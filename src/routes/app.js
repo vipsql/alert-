@@ -1,69 +1,39 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'dva'
-import Login from './login'
-import Header from '../components/layout/header'
-import Bread from '../components/layout/bread'
-import Footer from '../components/layout/footer'
-import Sider from '../components/layout/sider'
+import LeftMenu from '../components/layout/leftMenu/leftWrap'
 import styles from '../components/layout/main.less'
+import Bread from '../components/layout/bread/index'
 import { Spin } from 'antd'
 import { classnames } from '../utils'
 import '../components/layout/common.less'
 
 function App ({children, location, dispatch, app}) {
-  const {login, loading, loginButtonLoading, user, siderFold, darkTheme, isNavbar, menuPopoverVisible} = app
-  const loginProps = {
-    loading,
-    loginButtonLoading,
-    onOk (data) {
-      dispatch({type: 'app/login', payload: data})
-    }
-  }
-
-  const headerProps = {
-    user,
-    siderFold,
+  const {isShowMask, isFold} = app
+  const LeftMenuProps = {
+    isFold,
     location,
-    isNavbar,
-    menuPopoverVisible,
-    switchMenuPopover () {
-      dispatch({type: 'app/switchMenuPopver'})
-    },
-    logout () {
-      dispatch({type: 'app/logout'})
-    },
-    switchSider () {
-      dispatch({type: 'app/switchSider'})
-    }
-  }
-
-  const siderProps = {
-    siderFold,
-    darkTheme,
-    location,
-    changeTheme () {
-      dispatch({type: 'app/changeTheme'})
+    handleFoldMenu(){
+      dispatch({
+        type: 'app/handleFoldMenu'
+      })
     }
   }
 
   return (
-    <div>{login
-        ? <div className={classnames(styles.layout, {[styles.fold]: isNavbar ? false : siderFold}, {[styles.withnavbar]: isNavbar})}>
-          {!isNavbar ? <aside className={classnames(styles.sider, {[styles.light]: !darkTheme})}>
-            <Sider {...siderProps} />
-          </aside> : ''}
-          <div className={styles.main}>
-            <Header {...headerProps} />
-            <Bread location={location} />
-            <div className={styles.container}>
-              <div className={styles.content}>
-                {children}
-              </div>
+    <div>
+      {isShowMask && <div className={styles.layer}></div>}
+      <div className={classnames(styles.layout,!isFold ? '' : styles.fold)}>
+        <LeftMenu {...LeftMenuProps} />
+        <div className={styles.main}>
+          <Bread location={location} />
+          <div className={styles.container}>
+            <div className={styles.content}>
+              {children}
             </div>
-            <Footer />
           </div>
         </div>
-        : <div className={styles.spin}><Spin tip='加载用户信息...' spinning={loading} size='large'><Login {...loginProps} /></Spin></div>}</div>
+      </div>
+    </div>
   )
 }
 
@@ -71,12 +41,7 @@ App.propTypes = {
   children: PropTypes.element.isRequired,
   location: PropTypes.object,
   dispatch: PropTypes.func,
-  loading: PropTypes.object,
-  loginButtonLoading: PropTypes.bool,
-  login: PropTypes.bool,
-  user: PropTypes.object,
-  siderFold: PropTypes.bool,
-  darkTheme: PropTypes.bool
+  isFold: PropTypes.bool
 }
 
 export default connect(({app}) => ({app}))(App)

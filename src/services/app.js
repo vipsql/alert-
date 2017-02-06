@@ -1,9 +1,8 @@
 import { request } from '../utils'
 
-export async function login (params) {
-  return request('/api/login', {
-    method: 'post',
-    data: params
+export async function queryAlertDashbodr () {
+  return request('/mock/app.json', {
+    method: 'get'
   })
 }
 

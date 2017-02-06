@@ -34,7 +34,7 @@
 │ ├── index.js       # 入口文件
 │ └── index.html     
 ├── package.json     # 项目信息
-└── proxy.config.js  # 数据mock配置
+
 
 ```
 
@@ -43,7 +43,7 @@
 克隆项目文件:
 
 ```
-git clone
+git clone https://git.uyunsoft.cn/octopus/AlertFront.git
 ```
 
 进入目录安装依赖:

@@ -9,51 +9,58 @@ export default function ({history, app}) {
       component: App,
       getIndexRoute (nextState, cb) {
         require.ensure([], require => {
-          app.model(require('./models/dashboard'))
-          cb(null, {component: require('./routes/dashboard')})
+          app.model(require('./models/alertManage'))
+          cb(null, {component: require('./routes/alertManage')})
         })
       },
       childRoutes: [
         {
-          path: 'dashboard',
-          name: 'dashboard',
+          path: 'alertManage',
+          name: 'alertManage',
+
           getComponent (nextState, cb) {
             require.ensure([], require => {
-              app.model(require('./models/dashboard'))
-              cb(null, require('./routes/dashboard'))
+              app.model(require('./models/alertManage'))
+              cb(null, require('./routes/alertManage'))
+            })
+          }
+        },
+        {
+          path: 'alertManage/:alertClassify/:alertList',
+          name: 'alertList',
+          getComponent(nextState, cb) {
+            require.ensure([], require => {
+              app.model(require('./models/alertList'))
+              cb(null, require('./routes/alertList'))
+            })
+          }
+
+        },
+        {
+          path: 'alertQuery',
+          name: 'alertQuery',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              app.model(require('./models/alertQuery'))
+              cb(null, require('./routes/alertQuery'))
             })
           }
         }, {
-          path: 'users',
-          name: 'users',
+          path: 'alertConfig',
+          name: 'alertConfig',
           getComponent (nextState, cb) {
             require.ensure([], require => {
-              app.model(require('./models/users'))
-              cb(null, require('./routes/users'))
+              app.model(require('./models/alertConfig'))
+              cb(null, require('./routes/alertConfig'))
             })
           }
         }, {
-          path: 'ui/ico',
-          name: 'ui/ico',
+          path: 'watchManage',
+          name: 'watchManage',
           getComponent (nextState, cb) {
             require.ensure([], require => {
-              cb(null, require('./routes/ui/ico'))
-            })
-          }
-        }, {
-          path: 'ui/search',
-          name: 'ui/search',
-          getComponent (nextState, cb) {
-            require.ensure([], require => {
-              cb(null, require('./routes/ui/search'))
-            })
-          }
-        }, {
-          path: '*',
-          name: 'error',
-          getComponent (nextState, cb) {
-            require.ensure([], require => {
-              cb(null, require('./routes/error'))
+              app.model(require('./models/watchManage'))
+              cb(null, require('./routes/watchManage'))
             })
           }
         }
