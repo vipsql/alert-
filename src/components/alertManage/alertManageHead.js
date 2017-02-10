@@ -18,13 +18,13 @@ const AlertManageHead = ({
           <i className={setClass}></i>关注设置
         </div>
         {isSetAlert &&
-          <div>
-          最近一小时活跃告警：
-          <ul>
-            <li>紧急（{levels.jj}）</li>
-            <li>告警（{levels.gj}）</li>
-            <li>提醒（{levels.tx}）</li>
-          </ul>
+          <div className={styles.alertItemSet}>
+            <p>最近一小时活跃告警：</p>
+            <ul>
+              <li><div className={styles.jjColorIcon}></div><p>紧急（{levels.jj}）</p></li>
+              <li><div className={styles.gjColorIcon}></div><p>告警（{levels.gj}）</p></li>
+              <li><div className={styles.txColorIcon}></div><p>提醒（{levels.tx}）</p></li>
+            </ul>
           </div>
         }
 

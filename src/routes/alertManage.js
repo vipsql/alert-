@@ -17,17 +17,24 @@ function AlertManage({dispatch, alertManage}){
     modalVisible,
     tagsNum,
     tagsList,
+    currentDashbordData,
   } = alertManage
+
+  const alertDashbord = {
+    currentDashbordData
+  }
 
   const alertSetProps = {
     hideAlertSetTip,
 
     onOk(){
       dispatch({
-        type: 'app/focusSet'
+        type: 'app/showAlertManage',
+        payload: false
       })
       dispatch({
-        type: 'alertManage/hideAlertSetTip'
+        type: 'alertManage/toggleAlertSetTip',
+        payload: true
       })
     }
   }
@@ -38,39 +45,25 @@ function AlertManage({dispatch, alertManage}){
 
     showTagsModal(){
       dispatch({
-        type:'alertTagsSet/showTagsModal',
-        modalVisible: true
+        type: 'alertTagsSet/tagsContentView',
+        payload: {}
       })
 
+      dispatch({
+        type: 'alertTagsSet/toggleTagsModal',
+        payload: true
+      })
     }
 
   }
-  const alertTagsSetProps = {
-    modalVisible,
-    tagsNum,
-    tagsList,
-    changSelectTag(){
-      dispatch({
-        type:'alertManage/changSelectTag',
-      })
-
-    },
-    closeTagsModal(){
-      dispatch({
-        type:'alertManage/closeTagsModal',
-        modalVisible: false
-      })
-
-    },
-  }
-
+  
   return (
 
     <div>
       <AlertTagsSet  />
       <AlertManageHead {...alertManageHeadProps} />
       {isSetAlert ?
-        <Chart /> :
+        <Chart {...alertDashbord}/> :
         <AlertSet {...alertSetProps}/>
       }
     </div>

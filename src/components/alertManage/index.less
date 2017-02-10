@@ -51,8 +51,72 @@
     font-size: 14px;
   }
 }
+.alertItemSet{
+  position: relative;
+  margin-right: 50%;
+  top: 8px;
+  ul{
+    position: relative;
+    left: 140px;
+    top: -18px;
+    li{
+      position: relative;
+      margin-right: 15px;
+      float: left;
+      p{
+        display: inline-block;
+        position: relative;
+        left: 8px;
+      }
+      .jjColorIcon{
+        display: inline-block;
+        position: relative;
+        top: 2px;
+        width: 12px;
+        height: 12px;
+        background-color: red;
+        border-radius: 100%;
+        -moz-border-radius: 100%;
+        -webkit-border-radius: 100%;
+        box-shadow: red 0px 0px 5px;
+        -moz-box-shadow: red 0px 0px 5px;
+        -webkit-box-shadow: red 0px 0px 5px;
+      }
+      .gjColorIcon{
+        display: inline-block;
+        position: relative;
+        top: 2px;
+        width: 12px;
+        height: 12px;
+        background-color: orange;
+        border-radius: 100%;
+        -moz-border-radius: 100%;
+        -webkit-border-radius: 100%;
+        box-shadow: orange 0px 0px 5px;
+        -moz-box-shadow: orange 0px 0px 5px;
+        -webkit-box-shadow: orange 0px 0px 5px;
+      }
+      .txColorIcon{
+        display: inline-block;
+        position: relative;
+        top: 2px;
+        width: 12px;
+        height: 12px;
+        background-color: green;
+        border-radius: 100%;
+        -moz-border-radius: 100%;
+        -webkit-border-radius: 100%;
+        box-shadow: green 0px 0px 5px;
+        -moz-box-shadow: green 0px 0px 5px;
+        -webkit-box-shadow: green 0px 0px 5px;
+      }
+    }
+  }
+}
 .focusSetModalMain{
   p{
+    position: relative;
+    left: 5px;
     color: #acb2be;
     font-size: 14px;
     letter-spacing: 1px;
@@ -68,7 +132,7 @@
       margin-top: 10px;
       border-bottom: 1px solid #f1f3f5;
       line-height: 30px;
-      padding-bottom: 10px;
+      padding-bottom: 5px;
       padding-left: 95px;
       font-size: 13px;
       &:last-child{
@@ -79,14 +143,19 @@
         padding: 0 5px;
         color:#828b9a;
         margin-right: 30px;
+        margin-bottom: 5px;
         cursor: pointer;
+        i{
+          margin-left: 5px;
+          font-size: 14px;
+        }
         &.tagsSelected{
            background: #66a6fe;
            border-radius: 3px;
            color: white;
            &:hover{
             //  background: none;
-           }
+           } 
         }
         &:hover{
 

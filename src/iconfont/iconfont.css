@@ -1,10 +1,10 @@
 
 @font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1484898704950'); /* IE9*/
-  src: url('iconfont.eot?t=1484898704950#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('iconfont.woff?t=1484898704950') format('woff'), /* chrome, firefox */
-  url('iconfont.ttf?t=1484898704950') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1484898704950#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1486544689342'); /* IE9*/
+  src: url('iconfont.eot?t=1486544689342#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1486544689342') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1486544689342') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1486544689342#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -24,6 +24,10 @@
 .icon-cebianlanshouqi:before { content: "\e60d"; }
 
 .icon-cebianlanzhankai:before { content: "\e60e"; }
+
+.icon-dui:before { content: "\e631"; }
+
+.icon-wancheng:before { content: "\e845"; }
 
 .icon-gaojingchaxun:before { content: "\e601"; }
 

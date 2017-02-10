@@ -1,12 +1,11 @@
 import {queryAlertDashbord} from '../services/alertManage'
 import {parse} from 'qs'
 
-export default {
-  namespace: 'alertManage',
-  state: {
+const initialState = {
     isSetAlert: false, // 是否设置过告警标签
-    hideAlertSetTip: false, // 设置提示
+    hideAlertSetTip: false, // 设置提示false有提示
     modalVisible: false,
+    currentDashbordData: [],
     tagsNum: 0,
     tagsList: [
       {
@@ -32,75 +31,39 @@ export default {
       gj: 33,
       tx: 44
     }
-  },
+}
+
+export default {
+  namespace: 'alertManage',
+
+  state: initialState,
+
   subscriptions: {
     setup({dispatch}){
       dispatch({
-        type: 'queryAlertDashbord'
+        type: 'toggleAlertSet',
+        payload: false
       })
     }
   },
+
+  effects: {
+    
+  },
+
   reducers: {
     // 显示标签设置
-    showAlertSet(state){
-      return {
-        ...state,
-        isSetAlert: false
-      }
+    toggleAlertSet(state, { payload: isSetAlert }){
+      return { ...state, isSetAlert }
     },
     // 显示treemap
-    showAlertDashbord(state){
-      return {
-        ...state,
-        isSetAlert: true,
-        hideAlertSetTip: true
-      }
+    setCurrentTreemap(state, { payload }){
+      return { ...state, ...payload }
     },
     // 隐藏标签设置提示
-    hideAlertSetTip(state){
-      return {
-        ...state,
-        hideAlertSetTip: true
-      }
+    toggleAlertSetTip(state, { payload: hideAlertSetTip }){
+      return { ...state, hideAlertSetTip }
     },
-    // 显示标签设置框
-    showTagsModal(state){
-      return {
-        ...state,
-        modalVisible: true
-      }
-    },
-    // 标签选择
-    changSelectTag(state){
-
-    },
-    // 关闭标签设置框
-    closeTagsModal(state){
-      return {
-        ...state,
-        modalVisible: false
-      }
-    }
-
-
-
-  },
-  effects: {
-    *queryAlertDashbord ({
-      payload
-    }, {put, call}) {
-      const data = yield call(queryAlertDashbord, parse(payload))
-      if(data.isSet){
-        yield put({
-          type: 'showAlertDashbord',
-        })
-      }else{
-        yield put({
-          type: 'showAlertSet',
-        })
-      }
-    }
   }
-
 
 }
