@@ -5,13 +5,16 @@ import request from '../../utils/request'
 const echarts = require('echarts');
 
 class Chart extends Component{
+    
     constructor(props) {
         super(props);
         this.setTreemapHeight = this.setTreemapHeight.bind(this);
     }
     setTreemapHeight(ele){
+        const _percent = 0.8 // 占屏比
+
         const clientHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
-        ele.style.height = clientHeight + 'px';
+        ele.style.height = (clientHeight * _percent) + 'px';
 
     }
     componentDidMount(){

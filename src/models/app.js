@@ -13,9 +13,39 @@ export default {
   state: initialState,
 
   subscriptions: {
+    setup({dispatch}) {
+      dispatch({
+        type: 'queryAlertDashbord'
+      })
+    }
   
   },
   effects: {
+    *queryAlertDashbord({payload}, {put, call}) {
+      const data = yield call(queryAlertDashbord, parse(payload))
+      if(data.isSet) {
+        yield put({
+          type: 'showAlertManage',
+          payload: false
+        })
+        yield put({
+          type: 'alertTagsSet/addAlertTags'
+        })
+        yield put({
+          type: 'alertManage/toggleAlertSetTip',
+          payload: true
+        })
+      } else {
+        yield put({
+          type: 'showAlertManage',
+          payload: true
+        })
+        yield put({
+          type: 'alertManage/toggleAlertSet',
+          payload: false
+        })
+      }
+    }
     
   },
   reducers: {

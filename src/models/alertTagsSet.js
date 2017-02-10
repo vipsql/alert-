@@ -1,5 +1,5 @@
 import {parse} from 'qs'
-import { tagsView, queryAlertDashbord } from '../services/alertManage.js'
+import { tagsView, queryAlertManage } from '../services/alertManage.js'
 
 const initialState = {
   tagNum: 0,
@@ -31,10 +31,10 @@ export default {
         payload: data
       })
     },
-    *queryAlertDashbord ({payload}, {select, put, call}) {
-      const data = yield queryAlertDashbord()
+    *addAlertTags ({payload}, {select, put, call}) {
+      const data = yield queryAlertManage()
       console.log(data);
-      if(data.isSet){
+      //if(data.isSet){
         yield put({
           type: 'alertManage/setCurrentTreemap',
           payload: {
@@ -45,7 +45,7 @@ export default {
           type: 'alertManage/toggleAlertSet',
           payload: true
         })
-      }
+      //}
 
       yield put({
         type: 'toggleTagsModal',

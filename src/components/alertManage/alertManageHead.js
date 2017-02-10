@@ -22,6 +22,8 @@ const AlertManageHead = ({
             <p>最近一小时活跃告警：</p>
             <ul>
               <li><div className={styles.jjColorIcon}></div><p>紧急（{levels.jj}）</p></li>
+              <li><div className={styles.zyColorIcon}></div><p>主要（{levels.zy}）</p></li>
+              <li><div className={styles.cyColorIcon}></div><p>次要（{levels.cy}）</p></li>
               <li><div className={styles.gjColorIcon}></div><p>告警（{levels.gj}）</p></li>
               <li><div className={styles.txColorIcon}></div><p>提醒（{levels.tx}）</p></li>
             </ul>
