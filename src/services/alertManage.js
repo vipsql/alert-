@@ -1,6 +1,6 @@
 import { request } from '../utils'
 
-export async function queryAlertDashbord() {
+export async function queryAlertManage() {
   return request('/mock/app.json', {
     method: 'get'
   })

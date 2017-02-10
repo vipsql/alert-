@@ -21,8 +21,6 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
     )
 
     const itemSelect = (e) => {
-
-      console.log(e.target);
       let tagId = e.target.getAttribute('data-id');
       dispatch({
         type: 'alertTagsSet/changSelectTag',
@@ -62,7 +60,7 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
     modalFooter.push(<div className={styles.modalFooter}>
       <Button type="primary" onClick={ () => {
         dispatch({
-          type: 'alertTagsSet/queryAlertDashbord'
+          type: 'alertTagsSet/addAlertTags'
         })
       }} >确认</Button>
       <Button type="ghost" onClick={ () => {

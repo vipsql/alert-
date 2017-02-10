@@ -1,4 +1,4 @@
-import {queryAlertDashbord} from '../services/alertManage'
+import {queryAlertManage} from '../services/alertManage'
 import {parse} from 'qs'
 
 const initialState = {
@@ -29,7 +29,9 @@ const initialState = {
     levels: { //告警级别
       jj: 23,
       gj: 33,
-      tx: 44
+      tx: 44,
+      zy: 30,
+      cy: 11
     }
 }
 
@@ -39,12 +41,7 @@ export default {
   state: initialState,
 
   subscriptions: {
-    setup({dispatch}){
-      dispatch({
-        type: 'toggleAlertSet',
-        payload: false
-      })
-    }
+    
   },
 
   effects: {
