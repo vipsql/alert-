@@ -87,76 +87,66 @@ class AlertBar extends Component{
     super()
   }
   componentDidMount(){
-    d3.xhr('./mock/alert.json', () => {
-
-    })
-    d3.csv("./mock/flights-3m.json", function(error, flights) {
-      function randomDate(start, end) {
-          var d = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-          return d;
-      }
-      // Months are 0 indexed...
-      var start = new Date(2013, 10, 1, 2);
-      var end = new Date(2013, 10, 1, 6);
-
-
-      function genData(start,end){
-        var d = [];
-        for(var i = 0; i < 200; i++) {
-          d[i] = {
-            date: randomDate(start, end).getTime(),
-            value: Math.floor(Math.random() * 3000)
-          }
-
-        }
+    function randomDate(start, end) {
+        var d = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
         return d;
+    }
+    // Months are 0 indexed...
+    var start = new Date(2013, 10, 1, 2);
+    var end = new Date(2013, 10, 1, 6);
+
+
+    function genData(start,end){
+      var d = [];
+      for(var i = 0; i < 200; i++) {
+        d[i] = {
+          date: randomDate(start, end).getTime(),
+          value: Math.floor(Math.random() * 3000)
+        }
+
       }
-      var data = genData(start,end)
+      return d;
+    }
+    var data = genData(start,end)
 
 
-      // Create the crossfilter for the relevant dimensions and groups.
-      var min5 = n_minutes_interval(5);
-      var alertList = crossfilter(data)
+    // Create the crossfilter for the relevant dimensions and groups.
+    var min5 = n_minutes_interval(5);
+    var alertList = crossfilter(data)
 
 
-      var width = screen.width - 160 - 50;
-      var height = 80
-      var margins = {top: 0, right: 20, bottom: 25, left: 15}
-      var dim2 = alertList.dimension(function(d) { return d.date; });
-      var grp2 = dim2.group(min5).reduceSum(function(d) { return d.value; });
-      var chart = dc.barChart(".dc-chart")
-                    .width(width)
-                    .height(height)
-                    .margins(margins)
-                    .dimension(dim2)
-                    .group(grp2)
-                    .round(dc.round.floor)
-                    .renderHorizontalGridLines(true)
-                    .x(d3.time.scale().domain([start, end]))
-                    .xUnits(min5.range)
-                    .filter([new Date(2013, 10, 1, 3), new Date(2013, 10, 1, 6)])
+    var width = screen.width - 160 - 50;
+    var height = 80
+    var margins = {top: 0, right: 20, bottom: 25, left: 15}
+    var dim2 = alertList.dimension(function(d) { return d.date; });
+    var grp2 = dim2.group(min5).reduceSum(function(d) { return d.value; });
+    var chart = dc.barChart(".dc-chart")
+                  .width(width)
+                  .height(height)
+                  .margins(margins)
+                  .dimension(dim2)
+                  .group(grp2)
+                  .round(dc.round.floor)
+                  .renderHorizontalGridLines(true)
+                  .x(d3.time.scale().domain([start, end]))
+                  .xUnits(min5.range)
+                  .filter([new Date(2013, 10, 1, 3), new Date(2013, 10, 1, 6)])
 
-      chart.xAxis().tickSize(0).tickPadding(10).tickFormat(d3.time.format('%H:%M'));
-      chart.render();
-
-
-      chart.on('filtered', function(d,f){
-        console.log(f)
-      })
-
-      setInterval(function(){
-        alertList.remove()
-        alertList.add(genData(new Date(2013, 10, 1, 3),new Date(2013, 10, 1, 7)))
-        chart.x(d3.time.scale().domain([new Date(2013, 10, 1, 3),new Date(2013, 10, 1, 7)]))
-             .filter([new Date(2013, 10, 1, 4), new Date(2013, 10, 1, 7)])
-        dc.redrawAll()
-      },3000)
+    chart.xAxis().tickSize(0).tickPadding(10).tickFormat(d3.time.format('%H:%M'));
+    chart.render();
 
 
+    chart.on('filtered', function(d,f){
+      // console.log(f)
+    })
 
-
-
-    });
+    setInterval(function(){
+      alertList.remove()
+      alertList.add(genData(new Date(2013, 10, 1, 3),new Date(2013, 10, 1, 7)))
+      chart.x(d3.time.scale().domain([new Date(2013, 10, 1, 3),new Date(2013, 10, 1, 7)]))
+           .filter([new Date(2013, 10, 1, 4), new Date(2013, 10, 1, 7)])
+      dc.redrawAll()
+    },3000)
   }
   render(){
     return (

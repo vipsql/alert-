@@ -79,24 +79,28 @@ class ListTable extends Component {
           )
         })
         const childtrs = item.children.map( (childItem,index) => {
+          const trKey = 'td' + index
+          const tdKey = 'td' + index
           return (
-              <tr>
-                <td key={index}><input type="checkbox" /></td>
+              <tr key={trKey}>
+                <td key={tdKey}><input type="checkbox" /></td>
                 {tds}
               </tr>
           )
         } )
-        childtrs.unshift(<tr><td colSpan={keys.length + 1}>{item.classify}</td></tr>)
+        childtrs.unshift(<tr key={index}><td colSpan={keys.length + 1}>{item.classify}</td></tr>)
         tbodyCon.push(childtrs)
 
       } )
 
     }else{
+
       tbodyCon = data.map( (item, index) => {
         const keys = Object.keys(item);
 
         // 列是不固定的 需要抽取出来
         const tds = keys.map((key) => {
+
           return (
             <td key={key}>{item[key]}</td>
           )
@@ -108,6 +112,7 @@ class ListTable extends Component {
           </tr>
         )
       })
+
     }
 
 
