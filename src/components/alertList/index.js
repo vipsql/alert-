@@ -1,5 +1,8 @@
 import React, { PropTypes } from 'react'
 import ListTable from './listTable'
+import AlertBar from './alertBar'
+import AlertTagsFilter from './alertTagsFilter'
+import { connect } from 'dva'
 
 function alertLsit({
   loading,
@@ -9,7 +12,11 @@ function alertLsit({
 }){
 
   return (
-    <ListTable isGroup={true} />
+    <div>
+      <AlertTagsFilter />
+      <AlertBar/>
+      <ListTable isGroup={true} />
+    </div>
   )
 }
 
@@ -19,4 +26,10 @@ alertLsit.propTypes = {
   loading: PropTypes.any,
   pagination: PropTypes.any
 }
-export default alertLsit
+
+export default connect((state) => {
+  return {
+    alertTagsSet: state.alertTagsSet,
+    alertList: state.alertList
+  }
+})(alertLsit)
