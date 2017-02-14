@@ -1,35 +1,32 @@
-import React, { PropTypes } from 'react'
+import React, { PropTypes, Component } from 'react'
+import { Tabs } from 'antd';
 import ListTable from './listTable'
 import AlertBar from './alertBar'
 import AlertTagsFilter from './alertTagsFilter'
 import { connect } from 'dva'
+const TabPane = Tabs.TabPane
 
-function alertLsit({
-  loading,
-  dataSource,
-  pagination,
-  onPageChange
-}){
-
-  return (
-    <div>
-      <AlertTagsFilter />
-      <AlertBar/>
-      <ListTable isGroup={true} />
-    </div>
-  )
-}
-
-alertLsit.propTypes = {
-  onPageChange: PropTypes.func,
-  dataSource: PropTypes.array,
-  loading: PropTypes.any,
-  pagination: PropTypes.any
-}
-
-export default connect((state) => {
-  return {
-    alertTagsSet: state.alertTagsSet,
-    alertList: state.alertList
+class AlertListManage extends Component{
+  constructor(props){
+    super(props)
   }
-})(alertLsit)
+  render(){
+    return (
+      <div>
+        <AlertTagsFilter />
+        <AlertBar />
+        <div >
+          <Tabs>
+            <TabPane tab="列表" key={1}>
+              <ListTable isGroup={true}/>
+            </TabPane>
+            <TabPane tab="时间线" key={2}></TabPane>
+          </Tabs>
+        </div>
+      </div>
+    )
+  }
+}
+
+export default AlertListManage
+
