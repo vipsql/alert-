@@ -4,14 +4,10 @@ import {parse} from 'qs'
 export default {
   namespace: 'alertList',
   state: {
-    dataSource: [],
-    loading: false,
-    pagination: {
-      showSizeChanger: true,
-      showQuickJumper: true,
-      current: 1,
-      total: null
-    }
+    isRefresh: false, //是否实时更新
+    tagsFilter: [
+      {jb: [1,2,3]}
+    ]
 
   },
   reducers: {

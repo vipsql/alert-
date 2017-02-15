@@ -7,7 +7,7 @@
     "antd": "^2.6.0",
     "classnames": "^2.2.5",
     "crossfilter": "^1.3.12",
-    "d3": "^4.5.0",
+    "d3": "^3.3.3",
     "dc": "^2.1.3",
     "dva": "^1.1.0",
     "dva-loading": "^0.2.0",
@@ -46,7 +46,7 @@
     "watchjs": "^0.0.0"
   },
   "scripts": {
-    "start": "dora --plugins \"webpack,webpack-hmr\"",
+    "start": "dora --plugins \"proxy,webpack,webpack-hmr\"",
     "dev": "dora --plugins \"webpack,webpack-hmr\"",
     "lint": "eslint --fix --ext .js,.jsx src/components/layout",
     "build": "atool-build"

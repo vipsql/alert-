@@ -8,7 +8,10 @@ const app = dva()
 // 2. Model
 
 app.model(require('./models/app'))
+
+// 告警列表
 app.model(require('./models/alertTagsSet'))
+app.model(require('./models/alertListTable'))
 
 
 // 3. Router
