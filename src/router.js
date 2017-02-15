@@ -30,6 +30,7 @@ export default function ({history, app}) {
           name: 'alertList',
           getComponent(nextState, cb) {
             require.ensure([], require => {
+              app.model(require('./models/tagsListFilter'))
               app.model(require('./models/alertList'))
               cb(null, require('./routes/alertList'))
             })

@@ -3,6 +3,7 @@ import { Tabs } from 'antd';
 import ListTable from './listTable'
 import AlertBar from './alertBar'
 import AlertTagsFilter from './alertTagsFilter'
+import { connect } from 'dva'
 const TabPane = Tabs.TabPane
 
 class AlertListManage extends Component{
@@ -12,6 +13,7 @@ class AlertListManage extends Component{
   render(){
     return (
       <div>
+        <AlertTagsFilter />
         <AlertBar />
         <div >
           <Tabs>
@@ -21,11 +23,10 @@ class AlertListManage extends Component{
             <TabPane tab="时间线" key={2}></TabPane>
           </Tabs>
         </div>
-
       </div>
     )
   }
 }
 
-
 export default AlertListManage
+

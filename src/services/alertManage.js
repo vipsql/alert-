@@ -11,6 +11,7 @@ export async function tagsView() {
     data: [
       {
         name: '告警来源',
+        key: 1,
         tags: [
           {
             key: 1,
@@ -31,6 +32,7 @@ export async function tagsView() {
       },
       {
         name: '告警通知',
+        key: 2,
         tags: [
           {
             key: 4,
