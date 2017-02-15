@@ -18,10 +18,11 @@ export default {
         type: 'queryAlertDashbord'
       })
     }
-  
+
   },
   effects: {
-    *queryAlertDashbord({payload}, {put, call}) {
+    *queryAlertDashbord({payload}, {put, call, select}) {
+
       const data = yield call(queryAlertDashbord, parse(payload))
       if(data.isSet) {
         yield put({
@@ -46,7 +47,7 @@ export default {
         })
       }
     }
-    
+
   },
   reducers: {
     // 转化alertManage面板显示(通过设置isShowMask)

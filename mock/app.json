@@ -2,10 +2,10 @@
   "isSet": true,
   "data": [
         {
-            "value": 12, 
-            "name": "position", 
-            "path": "position", 
-            "children": [ 
+            "value": 12,
+            "name": "position",
+            "path": "position",
+            "children": [
                 {
                     "value": 12,
                     "name": "a",

@@ -56,7 +56,7 @@ function AlertManage({dispatch, alertManage}){
     }
 
   }
-  
+
   return (
 
     <div>

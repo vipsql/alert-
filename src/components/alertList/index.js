@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { Tabs } from 'antd';
 import ListTable from './listTable'
+import ListTimeTable from './listTimeTable'
 import AlertBar from './alertBar'
 import AlertTagsFilter from './alertTagsFilter'
 import { connect } from 'dva'
@@ -18,7 +19,7 @@ class AlertListManage extends Component{
         <div >
           <Tabs>
             <TabPane tab="列表" key={1}>
-              <ListTable isGroup={true}/>
+              <ListTimeTable />
             </TabPane>
             <TabPane tab="时间线" key={2}></TabPane>
           </Tabs>
