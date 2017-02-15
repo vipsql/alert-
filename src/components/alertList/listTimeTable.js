@@ -131,7 +131,7 @@ class ListTimeTable extends Component {
       const formatDate = new Date(timstamp).getHours() + ':' +  new Date(timstamp).getMinutes()
       const left = gridWidth * i
       timeTH.push(
-        <div>
+        <div key={i}>
           <span className={styles.timePos} style={{left:left + 'px'}}>
           {formatDate}
           </span>
