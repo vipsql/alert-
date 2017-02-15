@@ -185,7 +185,7 @@ class ListTimeTable extends Component {
             return
           }
           return (
-            <td  className={styles[className]}>{item[key]}</td>
+            <td key={key} className={styles[className]}>{item[key]}</td>
 
           )
         })
@@ -204,7 +204,7 @@ class ListTimeTable extends Component {
 
 
 
-            dots =  item['list'].map( (itemDot) => {
+            dots =  item['list'].map( (itemDot, idx) => {
               const left = (itemDot.date - startTime) / (60 * 1000) * minuteToWidth
               const content = (
                 <div>
@@ -213,7 +213,7 @@ class ListTimeTable extends Component {
                 </div>
               );
               return (
-                <Popover content={content}>
+                <Popover content={content} key={`dot-${idx}`}>
                   <span style={{left: left  + 'px'}}></span>
                 </Popover>
 
@@ -223,12 +223,12 @@ class ListTimeTable extends Component {
 
         })
 
-        const ckKey = "checkbox" + index
+
         return (
-          <tr>
-            <td key={ckKey}><input type="checkbox" /></td>
+          <tr key={index}>
+            <td key="checkbox"><input type="checkbox" /></td>
             {tds}
-            <td>
+            <td key="timeDot">
               <div className={styles.timeLineDot}>
                 <div className={styles.lineDot} style={{width:lineDotW + 'px', left: lineDotLeft + 'px'}}></div>
                 {dots}
@@ -245,8 +245,8 @@ class ListTimeTable extends Component {
         <table width='100%' id="listTimeTable" className={styles.listTimeTable}>
           <thead>
             <tr>
-              <th width='30'></th>
               <th key="checkAll" width='48'><input type="checkbox" /></th>
+              <th width='30'></th>
               {theads}
               <th key="timeLine" id="timeLine">
                 <div className={styles.relPos}>{timeTH}</div>

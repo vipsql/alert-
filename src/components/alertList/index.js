@@ -19,9 +19,11 @@ class AlertListManage extends Component{
         <div >
           <Tabs>
             <TabPane tab="列表" key={1}>
+              <ListTable />
+            </TabPane>
+            <TabPane tab="时间线" key={2}>
               <ListTimeTable />
             </TabPane>
-            <TabPane tab="时间线" key={2}></TabPane>
           </Tabs>
         </div>
       </div>
@@ -30,4 +32,3 @@ class AlertListManage extends Component{
 }
 
 export default AlertListManage
-
