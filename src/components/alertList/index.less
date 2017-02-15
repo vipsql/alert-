@@ -1,5 +1,19 @@
 @import "../vars.less";
 
+.alertDetailModal{
+  position: fixed;
+  width: 75%;
+  top: 30px;
+  right: 13px;
+  bottom: 5px;
+  transition: transform .8s ease-out;
+  overflow-y: auto;
+  transform: translate(105%);
+  background: red;
+  &.show{
+    transform: translate(0);
+  }
+}
 .timeAlert{
   position: relative;
   height: 80px;

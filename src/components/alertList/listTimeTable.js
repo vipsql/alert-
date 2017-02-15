@@ -171,7 +171,6 @@ class ListTimeTable extends Component {
       } )
 
     }else{
-
       tbodyCon = data.map( (item, index) => {
 
         // const info = item.alertInfo
@@ -238,7 +237,6 @@ class ListTimeTable extends Component {
           </tr>
         )
       })
-
     }
     return(
       <div>

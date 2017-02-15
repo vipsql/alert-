@@ -5,6 +5,7 @@ import ListTimeTable from './listTimeTable'
 import AlertBar from './alertBar'
 import AlertTagsFilter from './alertTagsFilter'
 import { connect } from 'dva'
+import styles from './index.less'
 const TabPane = Tabs.TabPane
 
 class AlertListManage extends Component{
@@ -25,6 +26,9 @@ class AlertListManage extends Component{
               <ListTimeTable />
             </TabPane>
           </Tabs>
+        </div>
+        <div className={styles.alertDetailModal}>
+
         </div>
       </div>
     )
