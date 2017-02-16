@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import { Button } from 'antd';
 import { connect } from 'dva'
 import { Popover } from 'antd';
-import styles from './index.less'
+import styles from '../index.less'
 
 
 const columns = [{
