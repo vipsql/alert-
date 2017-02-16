@@ -3,7 +3,15 @@ import request from './request'
 import classnames from 'classnames'
 import {color} from './theme'
 
-
+// 拼接url
+function packURL(url, params){
+  let queryString = url.indexOf('?') < 0 ? '?' : ''
+  for(let prop in params){
+    queryString += prop + '=' + params[prop] + '&'
+  }
+  queryString = queryString.substring(0,queryString.length - 1)
+  return url + queryString
+}
 
 // 日期格式化
 Date.prototype.format = function (format) {
@@ -30,6 +38,7 @@ Date.prototype.format = function (format) {
 
 module.exports = {
   menu,
+  packURL,
   request,
   color,
   classnames

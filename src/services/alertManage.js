@@ -6,6 +6,7 @@ export async function queryAlertManage() {
   })
 }
 
+
 export async function tagsView() {
   return {
     data: [
@@ -74,4 +75,3 @@ export async function tagsView() {
     ]
   }
 }
-

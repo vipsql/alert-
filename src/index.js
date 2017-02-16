@@ -12,6 +12,7 @@ app.model(require('./models/app'))
 // 告警列表
 app.model(require('./models/alertTagsSet'))
 app.model(require('./models/alertListTable'))
+app.model(require('./models/alertListTimeTable'))
 
 
 // 3. Router

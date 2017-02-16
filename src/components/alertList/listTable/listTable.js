@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react'
-
+import { Button } from 'antd';
+import styles from '../index.less'
 
 const columns = [{
   title: 'Name',
@@ -22,38 +23,38 @@ const columns = [{
   key: 'x',
   width: 150,
 }];
-// const data = [{
-//   classify: 'a',
-//   children: [{
-//     id: 11,
-//     name: 'aa',
-//     age: 33,
-//     address: 'I am aa',
-//   }]
-// },{
-//   classify: 'b',
-//   children: [{
-//     id: 22,
-//     name: 'bb',
-//     age: 33,
-//     address: 'I am aa',
-//   },{  id: 33,
-//     name: 'cc',
-//     age: 33,
-//     address: 'I am aa',
-//   }]
-// }];
-const data= [{
-  id: 22,
-  name: 'bb',
-  age: 33,
-  address: 'I am aa',
+const data = [{
+  classify: 'a',
+  children: [{
+    id: 11,
+    name: 'aa',
+    age: 33,
+    address: 'I am aa',
+  }]
 },{
-  id: 33,
-  name: 'aa',
-  age: 34,
-  address: 'I am bb',
-}]
+  classify: 'b',
+  children: [{
+    id: 22,
+    name: 'bb',
+    age: 33,
+    address: 'I am aa',
+  },{  id: 33,
+    name: 'cc',
+    age: 33,
+    address: 'I am aa',
+  }]
+}];
+// const data= [{
+//   id: 22,
+//   name: 'bb',
+//   age: 33,
+//   address: 'I am aa',
+// },{
+//   id: 33,
+//   name: 'aa',
+//   age: 34,
+//   address: 'I am bb',
+// }]
 class ListTable extends Component {
   constructor(){
     super()
@@ -118,7 +119,7 @@ class ListTable extends Component {
 
     return(
       <div>
-        <table>
+        <table className={styles.listTable}>
           <thead>
             <tr>
               {theads}
@@ -128,6 +129,7 @@ class ListTable extends Component {
             {tbodyCon}
           </tbody>
         </table>
+        <Button>显示更多</Button>
       </div>
     )
   }

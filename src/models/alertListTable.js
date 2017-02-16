@@ -5,7 +5,7 @@ export default {
   namespace: 'alertListTable',
   state: {
     gridWidth: 100,
-    isGroup: false,
+    isGroup: true,
     minuteToWidth: 5, //以分钟单位计算间隔
     startTime: 1487031735817,
     endTime: 1487035335817
@@ -13,7 +13,12 @@ export default {
   },
   subscriptions: {
     setup({dispatch}) {
-
+      dispatch({
+        type: 'queryAlertListTime',
+        payload: {
+          curPage: 1
+        }
+      })
     }
   },
   reducers: {
