@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import { Tabs, Select } from 'antd';
-import ListTable from './listTable'
+import ListTableWrap from './listTable'
 import ListTimeTableWrap from './listTimeTable'
 import AlertBar from './alertBar'
 import AlertTagsFilter from './alertTagsFilter'
@@ -22,8 +22,7 @@ class AlertListManage extends Component{
           <Tabs>
             <TabPane tab="列表" key={1}>
               <AlertOperation position='list' />
-              
-
+              <ListTableWrap />
             </TabPane>
             <TabPane tab="时间线" key={2}>
               <AlertOperation position='timeAxis' />

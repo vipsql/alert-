@@ -72,9 +72,6 @@ class ListTimeTable extends Component {
 
       }
 
-
-
-
       let tbodyCon = [];
       if(isGroup){
         data.forEach( (item, index) => {
@@ -101,59 +98,101 @@ class ListTimeTable extends Component {
         } )
 
       }else{
-        tbodyCon = data.map( (item, index) => {
+        data.map( (item, index) => {
 
           // const info = item.alertInfo
-          const keys = Object.keys(item);
+          let keys = Object.keys(item);
 
+          const genTds =  item => {
+            return keys.map((key, index) => {
+              // const tdKey = item.date + key
+              const className = key == 'des' ? 'tdBorderRight' : ''
+              if(key === 'list' || key === 'children')  {
+                return
+              }
+              return (
+                <td key={key} className={styles[className]}>{item[key]}</td>
 
-          const tds = keys.map((key, index) => {
-            // const tdKey = item.date + key
-            const className = key == 'des' ? 'tdBorderRight' : ''
-            if(key === 'list')  {
-              return
-            }
-            return (
-              <td key={key} className={styles[className]}>{item[key]}</td>
-
-            )
-          })
-
+              )
+            })
+          }
           // 构建告警点
-          let dots = null
-          let dotsLine = []
-          let lineDotLeft = 0
-          let lineDotW = 0
-
-          keys.forEach((key, index) => {
-            if(key === 'list')  {
-              lineDotLeft = (item['list'][0].date - startTime) / (60 * 1000) * minuteToWidth
-              const len = item['list'].length
-              lineDotW = (item['list'][len-1]['date'] - item['list'][0]['date']) / (60 * 1000) * minuteToWidth
 
 
 
-              dots =  item['list'].map( (itemDot, idx) => {
-                const left = (itemDot.date - startTime) / (60 * 1000) * minuteToWidth
-                const content = (
-                  <div>
-                    <p>{itemDot['jd']}</p>
-                    <p>{itemDot['name']}</p>
-                  </div>
-                );
-                return (
-                  <Popover content={content} key={`dot-${idx}`}>
-                    <span style={{left: left  + 'px'}}></span>
-                  </Popover>
+          // 生成时间点
+          const genDots = item => {
+            let dots = null
+            let dotsLine = []
+            let lineDotLeft = 0
+            let lineDotW = 0
+            keys.forEach((key, index) => {
+              if(key === 'list')  {
+                lineDotLeft = (item['list'][0].date - startTime) / (60 * 1000) * minuteToWidth
+                const len = item['list'].length
+                lineDotW = (item['list'][len-1]['date'] - item['list'][0]['date']) / (60 * 1000) * minuteToWidth
 
-                )
-              })
+                dots =  item['list'].map( (itemDot, idx) => {
+                  const left = (itemDot.date - startTime) / (60 * 1000) * minuteToWidth
+                  const content = (
+                    <div>
+                      <p>{itemDot['jd']}</p>
+                      <p>{itemDot['name']}</p>
+                    </div>
+                  );
+                  return (
+                    <Popover content={content} key={`dot-${idx}`}>
+                      <span style={{left: left  + 'px'}}></span>
+                    </Popover>
+
+                  )
+                })
+              }
+            })
+            return {
+              dots,
+              lineDotW,
+              lineDotLeft
             }
+          }
 
-          })
+          const tds = genTds(item)
+          const dotsInfo = genDots(item)
+          const dots = dotsInfo.dots
+          const lineDotW = dotsInfo.lineDotW
+          const lineDotLeft = dotsInfo.lineDotLeft
 
 
-          return (
+          // 如果有子告警
+          let childTrs = []
+
+          if(item.children){
+
+            childTrs = item.children.map ( (childItem, childIndex) => {
+              keys = Object.keys(childItem);
+              const childTds = genTds(childItem)
+              const childDotsInfo = genDots(childItem)
+              const childDots = childDotsInfo.dots
+              const childLineDotW = childDotsInfo.lineDotW
+              const childLineDotLeft = childDotsInfo.lineDotLeft
+              return (
+                <tr key={childIndex} >
+                  <td key="checkbox"></td>
+                  {childTds}
+                  <td key="timeDot">
+                    <div className={styles.timeLineDot}>
+                      <div className={styles.lineDot} style={{width:childLineDotW + 'px', left: childLineDotLeft + 'px'}}></div>
+                      {childDots}
+                    </div>
+                  </td>
+                </tr>
+              )
+            })
+          }else{
+            childTrs = null
+          }
+
+          tbodyCon.push(
             <tr key={index}>
               <td key="checkbox"><input type="checkbox" /></td>
               {tds}
@@ -161,13 +200,15 @@ class ListTimeTable extends Component {
                 <div className={styles.timeLineDot}>
                   <div className={styles.lineDot} style={{width:lineDotW + 'px', left: lineDotLeft + 'px'}}></div>
                   {dots}
-
                 </div>
               </td>
-            </tr>
+            </tr>,
+            childTrs
           )
         })
       }
+
+
       return(
         <div>
           <table width='100%' id="listTimeTable" className={styles.listTimeTable}>
@@ -183,6 +224,7 @@ class ListTimeTable extends Component {
             </thead>
             <tbody>
               {tbodyCon}
+
             </tbody>
           </table>
           <Button onClick={showMore}>显示更多2</Button>
