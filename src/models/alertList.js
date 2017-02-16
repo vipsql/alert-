@@ -19,24 +19,7 @@ export default {
     }
   },
   effects: {
-    *queryAlertList({payload}, {call, put}){
-      yield put({type: showLoading});
-      const data = yield call(queryAlertList, parse(payload));
-      if(data){
-        yield put({
-          type: 'initAlertList',
-          payload: {
-            list: data.data,
-            pagination: {
-              total: data.page.total,
-              current: data.page.current,
-              showSizeChanger: true,
-              showQuickJumper: true
-            }
-          }
-        })
-      }
-    }
+
   },
 
 

@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-
+import { Button } from 'antd';
 
 const columns = [{
   title: 'Name',
@@ -128,6 +128,7 @@ class ListTable extends Component {
             {tbodyCon}
           </tbody>
         </table>
+        <Button>显示更多</Button>
       </div>
     )
   }

@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { Tabs } from 'antd';
 import ListTable from './listTable'
-import ListTimeTable from './listTimeTable'
+import ListTimeTableWrap from './listTimeWrap'
 import AlertBar from './alertBar'
 import AlertTagsFilter from './alertTagsFilter'
 import { connect } from 'dva'
@@ -17,15 +17,18 @@ class AlertListManage extends Component{
       <div>
         <AlertTagsFilter />
         <AlertBar />
-        <div >
+        <div>
           <Tabs>
             <TabPane tab="列表" key={1}>
               <ListTable />
+
             </TabPane>
             <TabPane tab="时间线" key={2}>
-              <ListTimeTable />
+              <ListTimeTableWrap />
+
             </TabPane>
           </Tabs>
+
         </div>
         <div className={styles.alertDetailModal}>
 

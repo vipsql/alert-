@@ -22,9 +22,7 @@ function alertList(location,dispatch,alertList){
   // }
 
   return (
-    <div>
-      <AlertListManage />
-    </div>
+    <AlertListManage />
   )
 }
 alertList.propTypes = {
