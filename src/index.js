@@ -15,6 +15,7 @@ app.model(require('./models/alertListTable'))
 app.model(require('./models/alertListTimeTable'))
 
 
+
 // 3. Router
 app.router(require('./router'))
 
