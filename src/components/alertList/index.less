@@ -1,18 +1,183 @@
 @import "../vars.less";
 
 .alertDetailModal{
-  position: fixed;
-  width: 75%;
-  top: 30px;
-  right: 13px;
-  bottom: 5px;
-  transition: transform .8s ease-out;
-  overflow-y: auto;
-  transform: translate(105%);
-  background: red;
-  &.show{
-    transform: translate(0);
-  }
+    position: fixed;
+    width: 40%;
+    top: 25px;
+    right: 13px;
+    bottom: 50px;
+    transition: transform .8s ease-out;
+    overflow: hidden;
+    transform: translate(105%);
+    background: #fff;
+    z-index: 1001;
+    box-shadow: #d7dce4 0px 0px 30px;
+    border-radius: 4px;
+    &.show{
+        transform: translate(0);
+    }
+    &:after{
+        content: ' ';
+        display: inline-block;
+        position: absolute;
+        top: 42px;
+        width: 120%;
+        height: 1px;
+        background: #d5ddeb;
+    }
+    .main{
+        height: 100%;
+        .detailHead{
+            position: relative;
+            margin: 12px 12px 10px 18px;
+            p{
+                font-size: 14px;
+                color: #4c5159;
+                font-weight: 600;
+                //text-shadow: 0px 0px 1px #cfd0d1;
+            }
+            & > div {
+                margin-bottom: 0px;
+                margin-top: 22px;
+                padding-left: 0px;
+            }
+            .shanChu{
+                position: absolute;
+                top: -2px;
+                right: 10px;
+                cursor: pointer;
+            }
+        }
+
+        .detailBody{
+            margin-top: 15px;
+            margin-right: 10px;
+            overflow-y: auto;
+            overflow-x: auto;
+            height: 80%;
+            &::-webkit-scrollbar-thumb {
+                width: 7px;
+                background-color: #d3d4d6;
+                border-radius: 5px;
+            }
+            &::-webkit-scrollbar {
+                width: 7px;
+                height: 7px;
+            }
+            &::-webkit-scrollbar-track {
+                width: 10px;
+            }
+            .infoBody{
+                position: relative;
+                margin-bottom: 10px;
+                padding: 15px 18px 15px 18px;
+                margin-left: 18px;
+                margin-right: 12px;
+                background: #f8fbfd;
+                border: 1px solid #e4e7eb;
+                border-radius: 3px;
+                width: 95%;
+                & > p {
+                    font-size: 14px;
+                    color: #4c5159;
+                    font-weight: 600;
+                    margin-bottom: 10px;
+                }
+                li{
+                    position: relative;
+                    line-height: 25px;
+                    font-size: 13px;
+                    padding: 0px 20px 8px 90px;
+                    & > span:first-child{
+                        position: absolute;
+                        left: 0;
+                        color: #acb2be;
+                        font-weight: bold;
+                    }
+                    span{
+                        color: #828b9a;
+                        font-weight: bold;
+                        &.level{
+                            background: #f7843e;
+                            padding: 5px 10px 5px 10px;
+                            color: #fff;
+                            border-radius: 4px;
+                        }
+                        .stateClass{
+                            color: #6bd9b4;
+                            margin-left: 5px;
+                        }
+                        
+                    }
+                    &.gongDan{
+                        :global .ant-row{
+                            display: inline-block;
+                        }
+                        :global .ant-form-item{
+                            margin-bottom: 0px;
+                            margin-right: 35px;
+                            vertical-align: baseline;
+                        }
+                    }
+                    .formMain{
+                        display: inline-block;
+                        .editForm{
+                            margin-left: 30px;
+                            color: #4082e6;
+                            border-bottom: 1px solid #acc4f2;
+                            line-height: 13px;
+                            cursor: pointer;
+                        }
+                        & > button{
+                            &:global.ant-btn-primary > span{
+                                color: #fff;
+                            }
+                        }
+                    }
+                }
+                .remarkTitle{
+                    display: inline-block;
+                }
+                .remark{
+                    display: inline-block;
+                    cursor: pointer;
+                    float: right;
+                    .bianji{
+                        color: #4082e6;
+                    }
+                    span{
+                        position: relative;
+                        font-size: 14px;
+                        top: -2px;
+                        color: #4082e6;
+                        font-weight: 600;
+                        margin-left: 5px;
+                        border-bottom: 1px solid #acc4f2;
+                    }
+                }
+                .remarkOperate{
+                    text-align: right;
+                    & > button{
+                        &:global.ant-btn-primary > span{
+                            color: #fff;
+                            font-size: 12px;
+                            font-weight: bold;
+                        }
+                        &:global.ant-btn-ghost > span{
+                            color: rgb(130, 139, 154);
+                            font-size: 12px;
+                            font-weight: bold;
+                        }
+                    }
+                }
+                // remark antd style change
+                :global .ant-form-item{
+                    margin-bottom: 10px;
+                }
+            }
+        }
+    }
+
 }
 .timeAlert{
   position: relative;
@@ -287,6 +452,17 @@
         }
     }
 
+    // cover ant-design Button style on local
+    .myButton{
+        &:global.ant-btn{
+            margin-right: 10px;
+            line-height: 1.45;
+            font-weight: 600;
+            font-size: 14px;
+            color: #6c7480;
+        }
+    }
+
     .button{
         position: relative;
         height: 30px;
@@ -318,29 +494,29 @@
             padding-left: 8px;
             color: #a1a8b2;
         }
-        .arrow{
-            position: relative;
-            display: inline-block;
-            color: #b0bdd0;
-            top: -1px;
-            padding-right: 10px;
-            font-size: 9px;
-            &.mergeBtn{
-                border-radius: 3px;
-                background-color: #f5f9fc;
-                border: 1px solid #d5ddeb;
-                color: #b0bdd0;
-                top: -1px;
-                bottom: -1px;
-                right: -1px;
-                height: 30px;
-                padding-right: 5px;
-                padding-left: 5px;
-                line-height: 28px;
-                font-size: 9px;
-                float: right;
-            }
-        }
+        // .arrow{
+        //     position: relative;
+        //     display: inline-block;
+        //     color: #b0bdd0;
+        //     top: -1px;
+        //     padding-right: 10px;
+        //     font-size: 9px;
+        //     &.mergeBtn{
+        //         border-radius: 3px;
+        //         background-color: #f5f9fc;
+        //         border: 1px solid #d5ddeb;
+        //         color: #b0bdd0;
+        //         top: -1px;
+        //         bottom: -1px;
+        //         right: -1px;
+        //         height: 30px;
+        //         padding-right: 5px;
+        //         padding-left: 5px;
+        //         line-height: 28px;
+        //         font-size: 9px;
+        //         float: right;
+        //     }
+        // }
     }
 }
 

@@ -32,6 +32,7 @@ export default function ({history, app}) {
             require.ensure([], require => {
               app.model(require('./models/alertOperation'))
               app.model(require('./models/tagsListFilter'))
+              app.model(require('./models/alertDetail'))
               app.model(require('./models/alertList'))
               cb(null, require('./routes/alertList'))
             })

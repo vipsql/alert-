@@ -5,8 +5,11 @@ import ListTimeTableWrap from './listTimeTable'
 import AlertBar from './alertBar'
 import AlertTagsFilter from './alertTagsFilter'
 import AlertOperation from './alertOperation'
+import AlertDetail from './alertDetail'
 import { connect } from 'dva'
 import styles from './index.less'
+import { classnames } from '../../utils'
+
 const TabPane = Tabs.TabPane
 
 class AlertListManage extends Component{
@@ -14,6 +17,8 @@ class AlertListManage extends Component{
     super(props)
   }
   render(){
+    const { alertDetail } = this.props;
+    console.log(alertDetail);
     return (
       <div>
         <AlertTagsFilter />
@@ -32,12 +37,16 @@ class AlertListManage extends Component{
           </Tabs>
 
         </div>
-        <div className={styles.alertDetailModal}>
-
+        <div className={ alertDetail.isShowDetail ? classnames(styles.alertDetailModal, styles.show) : styles.alertDetailModal }>
+          <AlertDetail />
         </div>
       </div>
     )
   }
 }
 
-export default AlertListManage
+export default connect((state) => {
+  return {
+    alertDetail: state.alertDetail
+  }
+})(AlertListManage)
