@@ -2,11 +2,11 @@ import React, { PropTypes, Component } from 'react'
 import { connect } from 'dva'
 import { Modal, Button, Table } from 'antd';
 import styles from './index.less'
-import mergeStyles from './mergeAlert.less'
+import mergeStyles from './mergeModal.less'
 import LevelIcon from '../common/levelIcon/index.js'
 import { classnames } from '../../utils'
 
-const mergeAlert = ({alertOperation, dispatch}) => {
+const mergeModal = ({alertOperation, dispatch}) => {
 
     const { isShowMergeModal, mergeInfoList, originAlert } = alertOperation;
     
@@ -18,7 +18,7 @@ const mergeAlert = ({alertOperation, dispatch}) => {
     }
 
     const modalFooter = []
-    modalFooter.push(<div className={mergeStyles.modalFooter}>
+    modalFooter.push(<div className={styles.modalFooter}>
       <Button type="primary" onClick={ () => {
         dispatch({
             type: 'alertOperation/toggleMergeModal',
@@ -114,11 +114,11 @@ const mergeAlert = ({alertOperation, dispatch}) => {
     )
 }
 
-mergeAlert.defaultProps = {
+mergeModal.defaultProps = {
 
 }
 
-mergeAlert.propTypes = {
+mergeModal.propTypes = {
 
 }
 
@@ -126,4 +126,4 @@ export default connect( state => {
     return {
         alertOperation: state.alertOperation,
     }
-})(mergeAlert);
+})(mergeModal);

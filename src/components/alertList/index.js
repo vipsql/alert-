@@ -11,7 +11,9 @@ import AlertDetail from './alertDetail'
 import { connect } from 'dva'
 import styles from './index.less'
 import LevelIcon from '../common/levelIcon/index.js'
-import MergeAlert from './mergeAlert'
+import MergeModal from './mergeModal'
+import CloseModal from './closeModal'
+import DispatchModal from './dispatchModal'
 import { classnames } from '../../utils'
 
 const TabPane = Tabs.TabPane
@@ -63,7 +65,9 @@ class AlertListManage extends Component{
         <div className={ alertDetail.isShowDetail ? classnames(styles.alertDetailModal, styles.show) : styles.alertDetailModal }>
           <AlertDetail />
         </div>
-        <MergeAlert />
+        <MergeModal />
+        <CloseModal />
+        <DispatchModal />
       </div>
     )
   }
