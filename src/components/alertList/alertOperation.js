@@ -67,11 +67,8 @@ const alertOperation = ({position, alertOperation, dispatch}) => {
             //出现解除告警的modal，并做相应处理
             console.log(111);
             dispatch({
-                type: 'alertOperation/toggleModalState',
-                payload: {
-                    isOpen: true,
-                    modalType: 3
-                }
+                type: 'alertOperation/toggleRelieveModal',
+                payload: true
             })
         }}>
             <Menu.Item key="1" className={styles.menuItem}>解除告警</Menu.Item>
@@ -80,19 +77,25 @@ const alertOperation = ({position, alertOperation, dispatch}) => {
     
     return (
         <div className={styles.operateMain}>
-            <Button className={styles.myButton}>派发工单</Button>
-            <Button className={styles.myButton}>关闭告警</Button>
+            <Button className={styles.myButton} onClick={ () => {
+                dispatch({
+                    type: 'alertOperation/toggleFormModal',
+                    payload: true
+                })
+            }} >派发工单</Button>
+            <Button className={styles.myButton} onClick={ () => {
+                dispatch({
+                    type: 'alertOperation/toggleCloseModal',
+                    payload: true
+                })
+            }} >关闭告警</Button>
             {
                 position !== 'detail' ?
                 <DropdownButton overlay={menu} className={styles.myDropdown} trigger={['click']} onClick={ () => {
                     // 出现合并告警的modal，并做相应处理
-                    console.log(222);
                     dispatch({
-                        type: 'alertOperation/toggleModalState',
-                        payload: {
-                            isOpen: true,
-                            modalType: 2
-                        }
+                        type: 'alertOperation/toggleMergeModal',
+                        payload: true
                     })
                 }}>
                     合并告警

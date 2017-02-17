@@ -21,11 +21,11 @@ const levelIcon = ({extraStyle, iconType, initalIconState, onClick, iconState}) 
 
     return initalIconState 
                     ? typeof iconState === 'undefined' || iconState
-                        ? <div className={iconStyle} onClick={ (e) => onClick(e) }></div>
-                            : <div className={whiteIcon} onClick={(e) => onClick(e)}></div>
+                        ? <div data-Type={iconType} className={iconStyle} onClick={ (e) => onClick(e) }></div>
+                            : <div data-Type={iconType} className={whiteIcon} onClick={(e) => onClick(e)}></div>
                     : typeof iconState !== 'undefined' && iconState
-                        ? <div className={iconStyle} onClick={(e) => onClick(e)}></div>
-                            : <div className={whiteIcon} onClick={(e) => onClick(e)}></div>
+                        ? <div data-Type={iconType} className={iconStyle} onClick={(e) => onClick(e)}></div>
+                            : <div data-Type={iconType} className={whiteIcon} onClick={(e) => onClick(e)}></div>
 }
 
 levelIcon.defaultProps = {

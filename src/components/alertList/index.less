@@ -1,5 +1,32 @@
 @import "../vars.less";
 
+// levelBar
+.alertListPage{
+    position: relative;
+    .levelBar{
+        position: absolute;
+        right: 0px;
+        top: 10px;
+        li{
+                position: relative;
+                margin-right: 15px;
+                float: left;
+            p{
+                display: inline-block;
+                position: relative;
+                left: 8px;
+            }
+            .extraStyle{
+                display: inline-block;
+                position: relative;
+                top: 2px;
+            }    
+        }
+    }
+
+}
+
+
 .alertDetailModal{
     position: fixed;
     width: 40%;
@@ -10,7 +37,7 @@
     overflow: hidden;
     transform: translate(105%);
     background: #fff;
-    z-index: 1001;
+    z-index: 999;
     box-shadow: #d7dce4 0px 0px 30px;
     border-radius: 4px;
     &.show{

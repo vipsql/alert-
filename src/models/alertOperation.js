@@ -2,10 +2,12 @@ import {parse} from 'qs'
 
 const initalState = {
 
-    showModal: {
-        modalType: undefined, // 预设modal类型（0：派发工单，1：关闭告警，2：合并告警，3：解除告警）--> 必须为number类型
-        isOpen: false, // 弹窗是否显示
-    },
+    // 各个modal弹窗
+    isShowFormModal: false, // 派发
+    isShowCloseModal: false, // 关闭
+    isShowMergeModal: false, // 合并
+    isShowRelieveModal: false, // 解除
+
     isSelectAlert: false, // 是否选择了告警
     isSelectOrigin: false, // 是否选择了源告警
     currentAlert: [
@@ -27,6 +29,34 @@ const initalState = {
             11 //ids
         ]
     },
+
+    originAlert: [],
+    mergeInfoList: [
+        {
+            id: 1,
+            object: 'hb_mysql1',
+            name: '不满意交易笔数',
+            origin: 'Monitor',
+            descipition: '这是一条描述',
+            time: '1h',
+        },
+        {
+            id: 2,
+            object: 'hb_mysql1',
+            name: '不满意交易笔数',
+            origin: 'Monitor',
+            descipition: '这是一条描述',
+            time: '1h',
+        },
+        {
+            id: 3,
+            object: 'hb_mysql1',
+            name: '不满意交易笔数',
+            origin: 'Monitor',
+            descipition: '这是一条描述',
+            time: '1h',
+        }
+    ], // 合并列表展示信息
 
     // 抑制告警
     restrainType: [
@@ -125,8 +155,27 @@ export default {
           return { ...state, selectGroup: initalState.selectGroup }
       },
       // 转换modal状态
-      toggleModalState(state, {payload}) {
-          return { ...state, showModal: {isOpen: payload.isOpen, modalType: payload.modalType} }
+      toggleFormModal(state, {payload: isShowFormModal}) {
+          return { ...state, isShowFormModal }
+      },
+      toggleCloseModal(state, {payload: isShowCloseModal}) {
+          return { ...state, isShowCloseModal }
+      },
+      toggleMergeModal(state, {payload: isShowMergeModal}) {
+          return { ...state, isShowMergeModal }
+      },
+      toggleRelieveModal(state, {payload: isShowRelieveModal}) {
+          return { ...state, isShowRelieveModal }
+      },
+      // selectRows是合并告警时触发
+      selectRows(state, {payload: originAlert}) {
+          return { ...state, originAlert }
+      },
+      // remove告警
+      removeAlert(state, {payload}) {
+          const { mergeInfoList } = state;
+          const newList = mergeInfoList.filter( (item) => (item.id !== payload) )
+          return { ...state, mergeInfoList: newList}
       }
   }
 }
