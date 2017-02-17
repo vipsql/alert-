@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { Button } from 'antd';
 import { connect } from 'dva'
-import { Popover } from 'antd';
+import { Popover } from 'antd'
 import styles from '../index.less'
 
 
@@ -76,28 +76,147 @@ class ListTimeTable extends Component {
 
       }
 
-      let tbodyCon = [];
+
+      let tbodyCon = []
+
+      // 生成列
+       const genTds = (item, keys) => {
+         let TDS = []
+
+         keys.forEach( (key, index) => {
+           // const tdKey = item.date + key
+           const className = key == 'des' ? 'tdBorderRight' : ''
+           if(key === 'list' || key == 'children')  {
+             return
+           }
+
+           if(index == 1){
+               TDS.push(
+                <td key='sourceAlert'>
+                  {item.children && <span className={styles.triangleLeft}>
+                  </span>}
+                </td>
+              )
+
+            }
+            TDS.push(
+              <td key={key} className={styles[className]}>{item[key]}</td>
+            )
+
+         })
+
+         return TDS
+       }
+
+      //  生成时间线
+      const genDots = (item, keys) => {
+        let dots = null
+        let dotsLine = []
+        let lineDotLeft = 0
+        let lineDotW = 0
+        keys.forEach((key, index) => {
+          if(key === 'list')  {
+            lineDotLeft = (item['list'][0].date - startTime) / (60 * 1000) * minuteToWidth
+            const len = item['list'].length
+            lineDotW = (item['list'][len-1]['date'] - item['list'][0]['date']) / (60 * 1000) * minuteToWidth
+
+            dots =  item['list'].map( (itemDot, idx) => {
+              const left = (itemDot.date - startTime) / (60 * 1000) * minuteToWidth
+              const content = (
+                <div>
+                  <p>{itemDot['jd']}</p>
+                  <p>{itemDot['name']}</p>
+                </div>
+              );
+              return (
+                <Popover content={content} key={`dot-${idx}`}>
+                  <span style={{left: left  + 'px'}}></span>
+                </Popover>
+
+              )
+            })
+          }
+        })
+        return {
+          dots,
+          lineDotW,
+          lineDotLeft
+        }
+      }
+
+      // 生成子告警行
+      const genchildTrs = (childItem, childIndex, keys, lineDotW, lineDotLeft) => {
+        const childTds = genTds(childItem, keys)
+        const childDotsInfo = genDots(childItem, keys)
+        const childDots = childDotsInfo.dots
+        const childLineDotW = childDotsInfo.lineDotW
+        const childLineDotLeft = childDotsInfo.lineDotLeft
+        return (
+          <tr key={childIndex} >
+            <td key="checkbox"></td>
+            {childTds}
+            <td key="timeDot">
+              <div className={styles.timeLineDot}>
+                <div className={styles.lineDot} style={{width:childLineDotW + 'px', left: childLineDotLeft + 'px'}}></div>
+                {childDots}
+              </div>
+            </td>
+          </tr>
+        )
+      }
+
       if(isGroup){
-        data.forEach( (item, index) => {
-          const keys = Object.keys(item.children[0]);
-          // 这里每次都会执行 其实需要提出去
-          const tds = keys.map((key) => {
-            return (
-              <td key={key}>{item.children[index][key]}</td>
+        data.forEach( (groupItem, index) => {
+          let groupTr = null
+          let commonTrs = []
+          let childTrs = []
+          // 分组行
+          groupTr = (
+            <tr>
+              <td colSpan='6'>{groupItem['classify']}</td>
+            </tr>
+          )
+          //
+          groupItem.children.forEach( (item, index) => {
+            let keys = Object.keys(item)
+
+            const tds = genTds(item, keys)
+            const dotsInfo = genDots(item, keys)
+            const dots = dotsInfo.dots
+            const lineDotW = dotsInfo.lineDotW
+            const lineDotLeft = dotsInfo.lineDotLeft
+
+            commonTrs = (
+              <tr key={index}>
+                <td key="checkbox"><input type="checkbox" /></td>
+                {tds}
+                <td key="timeDot">
+                  <div className={styles.timeLineDot}>
+                    <div className={styles.lineDot} style={{width:lineDotW + 'px', left: lineDotLeft + 'px'}}></div>
+                    {dots}
+                  </div>
+                </td>
+              </tr>
             )
+
+            if(item.children){
+              childTrs = item.children.map ( (childItem, childIndex) => {
+                keys = Object.keys(childItem);
+                return genchildTrs(childItem, childIndex, keys, lineDotW, lineDotLeft)
+
+              })
+            }else{
+              childTrs = null
+            }
+
           })
-          const childtrs = item.children.map( (childItem,index) => {
-            const trKey = 'tr' + index
-            const tdKey = 'td' + index
-            return (
-                <tr key={trKey}>
-                  <td key={tdKey}><input type="checkbox" /></td>
-                  {tds}
-                </tr>
-            )
-          } )
-          childtrs.unshift(<tr key={index}><td colSpan={keys.length + 1}>{item.classify}</td></tr>)
-          tbodyCon.push(childtrs)
+          tbodyCon.push(
+            groupTr,
+            commonTrs,
+            childTrs
+          )
+
+
 
         } )
 
@@ -107,77 +226,11 @@ class ListTimeTable extends Component {
           // const info = item.alertInfo
           let keys = Object.keys(item);
 
-          const genTds =  item => {
-            let TDS = []
-            keys.forEach( (key, index) => {
-              // const tdKey = item.date + key
-              const className = key == 'des' ? 'tdBorderRight' : ''
-              if(key === 'list' || key == 'children')  {
-                return
-              }
-
-
-              if(index == 1){
-                  TDS.push(
-                   <td key='sourceAlert'>
-                     {item.children && <span className={styles.triangleLeft}>
-                     </span>}
-                   </td>
-                 )
-
-               }
-               TDS.push(
-                 <td key={key} className={styles[className]}>{item[key]}</td>
-               )
-
-            })
-
-            return TDS
-          }
-          // 构建告警点
-
-          // 生成时间点
-          const genDots = item => {
-            let dots = null
-            let dotsLine = []
-            let lineDotLeft = 0
-            let lineDotW = 0
-            keys.forEach((key, index) => {
-              if(key === 'list')  {
-                lineDotLeft = (item['list'][0].date - startTime) / (60 * 1000) * minuteToWidth
-                const len = item['list'].length
-                lineDotW = (item['list'][len-1]['date'] - item['list'][0]['date']) / (60 * 1000) * minuteToWidth
-
-                dots =  item['list'].map( (itemDot, idx) => {
-                  const left = (itemDot.date - startTime) / (60 * 1000) * minuteToWidth
-                  const content = (
-                    <div>
-                      <p>{itemDot['jd']}</p>
-                      <p>{itemDot['name']}</p>
-                    </div>
-                  );
-                  return (
-                    <Popover content={content} key={`dot-${idx}`}>
-                      <span style={{left: left  + 'px'}}></span>
-                    </Popover>
-
-                  )
-                })
-              }
-            })
-            return {
-              dots,
-              lineDotW,
-              lineDotLeft
-            }
-          }
-
-          const tds = genTds(item)
-          const dotsInfo = genDots(item)
+          const tds = genTds(item, keys)
+          const dotsInfo = genDots(item, keys)
           const dots = dotsInfo.dots
           const lineDotW = dotsInfo.lineDotW
           const lineDotLeft = dotsInfo.lineDotLeft
-
 
           // 如果有子告警
           let childTrs = []
@@ -186,23 +239,8 @@ class ListTimeTable extends Component {
 
             childTrs = item.children.map ( (childItem, childIndex) => {
               keys = Object.keys(childItem);
-              const childTds = genTds(childItem)
-              const childDotsInfo = genDots(childItem)
-              const childDots = childDotsInfo.dots
-              const childLineDotW = childDotsInfo.lineDotW
-              const childLineDotLeft = childDotsInfo.lineDotLeft
-              return (
-                <tr key={childIndex} >
-                  <td key="checkbox"></td>
-                  {childTds}
-                  <td key="timeDot">
-                    <div className={styles.timeLineDot}>
-                      <div className={styles.lineDot} style={{width:childLineDotW + 'px', left: childLineDotLeft + 'px'}}></div>
-                      {childDots}
-                    </div>
-                  </td>
-                </tr>
-              )
+              return genchildTrs(childItem, childIndex, keys, lineDotW, lineDotLeft)
+
             })
           }else{
             childTrs = null
