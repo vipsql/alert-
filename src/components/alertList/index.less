@@ -134,7 +134,7 @@
                             color: #6bd9b4;
                             margin-left: 5px;
                         }
-                        
+
                     }
                     &.gongDan{
                         :global .ant-row{
@@ -250,6 +250,22 @@
     }
 
   }
+  .triangleLeft {
+      display: block;
+      width: 0;
+      height: 0;
+      border-top: 4px solid transparent;
+      border-left: 6px solid #4082e6;
+      border-bottom: 4px solid transparent;
+  }
+  .triangleDown {
+    display: block;
+    width: 0;
+    height: 0;
+    border-left: 4x solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 4px solid #4082e6;
+}
   .relPos{
     position: relative;
     height: 38px;
@@ -282,10 +298,10 @@
     span{
       position: absolute;
       top: 20px;
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       background: #f26d49;
-      border-radius: 10px;
+      border-radius: 12px;
     }
   }
 }
@@ -463,17 +479,6 @@
         }
     }
 
-    // cover ant-design Button style on local
-    .myButton{
-        &:global.ant-btn{
-            margin-right: 10px;
-            line-height: 1.45;
-            font-weight: 600;
-            font-size: 14px;
-            color: #6c7480;
-        }
-    }
-
     .button{
         position: relative;
         height: 30px;
@@ -505,29 +510,29 @@
             padding-left: 8px;
             color: #a1a8b2;
         }
-        // .arrow{
-        //     position: relative;
-        //     display: inline-block;
-        //     color: #b0bdd0;
-        //     top: -1px;
-        //     padding-right: 10px;
-        //     font-size: 9px;
-        //     &.mergeBtn{
-        //         border-radius: 3px;
-        //         background-color: #f5f9fc;
-        //         border: 1px solid #d5ddeb;
-        //         color: #b0bdd0;
-        //         top: -1px;
-        //         bottom: -1px;
-        //         right: -1px;
-        //         height: 30px;
-        //         padding-right: 5px;
-        //         padding-left: 5px;
-        //         line-height: 28px;
-        //         font-size: 9px;
-        //         float: right;
-        //     }
-        // }
+        .arrow{
+            position: relative;
+            display: inline-block;
+            color: #b0bdd0;
+            top: -1px;
+            padding-right: 10px;
+            font-size: 9px;
+            &.mergeBtn{
+                border-radius: 3px;
+                background-color: #f5f9fc;
+                border: 1px solid #d5ddeb;
+                color: #b0bdd0;
+                top: -1px;
+                bottom: -1px;
+                right: -1px;
+                height: 30px;
+                padding-right: 5px;
+                padding-left: 5px;
+                line-height: 28px;
+                font-size: 9px;
+                float: right;
+            }
+        }
     }
 }
 

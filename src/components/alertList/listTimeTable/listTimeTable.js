@@ -51,6 +51,10 @@ class ListTimeTable extends Component {
           </th>
         )
       } )
+      // 添加一个空列显示合并告警箭头
+      theads.unshift((
+        <th width="10" key='space-col'></th>
+      ))
 
       const defaultShowNums = 10; //默认显示10个点
       const gridTime = (endTime - startTime) / defaultShowNums //间隔时间戳
@@ -104,21 +108,33 @@ class ListTimeTable extends Component {
           let keys = Object.keys(item);
 
           const genTds =  item => {
-            return keys.map((key, index) => {
+            let TDS = []
+            keys.forEach( (key, index) => {
               // const tdKey = item.date + key
               const className = key == 'des' ? 'tdBorderRight' : ''
-              if(key === 'list' || key === 'children')  {
+              if(key === 'list' || key == 'children')  {
                 return
               }
-              return (
-                <td key={key} className={styles[className]}>{item[key]}</td>
 
-              )
+
+              if(index == 1){
+                  TDS.push(
+                   <td key='sourceAlert'>
+                     {item.children && <span className={styles.triangleLeft}>
+                     </span>}
+                   </td>
+                 )
+
+               }
+               TDS.push(
+                 <td key={key} className={styles[className]}>{item[key]}</td>
+               )
+
             })
+
+            return TDS
           }
           // 构建告警点
-
-
 
           // 生成时间点
           const genDots = item => {
