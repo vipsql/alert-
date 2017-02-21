@@ -89,7 +89,7 @@ class ListTable extends Component {
               </tr>
           )
         } )
-        childtrs.unshift(<tr key={index}><td colSpan={keys.length + 1}>{item.classify}</td></tr>)
+        childtrs.unshift(<tr className={styles.trGroup} key={index}><td colSpan={keys.length + 1}><span className={styles.expandIcon}>+</span>{item.classify}</td></tr>)
         tbodyCon.push(childtrs)
 
       } )
@@ -129,7 +129,7 @@ class ListTable extends Component {
             {tbodyCon}
           </tbody>
         </table>
-        <Button>显示更多</Button>
+        <Button className={styles.loadMore}>显示更多</Button>
       </div>
     )
   }

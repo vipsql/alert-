@@ -3,7 +3,8 @@ import * as d3 from 'd3'
 import crossfilter from 'crossfilter'
 import dc from 'dc'
 import styles from './index.less'
-var d3_date = Date;
+
+let d3_date = Date;
 function d3_time_interval(local, step, number) {
 
   function round(date) {
@@ -82,13 +83,14 @@ function n_minutes_interval(nmins) {
       return date.getMinutes();
     });
 }
+
 class AlertBar extends Component{
   constructor(){
     super()
   }
   componentDidMount(){
     function randomDate(start, end) {
-        var d = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+        const d = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
         return d;
     }
     // Months are 0 indexed...
@@ -111,21 +113,21 @@ class AlertBar extends Component{
 
 
     // Create the crossfilter for the relevant dimensions and groups.
-    var min5 = n_minutes_interval(5);
-    var alertList = crossfilter(data)
+    const min5 = n_minutes_interval(5);
+    const alertList = crossfilter(data)
 
 
-    var width = screen.width - 160 - 50;
-    var height = 80
-    var margins = {top: 0, right: 20, bottom: 25, left: 15}
-    var dim2 = alertList.dimension(function(d) { return d.date; });
-    var grp2 = dim2.group(min5).reduceSum(function(d) { return d.value; });
-    var chart = dc.barChart(".dc-chart")
+    const width = screen.width - 160 - 50;
+    const height = 80
+    const margins = {top: 0, right: 20, bottom: 25, left: 15}
+    const dim = alertList.dimension(function(d) { return d.date; });
+    const grp = dim.group(min5).reduceSum(function(d) { return d.value; });
+    const chart = dc.barChart(".dc-chart")
                   .width(width)
                   .height(height)
                   .margins(margins)
-                  .dimension(dim2)
-                  .group(grp2)
+                  .dimension(dim)
+                  .group(grp)
                   .round(dc.round.floor)
                   .renderHorizontalGridLines(true)
                   .x(d3.time.scale().domain([start, end]))
