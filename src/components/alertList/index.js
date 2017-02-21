@@ -38,18 +38,28 @@ class AlertListManage extends Component{
     const { alertDetail, alertList } = this.props;
 
     const { levels } = alertList;
-    console.log(alertDetail);
+
+    const tabList = classnames(
+      styles['iconfont'],
+      styles['icon-liebiao'],
+      styles['listTab']
+    )
+    const tabLine = classnames(
+      styles['iconfont'],
+      styles['icon-shijian'],
+      styles['timeTab']
+    )
     return (
       <div>
         <AlertTagsFilter />
         <AlertBar />
         <div className={styles.alertListPage}>
           <Tabs>
-            <TabPane tab="列表" key={1}>
+            <TabPane tab={<span className={tabList}>列表</span>} key={1}>
               <AlertOperation position='list' />
               <ListTableWrap />
             </TabPane>
-            <TabPane tab="时间线" key={2}>
+            <TabPane tab={<span className={tabLine}>时间线</span>}  key={2}>
               <AlertOperation position='timeAxis' />
               <ListTimeTableWrap />
             </TabPane>

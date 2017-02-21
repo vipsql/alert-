@@ -3,6 +3,10 @@
 // levelBar
 .alertListPage{
     position: relative;
+    margin-top: 15px;
+    background: white;
+    border: 1px solid #e4e7eb;
+    border-radius: 3px;
     .levelBar{
         position: absolute;
         right: 0px;
@@ -20,9 +24,10 @@
                 display: inline-block;
                 position: relative;
                 top: 2px;
-            }    
+            }
         }
     }
+
 
 }
 
@@ -222,6 +227,10 @@
     overflow: hidden;
   }
 }
+.loadMore{
+  display: block;
+  margin: 10px auto;
+}
 .listTimeTable, .listTable{
   width: 100%;
   border-collapse: collapse;
@@ -238,6 +247,8 @@
     }
   }
   tbody{
+
+
     td{
       height: 50px;
       line-height: 50px;
@@ -246,6 +257,28 @@
       border-bottom: 1px solid #e4e7eb;
       &.tdBorderRight{
         border-right: 1px solid #e4e7eb;
+      }
+    }
+    tr.trGroup{
+      td {
+        text-align: left;
+        .expandIcon{
+          display: inline-block;
+          margin: 18px 10px 0 30px;
+          width: 14px;
+          height: 14px;
+          line-height: 14px;
+          text-align: center;
+          background: #4082e6;
+          color: white;
+          cursor: pointer;
+
+        }
+      }
+    }
+    tr.trChild{
+      td{
+
       }
     }
 
@@ -304,6 +337,7 @@
       border-radius: 12px;
     }
   }
+
 }
 
 // config tagsFilter style on local
@@ -575,7 +609,7 @@
         :global .ant-form-item-label{
             & > label{
                 font-size: 14px;
-                font-weight: 600;  
+                font-weight: 600;
             }
         }
         & > div:last-child {
@@ -603,7 +637,7 @@
         :global .ant-form-item-label{
             & > label{
                 font-size: 14px;
-                font-weight: 600;  
+                font-weight: 600;
             }
         }
         & > div:last-child {
@@ -915,4 +949,32 @@
     display: none;
   }
 
+}
+
+:global{
+  .ant-tabs-nav-container{
+    margin-bottom: 0;
+    overflow: inherit;
+  }
+  .ant-tabs-nav .ant-tabs-tab{
+    width: 130px;
+    margin-right: 0;
+    background: #f6f9fb;
+    border-bottom: 1px solid #e4e7eb;
+    border-right: 1px solid #e4e7eb;
+    text-align: center;
+    color: #828b99;
+  }
+  .ant-tabs-ink-bar{
+    opacity: 0;
+  }
+  .ant-tabs-nav .ant-tabs-tab-active{
+    height: 41px;
+    margin-bottom: -1px;
+    border-bottom: none;
+    background: white;
+    color: #4082e6;
+
+
+  }
 }
