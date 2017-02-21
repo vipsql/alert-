@@ -1,13 +1,15 @@
-// import {login, userInfo, logout} from '../services/alertManage'
+import { queryAlertBar } from '../services/alertList'
 import {parse} from 'qs'
 
 export default {
   namespace: 'alertList',
   state: {
     isRefresh: false, //是否实时更新
-    tagsFilter: [
-      {jb: [1,2,3]}
-    ],
+    tagsFilter: {
+      "severity":"紧急,次要",
+      "name":"温度超标事件"
+    },
+    barData:[], // 最近4小时告警数据
     levels: { //告警级别
       jj: {
         number: 22,
@@ -32,7 +34,30 @@ export default {
     }
 
   },
+  subscriptions: {
+    setup({dispatch}) {
+      dispatch({
+        type: 'queryAlertBar'
+      })
+    }
+  },
   effects: {
+    // 查询柱状图
+    *queryAlertBar({}, {call, put, select}) {
+      const payload = yield select(state => {
+        return state.alertList.tagsFilter
+      })
+      
+      const data = yield call(queryAlertBar, payload)
+
+      if(data.result){
+        yield put({
+          type: 'updateAlerBarData',
+          payload: data.data
+        })
+      }
+
+    },
     *editLevel() {
 
     }
@@ -44,6 +69,12 @@ export default {
     },
     initAlertList(state, action) {
       return { ...state, ...action.payload, loading: false}
+    },
+    updateAlerBarData(state,{payload: barData}){
+      return {
+        ...state,
+        barData
+      }
     },
     // 转换icon状态
     toggleLevelState(state, {payload: type}) {

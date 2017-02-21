@@ -34,6 +34,8 @@ export default function ({history, app}) {
               app.model(require('./models/tagsListFilter'))
               app.model(require('./models/alertDetail'))
               app.model(require('./models/alertList'))
+              app.model(require('./models/alertListTable'))
+              app.model(require('./models/alertListTimeTable'))
               cb(null, require('./routes/alertList'))
             })
           }

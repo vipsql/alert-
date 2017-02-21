@@ -37,7 +37,8 @@ class AlertListManage extends Component{
   render(){
     const { alertDetail, alertList } = this.props;
 
-    const { levels } = alertList;
+    const { levels, barData } = alertList;
+
 
     const tabList = classnames(
       styles['iconfont'],
@@ -49,10 +50,15 @@ class AlertListManage extends Component{
       styles['icon-shijian'],
       styles['timeTab']
     )
+
+    const alertBarProps = {
+      barData
+    }
+    
     return (
       <div>
         <AlertTagsFilter />
-        <AlertBar />
+        <AlertBar {...alertBarProps} />
         <div className={styles.alertListPage}>
           <Tabs>
             <TabPane tab={<span className={tabList}>列表</span>} key={1}>

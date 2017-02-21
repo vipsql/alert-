@@ -85,79 +85,79 @@ function n_minutes_interval(nmins) {
 }
 
 class AlertBar extends Component{
-  constructor(){
-    super()
+  constructor(props){
+    super(props)
   }
   componentDidMount(){
-    function randomDate(start, end) {
-        const d = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-        return d;
+    const {
+      barData
+    } = this.props
+    const len = barData.length
+
+    if(len > 0) {
+        
+        const startTime = barData[0]['time']
+        const endtTime = barData[barData.length - 1]['time']
+        const start = new Date(startTime)
+        const end = new Date(endtTime)
+        const latestHour = new Date(endtTime - 3600000)
+
+        // Create the crossfilter for the relevant dimensions and groups.
+        const min5 = n_minutes_interval(2);
+        const alertList = crossfilter(barData)
+
+
+
+        const width = screen.width - 160 - 50;
+        const height = 80
+        const margins = {top: 0, right: 20, bottom: 25, left: 15}
+        const dim = alertList.dimension(function(d) { return d.time; });
+        const grp = dim.group(min5).reduceSum(function(d) { return d.count; });
+        const chart = dc.barChart(".dc-chart")
+                      .width(width)
+                      .height(height)
+                      .margins(margins)
+                      .dimension(dim)
+                      .group(grp)
+                      .round(dc.round.floor)
+                      .renderHorizontalGridLines(true)
+                      .x(d3.time.scale().domain([start, end]))
+                      .xUnits(min5.range)
+                      .filter([latestHour, end])
+
+        chart.xAxis().tickSize(0).tickPadding(10).tickFormat(d3.time.format('%H:%M'));
+        chart.render();
+
+
+        chart.on('filtered', function(d,f){
+          // console.log(f)
+        })
     }
-    // Months are 0 indexed...
-    var start = new Date(2013, 10, 1, 2);
-    var end = new Date(2013, 10, 1, 6);
 
-
-    function genData(start,end){
-      var d = [];
-      for(var i = 0; i < 200; i++) {
-        d[i] = {
-          date: randomDate(start, end).getTime(),
-          value: Math.floor(Math.random() * 3000)
-        }
-
-      }
-      return d;
-    }
-    var data = genData(start,end)
-
-
-    // Create the crossfilter for the relevant dimensions and groups.
-    const min5 = n_minutes_interval(5);
-    const alertList = crossfilter(data)
-
-
-    const width = screen.width - 160 - 50;
-    const height = 80
-    const margins = {top: 0, right: 20, bottom: 25, left: 15}
-    const dim = alertList.dimension(function(d) { return d.date; });
-    const grp = dim.group(min5).reduceSum(function(d) { return d.value; });
-    const chart = dc.barChart(".dc-chart")
-                  .width(width)
-                  .height(height)
-                  .margins(margins)
-                  .dimension(dim)
-                  .group(grp)
-                  .round(dc.round.floor)
-                  .renderHorizontalGridLines(true)
-                  .x(d3.time.scale().domain([start, end]))
-                  .xUnits(min5.range)
-                  .filter([new Date(2013, 10, 1, 3), new Date(2013, 10, 1, 6)])
-
-    chart.xAxis().tickSize(0).tickPadding(10).tickFormat(d3.time.format('%H:%M'));
-    chart.render();
-
-
-    chart.on('filtered', function(d,f){
-      // console.log(f)
-    })
-
-    setInterval(function(){
-      alertList.remove()
-      alertList.add(genData(new Date(2013, 10, 1, 3),new Date(2013, 10, 1, 7)))
-      chart.x(d3.time.scale().domain([new Date(2013, 10, 1, 3),new Date(2013, 10, 1, 7)]))
-           .filter([new Date(2013, 10, 1, 4), new Date(2013, 10, 1, 7)])
-      dc.redrawAll()
-    },3000)
+    // setInterval(function(){
+    //   alertList.remove()
+    //   alertList.add(genData(new Date(2013, 10, 1, 3),new Date(2013, 10, 1, 7)))
+    //   chart.x(d3.time.scale().domain([new Date(2013, 10, 1, 3),new Date(2013, 10, 1, 7)]))
+    //        .filter([new Date(2013, 10, 1, 4), new Date(2013, 10, 1, 7)])
+    //   dc.redrawAll()
+    // },3000)
   }
   render(){
+
+    const {
+      barData
+    } = this.props
+    const len = barData.length
     return (
-      <div className={styles.timeAlert}>
+      <div>{ len ?
+       <div className={styles.timeAlert}>
         <div id="date-chart" className="dc-chart">
 
         </div>
         <div className={styles.xAxisLine}></div>
+      </div> : <div>正在加载中...</div> }
       </div>
+
     )
   }
 
