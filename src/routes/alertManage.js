@@ -29,7 +29,7 @@ function AlertManage({dispatch, alertManage}){
 
     onOk(){
       dispatch({
-        type: 'app/showAlertManage',
+        type: 'app/showMask',
         payload: false
       })
       dispatch({
@@ -45,13 +45,7 @@ function AlertManage({dispatch, alertManage}){
 
     showTagsModal(){
       dispatch({
-        type: 'alertTagsSet/tagsContentView',
-        payload: {}
-      })
-
-      dispatch({
-        type: 'alertTagsSet/toggleTagsModal',
-        payload: true
+        type: 'alertTagsSet/openFocusModal',
       })
     }
 

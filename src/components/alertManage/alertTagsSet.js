@@ -36,7 +36,7 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
     }
 
     const modalFooter = []
-    modalFooter.push(<div className={styles.modalFooter}>
+    modalFooter.push(<div key={'0'} className={styles.modalFooter}>
       <Button type="primary" onClick={ () => {
         dispatch({
           type: 'alertTagsSet/addAlertTags'

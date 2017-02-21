@@ -14,7 +14,7 @@ export default function request (url, options) {
       format: 'json'
     })
   } else {
-    
+
     return Ajax.ajax({
       url: url,
       method: options.method || 'get',
