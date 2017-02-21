@@ -12,7 +12,7 @@ const checkList = ({itemList, checkedNum, isSpreadTags, checkHandler}) => {
     const tags = itemList.map((item) => {
       const tagsDetail = item.tags.map((tag) => {
         return (
-          <span className={tag.selected && styles.tagsSelected} key={tag.key} data-id={tag.key} onClick={ (e) => {checkHandler(e)} }>
+          <span className={tag.selected && styles.tagsSelected} key={tag.id} data-id={tag.id} onClick={ (e) => {checkHandler(e)} }>
             {tag.name}
             <i className={tag.selected && setClass}></i>
           </span>

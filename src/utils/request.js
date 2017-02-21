@@ -1,5 +1,6 @@
 import fetch from 'dva/fetch';
 import constants from './constants';
+const Ajax = require('robe-ajax')
 
 const ROOT_PATH = constants.api_root;
 
@@ -27,11 +28,48 @@ function checkStatus(response) {
  * @param  {object} [options] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
-export default async function request(url, options) {
-  const response = await fetch(isApiUrl(url), options);
-    checkStatus(response);
+// export default async function request(url, options) {
+//   var xhr = new XMLHttpRequest();
+//   xhr.open("GET", isApiUrl(url), true);  
+//   xhr.setRequestHeader("Content-Type", options.headers.Content-Type);  
+//   xhr.send(null); 
+  
+//   const response = await fetch(isApiUrl(url), options);
+//     checkStatus(response);
 
-    const data = await response.json();
+//     const data = await response.json();
+//     console.log(data);
 
-    return data;
+//     return data;
+// }
+
+/**
+ * Requests a URL, returning a promise.
+ *
+ * @param  {string} url       The URL we want to request
+ * @param  {object} [options] The options we want to pass to "fetch"
+ * @return {object}           An object containing either "data" or "err"
+ */
+export default function request (url, options) {
+  if (options.cross) {
+    return Ajax.getJSON(isApiUrl(url), {
+      q: "select * from json where url='" + isApiUrl(url) + '?' + Ajax.param(options.data) + "'",
+      format: 'json'
+    })
+  } else {
+    
+    return Ajax.ajax({
+      url: isApiUrl(url),
+      method: options.method || 'get',
+      contentType: 'application/json',
+      data: options.body,
+      processData: options.method === 'get',
+      dataType: 'JSON'
+    }).done((data) => {
+      if (!data.result) {
+        console.error(data.message);
+      } 
+      return data
+    })
+  }
 }
