@@ -2,77 +2,34 @@ import React, { PropTypes, Component } from 'react'
 import { Button } from 'antd';
 import styles from '../index.less'
 
-const columns = [{
-  title: 'Name',
-  dataIndex: 'name',
-  key: 'name',
-  width: 400,
-}, {
-  title: 'Age',
-  dataIndex: 'age',
-  key: 'age',
-  width: 100,
-}, {
-  title: 'Address',
-  dataIndex: 'address',
-  key: 'address',
-  width: 200,
-}, {
-  title: 'Operations',
-  dataIndex: 'operation',
-  key: 'x',
-  width: 150,
-}];
-const data = [{
-  classify: 'a',
-  children: [{
-    id: 11,
-    name: 'aa',
-    age: 33,
-    address: 'I am aa',
-  }]
-},{
-  classify: 'b',
-  children: [{
-    id: 22,
-    name: 'bb',
-    age: 33,
-    address: 'I am aa',
-  },{  id: 33,
-    name: 'cc',
-    age: 33,
-    address: 'I am aa',
-  }]
-}];
-// const data= [{
-//   id: 22,
-//   name: 'bb',
-//   age: 33,
-//   address: 'I am aa',
-// },{
-//   id: 33,
-//   name: 'aa',
-//   age: 34,
-//   address: 'I am bb',
-// }]
 class ListTable extends Component {
   constructor(){
     super()
   }
   render(){
-    const {isGroup} = this.props
+    const {
+      isGroup,
+      isShowMore,
+      data,
+      columns
+    } = this.props
+    let colsKey = []
     const theads = columns.map( (item) => {
+      const width = item.width || 'auto'
+      colsKey.push(item['key'])
       return (
-        <th key={item.key}>
+        <th key={item.key} width={width}>
           {item.title}
         </th>
       )
     } )
-    theads.unshift(<th key="checkAll"><input type="checkbox" /></th>)
+
+    theads.unshift(<th key="checkAll" width={60}><input type="checkbox" /></th>)
     let tbodyCon = [];
+
     if(isGroup){
       data.forEach( (item, index) => {
-        const keys = Object.keys(item.children[0]);
+        const keys = colsKey
         // 这里每次都会执行 其实需要提出去
         const tds = keys.map((key) => {
           return (
@@ -97,13 +54,26 @@ class ListTable extends Component {
     }else{
 
       tbodyCon = data.map( (item, index) => {
-        const keys = Object.keys(item);
+        const keys = colsKey
 
         // 列是不固定的 需要抽取出来
         const tds = keys.map((key) => {
+          let data = item[key];
+          if(key == 'lastOccurtime'){
+            const date = new Date(data)
+            data = `${date.getHours()}:${date.getMinutes()}`
+          }
+          if(key == 'status'){
+            switch (data) {
+              case 0:
 
+                break;
+              default:
+
+            }
+          }
           return (
-            <td key={key}>{item[key]}</td>
+            <td key={key}>{data}</td>
           )
         })
         return (
@@ -126,10 +96,15 @@ class ListTable extends Component {
             </tr>
           </thead>
           <tbody>
-            {tbodyCon}
+            {
+              data.length > 0 ? tbodyCon :
+              <tr>
+              <td colSpan={columns.length + 1}>暂无数据</td>
+              </tr>
+            }
           </tbody>
         </table>
-        <Button className={styles.loadMore}>显示更多</Button>
+        {isShowMore && <Button className={styles.loadMore}>显示更多</Button>}
       </div>
     )
   }

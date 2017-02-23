@@ -33,6 +33,16 @@ class AlertListManage extends Component{
       payload: levelType
     })
   }
+  // timeTabClick(e) {
+  //   const { dispatch, begin, end } = this.props;
+  //
+  //   dispatch({
+  //     type: 'alertListTimeTable/queryAlertListTime',
+  //     payload: {
+  //
+  //     }
+  //   })
+  // }
 
   render(){
     const { alertDetail, alertList } = this.props;
@@ -54,7 +64,7 @@ class AlertListManage extends Component{
     const alertBarProps = {
       barData
     }
-    
+
     return (
       <div>
         <AlertTagsFilter />
@@ -65,7 +75,7 @@ class AlertListManage extends Component{
               <AlertOperation position='list' />
               <ListTableWrap />
             </TabPane>
-            <TabPane tab={<span className={tabLine}>时间线</span>}  key={2}>
+            <TabPane tab={<span className={tabLine} >时间线</span>}  key={2}>
               <AlertOperation position='timeAxis' />
               <ListTimeTableWrap />
             </TabPane>

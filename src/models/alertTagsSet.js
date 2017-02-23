@@ -42,6 +42,7 @@ export default {
     // search selected tags
     *tagSelectedView({payload}, {select, put, call}) {
       const { userId } = yield select( state => ({'userId': state.app.userId}))
+      console.log(userId)
       const selectedTags =yield getTagsByUser(userId);
       if (typeof selectedTags.data !== 'undefined') {
         yield put({
@@ -63,7 +64,7 @@ export default {
       } else {
         console.error(selectedTags.message);
       }
-  
+
       const { commitTagIds } = yield select( state => {
         return {
           'commitTagIds': state.alertTagsSet.commitTagIds
@@ -106,7 +107,7 @@ export default {
       yield put({ type: 'alertManage/toggleAlertSet', payload: true })
       yield put({ type: 'toggleTagsModal', payload: false })
       yield put({ type: 'clear' })
-      
+
     }
   },
 
@@ -225,7 +226,7 @@ export default {
         })
         return item;
       })
-      
+
       return { ...state, currentTagsList: newList, selectedTagsNum: newTagsNum }
     },
     // 重置选择(接口没对，暂时这么处理，后期修改)

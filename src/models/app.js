@@ -6,7 +6,7 @@ import {parse} from 'qs'
 const initialState = {
   isLogin: false, // 是否登录
   userName: 'xuyh', // 前端先写死，后期改用localstorge来存储
-  userId: localStorage.getItem('userId') || '',
+  userId: 'admin',
   isFold: false, //false展开
   isShowMask: true // 遮罩层
 }
