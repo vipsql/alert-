@@ -30,10 +30,10 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 // export default async function request(url, options) {
-//   var xhr = new XMLHttpRequest();
-//   xhr.open("GET", isApiUrl(url), true);
-//   xhr.setRequestHeader("Content-Type", options.headers.Content-Type);
-//   xhr.send(null);
+  // var xhr = new XMLHttpRequest();
+  // xhr.open("GET", isApiUrl(url), true);
+  // xhr.setRequestHeader("Content-Type", options.headers.Content-Type);
+  // xhr.send(null);
 
 //   const response = await fetch(isApiUrl(url), options);
 //     checkStatus(response);
@@ -52,12 +52,13 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request (url, options) {
-  const httpUrl = isApiUrl(url)
+  
+    const httpUrl = isApiUrl(url)
     return Ajax.ajax({
       url: httpUrl,
       method: options.method || 'get',
       contentType: 'application/json',
-      data: options.body,
+      data: options.body || undefined,
       processData: options.method === 'get',
       dataType: 'JSON'
     }).done((data) => {

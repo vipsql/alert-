@@ -1,6 +1,7 @@
 import {parse} from 'qs'
 import { tagsView } from '../services/alertManage.js'
 import { getTagsByUser, getAllTags, setUserTags } from '../services/alertTags.js'
+import { message } from 'antd';
 
 const initialState = {
   tagNum: 0,
@@ -24,16 +25,15 @@ export default {
     *openFocusModal({payload}, {select, put, call}) {
       yield put({type: 'tagsAllView'})
       yield put({type: 'tagSelectedView'})
-      yield put({type: 'filterInitalTags'})
-      yield put({type: 'toggleTagsModal', payload: true})
     },
     // search all tags
     *tagsAllView({payload}, {select, put, call}) {
       const allTags = yield getAllTags();
-      if (typeof allTags.data !== 'undefined' && allTags.length !== 0) {
+     
+      if (typeof allTags.data !== 'undefined' && allTags.data.length !== 0) {
         yield put({
           type: 'setCurrentTags',
-          payload: allTags.data
+          payload: allTags.data || []
         })
       } else {
         console.error(allTags.message);
@@ -42,19 +42,23 @@ export default {
     // search selected tags
     *tagSelectedView({payload}, {select, put, call}) {
       const { userId } = yield select( state => ({'userId': state.app.userId}))
-      const selectedTags =yield getTagsByUser(userId);
+      const selectedTags = yield getTagsByUser(userId);
+      
       if (typeof selectedTags.data !== 'undefined') {
         yield put({
           type: 'setCurrentSelectTags',
-          payload: selectedTags.data || []
+          payload: selectedTags.data
         })
       } else {
         console.error(selectedTags.message);
       }
+      yield put({type: 'filterInitalTags'})
+      yield put({type: 'toggleTagsModal', payload: true})
     },
     // inital dashbord when isSet is true
     *queryDashbordBySetted({payload: userId}, {select, put, call}) {
       const selectedTags = yield getTagsByUser(userId)
+      
       if (typeof selectedTags.data !== 'undefined') {
         yield put({
           type: 'filterCommitTags',
@@ -63,13 +67,12 @@ export default {
       } else {
         console.error(selectedTags.message);
       }
-  
       const { commitTagIds } = yield select( state => {
         return {
           'commitTagIds': state.alertTagsSet.commitTagIds
         }
       })
-
+      
       yield put({
         type: 'alertManage/queryAlertDashbord',
         payload: {
@@ -90,10 +93,12 @@ export default {
         }
       })
 
-      const result = yield setUserTags({'userId': userId, 'tagIdList': commitTagIds});
-      console.log(result);
-      if (result) {
-
+      const postResult = yield setUserTags({'userId': userId, 'tagIdList': commitTagIds});
+      
+      if (postResult.result) {
+        yield message.success('标签保存成功');
+      } else {
+        yield message.error('标签未保存成功');
       }
 
       yield put({
@@ -118,67 +123,43 @@ export default {
     },
     // 保存当前标签列表并做格式处理
     setCurrentTags(state, { payload }) {
-      let current = [];
-      payload.forEach( (tag) => {
-        if (current.length === 0) {
-          current.push({
-            key: tag.key,
-            name: tag.keyName,
-            tags: [
-              {
-                id: tag.id,
-                name: tag.value,
-                selected: false
-              }
-            ]
-          })
-        } else {
-          current.forEach( (tagGroup) => {
-            if (tagGroup.key === tag.key) {
-              tagGroup.tags.push({
-                id: tag.id,
-                name: tag.value,
-                selected: false
-              })
-            } else {
-              current.push({
-                key: tag.key,
-                name: tag.keyName,
-                tags: [
-                  {
-                    id: tag.id,
-                    name: tag.value,
-                    selected: false
-                  }
-                ]
-              })
-            }
-          })
-
-        }
+      const arr = payload.map( (group) => {
+        group.name = group.keyName;
+        delete group.keyName;
+        group.values = group.tags;
+        delete group.tags;
+        group.values.map( (tag) => {
+          tag.name = tag.value;
+          delete tag.value;
+          return tag
+        })
+        return group
       })
-      return { ...state, currentTagsList: current }
+
+      return { ...state, currentTagsList: arr }
     },
     // 保存当前选择的标签列表(注意这里仅仅是保存，没有像setCurrentTags作数据过滤)
-    setCurrentSelectTags(state, { payload }) {
-      return { ...state, currentSelectTags: payload }
+    setCurrentSelectTags(state, { payload: currentSelectTags }) {
+      return { ...state, currentSelectTags }
     },
     // 过滤初始化数据
     filterInitalTags(state, { payload }) {
       const { currentSelectTags, currentTagsList } = state;
+      let num = 0;
       if (typeof currentSelectTags !== 'undefined' && currentSelectTags.length !== 0) {
         currentTagsList.forEach( (tagGroup) => {
-          currentSelectTags.forEach( (tag) => {
+          currentSelectTags.forEach( (tag, index) => {
             if (tagGroup.key === tag.key) {
-              tagGroup.tags.forEach( (item) => {
+              tagGroup.values.forEach( (item) => {
                 if (item.id === tag.id) {
                   item.selected = true;
                 }
               })
             }
+            num = index + 1;
           })
         })
-        return { ...state, currentTagsList }
+        return { ...state, currentTagsList, selectedTagsNum: num }
       } else {
         return { ...state }
       }
@@ -199,20 +180,20 @@ export default {
       let newCommitTagIds = [];
       const { currentTagsList } = state;
       currentTagsList.forEach( (tagsGroup) => {
-        tagsGroup.tags.forEach( (tag) => {
+        tagsGroup.values.forEach( (tag) => {
           if (tag.selected) {
             newCommitTagIds.push(tag.id);
           }
         })
       })
-      return { ...state, ommitTagIds: newCommitTagIds }
+      return { ...state, commitTagIds: newCommitTagIds }
     },
     // 标签选择
     changSelectTag(state, { payload: currentSelectId }){
       const { currentTagsList, selectedTagsNum } = state;
       let newTagsNum = selectedTagsNum;
       const newList = currentTagsList.map( (item) => {
-        item.tags.map( (tag) => {
+        item.values.map( (tag) => {
           if (typeof currentSelectId !== 'undefined' && tag.id == currentSelectId) {
             if (!tag.selected && typeof selectedTagsNum === 'number') {
               newTagsNum = selectedTagsNum + 1;
@@ -232,7 +213,7 @@ export default {
     resetSelected(state) {
       const { currentTagsList } = state;
       const newList = currentTagsList.map( (item) => {
-        item.tags.map( (tag) => {
+        item.values.map( (tag) => {
           if (tag.selected) {
             tag.selected = !tag.selected;
           }

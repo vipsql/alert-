@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import styles from './index.less'
 import request from '../../utils/request'
+import { connect } from 'dva'
 
 const echarts = require('echarts');
 
@@ -17,12 +18,12 @@ class Chart extends Component{
         ele.style.height = (clientHeight * _percent) + 'px';
 
     }
-    componentDidMount(){
+    componentDidUpdate(){
         const treeMapNode = document.getElementById('treemap');
         this.setTreemapHeight(treeMapNode);
-
+        
         const myChart = echarts.init(treeMapNode);
-        var formatUtil = echarts.format;
+        var formatUtil = echarts.format; 
 
         function getLevelOption() {
             return [
@@ -102,7 +103,7 @@ class Chart extends Component{
                     show: false
                     },
                     levels: getLevelOption(),
-                    data: this.props.currentDashbordData
+                    data: this.props.alertManage.currentDashbordData
                 }
             ]
         }
@@ -119,4 +120,4 @@ class Chart extends Component{
 
 }
 
-export default Chart
+export default connect(({alertManage}) => ({alertManage}))(Chart)

@@ -2,24 +2,24 @@ import React, { PropTypes, Component } from 'react'
 import styles from './index.less'
 import { classnames } from '../../../utils'
 
-const checkList = ({itemList, checkedNum, isSpreadTags, checkHandler}) => {
+const checkList = ({itemList, checkedNum, isSpreadTags, checkHandler, origin}) => {
 
     const setClass = classnames(
       styles['iconfont'],
       styles['icon-wancheng']
     )
-
-    const tags = itemList.map((item) => {
-      const tagsDetail = item.tags.map((tag) => {
+    
+    const tags = itemList.map((item, index) => {
+      const tagsDetail = item.values.map((tag, index) => {
         return (
-          <span className={tag.selected && styles.tagsSelected} key={tag.id} data-id={tag.id} onClick={ (e) => {checkHandler(e)} }>
+          <span className={tag.selected && styles.tagsSelected} key={ index } data-id={origin === 'main' ? tag.id : tag.name} onClick={ (e) => {checkHandler(e)} }>
             {tag.name}
             <i className={tag.selected && setClass}></i>
           </span>
         )
       })
       return (
-        <li key={item.key}>
+        <li key={index}>
           <span className={styles.tagsName}>{item.name}:</span>
           {tagsDetail}
         </li>
@@ -49,7 +49,8 @@ checkList.propTypes = {
     itemList: React.PropTypes.array.isRequired,
     checkedNum: React.PropTypes.number,
     isSpreadTags: React.PropTypes.bool.isRequired,
-    checkHandler: React.PropTypes.func.isRequired
+    checkHandler: React.PropTypes.func.isRequired,
+    origin: React.PropTypes.string
 }
 
 export default checkList;

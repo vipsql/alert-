@@ -9,7 +9,7 @@ const Option = Select.Option;
 const closeModal = ({alertOperation, dispatch, form}) => {
 
     const { isShowCloseModal } = alertOperation;
-    const { getFieldDecorator, getFieldsValue } = form;
+    const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
 
     const closeCloseModal = () => {
         dispatch({
@@ -21,11 +21,18 @@ const closeModal = ({alertOperation, dispatch, form}) => {
     const modalFooter = []
     modalFooter.push(<div className={styles.modalFooter}>
       <Button type="primary" onClick={ () => {
-        dispatch({
-            type: 'alertOperation/toggleCloseModal',
-            payload: false
+        form.validateFieldsAndScroll( (errors, values) => {
+            if (!!errors) {
+                return;
+            }
+            const value = form.getFieldValue('closeOption')
+            dispatch({
+                type: 'alertOperation/closeAlert',
+                payload: value
+            })
+
+            form.resetFields();
         })
-        form.resetFields();
       }} >关闭</Button>
       <Button type="ghost" onClick={ () => {
         dispatch({
@@ -47,21 +54,26 @@ const closeModal = ({alertOperation, dispatch, form}) => {
         >
             <div className={styles.closeMain}>
                 <Form>
-                   
-                            <Item
-                                label="关闭理由"
-                            >
-                                {getFieldDecorator('closeOption')(
-                                    <Select style={{width: '100%'}} showSearch placeholder="请选择关闭理由" filterOption={ (inputValue, option) => {
-                                        
-                                    }}>
-                                        <Option className={styles.menuItem} value="0">关闭理由1：故障已存在</Option>
-                                        <Option className={styles.menuItem} value="1">关闭理由2：计划中停机</Option>
-                                        <Option className={styles.menuItem} value="2">关闭理由3：监控系统误报</Option>
-                                    </Select>
-                                )}
-                            </Item>
-                
+                    <Item
+                        label="关闭理由"
+                        hasFeedback
+                        help={isFieldValidating('closeOption') ? '校验中...' : (getFieldError('closeOption') || []).join(', ')}
+                    >
+                        {getFieldDecorator('closeOption', {
+                            rules: [
+                                { required: true, message: '请选择关闭理由' }
+                            ]
+                        })(
+                            <Select style={{width: '100%'}} showSearch placeholder="请选择关闭理由" filterOption={ (inputValue, option) => {
+                                
+                            }}>
+                                <Option className={styles.menuItem} value={`关闭理由1：故障已存在`}>关闭理由1：故障已解决</Option>
+                                <Option className={styles.menuItem} value={`关闭理由2：计划停机`}>关闭理由2：计划停机</Option>
+                                <Option className={styles.menuItem} value={`关闭理由3：监控系统误报`}>关闭理由3：监控系统误报</Option>
+                            </Select>
+                        )}
+                    </Item>
+
                 </Form>
             </div>
         </Modal>

@@ -20,10 +20,6 @@ function AlertManage({dispatch, alertManage}){
     currentDashbordData,
   } = alertManage
 
-  const alertDashbord = {
-    currentDashbordData
-  }
-
   const alertSetProps = {
     hideAlertSetTip,
 
@@ -57,7 +53,7 @@ function AlertManage({dispatch, alertManage}){
       <AlertTagsSet  />
       <AlertManageHead {...alertManageHeadProps} />
       {isSetAlert ?
-        <Chart {...alertDashbord}/> :
+        <Chart /> :
         <AlertSet {...alertSetProps}/>
       }
     </div>

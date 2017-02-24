@@ -14,11 +14,11 @@ const tagsGroup = ({className, removeHandler, tagsList, haveTags}) => {
         haveTags ? <div className={className}>
                 <p className={styles.typeName}>{`${ tagsList.name }:`}</p>
                 {
-                    tagsList.tags.map( (item, index) => {
+                    tagsList.values.map( (item, index) => {
                         return (
                             <div key={ index } className={styles.tagName}>
                                 <p>{ item.name }</p>
-                                <i className={switchClass} data-id={item.key} onClick={(e) => removeHandler(e)}></i>
+                                <i className={switchClass} data-id={item.name} onClick={(e) => removeHandler(e)}></i>
                             </div>
                         )
                     })
