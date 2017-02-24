@@ -5,20 +5,10 @@ import { Popover } from 'antd'
 import styles from '../index.less'
 
 
-const columns = [{
-  title: '对象',
-  dataIndex: 'objec',
-  key: 'objec',
-  width: 100
-}, {
-  title: '告警名称',
-  dataIndex: 'name',
-  key: 'name',
-  width: 180
-}];
+
 class ListTimeTable extends Component {
     componentDidMount(){
-      const { setTimeLineWidth, startTime, endTime  } = this.props
+      const { setTimeLineWidth, begin, end  } = this.props
 
       const table = document.getElementById('listTimeTable')
       const width = table.offsetWidth
@@ -26,7 +16,7 @@ class ListTimeTable extends Component {
       const lineW = width - 360
       timeLine.style.width = lineW + 'px'
       const gridWidth = Math.floor(lineW / 10)
-      const countMins = (endTime - startTime) / (60 * 1000)
+      const countMins = (end - begin) / (60 * 1000)
       const minuteToWidth = Math.floor(lineW / countMins)
 
       setTimeLineWidth(gridWidth, minuteToWidth)
@@ -37,31 +27,30 @@ class ListTimeTable extends Component {
         isGroup,
         gridWidth,
         minuteToWidth,
-        startTime,
-        endTime,
+        begin,
+        end,
         data,
-        showMore
+        columns,
+        isShowMore
       } = this.props
 
-
+      let colsKey = []
       const theads = columns.map( (item) => {
+        colsKey.push(item['key'])
         return (
           <th key={item.key} width={item.width}>
             {item.title}
           </th>
         )
       } )
-      // 添加一个空列显示合并告警箭头
-      theads.unshift((
-        <th width="10" key='space-col'></th>
-      ))
+
 
       const defaultShowNums = 10; //默认显示10个点
-      const gridTime = (endTime - startTime) / defaultShowNums //间隔时间戳
+      const gridTime = (end - begin) / defaultShowNums //间隔时间戳
 
       let timeTH = []
       for(let i = 0; i < defaultShowNums; i++){
-        const timstamp = startTime + gridTime * i
+        const timstamp = begin + gridTime * i
         const formatDate = new Date(timstamp).getHours() + ':' +  new Date(timstamp).getMinutes()
         const left = gridWidth * i
         timeTH.push(
@@ -85,20 +74,15 @@ class ListTimeTable extends Component {
 
          keys.forEach( (key, index) => {
            // const tdKey = item.date + key
-           const className = key == 'des' ? 'tdBorderRight' : ''
-           if(key === 'list' || key == 'children')  {
-             return
+           const className = key == 'description' ? 'tdBorderRight' : ''
+           if(index == 0){
+             TDS.push(
+               <td key='sourceAlert'>
+                 {item.children && <span className={styles.triangleLeft}>
+                 </span>}
+               </td>
+             )
            }
-
-           if(index == 1){
-               TDS.push(
-                <td key='sourceAlert'>
-                  {item.children && <span className={styles.triangleLeft}>
-                  </span>}
-                </td>
-              )
-
-            }
             TDS.push(
               <td key={key} className={styles[className]}>{item[key]}</td>
             )
@@ -114,18 +98,18 @@ class ListTimeTable extends Component {
         let dotsLine = []
         let lineDotLeft = 0
         let lineDotW = 0
-        keys.forEach((key, index) => {
-          if(key === 'list')  {
-            lineDotLeft = (item['list'][0].date - startTime) / (60 * 1000) * minuteToWidth
-            const len = item['list'].length
-            lineDotW = (item['list'][len-1]['date'] - item['list'][0]['date']) / (60 * 1000) * minuteToWidth
+        // keys.forEach((key, index) => {
+        //   if(key === 'timeLine')  {
+            lineDotLeft = (item[0].date - begin) / (60 * 1000) * minuteToWidth
+            const len = item.length
+            lineDotW = (item[len-1]['date'] - item[0]['date']) / (60 * 1000) * minuteToWidth
 
-            dots =  item['list'].map( (itemDot, idx) => {
-              const left = (itemDot.date - startTime) / (60 * 1000) * minuteToWidth
+            dots =  item.map( (itemDot, idx) => {
+              const left = (itemDot.date - begin) / (60 * 1000) * minuteToWidth
               const content = (
                 <div>
-                  <p>{itemDot['jd']}</p>
-                  <p>{itemDot['name']}</p>
+                  <p>{itemDot['description']}</p>
+                  <p>{itemDot['entityName']}</p>
                 </div>
               );
               return (
@@ -135,8 +119,8 @@ class ListTimeTable extends Component {
 
               )
             })
-          }
-        })
+        //   }
+        // })
         return {
           dots,
           lineDotW,
@@ -221,13 +205,14 @@ class ListTimeTable extends Component {
         } )
 
       }else{
-        data.map( (item, index) => {
+
+        data .length > 0 && data.map( (item, index) => {
 
           // const info = item.alertInfo
-          let keys = Object.keys(item);
+          let keys = colsKey;
 
           const tds = genTds(item, keys)
-          const dotsInfo = genDots(item, keys)
+          const dotsInfo = genDots(item.timeLine, keys)
           const dots = dotsInfo.dots
           const lineDotW = dotsInfo.lineDotW
           const lineDotLeft = dotsInfo.lineDotLeft
@@ -238,7 +223,7 @@ class ListTimeTable extends Component {
           if(item.children){
 
             childTrs = item.children.map ( (childItem, childIndex) => {
-              keys = Object.keys(childItem);
+              keys = colsKey
               return genchildTrs(childItem, childIndex, keys, lineDotW, lineDotLeft)
 
             })
@@ -249,6 +234,8 @@ class ListTimeTable extends Component {
           tbodyCon.push(
             <tr key={index}>
               <td key="checkbox"><input type="checkbox" /></td>
+              <td width="20" key='space-col-td'></td>
+
               {tds}
               <td key="timeDot">
                 <div className={styles.timeLineDot}>
@@ -269,7 +256,8 @@ class ListTimeTable extends Component {
             <thead>
               <tr>
                 <th key="checkAll" width='48'><input type="checkbox" /></th>
-                <th width='30'></th>
+                <th width="20" key='space-col'></th>
+                <th width='10'></th>
                 {theads}
                 <th key="timeLine" id="timeLine">
                   <div className={styles.relPos}>{timeTH}</div>
@@ -281,7 +269,7 @@ class ListTimeTable extends Component {
 
             </tbody>
           </table>
-          <Button onClick={showMore}>显示更多2</Button>
+
         </div>
       )
     }

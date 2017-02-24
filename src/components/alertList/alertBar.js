@@ -89,13 +89,13 @@ class AlertBar extends Component{
     super(props)
   }
   componentDidMount(){
+
     const {
       barData
     } = this.props
     const len = barData.length
 
     if(len > 0) {
-        
         const startTime = barData[0]['time']
         const endtTime = barData[barData.length - 1]['time']
         const start = new Date(startTime)
@@ -105,8 +105,6 @@ class AlertBar extends Component{
         // Create the crossfilter for the relevant dimensions and groups.
         const min5 = n_minutes_interval(2);
         const alertList = crossfilter(barData)
-
-
 
         const width = screen.width - 160 - 50;
         const height = 80
@@ -148,6 +146,7 @@ class AlertBar extends Component{
       barData
     } = this.props
     const len = barData.length
+    
     return (
       <div>{ len ?
        <div className={styles.timeAlert}>
