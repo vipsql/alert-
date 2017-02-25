@@ -56,10 +56,6 @@ export default {
           type: 'toggleAlertSetTip',
           payload: true
         })
-        yield put({
-          type: 'toggleAlertSet',
-          payload: true
-        })
       } else {
         yield put({
           type: 'app/showMask',

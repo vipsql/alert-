@@ -6,14 +6,16 @@ import { classnames } from '../../utils'
 
 const Item = Form.Item;
 const Option = Select.Option;
-const closeModal = ({alertOperation, dispatch, form}) => {
+const closeModal = ({alertOperation, alertDetailOperation, alertList, dispatch, form}) => {
 
-    const { isShowCloseModal } = alertOperation;
+    const currentData = alertList.alertOperateModalOrigin === 'detail' ? alertDetailOperation : alertOperation
+    
+    const { isShowCloseModal } = currentData;
     const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
 
     const closeCloseModal = () => {
         dispatch({
-            type: 'alertOperation/toggleCloseModal',
+            type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleCloseModal' : 'alertOperation/toggleCloseModal',
             payload: false
         })
     }
@@ -27,7 +29,7 @@ const closeModal = ({alertOperation, dispatch, form}) => {
             }
             const value = form.getFieldValue('closeOption')
             dispatch({
-                type: 'alertOperation/closeAlert',
+                type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/closeAlert' : 'alertOperation/closeAlert',
                 payload: value
             })
 
@@ -36,7 +38,7 @@ const closeModal = ({alertOperation, dispatch, form}) => {
       }} >关闭</Button>
       <Button type="ghost" onClick={ () => {
         dispatch({
-            type: 'alertOperation/toggleCloseModal',
+            type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleCloseModal' : 'alertOperation/toggleCloseModal',
             payload: false
         })
         form.resetFields();
@@ -92,6 +94,8 @@ export default Form.create()(
     connect( state => {
         return {
             alertOperation: state.alertOperation,
+            alertDetailOperation: state.alertDetailOperation,
+            alertList: state.alertList
         }
     })(closeModal)
 )

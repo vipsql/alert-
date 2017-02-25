@@ -5,6 +5,7 @@ export default {
   namespace: 'alertList',
   state: {
     isRefresh: false, //是否实时更新
+    alertOperateModalOrigin: undefined, // 这个状态是用来区别那个Modal打开的 --> 对应position
     tagsFilter: {
       "severity":"紧急,次要"
     },
@@ -14,23 +15,23 @@ export default {
     levels: { //告警级别
       jj: {
         number: 22,
-        state: false,
+        state: true,
       },
       gj: {
         number: 33,
-        state: false,
+        state: true,
       },
       tx: {
         number: 44,
-        state: false,
+        state: true,
       },
       zy: {
         number: 55,
-        state: false,
+        state: true,
       },
       cy: {
         number: 66,
-        state: false,
+        state: true,
       }
     }
 
@@ -116,6 +117,10 @@ export default {
         state.levels[type].state = !(state.levels[type].state);
       }
       return { ...state }
+    },
+    // 转换modal的来源
+    toggleModalOrigin(state, {payload: alertOperateModalOrigin}) {
+      return { ...state, alertOperateModalOrigin }
     }
   },
 

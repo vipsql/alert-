@@ -45,49 +45,29 @@ const initalState = {
         }
     ], // 合并列表展示信息
 
-    // 抑制告警
-    restrainType: [
-        {id: 1, name: '344'}
-    ], // 5,10,30分钟
-
-    restrainList: {
-        typeId: 1,
-        alertList: [ 11 ]
-    }, // 提交至后台
-
-    // 更多操作
-    otherOperation: [
-        {id: 1, name: '344'} // 其他操作
-    ],
-
-    operateList: {
-        typeId: 1,
-        alertList: [ 11 ]
-    }, // 提交至后台
-
     // 列定制(点击需要初始化进行数据结构转换)
-    selectCol: undefined, // 选择的列
+    selectColumn: [], // 选择的列
     columnList: [
         {
-            type: 1, // id 
+            type: 0, // id 
             name: '常规',
             cols: [
-                {id: 1, name: 'ID', checked: false,},
-                {id: 2, name: '节点名称', checked: false,},
-                {id: 3, name: '告警名称', checked: false,},
-                {id: 4, name: '告警来源', checked: false,},
-                {id: 5, name: '告警状态', checked: false,},
-                {id: 6, name: '告警描述', checked: false,}
+                {id: 'id', name: 'ID', checked: false,},
+                {id: 'entityName', name: '节点名称', checked: false,},
+                {id: 'name', name: '告警名称', checked: false,},
+                {id: 'sourceId', name: '告警来源', checked: false,},
+                {id: 'status', name: '告警状态', checked: false,},
+                {id: 'description', name: '告警描述', checked: false,}
             ]
         },
         {
-            type: 2, // id 
+            type: 1, // id 
             name: '扩展',
             cols: [
-                {id: 7, name: '地理位置', checked: false,},
-                {id: 8, name: '所属单位', checked: false,},
-                {id: 9, name: '运营商', checked: false,},
-                {id: 10, name: '负责人', checked: false,}
+                {id: 'position', name: '地理位置', checked: false,},
+                {id: 'responsibleDepartment', name: '所属单位', checked: false,},
+                {id: 'david', name: '运营商', checked: false,},
+                {id: 'responsiblePerson', name: '负责人', checked: false,}
             ]
         },
     ],
@@ -95,9 +75,6 @@ const initalState = {
     // 分组显示
     isGroup: false,
     selectGroup: '分组显示', // 默认是分组设置
-    groupList: [
-        {id: 1, name: '按来源分组'}
-    ],
 }
 
 export default {
@@ -156,7 +133,7 @@ export default {
                   'mergeInfoList': state.alertListTable.mergeInfoList,
               }
           })
-          if (mergeInfoList !== undefined && mergeInfoList.length !== 0) {
+          if (mergeInfoList !== undefined && mergeInfoList.length > 2) {
               yield put({
                   type: 'setMergeInfoList',
                   payload: mergeInfoList
@@ -202,19 +179,40 @@ export default {
       },
       // 打开派发工单做的相应处理
       *openFormModal({payload}, {select, put, call}) {
-          const options = yield getFormOptions();
-          if (options !== undefined) {
+          yield put({
+              type: 'alertList/toggleModalOrigin',
+              payload: payload
+          })
+          if (payload !== undefined && payload === 'detail') {
               yield put({
-                  type: 'setFormOptions',
-                  payload: options.data || []
+                  type: 'alertDetailOperation/openFormModal'
               })
           } else {
-              console.error(options.message);
+            const options = yield getFormOptions();
+            if (options !== undefined) {
+                yield put({
+                    type: 'setFormOptions',
+                    payload: options.data || []
+                })
+            } else {
+                console.error('获取工单类型失败');
+            }
+            yield put({
+                type: 'toggleFormModal',
+                payload: true
+            })
           }
+      },
+      *openCloseModal({payload}, {select, put, call}) {
           yield put({
-            type: 'toggleFormModal',
-            payload: true
+              type: 'alertList/toggleModalOrigin',
+              payload: payload.origin
           })
+          if (payload.origin !== undefined && payload.origin === 'detail') {
+              yield put({type: 'alertDetailOperation/toggleCloseModal',payload: payload.state})
+          } else {
+              yield put({type: 'toggleCloseModal', payload: payload.state})
+          }
       },
       // 关闭告警
       *closeAlert({payload}, {select, put, call}) {
@@ -224,21 +222,26 @@ export default {
                   'userId': state.app.userId
               }
           })
+          if ( operateAlertIds !== undefined ) {
 
-          if (operateAlertIds.length === 0) {
-             yield message.error(`请先选择一条告警`, 3);
+            if (operateAlertIds.length === 0) {
+                yield message.error(`请先选择一条告警`, 3);
+            } else {
+                const resultData = yield close({
+                    userId: userId, 
+                    alertIds: operateAlertIds,
+                    closeMessage: payload
+                })
+                if (resultData.result) {
+                    yield message.success(`关闭成功`, 3);
+                } else {
+                    yield message.error(`${resultData.message}`, 3);
+                }
+            } 
+
           } else {
-              const resultData = yield close({
-                  userId: userId, 
-                  alertIds: operateAlertIds,
-                  closeMessage: payload
-              })
-              if (resultData.result) {
-                  yield message.success(`关闭成功`, 3);
-              } else {
-                  yield message.error(`${resultData.message}`, 3);
-              }
-          } 
+              console.error('operateAlertIds有误');
+          }
 
           yield put({
             type: 'toggleCloseModal',
@@ -297,13 +300,47 @@ export default {
         //           isGroup: false,
         //       }
         //   })
+      },
+      // 列定制
+      *checkColumn({payload}, {select, put, call}) {
+          yield put({ type: 'setColumn', payload: payload })
+          yield put({ type: 'filterColumn' })
       }
+
   },
 
   reducers: {
       // 列定制初始化
       initColumn(state, {payload}) {
 
+      },
+      // 列改变时触发
+      setColumn(state, {payload: selectCol}) {
+        const { columnList } = state;
+        const newList = columnList.map( (group) => {
+            group.cols.map( (col) => {
+                if (typeof selectCol !== 'undefined' && col.id === selectCol) {
+                    col.checked = !col.checked;
+                }
+                return col;
+            })
+            return group;
+        })
+        
+        return { ...state, columnList: newList }
+      },
+      // 过滤选择的列为指定格式
+      filterColumn(state) {
+          const { columnList } = state;
+          let arr = []
+          columnList.forEach( (group) => {
+            group.cols.map( (col) => {
+                if (col.checked) {
+                    arr.push({ key: col.id, width: 150 }) // width先定死
+                }
+            })
+          })
+          return { ...state, selectColumn: arr }
       },
       // 设置合并子列表
       setMergeInfoList(state, { payload }) {
@@ -316,21 +353,6 @@ export default {
       // 设置工单类型
       setFormOptions(state, { payload }) {
           return { ...state, formOptions: payload }
-      },
-      // 列改变时触发
-      checkColumn(state, {payload: selectCol}) {
-        const { columnList } = state;
-        const newList = columnList.map( (group) => {
-            group.cols.map( (col) => {
-                if (typeof selectCol !== 'undefined' && col.id == selectCol) {
-                    col.checked = !col.checked;
-                }
-                return col;
-            })
-            return group;
-        })
-        
-        return { ...state, columnList: newList }
       },
       // 设置分组显示的类型
       setGroupType(state, {payload: selectGroup}) {

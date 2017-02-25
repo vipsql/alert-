@@ -72,18 +72,21 @@ const alertOperation = ({position, alertOperation, dispatch}) => {
             <Menu.Item key="1" className={styles.menuItem}>解除告警</Menu.Item>
         </Menu>
     )
-    
     return (
         <div className={styles.operateMain}>
             <Button className={styles.myButton} onClick={ () => {
                 dispatch({
                     type: 'alertOperation/openFormModal',
+                    payload: position
                 })
             }} >派发工单</Button>
             <Button className={styles.myButton} onClick={ () => {
                 dispatch({
-                    type: 'alertOperation/toggleCloseModal',
-                    payload: true
+                    type: 'alertOperation/openCloseModal',
+                    payload: {
+                        state: true,
+                        origin: position
+                    }
                 })
             }} >关闭告警</Button>
             {

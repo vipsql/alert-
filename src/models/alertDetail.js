@@ -1,4 +1,6 @@
 import {parse} from 'qs'
+import { queryDetail } from '../services/alertDetail'
+import { message } from 'antd'
 
 const initalState = {
   isShowDetail: true, // 是否显示detail
@@ -44,19 +46,56 @@ export default {
     *initalForm() {
       // 将初始的detail form --> operateForm
     },
-    // 将alertListTableCommon中的viewDetailAlertId变为false(每次关闭detail做)
-    // *toggleViewDetailAlertId({payload}, {put, select, call}) {
-    //   yield put({
-    //     type: 'alertListTableCommon/viewDetailAlertId',
-    //     payload: payload
-    //   })
-    // }
+
+    // 点击展开detail时的操作
+    *openDetailModal({payload}, {select, put, call}) {
+      const viewDetailAlertId = yield select( state => state.alertListTableCommon.viewDetailAlertId )
+
+      if (typeof viewDetailAlertId === 'number') {
+        const detailResult = yield queryDetail(viewDetailAlertId);
+        if ( typeof detailResult.data !== 'undefined' ) {
+          yield put({
+            type: 'setDetail',
+            payload: detailResult.data || {}
+          })
+          if (detailResult.data.orderInfo) {
+            yield put({
+              type: 'setFormData',
+              payload: detailResult.data.orderInfo
+            })
+          }
+          yield put({
+            type: 'toggleDetailModal',
+            payload: true
+          })
+        } else {
+          yield message.error(`${detailResult.message}`, 3);
+        }
+      } else {
+        console.error('viewDetailAlertId类型错误')
+      }
+    },
+    // 关闭时
+    *closeDetailModal({payload}, {select, put, call}) {
+      yield put({
+        type: 'alertListTableCommon/toggleDetailAlertId',
+        payload: false
+      })
+      yield put({
+          type: 'toggleDetailModal',
+          payload: false
+      })
+    }
   },
 
   reducers: {
     // 初始化operateForm
     initalFormData(state) {
       return { ...state, operateRemark: state.currentAlertDetail.form }
+    },
+    // 储存detail信息
+    setDetail(state, {payload: currentAlertDetail}) {
+      return { ...state. currentAlertDetail }
     },
     // 切换侧滑框的状态
     toggleDetailModal(state, {payload: isShowDetail}) {

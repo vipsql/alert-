@@ -26,7 +26,7 @@ export default {
                   payload: options.data || []
               })
           } else {
-              console.error(options.message);
+              console.error('获取工单类型失败');
           }
           yield put({
             type: 'toggleFormModal',
@@ -53,7 +53,7 @@ export default {
                   yield message.error(`${resultData.message}`, 3);
               }
           } else {
-              console.error('请先选择告警');
+              console.error('请先选择告警/告警Id类型错误');
           }
           yield put({
             type: 'toggleCloseModal',
@@ -76,7 +76,7 @@ export default {
                   yield message.error(`派发工单失败`, 3);
               }
           } else {
-              console.error('请先选择告警');
+              console.error('请先选择告警/告警Id类型错误');
           }
           yield put({
             type: 'toggleFormModal',
@@ -89,7 +89,6 @@ export default {
   reducers: {
       // 设置工单类型
       setFormOptions(state, { payload }) {
-          console.log(payload);
           return { ...state, formOptions: payload }
       },
       // 转换modal状态

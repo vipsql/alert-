@@ -23,11 +23,8 @@ export default {
 
   effects: {
     *openFocusModal({payload}, {select, put, call}) {
-      yield put({type: 'tagsAllView'})
-      yield put({type: 'tagSelectedView'})
-    },
-    // search all tags
-    *tagsAllView({payload}, {select, put, call}) {
+      // search all tags
+      const { userId } = yield select( state => ({'userId': state.app.userId}))
       const allTags = yield getAllTags();
      
       if (typeof allTags.data !== 'undefined' && allTags.data.length !== 0) {
@@ -35,26 +32,23 @@ export default {
           type: 'setCurrentTags',
           payload: allTags.data || []
         })
-      } else {
-        console.error(allTags.message);
-      }
-    },
-    // search selected tags
-    *tagSelectedView({payload}, {select, put, call}) {
-      const { userId } = yield select( state => ({'userId': state.app.userId}))
-
-      const selectedTags = yield getTagsByUser(userId);
+        // search selected tags
+        const selectedTags = yield getTagsByUser(userId);
       
-      if (typeof selectedTags.data !== 'undefined') {
-        yield put({
-          type: 'setCurrentSelectTags',
-          payload: selectedTags.data
-        })
+        if (typeof selectedTags.data !== 'undefined') {
+          yield put({
+            type: 'setCurrentSelectTags',
+            payload: selectedTags.data
+          })
+          // filter tags
+          yield put({type: 'filterInitalTags'})
+          yield put({type: 'toggleTagsModal', payload: true})
+        } else {
+          console.error('查询用户已选择标签错误');
+        }
       } else {
-        console.error(selectedTags.message);
-      }
-      yield put({type: 'filterInitalTags'})
-      yield put({type: 'toggleTagsModal', payload: true})
+        console.error('查询所有标签错误');
+      }  
     },
     // inital dashbord when isSet is true
     *queryDashbordBySetted({payload: userId}, {select, put, call}) {
@@ -65,22 +59,26 @@ export default {
           type: 'filterCommitTags',
           payload: selectedTags.data || []
         })
-      } else {
-        console.error(selectedTags.message);
-      }
 
-      const { commitTagIds } = yield select( state => {
-        return {
-          'commitTagIds': state.alertTagsSet.commitTagIds
-        }
-      })
+        const { commitTagIds } = yield select( state => {
+          return {
+            'commitTagIds': state.alertTagsSet.commitTagIds
+          }
+        })
+        
+        yield put({
+          type: 'alertManage/queryAlertDashbord',
+          payload: {
+            tagIds: commitTagIds
+          }
+        })
+
+        yield put({ type: 'alertManage/toggleAlertSet', payload: true })
+
+      } else {
+        console.error('查询用户标签错误');
+      }
       
-      yield put({
-        type: 'alertManage/queryAlertDashbord',
-        payload: {
-          tagIds: commitTagIds
-        }
-      })
     },
     // commit tagIds by set modal
     *addAlertTags ({payload}, {select, put, call}) {
@@ -112,7 +110,6 @@ export default {
 
       yield put({ type: 'alertManage/toggleAlertSet', payload: true })
       yield put({ type: 'toggleTagsModal', payload: false })
-      yield put({ type: 'clear' })
 
     }
   },

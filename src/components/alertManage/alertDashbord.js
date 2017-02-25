@@ -12,7 +12,7 @@ class Chart extends Component{
         this.setTreemapHeight = this.setTreemapHeight.bind(this);
     }
     setTreemapHeight(ele){
-        const _percent = 0.8 // 占屏比
+        const _percent = 0.85 // 占屏比
 
         const clientHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
         ele.style.height = (clientHeight * _percent) + 'px';

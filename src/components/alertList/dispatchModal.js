@@ -6,14 +6,16 @@ import { classnames } from '../../utils'
 
 const Item = Form.Item;
 const Option = Select.Option;
-const dispatchModal = ({alertOperation, dispatch, form}) => {
+const dispatchModal = ({alertOperation, alertDetailOperation, alertList, dispatch, form}) => {
 
-    const { isShowFormModal, formOptions } = alertOperation;
+    const currentData = alertList.alertOperateModalOrigin === 'detail' ? alertDetailOperation : alertOperation
+    
+    const { isShowFormModal, formOptions } = currentData;
     const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
 
     const closeDispatchModal = () => {
         dispatch({
-            type: 'alertOperation/toggleFormModal',
+            type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleFormModal' : 'alertOperation/toggleFormModal',
             payload: false
         })
     }
@@ -27,7 +29,7 @@ const dispatchModal = ({alertOperation, dispatch, form}) => {
             }
             const value = form.getFieldValue('formOption')
             dispatch({
-                type: 'alertOperation/dispatchForm',
+                type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/dispatchForm' : 'alertOperation/dispatchForm',
                 payload: value
             })
 
@@ -36,7 +38,7 @@ const dispatchModal = ({alertOperation, dispatch, form}) => {
       }} >派发</Button>
       <Button type="ghost" onClick={ () => {
         dispatch({
-            type: 'alertOperation/toggleFormModal',
+            type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleFormModal' : 'alertOperation/toggleFormModal',
             payload: false
         })
         form.resetFields();
@@ -91,6 +93,8 @@ export default Form.create()(
     connect( state => {
         return {
             alertOperation: state.alertOperation,
+            alertDetailOperation: state.alertDetailOperation,
+            alertList: state.alertList
         }
     })(dispatchModal)
 )

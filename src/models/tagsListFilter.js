@@ -22,6 +22,7 @@ const initalState = {
     ], // 暂时先静态数据代替(数据结构也还不确定)，后期有两种初始可能。1.alertTagsSet传过来 2.重新发一次请求取得
     // ------
     originTags: {},
+    filteredTags: {}
 }
 
 export default {
@@ -56,8 +57,16 @@ export default {
           payload: tagsList || []
         })
       } else {
-        console.error(tagsList.message);
+        console.error('查询所有标签失败');
       }
+    },
+    *changeTags({payload}, {select, put, call}) {
+      yield put({ type: 'changeSelectTag', payload: payload })
+      yield put({ type: 'filterTags'})
+    },
+    *removeTag({payload}, {select, put, call}) {
+      yield put({ type: 'removeSelectTag', payload: payload })
+      yield put({ type: 'filterTags'})
     }
   },
 
@@ -94,7 +103,7 @@ export default {
       return { ...state, isSpread }
     },
     // select tag
-    changSelectTag(state, { payload: selectTagName }) {
+    changeSelectTag(state, { payload: selectTagName }) {
       
       const { tagsList } = state;
 
@@ -106,8 +115,8 @@ export default {
           return tag;
         })
         return item;
-      })
-      
+      })   
+
       return { ...state, tagsList: newList }
     },
     // remove select tag
@@ -125,6 +134,23 @@ export default {
       })
       
       return { ...state, tagsList: newList }
+    },
+    // filter tags
+    filterTags(state) {
+      const { tagsList } = state;
+      let source = {};
+      tagsList.forEach( (item) => {
+        item.values.forEach( (tag) => {
+          if (tag.selected) {
+            if ( source[item.field] ) {
+              source[item.field] = source[item.field] + ',' + tag.name;
+            } else {
+              source[item.field] = tag.name;
+            }
+          }
+        })
+      })
+      return { ...state, filteredTags: source }
     }
   },
 

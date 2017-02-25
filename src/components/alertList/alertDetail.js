@@ -36,19 +36,22 @@ const alertDetail = ({alertDetail, dispatch, form}) => {
       styles['icon-yijianfankui']
     )
 
+    // 根据severity选择不同的颜色
+    const severityColor = currentAlertDetail.severity === '紧急' ? styles.jjLevel 
+                            : currentAlertDetail.severity === '主要' ? styles.zyLevel 
+                                : currentAlertDetail.severity === '次要' ? styles.cyLevel 
+                                    : currentAlertDetail.severity === '告警' ? styles.gjLevel 
+                                        : currentAlertDetail.severity === '提醒' ? styles.txLevel : styles.jjLevel
+
     return (
         <div className={styles.main}>
             <div className={styles.detailHead}>
                 <p>{currentAlertDetail.alertName}</p>
-                <i className={classnames(styles.shanChu, shanchuClass)} onClick={ () => {
+                <i className={classnames(styles.shanChu, shanchuClass)} onClick={ () => {  
                     dispatch({
-                        type: 'alertDetail/toggleDetailModal',
+                        type: 'alertDetail/closeDetailModal',
                         payload: false
                     })
-                    // dispatch({
-                    //     type: 'alertDetail/toggleViewDetailAlertId',
-                    //     payload: false
-                    // })
                 }}></i>
                 <AlertOperation position="detail" />
             </div>
@@ -58,7 +61,7 @@ const alertDetail = ({alertDetail, dispatch, form}) => {
                     <ul>
                         <li><span>ID:</span><span>{currentAlertDetail.alertId}</span></li>
                         <li><span>状态:</span><span>{currentAlertDetail.status}<i className={classnames(setClass, styles.stateClass)}></i></span></li>
-                        <li><span>级别:</span><span className={styles.level}>{currentAlertDetail.severity}</span></li>
+                        <li><span>级别:</span><span className={severityColor}>{currentAlertDetail.severity}</span></li>
                         <li><span>来源:</span><span>{currentAlertDetail.entityName}</span></li>
                         <li><span>描述:</span><span>{currentAlertDetail.description}</span></li>
                         <li><span>首次发生:</span><span>{dateTransfer(currentAlertDetail.firstOccurtime, currentAlertDetail.lastOccurtime).begin}</span></li>
