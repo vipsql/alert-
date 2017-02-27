@@ -7,14 +7,14 @@ export default {
     gridWidth: 100,
     isGroup: false,
     minuteToWidth: 5, //以分钟单位计算间隔
-    begin: 0,
-    end: 0,
-    isShowMore: true, // 是否显示更多
-    orderBy: 'source',
-    orderType: 0,
-    groupBy: 'source',
-    pageSize: 50,
-    currentPage: 1,
+    // begin: 0,
+    // end: 0,
+    // isShowMore: true, // 是否显示更多
+    // orderBy: 'source',
+    // orderType: 0,
+    // groupBy: 'source',
+    // pageSize: 50,
+    // currentPage: 1,
     data: [],
     columns: [{
       title: '对象',
@@ -80,7 +80,7 @@ export default {
   },
   effects: {
     *queryAlertListTime({ payload }, {call, put, select}){
-
+      
       let {
         isGroup,
         begin,
@@ -162,15 +162,14 @@ export default {
           })
         }else{
           yield put({
-            type: 'updateAlertListTimeData',
-            payload:{
-              data: data.data,
-              isShowMore: data.data
-            }
+            type: 'updateAlertListData',
+            payload: data.data.datas
           })
 
-
-
+          yield put({
+            type: 'alertListTableCommon/updateShowMore',
+            payload:data.data.hasNext
+          })
 
         }
 

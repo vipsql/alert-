@@ -34,4 +34,13 @@ const  ListTimeTableWrap = ({dispatch, alertListTimeTable}) => {
     <ListTimeTable {...props} />
   )
 }
-export default connect(({alertListTimeTable}) => ({alertListTimeTable}))(ListTimeTableWrap)
+export default connect(
+  (state) => {
+    return {
+      alertListTimeTable: {
+        ...state.alertListTimeTable,
+        ...state.alertListTableCommon
+      }
+    }
+  }
+)(ListTimeTableWrap)

@@ -6,9 +6,7 @@ export default {
   state: {
     isRefresh: false, //是否实时更新
     alertOperateModalOrigin: undefined, // 这个状态是用来区别那个Modal打开的 --> 对应position
-    tagsFilter: {
-      "severity":"紧急,次要"
-    },
+    tagsFilter: {},
     barData:[], // 最近4小时告警数据
     begin: 0, //告警开始时间(时间线)
     end: 0,  //告警结束时间(时间线)
@@ -38,15 +36,20 @@ export default {
   },
   subscriptions: {
     setup({dispatch}) {
-      dispatch({
-        type: 'queryAlertBar'
-      })
+      // dispatch({
+      //   type: 'queryAlertBar'
+      // })
+
+      // 取过滤条件
+
+
     }
   },
   effects: {
     // 查询柱状图
-    *queryAlertBar({}, {call, put, select}) {
-      const payload = yield select(state => {
+    *queryAlertBar({payload}, {call, put, select}) {
+
+      const payData = yield select(state => {
         return state.alertList.tagsFilter
       })
 
@@ -100,6 +103,7 @@ export default {
     showLoading(state){
       return {...state, loading: true}
     },
+
     initAlertList(state, action) {
       return { ...state, ...action.payload, loading: false}
     },

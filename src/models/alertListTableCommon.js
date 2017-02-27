@@ -36,7 +36,7 @@ export default {
         isShowMore
       }
     },
-    // 
+    //
     toggleDetailAlertId(state, {payload: viewDetailAlertId}) {
       return { ...state, viewDetailAlertId }
     }
@@ -57,7 +57,7 @@ export default {
       })
 
       const { id } = alertInfo
-      
+
       operateAlertIds.push(id)
       selectedAlertIds.push(alertInfo)
     }

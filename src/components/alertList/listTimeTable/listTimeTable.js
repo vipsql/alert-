@@ -31,6 +31,7 @@ class ListTimeTable extends Component {
         end,
         data,
         columns,
+        loadMore,
         isShowMore
       } = this.props
 
@@ -266,11 +267,15 @@ class ListTimeTable extends Component {
               </tr>
             </thead>
             <tbody>
-              {tbodyCon}
-
+            {
+              data.length > 0 ? tbodyCon :
+              <tr>
+              <td colSpan="6">暂无数据</td>
+              </tr>
+            }
             </tbody>
           </table>
-
+          {isShowMore && <Button className={styles.loadMore} onClick={loadMore}>显示更多</Button>}
         </div>
       )
     }

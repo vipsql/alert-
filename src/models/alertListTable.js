@@ -142,9 +142,7 @@ export default {
           })
           yield put({
             type: 'alertListTableCommon/updateShowMore',
-            payload:{
-              isShowMore: false
-            }
+            payload:fal
           })
 
         }else{
@@ -154,9 +152,7 @@ export default {
           })
           yield put({
             type: 'alertListTableCommon/updateShowMore',
-            payload:{
-              isShowMore: data.data.hasNext
-            }
+            payload:data.data.hasNext
           })
         }
 
