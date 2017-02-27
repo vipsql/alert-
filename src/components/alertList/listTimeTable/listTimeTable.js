@@ -49,6 +49,7 @@ class ListTimeTable extends Component {
       const gridTime = (end - begin) / defaultShowNums //间隔时间戳
 
       let timeTH = []
+
       for(let i = 0; i < defaultShowNums; i++){
         const timstamp = begin + gridTime * i
         const formatDate = new Date(timstamp).getHours() + ':' +  new Date(timstamp).getMinutes()
