@@ -5,17 +5,8 @@ export default {
   namespace: 'alertListTable',
   state: {
     gridWidth: 100,
-    isGroup: false,
     minuteToWidth: 5, //以分钟单位计算间隔
-    begin: 0,
-    end: 0,
-    isShowMore: false,
     data: [],
-    orderBy: 'source',
-    orderType: 0,
-    groupBy: 'source',
-    pageSize: 50,
-    currentPage: 1,
     columns: [{
       key: 'entityAddr',
       title: '对象',
@@ -39,7 +30,7 @@ export default {
       key: 'count',
       title: '次数',
     }, {
-      key: 'time',
+      key: 'lastTime',
       title: '持续时间',
     }, {
       key: 'lastOccurtime',
@@ -71,35 +62,30 @@ export default {
 
     },
     // 更新告警列表
-    updateAlertListData(state, {payload: {data,isShowMore}}){
+    updateAlertListData(state, {payload: data}){
       return {
         ...state,
-        data,
-        isShowMore
+        data
       }
     },
-    // 更新分组字段
-    updateGroup(state,{payload: isGroup}){
-      return {
-        ...state,
-        isGroup
-      }
-    }
+
   },
   effects: {
 
     //查询告警列表
     *queryAlertList({payload},{call, put, select}){
+
       let {
         isGroup,
         begin,
         end
       } = yield select(state => {
-        const alertListTable = state.alertListTable
+        const alertListTableCommon = state.alertListTableCommon
+
         return {
-          isGroup: alertListTable.isGroup,
-          begin: alertListTable.begin,
-          end: alertListTable.end
+          isGroup: alertListTableCommon.isGroup,
+          begin: alertListTableCommon.begin,
+          end: alertListTableCommon.end
         }
       })
 
@@ -114,7 +100,7 @@ export default {
       // 如果存在表示分组
       if(isGroup){
         yield put({
-          type: 'updateGroup',
+          type: 'alertListTableCommon/updateGroup',
           payload: true
         })
       }
@@ -128,17 +114,17 @@ export default {
       })
 
       const extraParams = yield select( state => {
-        const alertListTable = state.alertListTable
+        const alertListTableCommon = state.alertListTableCommon
         if(isGroup){
           return {
             groupBy: payload.group
           }
         }else{
           return {
-            pageSize: alertListTable.pageSize,
-            currentPage: alertListTable.currentPage,
-            orderBy: alertListTable.orderBy,
-            orderType: alertListTable.orderType
+            pageSize: alertListTableCommon.pageSize,
+            currentPage: alertListTableCommon.currentPage,
+            orderBy: alertListTableCommon.orderBy,
+            orderType: alertListTableCommon.orderType
           }
         }
       })
@@ -147,21 +133,28 @@ export default {
         ...tagsFilter,
         ...extraParams
       })
-      
+
       if(data.result){
         if(isGroup){
           yield put({
             type: 'updateAlertListData',
+            payload: data.data
+          })
+          yield put({
+            type: 'alertListTableCommon/updateShowMore',
             payload:{
-              data: data.data,
               isShowMore: false
             }
           })
+
         }else{
           yield put({
             type: 'updateAlertListData',
+            payload: data.data.datas
+          })
+          yield put({
+            type: 'alertListTableCommon/updateShowMore',
             payload:{
-              data: data.data.datas,
               isShowMore: data.data.hasNext
             }
           })

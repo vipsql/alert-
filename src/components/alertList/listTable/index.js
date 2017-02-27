@@ -8,7 +8,7 @@ import styles from '../index.less'
 const  ListTableWrap = ({dispatch, alertListTable}) => {
   const props = {
     ...alertListTable,
-    showMore(){
+    loadMore(){
       dispatch({
         type: 'alertListTable/loadMore'
       })
@@ -22,9 +22,12 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
         }
       })
     },
-    showMore(){
+    checkAlert(e){
+      const alertInfo = JSON.parse(e.target.getAttribute('data-all'))
+
       dispatch({
-        type: 'alertListTable/showMore'
+        type: 'alertListTableCommon/updateCheckAlert',
+        payload: alertInfo
       })
     }
 
@@ -34,4 +37,13 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
     <ListTable {...props} />
   )
 }
-export default connect(({alertListTable}) => ({alertListTable}))(ListTableWrap)
+export default connect(
+  (state) => {
+    return {
+      alertListTable: {
+        ...state.alertListTable,
+        ...state.alertListTableCommon
+      }
+    }
+  }
+)(ListTableWrap)

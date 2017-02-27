@@ -11,9 +11,12 @@ class ListTable extends Component {
       isGroup,
       isShowMore,
       data,
-      columns
+      columns,
+      checkAlert,
+      loadMore
     } = this.props
     let colsKey = []
+
     const theads = columns.map( (item) => {
       const width = item.width || 'auto'
       colsKey.push(item['key'])
@@ -53,7 +56,7 @@ class ListTable extends Component {
 
     }else{
 
-      tbodyCon = data.map( (item, index) => {
+      tbodyCon = data.length > 0 && data.map( (item, index) => {
         const keys = colsKey
 
         // 列是不固定的 需要抽取出来
@@ -62,6 +65,9 @@ class ListTable extends Component {
           if(key == 'lastOccurtime'){
             const date = new Date(data)
             data = `${date.getHours()}:${date.getMinutes()}`
+          }
+          if(key == 'lastTime'){
+            data = `${Math.floor(data/(60*60*1000))}h`
           }
           if(key == 'status'){
             switch (data) {
@@ -78,7 +84,7 @@ class ListTable extends Component {
         })
         return (
           <tr key={item.id}>
-            <td key={index}><input type="checkbox" /></td>
+            <td key={index}><input type="checkbox" data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlert}/></td>
             {tds}
           </tr>
         )
@@ -104,7 +110,7 @@ class ListTable extends Component {
             }
           </tbody>
         </table>
-        {isShowMore && <Button className={styles.loadMore}>显示更多</Button>}
+        {isShowMore && <Button className={styles.loadMore} onClick={loadMore}>显示更多</Button>}
       </div>
     )
   }

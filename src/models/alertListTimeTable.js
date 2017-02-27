@@ -68,6 +68,14 @@ export default {
         ...state,
         isGroup
       }
+    },
+    // 更新时间
+    updateCurState(state, {payload: {begin,end}}){
+      return {
+        ...state,
+        begin,
+        end
+      }
     }
   },
   effects: {
@@ -135,16 +143,14 @@ export default {
 
       if(data.result){
         // 更新当前状态
-        // yield put({
-        //   type: 'updateCurState',
-        //   payload: {
-        //     data: data.data,
-        //     begin,
-        //     end,
-        //     isGroup
-        //   },
-        //
-        // })
+        yield put({
+          type: 'updateCurState',
+          payload: {
+            begin,
+            end
+          },
+
+        })
 
         if(isGroup){
           yield put({
