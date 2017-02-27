@@ -129,8 +129,32 @@
                     span{
                         color: #828b9a;
                         font-weight: bold;
-                        &.level{
-                            background: #f7843e;
+                        &.jjLevel{
+                            background: red;
+                            padding: 5px 10px 5px 10px;
+                            color: #fff;
+                            border-radius: 4px;
+                        }
+                        &.zyLevel{
+                            background: #f57268;
+                            padding: 5px 10px 5px 10px;
+                            color: #fff;
+                            border-radius: 4px;
+                        }
+                        &.cyLevel{
+                            background: orange;
+                            padding: 5px 10px 5px 10px;
+                            color: #fff;
+                            border-radius: 4px;
+                        }
+                        &.gjLevel{
+                            background: #ffdd00;
+                            padding: 5px 10px 5px 10px;
+                            color: #fff;
+                            border-radius: 4px;
+                        }
+                        &.txLevel{
+                            background: #10cc10;
                             padding: 5px 10px 5px 10px;
                             color: #fff;
                             border-radius: 4px;
@@ -153,8 +177,10 @@
                     }
                     .formMain{
                         display: inline-block;
+                        .content{
+                            margin-right: 30px;
+                        }
                         .editForm{
-                            margin-left: 30px;
                             color: #4082e6;
                             border-bottom: 1px solid #acc4f2;
                             line-height: 13px;
@@ -343,7 +369,6 @@
 // config tagsFilter style on local
 .tagsIframe{
     position: relative;
-    background: white;
     margin-bottom: 10px;
     padding-right: 190px;
     .selectBtn{
@@ -607,6 +632,7 @@
     :global .ant-form-item{
         margin-bottom: 0px;
         :global .ant-form-item-label{
+            vertical-align: top;
             & > label{
                 font-size: 14px;
                 font-weight: 600;
@@ -614,7 +640,7 @@
         }
         & > div:last-child {
             display: inline-block;
-            width: 80%
+            width: 70%
         }
         :global .ant-form-item-control{
             :global .ant-select-selection--single{
@@ -630,11 +656,19 @@
         }
     }
 }
+.relieveMain{
+    padding: 5px 50px 5px 50px;
+    & > p{
+        text-align: center;
+        font-size: 18px;
+    }
+}
 .dispatchMain{
     padding: 5px 50px 5px 50px;
     :global .ant-form-item{
         margin-bottom: 0px;
         :global .ant-form-item-label{
+            vertical-align: top;
             & > label{
                 font-size: 14px;
                 font-weight: 600;
@@ -642,7 +676,7 @@
         }
         & > div:last-child {
             display: inline-block;
-            width: 80%
+            width: 70%
         }
         :global .ant-form-item-control{
             :global .ant-select-selection--single{

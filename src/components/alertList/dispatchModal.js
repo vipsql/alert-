@@ -6,14 +6,16 @@ import { classnames } from '../../utils'
 
 const Item = Form.Item;
 const Option = Select.Option;
-const dispatchModal = ({alertOperation, dispatch, form}) => {
+const dispatchModal = ({alertOperation, alertDetailOperation, alertList, dispatch, form}) => {
 
-    const { isShowFormModal } = alertOperation;
-    const { getFieldDecorator, getFieldsValue } = form;
+    const currentData = alertList.alertOperateModalOrigin === 'detail' ? alertDetailOperation : alertOperation
+    
+    const { isShowFormModal, formOptions } = currentData;
+    const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
 
     const closeDispatchModal = () => {
         dispatch({
-            type: 'alertOperation/toggleFormModal',
+            type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleFormModal' : 'alertOperation/toggleFormModal',
             payload: false
         })
     }
@@ -21,15 +23,22 @@ const dispatchModal = ({alertOperation, dispatch, form}) => {
     const modalFooter = []
     modalFooter.push(<div className={styles.modalFooter}>
       <Button type="primary" onClick={ () => {
-        dispatch({
-            type: 'alertOperation/toggleFormModal',
-            payload: false
+        form.validateFieldsAndScroll( (errors, values) => {
+            if (!!errors) {
+                return;
+            }
+            const value = form.getFieldValue('formOption')
+            dispatch({
+                type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/dispatchForm' : 'alertOperation/dispatchForm',
+                payload: value
+            })
+
+            form.resetFields();
         })
-        form.resetFields();
       }} >派发</Button>
       <Button type="ghost" onClick={ () => {
         dispatch({
-            type: 'alertOperation/toggleFormModal',
+            type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleFormModal' : 'alertOperation/toggleFormModal',
             payload: false
         })
         form.resetFields();
@@ -47,19 +56,25 @@ const dispatchModal = ({alertOperation, dispatch, form}) => {
         >
             <div className={styles.dispatchMain}>
                 <Form>
-                   
-                            <Item
-                                label="工单类别"
-                            >
-                                {getFieldDecorator('closeOption')(
-                                    <Select style={{width: '100%'}} placeholder="请选择工单类别">
-                                        <Option className={styles.menuItem} value="0">工单类别1</Option>
-                                        <Option className={styles.menuItem} value="1">工单类别2</Option>
-                                        <Option className={styles.menuItem} value="2">工单类别3</Option>
-                                    </Select>
-                                )}
-                            </Item>
-                
+                    <Item
+                        label="工单类别"
+                        hasFeedback
+                        help={isFieldValidating('formOption') ? '校验中...' : (getFieldError('formOption') || []).join(', ')}
+                    >
+                        {getFieldDecorator('formOption', {
+                            rules: [
+                                { required: true, message: '请输选择工单类型' }
+                            ]
+                        })(
+                            <Select style={{width: '90%'}} placeholder="请选择工单类别">
+                                {
+                                    formOptions.map( (item, index) => {
+                                        return <Option className={styles.menuItem} key={item.code} value={item.code}>{item.name}</Option>
+                                    })
+                                }
+                            </Select>
+                        )}
+                    </Item>
                 </Form>
             </div>
         </Modal>
@@ -78,6 +93,8 @@ export default Form.create()(
     connect( state => {
         return {
             alertOperation: state.alertOperation,
+            alertDetailOperation: state.alertDetailOperation,
+            alertList: state.alertList
         }
     })(dispatchModal)
 )

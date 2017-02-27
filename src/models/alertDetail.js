@@ -1,28 +1,28 @@
 import {parse} from 'qs'
+import { queryDetail } from '../services/alertDetail'
+import { message } from 'antd'
 
 const initalState = {
   isShowDetail: true, // 是否显示detail
 
   currentAlertDetail: {
-    id: 1,
-    name: '不满意交易笔数告警',
-    state: 1, // 状态（后台定义：1：已解决）
-    stateName: '已解决',
-    levelName: '紧急',
-    level: 1, // 级别 同状态
-    origin: 'CMDB',
+    alertId: 1,
+    alertName: '不满意交易笔数告警',
+    status: '已解决',
+    severity: '紧急',
+    entityName: 'CMDB',
     description: '不满意交易笔数超过阈值2000',
-    firstHappend: '2017/1/20 15:27', // 时间格式后期需要处理
-    endHappend: '2017/1/24 10:31',
-    continueTime: '2小时',
-    alertTime: 13,
-    managePerson: '张某某',
-    manageDepartment: '---',
-    form: '张某某张某某张某某张某某张某某张某某张某某张某某张某某张某某张某某张某某', // 工单
-    affiliation: '江城分区', // 所属单位
-    position: '华中区域',
-    david: '武汉联通', // 代维商
-    remark: '备注信息', // 备注
+    firstOccurtime: '1487312852758', // 时间格式后期需要处理
+    lastOccurtime: '1487316452758',
+    count: 13,
+    responsiblePerson: '张某某',
+    responsibleDepartment: '---',
+    orderInfo: '张某某张某某张某某张某某张某某张某某张某某张某某张某某张某某张某某张某某', // 工单
+    propertys: [
+      {code: 'affiliation', value: '江城分区'},
+      {code: 'position', value: '华中区域'},
+      {code: 'david', value: '武汉联通'}
+    ]
   },
 
   operateForm: undefined, // 操作工单（当前） 
@@ -45,6 +45,46 @@ export default {
   effects: {
     *initalForm() {
       // 将初始的detail form --> operateForm
+    },
+
+    // 点击展开detail时的操作
+    *openDetailModal({payload}, {select, put, call}) {
+      const viewDetailAlertId = yield select( state => state.alertListTableCommon.viewDetailAlertId )
+
+      if (typeof viewDetailAlertId === 'number') {
+        const detailResult = yield queryDetail(viewDetailAlertId);
+        if ( typeof detailResult.data !== 'undefined' ) {
+          yield put({
+            type: 'setDetail',
+            payload: detailResult.data || {}
+          })
+          if (detailResult.data.orderInfo) {
+            yield put({
+              type: 'setFormData',
+              payload: detailResult.data.orderInfo
+            })
+          }
+          yield put({
+            type: 'toggleDetailModal',
+            payload: true
+          })
+        } else {
+          yield message.error(`${detailResult.message}`, 3);
+        }
+      } else {
+        console.error('viewDetailAlertId类型错误')
+      }
+    },
+    // 关闭时
+    *closeDetailModal({payload}, {select, put, call}) {
+      yield put({
+        type: 'alertListTableCommon/toggleDetailAlertId',
+        payload: false
+      })
+      yield put({
+          type: 'toggleDetailModal',
+          payload: false
+      })
     }
   },
 
@@ -52,6 +92,10 @@ export default {
     // 初始化operateForm
     initalFormData(state) {
       return { ...state, operateRemark: state.currentAlertDetail.form }
+    },
+    // 储存detail信息
+    setDetail(state, {payload: currentAlertDetail}) {
+      return { ...state. currentAlertDetail }
     },
     // 切换侧滑框的状态
     toggleDetailModal(state, {payload: isShowDetail}) {

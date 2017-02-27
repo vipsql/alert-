@@ -19,16 +19,19 @@ const mergeModal = ({alertOperation, dispatch}) => {
 
     const modalFooter = []
     modalFooter.push(<div className={styles.modalFooter}>
-      <Button type="primary" onClick={ () => {
+      <Button type="primary" disabled={originAlert !== undefined && originAlert.length == 0 ? true : false} onClick={ () => {
         dispatch({
-            type: 'alertOperation/toggleMergeModal',
-            payload: false
+            type: 'alertOperation/mergeAlert',
         })
       }} >合并</Button>
       <Button type="ghost" onClick={ () => {
         dispatch({
             type: 'alertOperation/toggleMergeModal',
             payload: false
+        })
+        dispatch({
+            type: 'alertOperation/selectRows',
+            payload: []
         })
       }}>取消</Button>
       </div>

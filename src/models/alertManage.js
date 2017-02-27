@@ -26,7 +26,7 @@ export default {
       history.listen((location) => {
         if (location.pathname === '/alertManage') {
           dispatch({
-            type: 'queryAlertDashbord'
+            type: 'alertManageSetup'
           })
         }
       })
@@ -41,21 +41,21 @@ export default {
           'userId': state.app.userId,
         }
       })
-
+      
       const tagSet = yield isSetUserTags(userId)
       if(tagSet.data.isSet) {
         yield put({
           type: 'alertTagsSet/queryDashbordBySetted',
           payload: userId
         })
-        // yield put({
-        //   type: 'app/showMask',
-        //   payload: false
-        // })
-        // yield put({
-        //   type: 'toggleAlertSetTip',
-        //   payload: true
-        // })
+        yield put({
+          type: 'app/showMask',
+          payload: false
+        })
+        yield put({
+          type: 'toggleAlertSetTip',
+          payload: true
+        })
       } else {
         yield put({
           type: 'app/showMask',
@@ -67,16 +67,14 @@ export default {
         })
       }
     },
-    *queryAlertDashbord({payload}, {put, call, select}) {
-      const pays = yield select( state => {
-        return state.alertManage.levels
-      })
-      const treemapData = yield call(queryDashbord,pays)
-     
+    *queryAlertDashbord({payload}, {call, put, select}) {
+      
+      const treemapData = yield queryDashbord(payload)
+      
       if (typeof treemapData.data !== 'undefined') {
         yield put({
           type: 'setCurrentTreemap',
-          payload: treemapData.data || treemapData.data.picList || []
+          payload: treemapData.data && treemapData.data.picList || []
         })
 
         yield put({

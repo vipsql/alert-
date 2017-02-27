@@ -43,24 +43,24 @@ const alertTagsFilter = ({dispatch, tagListFilter}) => {
     }
 
     const itemSelect = (e) => {
-      let tagId = e.target.getAttribute('data-id');
+      let tagName = e.target.getAttribute('data-id');
       dispatch({
-        type: 'tagListFilter/changSelectTag',
-        payload: tagId
+        type: 'tagListFilter/changeTags',
+        payload: tagName
       })
     }
 
     const removefun = (e) => {
-      let tagId = e.target.getAttribute('data-id');
+      let tagName = e.target.getAttribute('data-id');
       dispatch({
-        type: 'tagListFilter/removeSelectTag',
-        payload: tagId
+        type: 'tagListFilter/removeTag',
+        payload: tagName
       })
     }
 
     const tagsGroup = tagsList.map( (item, index) => {
-      let temp = item.tags.filter( tag => tag.selected )
-      let renderItem = { ...item, tags: temp }
+      let temp = item.values.filter( tag => tag.selected )
+      let renderItem = { ...item, values: temp }
       return <TagsGroup key={ index } haveTags={typeof temp !== 'undefined' && temp.length !== 0 ? true : false} 
         className={classnames(tagsStyles.tagsGroupMain, styles.tagsGroup)} tagsList={ renderItem } removeHandler={removefun}/>
     })
@@ -75,6 +75,7 @@ const alertTagsFilter = ({dispatch, tagListFilter}) => {
                         <div className={styles.triangle}></div>
                         <div className={styles.container} onMouseLeave={moveoutDiv}>
                             <CheckList
+                                origin={'list'}
                                 itemList={ tagsList }
                                 isSpreadTags={ true }
                                 checkHandler={ itemSelect }

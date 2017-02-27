@@ -1,8 +1,7 @@
 import { request } from '../utils'
 
 export async function queryDashbord(parmas) {
-  console.log(parmas)
-  return request(`http://10.1.240.105:8890/arbiter/rest/v1/alert/queryLastTimeline`, {
+  return request(`/arbiter/rest/v1/alert/getLastOneHourAlertData`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',

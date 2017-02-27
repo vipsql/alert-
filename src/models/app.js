@@ -5,10 +5,10 @@ import {parse} from 'qs'
 
 const initialState = {
   isLogin: false, // 是否登录
-  userName: 'xuyh', // 前端先写死，后期改用localstorge来存储
-  userId: 'admin',
+  userName: 'admin', // 前端先写死，后期改用localstorge来存储
+  userId: localStorage.getItem('userId') || '',
   isFold: false, //false展开
-  isShowMask: true // 遮罩层
+  isShowMask: false // 遮罩层
 }
 
 export default {
@@ -35,7 +35,7 @@ export default {
       if(!app.isLogin) {
         const userInfo = yield login(app.userName)
 
-        if (userInfo.data.userId !== undefined) {
+        if (userInfo.data !== undefined && userInfo.data.userId !== undefined) {
           yield put({
             type: 'setUser',
             payload: {

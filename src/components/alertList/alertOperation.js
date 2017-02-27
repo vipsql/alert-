@@ -65,28 +65,28 @@ const alertOperation = ({position, alertOperation, dispatch}) => {
     const menu = (
         <Menu onClick={ () => {
             //出现解除告警的modal，并做相应处理
-            console.log(111);
             dispatch({
-                type: 'alertOperation/toggleRelieveModal',
-                payload: true
+                type: 'alertOperation/openRelieveModal',
             })
         }}>
             <Menu.Item key="1" className={styles.menuItem}>解除告警</Menu.Item>
         </Menu>
     )
-    
     return (
         <div className={styles.operateMain}>
             <Button className={styles.myButton} onClick={ () => {
                 dispatch({
-                    type: 'alertOperation/toggleFormModal',
-                    payload: true
+                    type: 'alertOperation/openFormModal',
+                    payload: position
                 })
             }} >派发工单</Button>
             <Button className={styles.myButton} onClick={ () => {
                 dispatch({
-                    type: 'alertOperation/toggleCloseModal',
-                    payload: true
+                    type: 'alertOperation/openCloseModal',
+                    payload: {
+                        state: true,
+                        origin: position
+                    }
                 })
             }} >关闭告警</Button>
             {
@@ -94,8 +94,7 @@ const alertOperation = ({position, alertOperation, dispatch}) => {
                 <DropdownButton overlay={menu} className={styles.myDropdown} trigger={['click']} onClick={ () => {
                     // 出现合并告警的modal，并做相应处理
                     dispatch({
-                        type: 'alertOperation/toggleMergeModal',
-                        payload: true
+                        type: 'alertOperation/openMergeModal',
                     })
                 }}>
                     合并告警
@@ -120,18 +119,18 @@ const alertOperation = ({position, alertOperation, dispatch}) => {
                 <div className={styles.groupMain}>
                     <Select className={classnames(styles.setGroup, styles.selectSingle)} placeholder="分组显示" value={selectGroup} onChange={ (value) => {
                         dispatch({
-                            type: 'alertOperation/setGroupType',
+                            type: 'alertOperation/groupView',
                             payload: value,
                         })
                     }}>
-                        <Option className={styles.menuItem} value="0">按来源分组</Option>
-                        <Option className={styles.menuItem} value="1">按状态分组</Option>
-                        <Option className={styles.menuItem} value="2">按级别分组</Option>
-                        <Option className={styles.menuItem} value="3">按位置分组</Option>
+                        <Option className={styles.menuItem} value="source">按来源分组</Option>
+                        <Option className={styles.menuItem} value="state">按状态分组</Option>
+                        <Option className={styles.menuItem} value="severity">按级别分组</Option>
+                        <Option className={styles.menuItem} value="position">按位置分组</Option>
                     </Select>
                     <i className={selectGroup !== '分组显示' && classnames(switchClass, styles.switch)} onClick={() => {
                         dispatch({
-                            type: 'alertOperation/removeGroupType',
+                            type: 'alertOperation/noGroupView',
                         })
                     }}></i>
                 </div>

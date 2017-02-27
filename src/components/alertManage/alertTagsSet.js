@@ -59,6 +59,7 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
           footer={modalFooter}
         >
           <CheckList 
+            origin={'main'}
             itemList={ currentTagsList }
             checkedNum={ selectedTagsNum }
             isSpreadTags={ true }

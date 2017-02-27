@@ -14,6 +14,7 @@ import LevelIcon from '../common/levelIcon/index.js'
 import MergeModal from './mergeModal'
 import CloseModal from './closeModal'
 import DispatchModal from './dispatchModal'
+import RelieveModal from './relieveModal'
 import { classnames } from '../../utils'
 
 const TabPane = Tabs.TabPane
@@ -94,6 +95,7 @@ class AlertListManage extends Component{
         <MergeModal />
         <CloseModal />
         <DispatchModal />
+        <RelieveModal />
       </div>
     )
   }
