@@ -27,11 +27,8 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
 
     const closeTagsModal = () => {
       dispatch({
-        type: 'alertTagsSet/toggleTagsModal',
+        type: 'alertTagsSet/closeModal',
         payload: false
-      })
-      dispatch({
-        type: 'alertTagsSet/clear',
       })
     }
 

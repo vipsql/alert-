@@ -35,6 +35,10 @@ export default {
         ...state,
         isShowMore
       }
+    },
+    // 
+    toggleDetailAlertId(state, {payload: viewDetailAlertId}) {
+      return { ...state, viewDetailAlertId }
     }
 
 

@@ -111,6 +111,11 @@ export default {
       yield put({ type: 'alertManage/toggleAlertSet', payload: true })
       yield put({ type: 'toggleTagsModal', payload: false })
 
+    },
+    // close modal
+    *closeModal({payload}, {select, put, call}) {
+      yield put({ type: 'toggleTagsModal', payload: payload })
+      yield put({ type: 'clear' })
     }
   },
 
@@ -208,7 +213,7 @@ export default {
 
       return { ...state, currentTagsList: newList, selectedTagsNum: newTagsNum }
     },
-    // 重置选择(接口没对，暂时这么处理，后期修改)
+    // 重置选择
     resetSelected(state) {
       const { currentTagsList } = state;
       const newList = currentTagsList.map( (item) => {

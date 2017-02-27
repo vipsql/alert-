@@ -130,7 +130,7 @@ export default {
       *openMergeModal({payload}, {select, put, call}) {
           const { mergeInfoList } = yield select( state => {
               return {
-                  'mergeInfoList': state.alertListTable.mergeInfoList,
+                  'mergeInfoList': state.alertListTableCommon.selectedAlertIds,
               }
           })
           if (mergeInfoList !== undefined && mergeInfoList.length > 2) {
@@ -218,7 +218,7 @@ export default {
       *closeAlert({payload}, {select, put, call}) {
           const { operateAlertIds, userId } = yield select( state => {
               return {
-                  'operateAlertIds': state.alertListTable.operateAlertIds,
+                  'operateAlertIds': state.alertListTableCommon.operateAlertIds,
                   'userId': state.app.userId
               }
           })
@@ -251,7 +251,7 @@ export default {
       // 确定派发工单
       *dispatchForm({payload}, {select, put, call}) {
 
-          const operateAlertIds = yield select( state => state.alertListTable.operateAlertIds)
+          const operateAlertIds = yield select( state => state.alertListTableCommon.operateAlertIds)
 
           if (operateAlertIds.length > 1) {
               yield message.error(`请先将多条告警合并为一条原告警`, 3);

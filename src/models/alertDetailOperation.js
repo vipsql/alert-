@@ -35,9 +35,10 @@ export default {
       },
       // 关闭告警
       *closeAlert({payload}, {select, put, call}) {
-          const { userId } = yield select( state => {
+          const { userId, viewDetailAlertId } = yield select( state => {
               return {
-                  'userId': state.app.userId
+                  'userId': state.app.userId,
+                  'viewDetailAlertId': state.alertListTableCommon.viewDetailAlertId
               }
           })
 
@@ -63,7 +64,7 @@ export default {
       // 确定派发工单
       *dispatchForm({payload}, {select, put, call}) {
 
-          const viewDetailAlertId = yield select( state => state.alertListTable.viewDetailAlertId)
+          const viewDetailAlertId = yield select( state => state.alertListTableCommon.viewDetailAlertId)
 
           if (typeof viewDetailAlertId === 'number') {
               const result = yield dispatchForm({
