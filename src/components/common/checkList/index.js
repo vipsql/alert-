@@ -20,7 +20,7 @@ const checkList = ({itemList, checkedNum, isSpreadTags, checkHandler, origin}) =
       })
       return (
         <li key={index}>
-          <span className={styles.tagsName}>{item.name}:</span>
+          <div className={styles.tagsName}>{item.name}:</div>
           {tagsDetail}
         </li>
       )
