@@ -3,7 +3,7 @@ import { queryDetail } from '../services/alertDetail'
 import { message } from 'antd'
 
 const initalState = {
-  isShowDetail: true, // 是否显示detail
+  isShowDetail: false, // 是否显示detail
 
   currentAlertDetail: {
     alertId: 1,
@@ -25,12 +25,12 @@ const initalState = {
     ]
   },
 
-  operateForm: undefined, // 操作工单（当前） 
+  operateForm: undefined, // 操作工单（当前）
   isSowOperateForm: false, // 是否显示操作工单文本
 
   operateRemark: undefined, // 备注信息
   isShowRemark: false, // 是否显示备注框
-    
+
 }
 
 export default {

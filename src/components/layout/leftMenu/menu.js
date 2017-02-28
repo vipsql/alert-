@@ -19,7 +19,6 @@ const createMenus = (menus, isFold) => {
     return (
       <Menu.Item key={item.key}>
         <Link to={path + item.key}>
-          {/*{item.icon ? <Icon type={item.icon} /> : ''}*/}
           <i className={className}></i>
 
           {isFold ? '' : item.name}

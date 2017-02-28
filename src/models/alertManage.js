@@ -41,7 +41,7 @@ export default {
           'userId': state.app.userId,
         }
       })
-      
+
       const tagSet = yield isSetUserTags(userId)
       if(tagSet.data.isSet) {
         yield put({
@@ -68,9 +68,9 @@ export default {
       }
     },
     *queryAlertDashbord({payload}, {call, put, select}) {
-      
+
       const treemapData = yield queryDashbord(payload)
-      
+
       if (typeof treemapData.data !== 'undefined') {
         yield put({
           type: 'setCurrentTreemap',

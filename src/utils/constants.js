@@ -1,3 +1,3 @@
 export default {
-    "api_root": "http://10.1.240.126:8890"
+    "api_root": "http://10.1.140.114:8890"
 }

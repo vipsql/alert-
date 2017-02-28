@@ -26,7 +26,7 @@ export default {
       // search all tags
       const { userId } = yield select( state => ({'userId': state.app.userId}))
       const allTags = yield getAllTags();
-     
+
       if (typeof allTags.data !== 'undefined' && allTags.data.length !== 0) {
         yield put({
           type: 'setCurrentTags',
@@ -34,7 +34,7 @@ export default {
         })
         // search selected tags
         const selectedTags = yield getTagsByUser(userId);
-      
+
         if (typeof selectedTags.data !== 'undefined') {
           yield put({
             type: 'setCurrentSelectTags',
@@ -48,12 +48,12 @@ export default {
         }
       } else {
         console.error('查询所有标签错误');
-      }  
+      }
     },
     // inital dashbord when isSet is true
     *queryDashbordBySetted({payload: userId}, {select, put, call}) {
       const selectedTags = yield getTagsByUser(userId)
-      
+
       if (typeof selectedTags.data !== 'undefined') {
         yield put({
           type: 'filterCommitTags',
@@ -65,7 +65,7 @@ export default {
             'commitTagIds': state.alertTagsSet.commitTagIds
           }
         })
-        
+
         yield put({
           type: 'alertManage/queryAlertDashbord',
           payload: {
@@ -78,7 +78,7 @@ export default {
       } else {
         console.error('查询用户标签错误');
       }
-      
+
     },
     // commit tagIds by set modal
     *addAlertTags ({payload}, {select, put, call}) {
@@ -94,7 +94,7 @@ export default {
       })
 
       const postResult = yield setUserTags({'userId': userId, 'tagIdList': commitTagIds});
-      
+
       if (postResult.result) {
         yield message.success('标签保存成功');
       } else {
