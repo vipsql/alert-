@@ -1,4 +1,5 @@
 import { login } from '../services/app'
+import { isSetUserTags } from '../services/alertTags.js'
 //import pathToRegexp from 'path-to-regexp';
 import {parse} from 'qs'
 
@@ -8,7 +9,7 @@ const initialState = {
   userName: 'admin', // 前端先写死，后期改用localstorge来存储
   userId: localStorage.getItem('userId') || '',
   isFold: false, //false展开
-  isShowMask: false // 遮罩层
+  isShowMask: true // 遮罩层
 }
 
 export default {
@@ -24,6 +25,9 @@ export default {
             type: 'login'
           })
         }
+        dispatch({
+          type: 'isSetTags'
+        })
       })
     },
   },
@@ -47,6 +51,28 @@ export default {
         } else {
           console.error('用户Id未获取');
         }
+      }
+    },
+    *isSetTags({payload}, {put, call, select}) {
+
+      const { userId } = yield select( state => {
+        return {
+          'userId': state.app.userId,
+        }
+      })
+      
+      const tagSet = yield isSetUserTags(userId)
+      if(tagSet.data.isSet) {
+        yield put({
+          type: 'showMask',
+          payload: false
+        })
+        
+      } else {
+        yield put({
+          type: 'showMask',
+          payload: true
+        })
       }
     },
 

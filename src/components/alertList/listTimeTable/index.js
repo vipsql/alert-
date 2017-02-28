@@ -8,11 +8,13 @@ import styles from '../index.less'
 const  ListTimeTableWrap = ({dispatch, alertListTimeTable}) => {
   const props = {
     ...alertListTimeTable,
-    showMore(){
+
+    loadMore(){
       dispatch({
-        type: 'alertListTimeTable/loadMore'
+        type: 'alertListTableCommon/loadMore'
       })
     },
+    
     setTimeLineWidth(gridWidth, minuteToWidth){
       dispatch({
         type: 'alertListTimeTable/setTimeLineWidth',
@@ -22,11 +24,6 @@ const  ListTimeTableWrap = ({dispatch, alertListTimeTable}) => {
         }
       })
     },
-    showMore(){
-      dispatch({
-        type: 'alertListTimeTable/showMore'
-      })
-    }
 
   }
 

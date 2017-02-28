@@ -10,7 +10,7 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
     ...alertListTable,
     loadMore(){
       dispatch({
-        type: 'alertListTable/loadMore'
+        type: 'alertListTableCommon/loadMore'
       })
     },
     setTimeLineWidth(gridWidth, minuteToWidth){

@@ -24,7 +24,7 @@ export default {
   subscriptions: {
     alertManageSetup({dispatch, history}) {
       history.listen((location) => {
-        if (location.pathname === '/alertManage') {
+        if (location.pathname === '/alertManage' || location.pathname === '/') {
           dispatch({
             type: 'alertManageSetup'
           })
@@ -49,18 +49,10 @@ export default {
           payload: userId
         })
         yield put({
-          type: 'app/showMask',
-          payload: false
-        })
-        yield put({
           type: 'toggleAlertSetTip',
           payload: true
         })
       } else {
-        yield put({
-          type: 'app/showMask',
-          payload: true
-        })
         yield put({
           type: 'toggleAlertSet',
           payload: false

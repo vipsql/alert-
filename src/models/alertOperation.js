@@ -280,26 +280,26 @@ export default {
               type: 'setGroupType',
               payload: payload
           })
-        //   const group = yield select( state => state.alertOperation.selectGroup)
-        //   yield put({
-        //       type: 'alertListTableCommon/setGroup',
-        //       payload: {
-        //           isGroup: true,
-        //           group: group
-        //       }
-        //   })
+          const group = yield select( state => state.alertOperation.selectGroup)
+          yield put({
+              type: 'alertListTableCommon/setGroup',
+              payload: {
+                  isGroup: true,
+                  group: group
+              }
+          })
       },
       // 无分组显示
       *noGroupView({payload}, {select, put, call}) {
           yield put({
               type: 'removeGroupType',
           })
-        //   yield put({
-        //       type: 'alertListTableCommon/setGroup',
-        //       payload: {
-        //           isGroup: false,
-        //       }
-        //   })
+          yield put({
+              type: 'alertListTableCommon/setGroup',
+              payload: {
+                  isGroup: false,
+              }
+          })
       },
       // 列定制
       *checkColumn({payload}, {select, put, call}) {

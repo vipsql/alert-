@@ -3,6 +3,7 @@ import * as d3 from 'd3'
 import crossfilter from 'crossfilter'
 import dc from 'dc'
 import styles from './index.less'
+import { connect } from 'dva'
 
 let d3_date = Date;
 function d3_time_interval(local, step, number) {
@@ -88,13 +89,13 @@ class AlertBar extends Component{
   constructor(props){
     super(props)
   }
-  componentDidMount(){
+  componentDidUpdate(){
 
     const {
       barData
-    } = this.props
+    } = this.props.alertList
     const len = barData.length
-
+    
     if(len > 0) {
         const startTime = barData[0]['time']
         const endtTime = barData[barData.length - 1]['time']
@@ -144,9 +145,9 @@ class AlertBar extends Component{
 
     const {
       barData
-    } = this.props
+    } = this.props.alertList
     const len = barData.length
-    
+
     return (
       <div>{ len ?
        <div className={styles.timeAlert}>
@@ -161,4 +162,4 @@ class AlertBar extends Component{
   }
 
 }
-export default AlertBar
+export default connect(({alertList}) => ({alertList}))(AlertBar)

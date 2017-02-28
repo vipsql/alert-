@@ -6,7 +6,7 @@ export default {
   state: {
     isRefresh: false, //是否实时更新
     alertOperateModalOrigin: undefined, // 这个状态是用来区别那个Modal打开的 --> 对应position
-    tagsFilter: {},
+
     barData:[], // 最近4小时告警数据
     begin: 0, //告警开始时间(时间线)
     end: 0,  //告警结束时间(时间线)
@@ -36,22 +36,14 @@ export default {
   },
   subscriptions: {
     setup({dispatch}) {
-      // dispatch({
-      //   type: 'queryAlertBar'
-      // })
-
-      // 取过滤条件
-
 
     }
   },
   effects: {
     // 查询柱状图
     *queryAlertBar({payload}, {call, put, select}) {
-
-      const payData = yield select(state => {
-        return state.alertList.tagsFilter
-      })
+      // 触发这个effect的时机是在刷新/tag转变的时候（不保存状态--所以需要初始化commonList）
+      yield put({ type: 'alertListTableCommon/clear' })
 
       const data = yield call(queryAlertBar, payload)
 
@@ -60,34 +52,35 @@ export default {
         const endtTime = barData[barData.length - 1]['time']
         const startTime = endtTime - 3600000
 
+        // 将公用数据放入commonList
+        yield put({
+          type: 'alertListTableCommon/setInitvalScope',
+          payload: {
+            begin: startTime,
+            end: endtTime,
+            isGroup: false,
+            tagsFilter: payload
+          }
+        })
+
         // 更新柱状图数据
         yield put({
           type: 'updateAlerBarData',
           payload: {
-            barData:data.data
+            barData: data.data,
+            begin: startTime,
+            end: endtTime
           }
-
         })
 
         // 发起查询列表请求
         yield put({
           type: 'alertListTable/queryAlertList',
-          payload: {
-            begin: startTime,
-            end: endtTime,
-            isGroup: false,
-            group: 'severity'
-          }
         })
 
         // 预加载告警列表时间线数据
         yield put({
           type: 'alertListTimeTable/queryAlertListTime',
-          payload: {
-            begin: startTime,
-            end: endtTime,
-            isGroup: false
-          }
         })
 
 
@@ -107,12 +100,10 @@ export default {
     initAlertList(state, action) {
       return { ...state, ...action.payload, loading: false}
     },
-    updateAlerBarData(state,{payload: {barData,begin,end}}){
+    updateAlerBarData(state,{ payload }){
       return {
         ...state,
-        barData,
-        begin,
-        end
+        ...payload
       }
     },
     // 转换icon状态

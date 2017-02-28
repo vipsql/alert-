@@ -77,6 +77,7 @@ export default {
 
       let {
         isGroup,
+        groupBy,
         begin,
         end
       } = yield select(state => {
@@ -84,6 +85,7 @@ export default {
 
         return {
           isGroup: alertListTableCommon.isGroup,
+          groupBy: alertListTableCommon.groupBy,
           begin: alertListTableCommon.begin,
           end: alertListTableCommon.end
         }
@@ -91,23 +93,23 @@ export default {
 
 
       // 如果是分组
-      if(payload.begin){
-        begin = payload.begin
-        end = payload.end
-        isGroup = payload.isGroup
-      }
+      // if(payload.begin){
+      //   begin = payload.begin
+      //   end = payload.end
+      //   isGroup = payload.isGroup
+      // }
 
       // 如果存在表示分组
-      if(isGroup){
-        yield put({
-          type: 'alertListTableCommon/updateGroup',
-          payload: true
-        })
-      }
+      // if(isGroup){
+      //   yield put({
+      //     type: 'alertListTableCommon/updateGroup',
+      //     payload: true
+      //   })
+      // }
       const tagsFilter = yield select( state => {
 
         return {
-          ...state.alertList.tagsFilter,
+          ...state.alertListTableCommon.tagsFilter,
           begin: begin,
           end: end
         }
@@ -117,7 +119,7 @@ export default {
         const alertListTableCommon = state.alertListTableCommon
         if(isGroup){
           return {
-            groupBy: payload.group
+            groupBy: groupBy
           }
         }else{
           return {
@@ -142,7 +144,7 @@ export default {
           })
           yield put({
             type: 'alertListTableCommon/updateShowMore',
-            payload:fal
+            payload: false
           })
 
         }else{
@@ -152,7 +154,7 @@ export default {
           })
           yield put({
             type: 'alertListTableCommon/updateShowMore',
-            payload:data.data.hasNext
+            payload: data.data.hasNext
           })
         }
 

@@ -3,7 +3,7 @@ import { queryDetail } from '../services/alertDetail'
 import { message } from 'antd'
 
 const initalState = {
-  isShowDetail: true, // 是否显示detail
+  isShowDetail: false, // 是否显示detail
 
   currentAlertDetail: {
     alertId: 1,
