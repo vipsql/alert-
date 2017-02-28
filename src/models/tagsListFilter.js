@@ -68,14 +68,14 @@ export default {
     *changeTags({payload}, {select, put, call}) {
       yield put({ type: 'changeSelectTag', payload: payload })
       yield put({ type: 'filterTags'})
-      const { filterTags } = yield select( state => state.tagListFilter.filterTags )
-    yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
+      const filteredTags = yield select( state => state.tagListFilter.filteredTags )
+      yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
     },
     *removeTag({payload}, {select, put, call}) {
       yield put({ type: 'removeSelectTag', payload: payload })
       yield put({ type: 'filterTags'})
-      const { filterTags } = yield select( state => state.tagListFilter.filterTags )
-     yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
+      const filteredTags = yield select( state => state.tagListFilter.filteredTags )
+      yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
     }
   },
 

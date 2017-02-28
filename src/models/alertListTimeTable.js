@@ -46,91 +46,84 @@ export default {
         data
       }
     },
-    loadMore(state, {payload: {data, curPage}}){
-
-      return {
-        ...state,
-        data,
-        curPage
-      }
-    },
     // 更新告警列表
-    updateAlertListTimeData(state, {payload: {data,isShowMore}}){
+    updateAlertListTimeData(state, {payload: data}){
       return {
         ...state,
-        data,
-        isShowMore
+        data
       }
     },
     // 更新分组字段
-    updateGroup(state,{payload: isGroup}){
-      return {
-        ...state,
-        isGroup
-      }
-    },
+    // updateGroup(state,{payload: isGroup}){
+    //   return {
+    //     ...state,
+    //     isGroup
+    //   }
+    // },
     // 更新时间
-    updateCurState(state, {payload: {begin,end}}){
-      return {
-        ...state,
-        begin,
-        end
-      }
-    }
+    // updateCurState(state, {payload: {begin,end}}){
+    //   return {
+    //     ...state,
+    //     begin,
+    //     end
+    //   }
+    // }
   },
   effects: {
     *queryAlertListTime({ payload }, {call, put, select}){
       
       let {
         isGroup,
+        groupBy,
         begin,
         end
       } = yield select(state => {
-        const alertListTimeTable = state.alertListTimeTable
+        const alertListTableCommon = state.alertListTableCommon
         return {
-          isGroup: alertListTimeTable.isGroup,
-          begin: alertListTimeTable.begin,
-          end: alertListTimeTable.end
+          isGroup: alertListTableCommon.isGroup,
+          groupBy: alertListTableCommon.groupBy,
+          begin: alertListTableCommon.begin,
+          end: alertListTableCommon.end
         }
       })
 
 
       // 如果是分组
-      if(payload.begin){
-        begin = payload.begin
-        end = payload.end
-        isGroup = payload.isGroup
-      }
+      // if(payload.begin){
+      //   begin = payload.begin
+      //   end = payload.end
+      //   isGroup = payload.isGroup
+      // }
 
       // 如果存在表示分组
-      if(isGroup){
-        yield put({
-          type: 'updateGroup',
-          payload: true,
+      // if(isGroup){
+      //   yield put({
+      //     type: 'alertListTableCommon/updateGroup',
+      //     payload: true,
 
-        })
-      }
+      //   })
+      // }
       const tagsFilter = yield select( state => {
 
         return {
-          ...state.alertList.tagsFilter,
+          ...state.alertListTableCommon.tagsFilter,
           begin: begin,
           end: end
         }
       })
 
       const extraParams = yield select( state => {
-        const alertListTimeTable = state.alertListTimeTable
+        const alertListTableCommon = state.alertListTableCommon
         if(isGroup){
           return {
-            groupBy: payload.group
+            groupBy: groupBy
           }
         }else{
           return {
-            pageSize: alertListTimeTable.pageSize,
-            currentPage: alertListTimeTable.currentPage,
-            orderBy: alertListTimeTable.orderBy,
-            orderType: alertListTimeTable.orderType
+            pageSize: alertListTableCommon.pageSize,
+            currentPage: alertListTableCommon.currentPage,
+            orderBy: alertListTableCommon.orderBy,
+            orderType: alertListTableCommon.orderType
           }
         }
       })
@@ -142,27 +135,19 @@ export default {
 
 
       if(data.result){
-        // 更新当前状态
-        yield put({
-          type: 'updateCurState',
-          payload: {
-            begin,
-            end
-          },
-
-        })
 
         if(isGroup){
           yield put({
             type: 'updateAlertListTimeData',
-            payload:{
-              data: data.data,
-              isShowMore: false
-            }
+            payload: data.data,
+          })
+          yield put({
+            type: 'alertListTableCommon/updateShowMore',
+            payload: false
           })
         }else{
           yield put({
-            type: 'updateAlertListData',
+            type: 'updateAlertListTimeData',
             payload: data.data.datas
           })
 
@@ -175,27 +160,6 @@ export default {
 
       }
 
-
-
-    },
-    *showMore({}, {call, put, select}){
-      let { curPage, data }=  yield select(state => {
-         return state.alertListTimeTable
-      })
-      curPage =  curPage + 1
-      const payload = {
-        curPage : curPage
-      }
-
-      const returnData = yield call(queryAlertListTime, payload)
-      data = data.concat(returnData)
-      yield put({
-        type: 'loadMore',
-        payload: {
-          data,
-          curPage
-        }
-      })
 
 
     }

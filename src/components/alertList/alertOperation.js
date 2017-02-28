@@ -124,7 +124,7 @@ const alertOperation = ({position, alertOperation, dispatch}) => {
                         })
                     }}>
                         <Option className={styles.menuItem} value="source">按来源分组</Option>
-                        <Option className={styles.menuItem} value="state">按状态分组</Option>
+                        <Option className={styles.menuItem} value="status">按状态分组</Option>
                         <Option className={styles.menuItem} value="severity">按级别分组</Option>
                         <Option className={styles.menuItem} value="position">按位置分组</Option>
                     </Select>
