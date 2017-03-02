@@ -25,12 +25,12 @@ const initalState = {
     // ]
   },
 
-  operateForm: undefined, // 操作工单（当前） 
+  operateForm: undefined, // 操作工单（当前）
   isSowOperateForm: false, // 是否显示操作工单文本
 
   operateRemark: undefined, // 备注信息
   isShowRemark: false, // 是否显示备注框
-    
+
 }
 
 export default {

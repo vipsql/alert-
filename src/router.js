@@ -30,7 +30,7 @@ export default function ({history, app}) {
           name: 'alertList',
           getComponent(nextState, cb) {
             require.ensure([], require => {
-              
+
               cb(null, require('./routes/alertList'))
             })
           }
