@@ -114,7 +114,7 @@ export default {
       return { ...state, checkAlert: checkList }
     },
     // 重置勾选状态
-    resetCheckAlert(state) {
+    resetCheckedAlert(state) {
       const { checkAlert } = state;
       let ids = Object.keys(checkAlert);
       ids.forEach( (id) => {

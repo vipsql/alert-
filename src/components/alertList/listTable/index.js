@@ -31,7 +31,6 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
       })
     },
     detailClick(e) {
-      console.log(e)
       const alertId = JSON.parse(e.target.getAttribute('data-id'));
 
       dispatch({

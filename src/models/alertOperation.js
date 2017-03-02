@@ -98,7 +98,7 @@ export default {
                   parentId: relieveAlert.id
               })
               if (!relieveResult.result) {
-                  yield put({ type: 'alertListTableCommon/resetCheckAlert'})
+                  yield put({ type: 'alertListTableCommon/resetCheckedAlert'})
                   yield message.error(result.message, 3);
               } else {
                   yield message.success('解除成功', 3);
@@ -153,7 +153,7 @@ export default {
                   childs: filterList
               })
               if (!result.result) {
-                  yield put({ type: 'alertListTableCommon/resetCheckAlert'})
+                  yield put({ type: 'alertListTableCommon/resetCheckedAlert'})
                   yield message.error(result.message, 3);
               } else {
                   yield message.success('合并成功', 3);
@@ -225,7 +225,7 @@ export default {
                     closeMessage: payload
                 })
                 if (resultData.result) {
-                    yield put({ type: 'alertListTableCommon/resetCheckAlert'})
+                    yield put({ type: 'alertListTableCommon/resetCheckedAlert'})
                     yield message.success(`关闭成功`, 3);
                 } else {
                     yield message.error(`${resultData.message}`, 3);
@@ -256,7 +256,7 @@ export default {
               })
               if (result.data !== undefined) {
                   yield window.open(result.data);
-                  yield put({ type: 'alertListTableCommon/resetCheckAlert'})
+                  yield put({ type: 'alertListTableCommon/resetCheckedAlert'})
               }
           } else if (operateAlertIds.length === 0) {
               yield message.error(`请先选择一条告警`, 3);
@@ -275,12 +275,11 @@ export default {
               type: 'setGroupType',
               payload: payload
           })
-          const group = yield select( state => state.alertOperation.selectGroup)
           yield put({
               type: 'alertListTableCommon/setGroup',
               payload: {
                   isGroup: true,
-                  group: group
+                  group: payload
               }
           })
       },

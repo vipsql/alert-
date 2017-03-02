@@ -74,12 +74,12 @@ class ListTimeTable extends Component {
       let tbodyCon = []
 
       // 生成列
-       const genTds = (item, keys) => {
+      const genTds = (item, keys) => {
          let TDS = []
 
          keys.forEach( (key, index) => {
            // const tdKey = item.date + key
-           const className = key == 'description' ? 'tdBorderRight' : ''
+           const className = key == 'alertName' ? 'tdBorderRight' : ''
            if(index == 0){
              TDS.push(
                <td key='sourceAlert'>
@@ -95,7 +95,7 @@ class ListTimeTable extends Component {
          })
 
          return TDS
-       }
+      }
 
       //  生成时间线
       const genDots = (item, keys) => {
@@ -103,19 +103,27 @@ class ListTimeTable extends Component {
         let dotsLine = []
         let lineDotLeft = 0
         let lineDotW = 0
-
+        
         // keys.forEach((key, index) => {
         //   if(key === 'timeLine')  {
-            lineDotLeft = (item[0].date - begin) / (60 * 1000) * minuteToWidth
+            lineDotLeft = (item[0].occurTime - begin) / (60 * 1000) * minuteToWidth
             const len = item.length
-            lineDotW = (item[len-1]['date'] - item[0]['date']) / (60 * 1000) * minuteToWidth
-
+            lineDotW = (item[len-1]['occurTime'] - item[0]['occurTime']) / (60 * 1000) * minuteToWidth
+            // console.log(item[0].occurTime)
+            // console.log(item[0].occurTime - begin)
+            // console.log(begin)
             dots =  item.map( (itemDot, idx) => {
-              const left = (itemDot.date - begin) / (60 * 1000) * minuteToWidth
+              const left = (itemDot.occurTime - begin) / (60 * 1000) * minuteToWidth
+              //console.log(left)
+              let newDate = new Date(+itemDot['occurTime'])
               const content = (
                 <div>
-                  <p>{itemDot['description']}</p>
-                  <p>{itemDot['entityName']}</p>
+                  <p>{`级别：${itemDot['severity'] == 10 ? '提醒' : severity == 20 ? '警告' : severity == 30 ? '次要': severity == 40 ? '主要' : severity == 50 ? '紧急' : '恢复' }`}</p>
+                  <p>{`告警名称：${itemDot['name']}`}</p>
+                  <p>{`告警ID：${itemDot['id']}`}</p>
+                  <p>{`发生时间：${newDate.getFullYear() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getDate() + ' ' + newDate.getHours() + ':' + newDate.getMinutes()}`}</p>
+                  <p>{`告警描述：${itemDot['description']}`}</p>
+                  <p>{`来源：${itemDot['entityName']}`}</p>
                 </div>
               );
               return (
@@ -157,28 +165,30 @@ class ListTimeTable extends Component {
 
       if(isGroup){
         data.forEach( (groupItem, index) => {
+          let keys = colsKey;
+
           let groupTr = null
           let commonTrs = []
           let childTrs = []
           // 分组行
           groupTr = (
-            <tr>
-              <td colSpan='6'>{groupItem['classify']}</td>
+            <tr className={styles.trGroup} key={index}>
+              <td colSpan={6}><span className={styles.expandIcon}>-</span>{groupItem['classify']}</td>
             </tr>
           )
-          //
-          groupItem.children.forEach( (item, index) => {
-            let keys = Object.keys(item)
-
+          
+          groupItem.children !== undefined && groupItem.children.forEach( (item, index) => {
+            console.log(item)
             const tds = genTds(item, keys)
-            const dotsInfo = genDots(item, keys)
+            const dotsInfo = genDots(item.timeLine, keys)
             const dots = dotsInfo.dots
             const lineDotW = dotsInfo.lineDotW
             const lineDotLeft = dotsInfo.lineDotLeft
 
-            commonTrs = (
+            commonTrs.push(
               <tr key={index}>
                 <td key="checkbox"><input type="checkbox" data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
+                <td width="20" key='space-col-td'></td>
                 {tds}
                 <td key="timeDot">
                   <div className={styles.timeLineDot}>
@@ -212,12 +222,15 @@ class ListTimeTable extends Component {
 
       }else{
 
-        data .length > 0 && data.map( (item, index) => {
+        data.length > 0 && data.map( (item, index) => {
 
           // const info = item.alertInfo
           let keys = colsKey;
           
-          const tdCheck = Object.keys(checkAlert).length !== 0 ? <td key="checkbox"><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td> : undefined
+          const tdCheck = Object.keys(checkAlert).length !== 0 ? 
+            <td key="checkbox"><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td> 
+            : 
+            undefined
           const tds = genTds(item, keys)
           const dotsInfo = genDots(item.timeLine, keys)
           const dots = dotsInfo.dots
@@ -237,7 +250,7 @@ class ListTimeTable extends Component {
           }else{
             childTrs = null
           }
-
+          
           tbodyCon.push(
             <tr key={index}>
               {tdCheck}

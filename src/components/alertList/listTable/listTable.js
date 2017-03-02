@@ -32,16 +32,51 @@ class ListTable extends Component {
     theads.unshift(<th key="checkAll" width={60}><input type="checkbox" /></th>)
     let tbodyCon = [];
 
+    // 生成每一列的参数
+    const getTds = (item, keys) => {
+      return keys.map((key) => {
+        let data = item[key];
+        if(key == 'lastOccurtime'){
+          const date = new Date(data)
+          data = `${date.getHours()}:${date.getMinutes()}`
+        }
+        if(key == 'lastTime'){
+          data = `${Math.floor(data/(60*60*1000))}h`
+        }
+        if(key == 'status'){
+          switch (data) {
+            case 0:
+              data = `新告警`
+              break;
+            case 40:
+              data = `已确认`
+              break;
+            case 150:
+              data = `处理中`
+              break;
+            case 255:
+              data = `已解决`
+              break;
+            default:
+              data
+              break;
+          }
+        }
+        return (
+          key == 'typeName' ?
+          <td key={key} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >{data}</td>
+          :
+          <td key={key}>{data}</td>
+        )
+      })
+    }
+
     if(isGroup){
       data.forEach( (item, index) => {
         const keys = colsKey
-        // 这里每次都会执行 其实需要提出去
-        const tds = keys.map((key) => {
-          return (
-            <td key={key}>{item.children[index][key]}</td>
-          )
-        })
-        const childtrs = item.children.map( (childItem,index) => {
+        const childtrs = item.children !== undefined ? item.children.map( (childItem, index) => {
+          
+          const tds = getTds(childItem, keys)
           const trKey = 'td' + index
           const tdKey = 'td' + index
           return (
@@ -50,43 +85,18 @@ class ListTable extends Component {
                 {tds}
               </tr>
           )
-        } )
-        childtrs.unshift(<tr className={styles.trGroup} key={index}><td colSpan={keys.length + 1}><span className={styles.expandIcon}>+</span>{item.classify}</td></tr>)
+        } ) : []
+        childtrs.unshift(<tr className={styles.trGroup} key={index}><td colSpan={keys.length + 1}><span className={styles.expandIcon}>-</span>{item.classify}</td></tr>)
         tbodyCon.push(childtrs)
 
       } )
 
     }else{
 
-      tbodyCon = data.length > 0 && data.map( (item, index) => {
+      tbodyCon = data.length > 0 && data.children === undefined && data.map( (item, index) => {
         const keys = colsKey
-
-        // 列是不固定的 需要抽取出来
-        const tds = keys.map((key) => {
-          let data = item[key];
-          if(key == 'lastOccurtime'){
-            const date = new Date(data)
-            data = `${date.getHours()}:${date.getMinutes()}`
-          }
-          if(key == 'lastTime'){
-            data = `${Math.floor(data/(60*60*1000))}h`
-          }
-          if(key == 'status'){
-            switch (data) {
-              case 0:
-
-                break;
-              default:
-
-            }
-          }
-          return (
-            key == 'typeName' ?
-            <td key={key} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >{data}</td>
-            :
-            <td key={key}>{data}</td>
-          )
-        })
+        const tds = getTds(item, keys)
+        
         return (
           <tr key={item.id}>
             {
