@@ -1,5 +1,6 @@
 const webpack = require('atool-build/lib/webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const StringReplacePlugin = require("string-replace-webpack-plugin");
 
 module.exports = function (webpackConfig, env) {
   webpackConfig.babel.plugins.push('transform-runtime')
@@ -22,11 +23,12 @@ module.exports = function (webpackConfig, env) {
   webpackConfig.plugins.push(
        new CopyWebpackPlugin([
            {
-             from: __dirname + '/assets/iconfont/**',
+             from: __dirname + '/iconfont/**',
              to: __dirname + '/dist/'
            },
        ])
    );
+
   // Don't extract common.js and common.css
   webpackConfig.plugins = webpackConfig.plugins.filter(function (plugin) {
     return !(plugin instanceof webpack.optimize.CommonsChunkPlugin)
@@ -52,6 +54,9 @@ module.exports = function (webpackConfig, env) {
       loader.test = /\.css$/
     }
   })
+
+
+
 
   return webpackConfig
 }
