@@ -19,6 +19,8 @@ const initvalState = {
     end: 0,
 
     tagsFilter: {}, // 过滤标签
+
+    checkAlert: {}, //此对象将alertId作为属性，用来过滤checked的alert
 }
 
 export default {
@@ -66,27 +68,86 @@ export default {
     // 初始化
     clear(state) {
       return { ...state, ...initvalState }
+    },
+    // 初始化checkAlerts
+    initCheckAlert(state, { payload }) {
+      let checkList = {};
+      payload.forEach( (item, index) => {
+        checkList[`${item.id}`] = {
+          info: item,
+          checked: false
+        }
+      })
+      return { ...state, checkAlert: checkList }
+    },
+    // 初始化checkAlerts分组的
+    initCheckAlertToGroup(state, { payload }) {
+      let checkList = {};
+      payload.forEach( (group, index) => {
+        group.children.forEach( (item) => {
+          checkList[`${item.id}`] = {
+            info: item,
+            checked: false
+          }
+        })
+      })
+      return { ...state, checkAlert: checkList }
+    },
+    // 记录下原先checked数据
+    resetCheckAlert(state, { payload: { origin, newObj } }) {
+      let ids = Object.keys(origin);
+      let checkList = {};
+      newObj.forEach( (item, index) => {
+        checkList[`${item.id}`] = {
+          info: item,
+          checked: false
+        }
+        ids.forEach( (id) => {
+          if (item.id == id && origin[id].checked) {
+            checkList[`${item.id}`] = {
+              info: item,
+              checked: true
+            }
+          }
+        })
+      })
+      return { ...state, checkAlert: checkList }
+    },
+    // 重置勾选状态
+    resetCheckAlert(state) {
+      const { checkAlert } = state;
+      let ids = Object.keys(checkAlert);
+      ids.forEach( (id) => {
+        checkAlert[id].checked = false
+      })
+      return { ...state, checkAlert: checkAlert }
+    },
+    // 更改勾选状态
+    changeCheckAlert(state, { payload: alertInfo }) {
+      const { checkAlert } = state;
+      if (checkAlert[alertInfo.id] !== undefined) {
+        checkAlert[alertInfo.id].checked = !checkAlert[alertInfo.id].checked
+        return { ...state, checkAlert: checkAlert }
+      } else {
+        return { ...state }
+      }
+    },
+    // 在点击操作时进行过滤处理
+    filterCheckAlert(state) {
+      const { checkAlert } = state;
+      let operateAlertIds = [], selectedAlertIds = [];
+      let keyArr = Object.keys(checkAlert) || [];
+      keyArr.forEach( (id) => {
+        if (checkAlert[id].checked) {
+          operateAlertIds.push(id);
+          selectedAlertIds.push(checkAlert[id].info)
+        }
+      })
+      return { ...state, operateAlertIds: operateAlertIds, selectedAlertIds: selectedAlertIds }
     }
 
   },
   effects: {
-    // 更新选中告警状态
-    *updateCheckAlert({payload: alertInfo}, {select}){
-
-      let {selectedAlertIds, operateAlertIds }= yield select( state => {
-        const alertListTableCommon = state.alertListTableCommon
-
-        return {
-          selectedAlertIds: alertListTableCommon.selectedAlertIds,
-          operateAlertIds: alertListTableCommon.operateAlertIds
-        }
-      })
-
-      const { id } = alertInfo
-
-      operateAlertIds.push(id)
-      selectedAlertIds.push(alertInfo)
-    },
     // 点击分组时触发
     *setGroup({payload}, {select, put, call}) {
       if (payload.isGroup) {
@@ -99,6 +160,11 @@ export default {
         yield put({ type: 'alertListTable/queryAlertList' })
         yield put({ type: 'alertListTimeTable/queryAlertListTime' })
       }
+    },
+    // 点击展开详情
+    *clickDetail({payload}, {select, put, call}) {
+      yield put({ type: 'toggleDetailAlertId', payload: payload })
+      yield put({ type: 'alertDetail/openDetailModal'})
     },
     // show more
     *loadMore({}, {call, put, select}){
@@ -137,6 +203,13 @@ export default {
 
         listData = listData.concat(listReturnData.data.datas);
         timeData = timeData.concat(timeReturnData.data.datas);
+        yield put({
+          type: 'resetCheckAlert',
+          payload: {
+            origin: alertListTableCommon.checkAlert,
+            newObj: listData
+          }
+        })
 
         yield put({
           type: 'alertListTable/updateAlertListData',

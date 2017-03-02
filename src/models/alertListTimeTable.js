@@ -22,7 +22,7 @@ export default {
       width: 100
     }, {
       title: '告警名称',
-      key: 'description',
+      key: 'alertName',
       width: 180
     }]
   },

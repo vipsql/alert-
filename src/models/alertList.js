@@ -87,6 +87,37 @@ export default {
       }
 
     },
+    // 滑动时间条触发
+    *editAlertBar({payload}, {call, put, select}) {
+      // 将公用数据放入commonList
+      yield put({
+        type: 'alertListTableCommon/setInitvalScope',
+        payload: {
+          begin: payload.begin,
+          end: payload.end,
+          currentPage: 1
+        }
+      })
+
+      // 更新柱状图数据
+      // yield put({
+      //   type: 'updateAlerBarData',
+      //   payload: {
+      //     begin: payload.begin,
+      //     end: payload.end,
+      //   }
+      // })
+      
+      // 发起查询列表请求
+      yield put({
+        type: 'alertListTable/queryAlertList',
+      })
+
+      // 预加载告警列表时间线数据
+      yield put({
+        type: 'alertListTimeTable/queryAlertListTime',
+      })
+    },
     *editLevel() {
 
     }

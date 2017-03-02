@@ -6,9 +6,10 @@ import { classnames } from '../../utils'
 
 const Option = Select.Option;
 const DropdownButton = Dropdown.Button;
-const alertOperation = ({position, alertOperation, dispatch}) => {
+const alertOperation = ({position, alertOperation, alertList, dispatch}) => {
 
     const { columnList, selectGroup } = alertOperation
+    const { columns } = alertList
 
     // static data
     // <div className={styles.button}><p>派发工单</p></div>
@@ -47,12 +48,16 @@ const alertOperation = ({position, alertOperation, dispatch}) => {
                                 <p>{group.name}</p>
                                 {
                                     group.cols.map( (item, index) => {
-                                        return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={item.checked} onChange={ (e) => {
-                                            dispatch({
-                                                type: 'alertOperation/checkColumn',
-                                                payload: e.target.value,
-                                            })
-                                        }}>{item.name}</Checkbox></div>
+                                        if (item.id === 'entityAddr' || item.id === 'typeName') {
+                                            return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={true} disabled={true} >{item.name}</Checkbox></div>
+                                        } else {
+                                            return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={item.checked} onChange={ (e) => {
+                                                dispatch({
+                                                    type: 'alertOperation/checkColumn',
+                                                    payload: e.target.value,
+                                                })
+                                            }}>{item.name}</Checkbox></div>
+                                        }
                                     })
                                 }
                             </div>
@@ -138,7 +143,11 @@ const alertOperation = ({position, alertOperation, dispatch}) => {
                 undefined
             }
             { position === 'list' 
-                ? <Popover placement='bottomRight' trigger="click" content={popoverContent}>
+                ? <Popover placement='bottomRight' trigger="click" content={popoverContent} onClick={ () => {
+                    dispatch({
+                        type: 'alertOperation/initalColumn'
+                    })
+                  }}>
                     <div className={classnames(styles.button, styles.rightBtn)}>
                         <i className={classnames(setClass, styles.setCol)}></i>
                         <p className={styles.col}>列定制</p>
@@ -160,6 +169,7 @@ alertOperation.propTypes = {
 
 export default connect((state) => {
   return {
+    alertList: state.alertList,
     alertOperation: state.alertOperation
   }
 })(alertOperation)

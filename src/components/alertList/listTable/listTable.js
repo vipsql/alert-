@@ -12,11 +12,13 @@ class ListTable extends Component {
       isShowMore,
       data,
       columns,
+      checkAlertFunc,
+      loadMore,
       checkAlert,
-      loadMore
+      detailClick
     } = this.props
     let colsKey = []
-
+    
     const theads = columns.map( (item) => {
       const width = item.width || 'auto'
       colsKey.push(item['key'])
@@ -44,7 +46,7 @@ class ListTable extends Component {
           const tdKey = 'td' + index
           return (
               <tr key={trKey}>
-                <td key={tdKey}><input type="checkbox" /></td>
+                <td key={tdKey}><input type="checkbox" data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc}/></td>
                 {tds}
               </tr>
           )
@@ -79,12 +81,20 @@ class ListTable extends Component {
             }
           }
           return (
+            key == 'typeName' ?
+            <td key={key} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >{data}</td>
+            :
             <td key={key}>{data}</td>
           )
         })
         return (
           <tr key={item.id}>
-            <td key={index}><input type="checkbox" data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlert}/></td>
+            {
+              Object.keys(checkAlert).length !== 0 ?
+              <td key={index}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
+              :
+              undefined
+            }
             {tds}
           </tr>
         )

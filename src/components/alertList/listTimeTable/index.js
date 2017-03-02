@@ -25,6 +25,23 @@ const  ListTimeTableWrap = ({dispatch, alertListTimeTable}) => {
       })
     },
 
+    checkAlertFunc(e){
+      const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
+
+      dispatch({
+        type: 'alertListTableCommon/changeCheckAlert',
+        payload: alertInfo
+      })
+    },
+    detailClick(e) {
+      const alertId = JSON.parse(e.target.getAttribute('data-id'));
+
+      dispatch({
+        type: 'alertListTableCommon/clickDetail',
+        payload: alertId
+      })
+    }
+
   }
 
   return (

@@ -41,11 +41,12 @@ export default {
                   'viewDetailAlertId': state.alertListTableCommon.viewDetailAlertId
               }
           })
-
+          
           if (typeof viewDetailAlertId === 'number') {
+              let stringId = '' + viewDetailAlertId;
               const resultData = yield close({
                   userId: userId, 
-                  alertIds: [viewDetailAlertId],
+                  alertIds: [stringId],
                   closeMessage: payload
               })
               if (resultData.result) {
@@ -65,7 +66,7 @@ export default {
       *dispatchForm({payload}, {select, put, call}) {
 
           const viewDetailAlertId = yield select( state => state.alertListTableCommon.viewDetailAlertId)
-
+          
           if (typeof viewDetailAlertId === 'number') {
               const result = yield dispatchForm({
                   type: payload, 

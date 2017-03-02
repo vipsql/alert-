@@ -91,10 +91,12 @@ class AlertBar extends Component{
   }
   componentDidUpdate(){
 
-    const {
-      barData
-    } = this.props.alertList
-    const len = barData.length
+    let timer = null;
+
+    const { barData } = this.props.alertList;
+    const { dispatch } = this.props;
+
+    const len = barData.length;
     
     if(len > 0) {
         const startTime = barData[0]['time']
@@ -128,8 +130,18 @@ class AlertBar extends Component{
         chart.render();
 
 
-        chart.on('filtered', function(d,f){
-          // console.log(f)
+        chart.on('filtered', function(d, f){
+          clearTimeout(timer)
+
+          timer = setTimeout( () => {
+            dispatch({
+              type: 'alertList/editAlertBar',
+              payload: {
+                begin: f[0],
+                end: f[1]
+              }
+            })
+          }, 1000)
         })
     }
 

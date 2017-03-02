@@ -47,7 +47,7 @@ class AlertListManage extends Component{
 
   render(){
     const { alertDetail, alertList } = this.props;
-
+    
     const { levels } = alertList;
 
     const tabList = classnames(
@@ -84,9 +84,14 @@ class AlertListManage extends Component{
             <li><LevelIcon extraStyle={styles.extraStyle} iconType='tx' iconState={levels.tx.state} onClick={ this.clickIcon } /><p>提醒（{levels.tx.number}）</p></li>
           </ul>
         </div>
-        <div className={ alertDetail.isShowDetail ? classnames(styles.alertDetailModal, styles.show) : styles.alertDetailModal }>
-          <AlertDetail />
-        </div>
+        {
+          Object.keys(alertDetail).length !== 0 && alertDetail.currentAlertDetail !== undefined && Object.keys(alertDetail.currentAlertDetail).length !== 0 ?
+          <div className={ alertDetail.isShowDetail ? classnames(styles.alertDetailModal, styles.show) : styles.alertDetailModal }>
+            <AlertDetail />
+          </div>
+          :
+          undefined
+        }
         <MergeModal />
         <CloseModal />
         <DispatchModal />

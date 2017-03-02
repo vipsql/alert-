@@ -17,11 +17,11 @@ export default {
       width: 100,
     }, {
       key: 'entityName',
-      title: '来源',
+      title: '告警来源',
       width: 200,
     }, {
       key: 'status',
-      title: '状态',
+      title: '告警状态',
       width: 150,
     }, {
       key: 'description',
@@ -146,6 +146,10 @@ export default {
             type: 'alertListTableCommon/updateShowMore',
             payload: false
           })
+          yield put({
+            type: 'alertListTableCommon/initCheckAlertToGroup',
+            payload: data.data
+          })
 
         }else{
           yield put({
@@ -155,6 +159,10 @@ export default {
           yield put({
             type: 'alertListTableCommon/updateShowMore',
             payload: data.data.hasNext
+          })
+          yield put({
+            type: 'alertListTableCommon/initCheckAlert',
+            payload: data.data.datas
           })
         }
 

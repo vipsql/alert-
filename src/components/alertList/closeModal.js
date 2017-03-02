@@ -7,9 +7,9 @@ import { classnames } from '../../utils'
 const Item = Form.Item;
 const Option = Select.Option;
 const closeModal = ({alertOperation, alertDetailOperation, alertList, dispatch, form}) => {
-
-    const currentData = alertList.alertOperateModalOrigin === 'detail' ? alertDetailOperation : alertOperation
     
+    const currentData = alertList.alertOperateModalOrigin === 'detail' ? alertDetailOperation : alertOperation
+
     const { isShowCloseModal } = currentData;
     const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
 

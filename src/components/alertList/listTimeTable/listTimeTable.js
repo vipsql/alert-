@@ -32,9 +32,12 @@ class ListTimeTable extends Component {
         data,
         columns,
         loadMore,
-        isShowMore
+        isShowMore,
+        checkAlertFunc,
+        checkAlert,
+        detailClick
       } = this.props
-
+      
       let colsKey = []
       const theads = columns.map( (item) => {
         colsKey.push(item['key'])
@@ -100,6 +103,7 @@ class ListTimeTable extends Component {
         let dotsLine = []
         let lineDotLeft = 0
         let lineDotW = 0
+
         // keys.forEach((key, index) => {
         //   if(key === 'timeLine')  {
             lineDotLeft = (item[0].date - begin) / (60 * 1000) * minuteToWidth
@@ -116,7 +120,7 @@ class ListTimeTable extends Component {
               );
               return (
                 <Popover content={content} key={`dot-${idx}`}>
-                  <span style={{left: left  + 'px'}}></span>
+                  <span style={{left: left  + 'px'}} data-id={itemDot.id} onClick={detailClick}></span>
                 </Popover>
 
               )
@@ -174,7 +178,7 @@ class ListTimeTable extends Component {
 
             commonTrs = (
               <tr key={index}>
-                <td key="checkbox"><input type="checkbox" /></td>
+                <td key="checkbox"><input type="checkbox" data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
                 {tds}
                 <td key="timeDot">
                   <div className={styles.timeLineDot}>
@@ -212,7 +216,8 @@ class ListTimeTable extends Component {
 
           // const info = item.alertInfo
           let keys = colsKey;
-
+          
+          const tdCheck = Object.keys(checkAlert).length !== 0 ? <td key="checkbox"><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td> : undefined
           const tds = genTds(item, keys)
           const dotsInfo = genDots(item.timeLine, keys)
           const dots = dotsInfo.dots
@@ -235,7 +240,7 @@ class ListTimeTable extends Component {
 
           tbodyCon.push(
             <tr key={index}>
-              <td key="checkbox"><input type="checkbox" /></td>
+              {tdCheck}
               <td width="20" key='space-col-td'></td>
 
               {tds}

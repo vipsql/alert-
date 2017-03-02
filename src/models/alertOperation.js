@@ -19,30 +19,7 @@ const initalState = {
     originAlert: [], //选择的radio是个数组
     relieveAlert: {}, // 选中的解除对象
     mergeInfoList: [
-        {
-            id: 1,
-            object: 'hb_mysql1',
-            name: '不满意交易笔数',
-            origin: 'Monitor',
-            descipition: '这是一条描述',
-            time: '1h',
-        },
-        {
-            id: 2,
-            object: 'hb_mysql1',
-            name: '不满意交易笔数',
-            origin: 'Monitor',
-            descipition: '这是一条描述',
-            time: '1h',
-        },
-        {
-            id: 3,
-            object: 'hb_mysql1',
-            name: '不满意交易笔数',
-            origin: 'Monitor',
-            descipition: '这是一条描述',
-            time: '1h',
-        }
+        
     ], // 合并列表展示信息
 
     // 列定制(点击需要初始化进行数据结构转换)
@@ -52,24 +29,25 @@ const initalState = {
             type: 0, // id 
             name: '常规',
             cols: [
-                {id: 'id', name: 'ID', checked: false,},
-                {id: 'entityName', name: '节点名称', checked: false,},
-                {id: 'name', name: '告警名称', checked: false,},
-                {id: 'sourceId', name: '告警来源', checked: false,},
+                {id: 'entityAddr', name: '对象', checked: false,},
+                {id: 'typeName', name: '告警名称', checked: false,},
+                {id: 'entityName', name: '告警来源', checked: false,},
                 {id: 'status', name: '告警状态', checked: false,},
-                {id: 'description', name: '告警描述', checked: false,}
+                {id: 'description', name: '告警描述', checked: false,},
+                {id: 'lastTime', name: '持续时间', checked: false,},
+                {id: 'lastOccurtime', name: '发生时间', checked: false,}
             ]
         },
-        {
-            type: 1, // id 
-            name: '扩展',
-            cols: [
-                {id: 'position', name: '地理位置', checked: false,},
-                {id: 'responsibleDepartment', name: '所属单位', checked: false,},
-                {id: 'david', name: '运营商', checked: false,},
-                {id: 'responsiblePerson', name: '负责人', checked: false,}
-            ]
-        },
+        // {
+        //     type: 1, // id 
+        //     name: '扩展',
+        //     cols: [
+        //         {id: 'position', name: '地理位置', checked: false,},
+        //         {id: 'responsibleDepartment', name: '所属单位', checked: false,},
+        //         {id: 'david', name: '运营商', checked: false,},
+        //         {id: 'responsiblePerson', name: '负责人', checked: false,}
+        //     ]
+        // },
     ],
 
     // 分组显示
@@ -85,16 +63,23 @@ export default {
   effects: {
       // 列定制初始化(将数据变为设定的结构)
       *initalColumn({payload}, {select, put, call}) {
-
+          const { columns } = yield select( state => {
+              return {
+                  'columns': state.alertListTable.columns
+              }
+          })
+          yield put({ type: 'initColumn', payload: columns})
       },
       // 打开解除告警modal
       *openRelieveModal({payload}, {select, put, call}) {
-          const relieveAlert = yield select( state => state.alertListTable.relieveAlert)
+          // 触发筛选
+          yield put({ type: 'alertListTableCommon/filterCheckAlert'})
+          const relieveAlert = yield select( state => state.alertListTableCommon.selectedAlertIds)
 
-          if (relieveAlert !== undefined ) {
+          if (relieveAlert !== undefined && relieveAlert.length === 1) {
               yield put({
                   type: 'setRelieveAlert',
-                  payload: relieveAlert || {}
+                  payload: relieveAlert[0] || {}
               })
               yield put({
                   type: 'toggleRelieveModal',
@@ -107,12 +92,13 @@ export default {
       // 解除告警
       *relieveAlert({payload}, {select, put, call}) {
           const relieveAlert = yield select( state => state.alertOperation.relieveAlert)
-
+          
           if (relieveAlert !== undefined && relieveAlert.id !== undefined) {
               const relieveResult = yield relieve({
                   parentId: relieveAlert.id
               })
               if (!relieveResult.result) {
+                  yield put({ type: 'alertListTableCommon/resetCheckAlert'})
                   yield message.error(result.message, 3);
               } else {
                   yield message.success('解除成功', 3);
@@ -128,12 +114,15 @@ export default {
       },
       // 打开合并告警需要做的处理
       *openMergeModal({payload}, {select, put, call}) {
+          // 触发筛选
+          yield put({ type: 'alertListTableCommon/filterCheckAlert'})
           const { mergeInfoList } = yield select( state => {
               return {
                   'mergeInfoList': state.alertListTableCommon.selectedAlertIds,
               }
           })
-          if (mergeInfoList !== undefined && mergeInfoList.length > 2) {
+          
+          if (mergeInfoList !== undefined && mergeInfoList.length >= 2) {
               yield put({
                   type: 'setMergeInfoList',
                   payload: mergeInfoList
@@ -143,7 +132,7 @@ export default {
                   payload: true
               })
           } else if (mergeInfoList.length < 2) {
-              yield message.error(`请先选择至少两条告警`, 3);
+              yield message.error(`请先选择至少二条告警`, 3);
           } else {
               console.error('合并告警源有错误');
           }
@@ -164,6 +153,7 @@ export default {
                   childs: filterList
               })
               if (!result.result) {
+                  yield put({ type: 'alertListTableCommon/resetCheckAlert'})
                   yield message.error(result.message, 3);
               } else {
                   yield message.success('合并成功', 3);
@@ -216,6 +206,8 @@ export default {
       },
       // 关闭告警
       *closeAlert({payload}, {select, put, call}) {
+          // 触发筛选
+          yield put({ type: 'alertListTableCommon/filterCheckAlert'});
           const { operateAlertIds, userId } = yield select( state => {
               return {
                   'operateAlertIds': state.alertListTableCommon.operateAlertIds,
@@ -223,16 +215,17 @@ export default {
               }
           })
           if ( operateAlertIds !== undefined ) {
-
             if (operateAlertIds.length === 0) {
                 yield message.error(`请先选择一条告警`, 3);
             } else {
+                let stingIds = operateAlertIds.map( item => '' + item)
                 const resultData = yield close({
                     userId: userId, 
-                    alertIds: operateAlertIds,
+                    alertIds: stingIds,
                     closeMessage: payload
                 })
                 if (resultData.result) {
+                    yield put({ type: 'alertListTableCommon/resetCheckAlert'})
                     yield message.success(`关闭成功`, 3);
                 } else {
                     yield message.error(`${resultData.message}`, 3);
@@ -250,7 +243,8 @@ export default {
       },
       // 确定派发工单
       *dispatchForm({payload}, {select, put, call}) {
-
+          // 触发筛选
+          yield put({ type: 'alertListTableCommon/filterCheckAlert'})
           const operateAlertIds = yield select( state => state.alertListTableCommon.operateAlertIds)
 
           if (operateAlertIds.length > 1) {
@@ -261,7 +255,8 @@ export default {
                   alertId: operateAlertIds[0]
               })
               if (result.data !== undefined) {
-                  yield window.open(result.data); 
+                  yield window.open(result.data);
+                  yield put({ type: 'alertListTableCommon/resetCheckAlert'})
               }
           } else if (operateAlertIds.length === 0) {
               yield message.error(`请先选择一条告警`, 3);
@@ -305,14 +300,28 @@ export default {
       *checkColumn({payload}, {select, put, call}) {
           yield put({ type: 'setColumn', payload: payload })
           yield put({ type: 'filterColumn' })
+          const selectColumn = yield select(state => state.alertOperation.selectColumn)
+          yield put({ type: 'alertListTable/customCols', payload: selectColumn})
       }
 
   },
 
   reducers: {
       // 列定制初始化
-      initColumn(state, {payload}) {
-
+      initColumn(state, {payload: columns}) {
+          const { columnList } = state;
+          let newList = columnList;
+          columns.forEach( (column, index) => {
+              newList.forEach( (group) => {
+                  group.cols.forEach( (col) => {
+                    if (column.key === col.id) {
+                        col.checked = true;
+                    }
+                  }) 
+              })
+          })
+          
+          return { ...state, columnList: newList }
       },
       // 列改变时触发
       setColumn(state, {payload: selectCol}) {
@@ -336,7 +345,7 @@ export default {
           columnList.forEach( (group) => {
             group.cols.map( (col) => {
                 if (col.checked) {
-                    arr.push({ key: col.id, width: 150 }) // width先定死
+                    arr.push({ key: col.id, title: col.name, width: 150 }) // width先定死
                 }
             })
           })

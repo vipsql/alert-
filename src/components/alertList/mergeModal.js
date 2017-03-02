@@ -19,7 +19,12 @@ const mergeModal = ({alertOperation, dispatch}) => {
 
     const modalFooter = []
     modalFooter.push(<div className={styles.modalFooter}>
-      <Button type="primary" disabled={originAlert !== undefined && originAlert.length == 0 ? true : false} onClick={ () => {
+      <Button type="primary" disabled={
+        originAlert !== undefined 
+          && originAlert.length == 0 
+            || (mergeInfoList !== undefined 
+                && mergeInfoList.length < 2)
+                    ? true : false } onClick={ () => {
         dispatch({
             type: 'alertOperation/mergeAlert',
         })
@@ -63,34 +68,45 @@ const mergeModal = ({alertOperation, dispatch}) => {
                     columns={ [
                         {
                             key: 'icon',
+                            dataIndex: 'severity',
                             render: (text, record, index) => {
-                                return <LevelIcon key={index} iconType='jj' /> 
+                                return <LevelIcon key={index} iconType={
+                                    text === 10 ? 
+                                        'tx' : text === 20 ?
+                                            'gj' : text === 30 ?
+                                                'cy' : text === 40 ?
+                                                    'zy' : text === 50 ? 
+                                                        'jj' : undefined
+                                } /> 
                             }
                         },
                         {
                             title: '对象',
-                            key: 'object',
-                            dataIndex: 'object'
+                            key: 'entityAddr',
+                            dataIndex: 'entityAddr'
                         },
                         {
                             title: '告警名称',
-                            key: 'name',
-                            dataIndex: 'name'
+                            key: 'typeName',
+                            dataIndex: 'typeName'
                         },
                         {
                             title: '来源',
-                            key: 'origin',
-                            dataIndex: 'origin'
+                            key: 'entityName',
+                            dataIndex: 'entityName'
                         },
                         {
                             title: '告警描述',
-                            key: 'descipition',
-                            dataIndex: 'descipition'
+                            key: 'description',
+                            dataIndex: 'description'
                         },
                         {
                             title: '持续时间',
-                            key: 'time',
-                            dataIndex: 'time'
+                            key: 'lastTime',
+                            dataIndex: 'lastTime',
+                            render: (data) => {
+                                return <span>{`${Math.floor(data/(60*60*1000))}h`}</span>
+                            }
                         },
                         {
                             title: '操作',

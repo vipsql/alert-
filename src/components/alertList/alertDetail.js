@@ -9,7 +9,7 @@ const alertDetail = ({alertDetail, dispatch, form}) => {
 
     const { currentAlertDetail, isSowOperateForm, isShowRemark } = alertDetail;
     const { getFieldDecorator, getFieldsValue } = form;
-
+    
     const dateTransfer = (begin, end) => {
         let date = {};
         let beginTime = new Date(+begin);
@@ -68,8 +68,8 @@ const alertDetail = ({alertDetail, dispatch, form}) => {
                         <li><span>最后发生:</span><span>{dateTransfer(currentAlertDetail.firstOccurtime, currentAlertDetail.lastOccurtime).end}</span></li>
                         <li><span>持续时间:</span><span>{dateTransfer(currentAlertDetail.firstOccurtime, currentAlertDetail.lastOccurtime).continueTime}小时</span></li>
                         <li><span>报警次数:</span><span>{currentAlertDetail.count}</span></li>
-                        <li><span>负责人:</span><span>{currentAlertDetail.responsiblePerson}</span></li>
-                        <li><span>负责部门:</span><span>{currentAlertDetail.responsibleDepartment}</span></li>
+                        <li><span>负责人:</span><span>{currentAlertDetail.responsiblePerson ? currentAlertDetail.responsiblePerson : '暂无'}</span></li>
+                        <li><span>负责部门:</span><span>{currentAlertDetail.responsibleDepartment ? currentAlertDetail.responsibleDepartment : '暂无'}</span></li>
                         <li className={styles.gongDan}>
                             <span>工单:</span>
                             {
@@ -121,7 +121,7 @@ const alertDetail = ({alertDetail, dispatch, form}) => {
                     <p>丰富信息</p>
                     <ul>
                         {
-                            currentAlertDetail.propertys.map( (item, index) => {
+                            currentAlertDetail.propertys !== undefined && Array.isArray(currentAlertDetail.propertys) && currentAlertDetail.propertys.length !== 0 && currentAlertDetail.propertys.map( (item, index) => {
                                 return <li key={index}><span>{item.code}</span><span>{item.value}</span></li>
                             })
                         }

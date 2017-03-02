@@ -6,23 +6,23 @@ const initalState = {
   isShowDetail: false, // 是否显示detail
 
   currentAlertDetail: {
-    alertId: 1,
-    alertName: '不满意交易笔数告警',
-    status: '已解决',
-    severity: '紧急',
-    entityName: 'CMDB',
-    description: '不满意交易笔数超过阈值2000',
-    firstOccurtime: '1487312852758', // 时间格式后期需要处理
-    lastOccurtime: '1487316452758',
-    count: 13,
-    responsiblePerson: '张某某',
-    responsibleDepartment: '---',
-    orderInfo: '张某某张某某张某某张某某张某某张某某张某某张某某张某某张某某张某某张某某', // 工单
-    propertys: [
-      {code: 'affiliation', value: '江城分区'},
-      {code: 'position', value: '华中区域'},
-      {code: 'david', value: '武汉联通'}
-    ]
+    // alertId: 1,
+    // alertName: '不满意交易笔数告警',
+    // status: '已解决',
+    // severity: '紧急',
+    // entityName: 'CMDB',
+    // description: '不满意交易笔数超过阈值2000',
+    // firstOccurtime: '1487312852758', // 时间格式后期需要处理
+    // lastOccurtime: '1487316452758',
+    // count: 13,
+    // responsiblePerson: '张某某',
+    // responsibleDepartment: '---',
+    // orderInfo: '张某某张某某张某某张某某张某某张某某张某某张某某张某某张某某张某某张某某', // 工单
+    // propertys: [
+    //   {code: 'affiliation', value: '江城分区'},
+    //   {code: 'position', value: '华中区域'},
+    //   {code: 'david', value: '武汉联通'}
+    // ]
   },
 
   operateForm: undefined, // 操作工单（当前） 
@@ -50,7 +50,7 @@ export default {
     // 点击展开detail时的操作
     *openDetailModal({payload}, {select, put, call}) {
       const viewDetailAlertId = yield select( state => state.alertListTableCommon.viewDetailAlertId )
-
+      
       if (typeof viewDetailAlertId === 'number') {
         const detailResult = yield queryDetail(viewDetailAlertId);
         if ( typeof detailResult.data !== 'undefined' ) {
@@ -95,7 +95,7 @@ export default {
     },
     // 储存detail信息
     setDetail(state, {payload: currentAlertDetail}) {
-      return { ...state. currentAlertDetail }
+      return { ...state, currentAlertDetail }
     },
     // 切换侧滑框的状态
     toggleDetailModal(state, {payload: isShowDetail}) {
