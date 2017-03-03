@@ -13,11 +13,13 @@ class ListTimeTable extends Component {
       const table = document.getElementById('listTimeTable')
       const width = table.offsetWidth
       const timeLine = document.getElementById('timeLine')
-      const lineW = width - 360
+      // 360 表格左侧宽度
+      // 50 是最后一点预留位置
+      const lineW = width - 360 - 50
       timeLine.style.width = lineW + 'px'
-      const gridWidth = Math.floor(lineW / 10)
+      const gridWidth = lineW / 10
       const countMins = (end - begin) / (60 * 1000)
-      const minuteToWidth = Math.floor(lineW / countMins)
+      const minuteToWidth = lineW / countMins
 
       setTimeLineWidth(gridWidth, minuteToWidth)
 
@@ -53,20 +55,48 @@ class ListTimeTable extends Component {
       const gridTime = (end - begin) / defaultShowNums //间隔时间戳
 
       let timeTH = []
+      
+      const formatDate = function(date){
+        const d = new Date(date)
+        let hours = d.getHours()
+        let mins = d.getMinutes()
 
+        hours = hours < 10 ? '0' + hours : hours
+        mins = mins < 10 ? '0' + mins : mins
+
+
+        return hours + ':' + mins
+      }
       for(let i = 0; i < defaultShowNums; i++){
+        
         const timstamp = begin + gridTime * i
-        const formatDate = new Date(timstamp).getHours() + ':' +  new Date(timstamp).getMinutes()
+        const date = formatDate(timstamp)
         const left = gridWidth * i
         timeTH.push(
           <div key={i}>
             <span className={styles.timePos} style={{left:left + 'px'}}>
-            {formatDate}
+            {date}
             </span>
             <span className={styles.timeSep} style={{left:left + 'px'}}>
             </span>
           </div>
         )
+        // 添加最后时间点的显示
+        if( i == (defaultShowNums - 1)){
+          const lastTimeLeft = gridWidth*defaultShowNums
+          const lastTime = formatDate(end)
+          timeTH.push(
+            <div key={defaultShowNums}>
+              <span className={styles.timePos} style={{left:lastTimeLeft  + 'px'}}>
+              {lastTime}
+              </span>
+              <span className={styles.timeSep} style={{left:lastTimeLeft + 'px'}}>
+              </span>
+            </div>
+          )
+          
+          
+        }
 
       }
 

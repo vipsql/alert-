@@ -156,7 +156,7 @@ export default {
         yield put({ type: 'alertListTimeTable/queryAlertListTime' })
         yield 
       } else {
-        yield put({ type: 'updateGroup', payload: { isGroup: payload.isGroup }})
+        // yield put({ type: 'updateGroup', payload: { isGroup: payload.isGroup }})
         yield put({ type: 'alertListTable/queryAlertList' })
         yield put({ type: 'alertListTimeTable/queryAlertListTime' })
       }

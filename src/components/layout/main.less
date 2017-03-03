@@ -1,5 +1,9 @@
 @import "../vars.less";
-
+:global {
+  .root,.root > div {
+    height: 100%;
+  }
+}
 .layout {
   position: relative;
   height: 100%;
@@ -39,8 +43,8 @@
     background: #fff;
     position: absolute;
     overflow: visible;
-    padding:40px 0 24px;
-    height: 100vh;
+    padding-top:40px;
+    height: 100%;
     transition: @transition-ease-out;
     box-shadow: @shadow-1;
     color: #999;
@@ -124,6 +128,7 @@
         border-left: 5px solid #108ee9;
         border-right: none;
         background: #f2f7ff;
+        margin-right: 1px;
         a{
           margin-left: -5px;
         }
@@ -133,8 +138,16 @@
         line-height: 34px;
 
       }
+      .ant-menu-inline .ant-menu-item, .ant-menu-vertical .ant-menu-item{
+        border-right: none
+      }
+      
       .ant-menu-inline, .ant-menu-vertical{
         border-right: none;
+      }
+      .ant-menu-item, .ant-menu-submenu, .ant-menu-submenu-title {
+          -webkit-transition: none;
+          transition: none; 
       }
       .ant-menu-vertical > .ant-menu-item,
       .ant-menu-inline > .ant-menu-item,
