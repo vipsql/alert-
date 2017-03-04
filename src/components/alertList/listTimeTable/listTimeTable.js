@@ -3,8 +3,7 @@ import { Button } from 'antd';
 import { connect } from 'dva'
 import { Popover } from 'antd'
 import styles from '../index.less'
-
-
+import LevelIcon from '../../common/levelIcon/index.js'
 
 class ListTimeTable extends Component {
     componentDidMount(){
@@ -83,7 +82,7 @@ class ListTimeTable extends Component {
            if(index == 0){
              TDS.push(
                <td key='sourceAlert'>
-                 {item.children && <span className={styles.triangleLeft}>
+                 {item['hasChild'] && <span className={styles.triangleLeft}>
                  </span>}
                </td>
              )
@@ -93,7 +92,14 @@ class ListTimeTable extends Component {
             )
 
          })
-
+         TDS.unshift(<td width="20" key='space-col-td'><LevelIcon iconType={
+              item['severity'] == 10 ? 
+                  'tx' : item['severity'] == 20 ?
+                      'gj' : item['severity'] == 30 ?
+                          'cy' : item['severity'] == 40 ?
+                              'zy' : item['severity'] == 50 ? 
+                                  'jj' : undefined
+         }/></td>)
          return TDS
       }
 
@@ -177,39 +183,42 @@ class ListTimeTable extends Component {
             </tr>
           )
           
-          groupItem.children !== undefined && groupItem.children.forEach( (item, index) => {
-            console.log(item)
-            const tds = genTds(item, keys)
-            const dotsInfo = genDots(item.timeLine, keys)
-            const dots = dotsInfo.dots
-            const lineDotW = dotsInfo.lineDotW
-            const lineDotLeft = dotsInfo.lineDotLeft
+          if (groupItem.children !== undefined) {
+            
+            groupItem.children.forEach( (item, index) => {
 
-            commonTrs.push(
-              <tr key={index}>
-                <td key="checkbox"><input type="checkbox" data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
-                <td width="20" key='space-col-td'></td>
-                {tds}
-                <td key="timeDot">
-                  <div className={styles.timeLineDot}>
-                    <div className={styles.lineDot} style={{width:lineDotW + 'px', left: lineDotLeft + 'px'}}></div>
-                    {dots}
-                  </div>
-                </td>
-              </tr>
-            )
+              const tds = genTds(item, keys)
+              const dotsInfo = genDots(item.timeLine, keys)
+              const dots = dotsInfo.dots
+              const lineDotW = dotsInfo.lineDotW
+              const lineDotLeft = dotsInfo.lineDotLeft
 
-            if(item.children){
-              childTrs = item.children.map ( (childItem, childIndex) => {
-                keys = Object.keys(childItem);
-                return genchildTrs(childItem, childIndex, keys, lineDotW, lineDotLeft)
+              commonTrs.push(
+                <tr key={index}>
+                  <td key="checkbox"><input type="checkbox" data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
+                  {tds}
+                  <td key="timeDot">
+                    <div className={styles.timeLineDot}>
+                      <div className={styles.lineDot} style={{width:lineDotW + 'px', left: lineDotLeft + 'px'}}></div>
+                      {dots}
+                    </div>
+                  </td>
+                </tr>
+              )
 
-              })
-            }else{
-              childTrs = null
-            }
+              if(item.children){
+                childTrs = item.children.map ( (childItem, childIndex) => {
+                  keys = Object.keys(childItem);
+                  return genchildTrs(childItem, childIndex, keys, lineDotW, lineDotLeft)
 
-          })
+                })
+              }else{
+                childTrs = null
+              }
+
+            })
+            
+          }
           tbodyCon.push(
             groupTr,
             commonTrs,
@@ -222,51 +231,52 @@ class ListTimeTable extends Component {
 
       }else{
 
-        data.length > 0 && data.map( (item, index) => {
+        if (data.length > 0 && data.children === undefined) {
 
-          // const info = item.alertInfo
-          let keys = colsKey;
-          
-          const tdCheck = Object.keys(checkAlert).length !== 0 ? 
-            <td key="checkbox"><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td> 
-            : 
-            undefined
-          const tds = genTds(item, keys)
-          const dotsInfo = genDots(item.timeLine, keys)
-          const dots = dotsInfo.dots
-          const lineDotW = dotsInfo.lineDotW
-          const lineDotLeft = dotsInfo.lineDotLeft
+          data.forEach( (item, index) => {
 
-          // 如果有子告警
-          let childTrs = []
+            // const info = item.alertInfo
+            let keys = colsKey;
+            
+            const tdCheck = Object.keys(checkAlert).length !== 0 ? 
+              <td key="checkbox"><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td> 
+              : 
+              undefined
+            const tds = genTds(item, keys)
+            const dotsInfo = genDots(item.timeLine, keys)
+            const dots = dotsInfo.dots
+            const lineDotW = dotsInfo.lineDotW
+            const lineDotLeft = dotsInfo.lineDotLeft
 
-          if(item.children){
+            // 如果有子告警
+            let childTrs = []
 
-            childTrs = item.children.map ( (childItem, childIndex) => {
-              keys = colsKey
-              return genchildTrs(childItem, childIndex, keys, lineDotW, lineDotLeft)
+            if(item.children){
 
-            })
-          }else{
-            childTrs = null
-          }
-          
-          tbodyCon.push(
-            <tr key={index}>
-              {tdCheck}
-              <td width="20" key='space-col-td'></td>
+              childTrs = item.children.map ( (childItem, childIndex) => {
+                keys = colsKey
+                return genchildTrs(childItem, childIndex, keys, lineDotW, lineDotLeft)
 
-              {tds}
-              <td key="timeDot">
-                <div className={styles.timeLineDot}>
-                  <div className={styles.lineDot} style={{width:lineDotW + 'px', left: lineDotLeft + 'px'}}></div>
-                  {dots}
-                </div>
-              </td>
-            </tr>,
-            childTrs
-          )
-        })
+              })
+            }else{
+              childTrs = null
+            }
+            
+            tbodyCon.push(
+              <tr key={index}>
+                {tdCheck}
+                {tds}
+                <td key="timeDot">
+                  <div className={styles.timeLineDot}>
+                    <div className={styles.lineDot} style={{width:lineDotW + 'px', left: lineDotLeft + 'px'}}></div>
+                    {dots}
+                  </div>
+                </td>
+              </tr>,
+              childTrs
+            )
+          })
+        }
       }
 
 

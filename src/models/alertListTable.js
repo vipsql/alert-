@@ -1,4 +1,4 @@
-import { queryAlertList } from '../services/alertList'
+import { queryAlertList, queryChild, queryAlertListTime } from '../services/alertList'
 import {parse} from 'qs'
 
 export default {
@@ -68,6 +68,58 @@ export default {
         data
       }
     },
+    // 手动添加子告警
+    addChild(state, { payload: {children, parentId, isGroup} }) {
+      const { data } = state;
+      if (isGroup === true) {
+        const newData = data.map( (group) => {
+          group.children.map( (item) => {
+            if (item.id == parentId) {
+              item.childrenAlert = children;
+              item.isSpread = true
+            } 
+            return item;
+          })
+          return group
+        })
+        console.log(newData)
+        return { ...state, data: newData }
+      } else if (isGroup === false) {
+        const newData = data.map( (item, index) => {
+          if (item.id == parentId) {
+            item.childrenAlert = children;
+            item.isSpread = true
+          }
+          return item;
+        })
+        return { ...state, data: newData }
+      }
+    },
+    // 收拢子告警
+    toggleSpreadChild(state, { payload: { parentId, isGroup} }) {
+      const { data } = state;
+      if (isGroup === true) {
+        const newData = data.map( (group) => {
+          group.children.map( (item) => {
+            if (item.id == parentId) {
+              item.isSpread = !item.isSpread
+            } 
+            return item;
+          })
+          return group
+        })
+        return { ...state, data: newData }
+      } else if (isGroup === false) {
+        const newData = data.map( (item, index) => {
+          if (item.id == parentId) {
+            item.isSpread = !item.isSpread
+          }
+          return item;
+        })
+        return { ...state, data: newData }
+      }
+      return { ...state }
+    }
 
   },
   effects: {
@@ -93,9 +145,8 @@ export default {
 
 
       // 如果是分组
-      // if(payload.begin){
-      //   begin = payload.begin
-      //   end = payload.end
+      // if( payload !== undefined && payload.isGroup !== undefined){
+      //   groupBy = payload.groupBy
       //   isGroup = payload.isGroup
       // }
 
@@ -131,42 +182,109 @@ export default {
         }
       })
 
-      const data = yield call(queryAlertList, {
+      const listData = yield call(queryAlertList, {
+        ...tagsFilter,
+        ...extraParams
+      })
+      // 因为现在是同步，搁到一块，减少过度渲染
+      const listTimedata = yield call(queryAlertListTime, {
         ...tagsFilter,
         ...extraParams
       })
 
-      if(data.result){
+      if(listData.result && listTimedata.result){
         if(isGroup){
+          // 这个必须先触发，因为在ListTable中item.id匹配不到会使checkAlert[item.id]=undefined
+          yield put({
+            type: 'alertListTableCommon/initCheckAlertToGroup',
+            payload: listData.data
+          })
           yield put({
             type: 'updateAlertListData',
-            payload: data.data
+            payload: listData.data
+          })
+          yield put({
+            type: 'alertListTimeTable/updateAlertListTimeData',
+            payload: listTimedata.data,
           })
           yield put({
             type: 'alertListTableCommon/updateShowMore',
             payload: false
           })
-          yield put({
-            type: 'alertListTableCommon/initCheckAlertToGroup',
-            payload: data.data
-          })
 
         }else{
+          // 这个必须先触发，因为在ListTable中item.id匹配不到会使checkAlert[item.id]=undefined
+          yield put({
+            type: 'alertListTableCommon/initCheckAlert',
+            payload: listData.data.datas
+          })
           yield put({
             type: 'updateAlertListData',
-            payload: data.data.datas
+            payload: listData.data.datas
+          })
+          yield put({
+            type: 'alertListTimeTable/updateAlertListTimeData',
+            payload: listTimedata.data.datas
           })
           yield put({
             type: 'alertListTableCommon/updateShowMore',
-            payload: data.data.hasNext
-          })
-          yield put({
-            type: 'alertListTableCommon/initCheckAlert',
-            payload: data.data.datas
+            payload: listData.data.hasNext
           })
         }
 
       }
+    },
+    // 展开子告警
+    *spreadChild({payload},{call, put, select}) {
+      console.log(payload)
+      let haveChild;
+      const {data, isGroup} = yield select( state => {
+        return {
+          'isGroup': state.alertListTableCommon.isGroup,
+          'data': state.alertListTable.data
+        }
+      } )
+      // 先看下有没有子告警，没有就查询 有就隐藏
+      if (isGroup === true) {
+        data.forEach( (group) => {
+          group.children.forEach( (item) => {
+            if (item.id == payload) {
+              haveChild = !typeof item.childrenAlert === 'undefined'
+            } 
+          })
+        })
+      } else if (isGroup === false) {
+        data.forEach( (item, index) => {
+          if (item.id == payload) {
+            haveChild = !typeof item.childrenAlert === 'undefined'
+          }
+        })
+      }
+      console.log(haveChild)
+      console.log(isGroup)
+      if (typeof haveChild !== undefined && !haveChild) {
+        const childResult = yield call(queryChild, payload)
+        if (childResult.result) {
+          yield put( { type: 'addChild', payload: { children: childResult.data, parentId: payload, isGroup: isGroup } })
+          
+        } else {
+          console.error('查询子告警有误')
+        }
+      } else if (typeof haveChild !== undefined && haveChild){
+        yield put( { type: 'toggleSpreadChild', payload: { parentId: payload, isGroup: isGroup} })
+      } else {
+        console.error('haveChild is undefined')
+      }
+    },
+    // 收拢子告警
+    *noSpreadChild({payload},{call, put, select}) {
+      const {isGroup} = yield select( state => {
+        return {
+          'isGroup': state.alertListTableCommon.isGroup,
+        }
+      } )
+      console.log(isGroup)
+      yield put( { type: 'toggleSpreadChild', payload: { parentId: payload, isGroup: isGroup} })
     }
   },
 

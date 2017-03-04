@@ -153,12 +153,12 @@ export default {
       if (payload.isGroup) {
         yield put({ type: 'updateGroup', payload: { isGroup: payload.isGroup, groupBy: payload.group }})
         yield put({ type: 'alertListTable/queryAlertList' })
-        yield put({ type: 'alertListTimeTable/queryAlertListTime' })
+        //yield put({ type: 'alertListTimeTable/queryAlertListTime', payload: { isGroup: payload.isGroup, groupBy: payload.group } })
         yield 
       } else {
         yield put({ type: 'updateGroup', payload: { isGroup: payload.isGroup }})
         yield put({ type: 'alertListTable/queryAlertList' })
-        yield put({ type: 'alertListTimeTable/queryAlertListTime' })
+        //yield put({ type: 'alertListTimeTable/queryAlertListTime', payload: { isGroup: payload.isGroup } })
       }
     },
     // 点击展开详情
@@ -194,13 +194,6 @@ export default {
 
       if (listReturnData.result && timeReturnData.result) {
 
-        if (!listReturnData.data.hasNext && !timeReturnData.data.hasNext) {
-          yield put({
-            type: 'updateShowMore',
-            payload: listReturnData.data.hasNext
-          })
-        }
-
         listData = listData.concat(listReturnData.data.datas);
         timeData = timeData.concat(timeReturnData.data.datas);
         yield put({
@@ -210,6 +203,12 @@ export default {
             newObj: listData
           }
         })
+        if (!listReturnData.data.hasNext && !timeReturnData.data.hasNext) {
+          yield put({
+            type: 'updateShowMore',
+            payload: listReturnData.data.hasNext
+          })
+        }
 
         yield put({
           type: 'alertListTable/updateAlertListData',

@@ -98,9 +98,9 @@ export default {
                   parentId: relieveAlert.id
               })
               if (!relieveResult.result) {
-                  yield put({ type: 'alertListTableCommon/resetCheckedAlert'})
                   yield message.error(result.message, 3);
               } else {
+                  yield put({ type: 'alertListTableCommon/resetCheckedAlert'})
                   yield message.success('解除成功', 3);
               }
           } else {
@@ -153,9 +153,9 @@ export default {
                   childs: filterList
               })
               if (!result.result) {
-                  yield put({ type: 'alertListTableCommon/resetCheckedAlert'})
                   yield message.error(result.message, 3);
               } else {
+                  yield put({ type: 'alertListTableCommon/resetCheckedAlert'})
                   yield message.success('合并成功', 3);
               }
           } else {

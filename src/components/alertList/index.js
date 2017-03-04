@@ -34,16 +34,6 @@ class AlertListManage extends Component{
       payload: levelType
     })
   }
-  // timeTabClick(e) {
-  //   const { dispatch, begin, end } = this.props;
-  //
-  //   dispatch({
-  //     type: 'alertListTimeTable/queryAlertListTime',
-  //     payload: {
-  //
-  //     }
-  //   })
-  // }
 
   render(){
     const { alertDetail, alertList } = this.props;

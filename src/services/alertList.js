@@ -26,3 +26,11 @@ export async function queryAlertList(data) {
 
   return request('/arbiter/rest/v1/alert/queryLast', options)
 }
+
+export async function queryChild(param) {
+  const options = {
+    method: 'GET'
+  }
+
+  return request(`/arbiter/rest/v1/alert/query/childs?alertId=${param}`, options)
+}

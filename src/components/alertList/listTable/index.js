@@ -37,6 +37,22 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
         type: 'alertListTableCommon/clickDetail',
         payload: alertId
       })
+    },
+    spreadChild(e) {
+      const alertId = JSON.parse(e.target.getAttribute('data-id'));
+
+      dispatch({
+        type: 'alertListTable/spreadChild',
+        payload: alertId
+      })
+    },
+    noSpreadChild(e) {
+      const alertId = JSON.parse(e.target.getAttribute('data-id'));
+
+      dispatch({
+        type: 'alertListTable/noSpreadChild',
+        payload: alertId
+      })
     }
 
   }

@@ -79,9 +79,9 @@ export default {
         })
 
         // 预加载告警列表时间线数据
-        yield put({
-          type: 'alertListTimeTable/queryAlertListTime',
-        })
+        // yield put({
+        //   type: 'alertListTimeTable/queryAlertListTime',
+        // })
 
 
       }
@@ -114,9 +114,9 @@ export default {
       })
 
       // 预加载告警列表时间线数据
-      yield put({
-        type: 'alertListTimeTable/queryAlertListTime',
-      })
+      // yield put({
+      //   type: 'alertListTimeTable/queryAlertListTime',
+      // })
     },
     *editLevel() {
 
