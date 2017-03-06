@@ -17,6 +17,7 @@ function AlertManage({dispatch, alertManage}){
     modalVisible,
     tagsNum,
     tagsList,
+    isLoading,
     currentDashbordData,
   } = alertManage
 
@@ -47,13 +48,18 @@ function AlertManage({dispatch, alertManage}){
 
   }
 
+  const chartProps = {
+    currentDashbordData,
+    isLoading
+  }
+
   return (
 
     <div>
       <AlertTagsSet  />
       <AlertManageHead {...alertManageHeadProps} />
       {isSetAlert ?
-        <Chart /> :
+        <Chart {...chartProps} /> :
         <AlertSet {...alertSetProps}/>
       }
     </div>

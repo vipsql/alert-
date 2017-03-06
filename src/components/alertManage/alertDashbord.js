@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import styles from './index.less'
 import request from '../../utils/request'
 import { connect } from 'dva'
+import { Spin } from 'antd';
 
 const echarts = require('echarts');
 
@@ -86,7 +87,7 @@ class Chart extends Component{
                     width:'100%',
                     height: '100%',
                     visibleMin: 300,
-                    roam: 'zoom',
+                    roam: 'scale',
                     nodeClick: 'hash',
                     label: {
                         show: true,
@@ -103,21 +104,26 @@ class Chart extends Component{
                     show: false
                     },
                     levels: getLevelOption(),
-                    data: this.props.alertManage.currentDashbordData
+                    data: this.props.currentDashbordData
                 }
             ]
         }
         myChart.setOption(option);
-
+       
 
     }
 
     render(){
         return (
-            <div id="treemap" className={styles.treemap}></div>
+            <div>
+                {this.props.isLoading && <div className={styles.loadingWrap}><Spin/> 加载中...</div>}
+                <div id="treemap" className={styles.treemap}>
+                
+                </div>
+            </div>
         )
     }
 
 }
-
-export default connect(({alertManage}) => ({alertManage}))(Chart)
+export default Chart
+// export default connect(({alertManage}) => ({alertManage}))(Chart)

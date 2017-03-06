@@ -7,6 +7,7 @@ const initialState = {
     hideAlertSetTip: false, // 设置提示false有提示
     modalVisible: false,
     currentDashbordData: [],
+    isLoading: true, //加载
     levels: { //告警级别
       jj: 23,
       gj: 33,
@@ -66,7 +67,10 @@ export default {
       if (typeof treemapData.data !== 'undefined') {
         yield put({
           type: 'setCurrentTreemap',
-          payload: treemapData.data && treemapData.data.picList || []
+          payload: {
+            currentDashbordData:treemapData.data && treemapData.data.picList || [],
+            isLoading: false
+          }
         })
 
         yield put({
@@ -94,8 +98,8 @@ export default {
       return { ...state, isSetAlert }
     },
     // 显示treemap
-    setCurrentTreemap(state, { payload: currentDashbordData }){
-      return { ...state, currentDashbordData }
+    setCurrentTreemap(state, { payload: {currentDashbordData,isLoading} }){
+      return { ...state, currentDashbordData, isLoading}
     },
     // 设置告警状态
     setLevels(state, {payload}) {
