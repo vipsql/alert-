@@ -213,7 +213,7 @@ class ListTable extends Component {
           const tdKey = 'td' + index
           childtrs.push(
               <tr key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread && styles.hiddenChild}>
-                <td key={tdKey}><input type="checkbox" data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc}/></td>
+                <td key={tdKey}><input type="checkbox" checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc}/></td>
                 {tds}
               </tr>
           )
