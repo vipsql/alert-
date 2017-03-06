@@ -394,14 +394,14 @@ export default {
         data.forEach( (group) => {
           group.children.forEach( (item) => {
             if (item.id == payload) {
-              haveChild = !typeof item.childrenAlert === 'undefined'
+              haveChild = !(typeof item.childrenAlert === 'undefined')
             } 
           })
         })
       } else if (isGroup === false) {
         data.forEach( (item, index) => {
           if (item.id == payload) {
-            haveChild = !typeof item.childrenAlert === 'undefined'
+            haveChild = !(typeof item.childrenAlert === 'undefined')
           }
         })
       }
@@ -456,14 +456,14 @@ export default {
         data.forEach( (group) => {
           group.children.forEach( (item) => {
             if (item.id == payload) {
-              haveChild = !typeof item.childrenAlert === 'undefined'
+              haveChild = !(typeof item.childrenAlert === 'undefined')
             } 
           })
         })
       } else if (isGroup === false) {
         data.forEach( (item, index) => {
           if (item.id == payload) {
-            haveChild = !typeof item.childrenAlert === 'undefined'
+            haveChild = !(typeof item.childrenAlert === 'undefined')
           }
         })
       }

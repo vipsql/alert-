@@ -57,16 +57,16 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
     },
     // 分组展开
     spreadGroup(e) {
-      const groupClassify = JSON.parse(e.target.getAttribute('data-classify'))
-
+      const groupClassify = e.target.getAttribute('data-classify')
+      
       dispatch({
         type: 'alertListTable/spreadGroup',
         payload: groupClassify
       })
     },
     noSpreadGroup(e) {
-      const groupClassify = JSON.parse(e.target.getAttribute('data-classify'))
-
+      const groupClassify = e.target.getAttribute('data-classify')
+      
       dispatch({
         type: 'alertListTable/noSpreadGroup',
         payload: groupClassify
