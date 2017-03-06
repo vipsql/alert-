@@ -82,7 +82,6 @@ export default {
           })
           return group
         })
-        console.log(newData)
         return { ...state, data: newData }
       } else if (isGroup === false) {
         const newData = data.map( (item, index) => {
@@ -94,6 +93,7 @@ export default {
         })
         return { ...state, data: newData }
       }
+      return { ...state }
     },
     // 收拢子告警
     toggleSpreadChild(state, { payload: { parentId, isGroup} }) {
@@ -119,6 +119,151 @@ export default {
         return { ...state, data: newData }
       }
       return { ...state }
+    },
+    // 合并告警
+    mergeChildrenAlert(state, { payload: { parentId, childItems, isGroup}}) {
+      const { data } = state;
+      const childIds = childItems.map( item => item.id )
+      let childsItem = [];
+      if (isGroup === true) {
+        const newData = data.map( (group) => {
+          group.children.filter( (item) => {
+            let status = true;
+            if (item.id == parentId) {
+              item.hasChild = true;
+              item.isSpread = true;
+              item.childrenAlert = childItems;
+            }
+            childIds.forEach( (child) => {
+              if (child == item.id) {
+                status = false;
+              }
+            })
+            return status;
+          })
+          return group
+        })
+        return { ...state, data: newData }
+      } else if (isGroup === false) {
+        const newData = data.filter( (item) => {
+          let status = true;
+          if (item.id == parentId) {
+            item.hasChild = true;
+            item.isSpread = true;
+            item.childrenAlert = childItems;
+          }
+          childIds.forEach( (child) => {
+            if (child == item.id) {
+              status = false;
+            }
+          })
+          return status;
+        })
+        return { ...state, data: newData }
+      }
+      return { ...state }
+    },
+    // addParent再没展开过的情况下去解除告警
+    addParent(state, { payload: { addItem, parentId, isGroup}}) {
+      const { data } = state;
+      if (isGroup === true) {
+        const newData = data.map( (group) => {
+          let status = false;
+          group.children.map( (item) => {
+            if (item.id == parentId) {
+              status = true;
+              item.hasChild = false;
+              item.isSpread = false;
+            } 
+            return item;
+          })
+          console.log(status)
+          if (status) {
+            group.children.push(...addItem);
+          }
+          return group;
+        })
+        return { ...state, data: newData }
+      } else if (isGroup === false) {
+        let status = false;
+        const newData = data.map( (item, index) => {
+          if (item.id == parentId) {
+            status = true;
+            item.hasChild = false;
+            item.isSpread = false;
+          }
+          return item;
+        })
+        console.log(status)
+        if (status) {
+          newData.push(...addItem);
+        }
+        return { ...state, data: newData }
+      }
+      return { ...state }
+    },
+    // relieveChildrenAlert在展开过的情况下做操作
+    relieveChildrenAlert(state, {payload: {parentId, isGroup}}) {
+      const { data } = state;
+      if (isGroup === true) {
+        const newData = data.map( (group) => {
+          let items = [];
+          group.children.map( (item) => {
+            if (item.id == parentId) {
+              items = item.childrenAlert;
+              delete item.childrenAlert;
+              item.hasChild = false;
+              item.isSpread = false;
+            } 
+            return item;
+          })
+          console.log(items)
+          if (items.length !== 0) {
+            group.children.push(...items);
+          }
+          return group;
+        })
+        return { ...state, data: newData }
+      } else if (isGroup === false) {
+        let items = [];
+        const newData = data.map( (item, index) => {
+          if (item.id == parentId) {
+            items = item.childrenAlert;
+            delete item.childrenAlert;
+            item.hasChild = false;
+            item.isSpread = false;
+          }
+          return item;
+        })
+        console.log(items)
+        if (items.length !== 0) {
+          newData.push(...items);
+        }
+        return { ...state, data: newData }
+      }
+      return { ...state }
+    },
+    // 手动添加分组展开状态
+    addGroupSpread(state, { payload }) {
+      const { data } = state;
+      const newData = data.map( (group) => {
+        if (group.classify == payload) {
+          group.isGroupSpread = false;
+        }
+        return group
+      })
+      return { ...state, data: newData }
+    },
+    // 转换分组的展开状态
+    toggleGroupSpread(state, { payload }) {
+      const { data } = state;
+      const newData = data.map( (group) => {
+        if (group.classify == payload) {
+          group.isGroupSpread = !group.isGroupSpread;
+        }
+        return group
+      })
+      return { ...state, data: newData }
     }
 
   },
@@ -173,9 +318,10 @@ export default {
             groupBy: groupBy
           }
         }else{
+          // 这里触发时currentPage始终为1，如果从common取在分组转分页时会有问题
           return {
             pageSize: alertListTableCommon.pageSize,
-            currentPage: alertListTableCommon.currentPage,
+            currentPage: 1,
             orderBy: alertListTableCommon.orderBy,
             orderType: alertListTableCommon.orderType
           }
@@ -236,6 +382,67 @@ export default {
     },
     // 展开子告警
     *spreadChild({payload},{call, put, select}) {
+      let haveChild;
+      const {data, isGroup} = yield select( state => {
+        return {
+          'isGroup': state.alertListTableCommon.isGroup,
+          'data': state.alertListTable.data
+        }
+      } )
+      // 先看下有没有子告警，没有就查询 有就隐藏
+      if (isGroup === true) {
+        data.forEach( (group) => {
+          group.children.forEach( (item) => {
+            if (item.id == payload) {
+              haveChild = !typeof item.childrenAlert === 'undefined'
+            } 
+          })
+        })
+      } else if (isGroup === false) {
+        data.forEach( (item, index) => {
+          if (item.id == payload) {
+            haveChild = !typeof item.childrenAlert === 'undefined'
+          }
+        })
+      }
+
+      if (typeof haveChild !== undefined && !haveChild) {
+        const childResult = yield call(queryChild, payload)
+        if (childResult.result) {
+          yield put( { type: 'addChild', payload: { children: childResult.data, parentId: payload, isGroup: isGroup } })
+          
+        } else {
+          console.error('查询子告警有误')
+        }
+      } else if (typeof haveChild !== undefined && haveChild){
+        yield put( { type: 'toggleSpreadChild', payload: { parentId: payload, isGroup: isGroup} })
+      } else {
+        console.error('haveChild is undefined')
+      }
+    },
+    // 收拢子告警
+    *noSpreadChild({payload},{call, put, select}) {
+      const {isGroup} = yield select( state => {
+        return {
+          'isGroup': state.alertListTableCommon.isGroup,
+        }
+      } )
+      
+      yield put( { type: 'toggleSpreadChild', payload: { parentId: payload, isGroup: isGroup} })
+    },
+    // 合并告警
+    *mergeChildAlert({payload},{call, put, select}) {
+      const {data, isGroup} = yield select( state => {
+        return {
+          'isGroup': state.alertListTableCommon.isGroup,
+          'data': state.alertListTable.data
+        }
+      } )
+      // push childrenAlert/ remove parent/ hasChild -> true/ isSpread -> true
+      yield put({ type: 'mergeChildrenAlert', payload: { parentId: payload.pId, childItems: payload.cItems, isGroup: isGroup}})
+    },
+    // 解除告警
+    *relieveChildAlert({payload},{call, put, select}) {
       console.log(payload)
       let haveChild;
       const {data, isGroup} = yield select( state => {
@@ -260,31 +467,30 @@ export default {
           }
         })
       }
-      console.log(haveChild)
-      console.log(isGroup)
+      
       if (typeof haveChild !== undefined && !haveChild) {
         const childResult = yield call(queryChild, payload)
         if (childResult.result) {
-          yield put( { type: 'addChild', payload: { children: childResult.data, parentId: payload, isGroup: isGroup } })
+          yield put( { type: 'addParent', payload: { addItem: childResult.data || [], parentId: payload, isGroup: isGroup } })
           
         } else {
           console.error('查询子告警有误')
         }
       } else if (typeof haveChild !== undefined && haveChild){
-        yield put( { type: 'toggleSpreadChild', payload: { parentId: payload, isGroup: isGroup} })
+        yield put( { type: 'relieveChildrenAlert', payload: { parentId: payload, isGroup: isGroup} })
       } else {
         console.error('haveChild is undefined')
       }
     },
-    // 收拢子告警
-    *noSpreadChild({payload},{call, put, select}) {
-      const {isGroup} = yield select( state => {
-        return {
-          'isGroup': state.alertListTableCommon.isGroup,
-        }
-      } )
-      console.log(isGroup)
-      yield put( { type: 'toggleSpreadChild', payload: { parentId: payload, isGroup: isGroup} })
+    // 展开组
+    *spreadGroup({payload},{call, put, select}) {
+      console.log(payload);
+      yield put({ type: 'toggleGroupSpread', payload: payload })
+    },
+    // 合拢组
+    *noSpreadGroup({payload},{call, put, select}) {
+      console.log(payload);
+      yield put({ type: 'addGroupSpread', payload: payload })
     }
   },
 

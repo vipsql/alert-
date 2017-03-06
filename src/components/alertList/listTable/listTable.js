@@ -18,7 +18,9 @@ class ListTable extends Component {
       checkAlert,
       detailClick,
       spreadChild,
-      noSpreadChild
+      noSpreadChild,
+      spreadGroup,
+      noSpreadGroup
     } = this.props
     let colsKey = []
     
@@ -158,23 +160,37 @@ class ListTable extends Component {
     }
 
     // 生成子告警行
-      const genchildTrs = (childItem, childIndex, keys, item) => {
-        
-        const trKey = 'chTd' + childIndex
-        const childTds = getChildTds(childItem, keys)
-        
-        return (
-          <tr key={trKey} className={!item.isSpread && styles.hiddenChild}>
-            {childTds}
-          </tr>
-        )
-      }
+    const genchildTrs = (childItem, childIndex, keys, item) => {
+      
+      const trKey = 'chTd' + childIndex
+      const childTds = getChildTds(childItem, keys)
+      
+      return (
+        <tr key={trKey} className={!item.isSpread && styles.hiddenChild}>
+          {childTds}
+        </tr>
+      )
+    }
 
     if(isGroup){
       data.forEach( (item, index) => {
         const keys = colsKey
         let childtrs = []
-        
+        let groupTitle = item.isGroupSpread === false ?
+          (<tr className={styles.trGroup} key={index}>
+            <td colSpan={keys.length + 3}>
+              <span className={styles.expandIcon} data-classify={item.classify} onClick={spreadGroup}>+</span>
+                {item.classify}
+            </td>
+          </tr>)
+          :
+          (<tr className={styles.trGroup} key={index}>
+            <td colSpan={keys.length + 3}>
+              <span className={styles.expandIcon} data-classify={item.classify} onClick={noSpreadGroup}>-</span>
+                {item.classify}
+            </td>
+          </tr>)
+
         item.children !== undefined && item.children.forEach( (childItem, index) => {
           console.log(childItem)
           
@@ -182,7 +198,7 @@ class ListTable extends Component {
 
           // 如果有子告警
           let childs = []
-          if(childItem.childrenAlert){
+          if(childItem.childrenAlert && item.isGroupSpread !== false){
 
             childs = childItem.childrenAlert.map ( (childAlertItem, childIndex) => {
 
@@ -196,14 +212,14 @@ class ListTable extends Component {
           const trKey = 'td' + index
           const tdKey = 'td' + index
           childtrs.push(
-              <tr key={trKey}>
+              <tr key={trKey} className={!item.isGroupSpread && styles.hiddenChild}>
                 <td key={tdKey}><input type="checkbox" data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc}/></td>
                 {tds}
               </tr>
           )
           childtrs.push(childs)
         } )
-        childtrs.unshift(<tr className={styles.trGroup} key={index}><td colSpan={keys.length + 3}><span className={styles.expandIcon}>-</span>{item.classify}</td></tr>)
+        childtrs.unshift(groupTitle)
         tbodyCon.push(childtrs)
 
       } )

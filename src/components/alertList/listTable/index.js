@@ -38,6 +38,7 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
         payload: alertId
       })
     },
+    // children展开
     spreadChild(e) {
       const alertId = JSON.parse(e.target.getAttribute('data-id'));
 
@@ -52,6 +53,23 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
       dispatch({
         type: 'alertListTable/noSpreadChild',
         payload: alertId
+      })
+    },
+    // 分组展开
+    spreadGroup(e) {
+      const groupClassify = JSON.parse(e.target.getAttribute('data-classify'))
+
+      dispatch({
+        type: 'alertListTable/spreadGroup',
+        payload: groupClassify
+      })
+    },
+    noSpreadGroup(e) {
+      const groupClassify = JSON.parse(e.target.getAttribute('data-classify'))
+
+      dispatch({
+        type: 'alertListTable/noSpreadGroup',
+        payload: groupClassify
       })
     }
 

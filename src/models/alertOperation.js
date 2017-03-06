@@ -101,6 +101,7 @@ export default {
                   yield message.error(result.message, 3);
               } else {
                   yield put({ type: 'alertListTableCommon/resetCheckedAlert'})
+                  yield put({ type: 'alertListTable/relieveChildAlert', payload: relieveAlert.id })
                   yield message.success('解除成功', 3);
               }
           } else {
@@ -146,16 +147,17 @@ export default {
               }
           })
           if (mergeInfoList !== undefined && mergeInfoList.length > 1) { // 合并告警数量少于2不允许合并的操作在页面就不允许删除，还需和交互讨论，暂时不做处理
-              let newList = yield mergeInfoList.map( item => item.id )
-              let filterList = yield newList.filter( item => item != originAlert[0] )
+              let filterList = yield mergeInfoList.filter( item => item.id != originAlert[0] )
+              let filterListIds = yield filterList.map( item => item.id )
               const result = yield merge({
                   parentId: originAlert[0],
-                  childs: filterList
+                  childs: filterListIds
               })
               if (!result.result) {
                   yield message.error(result.message, 3);
               } else {
                   yield put({ type: 'alertListTableCommon/resetCheckedAlert'})
+                  yield put({ type: 'alertListTable/mergeChildAlert', payload: { pId: originAlert[0], cItems: filterList }})
                   yield message.success('合并成功', 3);
               }
           } else {
