@@ -16,7 +16,6 @@ app.model(require('./models/alertTagsSet'))
 
 
 app.model(require('./models/alertOperation'))
-app.model(require('./models/alertDetailOperation'))
 app.model(require('./models/tagsListFilter'))
 app.model(require('./models/alertDetail'))
 

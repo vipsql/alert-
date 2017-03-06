@@ -11,7 +11,7 @@ export default function ({history, app}) {
         require.ensure([], require => {
           app.model(require('./models/alertManage'))
           cb(null, {component: require('./routes/alertManage')})
-        })
+        },'alertManage')
       },
       childRoutes: [
         {
@@ -22,7 +22,7 @@ export default function ({history, app}) {
             require.ensure([], require => {
               app.model(require('./models/alertManage'))
               cb(null, require('./routes/alertManage'))
-            })
+            },'alertManage')
           }
         },
         {
@@ -32,7 +32,7 @@ export default function ({history, app}) {
             require.ensure([], require => {
 
               cb(null, require('./routes/alertList'))
-            })
+            },'alertList')
           }
 
         },
@@ -43,7 +43,7 @@ export default function ({history, app}) {
             require.ensure([], require => {
               app.model(require('./models/alertQuery'))
               cb(null, require('./routes/alertQuery'))
-            })
+            },'alertQuery')
           }
         }, {
           path: 'alertConfig',
@@ -52,7 +52,7 @@ export default function ({history, app}) {
             require.ensure([], require => {
               app.model(require('./models/alertConfig'))
               cb(null, require('./routes/alertConfig'))
-            })
+            },'alertConfig')
           }
         }, {
           path: 'watchManage',
@@ -61,7 +61,7 @@ export default function ({history, app}) {
             require.ensure([], require => {
               app.model(require('./models/watchManage'))
               cb(null, require('./routes/watchManage'))
-            })
+            },'alertConfig')
           }
         }
       ]
