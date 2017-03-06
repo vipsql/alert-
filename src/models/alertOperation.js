@@ -29,8 +29,8 @@ const initalState = {
             type: 0, // id 
             name: '常规',
             cols: [
-                {id: 'entityAddr', name: '对象', checked: false,},
-                {id: 'typeName', name: '告警名称', checked: false,},
+                {id: 'entity', name: '对象', checked: false,},
+                {id: 'alertName', name: '告警名称', checked: false,},
                 {id: 'entityName', name: '告警来源', checked: false,},
                 {id: 'status', name: '告警状态', checked: false,},
                 {id: 'description', name: '告警描述', checked: false,},
@@ -73,8 +73,8 @@ export default {
       // 打开解除告警modal
       *openRelieveModal({payload}, {select, put, call}) {
           // 触发筛选
-          yield put({ type: 'alertListTableCommon/filterCheckAlert'})
-          const relieveAlert = yield select( state => state.alertListTableCommon.selectedAlertIds)
+          yield put({ type: 'alertListTable/filterCheckAlert'})
+          const relieveAlert = yield select( state => state.alertListTable.selectedAlertIds)
 
           if (relieveAlert !== undefined && relieveAlert.length === 1) {
               yield put({
@@ -100,7 +100,7 @@ export default {
               if (!relieveResult.result) {
                   yield message.error(result.message, 3);
               } else {
-                  yield put({ type: 'alertListTableCommon/resetCheckedAlert'})
+                  yield put({ type: 'alertListTable/resetCheckedAlert'})
                   yield put({ type: 'alertListTable/relieveChildAlert', payload: relieveAlert.id })
                   yield message.success('解除成功', 3);
               }
@@ -116,10 +116,10 @@ export default {
       // 打开合并告警需要做的处理
       *openMergeModal({payload}, {select, put, call}) {
           // 触发筛选
-          yield put({ type: 'alertListTableCommon/filterCheckAlert'})
+          yield put({ type: 'alertListTable/filterCheckAlert'})
           const { mergeInfoList } = yield select( state => {
               return {
-                  'mergeInfoList': state.alertListTableCommon.selectedAlertIds,
+                  'mergeInfoList': state.alertListTable.selectedAlertIds,
               }
           })
           
@@ -156,7 +156,7 @@ export default {
               if (!result.result) {
                   yield message.error(result.message, 3);
               } else {
-                  yield put({ type: 'alertListTableCommon/resetCheckedAlert'})
+                  yield put({ type: 'alertListTable/resetCheckedAlert'})
                   yield put({ type: 'alertListTable/mergeChildAlert', payload: { pId: originAlert[0], cItems: filterList }})
                   yield message.success('合并成功', 3);
               }
@@ -209,10 +209,10 @@ export default {
       // 关闭告警
       *closeAlert({payload}, {select, put, call}) {
           // 触发筛选
-          yield put({ type: 'alertListTableCommon/filterCheckAlert'});
+          yield put({ type: 'alertListTable/filterCheckAlert'});
           const { operateAlertIds, userId } = yield select( state => {
               return {
-                  'operateAlertIds': state.alertListTableCommon.operateAlertIds,
+                  'operateAlertIds': state.alertListTable.operateAlertIds,
                   'userId': state.app.userId
               }
           })
@@ -227,7 +227,7 @@ export default {
                     closeMessage: payload
                 })
                 if (resultData.result) {
-                    yield put({ type: 'alertListTableCommon/resetCheckedAlert'})
+                    yield put({ type: 'alertListTable/resetCheckedAlert'})
                     yield message.success(`关闭成功`, 3);
                 } else {
                     yield message.error(`${resultData.message}`, 3);
@@ -246,8 +246,8 @@ export default {
       // 确定派发工单
       *dispatchForm({payload}, {select, put, call}) {
           // 触发筛选
-          yield put({ type: 'alertListTableCommon/filterCheckAlert'})
-          const operateAlertIds = yield select( state => state.alertListTableCommon.operateAlertIds)
+          yield put({ type: 'alertListTable/filterCheckAlert'})
+          const operateAlertIds = yield select( state => state.alertListTable.operateAlertIds)
 
           if (operateAlertIds.length > 1) {
               yield message.error(`请先将多条告警合并为一条原告警`, 3);
@@ -258,7 +258,7 @@ export default {
               })
               if (result.data !== undefined) {
                   yield window.open(result.data);
-                  yield put({ type: 'alertListTableCommon/resetCheckedAlert'})
+                  yield put({ type: 'alertListTable/resetCheckedAlert'})
               }
           } else if (operateAlertIds.length === 0) {
               yield message.error(`请先选择一条告警`, 3);
@@ -278,7 +278,7 @@ export default {
               payload: payload
           })
           yield put({
-              type: 'alertListTableCommon/setGroup',
+              type: 'alertListTable/setGroup',
               payload: {
                   isGroup: true,
                   group: payload
@@ -291,7 +291,7 @@ export default {
               type: 'removeGroupType',
           })
           yield put({
-              type: 'alertListTableCommon/setGroup',
+              type: 'alertListTable/setGroup',
               payload: {
                   isGroup: false,
               }

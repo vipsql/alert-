@@ -48,7 +48,7 @@ const alertOperation = ({position, alertOperation, alertList, dispatch}) => {
                                 <p>{group.name}</p>
                                 {
                                     group.cols.map( (item, index) => {
-                                        if (item.id === 'entityAddr' || item.id === 'typeName') {
+                                        if (item.id === 'entity' || item.id === 'alertName') {
                                             return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={true} disabled={true} >{item.name}</Checkbox></div>
                                         } else {
                                             return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={item.checked} onChange={ (e) => {

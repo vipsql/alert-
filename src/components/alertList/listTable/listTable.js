@@ -87,7 +87,7 @@ class ListTable extends Component {
           }
           td = <td key={key}>{data}</td>
         }
-        if(key == 'typeName') {
+        if(key == 'alertName') {
           td = <td key={key} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >{data}</td>
         } else {
           td = <td key={key}>{data}</td>
@@ -112,7 +112,7 @@ class ListTable extends Component {
         let data = item[key];
         let td;
         if(key == 'lastOccurtime'){
-          const date = new Date(data.time)
+          const date = new Date(data)
           data = `${date.getHours()}:${date.getMinutes()}`
           td = <td key={key}>{data}</td>
         }
@@ -140,7 +140,7 @@ class ListTable extends Component {
           }
           td = <td key={key}>{data}</td>
         }
-        if(key == 'typeName') {
+        if(key == 'alertName') {
           td = <td key={key} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >{data}</td>
         } else {
           td = <td key={key}>{data}</td>
@@ -199,7 +199,7 @@ class ListTable extends Component {
           // 如果有子告警
           let childs = []
           if(childItem.childrenAlert && item.isGroupSpread !== false){
-            console.log(111);
+
             childs = childItem.childrenAlert.map ( (childAlertItem, childIndex) => {
 
               return genchildTrs(childAlertItem, childIndex, keys, childItem)
@@ -243,7 +243,7 @@ class ListTable extends Component {
         }else{
           childs = null
         }
-        
+        console.log(checkAlert[`${item.id}`].checked)
         commonTrs.push(
           <tr key={item.id}>
             {

@@ -82,13 +82,13 @@ const mergeModal = ({alertOperation, dispatch}) => {
                         },
                         {
                             title: '对象',
-                            key: 'entityAddr',
-                            dataIndex: 'entityAddr'
+                            key: 'entity',
+                            dataIndex: 'entity'
                         },
                         {
                             title: '告警名称',
-                            key: 'typeName',
-                            dataIndex: 'typeName'
+                            key: 'alertName',
+                            dataIndex: 'alertName'
                         },
                         {
                             title: '来源',

@@ -10,7 +10,7 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
     ...alertListTable,
     loadMore(){
       dispatch({
-        type: 'alertListTableCommon/loadMore'
+        type: 'alertListTable/loadMore'
       })
     },
     setTimeLineWidth(gridWidth, minuteToWidth){
@@ -26,7 +26,7 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
       const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
 
       dispatch({
-        type: 'alertListTableCommon/changeCheckAlert',
+        type: 'alertListTable/changeCheckAlert',
         payload: alertInfo
       })
     },
@@ -34,7 +34,7 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
       const alertId = JSON.parse(e.target.getAttribute('data-id'));
 
       dispatch({
-        type: 'alertListTableCommon/clickDetail',
+        type: 'alertListTable/clickDetail',
         payload: alertId
       })
     },
@@ -84,7 +84,6 @@ export default connect(
     return {
       alertListTable: {
         ...state.alertListTable,
-        ...state.alertListTableCommon
       }
     }
   }

@@ -43,7 +43,7 @@ export default {
     // 查询柱状图
     *queryAlertBar({payload}, {call, put, select}) {
       // 触发这个effect的时机是在刷新/tag转变的时候（不保存状态--所以需要初始化commonList）
-      yield put({ type: 'alertListTableCommon/clear' })
+      yield put({ type: 'alertListTable/clear' })
 
       const data = yield call(queryAlertBar, payload)
 
@@ -54,7 +54,7 @@ export default {
 
         // 将公用数据放入commonList
         yield put({
-          type: 'alertListTableCommon/setInitvalScope',
+          type: 'alertListTable/setInitvalScope',
           payload: {
             begin: startTime,
             end: endtTime,
@@ -78,12 +78,6 @@ export default {
           type: 'alertListTable/queryAlertList',
         })
 
-        // 预加载告警列表时间线数据
-        // yield put({
-        //   type: 'alertListTimeTable/queryAlertListTime',
-        // })
-
-
       }
 
     },
@@ -91,32 +85,19 @@ export default {
     *editAlertBar({payload}, {call, put, select}) {
       // 将公用数据放入commonList
       yield put({
-        type: 'alertListTableCommon/setInitvalScope',
+        type: 'alertListTable/setInitvalScope',
         payload: {
           begin: payload.begin,
           end: payload.end,
           currentPage: 1
         }
       })
-
-      // 更新柱状图数据
-      // yield put({
-      //   type: 'updateAlerBarData',
-      //   payload: {
-      //     begin: payload.begin,
-      //     end: payload.end,
-      //   }
-      // })
       
       // 发起查询列表请求
       yield put({
         type: 'alertListTable/queryAlertList',
       })
 
-      // 预加载告警列表时间线数据
-      // yield put({
-      //   type: 'alertListTimeTable/queryAlertListTime',
-      // })
     },
     *editLevel() {
 

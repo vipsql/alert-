@@ -49,7 +49,7 @@ export default {
 
     // 点击展开detail时的操作
     *openDetailModal({payload}, {select, put, call}) {
-      const viewDetailAlertId = yield select( state => state.alertListTableCommon.viewDetailAlertId )
+      const viewDetailAlertId = yield select( state => state.alertListTable.viewDetailAlertId )
       
       if (typeof viewDetailAlertId === 'number') {
         const detailResult = yield queryDetail(viewDetailAlertId);
@@ -78,7 +78,7 @@ export default {
     // 关闭时
     *closeDetailModal({payload}, {select, put, call}) {
       yield put({
-        type: 'alertListTableCommon/toggleDetailAlertId',
+        type: 'alertListTable/toggleDetailAlertId',
         payload: false
       })
       yield put({

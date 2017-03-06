@@ -24,7 +24,7 @@ export async function queryAlertList(data) {
     method: 'post'
   }
 
-  return request('/arbiter/rest/v1/alert/queryLast', options)
+  return request('/arbiter/rest/v1/alert/queryLastTimeline', options)
 }
 
 export async function queryChild(param) {
@@ -32,5 +32,5 @@ export async function queryChild(param) {
     method: 'GET'
   }
 
-  return request(`/arbiter/rest/v1/alert/query/childs?alertId=${param}`, options)
+  return request(`/arbiter/rest/v1/alert/query/childs?alertId=${param.alertId}&begin=${param.begin}&end=${param.end}`, options)
 }

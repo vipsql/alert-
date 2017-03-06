@@ -5,19 +5,19 @@ import ListTimeTable from './ListTimeTable'
 import styles from '../index.less'
 
 // function ListTimeTableWrap({dispatch, alertListTimeTable}){
-const  ListTimeTableWrap = ({dispatch, alertListTimeTable}) => {
+const  ListTimeTableWrap = ({dispatch, alertListTable}) => {
   const props = {
-    ...alertListTimeTable,
+    ...alertListTable,
 
     loadMore(){
       dispatch({
-        type: 'alertListTableCommon/loadMore'
+        type: 'alertListTable/loadMore'
       })
     },
     
     setTimeLineWidth(gridWidth, minuteToWidth){
       dispatch({
-        type: 'alertListTimeTable/setTimeLineWidth',
+        type: 'alertListTable/setTimeLineWidth',
         payload: {
           gridWidth,
           minuteToWidth
@@ -29,7 +29,7 @@ const  ListTimeTableWrap = ({dispatch, alertListTimeTable}) => {
       const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
 
       dispatch({
-        type: 'alertListTableCommon/changeCheckAlert',
+        type: 'alertListTable/changeCheckAlert',
         payload: alertInfo
       })
     },
@@ -37,8 +37,42 @@ const  ListTimeTableWrap = ({dispatch, alertListTimeTable}) => {
       const alertId = JSON.parse(e.target.getAttribute('data-id'));
 
       dispatch({
-        type: 'alertListTableCommon/clickDetail',
+        type: 'alertListTable/clickDetail',
         payload: alertId
+      })
+    },
+    // children展开
+    spreadChild(e) {
+      const alertId = JSON.parse(e.target.getAttribute('data-id'));
+
+      dispatch({
+        type: 'alertListTable/spreadChild',
+        payload: alertId
+      })
+    },
+    noSpreadChild(e) {
+      const alertId = JSON.parse(e.target.getAttribute('data-id'));
+
+      dispatch({
+        type: 'alertListTable/noSpreadChild',
+        payload: alertId
+      })
+    },
+    // 分组展开
+    spreadGroup(e) {
+      const groupClassify = e.target.getAttribute('data-classify')
+      
+      dispatch({
+        type: 'alertListTable/spreadGroup',
+        payload: groupClassify
+      })
+    },
+    noSpreadGroup(e) {
+      const groupClassify = e.target.getAttribute('data-classify')
+      
+      dispatch({
+        type: 'alertListTable/noSpreadGroup',
+        payload: groupClassify
       })
     }
 
@@ -51,9 +85,8 @@ const  ListTimeTableWrap = ({dispatch, alertListTimeTable}) => {
 export default connect(
   (state) => {
     return {
-      alertListTimeTable: {
-        ...state.alertListTimeTable,
-        ...state.alertListTableCommon
+      alertListTable: {
+        ...state.alertListTable,
       }
     }
   }
