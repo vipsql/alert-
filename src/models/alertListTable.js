@@ -654,7 +654,6 @@ export default {
         //yield put({ type: 'updateGroup', payload: { isGroup: payload.isGroup, groupBy: payload.group }})
         yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, groupBy: payload.group } })   
       } else {
-        debugger
         //yield put({ type: 'updateGroup', payload: { isGroup: payload.isGroup }})
         yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup } })
       }
