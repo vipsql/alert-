@@ -87,7 +87,7 @@ class Chart extends Component{
                     width:'100%',
                     height: '100%',
                     visibleMin: 300,
-                    roam: 'zoom',
+                    roam: 'scale',
                     nodeClick: 'hash',
                     label: {
                         show: true,
@@ -109,7 +109,7 @@ class Chart extends Component{
             ]
         }
         myChart.setOption(option);
-
+       
 
     }
 

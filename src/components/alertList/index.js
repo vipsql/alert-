@@ -36,7 +36,7 @@ class AlertListManage extends Component{
   }
 
   render(){
-    const { alertDetail, alertList } = this.props;
+    const { alertDetail, alertList, isShowDetail } = this.props;
     
     const { levels } = alertList;
 
