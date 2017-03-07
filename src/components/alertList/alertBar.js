@@ -108,8 +108,8 @@ class AlertBar extends Component{
         // Create the crossfilter for the relevant dimensions and groups.
         const min5 = n_minutes_interval(2);
         const alertList = crossfilter(barData)
-
-        const width = screen.width - 160 - 50;
+        const clientWidth = document.documentElement.clientWidth || document.body.clientWidth
+        const width = clientWidth - 160 - 50;
         const height = 80
         const margins = {top: 0, right: 20, bottom: 25, left: 15}
         const dim = alertList.dimension(function(d) { return d.time; });

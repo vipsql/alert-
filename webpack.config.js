@@ -27,16 +27,16 @@ module.exports = function (webpackConfig, env) {
   // }
 
   //
-  // webpackConfig.plugins.push(
-  //
-  //      new CopyWebpackPlugin([
-  //          {
-  //            from: __dirname + '/iconfont/**',
-  //            to: __dirname + '/dist/'
-  //          },
-  //      ]),
-  //
-  //  );
+  webpackConfig.plugins.push(
+  
+       new CopyWebpackPlugin([
+           {
+             from: __dirname + '/iconfont/**',
+             to: __dirname + '/dist/'
+           },
+       ])
+  
+   );
 
   // Don't extract common.js and common.css
   webpackConfig.plugins = webpackConfig.plugins.filter(function (plugin) {
