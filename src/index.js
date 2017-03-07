@@ -20,9 +20,7 @@ app.model(require('./models/tagsListFilter'))
 app.model(require('./models/alertDetail'))
 
 app.model(require('./models/alertList'))
-app.model(require('./models/alertListTableCommon'))
 app.model(require('./models/alertListTable'))
-app.model(require('./models/alertListTimeTable'))
 // 3. Router
 app.router(require('./router'))
 

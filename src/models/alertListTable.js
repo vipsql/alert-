@@ -117,17 +117,6 @@ export default {
     clear(state) {
       return { ...state, ...initvalState }
     },
-    // 初始化checkAlerts
-    // initCheckAlert(state, { payload }) {
-    //   let checkList = {};
-    //   payload.forEach( (item, index) => {
-    //     checkList[`${item.id}`] = {
-    //       info: item,
-    //       checked: false
-    //     }
-    //   })
-    //   return { ...state, checkAlert: checkList }
-    // },
     // 不分组更新
     updateAlertListToNoGroup(state, {payload: {info, isShowMore, isGroup}}) {
       let checkList = {};
@@ -152,19 +141,6 @@ export default {
       })
       return { ...state, checkAlert: checkList, data: info, isShowMore, isGroup, groupBy}
     },
-    // 初始化checkAlerts分组的
-    // initCheckAlertToGroup(state, { payload }) {
-    //   let checkList = {};
-    //   payload.forEach( (group, index) => {
-    //     group.children.forEach( (item) => {
-    //       checkList[`${item.id}`] = {
-    //         info: item,
-    //         checked: false
-    //       }
-    //     })
-    //   })
-    //   return { ...state, checkAlert: checkList }
-    // },
     // 记录下原先checked数据
     resetCheckAlert(state, { payload: { origin, newObj } }) {
       let ids = Object.keys(origin);
@@ -375,47 +351,6 @@ export default {
       }
       return { ...state }
     },
-    // relieveChildrenAlert在展开过的情况下做操作
-    // relieveChildrenAlert(state, {payload: {parentId, isGroup}}) {
-    //   const { data, checkAlert } = state;
-    //   if (isGroup === true) {
-    //     const newData = data.map( (group) => {
-    //       let items = [];
-    //       group.children.map( (item) => {
-    //         if (item.id == parentId) {
-    //           items = item.childrenAlert;
-    //           delete item.childrenAlert;
-    //           item.hasChild = false;
-    //           item.isSpread = false;
-    //         } 
-    //         return item;
-    //       })
-    //       if (items.length !== 0) {
-    //         group.children.push(...items);
-    //         items.forEach( (item) => { checkAlert[item.id] = { info: item, checked: false } })
-    //       }
-    //       return group;
-    //     })
-    //     return { ...state, data: newData, checkAlert: checkAlert}
-    //   } else if (isGroup === false) {
-    //     let items = [];
-    //     const newData = data.map( (item, index) => {
-    //       if (item.id == parentId) {
-    //         items = item.childrenAlert;
-    //         delete item.childrenAlert;
-    //         item.hasChild = false;
-    //         item.isSpread = false;
-    //       }
-    //       return item;
-    //     })
-    //     if (items.length !== 0) {
-    //       newData.push(...items);
-    //       items.forEach( (item) => { checkAlert[item.id] = { info: item, checked: false } })
-    //     }
-    //     return { ...state, data: newData, checkAlert: checkAlert}
-    //   }
-    //   return { ...state }
-    // },
     // 手动添加分组展开状态
     addGroupSpread(state, { payload }) {
       const { data } = state;
@@ -504,7 +439,7 @@ export default {
 
       if(listData.result){
         if(isGroup){
-          // 这个必须先触发，因为在ListTable中item.id匹配不到会使checkAlert[item.id]=undefined
+          
           yield put({
             type: 'updateAlertListToGroup',
             payload: {
@@ -518,22 +453,9 @@ export default {
             type: 'toggleLoading',
             payload: false
           })
-          // yield put({
-          //   type: 'initCheckAlertToGroup',
-          //   payload: listData.data
-          // })
-          // yield put({
-          //   type: 'updateAlertListData',
-          //   payload: listData.data
-          // })
-
-          // yield put({
-          //   type: 'updateShowMore',
-          //   payload: false
-          // })
 
         }else{
-          // 这个必须先触发，因为在ListTable中item.id匹配不到会使checkAlert[item.id]=undefined
+        
           yield put({
             type: 'updateAlertListToNoGroup',
             payload: {
@@ -546,19 +468,7 @@ export default {
             type: 'toggleLoading',
             payload: false
           })
-          // yield put({
-          //   type: 'initCheckAlert',
-          //   payload: listData.data.datas
-          // })
-          // yield put({
-          //   type: 'updateAlertListData',
-          //   payload: listData.data.datas
-          // })
-
-          // yield put({
-          //   type: 'updateShowMore',
-          //   payload: listData.data.hasNext
-          // })
+          
         }
 
       }
@@ -628,44 +538,15 @@ export default {
     },
     // 解除告警
     *relieveChildAlert({payload},{call, put, select}) {
-      //let haveChild;
+      
       const {isGroup, begin, end} = yield select( state => {
         return {
           'isGroup': state.alertListTable.isGroup,
-          // 'data': state.alertListTable.data,
-          // 'begin': state.alertListTable.begin,
-          // 'end': state.alertListTable.end
         }
       } )
-      // 先看下有没有子告警，没有就查询 有就隐藏
-      // if (isGroup === true) {
-      //   data.forEach( (group) => {
-      //     group.children.forEach( (item) => {
-      //       if (item.id == payload) {
-      //         haveChild = !(typeof item.childrenAlert === 'undefined')
-      //       } 
-      //     })
-      //   })
-      // } else if (isGroup === false) {
-      //   data.forEach( (item, index) => {
-      //     if (item.id == payload) {
-      //       haveChild = !(typeof item.childrenAlert === 'undefined')
-      //     }
-      //   })
-      // }
-      //if (typeof haveChild !== undefined && !haveChild) {
-      //  const childResult = yield call(queryChild, {alertId: payload, begin: begin, end: end})
-      //  if (childResult.result) {
-          yield put( { type: 'addParent', payload: { addItem: payload.childs, parentId: payload.relieveId, isGroup: isGroup} })
+      
+      yield put( { type: 'addParent', payload: { addItem: payload.childs, parentId: payload.relieveId, isGroup: isGroup} })
           
-      //  } else {
-      //    console.error('查询子告警有误')
-      //  }
-      //} else if (typeof haveChild !== undefined && haveChild){
-      //  yield put( { type: 'relieveChildrenAlert', payload: { parentId: payload, isGroup: isGroup} })
-      //} else {
-      //  console.error('haveChild is undefined')
-      //}
     },
     // 展开组
     *spreadGroup({payload},{call, put, select}) {
@@ -680,10 +561,8 @@ export default {
     // 点击分组时触发
     *setGroup({payload}, {select, put, call}) {
       if (payload.isGroup) {
-        //yield put({ type: 'updateGroup', payload: { isGroup: payload.isGroup, groupBy: payload.group }})
         yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, groupBy: payload.group } })   
       } else {
-        //yield put({ type: 'updateGroup', payload: { isGroup: payload.isGroup }})
         yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup } })
       }
     },
