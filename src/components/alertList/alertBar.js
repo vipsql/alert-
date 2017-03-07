@@ -89,6 +89,9 @@ class AlertBar extends Component{
   constructor(props){
     super(props)
   }
+  shouldComponentUpdate(nextProps, nextState){
+    return this.props.alertList.barData !== nextProps.alertList.barData
+  }
   componentDidUpdate(){
 
     let timer = null;
