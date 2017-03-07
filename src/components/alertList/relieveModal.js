@@ -40,7 +40,7 @@ const relieveModal = ({alertOperation, dispatch}) => {
             footer={ modalFooter }
         >
             <div className={styles.relieveMain}>
-                <p>解除{`${relieveAlert.typeName}`}的合并告警</p>
+                <p>解除{`${relieveAlert.alertName}`}的合并告警</p>
             </div>
         </Modal>
     )

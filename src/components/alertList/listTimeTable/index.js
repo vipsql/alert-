@@ -74,6 +74,21 @@ const  ListTimeTableWrap = ({dispatch, alertListTable}) => {
         type: 'alertListTable/noSpreadGroup',
         payload: groupClassify
       })
+    },
+    toggleSelectedAll(e) {
+      dispatch({
+        type: 'alertListTable/toggleSelectedAll'
+      })
+    },
+    // 解除告警
+    relieveClick(e) {
+      e.stopPropagation();
+      const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
+
+      dispatch({
+        type: 'alertOperation/openRelieveModalByButton',
+        payload: alertInfo
+      })
     }
 
   }

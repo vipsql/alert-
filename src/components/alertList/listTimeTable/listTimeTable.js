@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { Button } from 'antd';
+import { Button, Spin} from 'antd';
 import { connect } from 'dva'
 import { Popover } from 'antd'
 import styles from '../index.less'
@@ -40,7 +40,11 @@ class ListTimeTable extends Component {
         spreadChild,
         noSpreadChild,
         spreadGroup,
-        noSpreadGroup
+        noSpreadGroup,
+        selectedAll,
+        toggleSelectedAll,
+        relieveClick,
+        isLoading
       } = this.props
       
       let colsKey = []
@@ -127,9 +131,19 @@ class ListTimeTable extends Component {
                </td>
              )
            }
-            TDS.push(
-              <td key={key} className={styles[className]}>{item[key]}</td>
-            )
+           if(key == 'alertName') {
+             TDS.push(<td key={key} className={styles[className]} data-id={item.id} onClick={detailClick} >
+              {item[key]}
+              {
+                item['hasChild'] === true ?
+                <span className={styles.relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
+                :
+                undefined
+              }
+              </td>)
+           } else {
+             TDS.push(<td key={key} className={styles[className]}>{item[key]}</td>)
+           }
 
          })
          TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={
@@ -149,12 +163,14 @@ class ListTimeTable extends Component {
 
          keys.forEach( (key, index) => {
            // const tdKey = item.date + key
-           const className = key == 'alertName' ? 'tdBorderRight' : ''
-           
-            TDS.push(
-              <td key={key} className={styles[className]}>{item[key]}</td>
-            )
+           const className = key == 'alertName' ? 'tdBorderRight' : '';
 
+           if(key == 'alertName') {
+             TDS.push(<td key={key} className={styles[className]} data-id={item.id} onClick={detailClick} >{item[key]}</td>)
+           } else {
+             TDS.push(<td key={key} className={styles[className]}>{item[key]}</td>)
+           }
+           
          })
          TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={
               item['severity'] == 10 ? 
@@ -267,7 +283,7 @@ class ListTimeTable extends Component {
               const lineDotW = dotsInfo.lineDotW
               const lineDotLeft = dotsInfo.lineDotLeft
 
-              if(item.childrenAlert){
+              if(item.childrenAlert && groupItem.isGroupSpread !== false){
                 childTrs = item.childrenAlert.map ( (childItem, childIndex) => {
                   //keys = Object.keys(childItem);
                   return genchildTrs(childItem, childIndex, keys, item, lineDotW, lineDotLeft)
@@ -360,7 +376,7 @@ class ListTimeTable extends Component {
           <table width='100%' id="listTimeTable" className={styles.listTimeTable}>
             <thead>
               <tr>
-                <th key="checkAll" width='48'><input type="checkbox" /></th>
+                <th key="checkAll" width='48'><input type="checkbox" checked={selectedAll} onChange={toggleSelectedAll}/></th>
                 <th width="20" key='space-col'></th>
                 <th width='10'></th>
                 {theads}
@@ -371,9 +387,10 @@ class ListTimeTable extends Component {
             </thead>
             <tbody>
             {
+              isLoading ? <tr><td colSpan="6"><Spin/> 加载中...</td></tr> :
               data.length > 0 ? tbodyCon :
               <tr>
-              <td colSpan="6">暂无数据</td>
+                <td colSpan="6">暂无数据</td>
               </tr>
             }
             </tbody>

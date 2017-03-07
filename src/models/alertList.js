@@ -105,13 +105,6 @@ export default {
 
   },
   reducers: {
-    showLoading(state){
-      return {...state, loading: true}
-    },
-
-    initAlertList(state, action) {
-      return { ...state, ...action.payload, loading: false}
-    },
     updateAlerBarData(state,{ payload }){
       return {
         ...state,

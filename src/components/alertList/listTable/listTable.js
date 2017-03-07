@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { Button } from 'antd';
+import { Button, Spin } from 'antd';
 import LevelIcon from '../../common/levelIcon/index.js'
 import styles from '../index.less'
 
@@ -20,7 +20,11 @@ class ListTable extends Component {
       spreadChild,
       noSpreadChild,
       spreadGroup,
-      noSpreadGroup
+      noSpreadGroup,
+      selectedAll,
+      toggleSelectedAll,
+      relieveClick,
+      isLoading
     } = this.props
     let colsKey = []
     
@@ -88,7 +92,15 @@ class ListTable extends Component {
           td = <td key={key}>{data}</td>
         }
         if(key == 'alertName') {
-          td = <td key={key} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >{data}</td>
+          td = <td key={key} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >
+            {data}
+            {
+              item['hasChild'] === true ?
+              <span className={styles.relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
+              :
+              undefined
+            }
+          </td>
         } else {
           td = <td key={key}>{data}</td>
         }
@@ -243,7 +255,6 @@ class ListTable extends Component {
         }else{
           childs = null
         }
-        console.log(checkAlert[`${item.id}`].checked)
         commonTrs.push(
           <tr key={item.id}>
             {
@@ -267,7 +278,7 @@ class ListTable extends Component {
         <table className={styles.listTable}>
           <thead>
             <tr>
-              <th key="checkAll" width={60}><input type="checkbox" /></th>
+              <th key="checkAll" width={60}><input type="checkbox" checked={selectedAll} onChange={toggleSelectedAll}/></th>
               <th width="20" key='space-col'></th>
               <th width='10'></th>
               {theads}
@@ -275,9 +286,10 @@ class ListTable extends Component {
           </thead>
           <tbody>
             {
+              isLoading ? <tr><td colSpan={columns.length + 3}><Spin/> 加载中...</td></tr> :
               data.length > 0 ? tbodyCon :
               <tr>
-              <td colSpan={columns.length + 3}>暂无数据</td>
+                <td colSpan={columns.length + 3}>暂无数据</td>
               </tr>
             }
           </tbody>

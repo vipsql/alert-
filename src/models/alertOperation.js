@@ -1,5 +1,6 @@
 import {parse} from 'qs'
 import { getFormOptions, dispatchForm, close, merge, relieve } from '../services/alertOperation'
+import { queryAlertList, queryChild, queryAlertListTime } from '../services/alertList'
 import { message } from 'antd';
 
 const initalState = {
@@ -89,19 +90,49 @@ export default {
               yield message.error('请选择一条源告警');
           }
       },
+      // 打开解除告警modal(点击按钮的方式)
+      *openRelieveModalByButton({payload}, {select, put, call}) {
+          if (payload !== undefined) {
+              yield put({
+                  type: 'setRelieveAlert',
+                  payload: payload || {}
+              })
+              yield put({
+                  type: 'toggleRelieveModal',
+                  payload: true
+              })
+          } else {
+              console.error('选择解除的源告警有误')
+          }
+      },
       // 解除告警
       *relieveAlert({payload}, {select, put, call}) {
-          const relieveAlert = yield select( state => state.alertOperation.relieveAlert)
+          const {relieveAlert, begin, end} = yield select( state => {
+              return {
+                  'relieveAlert': state.alertOperation.relieveAlert,
+                  'begin': state.alertListTable.begin,
+                  'end': state.alertListTable.end
+              }
+          })
           
           if (relieveAlert !== undefined && relieveAlert.id !== undefined) {
+              let childResult = {}
+              if (relieveAlert.childrenAlert === undefined) {
+                  childResult = yield call(queryChild, {alertId: relieveAlert.id, begin: begin, end: end})
+              }
               const relieveResult = yield relieve({
                   parentId: relieveAlert.id
               })
               if (!relieveResult.result) {
                   yield message.error(result.message, 3);
+              } else if (childResult.result !== undefined && !childResult.result) {
+                  console.error('查询子告警失败')
               } else {
                   yield put({ type: 'alertListTable/resetCheckedAlert'})
-                  yield put({ type: 'alertListTable/relieveChildAlert', payload: relieveAlert.id })
+                  yield put({ type: 'alertListTable/relieveChildAlert', payload: {
+                      childs: childResult.data === undefined ? relieveAlert.childrenAlert : childResult.data,
+                      relieveId: relieveAlert.id
+                  }})
                   yield message.success('解除成功', 3);
               }
           } else {
