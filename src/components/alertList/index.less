@@ -264,11 +264,47 @@
   thead{
     tr{
       th{
+        position: relative;
         height: 38px;
         line-height: 38px;
         background: #f8fbfd;
         border-bottom: 1px solid #e4e7eb;
         border-top: 2px solid #e4e7eb;
+        .orderTriangleDown {
+            position: absolute;
+            bottom: 30%;
+            width: 0;
+            height: 0;
+            border-right: 4px solid transparent;
+            border-left: 4px solid transparent;
+            border-top: 6px solid #acb3bf;
+            cursor: pointer;
+            transition: border-top .2s ease;
+            &:hover{
+                border-top: 6px solid #4082e6;
+            }
+            &.orderTriang-active{
+                border-top: 6px solid #4082e6;
+            }
+        }
+        .orderTriangleUp {
+            position: absolute;
+            top: 30%;
+            width: 0;
+            height: 0;
+            border-right: 4px solid transparent;
+            border-left: 4px solid transparent;
+            border-bottom: 6px solid #acb3bf;
+            text-align: center;
+            cursor: pointer;
+            transition: border-bottom .2s ease;
+            &:hover{
+                border-bottom: 6px solid #4082e6;
+            }
+            &.orderTriang-active{
+                border-bottom: 6px solid #4082e6;
+            }
+        }
       }
     }
   }
@@ -657,7 +693,37 @@
     text-align: center;
 }
 .closeMain{
+    position: relative;
     padding: 5px 50px 5px 50px;
+    .selectDropdown{
+        &.selectDropdown-hidden{
+            display: none;
+        }
+        position: absolute;
+        z-index: 1050;
+        background-color: #fff;
+        box-shadow: 0 1px 6px rgba(0,0,0,.2);
+        border-radius: 4px;
+        left: 27%;
+        width: 55%;
+        li{
+            font-size: 14px;
+            font-weight: 600;
+            text-align: left;
+            position: relative;
+            display: block;
+            padding: 7px 16px;
+            color: rgba(0,0,0,.65);
+            white-space: nowrap;
+            cursor: pointer;
+            overflow: hidden;
+            -webkit-transition: background .3s ease;
+            transition: background .3s ease;
+            &:hover{
+                background: #edf2f7;
+            }
+        }
+    }
     :global .ant-form-item{
         margin-bottom: 0px;
         :global .ant-form-item-label{
@@ -670,18 +736,6 @@
         & > div:last-child {
             display: inline-block;
             width: 70%
-        }
-        :global .ant-form-item-control{
-            :global .ant-select-selection--single{
-                :global .ant-select-selection-selected-value{
-                    // font-size: 14px;
-                    // font-weight: bold;
-                }
-                cursor: auto;
-                & > span{
-                    display: none;
-                }
-            }
         }
     }
 }

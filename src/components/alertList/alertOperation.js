@@ -128,10 +128,9 @@ const alertOperation = ({position, alertOperation, alertList, dispatch}) => {
                             payload: value,
                         })
                     }}>
-                        <Option className={styles.menuItem} value="source">按来源分组</Option>
+                        <Option className={styles.menuItem} value="ENTITY_NAME">按来源分组</Option>
                         <Option className={styles.menuItem} value="status">按状态分组</Option>
                         <Option className={styles.menuItem} value="severity">按级别分组</Option>
-                        <Option className={styles.menuItem} value="position">按位置分组</Option>
                     </Select>
                     <i className={selectGroup !== '分组显示' && classnames(switchClass, styles.switch)} onClick={() => {
                         dispatch({

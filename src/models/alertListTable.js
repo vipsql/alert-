@@ -12,8 +12,8 @@ const initvalState = {
     isShowMore: false,
     isLoading: false,
 
-    orderBy: 'source',
-    orderType: 0,
+    orderBy: undefined,
+    orderType: undefined,
     pageSize: 20,
     currentPage: 1,
 
@@ -40,6 +40,7 @@ const initvalState = {
       key: 'entityName',
       title: '告警来源',
       width: 200,
+      order: true
     }, {
       key: 'status',
       title: '告警状态',
@@ -53,9 +54,11 @@ const initvalState = {
     }, {
       key: 'lastTime',
       title: '持续时间',
+      order: true
     }, {
       key: 'lastOccurtime',
       title: '最后发送时间',
+      order: true
     }],
 }
 
@@ -372,6 +375,10 @@ export default {
         return group
       })
       return { ...state, data: newData }
+    },
+    // 排序
+    toggleOrder(state, {payload}) {
+      return { ...state, ...payload }
     }
 
   },
@@ -389,7 +396,10 @@ export default {
         isGroup,
         groupBy,
         begin,
-        end
+        end,
+        pageSize,
+        orderBy,
+        orderType
       } = yield select(state => {
         const alertListTable = state.alertListTable
 
@@ -397,13 +407,19 @@ export default {
           isGroup: alertListTable.isGroup,
           groupBy: alertListTable.groupBy,
           begin: alertListTable.begin,
-          end: alertListTable.end
+          end: alertListTable.end,
+          pageSize: alertListTable.pageSize,
+          orderBy: alertListTable.orderBy,
+          orderType: alertListTable.orderType
         }
       })
+      var extraParams = {};
 
       if(payload !== undefined && payload.isGroup !== undefined) {
         isGroup = payload.isGroup;
         groupBy = payload.groupBy;
+        orderBy = payload.orderBy;
+        orderType = payload.orderType;
       }
 
       const tagsFilter = yield select( state => {
@@ -415,22 +431,19 @@ export default {
         }
       })
 
-      const extraParams = yield select( state => {
-        const alertListTable = state.alertListTable
-        if(isGroup){
-          return {
-            groupBy: groupBy
-          }
-        }else{
-          // 这里触发时currentPage始终为1，如果从common取在分组转分页时会有问题
-          return {
-            pageSize: alertListTable.pageSize,
-            currentPage: 1,
-            orderBy: alertListTable.orderBy,
-            orderType: alertListTable.orderType
-          }
+      if(isGroup){
+        extraParams = {
+          groupBy: groupBy
         }
-      })
+      }else{
+        // 这里触发时currentPage始终为1，如果从common取在分组转分页时会有问题
+        extraParams = {
+          pageSize: pageSize,
+          currentPage: 1,
+          orderBy: orderBy,
+          orderType: orderType
+        }
+      }
 
       const listData = yield call(queryAlertList, {
         ...tagsFilter,
@@ -563,7 +576,7 @@ export default {
       if (payload.isGroup) {
         yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, groupBy: payload.group } })   
       } else {
-        yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup } })
+        yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, orderBy: undefined, orderType: undefined } })
       }
     },
     // 点击展开详情
@@ -633,6 +646,11 @@ export default {
         console.error('显示更多查询有错误');
       }
       
+    },
+    //orderList排序
+    *orderList({payload}, {select, put, call}) {
+      yield put({ type: 'toggleOrder', payload: payload })
+      yield put({ type: 'queryAlertList' })   
     }
   },
 

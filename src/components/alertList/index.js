@@ -67,11 +67,11 @@ class AlertListManage extends Component{
             </TabPane>
           </Tabs>
           <ul className={styles.levelBar}>
-            <li><LevelIcon extraStyle={styles.extraStyle} iconType='jj' iconState={levels.jj.state} onClick={ this.clickIcon } /><p>紧急（{levels.jj.number}）</p></li>
-            <li><LevelIcon extraStyle={styles.extraStyle} iconType='zy' iconState={levels.zy.state} onClick={ this.clickIcon } /><p>主要（{levels.zy.number}）</p></li>
-            <li><LevelIcon extraStyle={styles.extraStyle} iconType='cy' iconState={levels.cy.state} onClick={ this.clickIcon } /><p>次要（{levels.cy.number}）</p></li>
-            <li><LevelIcon extraStyle={styles.extraStyle} iconType='gj' iconState={levels.gj.state} onClick={ this.clickIcon } /><p>告警（{levels.gj.number}）</p></li>
-            <li><LevelIcon extraStyle={styles.extraStyle} iconType='tx' iconState={levels.tx.state} onClick={ this.clickIcon } /><p>提醒（{levels.tx.number}）</p></li>
+            <li><LevelIcon extraStyle={styles.extraStyle} iconType='jj' iconState={levels.jj.state} /><p>紧急（{levels.jj.number}）</p></li>
+            <li><LevelIcon extraStyle={styles.extraStyle} iconType='zy' iconState={levels.zy.state} /><p>主要（{levels.zy.number}）</p></li>
+            <li><LevelIcon extraStyle={styles.extraStyle} iconType='cy' iconState={levels.cy.state} /><p>次要（{levels.cy.number}）</p></li>
+            <li><LevelIcon extraStyle={styles.extraStyle} iconType='gj' iconState={levels.gj.state} /><p>警告（{levels.gj.number}）</p></li>
+            <li><LevelIcon extraStyle={styles.extraStyle} iconType='tx' iconState={levels.tx.state} /><p>提醒（{levels.tx.number}）</p></li>
           </ul>
         </div>
         {

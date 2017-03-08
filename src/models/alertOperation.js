@@ -14,6 +14,9 @@ const initalState = {
     isShowMergeModal: false, // 合并
     isShowRelieveModal: false, // 解除
 
+    isDropdownSpread: false, // 是否展开关闭modal的dropdown
+    closeMessage: undefined, // 关闭原因
+
     isSelectAlert: false, // 是否选择了告警
     isSelectOrigin: false, // 是否选择了源告警
 
@@ -425,6 +428,13 @@ export default {
           const { mergeInfoList } = state;
           const newList = mergeInfoList.filter( (item) => (item.id !== payload) )
           return { ...state, mergeInfoList: newList}
+      },
+      // 是否展开dropdown - closemodal
+      toggleDropdown(state, { payload: isDropdownSpread }) {
+          return { ...state, isDropdownSpread }
+      },
+      setCloseMessge(state, { payload: closeMessage}) {
+          return { ...state, closeMessage }
       }
   }
 }

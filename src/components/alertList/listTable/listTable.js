@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import { Button, Spin } from 'antd';
 import LevelIcon from '../../common/levelIcon/index.js'
 import styles from '../index.less'
+import { classnames } from '../../../utils'
 
 class ListTable extends Component {
   constructor(){
@@ -24,16 +25,28 @@ class ListTable extends Component {
       selectedAll,
       toggleSelectedAll,
       relieveClick,
-      isLoading
+      isLoading,
+      orderUp,
+      orderDown,
+      orderBy,
+      orderType
     } = this.props
     let colsKey = []
-    
-    const theads = columns.map( (item) => {
+    let theads = []
+    columns.forEach( (item) => {
+      const isOrder = item.order || false
       const width = item.width || 'auto'
+      const orderTriangle = orderBy !== undefined && item['key'] == orderBy ? styles['orderTriang-active'] : undefined
+      
       colsKey.push(item['key'])
-      return (
+      
+      theads.push(
         <th key={item.key} width={width}>
           {item.title}
+          &nbsp;&nbsp;
+          {!isGroup && isOrder && 
+            [<span className={ orderType !== undefined && orderType === 1 ? classnames(styles.orderTriangleUp, orderTriangle) : styles.orderTriangleUp} data-key={item['key']} key={1} onClick={ orderUp }></span>,
+            <span className={ orderType !== undefined && orderType === 0 ? classnames(styles.orderTriangleDown, orderTriangle) : styles.orderTriangleDown} data-key={item['key']} key={0} onClick={ orderDown }></span>]}
         </th>
       )
     } )
@@ -275,25 +288,26 @@ class ListTable extends Component {
 
     return(
       <div>
-        <table className={styles.listTable}>
-          <thead>
-            <tr>
-              <th key="checkAll" width={60}><input type="checkbox" checked={selectedAll} onChange={toggleSelectedAll}/></th>
-              <th width="20" key='space-col'></th>
-              <th width='10'></th>
-              {theads}
-            </tr>
-          </thead>
-          <tbody>
-            {
-              isLoading ? <tr><td colSpan={columns.length + 3}><Spin/> 加载中...</td></tr> :
-              data.length > 0 ? tbodyCon :
+        <Spin tip="加载中..." spinning={isLoading}>
+          <table className={styles.listTable}>
+            <thead>
               <tr>
-                <td colSpan={columns.length + 3}>暂无数据</td>
+                <th key="checkAll" width={60}><input type="checkbox" checked={selectedAll} onChange={toggleSelectedAll}/></th>
+                <th width="20" key='space-col'></th>
+                <th width='10'></th>
+                {theads}
               </tr>
-            }
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {
+                data.length > 0 ? tbodyCon :
+                <tr>
+                  <td colSpan={columns.length + 3}>暂无数据</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </Spin>
         {isShowMore && <Button className={styles.loadMore} onClick={loadMore}>显示更多</Button>}
       </div>
     )

@@ -86,8 +86,31 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
         type: 'alertOperation/openRelieveModalByButton',
         payload: alertInfo
       })
+    },
+    // 升序
+    orderUp(e) {
+      const orderKey = e.target.getAttribute('data-key');
+      
+      dispatch({
+        type: 'alertListTable/orderList',
+        payload: {
+          orderBy: orderKey,
+          orderType: 1
+        }
+      })
+    },
+    // 降序
+    orderDown(e) {
+      const orderKey = e.target.getAttribute('data-key');
+      
+      dispatch({
+        type: 'alertListTable/orderList',
+        payload: {
+          orderBy: orderKey,
+          orderType: 0
+        }
+      })
     }
-
   }
 
   return (

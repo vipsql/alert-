@@ -88,16 +88,25 @@ export default {
     initalTagsList(state, { payload: tagsList }) {
       const { originTags } = state;
       let originTagsList = Object.keys(originTags) || [];
+      let serverityList = originTags['severity'].split(',');
       const newList = tagsList.map( (group) => {
         group.values = group.values.map( (item) => {
           if (originTagsList.length !== 0
             && ((originTagsList[0] == group.field && originTags[`${originTagsList[0]}`] == item)
-              || (originTagsList[1] == group.field && originTags[`${originTagsList[1]}`] == item))) {
+              || (originTagsList[originTagsList.length - 1] == group.field && serverityList.includes(item)))) {
                 return {
                   name: item,
                   selected: true
                 }
           }
+          // if (originTagsList.length !== 0
+          //   && ((originTagsList[0] == group.field && originTags[`${originTagsList[0]}`] == item)
+          //     || (originTagsList[1] == group.field && originTags[`${originTagsList[1]}`] == item))) {
+          //       return {
+          //         name: item,
+          //         selected: true
+          //       }
+          // }
           return {
             name: item,
             selected: false

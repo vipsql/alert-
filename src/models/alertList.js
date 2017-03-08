@@ -89,7 +89,9 @@ export default {
         payload: {
           begin: payload.begin,
           end: payload.end,
-          currentPage: 1
+          currentPage: 1,
+          orderBy: undefined,
+          orderType: undefined,
         }
       })
       

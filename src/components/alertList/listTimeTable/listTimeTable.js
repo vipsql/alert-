@@ -373,28 +373,29 @@ class ListTimeTable extends Component {
 
       return(
         <div>
-          <table width='100%' id="listTimeTable" className={styles.listTimeTable}>
-            <thead>
-              <tr>
-                <th key="checkAll" width='48'><input type="checkbox" checked={selectedAll} onChange={toggleSelectedAll}/></th>
-                <th width="20" key='space-col'></th>
-                <th width='10'></th>
-                {theads}
-                <th key="timeLine" id="timeLine">
-                  <div className={styles.relPos}>{timeTH}</div>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-            {
-              isLoading ? <tr><td colSpan="6"><Spin/> 加载中...</td></tr> :
-              data.length > 0 ? tbodyCon :
-              <tr>
-                <td colSpan="6">暂无数据</td>
-              </tr>
-            }
-            </tbody>
-          </table>
+          <Spin tip="加载中..." spinning={isLoading}>
+            <table width='100%' id="listTimeTable" className={styles.listTimeTable}>
+              <thead>
+                <tr>
+                  <th key="checkAll" width='48'><input type="checkbox" checked={selectedAll} onChange={toggleSelectedAll}/></th>
+                  <th width="20" key='space-col'></th>
+                  <th width='10'></th>
+                  {theads}
+                  <th key="timeLine" id="timeLine">
+                    <div className={styles.relPos}>{timeTH}</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+              {
+                data.length > 0 ? tbodyCon :
+                <tr>
+                  <td colSpan="6">暂无数据</td>
+                </tr>
+              }
+              </tbody>
+            </table>
+          </Spin>
           {isShowMore && <Button className={styles.loadMore} onClick={loadMore}>显示更多</Button>}
         </div>
       )

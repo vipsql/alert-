@@ -1,22 +1,30 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'dva'
-import { Modal, Button, Form, Select, Row, Col } from 'antd';
+import { Modal, Button, Form, Select, Row, Col, Input } from 'antd';
 import styles from './index.less'
 import { classnames } from '../../utils'
 
 const Item = Form.Item;
 const Option = Select.Option;
 const closeModal = ({alertOperation, alertDetailOperation, alertList, dispatch, form}) => {
-    
     const currentData = alertList.alertOperateModalOrigin === 'detail' ? alertDetailOperation : alertOperation
-
-    const { isShowCloseModal } = currentData;
+    
+    const { isShowCloseModal, isDropdownSpread, closeMessage } = currentData;
     const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
 
     const closeCloseModal = () => {
         dispatch({
             type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleCloseModal' : 'alertOperation/toggleCloseModal',
             payload: false
+        })
+    }
+
+    const clickDropdown = (e) => {
+        const message = e.target.getAttribute('data-message')
+        
+        dispatch({
+            type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/setCloseMessge' : 'alertOperation/setCloseMessge',
+            payload: message
         })
     }
 
@@ -64,19 +72,29 @@ const closeModal = ({alertOperation, alertDetailOperation, alertList, dispatch, 
                         {getFieldDecorator('closeOption', {
                             rules: [
                                 { required: true, message: '请选择关闭理由' }
-                            ]
+                            ],
+                            initialValue: closeMessage,
                         })(
-                            <Select style={{width: '100%'}} showSearch placeholder="请选择关闭理由" filterOption={ (inputValue, option) => {
-                                
-                            }}>
-                                <Option className={styles.menuItem} value={`关闭理由1：故障已存在`}>关闭理由1：故障已解决</Option>
-                                <Option className={styles.menuItem} value={`关闭理由2：计划停机`}>关闭理由2：计划停机</Option>
-                                <Option className={styles.menuItem} value={`关闭理由3：监控系统误报`}>关闭理由3：监控系统误报</Option>
-                            </Select>
+                            <Input style={{width: '100%'}} placeholder="请选择关闭理由" onFocus={ (e) => {
+                                dispatch({
+                                    type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleDropdown' : 'alertOperation/toggleDropdown',
+                                    payload: true
+                                })
+                            }}/>
                         )}
                     </Item>
 
                 </Form>
+                <ul onMouseLeave={ () => {
+                    dispatch({
+                        type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleDropdown' : 'alertOperation/toggleDropdown',
+                        payload: false
+                    })
+                }} className={isDropdownSpread ? styles.selectDropdown : classnames(styles.selectDropdown, styles['selectDropdown-hidden'])}>
+                    <li data-message={`关闭理由1：故障已解决`} onClick={clickDropdown}>关闭理由1：故障已解决</li>
+                    <li data-message={`关闭理由2：计划停机`} onClick={clickDropdown}>关闭理由2：计划停机</li>
+                    <li data-message={`关闭理由3：监控系统误报`} onClick={clickDropdown}>关闭理由3：监控系统误报</li>
+                </ul>
             </div>
         </Modal>
     )

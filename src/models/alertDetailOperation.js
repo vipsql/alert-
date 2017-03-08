@@ -9,6 +9,9 @@ const initalState = {
     // 各个modal弹窗
     isShowFormModal: false, // 派发
     isShowCloseModal: false, // 关闭
+
+    isDropdownSpread: false,
+    closeMessage: undefined // 关闭原因
 }
 
 export default {
@@ -99,6 +102,13 @@ export default {
       },
       toggleCloseModal(state, {payload: isShowCloseModal}) {
           return { ...state, isShowCloseModal }
+      },
+      // 是否展开dropdown - closemodal
+      toggleDropdown(state, { payload: isDropdownSpread }) {
+          return { ...state, isDropdownSpread }
+      },
+      setCloseMessge(state, { payload: closeMessage}) {
+          return { ...state, closeMessage }
       }
 
   }
