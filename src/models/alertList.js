@@ -10,28 +10,13 @@ export default {
     barData:[], // 最近4小时告警数据
     begin: 0, //告警开始时间(时间线)
     end: 0,  //告警结束时间(时间线)
-    levels: { //告警级别
-      jj: {
-        number: 22,
-        state: true,
-      },
-      gj: {
-        number: 33,
-        state: true,
-      },
-      tx: {
-        number: 44,
-        state: true,
-      },
-      zy: {
-        number: 55,
-        state: true,
-      },
-      cy: {
-        number: 66,
-        state: true,
-      }
-    }
+    // levels: { //告警级别
+    //   jj: 22,
+    //   gj: 33,
+    //   tx: 44,
+    //   zy: 55,
+    //   cy: 66
+    // }
 
   },
   subscriptions: {
@@ -114,12 +99,12 @@ export default {
       }
     },
     // 转换icon状态
-    toggleLevelState(state, {payload: type}) {
-      if (type !== undefined && state.levels[type] !== undefined && Object.keys(state.levels).includes(type)) {
-        state.levels[type].state = !(state.levels[type].state);
-      }
-      return { ...state }
-    },
+    // toggleLevelState(state, {payload: type}) {
+    //   if (type !== undefined && state.levels[type] !== undefined && Object.keys(state.levels).includes(type)) {
+    //     state.levels[type].state = !(state.levels[type].state);
+    //   }
+    //   return { ...state }
+    // },
     // 转换modal的来源
     toggleModalOrigin(state, {payload: alertOperateModalOrigin}) {
       return { ...state, alertOperateModalOrigin }

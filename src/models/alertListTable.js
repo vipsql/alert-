@@ -17,6 +17,8 @@ const initvalState = {
     pageSize: 20,
     currentPage: 1,
 
+    levels:{}, // 告警级别
+
     begin: 0,
     end: 0,
 
@@ -121,7 +123,7 @@ export default {
       return { ...state, ...initvalState }
     },
     // 不分组更新
-    updateAlertListToNoGroup(state, {payload: {info, isShowMore, isGroup}}) {
+    updateAlertListToNoGroup(state, {payload: {info, isShowMore, isGroup, levels}}) {
       let checkList = {};
       info.forEach( (item, index) => {
         checkList[`${item.id}`] = {
@@ -129,10 +131,10 @@ export default {
           checked: false
         }
       })
-      return { ...state, checkAlert: checkList, data: info, isShowMore, isGroup}
+      return { ...state, checkAlert: checkList, data: info, isShowMore, isGroup, levels}
     },
     // 分组时更新
-    updateAlertListToGroup(state, {payload: {info, isShowMore, isGroup, groupBy}}) {
+    updateAlertListToGroup(state, {payload: {info, isShowMore, isGroup, groupBy, levels}}) {
       let checkList = {};
       info.forEach( (group, index) => {
         group.children.forEach( (item) => {
@@ -142,7 +144,7 @@ export default {
           }
         })
       })
-      return { ...state, checkAlert: checkList, data: info, isShowMore, isGroup, groupBy}
+      return { ...state, checkAlert: checkList, data: info, isShowMore, isGroup, groupBy, levels}
     },
     // 记录下原先checked数据
     resetCheckAlert(state, { payload: { origin, newObj } }) {
@@ -213,11 +215,13 @@ export default {
 
     },
     // 更新告警列表
-    updateAlertListData(state, {payload: data}){
-      return {
-        ...state,
-        data
-      }
+    updateAlertListData(state, {payload: { data, newLevels }}){
+      let { levels } = state;
+      let keys = Object.keys(newLevels);
+      keys.forEach( (key) => {
+        levels[key] = typeof levels[key] !== 'undefined' ? levels[key] + newLevels[key] : newLevels[key]
+      })
+      return { ...state, data, levels: levels }
     },
     // 手动添加子告警
     addChild(state, { payload: {children, parentId, isGroup} }) {
@@ -456,10 +460,11 @@ export default {
           yield put({
             type: 'updateAlertListToGroup',
             payload: {
-              info: listData.data,
+              info: listData.data.datas,
               isShowMore: false,
               isGroup: isGroup,
-              groupBy: groupBy
+              groupBy: groupBy,
+              levels: listData.data.levels
             }
           })
           yield put({
@@ -474,7 +479,8 @@ export default {
             payload: {
               info: listData.data.datas,
               isShowMore: listData.data.hasNext,
-              isGroup: false
+              isGroup: false,
+              levels: listData.data.levels
             }
           })
           yield put({
@@ -633,7 +639,10 @@ export default {
 
         yield put({
           type: 'updateAlertListData',
-          payload: listData
+          payload: {
+            data: listData,
+            newLevels: listReturnData.data.levels
+          }
         })
 
         yield put({ type: 'setMore', payload: currentPage })
