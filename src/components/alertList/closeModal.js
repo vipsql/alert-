@@ -66,22 +66,19 @@ const closeModal = ({alertOperation, alertDetailOperation, alertList, dispatch, 
                 <Form>
                     <Item
                         label="关闭理由"
-                        hasFeedback
-                        help={isFieldValidating('closeOption') ? '校验中...' : (getFieldError('closeOption') || []).join(', ')}
+                        required
                     >
-                        {getFieldDecorator('closeOption', {
-                            rules: [
-                                { required: true, message: '请选择关闭理由' }
-                            ],
-                            initialValue: closeMessage,
-                        })(
-                            <Input style={{width: '100%'}} placeholder="请选择关闭理由" onFocus={ (e) => {
-                                dispatch({
-                                    type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleDropdown' : 'alertOperation/toggleDropdown',
-                                    payload: true
-                                })
-                            }}/>
-                        )}
+                        <Input style={{width: '100%'}} placeholder="请选择关闭理由" onClick={ (e) => {
+                            dispatch({
+                                type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleDropdown' : 'alertOperation/toggleDropdown',
+                                payload: !isDropdownSpread
+                            })
+                        }} value={closeMessage} onChange={ (e) => {
+                            dispatch({
+                                type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/setCloseMessge' : 'alertOperation/setCloseMessge',
+                                payload: e.target.value
+                            })
+                        }}/>
                     </Item>
 
                 </Form>
