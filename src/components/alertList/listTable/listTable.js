@@ -29,21 +29,24 @@ class ListTable extends Component {
       orderUp,
       orderDown,
       orderBy,
-      orderType
+      orderType,
+      orderByTittle
     } = this.props
     let colsKey = []
     let theads = []
+    
     columns.forEach( (item) => {
       const isOrder = item.order || false
       const width = item.width || 'auto'
       const orderTriangle = orderBy !== undefined && item['key'] == orderBy ? styles['orderTriang-active'] : undefined
-      
+      const orderTh_active = orderBy !== undefined && item['key'] == orderBy ? styles['orderTh-active'] : undefined
+
       colsKey.push(item['key'])
       
       theads.push(
         <th key={item.key} width={width}>
-          {item.title}
-          &nbsp;&nbsp;
+          {!isGroup && isOrder ? <span className={ orderType !== undefined ? classnames(styles.orderTh, orderTh_active) : styles.orderTh} data-key={item['key']} onClick={ orderByTittle }>{item.title}</span>
+          : `${item.title}`}
           {!isGroup && isOrder && 
             [<span className={ orderType !== undefined && orderType === 1 ? classnames(styles.orderTriangleUp, orderTriangle) : styles.orderTriangleUp} data-key={item['key']} key={1} onClick={ orderUp }></span>,
             <span className={ orderType !== undefined && orderType === 0 ? classnames(styles.orderTriangleDown, orderTriangle) : styles.orderTriangleDown} data-key={item['key']} key={0} onClick={ orderDown }></span>]}
@@ -51,9 +54,6 @@ class ListTable extends Component {
       )
     } )
 
-    // theads.unshift(
-    //   <th key="checkAll" width={60}><input type="checkbox" /></th>
-    // )
     let tbodyCon = [];
 
     // 生成每一列的参数

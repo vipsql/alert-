@@ -31,17 +31,9 @@ const closeModal = ({alertOperation, alertDetailOperation, alertList, dispatch, 
     const modalFooter = []
     modalFooter.push(<div className={styles.modalFooter}>
       <Button type="primary" onClick={ () => {
-        form.validateFieldsAndScroll( (errors, values) => {
-            if (!!errors) {
-                return;
-            }
-            const value = form.getFieldValue('closeOption')
-            dispatch({
-                type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/closeAlert' : 'alertOperation/closeAlert',
-                payload: value
-            })
-
-            form.resetFields();
+        dispatch({
+            type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/closeAlert' : 'alertOperation/closeAlert',
+            payload: closeMessage
         })
       }} >关闭</Button>
       <Button type="ghost" onClick={ () => {
@@ -49,7 +41,6 @@ const closeModal = ({alertOperation, alertDetailOperation, alertList, dispatch, 
             type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleCloseModal' : 'alertOperation/toggleCloseModal',
             payload: false
         })
-        form.resetFields();
       }}>取消</Button>
       </div>
     )

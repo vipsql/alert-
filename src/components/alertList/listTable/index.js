@@ -110,6 +110,14 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
           orderType: 0
         }
       })
+    },
+    orderByTittle(e) {
+      const orderKey = e.target.getAttribute('data-key');
+
+      dispatch({
+        type: 'alertListTable/orderByTittle',
+        payload: orderKey
+      })
     }
   }
 

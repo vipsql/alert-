@@ -235,8 +235,10 @@ export default {
               payload: payload.origin
           })
           if (payload.origin !== undefined && payload.origin === 'detail') {
+              yield put({type: 'alertDetailOperation/setCloseMessge', payload: undefined})
               yield put({type: 'alertDetailOperation/toggleCloseModal',payload: payload.state})
           } else {
+              yield put({type: 'setCloseMessge', payload: undefined})
               yield put({type: 'toggleCloseModal', payload: payload.state})
           }
       },
@@ -380,7 +382,11 @@ export default {
           columnList.forEach( (group) => {
             group.cols.map( (col) => {
                 if (col.checked) {
-                    arr.push({ key: col.id, title: col.name, width: 150 }) // width先定死
+                    if (col.id == 'entityName' || col.id == 'lastTime' || col.id == 'lastOccurtime') {
+                        arr.push({ key: col.id, title: col.name, width: 150, order: true }) // order字段先定死
+                    } else {
+                        arr.push({ key: col.id, title: col.name, width: 150 }) // width先定死
+                    }
                 }
             })
           })

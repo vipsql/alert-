@@ -123,7 +123,7 @@ export default {
       return { ...state, ...initvalState }
     },
     // 不分组更新
-    updateAlertListToNoGroup(state, {payload: {info, isShowMore, isGroup, levels}}) {
+    updateAlertListToNoGroup(state, {payload: {info, isShowMore, isGroup, levels, orderBy, orderType}}) {
       let checkList = {};
       info.forEach( (item, index) => {
         checkList[`${item.id}`] = {
@@ -131,7 +131,7 @@ export default {
           checked: false
         }
       })
-      return { ...state, checkAlert: checkList, data: info, isShowMore, isGroup, levels}
+      return { ...state, checkAlert: checkList, data: info, isShowMore, isGroup, levels, orderBy, orderType}
     },
     // 分组时更新
     updateAlertListToGroup(state, {payload: {info, isShowMore, isGroup, groupBy, levels}}) {
@@ -480,6 +480,8 @@ export default {
               info: listData.data.datas,
               isShowMore: listData.data.hasNext,
               isGroup: false,
+              orderBy: orderBy,
+              orderType: orderType,
               levels: listData.data.levels
             }
           })
@@ -658,8 +660,28 @@ export default {
     },
     //orderList排序
     *orderList({payload}, {select, put, call}) {
-      yield put({ type: 'toggleOrder', payload: payload })
-      yield put({ type: 'queryAlertList' })   
+      //yield put({ type: 'toggleOrder', payload: payload })
+      yield put({ type: 'queryAlertList', payload: { isGroup: false, orderBy: payload.orderBy, orderType: payload.orderType } })   
+    },
+    //orderByTittle
+    *orderByTittle({payload}, {select, put, call}) {
+      const { orderType } = yield select( state => {
+        return {
+          'orderType': state.alertListTable.orderType,
+        }
+      } )
+      if (payload !== undefined) {
+        yield put({ 
+          type: 'toggleOrder', 
+          payload: {
+            orderBy: payload,
+            orderType: orderType === undefined || orderType === 1 ? 0 : 1,
+          } 
+        })
+        yield put({ type: 'queryAlertList' })   
+      } else {
+        console.error('orderBy有误')
+      }
     }
   },
 
