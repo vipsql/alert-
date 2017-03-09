@@ -50,7 +50,12 @@ function AlertManage({dispatch, alertManage}){
 
   const chartProps = {
     currentDashbordData,
-    isLoading
+    isLoading,
+    requestFresh(){
+      dispatch({
+        type: 'alertManage/queryAlertDashbord'
+      })
+    }
   }
 
   return (

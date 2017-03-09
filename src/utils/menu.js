@@ -11,7 +11,7 @@ module.exports = [
   },
   {
     key: 'alertConfig',
-    name: '告警查询',
+    name: '告警配置',
     icon: 'gaojingpeizhi'
   },
   {

@@ -6,7 +6,7 @@ const initialState = {
     isSetAlert: false, // 是否设置过告警标签
     hideAlertSetTip: false, // 设置提示false有提示
     modalVisible: false,
-    currentDashbordData: [],
+    currentDashbordData: undefined,
     isLoading: true, //加载
     levels: { //告警级别
       jj: 23,
@@ -59,16 +59,24 @@ export default {
           payload: false
         })
       }
-    },
+    }, 
     *queryAlertDashbord({payload}, {call, put, select}) {
-
-      const treemapData = yield queryDashbord(payload)
-
-      if (typeof treemapData.data !== 'undefined') {
+      if(!payload){
+        payload = {
+          tagIds: yield select( state => {
+            return state.alertTagsSet.commitTagIds
+          })
+        }
+        
+      }
+      const returnData = yield queryDashbord(payload)
+      const treemapData = returnData.data
+  
+      if (typeof treemapData !== 'undefined') {
         yield put({
           type: 'setCurrentTreemap',
           payload: {
-            currentDashbordData:treemapData.data && treemapData.data.picList || [],
+            currentDashbordData:treemapData && treemapData.picList || [],
             isLoading: false
           }
         })
@@ -77,11 +85,11 @@ export default {
           type: 'setLevels',
           payload: {
             levels: {
-              totalMinorCnt: treemapData.data.totalMinorCnt, // 次要
-              totalCriticalCnt: treemapData.data.totalCriticalCnt, // 紧急
-              totalWarnCnt: treemapData.data.totalWarnCnt, // 告警
-              totalMajorCnt: treemapData.data.totalMajorCnt, // 主要
-              totalInfoCnt: treemapData.data.totalInfoCnt // 提醒
+              totalMinorCnt: treemapData.totalMinorCnt, // 次要
+              totalCriticalCnt: treemapData.totalCriticalCnt, // 紧急
+              totalWarnCnt: treemapData.totalWarnCnt, // 告警
+              totalMajorCnt: treemapData.totalMajorCnt, // 主要
+              totalInfoCnt: treemapData.totalInfoCnt // 提醒
             }
           }
         })
