@@ -4,6 +4,7 @@ import crossfilter from 'crossfilter'
 import dc from 'dc'
 import styles from './index.less'
 import { connect } from 'dva'
+import { Spin } from 'antd';
 
 let d3_date = Date;
 function d3_time_interval(local, step, number) {
@@ -90,7 +91,7 @@ class AlertBar extends Component{
     super(props)
   }
   shouldComponentUpdate(nextProps, nextState){
-    return this.props.alertList.barData !== nextProps.alertList.barData
+    return this.props.alertList.barData !== nextProps.alertList.barData || this.props.alertList.isLoading !== nextProps.alertList.isLoading
   }
   componentDidUpdate(){
 
@@ -161,16 +162,21 @@ class AlertBar extends Component{
     const {
       barData
     } = this.props.alertList
+    console.log(this.props.alertList.isLoading)
     const len = barData.length
 
     return (
-      <div>{ len ?
-       <div className={styles.timeAlert}>
-        <div id="date-chart" className="dc-chart">
-
+      <div>
+        { len && !this.props.alertList.isLoading ?
+        <div className={styles.timeAlert}>
+          <div id="date-chart" className="dc-chart"></div>
+          <div className={styles.xAxisLine}></div>
         </div>
-        <div className={styles.xAxisLine}></div>
-      </div> : <div>正在加载中...</div> }
+        :
+        <Spin tip="加载中..." spinning={this.props.alertList.isLoading}>
+          <div className={styles.noTimeAlert}></div>
+        </Spin>
+        }
       </div>
 
     )

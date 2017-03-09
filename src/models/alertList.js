@@ -6,6 +6,7 @@ export default {
   state: {
     isRefresh: false, //是否实时更新
     alertOperateModalOrigin: undefined, // 这个状态是用来区别那个Modal打开的 --> 对应position
+    isLoading: false, // alertBar加载
 
     barData:[], // 最近4小时告警数据
     begin: 0, //告警开始时间(时间线)
@@ -29,6 +30,8 @@ export default {
     *queryAlertBar({payload}, {call, put, select}) {
       // 触发这个effect的时机是在刷新/tag转变的时候（不保存状态--所以需要初始化commonList）
       yield put({ type: 'alertListTable/clear' })
+      
+      yield put({ type: 'toggleAlertBarLoading', payload: true })
 
       const data = yield call(queryAlertBar, payload)
 
@@ -47,6 +50,7 @@ export default {
             tagsFilter: payload
           }
         })
+        yield put({ type: 'toggleAlertBarLoading', payload: false })
 
         // 更新柱状图数据
         yield put({
@@ -57,6 +61,7 @@ export default {
             end: endtTime
           }
         })
+
 
         // 发起查询列表请求
         yield put({
@@ -108,6 +113,9 @@ export default {
     // 转换modal的来源
     toggleModalOrigin(state, {payload: alertOperateModalOrigin}) {
       return { ...state, alertOperateModalOrigin }
+    },
+    toggleAlertBarLoading(state, {payload: isLoading}) {
+      return { ...state, isLoading }
     }
   },
 
