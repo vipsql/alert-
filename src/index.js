@@ -9,7 +9,7 @@ const app = dva()
 // 2. Model
 
 app.model(require('./models/app'))
-
+app.model(require('./models/alertManage'))
 // 告警列表
 app.model(require('./models/alertTagsSet'))
 
