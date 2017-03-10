@@ -9,7 +9,7 @@ export default function ({history, app}) {
       component: App,
       getIndexRoute (nextState, cb) {
         require.ensure([], require => {
-          app.model(require('./models/alertManage'))
+
           cb(null, {component: require('./routes/alertManage')})
         },'alertManage')
       },
@@ -20,7 +20,7 @@ export default function ({history, app}) {
 
           getComponent (nextState, cb) {
             require.ensure([], require => {
-              app.model(require('./models/alertManage'))
+              // app.model(require('./models/alertManage'))
               cb(null, require('./routes/alertManage'))
             },'alertManage')
           }
