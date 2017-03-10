@@ -88,7 +88,7 @@ export default {
     initalTagsList(state, { payload: tagsList }) {
       const { originTags } = state;
       let originTagsList = Object.keys(originTags) || [];
-      let serverityList = originTags['severity'].split(',');
+      let serverityList = originTags['SEVERITY'].split(',');
       const newList = tagsList.map( (group) => {
         group.values = group.values.map( (item) => {
           if (originTagsList.length !== 0
