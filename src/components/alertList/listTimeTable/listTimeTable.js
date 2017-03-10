@@ -205,7 +205,7 @@ class ListTimeTable extends Component {
               let newDate = new Date(+itemDot['occurTime'])
               const content = (
                 <div>
-                  <p>{`级别：${itemDot['severity'] == 10 ? '提醒' : severity == 20 ? '警告' : severity == 30 ? '次要': severity == 40 ? '主要' : severity == 50 ? '紧急' : '恢复' }`}</p>
+                  <p>{`级别：${itemDot['severity'] == 10 ? '提醒' : itemDot['severity'] == 20 ? '警告' : itemDot['severity'] == 30 ? '次要': itemDot['severity'] == 40 ? '主要' : itemDot['severity'] == 50 ? '紧急' : '恢复' }`}</p>
                   <p>{`告警名称：${itemDot['name']}`}</p>
                   <p>{`告警ID：${itemDot['id']}`}</p>
                   <p>{`发生时间：${newDate.getFullYear() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getDate() + ' ' + newDate.getHours() + ':' + newDate.getMinutes()}`}</p>
