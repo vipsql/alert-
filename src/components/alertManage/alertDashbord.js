@@ -4,7 +4,8 @@ import request from '../../utils/request'
 import { connect } from 'dva'
 import { Spin } from 'antd';
 
-const echarts = require('echarts');
+const echarts = require('echarts/lib/echarts')
+require('echarts/lib/chart/treemap')
 
 class Chart extends Component{
 
