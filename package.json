@@ -58,7 +58,7 @@
     "start": "dora --plugins \"proxy,webpack,webpack-hmr\"",
     "dev": "dora --plugins \"webpack,webpack-hmr\"",
     "lint": "eslint --fix --ext .js,.jsx src/components/layout",
-    "build": "atool-build"
+    "build": "atool-build && node replace.js"
   },
   "standard": {
     "parser": "babel-eslint",
