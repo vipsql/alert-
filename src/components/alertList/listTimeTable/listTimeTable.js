@@ -146,14 +146,7 @@ class ListTimeTable extends Component {
            }
 
          })
-         TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={
-              item['severity'] == 10 ? 
-                  'tx' : item['severity'] == 20 ?
-                      'gj' : item['severity'] == 30 ?
-                          'cy' : item['severity'] == 40 ?
-                              'zy' : item['severity'] == 50 ? 
-                                  'jj' : undefined
-         }/></td>)
+         TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
          return TDS
       }
 
@@ -172,14 +165,7 @@ class ListTimeTable extends Component {
            }
            
          })
-         TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={
-              item['severity'] == 10 ? 
-                  'tx' : item['severity'] == 20 ?
-                      'gj' : item['severity'] == 30 ?
-                          'cy' : item['severity'] == 40 ?
-                              'zy' : item['severity'] == 50 ? 
-                                  'jj' : undefined
-         }/></td>)
+         TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
          TDS.unshift(<td key='space-col-td'></td>)
          return TDS
       }
@@ -191,37 +177,37 @@ class ListTimeTable extends Component {
         let lineDotLeft = 0
         let lineDotW = 0
         
-        // keys.forEach((key, index) => {
-        //   if(key === 'timeLine')  {
-            lineDotLeft = (item[0].occurTime - begin) / (60 * 1000) * minuteToWidth
-            const len = item.length
-            lineDotW = (item[len-1]['occurTime'] - item[0]['occurTime']) / (60 * 1000) * minuteToWidth
-            // console.log(item[0].occurTime)
-            // console.log(item[0].occurTime - begin)
-            // console.log(begin)
-            dots =  item.map( (itemDot, idx) => {
-              const left = (itemDot.occurTime - begin) / (60 * 1000) * minuteToWidth
-              //console.log(left)
-              let newDate = new Date(+itemDot['occurTime'])
-              const content = (
-                <div>
-                  <p>{`级别：${itemDot['severity'] == 10 ? '提醒' : itemDot['severity'] == 20 ? '警告' : itemDot['severity'] == 30 ? '次要': itemDot['severity'] == 40 ? '主要' : itemDot['severity'] == 50 ? '紧急' : '恢复' }`}</p>
-                  <p>{`告警名称：${itemDot['name']}`}</p>
-                  <p>{`告警ID：${itemDot['id']}`}</p>
-                  <p>{`发生时间：${newDate.getFullYear() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getDate() + ' ' + newDate.getHours() + ':' + newDate.getMinutes()}`}</p>
-                  <p>{`告警描述：${itemDot['description']}`}</p>
-                  <p>{`来源：${itemDot['entityName']}`}</p>
-                </div>
-              );
-              return (
-                <Popover content={content} key={`dot-${idx}`}>
-                  <span style={{left: left  + 'px'}} data-id={itemDot.id} onClick={detailClick}></span>
-                </Popover>
+        lineDotLeft = (item[0].occurTime - begin) / (60 * 1000) * minuteToWidth
+        const len = item.length
+        lineDotW = (item[len-1]['occurTime'] - item[0]['occurTime']) / (60 * 1000) * minuteToWidth
+        
+        dots =  item.map( (itemDot, idx) => {
+          const left = (itemDot.occurTime - begin) / (60 * 1000) * minuteToWidth
+          const iconColor = itemDot['severity'] == 10 ? 
+                              'txLevel' : itemDot['severity'] == 20 ?
+                                  'gjLevel' : itemDot['severity'] == 30 ?
+                                      'cyLevel' : itemDot['severity'] == 40 ?
+                                          'zyLevel' : itemDot['severity'] == 50 ? 
+                                              'jjLevel' : undefined
+          let newDate = new Date(+itemDot['occurTime'])
+          const content = (
+            <div>
+              <p>{`级别：${itemDot['severity'] == 10 ? '提醒' : itemDot['severity'] == 20 ? '警告' : itemDot['severity'] == 30 ? '次要': itemDot['severity'] == 40 ? '主要' : itemDot['severity'] == 50 ? '紧急' : '恢复' }`}</p>
+              <p>{`告警名称：${itemDot['name']}`}</p>
+              <p>{`告警ID：${itemDot['id']}`}</p>
+              <p>{`发生时间：${newDate.getFullYear() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getDate() + ' ' + newDate.getHours() + ':' + newDate.getMinutes()}`}</p>
+              <p>{`告警描述：${itemDot['description']}`}</p>
+              <p>{`来源：${itemDot['entityName']}`}</p>
+            </div>
+          );
+          return (
+            <Popover content={content} key={`dot-${idx}`}>
+              <span style={{left: left  + 'px'}} className={styles[iconColor]} data-id={itemDot.id} onClick={detailClick}></span>
+            </Popover>
 
-              )
-            })
-        //   }
-        // })
+          )
+        })
+       
         return {
           dots,
           lineDotW,

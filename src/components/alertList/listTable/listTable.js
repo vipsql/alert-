@@ -56,6 +56,18 @@ class ListTable extends Component {
 
     let tbodyCon = [];
 
+    const formatDate = function(date){
+      const d = new Date(date)
+      let hours = d.getHours()
+      let mins = d.getMinutes()
+
+      hours = hours < 10 ? '0' + hours : hours
+      mins = mins < 10 ? '0' + mins : mins
+
+
+      return hours + ':' + mins
+    }
+
     // 生成每一列的参数
     const getTds = (item, keys) => {
       let tds = [];
@@ -77,7 +89,7 @@ class ListTable extends Component {
         }
         if(key == 'lastOccurtime'){
           const date = new Date(data)
-          data = `${date.getHours()}:${date.getMinutes()}`
+          data = formatDate(data)
           td = <td key={key}>{data}</td>
         }
         if(key == 'lastTime'){
@@ -119,14 +131,7 @@ class ListTable extends Component {
         }
         tds.push(td)
       })
-      tds.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={
-          item['severity'] == 10 ? 
-              'tx' : item['severity'] == 20 ?
-                  'gj' : item['severity'] == 30 ?
-                      'cy' : item['severity'] == 40 ?
-                          'zy' : item['severity'] == 50 ? 
-                              'jj' : undefined
-      }/></td>)
+      tds.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
       return tds
     }
 
@@ -138,7 +143,7 @@ class ListTable extends Component {
         let td;
         if(key == 'lastOccurtime'){
           const date = new Date(data)
-          data = `${date.getHours()}:${date.getMinutes()}`
+          data = formatDate(data)
           td = <td key={key}>{data}</td>
         }
         if(key == 'lastTime'){
@@ -172,14 +177,7 @@ class ListTable extends Component {
         }
         tds.push(td)
       })
-      tds.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={
-          item['severity'] == 10 ? 
-              'tx' : item['severity'] == 20 ?
-                  'gj' : item['severity'] == 30 ?
-                      'cy' : item['severity'] == 40 ?
-                          'zy' : item['severity'] == 50 ? 
-                              'jj' : undefined
-      }/></td>)
+      tds.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
       tds.unshift(<td key='space-col-td' colSpan="2"></td>)
       return tds
     }

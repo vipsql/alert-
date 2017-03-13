@@ -53,6 +53,7 @@ export default {
                   closeMessage: payload
               })
               if (resultData.result) {
+                  yield put({ type: 'alertListTable/deleteAlert', payload: [stringId]})
                   yield message.success(`关闭成功`, 3);
               } else {
                   yield message.error(`${resultData.message}`, 3);

@@ -5,15 +5,15 @@ import { classnames } from '../../../utils'
 const levelIcon = ({extraStyle, iconType, initalIconState, onClick, iconState}) => {
 
     // mapping iconType to classname 
-    const iconStyle = iconType === 'jj' 
+    const iconStyle = iconType === 'jj' || iconType == 50
                     ? classnames(styles.iconMain, extraStyle, styles.jjColorIcon)
-                    : iconType === 'zy'
+                    : iconType === 'zy' || iconType == 40
                         ? classnames(styles.iconMain, extraStyle, styles.zyColorIcon)
-                        : iconType === 'cy'
+                        : iconType === 'cy' || iconType == 30
                             ? classnames(styles.iconMain, extraStyle, styles.cyColorIcon)
-                            : iconType === 'gj'
+                            : iconType === 'gj' || iconType == 20
                                 ? classnames(styles.iconMain, extraStyle, styles.gjColorIcon)
-                                : iconType === 'tx'
+                                : iconType === 'tx' || iconType == 10
                                     ? classnames(styles.iconMain, extraStyle, styles.txColorIcon)
                                     : false
     
@@ -21,11 +21,11 @@ const levelIcon = ({extraStyle, iconType, initalIconState, onClick, iconState}) 
 
     return initalIconState 
                     ? typeof iconState === 'undefined' || iconState
-                        ? <div data-Type={iconType} className={iconStyle} onClick={ (e) => onClick(e) }></div>
-                            : <div data-Type={iconType} className={whiteIcon} onClick={(e) => onClick(e)}></div>
+                        ? <div className={iconStyle} onClick={ (e) => onClick(e) }></div>
+                            : <div className={whiteIcon} onClick={(e) => onClick(e)}></div>
                     : typeof iconState !== 'undefined' && iconState
-                        ? <div data-Type={iconType} className={iconStyle} onClick={(e) => onClick(e)}></div>
-                            : <div data-Type={iconType} className={whiteIcon} onClick={(e) => onClick(e)}></div>
+                        ? <div className={iconStyle} onClick={(e) => onClick(e)}></div>
+                            : <div className={whiteIcon} onClick={(e) => onClick(e)}></div>
 }
 
 levelIcon.defaultProps = {
@@ -35,7 +35,10 @@ levelIcon.defaultProps = {
 }
 
 levelIcon.propTypes = {
-    iconType: React.PropTypes.string.isRequired,
+    iconType: React.PropTypes.oneOfType([
+        React.PropTypes.string,
+        React.PropTypes.number
+    ]).isRequired,
     initalIconState: React.PropTypes.bool.isRequired,
     iconState: React.PropTypes.bool, // true --> fill
     extraStyle: React.PropTypes.string,

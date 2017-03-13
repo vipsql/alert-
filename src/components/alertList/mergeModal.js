@@ -70,14 +70,7 @@ const mergeModal = ({alertOperation, dispatch}) => {
                             key: 'icon',
                             dataIndex: 'severity',
                             render: (text, record, index) => {
-                                return <LevelIcon key={index} iconType={
-                                    text === 10 ? 
-                                        'tx' : text === 20 ?
-                                            'gj' : text === 30 ?
-                                                'cy' : text === 40 ?
-                                                    'zy' : text === 50 ? 
-                                                        'jj' : undefined
-                                } /> 
+                                return <LevelIcon key={index} iconType={text} /> 
                             }
                         },
                         {

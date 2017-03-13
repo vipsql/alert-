@@ -129,6 +129,8 @@ class Chart extends Component{
             ]
         }
         this.myChart.setOption(option);
+
+        this.myChart.resize();
     }
     componentDidMount(){
         const treeMapNode = document.getElementById('treemap');

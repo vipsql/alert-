@@ -383,6 +383,40 @@ export default {
     // 排序
     toggleOrder(state, {payload}) {
       return { ...state, ...payload }
+    },
+    // 删除时触发
+    deleteAlert(state, {payload}) {
+      const { data, isGroup, checkAlert } = state;
+      if (isGroup === true) {
+        const newData = data.map( (group) => {
+          const arr = group.children.filter( (item) => {
+            let status = true;
+            payload.forEach( (id) => {
+              if (item.id == id) {
+                status = false;
+                delete checkAlert[item.id]
+              } 
+            })
+            return status;
+          })
+          group.children = arr;
+          return group;
+        })
+        return { ...state, data: newData, checkAlert: checkAlert}
+      } else if (isGroup === false) {
+        const newData = data.filter( (item, index) => {
+          let status = true;
+          payload.forEach( (id) => {
+            if (item.id == id) {
+              status = false;
+              delete checkAlert[item.id]
+            } 
+          })
+          return status;
+        })
+        return { ...state, data: newData, checkAlert: checkAlert }
+      }
+      return { ...state }
     }
 
   },

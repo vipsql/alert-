@@ -16,6 +16,9 @@ function App ({children, location, dispatch, app}) {
       dispatch({
         type: 'app/handleFoldMenu'
       })
+      dispatch({
+        type: 'alertManage/queryAlertDashbord'
+      })
     }
   }
 

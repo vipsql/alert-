@@ -162,7 +162,7 @@ class AlertBar extends Component{
     const {
       barData
     } = this.props.alertList
-    console.log(this.props.alertList.isLoading)
+    
     const len = barData.length
 
     return (

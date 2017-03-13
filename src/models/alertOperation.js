@@ -264,6 +264,7 @@ export default {
                 })
                 if (resultData.result) {
                     yield put({ type: 'alertListTable/resetCheckedAlert'})
+                    yield put({ type: 'alertListTable/deleteAlert', payload: stingIds})
                     yield message.success(`关闭成功`, 3);
                 } else {
                     yield message.error(`${resultData.message}`, 3);
