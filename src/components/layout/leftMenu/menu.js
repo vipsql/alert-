@@ -4,6 +4,28 @@ import { Link } from 'dva/router'
 import { menu } from '../../../utils'
 import styles from '../common.less'
 import { classnames } from '../../../utils'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+
+const messages = defineMessages({
+   alertManage:{
+      id: 'alertManage',
+      defaultMessage: '告警管理',
+    },
+    alertQuery: {
+      id: 'alertQuery',
+      defaultMessage: '告警查询',
+    },
+    alertConfig: {
+      id: 'alertConfig',
+      defaultMessage: '告警配置',
+    },
+    watchManage: {
+      id: 'watchManage',
+      defaultMessage: '值班管理',
+    }
+})
+   
+
 
 const createMenus = (menus, isFold) => {
   return menus.map(item => {
@@ -21,7 +43,7 @@ const createMenus = (menus, isFold) => {
         <Link to={path + item.key}>
           <i className={className}></i>
 
-          {isFold ? '' : item.name}
+          {isFold ? '' : <FormattedMessage {...messages[item.key]} />}
         </Link>
       </Menu.Item>
     )

@@ -23,7 +23,7 @@ module.exports = function (webpackConfig, env) {
     webpackConfig.babel.plugins.push('dev-expression')
   }
   // webpackConfig.output = {
-  //    filename: '[name].[chunkhash:8].js'
+  //    publicPath: '/arbiter/new'
   // }
 
   //

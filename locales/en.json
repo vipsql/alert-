@@ -1,0 +1,6 @@
+{
+  "alertManage": "alertManage",
+  "alertQuery": "alertQuery",
+  "alertConfig": "alertConfig",
+  "watchManage": "watchManage"
+}

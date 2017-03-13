@@ -1,11 +1,19 @@
 import './index.html'
+import './index-en.html'
 import dva from 'dva'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { LocaleProvider } from 'antd'
+import { addLocaleData, IntlProvider } from 'react-intl';
 
+const appLocale = window.appLocale;
+
+addLocaleData(appLocale.data);
 
 
 // 1. Initialize
 const app = dva()
-
+const root = document.querySelector('#root')
 // 2. Model
 
 app.model(require('./models/app'))
@@ -26,4 +34,12 @@ app.model(require('./models/alertListTable'))
 app.router(require('./router'))
 
 // 4. Start
-app.start('#root')
+const App = app.start();
+ 
+ReactDOM.render(
+	<LocaleProvider locale={appLocale.antd}>
+	    <IntlProvider locale={appLocale.locale} messages={appLocale.messages}>
+	        <App />
+	    </IntlProvider>
+    </LocaleProvider>, 
+ root);
