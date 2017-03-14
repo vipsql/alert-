@@ -8,7 +8,7 @@ const initvalState = {
     selectedAlertIds: [], //选中的告警(合并告警)
     operateAlertIds: [], //选中的告警(派发 关闭)
     viewDetailAlertId: false, // 查看详细告警ID
-
+    isResize: false, //是否折叠
     isShowMore: false,
     isLoading: false,
 
@@ -74,6 +74,13 @@ export default {
     }
   },
   reducers: {
+    // 折叠状态
+    updateResize(state, { payload: isResize }){
+      return {
+        ...state,
+        ...isResize
+      }
+    },
     // 加载状态
     toggleLoading(state, { payload: isLoading }) {
       return { ...state, isLoading }
@@ -232,7 +239,7 @@ export default {
             if (item.id == parentId) {
               item.childrenAlert = children;
               item.isSpread = true
-            } 
+            }
             return item;
           })
           return group
@@ -258,7 +265,7 @@ export default {
           group.children.map( (item) => {
             if (item.id == parentId) {
               item.isSpread = !item.isSpread
-            } 
+            }
             return item;
           })
           return group
@@ -330,7 +337,7 @@ export default {
               status = true;
               item.hasChild = false;
               item.isSpread = false;
-            } 
+            }
             return item;
           })
           if (status) {
@@ -395,7 +402,7 @@ export default {
               if (item.id == id) {
                 status = false;
                 delete checkAlert[item.id]
-              } 
+              }
             })
             return status;
           })
@@ -410,7 +417,7 @@ export default {
             if (item.id == id) {
               status = false;
               delete checkAlert[item.id]
-            } 
+            }
           })
           return status;
         })
@@ -490,7 +497,7 @@ export default {
 
       if(listData.result){
         if(isGroup){
-          
+
           yield put({
             type: 'updateAlertListToGroup',
             payload: {
@@ -507,7 +514,7 @@ export default {
           })
 
         }else{
-        
+
           yield put({
             type: 'updateAlertListToNoGroup',
             payload: {
@@ -523,7 +530,7 @@ export default {
             type: 'toggleLoading',
             payload: false
           })
-          
+
         }
 
       }
@@ -545,7 +552,7 @@ export default {
           group.children.forEach( (item) => {
             if (item.id == payload) {
               haveChild = !(typeof item.childrenAlert === 'undefined')
-            } 
+            }
           })
         })
       } else if (isGroup === false) {
@@ -560,7 +567,7 @@ export default {
         const childResult = yield call(queryChild, {alertId: payload, begin: begin, end: end})
         if (childResult.result) {
           yield put( { type: 'addChild', payload: { children: childResult.data, parentId: payload, isGroup: isGroup } })
-          
+
         } else {
           console.error('查询子告警有误')
         }
@@ -577,7 +584,7 @@ export default {
           'isGroup': state.alertListTable.isGroup,
         }
       } )
-      
+
       yield put( { type: 'toggleSpreadChild', payload: { parentId: payload, isGroup: isGroup} })
     },
     // 合并告警
@@ -593,15 +600,15 @@ export default {
     },
     // 解除告警
     *relieveChildAlert({payload},{call, put, select}) {
-      
+
       const {isGroup, begin, end} = yield select( state => {
         return {
           'isGroup': state.alertListTable.isGroup,
         }
       } )
-      
+
       yield put( { type: 'addParent', payload: { addItem: payload.childs, parentId: payload.relieveId, isGroup: isGroup} })
-          
+
     },
     // 展开组
     *spreadGroup({payload},{call, put, select}) {
@@ -616,7 +623,7 @@ export default {
     // 点击分组时触发
     *setGroup({payload}, {select, put, call}) {
       if (payload.isGroup) {
-        yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, groupBy: payload.group } })   
+        yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, groupBy: payload.group } })
       } else {
         yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, orderBy: undefined, orderType: undefined } })
       }
@@ -633,7 +640,7 @@ export default {
         type: 'toggleLoading',
         payload: true
       })
-      
+
       let { currentPage, listData, alertListTable }=  yield select(state => {
          return {
            'currentPage': state.alertListTable.currentPage,
@@ -658,7 +665,7 @@ export default {
       if (listReturnData.result) {
 
         listData = listData.concat(listReturnData.data.datas);
-        
+
         yield put({
           type: 'resetCheckAlert',
           payload: {
@@ -690,12 +697,12 @@ export default {
       } else {
         console.error('显示更多查询有错误');
       }
-      
+
     },
     //orderList排序
     *orderList({payload}, {select, put, call}) {
       //yield put({ type: 'toggleOrder', payload: payload })
-      yield put({ type: 'queryAlertList', payload: { isGroup: false, orderBy: payload.orderBy, orderType: payload.orderType } })   
+      yield put({ type: 'queryAlertList', payload: { isGroup: false, orderBy: payload.orderBy, orderType: payload.orderType } })
     },
     //orderByTittle
     *orderByTittle({payload}, {select, put, call}) {
@@ -705,14 +712,14 @@ export default {
         }
       } )
       if (payload !== undefined) {
-        yield put({ 
-          type: 'toggleOrder', 
+        yield put({
+          type: 'toggleOrder',
           payload: {
             orderBy: payload,
             orderType: orderType === undefined || orderType === 1 ? 0 : 1,
-          } 
+          }
         })
-        yield put({ type: 'queryAlertList' })   
+        yield put({ type: 'queryAlertList' })
       } else {
         console.error('orderBy有误')
       }

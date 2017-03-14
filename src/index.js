@@ -35,11 +35,11 @@ app.router(require('./router'))
 
 // 4. Start
 const App = app.start();
- 
+
 ReactDOM.render(
 	<LocaleProvider locale={appLocale.antd}>
 	    <IntlProvider locale={appLocale.locale} messages={appLocale.messages}>
 	        <App />
 	    </IntlProvider>
-    </LocaleProvider>, 
+    </LocaleProvider>,
  root);
