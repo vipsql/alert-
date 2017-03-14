@@ -52,7 +52,8 @@ class Chart extends Component{
                     itemStyle: {
                         normal: {
                             borderWidth: 0,
-                            gapWidth: 5
+                            gapWidth: 5,
+                            borderColorSaturation: 0.85
                         }
                     },
                     label:{
@@ -66,7 +67,8 @@ class Chart extends Component{
                 {
                     itemStyle: {
                         normal: {
-                            gapWidth: 0
+                            gapWidth: 2,
+                            borderColorSaturation: 0.85
                         }
                     }
 
