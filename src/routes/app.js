@@ -16,6 +16,16 @@ function App ({children, location, dispatch, app}) {
       dispatch({
         type: 'app/handleFoldMenu'
       })
+      // 告警列表柱状图
+      dispatch({
+        type: 'alertList/updateResize',
+        payload: !isFold
+      })
+      // 告警列表table
+      dispatch({
+        type: 'alertListTable/updateResize',
+        payload: !isFold
+      })
       dispatch({
         type: 'alertManage/queryAlertDashbord'
       })

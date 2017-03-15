@@ -91,18 +91,20 @@ class AlertBar extends Component{
     super(props)
   }
   shouldComponentUpdate(nextProps, nextState){
-    return this.props.alertList.barData !== nextProps.alertList.barData || this.props.alertList.isLoading !== nextProps.alertList.isLoading
+    
+    return this.props.alertList.barData !== nextProps.alertList.barData || this.props.alertList.isResize !== nextProps.alertList.isResize
   }
   componentDidUpdate(){
 
     let timer = null;
 
-    const { barData } = this.props.alertList;
+    const { barData, isResize } = this.props.alertList;
     const { dispatch } = this.props;
 
     const len = barData.length;
-    
+
     if(len > 0) {
+
         const startTime = barData[0]['time']
         const endtTime = barData[barData.length - 1]['time']
         const start = new Date(startTime)
@@ -113,7 +115,9 @@ class AlertBar extends Component{
         const min5 = n_minutes_interval(2);
         const alertList = crossfilter(barData)
         const clientWidth = document.documentElement.clientWidth || document.body.clientWidth
-        const width = clientWidth - 160 - 50;
+        const leftMenuWidth = isResize ? 50 : 160 //是否折叠
+        const width = clientWidth - leftMenuWidth - 50;
+        console.log(isResize)
         const height = 80
         const margins = {top: 0, right: 20, bottom: 25, left: 15}
         const dim = alertList.dimension(function(d) { return d.time; });
@@ -147,6 +151,8 @@ class AlertBar extends Component{
             })
           }, 1000)
         })
+
+
     }
 
     // setInterval(function(){
@@ -162,7 +168,7 @@ class AlertBar extends Component{
     const {
       barData
     } = this.props.alertList
-    
+
     const len = barData.length
 
     return (

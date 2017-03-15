@@ -7,7 +7,7 @@ export default {
     isRefresh: false, //是否实时更新
     alertOperateModalOrigin: undefined, // 这个状态是用来区别那个Modal打开的 --> 对应position
     isLoading: false, // alertBar加载
-
+    isResize: false, //是否折叠
     barData:[], // 最近4小时告警数据
     begin: 0, //告警开始时间(时间线)
     end: 0,  //告警结束时间(时间线)
@@ -21,8 +21,15 @@ export default {
 
   },
   subscriptions: {
-    setup({dispatch}) {
-
+    setup({dispatch,history}) {
+      history.listen(location => {
+       if (location.pathname === '/users') {
+         dispatch({
+           type: 'query',
+           payload: location.query
+         })
+       }
+     })
     }
   },
   effects: {
@@ -30,7 +37,7 @@ export default {
     *queryAlertBar({payload}, {call, put, select}) {
       // 触发这个effect的时机是在刷新/tag转变的时候（不保存状态--所以需要初始化commonList）
       yield put({ type: 'alertListTable/clear' })
-      
+
       yield put({ type: 'toggleAlertBarLoading', payload: true })
 
       const data = yield call(queryAlertBar, payload)
@@ -84,7 +91,7 @@ export default {
           orderType: undefined,
         }
       })
-      
+
       // 发起查询列表请求
       yield put({
         type: 'alertListTable/queryAlertList',
@@ -101,6 +108,12 @@ export default {
       return {
         ...state,
         ...payload
+      }
+    },
+    updateResize(state, { payload: isResize }){
+      return {
+        ...state,
+        isResize
       }
     },
     // 转换icon状态

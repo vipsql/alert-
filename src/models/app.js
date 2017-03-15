@@ -60,14 +60,14 @@ export default {
           'userId': state.app.userId,
         }
       })
-      
+
       const tagSet = yield isSetUserTags(userId)
       if(tagSet.data.isSet) {
         yield put({
           type: 'showMask',
           payload: false
         })
-        
+
       } else {
         yield put({
           type: 'showMask',
