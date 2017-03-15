@@ -41,7 +41,10 @@ levelIcon.propTypes = {
     ]).isRequired,
     initalIconState: React.PropTypes.bool.isRequired,
     iconState: React.PropTypes.bool, // true --> fill
-    extraStyle: React.PropTypes.string,
+    extraStyle: React.PropTypes.oneOfType([
+        React.PropTypes.string,
+        React.PropTypes.bool
+    ]),
     onClick: React.PropTypes.func.isRequired
 }
 

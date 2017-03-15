@@ -9,7 +9,6 @@ export default function ({history, app}) {
       component: App,
       getIndexRoute (nextState, cb) {
         require.ensure([], require => {
-
           cb(null, {component: require('./routes/alertManage')})
         },'alertManage')
       },
@@ -17,7 +16,6 @@ export default function ({history, app}) {
         {
           path: 'alertManage',
           name: 'alertManage',
-
           getComponent (nextState, cb) {
             require.ensure([], require => {
               // app.model(require('./models/alertManage'))
@@ -41,7 +39,6 @@ export default function ({history, app}) {
           name: 'alertQuery',
           getComponent (nextState, cb) {
             require.ensure([], require => {
-              app.model(require('./models/alertQuery'))
               cb(null, require('./routes/alertQuery'))
             },'alertQuery')
           }

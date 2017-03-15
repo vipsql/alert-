@@ -2,30 +2,11 @@ import React, { PropTypes, Component } from 'react'
 import { Select, Popover, Checkbox, Dropdown, Menu, Button } from 'antd';
 import { connect } from 'dva'
 import styles from './index.less'
-import { classnames } from '../../utils'
+import { classnames } from '../../../utils'
 
 const Option = Select.Option;
 const DropdownButton = Dropdown.Button;
-const alertOperation = ({position, alertOperation, alertList, dispatch}) => {
-
-    const { columnList, selectGroup } = alertOperation
-    const { columns } = alertList
-
-    // static data
-    // <div className={styles.button}><p>派发工单</p></div>
-    // <div className={styles.button}><p>关闭告警</p></div>
-    // <div className={styles.button}><p>抑制告警</p><i className={classnames(arrClass, styles.arrow)}></i></div>
-    // <div className={styles.button}><p>更多操作</p><i className={classnames(arrClass, styles.arrow)}></i></div>
-    // <div className={classnames(styles.button, styles.rightBtn)}><p>分组显示</p><i className={classnames(arrClass, styles.arrow)}></i></div>
-    let isSpread = false;
-
-    const muenClass = !isSpread ? 'icon-xialasanjiao' : 'icon-xialasanjiao-copy';
-
-    const arrClass = classnames(
-        styles['switchMenu'],
-        styles.iconfont,
-        styles[muenClass]
-    )
+const alertOperation = ({position, columnList, selectGroup, checkCloumFunc, relieveFunc, dispatchFunc, closeFunc, mergeFunc, groupFunc, noGroupFunc, initCloumFunc}) => {
 
     const setClass = classnames(
         styles['icon'],
@@ -52,10 +33,7 @@ const alertOperation = ({position, alertOperation, alertList, dispatch}) => {
                                             return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={true} disabled={true} >{item.name}</Checkbox></div>
                                         } else {
                                             return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={item.checked} onChange={ (e) => {
-                                                dispatch({
-                                                    type: 'alertOperation/checkColumn',
-                                                    payload: e.target.value,
-                                                })
+                                                checkCloumFunc(e)
                                             }}>{item.name}</Checkbox></div>
                                         }
                                     })
@@ -68,40 +46,21 @@ const alertOperation = ({position, alertOperation, alertList, dispatch}) => {
             :
             undefined
     const menu = (
-        <Menu onClick={ () => {
-            //出现解除告警的modal，并做相应处理
-            dispatch({
-                type: 'alertOperation/openRelieveModal',
-            })
-        }}>
+        <Menu onClick={ relieveFunc }>
             <Menu.Item key="1" className={styles.menuItem}>解除告警</Menu.Item>
         </Menu>
     )
     return (
         <div className={styles.operateMain}>
             <Button className={styles.myButton} onClick={ () => {
-                dispatch({
-                    type: 'alertOperation/openFormModal',
-                    payload: position
-                })
-            }} >派发工单</Button>
+                dispatchFunc(position)
+            } } >派发工单</Button>
             <Button className={styles.myButton} onClick={ () => {
-                dispatch({
-                    type: 'alertOperation/openCloseModal',
-                    payload: {
-                        state: true,
-                        origin: position
-                    }
-                })
+                closeFunc(position)
             }} >关闭告警</Button>
             {
                 position !== 'detail' ?
-                <DropdownButton overlay={menu} className={styles.myDropdown} trigger={['click']} onClick={ () => {
-                    // 出现合并告警的modal，并做相应处理
-                    dispatch({
-                        type: 'alertOperation/openMergeModal',
-                    })
-                }}>
+                <DropdownButton overlay={menu} className={styles.myDropdown} trigger={['click']} onClick={ mergeFunc }>
                     合并告警
                 </DropdownButton>
                 :
@@ -123,30 +82,19 @@ const alertOperation = ({position, alertOperation, alertList, dispatch}) => {
                 position !== 'detail' ?
                 <div className={styles.groupMain}>
                     <Select className={classnames(styles.setGroup, styles.selectSingle)} placeholder="分组显示" value={selectGroup} onChange={ (value) => {
-                        dispatch({
-                            type: 'alertOperation/groupView',
-                            payload: value,
-                        })
+                        groupFunc(value)
                     }}>
                         <Option className={styles.menuItem} value="ENTITY_NAME">按来源分组</Option>
                         <Option className={styles.menuItem} value="status">按状态分组</Option>
                         <Option className={styles.menuItem} value="severity">按级别分组</Option>
                     </Select>
-                    <i className={selectGroup !== '分组显示' && classnames(switchClass, styles.switch)} onClick={() => {
-                        dispatch({
-                            type: 'alertOperation/noGroupView',
-                        })
-                    }}></i>
+                    <i className={selectGroup !== '分组显示' && classnames(switchClass, styles.switch)} onClick={noGroupFunc}></i>
                 </div>
                 :
                 undefined
             }
             { position === 'list' 
-                ? <Popover placement='bottomRight' trigger="click" content={popoverContent} onClick={ () => {
-                    dispatch({
-                        type: 'alertOperation/initalColumn'
-                    })
-                  }}>
+                ? <Popover placement='bottomRight' trigger="click" content={popoverContent} onClick={ initCloumFunc }>
                     <div className={classnames(styles.button, styles.rightBtn)}>
                         <i className={classnames(setClass, styles.setCol)}></i>
                         <p className={styles.col}>列定制</p>
@@ -160,15 +108,22 @@ const alertOperation = ({position, alertOperation, alertList, dispatch}) => {
 
 alertOperation.defaultProps = {
     position: 'list',
+    columnList: [],
+    selectGroup: '',
+    checkCloumFunc: () => {},
+    relieveFunc: () => {},
+    dispatchFunc: () => {},
+    closeFunc: () => {},
+    mergeFunc: () => {},
+    groupFunc: () => {},
+    noGroupFunc: () => {},
+    initCloumFunc: () => {}
 }
 
 alertOperation.propTypes = {
     position: React.PropTypes.oneOf(['list', 'timeAxis', 'detail']).isRequired,
+    columnList: React.PropTypes.array,
+
 }
 
-export default connect((state) => {
-  return {
-    alertList: state.alertList,
-    alertOperation: state.alertOperation
-  }
-})(alertOperation)
+export default alertOperation

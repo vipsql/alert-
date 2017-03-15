@@ -2,12 +2,12 @@ import React, { PropTypes, Component } from 'react'
 import { Button, Input, Form } from 'antd';
 import { connect } from 'dva'
 import styles from './index.less'
-import { classnames } from '../../utils'
-import AlertOperation from './alertOperation'
+import { classnames } from '../../../utils'
+import AlertOperation from '../alertOperation/index.js'
 
-const alertDetail = ({alertDetail, dispatch, form}) => {
+const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm, openForm, closeForm, openRemark, editRemark, closeRemark}) => {
 
-    const { currentAlertDetail, isSowOperateForm, isShowRemark } = alertDetail;
+    const { currentAlertDetail, isSowOperateForm, operateForm, isShowRemark, operateRemark } = extraProps;
     const { getFieldDecorator, getFieldsValue } = form;
     
     const dateTransfer = (begin, end) => {
@@ -47,13 +47,8 @@ const alertDetail = ({alertDetail, dispatch, form}) => {
         <div className={styles.main}>
             <div className={styles.detailHead}>
                 <p>{currentAlertDetail.alertName}</p>
-                <i className={classnames(styles.shanChu, shanchuClass)} onClick={ () => {  
-                    dispatch({
-                        type: 'alertDetail/closeDetailModal',
-                        payload: false
-                    })
-                }}></i>
-                <AlertOperation position="detail" />
+                <i className={classnames(styles.shanChu, shanchuClass)} onClick={closeDeatilModal}></i>
+                <AlertOperation position="detail" {...operateProps}/>
             </div>
             <div className={styles.detailBody}>
                 <div className={styles.infoBody}>
@@ -75,19 +70,14 @@ const alertDetail = ({alertDetail, dispatch, form}) => {
                             {
                                 !isSowOperateForm ?
                                 <div className={styles.formMain}>
-                                    <span className={alertDetail.operateForm !== undefined && alertDetail.operateForm != '' && styles.content}>{alertDetail.operateForm}</span>
-                                    <span className={styles.editForm} onClick={ () => {
-                                        dispatch({
-                                            type: 'alertDetail/toggleFormModal',
-                                            payload: true
-                                        })
-                                    }}>编辑</span>
+                                    <span className={operateForm !== undefined && operateForm != '' && styles.content}>{operateForm}</span>
+                                    <span className={styles.editForm} onClick={openForm}>编辑</span>
                                 </div>
                                 :
                                 <Form>
                                     <Form.Item>
                                         {getFieldDecorator('formContent', {
-                                            initialValue: alertDetail.operateForm
+                                            initialValue: operateForm
                                         })(
                                             <Input />
                                         )}
@@ -95,22 +85,10 @@ const alertDetail = ({alertDetail, dispatch, form}) => {
                                     <div className={styles.formMain}>
                                         <Button type="primary" onClick={ () => {
                                             const formData = form.getFieldsValue();
-                                            dispatch({
-                                                type: 'alertDetail/setFormData',
-                                                payload: formData.formContent
-                                            })
-                                            dispatch({
-                                                type: 'alertDetail/toggleFormModal',
-                                                payload: false
-                                            })
+                                            editForm(formData)
                                         }}>保存</Button>
                                         &nbsp;
-                                        <Button type="ghost" onClick={ () => {
-                                            dispatch({
-                                                type: 'alertDetail/toggleFormModal',
-                                                payload: false
-                                            })
-                                        }}>取消</Button>
+                                        <Button type="ghost" onClick={closeForm}>取消</Button>
                                     </div>
                                 </Form>
                             }
@@ -129,12 +107,7 @@ const alertDetail = ({alertDetail, dispatch, form}) => {
                 </div>
                 <div className={styles.infoBody}>
                     <p className={styles.remarkTitle}>备注信息</p>
-                    <div className={styles.remark} onClick={ () => {
-                        dispatch({
-                            type: 'alertDetail/toggleRemarkModal',
-                            payload: true
-                        })
-                    } }>
+                    <div className={styles.remark} onClick={openRemark}>
                         <i className={classnames(styles.bianji, bianjiClass)}></i>
                         <span>添加备注</span>
                     </div>
@@ -143,7 +116,7 @@ const alertDetail = ({alertDetail, dispatch, form}) => {
                         <Form>
                             <Form.Item>
                                 {getFieldDecorator('remark', {
-                                    initialValue: alertDetail.operateRemark
+                                    initialValue: operateRemark
                                 })(
                                     <Input type="textarea" placeholder="请输入备注信息" autosize={ true } />
                                 )}
@@ -151,22 +124,10 @@ const alertDetail = ({alertDetail, dispatch, form}) => {
                             <div className={styles.remarkOperate}>
                                 <Button type="primary" onClick={ () => {
                                     const formData = form.getFieldsValue();
-                                    dispatch({
-                                        type: 'alertDetail/setRemarkData',
-                                        payload: formData.remark
-                                    })
-                                    dispatch({
-                                        type: 'alertDetail/toggleRemarkModal',
-                                        payload: false
-                                    })
+                                    editRemark(formData)
                                 }}>保存</Button>
                                 &nbsp;
-                                <Button type="ghost" onClick={ () => {
-                                    dispatch({
-                                        type: 'alertDetail/toggleRemarkModal',
-                                        payload: false
-                                    })
-                                }}>取消</Button>
+                                <Button type="ghost" onClick={ closeRemark }>取消</Button>
                             </div>
                         </Form>
                         :
@@ -179,17 +140,18 @@ const alertDetail = ({alertDetail, dispatch, form}) => {
 }
 
 alertDetail.defaultProps = {
-    
+    extraProps: {}, 
+    closeDeatilModal: () => {}, 
+    editForm: () => {}, 
+    openForm: () => {}, 
+    closeForm: () => {}, 
+    openRemark: () => {}, 
+    editRemark: () => {}, 
+    closeRemark: () => {}
 }
 
 alertDetail.propTypes = {
 
 }
 
-export default Form.create()(
-    connect((state) => {
-        return {
-            alertDetail: state.alertDetail
-        }
-    })(alertDetail)
-)
+export default Form.create()(alertDetail)

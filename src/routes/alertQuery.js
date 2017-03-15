@@ -1,12 +1,15 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'dva'
+import AlertQueryManage from '../components/alertQuery'
 
 function alertQuery(dispatch){
   return (
-    <div></div>
+    <div>
+      <AlertQueryManage />
+    </div>
   )
 }
 alertQuery.propTypes = {
   dispatch: PropTypes.func
 }
-export default connect()(alertQuery)
+export default connect(({alertQuery}) => ({alertQuery}))(alertQuery)

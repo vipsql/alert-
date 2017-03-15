@@ -1,0 +1,58 @@
+@import "../../vars.less";
+
+.closeMain{
+    position: relative;
+    padding: 5px 50px 5px 50px;
+    .selectDropdown{
+        &.selectDropdown-hidden{
+            display: none;
+        }
+        position: absolute;
+        z-index: 1050;
+        background-color: #fff;
+        box-shadow: 0 1px 6px rgba(0,0,0,.2);
+        border-radius: 4px;
+        left: 27%;
+        width: 55%;
+        li{
+            font-size: 14px;
+            font-weight: 600;
+            text-align: left;
+            position: relative;
+            display: block;
+            padding: 7px 16px;
+            color: rgba(0,0,0,.65);
+            white-space: nowrap;
+            cursor: pointer;
+            overflow: hidden;
+            -webkit-transition: background .3s ease;
+            transition: background .3s ease;
+            &:hover{
+                background: #edf2f7;
+            }
+        }
+    }
+    :global .ant-form-item{
+        margin-bottom: 0px;
+        :global .ant-form-item-label{
+            vertical-align: top;
+            & > label{
+                font-size: 14px;
+                font-weight: 600;
+            }
+        }
+        & > div:last-child {
+            display: inline-block;
+            width: 70%
+        }
+    }
+}
+
+// common modal footer
+.modalFooter{
+    height: 60px;
+    line-height: 60px;
+    margin: -10px -18px -10px -10px;
+    background: #f2f7fc;
+    text-align: center;
+}

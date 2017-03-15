@@ -30,6 +30,9 @@ app.model(require('./models/alertDetail'))
 
 app.model(require('./models/alertList'))
 app.model(require('./models/alertListTable'))
+// 告警查询
+app.model(require('./models/alertQuery'))
+app.model(require('./models/alertQueryDetail'))
 // 3. Router
 app.router(require('./router'))
 

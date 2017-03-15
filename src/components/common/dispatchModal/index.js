@@ -2,24 +2,15 @@ import React, { PropTypes, Component } from 'react'
 import { connect } from 'dva'
 import { Modal, Button, Form, Select, Row, Col } from 'antd';
 import styles from './index.less'
-import { classnames } from '../../utils'
+import { classnames } from '../../../utils'
 
 const Item = Form.Item;
 const Option = Select.Option;
-const dispatchModal = ({alertOperation, alertDetailOperation, alertList, dispatch, form}) => {
-
-    const currentData = alertList.alertOperateModalOrigin === 'detail' ? alertDetailOperation : alertOperation
+const dispatchModal = ({currentData, closeDispatchModal, onOk, onCancal, form}) => {
     
     const { isShowFormModal, formOptions } = currentData;
     const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
-
-    const closeDispatchModal = () => {
-        dispatch({
-            type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleFormModal' : 'alertOperation/toggleFormModal',
-            payload: false
-        })
-    }
-
+    
     const modalFooter = []
     modalFooter.push(<div className={styles.modalFooter}>
       <Button type="primary" onClick={ () => {
@@ -28,19 +19,13 @@ const dispatchModal = ({alertOperation, alertDetailOperation, alertList, dispatc
                 return;
             }
             const value = form.getFieldValue('formOption')
-            dispatch({
-                type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/dispatchForm' : 'alertOperation/dispatchForm',
-                payload: value
-            })
+            onOk(value)
 
             form.resetFields();
         })
       }} >派发</Button>
       <Button type="ghost" onClick={ () => {
-        dispatch({
-            type: alertList.alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleFormModal' : 'alertOperation/toggleFormModal',
-            payload: false
-        })
+        onCancal()
         form.resetFields();
       }}>取消</Button>
       </div>
@@ -82,19 +67,14 @@ const dispatchModal = ({alertOperation, alertDetailOperation, alertList, dispatc
 }
 
 dispatchModal.defaultProps = {
-
+    currentData: {}, 
+    closeDispatchModal: () => {}, 
+    onOk: () => {}, 
+    onCancal: () => {}
 }
 
 dispatchModal.propTypes = {
 
 }
 
-export default Form.create()(
-    connect( state => {
-        return {
-            alertOperation: state.alertOperation,
-            alertDetailOperation: state.alertDetailOperation,
-            alertList: state.alertList
-        }
-    })(dispatchModal)
-)
+export default Form.create()(dispatchModal)

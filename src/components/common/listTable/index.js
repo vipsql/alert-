@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { Button, Spin } from 'antd';
-import LevelIcon from '../../common/levelIcon/index.js'
-import styles from '../index.less'
+import LevelIcon from '../levelIcon/index.js'
+import styles from './index.less'
 import { classnames } from '../../../utils'
 
 class ListTable extends Component {
@@ -10,6 +10,7 @@ class ListTable extends Component {
   }
   render(){
     const {
+      sourceOrigin,
       isGroup,
       isShowMore,
       data,
@@ -74,7 +75,7 @@ class ListTable extends Component {
       keys.forEach((key, index) => {
         let data = item[key];
         let td;
-        if(index == 0){
+        if(sourceOrigin !== 'alertQuery' && index == 0){
           tds.push(
             <td key='sourceAlert'>
               {
@@ -120,7 +121,7 @@ class ListTable extends Component {
           td = <td key={key} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >
             {data}
             {
-              item['hasChild'] === true ?
+              sourceOrigin !== 'alertQuery' && item['hasChild'] === true ?
               <span className={styles.relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
               :
               undefined
@@ -131,7 +132,7 @@ class ListTable extends Component {
         }
         tds.push(td)
       })
-      tds.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
+      tds.unshift(<td width="20" key='icon-col-td' colSpan={sourceOrigin !== 'alertQuery' ? '1' : '2'} ><LevelIcon extraStyle={sourceOrigin === 'alertQuery' && styles.alertQueryIcon} iconType={item['severity']}/></td>)
       return tds
     }
 
@@ -196,56 +197,61 @@ class ListTable extends Component {
     }
 
     if(isGroup){
-      data.forEach( (item, index) => {
-        const keys = colsKey
-        let childtrs = []
-        
-        let groupTitle = item.isGroupSpread === false ?
-          (<tr className={styles.trGroup} key={index}>
-            <td colSpan={keys.length + 3}>
-              <span className={styles.expandIcon} data-classify={item.classify} onClick={spreadGroup}>+</span>
-                {item.classify}
-            </td>
-          </tr>)
-          :
-          (<tr className={styles.trGroup} key={index}>
-            <td colSpan={keys.length + 3}>
-              <span className={styles.expandIcon} data-classify={item.classify} onClick={noSpreadGroup}>-</span>
-                {item.classify}
-            </td>
-          </tr>)
-
-        item.children !== undefined && item.children.forEach( (childItem, index) => {
+        data.forEach( (item, index) => {
+          const keys = colsKey
+          let childtrs = []
           
-          const tds = getTds(childItem, keys)
+          let groupTitle = item.isGroupSpread === false ?
+            (<tr className={styles.trGroup} key={index}>
+              <td colSpan={keys.length + 3}>
+                <span className={styles.expandIcon} data-classify={item.classify} onClick={spreadGroup}>+</span>
+                  {item.classify}
+              </td>
+            </tr>)
+            :
+            (<tr className={styles.trGroup} key={index}>
+              <td colSpan={keys.length + 3}>
+                <span className={styles.expandIcon} data-classify={item.classify} onClick={noSpreadGroup}>-</span>
+                  {item.classify}
+              </td>
+            </tr>)
 
-          // 如果有子告警
-          let childs = []
-          if(childItem.childrenAlert && item.isGroupSpread !== false){
+          item.children !== undefined && item.children.forEach( (childItem, index) => {
+            
+            const tds = getTds(childItem, keys)
 
-            childs = childItem.childrenAlert.map ( (childAlertItem, childIndex) => {
+            // 如果有子告警
+            let childs = []
+            if(sourceOrigin !== 'alertQuery' && childItem.childrenAlert && item.isGroupSpread !== false){
 
-              return genchildTrs(childAlertItem, childIndex, keys, childItem)
+              childs = childItem.childrenAlert.map ( (childAlertItem, childIndex) => {
 
-            })
-          }else{
-            childs = null
-          }
+                return genchildTrs(childAlertItem, childIndex, keys, childItem)
 
-          const trKey = 'td' + index
-          const tdKey = 'td' + index
-          childtrs.push(
-              <tr key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread && styles.hiddenChild}>
-                <td key={tdKey}><input type="checkbox" checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc}/></td>
-                {tds}
-              </tr>
-          )
-          childtrs.push(childs)
+              })
+            }else{
+              childs = null
+            }
+
+            const trKey = 'td' + index
+            const tdKey = 'td' + index
+            childtrs.push(
+                <tr key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread && styles.hiddenChild}>
+                  {
+                    sourceOrigin !== 'alertQuery' ?
+                    <td key={tdKey}><input type="checkbox" checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc}/></td>
+                    :
+                    undefined
+                  }
+                  {tds}
+                </tr>
+            )
+            childtrs.push(childs)
+          } )
+          childtrs.unshift(groupTitle)
+          tbodyCon.push(childtrs)
+
         } )
-        childtrs.unshift(groupTitle)
-        tbodyCon.push(childtrs)
-
-      } )
 
     }else{
 
@@ -256,7 +262,7 @@ class ListTable extends Component {
 
         // 如果有子告警
         let childs = []
-        if(item.childrenAlert){
+        if(sourceOrigin !== 'alertQuery' && item.childrenAlert){
 
           childs = item.childrenAlert.map ( (childItem, childIndex) => {
 
@@ -269,7 +275,7 @@ class ListTable extends Component {
         commonTrs.push(
           <tr key={item.id}>
             {
-              Object.keys(checkAlert).length !== 0 ?
+              sourceOrigin !== 'alertQuery' && Object.keys(checkAlert).length !== 0 ?
               <td key={index}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
               :
               undefined
@@ -290,9 +296,16 @@ class ListTable extends Component {
           <table className={styles.listTable}>
             <thead>
               <tr>
-                <th key="checkAll" width={60}><input type="checkbox" checked={selectedAll} onChange={toggleSelectedAll}/></th>
+                {
+                  sourceOrigin !== 'alertQuery' ?
+                  <th key="checkAll" width={60}><input type="checkbox" checked={selectedAll} onChange={toggleSelectedAll}/></th>
+                  :
+                  undefined
+                }
                 <th width="20" key='space-col'></th>
-                <th width='10'></th>
+               
+                  <th width='10'></th>
+               
                 {theads}
               </tr>
             </thead>
@@ -310,6 +323,19 @@ class ListTable extends Component {
       </div>
     )
   }
+}
+
+ListTable.defaultProps = {
+  sourceOrigin: 'alertMange',
+  checkAlertFunc: () => {},
+  spreadChild: () => {},
+  noSpreadChild: () => {},
+  toggleSelectedAll: () => {},
+  relieveClick: () => {},
+}
+
+ListTable.propTypes = { 
+  sourceOrigin: React.PropTypes.string.isRequired,
 }
 
 export default ListTable
