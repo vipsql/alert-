@@ -174,13 +174,30 @@
     }
 }
 
+.keywordsMenuItem{
+    &:global.ant-select-dropdown-menu-item{
+        padding: 7px 10px;
+    }
+}
+
 // cover Col style
 .colStyle{
+    & > div:first-child{
+        & > div:last-child{
+            width: 18%;
+        }
+    }
     & > div:last-child{
         margin-bottom: 0px;
         & > div{
             position: absolute;
             top: -56px;
+            & > div{
+                & > input{
+                    border-top-left-radius: 0px;
+                    border-bottom-left-radius: 0px;
+                }
+            }
         }
     }
 }

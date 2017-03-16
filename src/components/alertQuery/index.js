@@ -5,6 +5,8 @@ import { Row, Col, Form, Input, Select, DatePicker, Button, Popover, Checkbox} f
 import ListTableWrap from './queryList.js'
 import { classnames } from '../../utils'
 import AlertDetail from '../common/alertDetail/index.js'
+import CloseModal from '../common/closeModal/index.js'
+import DispatchModal from '../common/dispatchModal/index.js'
 
 const Item = Form.Item;
 const RangePicker = DatePicker.RangePicker;
@@ -35,44 +37,15 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
     )
 
     const operateProps = {
-      selectGroup: alertQueryDetail.selectGroup,
-      columnList: alertQueryDetail.columnList,
 
-      checkCloumFunc: (e) => {
-        dispatch({
-            type: 'alertOperation/checkColumn',
-            payload: e.target.value,
-        })
-      },
       dispatchFunc: (position) => {
         dispatch({
-            type: 'alertOperation/openFormModal',
-            payload: position
+            type: 'alertQueryDetail/openFormModal',
         })
       },
       closeFunc: (position) => {
         dispatch({
-            type: 'alertOperation/openCloseModal',
-            payload: {
-                state: true,
-                origin: position
-            }
-        })
-      },
-      groupFunc: (value) => {
-        dispatch({
-            type: 'alertQueryDetail/groupView',
-            payload: value,
-        })
-      },
-      noGroupFunc: () => {
-        dispatch({
-            type: 'alertQueryDetail/noGroupView',
-        })
-      },
-      initCloumFunc: () => {
-        dispatch({
-            type: 'alertOperation/initalColumn'
+            type: 'alertQueryDetail/openCloseModal',
         })
       }
     }
@@ -139,6 +112,78 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
       }
     }
 
+    const closeModalProps = {
+      currentData: alertQueryDetail,
+
+      closeCloseModal: () => {
+        dispatch({
+            type: 'alertQueryDetail/toggleCloseModal',
+            payload: false
+        })
+      },
+      clickDropdown: (e) => {
+        const message = e.target.getAttribute('data-message')
+        
+        dispatch({
+            type: 'alertQueryDetail/setCloseMessge',
+            payload: message
+        })
+      },
+      onOk: (closeMessage) => {
+        dispatch({
+            type: 'alertQueryDetail/closeAlert',
+            payload: closeMessage
+        })
+      },
+      onCancal: () => {
+        dispatch({
+            type: 'alertQueryDetail/toggleCloseModal',
+            payload: false
+        })
+      },
+      okCloseMessage: (isDropdownSpread) => {
+        dispatch({
+            type: 'alertQueryDetail/toggleDropdown',
+            payload: !isDropdownSpread
+        })
+      },
+      editCloseMessage: (e) => {
+        dispatch({
+            type: 'alertQueryDetail/setCloseMessge',
+            payload: e.target.value
+        })
+      },
+      mouseLeaveDropdown: () => {
+        dispatch({
+            type: 'alertQueryDetail/toggleDropdown',
+            payload: false
+        })
+      }
+    }
+
+    const dispatchModalProps = {
+      currentData: alertQueryDetail,
+
+      closeDispatchModal: () => {
+        dispatch({
+            type: 'alertQueryDetail/toggleFormModal',
+            payload: false
+        })
+      },
+      onOk: (value) => {
+        dispatch({
+            type: 'alertQueryDetail/dispatchForm',
+            payload: value
+        })
+      },
+      onCancal: () => {
+        dispatch({
+            type: 'alertQueryDetail/toggleFormModal',
+            payload: false
+        })
+      }
+    }
+
     const popoverContent = <div className={styles.popoverMain}>
         {
             columnList.map( (group, index) => {
@@ -152,7 +197,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                                 } else {
                                     return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={item.checked} onChange={ (e) => {
                                         dispatch({
-                                            type: 'alertOperation/checkColumn',
+                                            type: 'alertQueryDetail/checkColumn',
                                             payload: e.target.value,
                                         })
                                     }}>{item.name}</Checkbox></div>
@@ -201,15 +246,14 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                     initialValue: '1'
                   })(
                     <Select size='large'>
-                      <Option value="1">节点名称</Option>
-                      <Option value="3">标签</Option>
-                      <Option value="2">描述</Option>
+                      <Option className={styles.keywordsMenuItem} value="1">节点名称</Option>
+                      <Option className={styles.keywordsMenuItem} value="3">标签</Option>
+                      <Option className={styles.keywordsMenuItem} value="2">描述</Option>
                     </Select>
                   )}    
                 </Item>
                 <Item
-                  wrapperCol={{span: 7, offset: 11}}
-                  
+                  wrapperCol={{span: 8, offset: 10}}
                 >
                   {getFieldDecorator('keyWords', {
                     
@@ -311,7 +355,9 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
           {!haveQuery ? <div className={styles.alertListInfo}>暂无数据，请先选择查询条件</div> :
           <div>
             <div className={styles.queryOperate}>
-              <div className={styles.count}>{`共32个结果（严重3个、一般2个、提醒27个）`}</div>
+              <div className={styles.count}>
+                {`共${queryCount.total !== undefined ? queryCount.total : 0}个结果（紧急${queryCount.critical !== undefined ? queryCount.critical : 0}个、主要${queryCount.major !== undefined ? queryCount.major : 0}个、次要${queryCount.minor !== undefined ? queryCount.minor : 0}个、警告${queryCount.warning !== undefined ? queryCount.warning : 0}个、提醒${queryCount.information !== undefined ? queryCount.information : 0}个）`}
+              </div>
               <div className={styles.groupMain}>
                   <Select className={classnames(styles.setGroup, styles.selectSingle)} placeholder="分组显示" value={selectGroup} onChange={ (value) => {
                       dispatch({
@@ -350,6 +396,8 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
             :
             undefined
           }
+          <CloseModal {...closeModalProps}/>
+          <DispatchModal {...dispatchModalProps}/>
         </div>
     )
 }

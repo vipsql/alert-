@@ -9,6 +9,7 @@ const initalState = {
     haveQuery: false, // 是否包含查询条件
     sourceOptions: [], // 来源
     queryCount: {}, // 查询数量结果
+    currentQuery: {}, // 当前的查询条件
 
     isGroup: false,
     groupBy: 'source',
@@ -78,6 +79,14 @@ export default {
   },
 
   reducers: {
+    // 更新查询条件
+    setCurrentQuery(state, {payload: currentQuery}) {
+      return { ...state, currentQuery }
+    },
+    // 更新data数据
+    updateAlertListData(state, {payload: data}) {
+      return { ...state, data }
+    },
     // 存放告警来源的options
     setSourceOptions(state, { payload: sourceOptions}) {
       return { ...state, sourceOptions }
@@ -159,7 +168,7 @@ export default {
     },
     // 删除时触发
     deleteAlert(state, {payload}) {
-      const { data, isGroup, checkAlert } = state;
+      const { data, isGroup } = state;
       if (isGroup === true) {
         const newData = data.map( (group) => {
           const arr = group.children.filter( (item) => {
@@ -167,7 +176,6 @@ export default {
             payload.forEach( (id) => {
               if (item.id == id) {
                 status = false;
-                delete checkAlert[item.id]
               } 
             })
             return status;
@@ -175,19 +183,18 @@ export default {
           group.children = arr;
           return group;
         })
-        return { ...state, data: newData, checkAlert: checkAlert}
+        return { ...state, data: newData }
       } else if (isGroup === false) {
         const newData = data.filter( (item, index) => {
           let status = true;
           payload.forEach( (id) => {
             if (item.id == id) {
               status = false;
-              delete checkAlert[item.id]
             } 
           })
           return status;
         })
-        return { ...state, data: newData, checkAlert: checkAlert }
+        return { ...state, data: newData }
       }
       return { ...state }
     }
@@ -214,15 +221,22 @@ export default {
        }
     },
 
+    // 点击查找
+    *queryBefore({payload},{call, put, select}) {
+      console.log(payload)
+      yield put({ type: 'setCurrentQuery', payload: payload })
+      yield put({ type: 'queryAlertList'})
+    },
+
     //查询告警列表
     *queryAlertList({payload},{call, put, select}){
-      console.log(payload)
+      
       // payload为空时是有内置的查询条件的
       yield put({
         type: 'changeState',
         payload: {
           isLoading: true,
-          haveQuery: true
+          haveQuery: true,
         }
       })
 
@@ -231,7 +245,8 @@ export default {
         groupBy,
         pageSize,
         orderBy,
-        orderType
+        orderType,
+        currentQuery
       } = yield select(state => {
         const alertQuery = state.alertQuery
 
@@ -240,7 +255,8 @@ export default {
           groupBy: alertQuery.groupBy,
           pageSize: alertQuery.pageSize,
           orderBy: alertQuery.orderBy,
-          orderType: alertQuery.orderType
+          orderType: alertQuery.orderType,
+          currentQuery: alertQuery.currentQuery
         }
       })
       var extraParams = {};
@@ -267,12 +283,12 @@ export default {
       }
 
       const listData = yield call(queryAlertList, {
-        ...payload,
+        ...currentQuery,
         ...extraParams
       })
 
       const countData = yield call(queryCount, {
-        ...payload
+        ...currentQuery
       })
 
       if(listData.result){
@@ -336,7 +352,7 @@ export default {
     // 点击展开详情
     *clickDetail({payload}, {select, put, call}) {
       yield put({ type: 'toggleDetailAlertId', payload: payload })
-      yield put({ type: 'alertDetail/openDetailModal'})
+      yield put({ type: 'alertQueryDetail/openDetailModal'})
     },
     // show more
     *loadMore({}, {call, put, select}){
@@ -346,23 +362,21 @@ export default {
         payload: true
       })
       
-      let { currentPage, listData, alertListTable }=  yield select(state => {
+      let { currentPage, listData, alertQuery }=  yield select(state => {
          return {
-           'currentPage': state.alertListTable.currentPage,
-           'listData': state.alertListTable.data,
-           'alertListTable': state.alertListTable
+           'currentPage': state.alertQuery.currentPage,
+           'listData': state.alertQuery.data,
+           'alertQuery': state.alertQuery
          }
       })
 
       currentPage =  currentPage + 1
       const params = {
         currentPage: currentPage,
-        begin: alertListTable.begin,
-        end: alertListTable.end,
-        orderBy: alertListTable.orderBy,
-        orderType: alertListTable.orderType,
-        pageSize: alertListTable.pageSize,
-        ...alertListTable.tagsFilter
+        orderBy: alertQuery.orderBy,
+        orderType: alertQuery.orderType,
+        pageSize: alertQuery.pageSize,
+        ...alertQuery.currentQuery
       }
 
       const listReturnData = yield call(queryAlertList, params)
@@ -371,13 +385,6 @@ export default {
 
         listData = listData.concat(listReturnData.data.datas);
         
-        yield put({
-          type: 'resetCheckAlert',
-          payload: {
-            origin: alertListTable.checkAlert,
-            newObj: listData
-          }
-        })
         if (!listReturnData.data.hasNext) {
           yield put({
             type: 'updateShowMore',
@@ -387,10 +394,7 @@ export default {
 
         yield put({
           type: 'updateAlertListData',
-          payload: {
-            data: listData,
-            newLevels: listReturnData.data.levels
-          }
+          payload: listData,
         })
 
         yield put({ type: 'setMore', payload: currentPage })
@@ -413,7 +417,7 @@ export default {
     *orderByTittle({payload}, {select, put, call}) {
       const { orderType } = yield select( state => {
         return {
-          'orderType': state.alertListTable.orderType,
+          'orderType': state.alertQuery.orderType,
         }
       } )
       if (payload !== undefined) {
