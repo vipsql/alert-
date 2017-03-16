@@ -37,6 +37,12 @@ function Bread ({ location }) {
       <Breadcrumb.Item key="alertList">告警列表</Breadcrumb.Item>
     )
 
+  }else if(pathDepth.length > 2 && pathDepth.indexOf('alertConfig') > -1){ //告警配置
+    breads.push(
+      <Breadcrumb.Item key="alertConfig"><a href="#alertConfig">告警配置</a></Breadcrumb.Item>,
+      <Breadcrumb.Item key="alertApplication">应用集成</Breadcrumb.Item>
+    )
+
   }else{
     const key = path[pathDepth[1]]
     breads.push(<Breadcrumb.Item key={pathDepth[1]}>{key['name']}</Breadcrumb.Item>)

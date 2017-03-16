@@ -185,6 +185,15 @@
     & > div:first-child{
         & > div:last-child{
             width: 18%;
+            & > div{
+                & > div{
+                    & > div{
+                        border-top-right-radius: 0px;
+                        border-bottom-right-radius: 0px;
+                        border-right: none;
+                    }
+                }
+            }
         }
     }
     & > div:last-child{
@@ -192,6 +201,8 @@
         & > div{
             position: absolute;
             top: -56px;
+            width: 32%;
+            margin-left: 43%;
             & > div{
                 & > input{
                     border-top-left-radius: 0px;

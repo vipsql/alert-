@@ -1,0 +1,50 @@
+@import "../vars.less";
+
+// set Triangle
+.triangleMain{
+    position: relative;
+    .orderTh{
+        cursor: pointer;
+        color: rgba(0, 0, 0, 0.65);
+        &.orderTh-active{
+            color: #4082e6;
+        }
+    }
+    .orderTriangleDown {
+        position: absolute;
+        bottom: 0px;
+        right: -15px;
+        width: 0;
+        height: 0;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+        border-top: 6px solid #acb3bf;
+        cursor: pointer;
+        transition: border-top .2s ease;
+        &:hover{
+            border-top: 6px solid #4082e6;
+        }
+        &.orderTriang-active{
+            border-top: 6px solid #4082e6;
+        }
+    }
+    .orderTriangleUp {
+        position: absolute;
+        top: 0px;
+        width: 0;
+        height: 0;
+        right: -15px;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+        border-bottom: 6px solid #acb3bf;
+        text-align: center;
+        cursor: pointer;
+        transition: border-bottom .2s ease;
+        &:hover{
+            border-bottom: 6px solid #4082e6;
+        }
+        &.orderTriang-active{
+            border-bottom: 6px solid #4082e6;
+        }
+    }
+}

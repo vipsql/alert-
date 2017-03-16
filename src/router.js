@@ -42,16 +42,26 @@ export default function ({history, app}) {
               cb(null, require('./routes/alertQuery'))
             },'alertQuery')
           }
-        }, {
+        }, 
+        {
           path: 'alertConfig',
           name: 'alertConfig',
           getComponent (nextState, cb) {
             require.ensure([], require => {
-              app.model(require('./models/alertConfig'))
               cb(null, require('./routes/alertConfig'))
             },'alertConfig')
           }
-        }, {
+        },
+        {
+          path: 'alertConfig/:alertApplication',
+          name: 'alertApplication',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              cb(null, require('./routes/alertApplication'))
+            }, 'alertApplication')
+          }
+        }, 
+        {
           path: 'watchManage',
           name: 'watchManage',
           getComponent (nextState, cb) {

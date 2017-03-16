@@ -1,12 +1,15 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'dva'
+import AlertConfig from '../components/alertConfig'
 
-function alertConfig(dispatch){
+function alertConfig(){
   return (
-    <div></div>
+    <div>
+      <AlertConfig />
+    </div>
   )
 }
 alertConfig.propTypes = {
-  dispatch: PropTypes.func
+  
 }
-export default connect()(alertConfig)
+export default alertConfig
