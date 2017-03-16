@@ -1,11 +1,10 @@
 import React from 'react'
-import {Menu } from 'antd'
 import { connect } from 'dva'
 import styles from '../main.less'
 import Menus from './menu'
 import FoldBar from './menuHelper'
 
-function LeftWrap({isFold, handleFoldMenu , location}){
+function LeftWrap ({isFold, handleFoldMenu, location}) {
   // menu props
   const menuProps = {
     isFold,

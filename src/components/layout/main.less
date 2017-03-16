@@ -1,9 +1,4 @@
 @import "../vars.less";
-:global {
-  .root,.root > div {
-    height: 100%;
-  }
-}
 .layout {
   position: relative;
   height: 100%;
@@ -41,7 +36,7 @@
   .leftMenu {
     width: 160px;
     background: #fff;
-    position: absolute;
+    position: fixed;
     overflow: visible;
     padding-top:40px;
     height: 100%;
@@ -100,11 +95,6 @@
 
 
     :global {
-      .ant-menu-dark,
-      .ant-menu-dark .ant-menu-sub {
-        color: #999;
-      }
-
       .ant-menu {
         transition: @transition-ease-out;
 
@@ -141,13 +131,13 @@
       .ant-menu-inline .ant-menu-item, .ant-menu-vertical .ant-menu-item{
         border-right: none
       }
-      
+
       .ant-menu-inline, .ant-menu-vertical{
         border-right: none;
       }
       .ant-menu-item, .ant-menu-submenu, .ant-menu-submenu-title {
           -webkit-transition: none;
-          transition: none; 
+          transition: none;
       }
       .ant-menu-vertical > .ant-menu-item,
       .ant-menu-inline > .ant-menu-item,
@@ -195,59 +185,115 @@
 
 
   }
+}
 
-
+:global {
+  .root,.root > div {
+    height: 100%;
+  }
+  .blue {
+    :local{
+      .layout{
+        .leftMenu{
+          background: @blue2;
+          .menuAssist{
+            .menuSet, .menuHelp{
+              a{
+                color: @blue5;
+              }
+            }
+            .switchMenu{
+              background: #1d446d;
+            }
+            .foldBar{
+              &:after{
+                background: #1d446d;
+              }
+            }
+          }
+          :global{
+            .ant-menu-item-selected{
+                background: @blue3;
+            }
+            .ant-menu-inline .ant-menu-item-selected{
+              border-left: 5px solid @blue4;
+            }
+          }
+        }
+      }
+    }
+    :global{
+      .ant-menu{
+          background: @blue2;
+      }
+      .ant-menu-item > a{
+        color: @blue5;
+      }
+      .ant-menu-item-selected > a, .ant-menu-item-selected > a:hover{
+        color:white;
+      }
+    }
+  }
 
 }
 
-:global .ant-menu-dark {
-  color: #999;
-  background-color: #3e3e3e;
+:global{
 
-  .ant-menu-submenu-title:hover,
-  .ant-menu-submenu:hover {
-    color: @primary-color;
-  }
+  // .ant-menu {
+  //      color: #999;
+  //      background-color: #3e3e3e;
+  //
+  //      .ant-menu-submenu-title:hover,
+  //      .ant-menu-submenu:hover {
+  //        color: @primary-color;
+  //      }
+  //
+  //      .ant-menu-sub {
+  //        color: #999;
+  //      }
+  //
+  //      .ant-menu-submenu-selected {
+  //        color: @primary-color;
+  //
+  //        &:not(.ant-menu-submenu-open) {
+  //          background-color: @dark-half;
+  //        }
+  //      }
+  //
+  //      .ant-menu-item,
+  //      .ant-menu-submenu-title {
+  //        & > a {
+  //          color: #999;
+  //        }
+  //
+  //        &:hover > a {
+  //          color: @primary-color;
+  //        }
+  //      }
+  //
+  //      &.ant-menu-inline {
+  //        .ant-menu-item-selected {
+  //          background-color: @dark-half;
+  //        }
+  //      }
+  //
+  //      .ant-menu-item-selected {
+  //        color: @primary-color;
+  //        background-color: @dark-half;
+  //
+  //        & > a {
+  //          color: @primary-color;
+  //        }
+  //
+  //        &:hover {
+  //          background-color: @dark-half;
+  //        }
+  //      }
+  //    }
 
-  .ant-menu-sub {
-    color: #999;
-  }
-
-  .ant-menu-submenu-selected {
-    color: @primary-color;
-
-    &:not(.ant-menu-submenu-open) {
-      background-color: @dark-half;
-    }
-  }
-
-  .ant-menu-item,
-  .ant-menu-submenu-title {
-    & > a {
-      color: #999;
-    }
-
-    &:hover > a {
-      color: @primary-color;
-    }
-  }
-
-  &.ant-menu-inline {
-    .ant-menu-item-selected {
-      background-color: @dark-half;
-    }
-  }
-
-  .ant-menu-item-selected {
-    color: @primary-color;
-    background-color: @dark-half;
-
-    & > a {
-      color: @primary-color;
-    }
-
-    &:hover {
-      background-color: @dark-half;
-    }
-  }
+  // .blue{
+  //   .ant-menu{
+  //     background: @blue2;
+  //   }
+  // }
 }
