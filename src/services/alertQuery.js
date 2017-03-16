@@ -26,3 +26,12 @@ export async function queryCount(params) {
         }
     })
 }
+
+export async function queryCloumns() {
+    return request(`/arbiter/rest/v1/alert/query/filters`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+}

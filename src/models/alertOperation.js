@@ -67,6 +67,7 @@ export default {
   effects: {
       // 列定制初始化(将数据变为设定的结构)
       *initalColumn({payload}, {select, put, call}) {
+          // 这里后期要先做查询得到扩展字段，再和columnList拼接
           const { columns } = yield select( state => {
               return {
                   'columns': state.alertListTable.columns
