@@ -1,5 +1,5 @@
 import './index.html'
-import './index-en.html'
+// import './index-en.html'
 import dva from 'dva'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -35,6 +35,8 @@ app.model(require('./models/alertQuery'))
 app.model(require('./models/alertQueryDetail'))
 // 告警配置
 app.model(require('./models/alertConfig'))
+// 值班管理
+app.model(require('./models/watchManage'))
 // 3. Router
 app.router(require('./router'))
 
