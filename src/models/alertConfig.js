@@ -1,4 +1,4 @@
-import { queryConfigAplication, changeAppStatus, deleteApp } from '../services/alertConfig'
+import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery } from '../services/alertConfig'
 import {parse} from 'qs'
 import { message } from 'antd'
 
@@ -6,6 +6,61 @@ const initalState ={
 
   isLoading: false,
   applicationType: undefined, // 接入还是接出
+
+  applicationTypeData: [
+    {
+      appType: '监控类',
+      children: [
+        {
+          "id": "58c6817f5b71a73b448ccee8",
+          "name": "rest",
+          "type": "0",
+          "appType": "监控类"
+        },
+        {
+          "id": "58c6817f5b71a73b448ccee8",
+          "name": "rest",
+          "type": "0",
+          "appType": "监控类"
+        },
+        {
+          "id": "58c6817f5b71a73b448ccee8",
+          "name": "rest",
+          "type": "0",
+          "appType": "监控类"
+        }
+      ]
+    },
+    {
+      appType: '自动化类',
+      children: [
+        {
+          "id": "58c681cd5b71a73b448cceea",
+          "name": "Automation",
+          "type": "0",
+          "appType": "自动化类"
+        },
+        {
+          "id": "58c681cd5b71a73b448cceea",
+          "name": "Automation",
+          "type": "0",
+          "appType": "自动化类"
+        },
+        {
+          "id": "58c681cd5b71a73b448cceea",
+          "name": "Automation",
+          "type": "0",
+          "appType": "自动化类"
+        },{
+          "id": "58c681cd5b71a73b448cceea",
+          "name": "Automation",
+          "type": "0",
+          "appType": "自动化类"
+        }
+      ]
+    }
+  ], // 配置种类
+  isShowTypeModal: false, // 配置的modal
 
   columns: [{
     key: 'displayName',
@@ -89,7 +144,7 @@ export default {
   },
 
   effects: {
-
+    // 查询
     *queryAplication({payload}, {select, put, call}) {
 
       yield put({ type: 'toggleLoading', payload: true })
@@ -135,7 +190,27 @@ export default {
 
       yield put({ type: 'toggleLoading', payload: false })
     },
-    //
+    // 查询配置种类
+    *queryAplicationType({payload}, {select, put, call}) {
+      if (payload !== undefined) {
+        yield put({ type: 'toggleTypeModal', payload: true })
+        // const typeResult = yield call(typeQuery, payload)
+        // if (typeResult.result) {
+        //   yield put({
+        //     type: 'openTypeModal',
+        //     payload: {
+        //       modalStatus: true,
+        //       applicationTypeData: typeResult.data,
+        //     }
+        //   })
+        // } else {
+        //   yield message.error(`${typeResult.message}`, 2)
+        // }
+      } else {
+        console.error('配置类型不能为空')
+      }
+    },
+    // 更改启用状态
     *changeStatus({payload}, {select, put, call}) {
       if (payload !== undefined && payload.id !== undefined && payload.status !== undefined) {
         const statusResult = yield call(changeAppStatus, payload)
@@ -197,6 +272,31 @@ export default {
   },
 
   reducers: {
+    // 打开配置modal
+    openTypeModal(state, { payload: { applicationTypeData, modalStatus}}) {
+      let typeObj = {};
+      let newArr = [];
+      let keys = [];
+      applicationTypeData.forEach( (typeItem) => {
+        if (typeObj[typeItem.appType] !== undefined) {
+          typeObj[typeItem.appType].push(typeItem)
+        } else {
+          typeObj[typeItem.appType] = [typeItem]
+        }
+      })
+      keys = Object.keys(typeObj);
+      keys.forEach( (key) => {
+        newArr.push({
+          appType: key,
+          children: typeObj[key]
+        })
+      })
+      return { ...state, applicationTypeData: newArr, isShowTypeModal: modalStatus }
+    },
+    // 关闭modal
+    toggleTypeModal(state, {payload: isShowTypeModal}) {
+      return { ...state, isShowTypeModal }
+    },
     // 加载状态
     toggleLoading(state, {payload: isLoading}) {
       return { ...state, isLoading }

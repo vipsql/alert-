@@ -29,3 +29,13 @@ export async function deleteApp(id) {
 
   return request('/api/v2/application/updateStatus', options)
 }
+
+// 查询配置种类
+export async function typeQuery(type) {
+  return request(`/api/v2/applicationType/query?type=${type}`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}

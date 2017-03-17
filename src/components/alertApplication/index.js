@@ -1,15 +1,22 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'dva'
 import styles from './index.less'
-import { Row, Col, Tabs } from 'antd'
+import { Row, Col, Tabs, Button } from 'antd'
 import { classnames } from '../../utils'
 import { Link } from 'dva/router'
 import ApplicationList from '../common/applicationList'
+import AppSelectModal from './appSelectModal'
 
 const TabPane = Tabs.TabPane;
 const alertApplication = ({dispatch, alertConfig}) => {
 
     const { orderType, orderBy, applicationData } = alertConfig;
+
+    const switchClass = classnames(
+        styles['icon'],
+        styles.iconfont,
+        styles['icon-anonymous-iconfont']
+    )
 
     const tabsChange = (tabKey) => {
         dispatch({
@@ -19,6 +26,13 @@ const alertApplication = ({dispatch, alertConfig}) => {
                 orderBy: undefined,
                 orderType: undefined,
             }
+        })
+    }
+
+    const openAppModal = (type) => {
+        dispatch({
+            type: 'alertConfig/queryAplicationType',
+            payload: type
         })
     }
 
@@ -77,11 +91,18 @@ const alertApplication = ({dispatch, alertConfig}) => {
             <Tabs defaultActiveKey="1" type='line' onChange={ (tabKey) => {tabsChange(tabKey)}}>
                 <TabPane tab="接入" key="1">
                     <ApplicationList {...appListProps} />
+                    <Button type="primary" className={styles.appBtn} onClick={ () => {
+                        openAppModal(0) // 0 -> 接入
+                    }}><i className={switchClass}></i><span>添加应用</span></Button>
                 </TabPane>
                 <TabPane tab="接出" key="2">
                     <ApplicationList {...appListProps} />
+                    <Button type="primary" className={styles.appBtn} onClick={ () => {
+                        openAppModal(1) // 1 -> 接出
+                    }}><i className={switchClass}></i><span>添加应用</span></Button>
                 </TabPane>
             </Tabs>
+            <AppSelectModal />
         </div>
     )
 }
