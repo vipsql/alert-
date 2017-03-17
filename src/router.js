@@ -42,7 +42,7 @@ export default function ({history, app}) {
               cb(null, require('./routes/alertQuery'))
             },'alertQuery')
           }
-        }, 
+        },
         {
           path: 'alertConfig',
           name: 'alertConfig',
@@ -60,13 +60,12 @@ export default function ({history, app}) {
               cb(null, require('./routes/alertApplication'))
             }, 'alertApplication')
           }
-        }, 
+        },
         {
           path: 'watchManage',
           name: 'watchManage',
           getComponent (nextState, cb) {
             require.ensure([], require => {
-              app.model(require('./models/watchManage'))
               cb(null, require('./routes/watchManage'))
             },'alertConfig')
           }
