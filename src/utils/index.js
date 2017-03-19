@@ -3,6 +3,37 @@ import request from './request'
 import classnames from 'classnames'
 import {color} from './theme'
 
+/**
+ * Return random getUUID
+ *  
+ * @param {Number} len
+ * @return {String}
+ * @api private
+ */
+function getUUID(len) {
+  var buf = []
+    , chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
+    , charlen = chars.length;
+
+  for (var i = 0; i < len; ++i) {
+    buf.push(chars[getRandomInt(0, charlen - 1)]);
+  } 
+
+  return buf.join('');
+}
+
+/**
+ * Return a random Number
+ * 
+ * @param {Number} min
+ * @param {Number} max
+ * @return {Number}
+ * @api private
+ */
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 // 拼接url
 function packURL(url, params){
   let queryString = url.indexOf('?') < 0 ? '?' : ''
@@ -41,5 +72,6 @@ module.exports = {
   packURL,
   request,
   color,
-  classnames
+  classnames,
+  getUUID
 }

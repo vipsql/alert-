@@ -1,31 +1,27 @@
-import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery } from '../services/alertConfig'
+import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery, add, update, view} from '../services/alertConfig'
 import {parse} from 'qs'
 import { message } from 'antd'
+import pathToRegexp from 'path-to-regexp';
 
 const initalState ={
 
   isLoading: false,
   applicationType: undefined, // 接入还是接出
+  UUID: undefined, // UUID
 
   applicationTypeData: [
     {
       appType: '监控类',
       children: [
         {
-          "id": "58c6817f5b71a73b448ccee8",
-          "name": "rest",
+          "id": "58c6817f5b71a79b448ccee8",
+          "name": "Moniter",
           "type": "0",
           "appType": "监控类"
         },
         {
           "id": "58c6817f5b71a73b448ccee8",
-          "name": "rest",
-          "type": "0",
-          "appType": "监控类"
-        },
-        {
-          "id": "58c6817f5b71a73b448ccee8",
-          "name": "rest",
+          "name": "Rest",
           "type": "0",
           "appType": "监控类"
         }
@@ -35,32 +31,26 @@ const initalState ={
       appType: '自动化类',
       children: [
         {
-          "id": "58c681cd5b71a73b448cceea",
-          "name": "Automation",
-          "type": "0",
+          "id": "58c681cd5b71a73b048cceea",
+          "name": "ChatOps",
+          "type": "1",
           "appType": "自动化类"
         },
         {
           "id": "58c681cd5b71a73b448cceea",
-          "name": "Automation",
-          "type": "0",
-          "appType": "自动化类"
-        },
-        {
-          "id": "58c681cd5b71a73b448cceea",
-          "name": "Automation",
-          "type": "0",
-          "appType": "自动化类"
-        },{
-          "id": "58c681cd5b71a73b448cceea",
-          "name": "Automation",
-          "type": "0",
+          "name": "ITSM",
+          "type": "1",
           "appType": "自动化类"
         }
       ]
     }
   ], // 配置种类
+  currentOperateAppType: {}, //配置的应用详情
+  currentEditApp: {}, // 编辑的应用
+
   isShowTypeModal: false, // 配置的modal
+  isShowDeteleModal: false, // 删除的modal
+  currentDeleteApp: {}, // 删除操作的app
 
   columns: [{
     key: 'displayName',
@@ -139,11 +129,126 @@ export default {
           })
         }
       })
-
+    },
+    addApplicationSetup({dispatch, history}) {
+      history.listen((location) => {
+        if (pathToRegexp('/alertConfig/alertApplication/applicationView/add/:typeId').test(location.pathname)) {
+          const match = pathToRegexp('/alertConfig/alertApplication/applicationView/add/:typeId').exec(location.pathname);
+          const appTypeId = match[1];
+          dispatch({
+            type: 'addApplicationView',
+            payload: appTypeId
+          })
+        }
+      })
+    },
+    editApplicationSetup({dispatch, history}) {
+      history.listen((location) => {
+        if (pathToRegexp('/alertConfig/alertApplication/applicationView/edit/:appId').test(location.pathname)) {
+          const match = pathToRegexp('/alertConfig/alertApplication/applicationView/edit/:appId').exec(location.pathname);
+          const appId = match[1];
+          console.log(appId)
+          dispatch({
+            type: 'editApplicationView',
+            payload: appId
+          })
+        }
+      })
     }
   },
 
   effects: {
+    // 通过modal进入详情页
+    *addApplicationView({payload}, {select, put, call}) {
+      if (payload !== undefined) {
+        yield put({ type: 'initalAddAppView', payload: {isShowTypeModal: false, appTypeId: payload, UUID: undefined}}) // isShowTypeModal -> false, currentOperateAppType -> Object
+      } else {
+        console.error('appTypeId is null')
+      }
+    },
+    // 通过编辑进入详情页
+    *editApplicationView({payload}, {select, put, call}) {
+      if (payload !== undefined) {
+        const viewResult = yield call(update, payload)
+        if (viewResult.result) {
+          yield put({
+            type: 'setCurrent',
+            payload: viewResult.data || {}
+          })
+        } else {
+          yield message.error(`viewResult.message`, 3)
+        }
+      } else {
+        console.error('appId is null')
+      }
+    },
+    // 新增应用
+    *addApplication({payload}, {select, put, call}) {
+      const { UUID, currentOperateAppType } = yield select( state => {
+        return {
+          'UUID': state.alertConfig.UUID,
+          'currentOperateAppType': state.alertConfig.currentOperateAppType
+        }
+      })
+
+      if (payload !== undefined && payload.displayName !== undefined) {
+        if (UUID === undefined) {
+          yield message.error(`请先生成AppKey`, 3)
+        }
+        const addResult = yield call(add, {
+          status: 1, // 默认启用
+          integration: '',
+          displayName: payload.displayName,
+          applyType:{
+            ...currentOperateAppType
+          },
+          type: currentOperateAppType.type,
+          appKey: UUID
+        })
+        if (addResult.result) {
+          yield message.success('应用添加成功', 3)
+          yield put(routerRedux.goBack());
+        } else {
+          yield message.error(`addResult.message`, 3)
+        }
+      } else {
+        console.error('displayName is null')
+      }
+    },
+    // 编辑
+    *editApplication({payload}, {select, put, call}) {
+      const { UUID, currentEditApp } = yield select( state => {
+        return {
+          'UUID': state.alertConfig.UUID,
+          'currentEditApp': state.alertConfig.currentEditApp
+        }
+      })
+
+      if (payload !== undefined && payload.displayName !== undefined) {
+        if (UUID === undefined) {
+          yield message.error(`请先生成AppKey`, 3)
+        }
+        const editResult = yield call(update, {
+          id: currentEditApp.id,
+          status: currentEditApp.status,
+          integration: currentEditApp.integration,
+          displayName: payload.displayName,
+          applyType:{
+            ...currentEditApp['applyType']
+          },
+          type: currentEditApp.type,
+          appKey: UUID
+        })
+        if (editResult.result) {
+          yield message.success('应用编辑成功', 3)
+          yield put(routerRedux.goBack());
+        } else {
+          yield message.error(`editResult.message`, 3)
+        }
+      } else {
+        console.error('displayName is null')
+      }
+    },
     // 查询
     *queryAplication({payload}, {select, put, call}) {
 
@@ -231,19 +336,24 @@ export default {
     },
     // 删除时的操作
     *deleteApp({payload}, {select, put, call}) {
-      if (payload !== undefined) {
-        const deleteResult = yield call(deleteApp, payload)
+      const { currentDeleteApp } = yield select( state => {
+        return {
+          'currentDeleteApp': state.alertConfig.currentDeleteApp,
+        }
+      })
+      if (Object.keys(currentDeleteApp).length !== 0 && currentDeleteApp.id !== undefined) {
+        const deleteResult = yield call(deleteApp, currentDeleteApp.id)
         if (deleteResult.result) {
           yield put({ 
             type: 'deleteApplication', 
-            payload: payload
+            payload: currentDeleteApp.id
           })
         } else {
           yield message.error(`${deleteResult.message}`, 2)
         }
       } else {
-        console.error('删除Id为空')
-      }
+        console.error('应用为空')
+      } 
     },
     //orderList排序
     *orderList({payload}, {select, put, call}) {
@@ -272,6 +382,23 @@ export default {
   },
 
   reducers: {
+    // 点开新增详情页面
+    initalAddAppView(state, { payload: {isShowTypeModal, appTypeId, UUID}}) {
+      const { applicationTypeData } = state;
+      let newObj = {};
+      applicationTypeData.forEach( (typeItem) => {
+        typeItem.children.forEach( (item) => {
+          if (item.id == appTypeId) {
+            newObj = item;
+          }
+        })
+      })
+      return { ...state, isShowTypeModal, UUID, currentOperateAppType: newObj}
+    },
+    // 回显
+    setCurrent(state, { payload }) {
+      return { ...state, currentEditApp: payload, UUID: payload.appKey }
+    },
     // 打开配置modal
     openTypeModal(state, { payload: { applicationTypeData, modalStatus}}) {
       let typeObj = {};
@@ -296,6 +423,10 @@ export default {
     // 关闭modal
     toggleTypeModal(state, {payload: isShowTypeModal}) {
       return { ...state, isShowTypeModal }
+    },
+    // 关闭modal
+    toggleDeleteModal(state, {payload: {applicationItem, status}}) {
+      return { ...state, currentDeleteApp: applicationItem, isShowDeteleModal: status }
     },
     // 加载状态
     toggleLoading(state, {payload: isLoading}) {
@@ -331,6 +462,9 @@ export default {
         return status;
       })
       return { ...state, applicationData: newData }
+    },
+    setUUID(state, { payload }) {
+      return { ...state, UUID: payload }
     }
   },
 

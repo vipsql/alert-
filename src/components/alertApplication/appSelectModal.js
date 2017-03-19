@@ -19,7 +19,7 @@ const appSelectModal = ({alertConfig, dispatch}) => {
     const lis = applicationTypeData.map( (appGroup, index) => {
         const appDetail = appGroup.children.map( (app, index) => {
             return (
-                <Link to={`/alertConfig/alertApplication`} key={index}>
+                <Link to={`alertConfig/alertApplication/applicationView/add/${app.id}`} key={index}>
                     <span key={index} className={styles.appItem}>{app.name}</span>
                 </Link>
             )

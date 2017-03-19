@@ -62,6 +62,30 @@ export default function ({history, app}) {
           }
         },
         {
+          path: 'alertConfig/:alertApplication/:applicationView',
+          name: 'applicationView',
+          childRoutes: [
+            {
+              path: 'add/:typeId',
+              name: 'addApplicationView',
+              getComponent (nextState, cb) {
+                require.ensure([], require => {
+                  cb(null, require('./components/applicationView/add'))
+                }, 'addApplicationView')
+              }
+            },
+            {
+              path: 'edit/:appId',
+              name: 'editApplicationView',
+              getComponent (nextState, cb) {
+                require.ensure([], require => {
+                  cb(null, require('./components/applicationView/edit'))
+                }, 'editApplicationView')
+              }
+            },
+          ],
+        },
+        {
           path: 'watchManage',
           name: 'watchManage',
           getComponent (nextState, cb) {

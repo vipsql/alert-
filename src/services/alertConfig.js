@@ -39,3 +39,33 @@ export async function typeQuery(type) {
       }
   })
 }
+
+// 新增
+export async function add(params) {
+  const options = {
+    body: JSON.stringify(params),
+    method: 'POST'
+  }
+
+  return request('/api/v2/application/create', options)
+}
+
+// 编辑
+export async function update(params) {
+  const options = {
+    body: JSON.stringify(params),
+    method: 'POST'
+  }
+
+  return request('/api/v2/application/update', options)
+}
+
+// 详情
+export async function view(id) {
+  return request(`/api/v2/application/getAppDetail/${id}`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}

@@ -6,17 +6,12 @@ import { classnames } from '../../utils'
 import { Link } from 'dva/router'
 import ApplicationList from '../common/applicationList'
 import AppSelectModal from './appSelectModal'
+import AppDeleteModal from './appDeleteModal'
 
 const TabPane = Tabs.TabPane;
 const alertApplication = ({dispatch, alertConfig}) => {
 
     const { orderType, orderBy, applicationData } = alertConfig;
-
-    const switchClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-anonymous-iconfont']
-    )
 
     const tabsChange = (tabKey) => {
         dispatch({
@@ -78,31 +73,39 @@ const alertApplication = ({dispatch, alertConfig}) => {
                 }
             })
         },
-        deleteClick: (id) => {
+        deleteClick: (item) => {
             dispatch({
-                type: 'alertConfig/deleteApp',
-                payload: id
+                type: 'alertConfig/toggleDeleteModal',
+                payload: {
+                    applicationItem: item,
+                    status: true,
+                }
             })
         }
     }
 
     return (
-        <div>
+        <div className={styles.myAppTabs}>
             <Tabs defaultActiveKey="1" type='line' onChange={ (tabKey) => {tabsChange(tabKey)}}>
                 <TabPane tab="接入" key="1">
                     <ApplicationList {...appListProps} />
-                    <Button type="primary" className={styles.appBtn} onClick={ () => {
-                        openAppModal(0) // 0 -> 接入
-                    }}><i className={switchClass}></i><span>添加应用</span></Button>
+                    <div className={styles.addBtn}>
+                        <Button type="primary" className={styles.appBtn} onClick={ () => {
+                            openAppModal(0) // 0 -> 接入
+                        }}><span>添加应用</span></Button>
+                    </div>
                 </TabPane>
                 <TabPane tab="接出" key="2">
                     <ApplicationList {...appListProps} />
-                    <Button type="primary" className={styles.appBtn} onClick={ () => {
-                        openAppModal(1) // 1 -> 接出
-                    }}><i className={switchClass}></i><span>添加应用</span></Button>
+                    <div className={styles.addBtn}>
+                        <Button type="primary" className={styles.appBtn} onClick={ () => {
+                            openAppModal(1) // 1 -> 接出
+                        }}><span>添加应用</span></Button>
+                    </div>
                 </TabPane>
             </Tabs>
             <AppSelectModal />
+            <AppDeleteModal />
         </div>
     )
 }
