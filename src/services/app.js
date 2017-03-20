@@ -9,7 +9,7 @@ export async function queryAlertDashbord () {
 
 export async function login(userName) {
   
-  return request(`/arbiter/rest/v1/alert/getUserId/${userName}`, {
+  return request(`/api/v2/incident/getUserId/${userName}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
