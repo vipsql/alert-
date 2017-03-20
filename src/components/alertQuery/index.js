@@ -220,8 +220,8 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
           const formData = form.getFieldsValue()
           
           if (formData.dateTime !== undefined && formData.dateTime.length !== 0) {
-            formData.begin = formData.dateTime[0].format('YYYY-MM-DD');
-            formData.end = formData.dateTime[1].format('YYYY-MM-DD')
+            formData.begin = formData.dateTime[0].toDate().getTime();
+            formData.end = formData.dateTime[1].toDate().getTime();
           }
           
           dispatch({
