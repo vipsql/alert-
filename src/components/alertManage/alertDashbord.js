@@ -1,8 +1,10 @@
-import React, { PropTypes, Component } from 'react'
+import React, { Component } from 'react'
 import styles from './index.less'
 import request from '../../utils/request'
 import { connect } from 'dva'
-import { Spin } from 'antd';
+import { Spin } from 'antd'
+// import * as d3 from 'd3'
+// import {event as currentEvent} from 'd3-selection';
 
 const echarts = require('echarts/lib/echarts')
 require('echarts/lib/chart/treemap')
@@ -151,6 +153,9 @@ class Chart extends Component{
             // });
             this.props.requestFresh()
         }, 60000);
+
+
+
 
     }
 

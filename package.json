@@ -4,13 +4,13 @@
     "index": "./src/index.js",
     "en-us": "./src/lang/en-us.js",
     "zh-cn": "./src/lang/zh-cn.js"
-
   },
   "dependencies": {
     "antd": "^2.6.0",
     "classnames": "^2.2.5",
     "crossfilter": "^1.3.12",
     "d3": "^3.3.3",
+    "d3-selection": "^1.0.5",
     "dc": "^2.1.3",
     "dva": "^1.1.0",
     "dva-loading": "^0.2.0",
