@@ -52,7 +52,7 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request (url, options) {
-  
+    
     const httpUrl = isApiUrl(url)
     return Ajax.ajax({
       url: httpUrl,
@@ -61,12 +61,15 @@ export default function request (url, options) {
       data: options.body || undefined,
       processData: options.method === 'get',
       dataType: 'JSON'
-    }).done( (data) => {
-      if (!data.result) {
-        console.error(data.message);
+    }).done( (data, b, c) => {
+      //console.log(c)
+      return {
+        result: true,
+        data: data
       }
-      return data
-    }).fail( (response, error,) => {
-
+    }).fail( (xhr, textStatus, errorThrown) => {
+      console.log(xhr);
+      //console.log(textStatus);
+      //console.log(typeof errorThrown)
     })
 }
