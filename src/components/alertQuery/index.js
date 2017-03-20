@@ -268,9 +268,10 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                   label='告警来源'
                 >
                   {getFieldDecorator('source', {
-                     
+                     initialValue: '-1'
                   })(
                       <Select>
+                          <Option value='-1'>所有来源</Option>
                         {
                           sourceOptions.map( (item) => {
                             return <Option value={item.value}>{item.name}</Option>
@@ -288,7 +289,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                   {getFieldDecorator('severity', {
                      
                   })(
-                      <Select>
+                      <Select placeholder='请选择级别'>
                         <Option value="50">紧急</Option>
                         <Option value="40">主要</Option>
                         <Option value="30">次要</Option>
@@ -304,6 +305,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                 <Item
                   {...formItemLayout}
                   label='发生时间'
+                  wrapperCol={{span: 14}}
                 >
                   {getFieldDecorator('dateTime', {
                      
@@ -318,9 +320,10 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                   label='对应状态'
                 >
                   {getFieldDecorator('status', {
-                     
+                     initialValue: '-1'
                   })(
                       <Select>
+                        <Option value="-1">所有状态</Option>
                         <Option value="0">新告警</Option>
                         <Option value="40">已确认</Option>
                         <Option value="150">处理中</Option>
@@ -337,7 +340,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                   {getFieldDecorator('duration', {
                      
                   })(
-                      <Select>
+                      <Select placeholder='请选择级别'>
                         <Option value="entityName">0-1h</Option>
                         <Option value="tag">2-3h</Option>
                         <Option value="description">4-5h</Option>
@@ -349,7 +352,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
             <Item wrapperCol={{ span: 10, offset: 2 }}>
               <Button type="primary" size="default" htmlType="submit" onClick={ (e) => {onOk(e, form)} }>搜索</Button>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <Button type="ghost" size="default" onClick={ () => {form.resetFields()} }>重置</Button>
+              <Button type="primary" size="default" onClick={ () => {form.resetFields()} }>重置</Button>
             </Item>
           </Form>
           {!haveQuery ? <div className={styles.alertListInfo}>暂无数据，请先选择查询条件</div> :

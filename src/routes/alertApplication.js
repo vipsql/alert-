@@ -4,9 +4,7 @@ import AlertApplication from '../components/alertApplication'
 
 function alertApplication(dispatch){
   return (
-    <div>
       <AlertApplication />
-    </div>
   )
 }
 alertApplication.propTypes = {

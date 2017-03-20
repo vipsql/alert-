@@ -88,7 +88,7 @@ class ListTable extends Component {
             </td>
           )
         }
-        if(key == 'lastOccurtime'){
+        if(key == 'lastOccurTime'){
           const date = new Date(data)
           data = formatDate(data)
           td = <td key={key}>{data}</td>
@@ -142,7 +142,7 @@ class ListTable extends Component {
       keys.forEach((key, index) => {
         let data = item[key];
         let td;
-        if(key == 'lastOccurtime'){
+        if(key == 'lastOccurTime'){
           const date = new Date(data)
           data = formatDate(data)
           td = <td key={key}>{data}</td>
@@ -218,6 +218,7 @@ class ListTable extends Component {
 
           item.children !== undefined && item.children.forEach( (childItem, index) => {
             
+            const colorClass = index % 2 === 0 ? styles['even'] : styles['odd']
             const tds = getTds(childItem, keys)
 
             // 如果有子告警
@@ -236,7 +237,7 @@ class ListTable extends Component {
             const trKey = 'td' + index
             const tdKey = 'td' + index
             childtrs.push(
-                <tr key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread && styles.hiddenChild}>
+                <tr key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread ? styles.hiddenChild : colorClass}>
                   {
                     sourceOrigin !== 'alertQuery' ?
                     <td key={tdKey}><input type="checkbox" checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc}/></td>
@@ -256,6 +257,8 @@ class ListTable extends Component {
     }else{
 
       data.length > 0 && data.children === undefined && data.forEach( (item, index) => {
+
+        const colorClass = index % 2 === 0 ? styles['even'] : styles['odd']
         const keys = colsKey
         const tds = getTds(item, keys)
         let commonTrs = []
@@ -273,7 +276,7 @@ class ListTable extends Component {
           childs = null
         }
         commonTrs.push(
-          <tr key={item.id}>
+          <tr key={item.id} className={colorClass}>
             {
               sourceOrigin !== 'alertQuery' && Object.keys(checkAlert).length !== 0 ?
               <td key={index}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>

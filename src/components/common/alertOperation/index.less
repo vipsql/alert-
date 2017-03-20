@@ -27,7 +27,7 @@
             width: 140px;
         }
         &:global.ant-select{
-            color: #6c7480;
+            //color: #6c7480;
             font-size: 13px;
             font-weight: normal;
             :global .ant-select-selection--single {
@@ -77,10 +77,16 @@
         height: 30px;
         display: inline-block;
         border-radius: 3px;
-        border: 1px solid #d5ddeb;
-        background-color: #fff;
+        // border: 1px solid #d5ddeb;
+        // background-color: #fff;
+        background-color: #0d5990;
+        border: 1px solid #297ebb;
         margin-right: 10px;
         cursor: pointer;
+        transition: border .2s;
+        &:hover{
+            border-color: #2bb4f4;
+        }
         &.rightBtn{
             float: right;
         }
@@ -91,7 +97,7 @@
             font-size: 13px;
             font-weight: normal;
             text-align: center;
-            color: #6c7480;
+            color: #5994d6;
             &.col{
                 padding-left: 5px;
             }
@@ -101,7 +107,7 @@
             display: inline-block;
             top: 2px;
             padding-left: 8px;
-            color: #a1a8b2;
+            color: #7dbae6;
         }
         .arrow{
             position: relative;
@@ -139,7 +145,7 @@
         margin: 10px 10px 15px 10px;
         width: 180px;
         & > p{
-            color: #babdc7;
+            color: #5994d6;
             font-size: 13px;
             font-weight: 600;
             margin-bottom: 4px;
@@ -150,7 +156,7 @@
                 display: inline-block;
                 height: 1px;
                 width: 90%;
-                background: #e9edf2;
+                background: #5994d6;
             }
         }
         .inlineItem {

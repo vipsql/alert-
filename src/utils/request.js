@@ -61,10 +61,12 @@ export default function request (url, options) {
       data: options.body || undefined,
       processData: options.method === 'get',
       dataType: 'JSON'
-    }).done((data) => {
+    }).done( (data) => {
       if (!data.result) {
         console.error(data.message);
       }
       return data
+    }).fail( (response, error,) => {
+
     })
 }

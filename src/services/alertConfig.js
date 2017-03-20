@@ -29,3 +29,43 @@ export async function deleteApp(id) {
 
   return request('/api/v2/application/updateStatus', options)
 }
+
+// 查询配置种类
+export async function typeQuery(type) {
+  return request(`/api/v2/applicationType/query?type=${type}`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
+
+// 新增
+export async function add(params) {
+  const options = {
+    body: JSON.stringify(params),
+    method: 'POST'
+  }
+
+  return request('/api/v2/application/create', options)
+}
+
+// 编辑
+export async function update(params) {
+  const options = {
+    body: JSON.stringify(params),
+    method: 'POST'
+  }
+
+  return request('/api/v2/application/update', options)
+}
+
+// 详情
+export async function view(id) {
+  return request(`/api/v2/application/getAppDetail/${id}`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}

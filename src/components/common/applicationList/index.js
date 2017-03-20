@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import { Button, Spin, Switch } from 'antd';
 import styles from './index.less'
 import { classnames } from '../../../utils'
+import { Link } from 'dva/router'
 
 class applicationList extends Component {
   constructor(){
@@ -62,7 +63,7 @@ class applicationList extends Component {
     }
 
     // 生成每一列的参数
-    const getTds = (item, keys) => {
+    const getTds = (item, keys, itemIndex) => {
       let tds = [];
       keys.forEach((key, index) => {
         let data = item[key];
@@ -90,9 +91,9 @@ class applicationList extends Component {
         }
         if(key == 'operation') {
           td = <td key={key}>
-           <Button size='small'>编辑</Button>
+           <Link to={`alertConfig/alertApplication/applicationView/edit/${item['id']}`}><Button className={styles.editBtn} size='small'>编辑</Button></Link>
            &nbsp;&nbsp;
-           <Button size='small' disabled={item['status']} onClick={ () => {deleteClick(item['id'])}}>删除</Button>
+           <Button size='small' className={styles.delBtn} disabled={item['status']} onClick={ () => {deleteClick(item)}}>删除</Button>
           </td>
         } 
         if(key == 'displayName') {
@@ -100,17 +101,18 @@ class applicationList extends Component {
         }
         tds.push(td)
       })
-      tds.unshift(<td width="10" key='space-col-td'></td>)
+      tds.unshift(<td width="30" key='space-col-td'></td>)
       return tds
     }
 
     applicationData.length > 0 && applicationData.forEach( (item, index) => {
+        const colorClass = index % 2 === 0 ? styles['even'] : styles['odd']
         const keys = colsKey
-        const tds = getTds(item, keys)
+        const tds = getTds(item, keys, index)
         let commonTrs = []
 
         commonTrs.push(
-            <tr key={item.id}>
+            <tr key={item.id} className={colorClass}>
                 {tds}
             </tr>
         )
@@ -124,7 +126,7 @@ class applicationList extends Component {
           <table className={styles.listTable}>
             <thead>
               <tr> 
-                <th width='10' key='space-col'></th>
+                <th width='30' key='space-col'></th>
                 {theads}
               </tr>
             </thead>
