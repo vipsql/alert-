@@ -4,7 +4,7 @@ export async function queryAlertListTime(data) {
     body: JSON.stringify(data),
     method: 'post'
   }
-  return request('/arbiter/rest/v1/alert/queryLastTimeline', options)
+  return request('/api/v2/incident/queryLastTimeline', options)
 }
 // 查询告警柱状图
 export async function queryAlertBar(data) {
@@ -14,7 +14,7 @@ export async function queryAlertBar(data) {
     method: 'post'
   }
 
-  return request('/arbiter/rest/v1/alert/buckets', options)
+  return request('/api/v2/incident/buckets', options)
 }
 
 // 查询告警列表(未分组)
@@ -24,7 +24,7 @@ export async function queryAlertList(data) {
     method: 'post'
   }
 
-  return request('/arbiter/rest/v1/alert/queryLastTimeline', options)
+  return request('/api/v2/incident/queryLastTimeline', options)
 }
 
 export async function queryChild(param) {
@@ -32,5 +32,5 @@ export async function queryChild(param) {
     method: 'GET'
   }
 
-  return request(`/arbiter/rest/v1/alert/query/childs?alertId=${param.alertId}&begin=${param.begin}&end=${param.end}`, options)
+  return request(`/api/v2/incident/query/childs?alertId=${param.alertId}&begin=${param.begin}&end=${param.end}`, options)
 }

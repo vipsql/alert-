@@ -2,7 +2,7 @@ import { request, packURL } from '../utils'
 import querystring from 'querystring';
 
 export async function getFormOptions() {
-    return request(`/arbiter/rest/v1/dataService/wos`, {
+    return request(`/api/v2/dataService/wos`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -11,7 +11,7 @@ export async function getFormOptions() {
 }
 
 export async function dispatchForm(param) {
-    return request(`/arbiter/rest/v1/dataService/assignWO`, {
+    return request(`/api/v2/dataService/assignWO`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -21,7 +21,7 @@ export async function dispatchForm(param) {
 }
 
 export async function close(param) {
-    return request(`/arbiter/rest/v1/alert/close`, {
+    return request(`/api/v2/incident/close`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export async function close(param) {
 }
 
 export async function merge(param) {
-    return request(`/arbiter/rest/v1/alert/megar`, {
+    return request(`/api/v2/incident/megar`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ export async function merge(param) {
 }
 
 export async function relieve(param) {
-    return request(`/arbiter/rest/v1/alert/decompose`, {
+    return request(`/api/v2/incident/decompose`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

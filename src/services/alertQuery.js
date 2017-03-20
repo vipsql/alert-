@@ -10,7 +10,7 @@ export async function querySource() {
 }
 
 export async function queryAlertList(params) {
-    return request(`/arbiter/rest/v1/alert/query/filters`, {
+    return request(`/api/v2/incident/query/filters`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ export async function queryAlertList(params) {
 }
 
 export async function queryCount(params) {
-    return request(`/arbiter/rest/v1/alert/query/filters`, {
+    return request(`/api/v2/incident/query/filters`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ export async function queryCount(params) {
 }
 
 export async function queryCloumns() {
-    return request(`/arbiter/rest/v1/alert/query/filters`, {
+    return request(`/api/v2/incident/query/filters`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

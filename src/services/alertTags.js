@@ -2,7 +2,7 @@ import { request, packURL } from '../utils'
 import querystring from 'querystring';
 
 export async function isSetUserTags(userId) {
-    return request(`/arbiter/rest/v1/alert/tags/isSet/${userId}`, {
+    return request(`/api/v2/incident/tags/isSet/${userId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -11,7 +11,7 @@ export async function isSetUserTags(userId) {
 }
 
 export async function getTagsByUser(userId) {
-    return request(`/arbiter/rest/v1/alert/tags/${userId}`, {
+    return request(`/api/v2/incident/tags/${userId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ export async function getTagsByUser(userId) {
 }
 
 export async function getAllTags() {
-    return request(`/arbiter/rest/v1/alert/tags/all`, {
+    return request(`/api/v2/incident/tags/all`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ export async function getAllTags() {
 }
 
 export async function setUserTags(tagObject) {
-    return request(`/arbiter/rest/v1/alert/tags`, {
+    return request(`/api/v2/incident/tags`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

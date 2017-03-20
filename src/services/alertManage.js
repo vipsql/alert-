@@ -1,7 +1,7 @@
 import { request } from '../utils'
 
 export async function queryDashbord(parmas) {
-  return request(`/arbiter/rest/v1/alert/getLastOneHourAlertData`, {
+  return request(`/api/v2/incident/getLastOneHourAlertData`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
