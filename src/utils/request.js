@@ -62,12 +62,9 @@ export default function request (url, options) {
       data: options.body || undefined,
       processData: options.method === 'get',
       dataType: 'JSON'
-    }).done( (data, b, c) => {
-      // return {
-      //   result: true,
-      //   data: data
-      // }
+    }).done( (data) => {
+      return data
     }).fail( (xhr, textStatus, errorThrown) => {
-
+      return xhr.responseJson
     })
 }
