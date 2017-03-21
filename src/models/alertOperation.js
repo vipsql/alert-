@@ -33,13 +33,13 @@ const initalState = {
             type: 0, // id 
             name: '常规',
             cols: [
-                {id: 'entity', name: '对象', checked: false,},
-                {id: 'alertName', name: '告警名称', checked: false,},
-                {id: 'entityName', name: '告警来源', checked: false,},
+                {id: 'entityName', name: '对象', checked: false,},
+                {id: 'name', name: '告警名称', checked: false,},
+                {id: 'source', name: '告警来源', checked: false,},
                 {id: 'status', name: '告警状态', checked: false,},
                 {id: 'description', name: '告警描述', checked: false,},
                 {id: 'lastTime', name: '持续时间', checked: false,},
-                {id: 'lastOccurtime', name: '发生时间', checked: false,}
+                {id: 'lastOccurTime', name: '发生时间', checked: false,}
             ]
         },
         // {
@@ -365,10 +365,18 @@ export default {
       // 列改变时触发
       setColumn(state, {payload: selectCol}) {
         const { columnList } = state;
+         let arr = []
         const newList = columnList.map( (group) => {
             group.cols.map( (col) => {
                 if (typeof selectCol !== 'undefined' && col.id === selectCol) {
                     col.checked = !col.checked;
+                }
+                if (col.checked) {
+                    if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime') {
+                        arr.push({ key: col.id, title: col.name, width: 150, order: true }) // order字段先定死
+                    } else {
+                        arr.push({ key: col.id, title: col.name, width: 150 }) // width先定死
+                    }
                 }
                 return col;
             })
@@ -378,22 +386,22 @@ export default {
         return { ...state, columnList: newList }
       },
       // 过滤选择的列为指定格式
-      filterColumn(state) {
-          const { columnList } = state;
-          let arr = []
-          columnList.forEach( (group) => {
-            group.cols.map( (col) => {
-                if (col.checked) {
-                    if (col.id == 'entityName' || col.id == 'lastTime' || col.id == 'lastOccurtime') {
-                        arr.push({ key: col.id, title: col.name, width: 150, order: true }) // order字段先定死
-                    } else {
-                        arr.push({ key: col.id, title: col.name, width: 150 }) // width先定死
-                    }
-                }
-            })
-          })
-          return { ...state, selectColumn: arr }
-      },
+    //   filterColumn(state) {
+    //       const { columnList } = state;
+    //       let arr = []
+    //       columnList.forEach( (group) => {
+    //         group.cols.map( (col) => {
+    //             if (col.checked) {
+    //                 if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurtime') {
+    //                     arr.push({ key: col.id, title: col.name, width: 150, order: true }) // order字段先定死
+    //                 } else {
+    //                     arr.push({ key: col.id, title: col.name, width: 150 }) // width先定死
+    //                 }
+    //             }
+    //         })
+    //       })
+    //       return { ...state, selectColumn: arr }
+    //   },
       // 设置合并子列表
       setMergeInfoList(state, { payload }) {
           return { ...state, mergeInfoList: payload }

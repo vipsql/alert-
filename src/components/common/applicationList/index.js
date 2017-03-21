@@ -134,7 +134,7 @@ class applicationList extends Component {
               {
                 applicationData.length > 0 ? tbodyCon :
                 <tr>
-                  <td colSpan={columns.length + 1}>暂无数据</td>
+                  <td colSpan={columns.length + 1} style={{textAlign: 'center'}}>暂无数据</td>
                 </tr>
               }
             </tbody>

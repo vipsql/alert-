@@ -1,8 +1,9 @@
 import { request } from '../utils'
+import {stringify} from 'qs'
 
 // 查询应用列表
 export async function queryConfigAplication(params) {
-  return request(`/api/v2/application/query?type=${params.type}&sortKey=${params.orderBy}&sortType=${params.orderType}`, {
+  return request(`/api/v2/application/query?${stringify(params)}`, {
       method: 'GET',
       headers: {
           'Content-Type': 'application/json',

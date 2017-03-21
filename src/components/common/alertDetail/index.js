@@ -46,7 +46,7 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
     return (
         <div className={styles.main}>
             <div className={styles.detailHead}>
-                <p>{currentAlertDetail.alertName}</p>
+                <p>{currentAlertDetail.entityName}</p>
                 <i className={classnames(styles.shanChu, shanchuClass)} onClick={closeDeatilModal}></i>
                 <AlertOperation position="detail" {...operateProps}/>
             </div>
@@ -54,14 +54,14 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                 <div className={styles.infoBody}>
                     <p>基本信息</p>
                     <ul>
-                        <li><span>ID:</span><span>{currentAlertDetail.alertId}</span></li>
+                        <li><span>ID:</span><span>{currentAlertDetail.id}</span></li>
                         <li><span>状态:</span><span>{currentAlertDetail.status}<i className={classnames(setClass, styles.stateClass)}></i></span></li>
                         <li><span>级别:</span><span className={severityColor}>{currentAlertDetail.severity}</span></li>
                         <li><span>来源:</span><span>{currentAlertDetail.entityName}</span></li>
                         <li><span>描述:</span><span>{currentAlertDetail.description}</span></li>
-                        <li><span>首次发生:</span><span>{dateTransfer(currentAlertDetail.firstOccurtime, currentAlertDetail.lastOccurtime).begin}</span></li>
-                        <li><span>最后发生:</span><span>{dateTransfer(currentAlertDetail.firstOccurtime, currentAlertDetail.lastOccurtime).end}</span></li>
-                        <li><span>持续时间:</span><span>{dateTransfer(currentAlertDetail.firstOccurtime, currentAlertDetail.lastOccurtime).continueTime}小时</span></li>
+                        <li><span>首次发生:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).begin}</span></li>
+                        <li><span>最后发生:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).end}</span></li>
+                        <li><span>持续时间:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).continueTime}小时</span></li>
                         <li><span>报警次数:</span><span>{currentAlertDetail.count}</span></li>
                         <li><span>负责人:</span><span>{currentAlertDetail.responsiblePerson ? currentAlertDetail.responsiblePerson : '暂无'}</span></li>
                         <li><span>负责部门:</span><span>{currentAlertDetail.responsibleDepartment ? currentAlertDetail.responsibleDepartment : '暂无'}</span></li>
@@ -79,7 +79,7 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                                         {getFieldDecorator('formContent', {
                                             initialValue: operateForm
                                         })(
-                                            <Input />
+                                            <Input placeholder='文本'/>
                                         )}
                                     </Form.Item>
                                     <div className={styles.formMain}>
@@ -99,8 +99,8 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                     <p>丰富信息</p>
                     <ul>
                         {
-                            currentAlertDetail.propertys !== undefined && Array.isArray(currentAlertDetail.propertys) && currentAlertDetail.propertys.length !== 0 && currentAlertDetail.propertys.map( (item, index) => {
-                                return <li key={index}><span>{item.code}</span><span>{item.value}</span></li>
+                            currentAlertDetail.properties !== undefined && Array.isArray(currentAlertDetail.properties) && currentAlertDetail.properties.length !== 0 && currentAlertDetail.properties.map( (item, index) => {
+                                return <li key={index}><span>{item.name}</span><span>{item.val}</span></li>
                             })
                         }
                     </ul>

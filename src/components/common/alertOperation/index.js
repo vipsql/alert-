@@ -29,7 +29,7 @@ const alertOperation = ({position, columnList, selectGroup, checkCloumFunc, reli
                                 <p>{group.name}</p>
                                 {
                                     group.cols.map( (item, index) => {
-                                        if (item.id === 'entity' || item.id === 'alertName') {
+                                        if (item.id === 'entityName' || item.id === 'name') {
                                             return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={true} disabled={true} >{item.name}</Checkbox></div>
                                         } else {
                                             return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={item.checked} onChange={ (e) => {

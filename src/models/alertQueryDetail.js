@@ -18,13 +18,14 @@ const initalState = {
             type: 0, // id 
             name: '常规',
             cols: [
-                {id: 'entity', name: '对象', checked: false,},
-                {id: 'alertName', name: '告警名称', checked: false,},
-                {id: 'entityName', name: '告警来源', checked: false,},
-                {id: 'status', name: '告警状态', checked: false,},
+                {id: 'entityName', name: '对象', checked: true,},
+                {id: 'name', name: '告警名称', checked: false,},
+                {id: 'source', name: '告警来源', checked: false,},
+                {id: 'status', name: '告警状态', checked: true,},
                 {id: 'description', name: '告警描述', checked: false,},
+                {id: 'count', name: '次数', checked: false,},
                 {id: 'lastTime', name: '持续时间', checked: false,},
-                {id: 'lastOccurtime', name: '发生时间', checked: false,}
+                {id: 'lastOccurTime', name: '发生时间', checked: false,}
             ]
         },
     ],
@@ -96,17 +97,17 @@ export default {
     *openDetailModal({payload}, {select, put, call}) {
       const viewDetailAlertId = yield select( state => state.alertQuery.viewDetailAlertId )
       
-      if (typeof viewDetailAlertId === 'number') {
+      if ( viewDetailAlertId ) {
         const detailResult = yield queryDetail(viewDetailAlertId);
-        if ( typeof detailResult.data !== 'undefined' ) {
+        if ( typeof detailResult !== 'undefined' ) {
           yield put({
             type: 'setDetail',
-            payload: detailResult.data || {}
+            payload: detailResult || {}
           })
-          if (detailResult.data.orderInfo) {
+          if (detailResult.orderInfo) {
             yield put({
               type: 'setFormData',
-              payload: detailResult.data.orderInfo
+              payload: detailResult.orderInfo
             })
           }
           yield put({
@@ -196,27 +197,26 @@ export default {
             }
         })
         const columnResult = yield call(queryCloumns)
-        if (columnResult.data !== undefined) {
-
-        } else {
-          console.error('扩展字段查询失败')
+        if (columnResult === undefined) {
+            console.error('扩展字段查询失败')
         }
-        yield put({ type: 'initColumn', payload: columns})
+        yield put({ type: 'initColumn', payload: {baseCols: columns, extend: columnResult || {}}})
+        
     },
     // 列定制
     *checkColumn({payload}, {select, put, call}) {
         yield put({ type: 'setColumn', payload: payload })
-        const selectColumn = yield select(state => state.alertOperation.selectColumn)
+        const selectColumn = yield select(state => state.alertQueryDetail.selectColumn)
         yield put({ type: 'alertQuery/customCols', payload: selectColumn})
     }
   },
 
   reducers: {
     // 列定制初始化
-    initColumn(state, {payload: columns}) {
+    initColumn(state, {payload: {baseCols, extend}}) {
         const { columnList } = state;
         let newList = columnList;
-        columns.forEach( (column, index) => {
+        baseCols.forEach( (column, index) => {
             newList.forEach( (group) => {
                 group.cols.forEach( (col) => {
                   if (column.key === col.id) {
@@ -225,7 +225,12 @@ export default {
                 }) 
             })
         })
-        
+        if (Object.keys(extend).length !== 0) {
+            extend.cols.forEach( (col) => {
+                col.checked = false;
+            })
+            newList.push(extend)
+        }
         return { ...state, columnList: newList }
     },
     // 列改变时触发
@@ -238,7 +243,7 @@ export default {
                   col.checked = !col.checked;
               }
               if (col.checked) {
-                  if (col.id == 'entityName' || col.id == 'lastTime' || col.id == 'lastOccurtime') {
+                  if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count') {
                       arr.push({ key: col.id, title: col.name, width: 150, order: true }) // order字段先定死
                   } else {
                       arr.push({ key: col.id, title: col.name, width: 150 }) // width先定死

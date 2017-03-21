@@ -16,7 +16,7 @@ const closeModal = ({currentData, closeCloseModal, clickDropdown, onOk, onCancal
       <Button type="primary" onClick={ () => {
         onOk(closeMessage)
       }} >关闭</Button>
-      <Button type="ghost" onClick={ () => {
+      <Button type="ghost" className={styles.ghostBtn} onClick={ () => {
         onCancal()
       }}>取消</Button>
       </div>

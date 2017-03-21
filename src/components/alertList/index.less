@@ -4,8 +4,10 @@
 .alertListPage{
     position: relative;
     margin-top: 15px;
-    background: white;
-    border: 1px solid #e4e7eb;
+    //background: white;
+    //border: 1px solid #e4e7eb;
+    background: #143b67;
+    border: 1px solid #143b67;
     border-radius: 3px;
     .levelBar{
         position: absolute;
@@ -37,13 +39,15 @@
     width: 40%;
     top: 25px;
     right: 13px;
-    bottom: 50px;
+    bottom: 20px;
     transition: transform .3s ease-out;
     overflow: hidden;
     transform: translate(105%);
-    background: #fff;
+    //background: #fff;
+    background: #1d6aa7;
     z-index: 999;
-    box-shadow: #d7dce4 0px 0px 30px;
+    //box-shadow: #d7dce4 0px 0px 30px;
+    box-shadow: #163b64 0px 0px 30px;
     border-radius: 4px;
     &.show{
         transform: translate(0);
@@ -55,7 +59,8 @@
         top: 42px;
         width: 120%;
         height: 1px;
-        background: #d5ddeb;
+        //background: #d5ddeb;
+        background: #245893;
     }
 
 }
@@ -80,13 +85,31 @@
   }
 }
 .loadMore{
-  display: block;
-  margin: 10px auto;
+  background: #174170;
+  button{
+    position: relative;
+    margin: 10px 50%;
+    background: #153960;
+    border: 1px solid #296193;
+    color: #4990c4;
+    font-size: 13px;
+    transition: all 0.5s;
+    &:hover{
+        border-color: #316fb4;
+        background: #153960;
+        color: #316fb4;
+        box-shadow: 1px 1px 1px #17375d;
+        top: -1px;
+        left: -1px;
+    }
+  }
 }
 .listTimeTable{
   width: 100%;
   border-collapse: collapse;
-
+  .checkstyle{
+    text-align: center;
+  }
   thead{
     tr{
       th{
@@ -288,7 +311,8 @@
         position: relative;
         margin-right: 8px;
         display: inline-block;
-        border: 1px solid #d5ddeb;
+        //border: 1px solid #d5ddeb;
+        border: 1px solid #297ebb;
         height: 30px;
         width: 52px;
         //top: -11px;
@@ -297,7 +321,8 @@
         cursor: pointer;
         .hopper{
             position: relative;
-            color: #8c95a1;
+            //color: #8c95a1;
+            color: #69c1ff;
             top: 2px;
             left: 7px;
         }
@@ -306,7 +331,8 @@
             display: inline-block;
             top: 2px;
             left: 13px;
-            color: #b0bdd0;
+            //color: #b0bdd0;
+            color: #69c1ff;
             text-align: center;
         }
         .selectModalMain{

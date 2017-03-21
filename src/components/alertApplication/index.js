@@ -86,8 +86,8 @@ const alertApplication = ({dispatch, alertConfig}) => {
 
     return (
         <div className={styles.myAppTabs}>
-            <Tabs defaultActiveKey="1" type='line' onChange={ (tabKey) => {tabsChange(tabKey)}}>
-                <TabPane tab="接入" key="1">
+            <Tabs defaultActiveKey="0" type='line' onChange={ (tabKey) => {tabsChange(tabKey)}}>
+                <TabPane tab="接入" key="0">
                     <ApplicationList {...appListProps} />
                     <div className={styles.addBtn}>
                         <Button type="primary" className={styles.appBtn} onClick={ () => {
@@ -95,7 +95,7 @@ const alertApplication = ({dispatch, alertConfig}) => {
                         }}><span>添加应用</span></Button>
                     </div>
                 </TabPane>
-                <TabPane tab="接出" key="2">
+                <TabPane tab="接出" key="1">
                     <ApplicationList {...appListProps} />
                     <div className={styles.addBtn}>
                         <Button type="primary" className={styles.appBtn} onClick={ () => {

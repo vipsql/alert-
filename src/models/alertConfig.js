@@ -71,42 +71,7 @@ const initalState ={
     title: '操作',
   }],
 
-  applicationData: [
-    {
-      "id": "58c7b19f5b71a7397c7fc1e9",
-      "tenant": "82f4dd1075454c0090969cdbdea28b8e",
-      "status": 1,
-      "integration": "shell",
-      "applyType": {
-        "id": "58c6817f5b71a73b448ccee8",
-        "name": "rest",
-        "type": "0",
-        "appType": "监控类"
-      },
-      "displayName": "基础资源监控报警",
-      "appKey": "aaaaaa",
-      "type": 0,
-      "builtIn": 1,
-      "createDate": 1489482143206
-    },
-    {
-      "id": "58c7b1b35b71a7397c7fc1ea",
-      "tenant": "82f4dd1075454c0090969cdbdea28b8e",
-      "status": 0,
-      "integration": "shelsssssl",
-      "applyType": {
-        "id": "58c6817f5b71a73b448ccee8",
-        "name": "rest",
-        "type": "0",
-        "appType": "监控类"
-      },
-      "displayName": "rest测试",
-      "appKey": "khsadhasjhkjhfas",
-      "type": 0,
-      "builtIn": 1,
-      "createDate": 1489482163782
-    },
-  ],
+  applicationData: [],
 
   orderBy: undefined, // 排序字段
   orderType: undefined, // 1升序
@@ -253,7 +218,7 @@ export default {
     *queryAplication({payload}, {select, put, call}) {
 
       yield put({ type: 'toggleLoading', payload: true })
-
+      
       var { type, orderBy, orderType } = yield select( state => {
         return {
           'type': state.alertConfig.applicationType,
@@ -272,26 +237,22 @@ export default {
       }
 
       const params = {
-        type,
-        orderType,
-        orderBy
+        type: type,
+        sortType: orderType,
+        orderBy: orderBy
       }
 
-      // if (payload !== undefined) {
-      //   const appResult = yield call(queryConfigAplication, params)
-      //   if (appResult.result) {
-      //     yield put({ type: 'setApplicationData', payload: {
-      //       applicationData: appResult.data || [],
-      //       applicationType: type,
-      //       orderBy: orderBy,
-      //       orderType: orderType
-      //     }})
-      //   } else {
-      //     yield message.error(`${appResult.message}`, 2)
-      //   }
-      // } else {
-      //   console.error('config type can not be undefined')
-      // }
+      const appResult = yield call(queryConfigAplication, params)
+      if (appResult !== undefined) {
+        yield put({ type: 'setApplicationData', payload: {
+          applicationData: appResult || [],
+          applicationType: type,
+          orderBy: orderBy,
+          orderType: orderType
+        }})
+      } else {
+        yield message.error(`${appResult.message}`, 2)
+      }
 
       yield put({ type: 'toggleLoading', payload: false })
     },
@@ -319,7 +280,7 @@ export default {
     *changeStatus({payload}, {select, put, call}) {
       if (payload !== undefined && payload.id !== undefined && payload.status !== undefined) {
         const statusResult = yield call(changeAppStatus, payload)
-        if (statusResult.result) {
+        if (statusResult) {
           yield put({ 
             type: 'changeAppStatus', 
             payload: {

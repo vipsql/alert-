@@ -117,7 +117,7 @@ class ListTable extends Component {
           }
           td = <td key={key}>{data}</td>
         }
-        if(key == 'alertName') {
+        if(key == 'name') {
           td = <td key={key} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >
             {data}
             {
@@ -171,7 +171,7 @@ class ListTable extends Component {
           }
           td = <td key={key}>{data}</td>
         }
-        if(key == 'alertName') {
+        if(key == 'name') {
           td = <td key={key} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >{data}</td>
         } else {
           td = <td key={key}>{data}</td>
@@ -240,7 +240,7 @@ class ListTable extends Component {
                 <tr key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread ? styles.hiddenChild : colorClass}>
                   {
                     sourceOrigin !== 'alertQuery' ?
-                    <td key={tdKey}><input type="checkbox" checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc}/></td>
+                    <td key={tdKey} className={styles.checkstyle}><input type="checkbox" checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc}/></td>
                     :
                     undefined
                   }
@@ -279,7 +279,7 @@ class ListTable extends Component {
           <tr key={item.id} className={colorClass}>
             {
               sourceOrigin !== 'alertQuery' && Object.keys(checkAlert).length !== 0 ?
-              <td key={index}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
+              <td key={index} className={styles.checkstyle}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
               :
               undefined
             }
@@ -301,7 +301,7 @@ class ListTable extends Component {
               <tr>
                 {
                   sourceOrigin !== 'alertQuery' ?
-                  <th key="checkAll" width={60}><input type="checkbox" checked={selectedAll} onChange={toggleSelectedAll}/></th>
+                  <th key="checkAll" width={60} className={styles.checkstyle}><input type="checkbox" checked={selectedAll} onChange={toggleSelectedAll}/></th>
                   :
                   undefined
                 }
@@ -316,13 +316,13 @@ class ListTable extends Component {
               {
                 data.length > 0 ? tbodyCon :
                 <tr>
-                  <td colSpan={columns.length + 3}>暂无数据</td>
+                  <td colSpan={columns.length + 3} style={{textAlign: 'center'}}>暂无数据</td>
                 </tr>
               }
             </tbody>
           </table>
         </Spin>
-        {isShowMore && <Button className={styles.loadMore} onClick={loadMore}>显示更多</Button>}
+        {isShowMore && <div className={styles.loadMore}><Button onClick={loadMore}>显示更多</Button></div>}
       </div>
     )
   }

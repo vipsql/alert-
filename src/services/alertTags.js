@@ -2,7 +2,7 @@ import { request, packURL } from '../utils'
 import querystring from 'querystring';
 
 export async function isSetUserTags(userId) {
-    return request(`/api/v2/incident/tags/isSet/${userId}`, {
+    return request(`/api/v2/incident/tags/isSet`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

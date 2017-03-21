@@ -15,6 +15,7 @@ const Option = Select.Option;
 const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
 
     const { haveQuery, sourceOptions, queryCount } = alertQuery;
+    
     const { selectGroup, columnList } = alertQueryDetail
 
     const { getFieldDecorator, getFieldsValue } = form;
@@ -192,7 +193,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                         <p>{group.name}</p>
                         {
                             group.cols.map( (item, index) => {
-                                if (item.id === 'entity' || item.id === 'alertName') {
+                                if (item.id === 'entityName' || item.id === 'name') {
                                     return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={true} disabled={true} >{item.name}</Checkbox></div>
                                 } else {
                                     return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={item.checked} onChange={ (e) => {
@@ -222,10 +223,11 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
           if (formData.dateTime !== undefined && formData.dateTime.length !== 0) {
             formData.begin = formData.dateTime[0].toDate().getTime();
             formData.end = formData.dateTime[1].toDate().getTime();
+            delete formData.dateTime
           }
-          
+          console.log(formData)
           dispatch({
-            type: 'alertQuery/queryAlertList',
+            type: 'alertQuery/queryBefore',
             payload: formData
           })
           
@@ -268,13 +270,13 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                   label='告警来源'
                 >
                   {getFieldDecorator('source', {
-                     initialValue: '-1'
+                     initialValue: ''
                   })(
                       <Select>
-                          <Option value='-1'>所有来源</Option>
+                          <Option value=''>所有来源</Option>
                         {
-                          sourceOptions.map( (item) => {
-                            return <Option value={item.value}>{item.name}</Option>
+                          sourceOptions.map( (item, index) => {
+                            return <Option key={index} value={item.value}>{item.value}</Option>
                           })
                         }
                       </Select>
@@ -290,11 +292,10 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                      
                   })(
                       <Select placeholder='请选择级别'>
-                        <Option value="50">紧急</Option>
-                        <Option value="40">主要</Option>
-                        <Option value="30">次要</Option>
-                        <Option value="20">警告</Option>
-                        <Option value="10">提醒</Option>
+                        <Option value="0">正常</Option>
+                        <Option value="1">提醒</Option>
+                        <Option value="2">警告</Option>
+                        <Option value="3">紧急</Option>
                       </Select>
                   )}
                 </Item>
@@ -320,10 +321,10 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                   label='对应状态'
                 >
                   {getFieldDecorator('status', {
-                     initialValue: '-1'
+                     initialValue: ''
                   })(
                       <Select>
-                        <Option value="-1">所有状态</Option>
+                        <Option value="">所有状态</Option>
                         <Option value="0">新告警</Option>
                         <Option value="40">已确认</Option>
                         <Option value="150">处理中</Option>
@@ -340,10 +341,12 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                   {getFieldDecorator('duration', {
                      
                   })(
-                      <Select placeholder='请选择级别'>
-                        <Option value="entityName">0-1h</Option>
-                        <Option value="tag">2-3h</Option>
-                        <Option value="description">4-5h</Option>
+                      <Select placeholder='请选择持续时间'>
+                        <Option value="1">{`< 15min`}</Option>
+                        <Option value="2">{`15 ~ 30min`}</Option>
+                        <Option value="3">{`30 ~ 60min`}</Option>
+                        <Option value="4">{`1 ~ 4h`}</Option>
+                        <Option value="5">{`> 4h`}</Option>
                       </Select>
                   )}
                 </Item>
@@ -359,7 +362,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
           <div>
             <div className={styles.queryOperate}>
               <div className={styles.count}>
-                {`共${queryCount.total !== undefined ? queryCount.total : 0}个结果（紧急${queryCount.critical !== undefined ? queryCount.critical : 0}个、主要${queryCount.major !== undefined ? queryCount.major : 0}个、次要${queryCount.minor !== undefined ? queryCount.minor : 0}个、警告${queryCount.warning !== undefined ? queryCount.warning : 0}个、提醒${queryCount.information !== undefined ? queryCount.information : 0}个）`}
+                {`共${queryCount.total !== undefined ? queryCount.total : 0}个结果（紧急${queryCount.critical !== undefined ? queryCount.critical : 0}个、警告${queryCount.warning !== undefined ? queryCount.warning : 0}个、提醒${queryCount.information !== undefined ? queryCount.information : 0}个、正常${queryCount.ok !== undefined ? queryCount.ok : 0}个）`}
               </div>
               <div className={styles.groupMain}>
                   <Select className={classnames(styles.setGroup, styles.selectSingle)} placeholder="分组显示" value={selectGroup} onChange={ (value) => {
@@ -378,11 +381,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                       })
                   }}></i>
               </div>
-              <Popover placement='bottomRight' trigger="click" content={popoverContent} onClick={ () => {
-                dispatch({
-                    type: 'alertQueryDetail/initalColumn'
-                })
-              }}>
+              <Popover placement='bottomRight' trigger="click" content={popoverContent} >
                 <div className={classnames(styles.button, styles.rightBtn)}>
                     <i className={classnames(setClass, styles.setCol)}></i>
                     <p className={styles.col}>列定制</p>

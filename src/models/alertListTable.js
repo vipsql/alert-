@@ -31,15 +31,15 @@ const initvalState = {
     minuteToWidth: 5, //以分钟单位计算间隔
     data: [],
     columns: [{
-      key: 'entity',
+      key: 'entityName',
       title: '对象',
       width: 100,
     }, {
-      key: 'alertName',
+      key: 'name',
       title: '告警名称',
       width: 100,
     }, {
-      key: 'entityName',
+      key: 'source',
       title: '告警来源',
       width: 200,
       order: true
@@ -58,7 +58,7 @@ const initvalState = {
       title: '持续时间',
       order: true
     }, {
-      key: 'lastOccurtime',
+      key: 'lastOccurTime',
       title: '最后发送时间',
       order: true
     }],

@@ -9,26 +9,29 @@
         }
         position: absolute;
         z-index: 1050;
-        background-color: #fff;
+        background-color: #1d6aa7;
+        color: #6ac5fe;
+        //background-color: #fff;
         box-shadow: 0 1px 6px rgba(0,0,0,.2);
         border-radius: 4px;
-        left: 27%;
+        left: 26%;
         width: 55%;
         li{
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
             text-align: left;
             position: relative;
             display: block;
-            padding: 7px 16px;
-            color: rgba(0,0,0,.65);
+            padding: 7px 14px;
+            //color: rgba(0,0,0,.65);
+            color: #fff;
             white-space: nowrap;
             cursor: pointer;
             overflow: hidden;
             -webkit-transition: background .3s ease;
             transition: background .3s ease;
             &:hover{
-                background: #edf2f7;
+                //background: #edf2f7;
+                background-color: #3092d9;
             }
         }
     }
@@ -38,7 +41,6 @@
             vertical-align: top;
             & > label{
                 font-size: 14px;
-                font-weight: 600;
             }
         }
         & > div:last-child {
@@ -48,11 +50,23 @@
     }
 }
 
+.ghostBtn{
+    color: #fff;
+    background-color: #108ee9;
+    border-color: #108ee9;
+    &:hover{
+        color: #fff;
+        background-color: #49a9ee;
+        border-color: #49a9ee;
+    }
+}
+
 // common modal footer
 .modalFooter{
     height: 60px;
     line-height: 60px;
     margin: -10px -18px -10px -10px;
-    background: #f2f7fc;
+    //background: #f2f7fc;
+    background: #145e99;
     text-align: center;
 }

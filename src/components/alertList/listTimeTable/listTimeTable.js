@@ -281,7 +281,7 @@ class ListTimeTable extends Component {
 
               commonTrs.push(
                 <tr key={index} className={groupItem.isGroupSpread !== undefined && !groupItem.isGroupSpread && styles.hiddenChild}>
-                  <td key="checkbox"><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
+                  <td key="checkbox" className={styles.checkstyle}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
                   {tds}
                   <td key="timeDot">
                     <div className={styles.timeLineDot}>
@@ -316,7 +316,7 @@ class ListTimeTable extends Component {
             let keys = colsKey;
             
             const tdCheck = Object.keys(checkAlert).length !== 0 ? 
-              <td key="checkbox"><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td> 
+              <td key="checkbox" className={styles.checkstyle}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td> 
               : 
               undefined
             const tds = genTds(item, keys)
@@ -363,7 +363,7 @@ class ListTimeTable extends Component {
             <table width='100%' id="listTimeTable" className={styles.listTimeTable}>
               <thead>
                 <tr>
-                  <th key="checkAll" width='48'><input type="checkbox" checked={selectedAll} onChange={toggleSelectedAll}/></th>
+                  <th key="checkAll" width='48' className={styles.checkstyle}><input type="checkbox" checked={selectedAll} onChange={toggleSelectedAll}/></th>
                   <th width="20" key='space-col'></th>
                   <th width='10'></th>
                   {theads}
@@ -382,7 +382,7 @@ class ListTimeTable extends Component {
               </tbody>
             </table>
           </Spin>
-          {isShowMore && <Button className={styles.loadMore} onClick={loadMore}>显示更多</Button>}
+          {isShowMore && <div className={styles.loadMore}><Button onClick={loadMore}>显示更多</Button></div>}
         </div>
       )
     }

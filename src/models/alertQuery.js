@@ -27,15 +27,15 @@ const initalState = {
     data: [],
 
     columns: [{
-      key: 'entity',
+      key: 'entityName',
       title: '对象',
       width: 100,
     }, {
-      key: 'alertName',
+      key: 'name',
       title: '告警名称',
       width: 100,
     }, {
-      key: 'entityName',
+      key: 'source',
       title: '告警来源',
       width: 200,
       order: true
@@ -49,12 +49,13 @@ const initalState = {
     }, {
       key: 'count',
       title: '次数',
+      order: true
     }, {
       key: 'lastTime',
       title: '持续时间',
       order: true
     }, {
-      key: 'lastOccurtime',
+      key: 'lastOccurTime',
       title: '最后发送时间',
       order: true
     }],
@@ -209,12 +210,15 @@ export default {
     *alertQuerySetup({payload},{call, put, select}){
        yield put({ type: 'alertQueryDetail/toggleDetailModal', payload: false })
        yield put({ type: 'clear'})
+       // 列定制初始化
+       yield put({ type: 'alertQueryDetail/initalColumn'})
 
-       const optionsResult = yield call(querySource)
-       if (optionsResult.result) {
+       const options = yield call(querySource)
+       
+       if (options !== undefined) {
          yield put({
            type: 'setSourceOptions',
-           payload: optionsResult.data || [],
+           payload: options || [],
          })
        } else {
          yield message.error('查询告警来源失败', 3)
@@ -291,7 +295,7 @@ export default {
         ...currentQuery
       })
 
-      if(listData.result){
+      if(listData !== undefined){
         if(isGroup){
           
           yield put({
@@ -314,12 +318,12 @@ export default {
           yield put({
             type: 'updateAlertListToNoGroup',
             payload: {
-              info: listData.data.datas,
-              isShowMore: listData.data.hasNext,
+              info: listData.data,
+              isShowMore: listData.hasNext,
               isGroup: false,
               orderBy: orderBy,
               orderType: orderType,
-              queryCount: countData.result === true ? countData.data : {}
+              queryCount: countData !== undefined ? countData : {}
             }
           })
           yield put({
@@ -381,14 +385,14 @@ export default {
 
       const listReturnData = yield call(queryAlertList, params)
 
-      if (listReturnData.result) {
+      if (listReturnData !== undefined) {
 
-        listData = listData.concat(listReturnData.data.datas);
+        listData = listData.concat(listReturnData.data);
         
-        if (!listReturnData.data.hasNext) {
+        if (!listReturnData.hasNext) {
           yield put({
             type: 'updateShowMore',
-            payload: listReturnData.data.hasNext
+            payload: listReturnData.hasNext
           })
         }
 
@@ -410,7 +414,6 @@ export default {
     },
     //orderList排序
     *orderList({payload}, {select, put, call}) {
-      //yield put({ type: 'toggleOrder', payload: payload })
       yield put({ type: 'queryAlertList', payload: { isGroup: false, orderBy: payload.orderBy, orderType: payload.orderType } })   
     },
     //orderByTittle

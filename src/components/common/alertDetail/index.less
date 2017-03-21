@@ -7,20 +7,22 @@
         margin: 12px 12px 10px 18px;
         p{
             font-size: 14px;
-            color: #4c5159;
-            font-weight: 600;
+            //color: #4c5159;
+            color: #fff;
             //text-shadow: 0px 0px 1px #cfd0d1;
         }
         & > div {
             margin-bottom: 0px;
             margin-top: 22px;
             padding-left: 0px;
+            background: #1d6aa7;
         }
         .shanChu{
             position: absolute;
             top: -2px;
             right: 10px;
             cursor: pointer;
+            color: #5bb1ef
         }
     }
 
@@ -32,12 +34,16 @@
         height: 80%;
         &::-webkit-scrollbar-thumb {
             width: 7px;
-            background-color: #d3d4d6;
-            border-radius: 5px;
+            //background-color: #d3d4d6;
+            background-color: #1d6aa7;
+            border: 2px solid #153d5e;
+            border-radius: 7px;
         }
         &::-webkit-scrollbar {
             width: 7px;
             height: 7px;
+            background-color: #153d5e;
+            border-radius: 7px;
         }
         &::-webkit-scrollbar-track {
             width: 10px;
@@ -48,13 +54,16 @@
             padding: 15px 18px 15px 18px;
             margin-left: 18px;
             margin-right: 12px;
-            background: #f8fbfd;
-            border: 1px solid #e4e7eb;
+            // background: #f8fbfd;
+            // border: 1px solid #e4e7eb;
+            background: #145e99;
+            border: 1px solid #145e99;
             border-radius: 3px;
             width: 95%;
             & > p {
                 font-size: 14px;
-                color: #4c5159;
+                //color: #4c5159;
+                color: #fff;
                 font-weight: 600;
                 margin-bottom: 10px;
             }
@@ -66,12 +75,11 @@
                 & > span:first-child{
                     position: absolute;
                     left: 0;
-                    color: #acb2be;
-                    font-weight: bold;
+                    color: #81c5f6;
                 }
                 span{
-                    color: #828b9a;
-                    font-weight: bold;
+                    color: #fff;
+                    font-size: 13px;
                     &.jjLevel{
                         background: red;
                         padding: 5px 10px 5px 10px;
@@ -124,15 +132,20 @@
                         margin-right: 30px;
                     }
                     .editForm{
-                        color: #4082e6;
-                        border-bottom: 1px solid #acc4f2;
+                        // color: #4082e6;
+                        // border-bottom: 1px solid #acc4f2;
+                        color: #01b4ff;
+                        border-bottom: 1px solid #01b4ff;
                         line-height: 13px;
                         cursor: pointer;
                     }
                     & > button{
-                        &:global.ant-btn-primary > span{
-                            color: #fff;
-                        }
+                        color: #fff;
+                        background-color: #108ee9;
+                        border-color: #108ee9;
+                        // &:global.ant-btn-primary > span{
+                        //     color: #fff;
+                        // }
                     }
                 }
             }
@@ -144,30 +157,31 @@
                 cursor: pointer;
                 float: right;
                 .bianji{
-                    color: #4082e6;
+                    //color: #4082e6;
+                    color: #01b4ff;
                 }
                 span{
                     position: relative;
-                    font-size: 14px;
+                    font-size: 13px;
                     top: -2px;
-                    color: #4082e6;
-                    font-weight: 600;
+                    //color: #4082e6;
+                    color: #01b4ff;
                     margin-left: 5px;
-                    border-bottom: 1px solid #acc4f2;
+                    border-bottom: 1px solid #01b4ff;
                 }
             }
             .remarkOperate{
                 text-align: right;
                 & > button{
+                    color: #fff;
+                    background-color: #108ee9;
+                    border-color: #108ee9;
                     &:global.ant-btn-primary > span{
-                        color: #fff;
-                        font-size: 12px;
-                        font-weight: bold;
+                        font-size: 13px;
                     }
                     &:global.ant-btn-ghost > span{
-                        color: rgb(130, 139, 154);
-                        font-size: 12px;
-                        font-weight: bold;
+                        //color: rgb(130, 139, 154);
+                        font-size: 13px;
                     }
                 }
             }
