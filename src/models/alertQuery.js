@@ -210,7 +210,9 @@ export default {
        yield put({ type: 'alertQueryDetail/toggleDetailModal', payload: false })
        yield put({ type: 'clear'})
 
+
        const optionsResult = yield call(querySource)
+       console.log(optionsResult)
        if (optionsResult.result) {
          yield put({
            type: 'setSourceOptions',

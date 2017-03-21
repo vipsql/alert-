@@ -1,5 +1,50 @@
-[
-  {
-    
-  }
+{	"path": "root",
+	"children":[
+	{
+	"path": "unit",
+	"children": [
+	{
+	"path": "unit/mvrg547t7w",
+	"value": 1,
+	"maxSeverity": "10"
+	},
+	{
+	"path": "unit/mvrg547t7w2",
+	"value": 3,
+	"maxSeverity": "20"
+	}
+	],
+	"name": "单位",
+	"value": 2
+	},
+	{
+	"path": "responsible",
+	"children": [
+	{
+	"path": "responsible/4771i8",
+	"value": 1,
+	"maxSeverity": "30"
+	}
+	],
+	"name": "责任人",
+	"value": 1
+	},
+	{
+	"path": "location",
+	"children": [
+	{
+	"path": "location/7l05cap4nocgaombrnya",
+	"value": 1,
+	"maxSeverity": "40"
+	},
+	{
+	"path": "location/eee",
+	"value": 2,
+	"maxSeverity": "50"
+	}
+	],
+	"name": "地理位置",
+	"value": 3
+	}
 ]
+}
