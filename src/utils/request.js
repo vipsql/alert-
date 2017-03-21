@@ -54,6 +54,7 @@ function checkStatus(response) {
 export default function request (url, options) {
     
     const httpUrl = isApiUrl(url)
+
     return Ajax.ajax({
       url: httpUrl,
       method: options.method || 'get',
@@ -62,14 +63,11 @@ export default function request (url, options) {
       processData: options.method === 'get',
       dataType: 'JSON'
     }).done( (data, b, c) => {
-      //console.log(c)
-      return {
-        result: true,
-        data: data
-      }
+      // return {
+      //   result: true,
+      //   data: data
+      // }
     }).fail( (xhr, textStatus, errorThrown) => {
-      console.log(xhr);
-      //console.log(textStatus);
-      //console.log(typeof errorThrown)
+
     })
 }
