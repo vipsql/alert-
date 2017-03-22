@@ -76,11 +76,6 @@ class AlertListManage extends Component{
         dispatch({
             type: 'alertOperation/noGroupView',
         })
-      },
-      initCloumFunc: () => {
-        dispatch({
-            type: 'alertOperation/initalColumn'
-        })
       }
     }
 

@@ -24,7 +24,7 @@ const dispatchModal = ({currentData, closeDispatchModal, onOk, onCancal, form}) 
             form.resetFields();
         })
       }} >派发</Button>
-      <Button type="ghost" onClick={ () => {
+      <Button type="ghost" className={styles.ghostBtn} onClick={ () => {
         onCancal()
         form.resetFields();
       }}>取消</Button>

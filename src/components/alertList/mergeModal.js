@@ -29,7 +29,7 @@ const mergeModal = ({alertOperation, dispatch}) => {
             type: 'alertOperation/mergeAlert',
         })
       }} >合并</Button>
-      <Button type="ghost" onClick={ () => {
+      <Button type="ghost" className={styles.ghostBtn} onClick={ () => {
         dispatch({
             type: 'alertOperation/toggleMergeModal',
             payload: false
@@ -62,7 +62,7 @@ const mergeModal = ({alertOperation, dispatch}) => {
           footer={ modalFooter }
           width={900}
         >
-            <div>
+            <div className={mergeStyles.mergeTable}>
                 <p className={mergeStyles.title}>合并告警前，请选择一条告警做源告警</p>
                 <Table
                     columns={ [
@@ -75,18 +75,18 @@ const mergeModal = ({alertOperation, dispatch}) => {
                         },
                         {
                             title: '对象',
-                            key: 'entity',
-                            dataIndex: 'entity'
+                            key: 'entityName',
+                            dataIndex: 'entityName'
                         },
                         {
                             title: '告警名称',
-                            key: 'alertName',
-                            dataIndex: 'alertName'
+                            key: 'name',
+                            dataIndex: 'name'
                         },
                         {
                             title: '来源',
-                            key: 'entityName',
-                            dataIndex: 'entityName'
+                            key: 'source',
+                            dataIndex: 'source'
                         },
                         {
                             title: '告警描述',

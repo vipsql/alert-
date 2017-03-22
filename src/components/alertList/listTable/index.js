@@ -30,7 +30,7 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
       })
     },
     detailClick(e) {
-      const alertId = JSON.parse(e.target.getAttribute('data-id'));
+      const alertId = e.target.getAttribute('data-id');
 
       dispatch({
         type: 'alertListTable/clickDetail',
@@ -39,7 +39,7 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
     },
     // children展开
     spreadChild(e) {
-      const alertId = JSON.parse(e.target.getAttribute('data-id'));
+      const alertId = e.target.getAttribute('data-id');
 
       dispatch({
         type: 'alertListTable/spreadChild',
@@ -47,7 +47,7 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
       })
     },
     noSpreadChild(e) {
-      const alertId = JSON.parse(e.target.getAttribute('data-id'));
+      const alertId = e.target.getAttribute('data-id');
 
       dispatch({
         type: 'alertListTable/noSpreadChild',

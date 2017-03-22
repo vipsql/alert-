@@ -31,7 +31,7 @@ export async function close(param) {
 }
 
 export async function merge(param) {
-    return request(`/api/v2/incident/megar`, {
+    return request(`/api/v2/incident/merge`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

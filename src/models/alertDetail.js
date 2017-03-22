@@ -35,17 +35,17 @@ export default {
     *openDetailModal({payload}, {select, put, call}) {
       const viewDetailAlertId = yield select( state => state.alertListTable.viewDetailAlertId )
       
-      if (typeof viewDetailAlertId === 'number') {
+      if (viewDetailAlertId) {
         const detailResult = yield queryDetail(viewDetailAlertId);
-        if ( typeof detailResult.data !== 'undefined' ) {
+        if ( typeof detailResult !== 'undefined' ) {
           yield put({
             type: 'setDetail',
-            payload: detailResult.data || {}
+            payload: detailResult || {}
           })
-          if (detailResult.data.orderInfo) {
+          if (detailResult.orderInfo) {
             yield put({
               type: 'setFormData',
-              payload: detailResult.data.orderInfo
+              payload: detailResult.orderInfo
             })
           }
           yield put({

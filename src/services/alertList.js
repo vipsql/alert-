@@ -32,5 +32,5 @@ export async function queryChild(param) {
     method: 'GET'
   }
 
-  return request(`/api/v2/incident/query/childs?alertId=${param.alertId}&begin=${param.begin}&end=${param.end}`, options)
+  return request(`/api/v2/incident/query/childs?incidentId=${param}`, options)
 }

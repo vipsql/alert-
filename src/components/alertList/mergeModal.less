@@ -1,13 +1,33 @@
 @import "../vars.less";
 
-// merge modal style
-.title{
-    font-size: 12px;
-    color: #828b99;
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.remove{
-    font-weight: 600;
+.mergeTable{
+    .title{
+        font-size: 13px;
+        //color: #828b99;
+        color: #9ad0f7;
+        margin-bottom: 10px;
+    }
+    :global{
+        .ant-table-thead{
+            tr {
+                border-bottom: 2px solid #1f72b4;
+            }
+            tr > th{
+                background: #164f7d;
+                color: #70c3fb
+            }
+        }
+        .ant-table-tbody > tr:hover{
+            background: #164f7d;
+        }
+        .ant-table-tbody > tr > td {
+            color: #fff;
+            border-bottom: 1px solid #1d6aa7;
+            background: #195d93;
+            position: relative;
+        }
+    }
+    .remove{
+        color: #fff;
+    }
 }

@@ -26,7 +26,7 @@ const  ListTimeTableWrap = ({dispatch, alertListTable}) => {
     },
 
     checkAlertFunc(e){
-      const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
+      const alertInfo = (e.target.getAttribute('data-all'));
 
       dispatch({
         type: 'alertListTable/changeCheckAlert',
@@ -34,7 +34,7 @@ const  ListTimeTableWrap = ({dispatch, alertListTable}) => {
       })
     },
     detailClick(e) {
-      const alertId = JSON.parse(e.target.getAttribute('data-id'));
+      const alertId = e.target.getAttribute('data-id');
 
       dispatch({
         type: 'alertListTable/clickDetail',
@@ -43,7 +43,7 @@ const  ListTimeTableWrap = ({dispatch, alertListTable}) => {
     },
     // children展开
     spreadChild(e) {
-      const alertId = JSON.parse(e.target.getAttribute('data-id'));
+      const alertId = e.target.getAttribute('data-id');
 
       dispatch({
         type: 'alertListTable/spreadChild',
@@ -51,7 +51,7 @@ const  ListTimeTableWrap = ({dispatch, alertListTable}) => {
       })
     },
     noSpreadChild(e) {
-      const alertId = JSON.parse(e.target.getAttribute('data-id'));
+      const alertId = e.target.getAttribute('data-id');
 
       dispatch({
         type: 'alertListTable/noSpreadChild',

@@ -26,7 +26,7 @@ export default {
           if (options !== undefined) {
               yield put({
                   type: 'setFormOptions',
-                  payload: options.data || []
+                  payload: options || []
               })
           } else {
               console.error('获取工单类型失败');
@@ -38,23 +38,22 @@ export default {
       },
       // 关闭告警
       *closeAlert({payload}, {select, put, call}) {
-          const { userId, viewDetailAlertId } = yield select( state => {
+          const { viewDetailAlertId } = yield select( state => {
               return {
-                  'userId': state.app.userId,
                   'viewDetailAlertId': state.alertListTable.viewDetailAlertId
               }
           })
           
-          if (typeof viewDetailAlertId === 'number') {
+          if ( viewDetailAlertId ) {
               let stringId = '' + viewDetailAlertId;
               const resultData = yield close({
-                  userId: userId, 
-                  alertIds: [stringId],
+                  incidentIds: [stringId],
                   closeMessage: payload
               })
               if (resultData.result) {
                   yield put({ type: 'alertListTable/deleteAlert', payload: [stringId]})
                   yield message.success(`关闭成功`, 3);
+                  yield put({ type: 'alertDetail/toggleDetailModal', payload: false})
               } else {
                   yield message.error(`${resultData.message}`, 3);
               }
@@ -71,13 +70,13 @@ export default {
 
           const viewDetailAlertId = yield select( state => state.alertListTable.viewDetailAlertId)
           
-          if (typeof viewDetailAlertId === 'number') {
+          if ( viewDetailAlertId ) {
               const result = yield dispatchForm({
-                  type: payload, 
-                  alertId: viewDetailAlertId
+                  code: payload, 
+                  id: viewDetailAlertId
               })
-              if (result.data !== undefined) {
-                  yield window.open(result.data); 
+              if (result !== undefined) {
+                  yield window.open(result.url); 
               } else {
                   yield message.error(`派发工单失败`, 3);
               }

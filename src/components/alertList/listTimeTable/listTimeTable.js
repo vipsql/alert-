@@ -263,6 +263,7 @@ class ListTimeTable extends Component {
             
             groupItem.children.forEach( (item, index) => {
 
+              const colorClass = index % 2 === 0 ? styles['even'] : styles['odd']
               const tds = genTds(item, keys)
               const dotsInfo = genDots(item.timeLine, keys)
               const dots = dotsInfo.dots
@@ -280,7 +281,7 @@ class ListTimeTable extends Component {
               }
 
               commonTrs.push(
-                <tr key={index} className={groupItem.isGroupSpread !== undefined && !groupItem.isGroupSpread && styles.hiddenChild}>
+                <tr key={index} className={groupItem.isGroupSpread !== undefined && !groupItem.isGroupSpread ? styles.hiddenChild : colorClass}>
                   <td key="checkbox" className={styles.checkstyle}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
                   {tds}
                   <td key="timeDot">
@@ -312,7 +313,7 @@ class ListTimeTable extends Component {
 
           data.forEach( (item, index) => {
 
-            // const info = item.alertInfo
+            const colorClass = index % 2 === 0 ? styles['even'] : styles['odd']
             let keys = colsKey;
             
             const tdCheck = Object.keys(checkAlert).length !== 0 ? 
@@ -340,7 +341,7 @@ class ListTimeTable extends Component {
             }
             
             tbodyCon.push(
-              <tr key={index}>
+              <tr key={index} className={colorClass}>
                 {tdCheck}
                 {tds}
                 <td key="timeDot">

@@ -1,6 +1,7 @@
 import {parse} from 'qs'
 import { getFormOptions, dispatchForm, close, merge, relieve } from '../services/alertOperation'
 import { queryAlertList, queryChild, queryAlertListTime } from '../services/alertList'
+import { queryCloumns } from '../services/alertQuery'
 import { message } from 'antd';
 
 const initalState = {
@@ -73,7 +74,11 @@ export default {
                   'columns': state.alertListTable.columns
               }
           })
-          yield put({ type: 'initColumn', payload: columns})
+          const columnResult = yield call(queryCloumns)
+          if (columnResult === undefined) {
+              console.error('扩展字段查询失败')
+          }
+          yield put({ type: 'initColumn', payload: {baseCols: columns, extend: columnResult || {}}})
       },
       // 打开解除告警modal
       *openRelieveModal({payload}, {select, put, call}) {
@@ -188,12 +193,12 @@ export default {
                   parentId: originAlert[0],
                   childs: filterListIds
               })
-              if (!result.result) {
-                  yield message.error(result.message, 3);
-              } else {
+              if (result === true) {
                   yield put({ type: 'alertListTable/resetCheckedAlert'})
                   yield put({ type: 'alertListTable/mergeChildAlert', payload: { pId: originAlert[0], cItems: filterList }})
                   yield message.success('合并成功', 3);
+              } else {
+                  yield message.error(result.message, 3);
               }
           } else {
               console.error('合并的子告警有误');
@@ -219,7 +224,7 @@ export default {
             if (options !== undefined) {
                 yield put({
                     type: 'setFormOptions',
-                    payload: options.data || []
+                    payload: options || []
                 })
             } else {
                 console.error('获取工单类型失败');
@@ -247,10 +252,9 @@ export default {
       *closeAlert({payload}, {select, put, call}) {
           // 触发筛选
           yield put({ type: 'alertListTable/filterCheckAlert'});
-          const { operateAlertIds, userId } = yield select( state => {
+          const { operateAlertIds } = yield select( state => {
               return {
                   'operateAlertIds': state.alertListTable.operateAlertIds,
-                  'userId': state.app.userId
               }
           })
           if ( operateAlertIds !== undefined ) {
@@ -259,8 +263,7 @@ export default {
             } else {
                 let stingIds = operateAlertIds.map( item => '' + item)
                 const resultData = yield close({
-                    userId: userId, 
-                    alertIds: stingIds,
+                    incidentIds: stingIds,
                     closeMessage: payload
                 })
                 if (resultData.result) {
@@ -291,11 +294,11 @@ export default {
               yield message.error(`请先将多条告警合并为一条原告警`, 3);
           } else if (operateAlertIds.length === 1 && operateAlertIds[0] !== undefined) {
               const result = yield dispatchForm({
-                  type: payload, 
-                  alertId: operateAlertIds[0]
+                  code: payload, 
+                  id: operateAlertIds[0]
               })
-              if (result.data !== undefined) {
-                  yield window.open(result.data);
+              if (result !== undefined) {
+                  yield window.open(result.url);
                   yield put({ type: 'alertListTable/resetCheckedAlert'})
               }
           } else if (operateAlertIds.length === 0) {
@@ -347,32 +350,37 @@ export default {
 
   reducers: {
       // 列定制初始化
-      initColumn(state, {payload: columns}) {
-          const { columnList } = state;
-          let newList = columnList;
-          columns.forEach( (column, index) => {
-              newList.forEach( (group) => {
-                  group.cols.forEach( (col) => {
-                    if (column.key === col.id) {
-                        col.checked = true;
-                    }
-                  }) 
-              })
-          })
-          
-          return { ...state, columnList: newList }
+      initColumn(state, {payload: {baseCols, extend}}) {
+        const { columnList } = state;
+        let newList = columnList;
+        baseCols.forEach( (column, index) => {
+            newList.forEach( (group) => {
+                group.cols.forEach( (col) => {
+                if (column.key === col.id) {
+                    col.checked = true;
+                }
+                }) 
+            })
+        })
+        if (Object.keys(extend).length !== 0) {
+            extend.cols.forEach( (col) => {
+                col.checked = false;
+            })
+            newList.push(extend)
+        }
+        return { ...state, columnList: newList }
       },
       // 列改变时触发
       setColumn(state, {payload: selectCol}) {
         const { columnList } = state;
-         let arr = []
+        let arr = []
         const newList = columnList.map( (group) => {
             group.cols.map( (col) => {
                 if (typeof selectCol !== 'undefined' && col.id === selectCol) {
                     col.checked = !col.checked;
                 }
                 if (col.checked) {
-                    if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime') {
+                    if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count') {
                         arr.push({ key: col.id, title: col.name, width: 150, order: true }) // order字段先定死
                     } else {
                         arr.push({ key: col.id, title: col.name, width: 150 }) // width先定死
@@ -385,23 +393,6 @@ export default {
         
         return { ...state, columnList: newList }
       },
-      // 过滤选择的列为指定格式
-    //   filterColumn(state) {
-    //       const { columnList } = state;
-    //       let arr = []
-    //       columnList.forEach( (group) => {
-    //         group.cols.map( (col) => {
-    //             if (col.checked) {
-    //                 if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurtime') {
-    //                     arr.push({ key: col.id, title: col.name, width: 150, order: true }) // order字段先定死
-    //                 } else {
-    //                     arr.push({ key: col.id, title: col.name, width: 150 }) // width先定死
-    //                 }
-    //             }
-    //         })
-    //       })
-    //       return { ...state, selectColumn: arr }
-    //   },
       // 设置合并子列表
       setMergeInfoList(state, { payload }) {
           return { ...state, mergeInfoList: payload }

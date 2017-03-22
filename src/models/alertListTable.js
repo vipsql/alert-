@@ -53,6 +53,7 @@ const initvalState = {
     }, {
       key: 'count',
       title: '次数',
+      order: true
     }, {
       key: 'lastTime',
       title: '持续时间',
@@ -564,9 +565,9 @@ export default {
       }
 
       if (typeof haveChild !== undefined && !haveChild) {
-        const childResult = yield call(queryChild, {alertId: payload, begin: begin, end: end})
-        if (childResult.result) {
-          yield put( { type: 'addChild', payload: { children: childResult.data, parentId: payload, isGroup: isGroup } })
+        const childResult = yield call(queryChild, payload)
+        if (childResult !== undefined) {
+          yield put( { type: 'addChild', payload: { children: childResult, parentId: payload, isGroup: isGroup } })
 
         } else {
           console.error('查询子告警有误')
@@ -662,9 +663,9 @@ export default {
 
       const listReturnData = yield call(queryAlertList, params)
 
-      if (listReturnData.result) {
+      if (listReturnData !== undefined) {
 
-        listData = listData.concat(listReturnData.data.datas);
+        listData = listData.concat(listReturnData.datas);
 
         yield put({
           type: 'resetCheckAlert',
@@ -673,10 +674,10 @@ export default {
             newObj: listData
           }
         })
-        if (!listReturnData.data.hasNext) {
+        if (!listReturnData.hasNext) {
           yield put({
             type: 'updateShowMore',
-            payload: listReturnData.data.hasNext
+            payload: listReturnData.hasNext
           })
         }
 
@@ -684,7 +685,7 @@ export default {
           type: 'updateAlertListData',
           payload: {
             data: listData,
-            newLevels: listReturnData.data.levels
+            newLevels: listReturnData.levels
           }
         })
 

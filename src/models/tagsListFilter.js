@@ -38,6 +38,9 @@ export default {
           dispatch({
             type: 'initTagsList',
           });
+          dispatch({
+            type: 'alertOperation/initalColumn'
+          })
         }
       });
     },
@@ -98,6 +101,7 @@ export default {
                 if (group.field == 'severity' || group.field == 'status') {
                   return {
                     name: CodeWords[group.field][item],
+                    value: item,
                     selected: true
                   }
                 } else {
@@ -168,9 +172,17 @@ export default {
         item.values.forEach( (tag) => {
           if (tag.selected) {
             if ( source[item.field] ) {
-              source[item.field] = source[item.field] + ',' + tag.name;
+              if (item.field == 'severity' || item.field == 'status') {
+                source[item.field] = source[item.field] + ',' + tag.value;
+              } else {
+                source[item.field] = source[item.field] + ',' + tag.name;
+              }
             } else {
-              source[item.field] = tag.name;
+              if (item.field == 'severity' || item.field == 'status') {
+                source[item.field] = tag.value;
+              } else {
+                source[item.field] = tag.name;
+              }
             }
           }
         })

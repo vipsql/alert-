@@ -6,7 +6,7 @@ import { classnames } from '../../../utils'
 
 const Option = Select.Option;
 const DropdownButton = Dropdown.Button;
-const alertOperation = ({position, columnList, selectGroup, checkCloumFunc, relieveFunc, dispatchFunc, closeFunc, mergeFunc, groupFunc, noGroupFunc, initCloumFunc}) => {
+const alertOperation = ({position, columnList, selectGroup, checkCloumFunc, relieveFunc, dispatchFunc, closeFunc, mergeFunc, groupFunc, noGroupFunc}) => {
 
     const setClass = classnames(
         styles['icon'],
@@ -94,7 +94,7 @@ const alertOperation = ({position, columnList, selectGroup, checkCloumFunc, reli
                 undefined
             }
             { position === 'list' 
-                ? <Popover placement='bottomRight' trigger="click" content={popoverContent} onClick={ initCloumFunc }>
+                ? <Popover placement='bottomRight' trigger="click" content={popoverContent} >
                     <div className={classnames(styles.button, styles.rightBtn)}>
                         <i className={classnames(setClass, styles.setCol)}></i>
                         <p className={styles.col}>列定制</p>
@@ -116,8 +116,7 @@ alertOperation.defaultProps = {
     closeFunc: () => {},
     mergeFunc: () => {},
     groupFunc: () => {},
-    noGroupFunc: () => {},
-    initCloumFunc: () => {}
+    noGroupFunc: () => {}
 }
 
 alertOperation.propTypes = {

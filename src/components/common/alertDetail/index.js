@@ -4,6 +4,7 @@ import { connect } from 'dva'
 import styles from './index.less'
 import { classnames } from '../../../utils'
 import AlertOperation from '../alertOperation/index.js'
+import CodeWords from '../../../codewords.json'
 
 const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm, openForm, closeForm, openRemark, editRemark, closeRemark}) => {
 
@@ -37,16 +38,15 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
     )
 
     // 根据severity选择不同的颜色
-    const severityColor = currentAlertDetail.severity === '紧急' ? styles.jjLevel 
-                            : currentAlertDetail.severity === '主要' ? styles.zyLevel 
-                                : currentAlertDetail.severity === '次要' ? styles.cyLevel 
-                                    : currentAlertDetail.severity === '告警' ? styles.gjLevel 
-                                        : currentAlertDetail.severity === '提醒' ? styles.txLevel : styles.jjLevel
+    const severityColor = currentAlertDetail.severity == 3 ? styles.jjLevel 
+                            : currentAlertDetail.severity == 2 ? styles.gjLevel 
+                                : currentAlertDetail.severity == 1 ? styles.txLevel 
+                                    : currentAlertDetail.severity == 0 ? styles.hfLevel : false
 
     return (
         <div className={styles.main}>
             <div className={styles.detailHead}>
-                <p>{currentAlertDetail.entityName}</p>
+                <p>{currentAlertDetail.name}</p>
                 <i className={classnames(styles.shanChu, shanchuClass)} onClick={closeDeatilModal}></i>
                 <AlertOperation position="detail" {...operateProps}/>
             </div>
@@ -56,7 +56,7 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                     <ul>
                         <li><span>ID:</span><span>{currentAlertDetail.id}</span></li>
                         <li><span>状态:</span><span>{currentAlertDetail.status}<i className={classnames(setClass, styles.stateClass)}></i></span></li>
-                        <li><span>级别:</span><span className={severityColor}>{currentAlertDetail.severity}</span></li>
+                        <li><span>级别:</span><span className={severityColor}>{CodeWords['severity'][currentAlertDetail.severity]}</span></li>
                         <li><span>来源:</span><span>{currentAlertDetail.entityName}</span></li>
                         <li><span>描述:</span><span>{currentAlertDetail.description}</span></li>
                         <li><span>首次发生:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).begin}</span></li>
