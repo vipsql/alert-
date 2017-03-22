@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import styles from './index.less'
-import request from '../../utils/request'
-import { connect } from 'dva'
 import { Spin } from 'antd'
 import * as d3 from 'd3'
 import {event as currentEvent} from 'd3'
@@ -12,61 +10,66 @@ require('echarts/lib/chart/treemap')
 class Chart extends Component{
 
     constructor(props) {
-        super(props);
-        this.setTreemapHeight = this.setTreemapHeight.bind(this);
+        super(props)
+        this.setTreemapHeight = this.setTreemapHeight.bind(this)
     }
     setTreemapHeight(ele){
         // const _percent = 0.85 // 占屏比
 
-        const clientHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
-        ele.style.height = (clientHeight - 130) + 'px';
+        const clientHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight)
+        ele.style.height = (clientHeight - 130) + 'px'
 
     }
-
-    componentDidUpdate(){
-
-        
+    shouldComponentUpdate(nextProps){
+      return this.props.currentDashbordData !== nextProps.currentDashbordData
     }
     componentDidMount(){
-        
-        const severityToColor = {
-            '10':  '#a5f664',//提醒
-            '20':  '#fadc23',//警告
-            '30':  '#ffa03a',//次要
-            '40':  '#fa6a3e',//主要
-            '50':  '#f74421'//紧急
+      const self = this;
+       const severityToColor = {
+            '0': '#ff9524', // 正常
+            '1': '#a5f664', // 提醒
+            '2': '#fadc23', // 警告
+            '3': '#eb5a30' // 紧急
         }
-        var chartWidth = 1000;
-        var chartHeight = 1000;
-        var xscale = d3.scale.linear().range([0, chartWidth]);
-        var yscale = d3.scale.linear().range([0, chartHeight]);
-        var color = function(num){
-            return severityToColor[num]
-        };
+      this.chartWidth = document.documentElement.clientWidth - 160 - 90;
+      this.chartHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight) - 180;
+      this.xscale = d3.scale.linear().range([0, this.chartWidth]);
+      this.yscale = d3.scale.linear().range([0, this.chartHeight]);
+      this.color = function(num){
+          return severityToColor[num]
+      };
+      
+
+      this.chart = d3.select("#treemap")
+          .append("svg:svg")
+          .attr("width", this.chartWidth)
+          .attr("height", this.chartHeight)
+          .append("svg:g")
+    }
+    componentDidUpdate(){ 
+         
+        this.treemap = d3.layout.treemap()
+          .round(false)
+          .size([this.chartWidth, this.chartHeight])
+          .sticky(true)
+          .value(function(d) {
+              return d.value;
+        });
         var headerHeight = 40;
         var headerColor = "transparent";
         var transitionDuration = 500;
         var root;
         var node;
 
-        var treemap = d3.layout.treemap()
-            .round(false)
-            .size([chartWidth, chartHeight])
-            .sticky(true)
-            .value(function(d) {
-                return d.value;
-            });
-
-        var chart = d3.select("#tree")
-            .append("svg:svg")
-            .attr("width", chartWidth)
-            .attr("height", chartHeight)
-            .append("svg:g")
-
-
-        d3.json("../../../mock/alert.json", function(data) {
-            node = root = data;
-            var nodes = treemap.nodes(root);
+       
+        // d3.json("../../../mock/alert.json", function(data) {
+        if(this.props.currentDashbordData){
+          node = root = {
+              path: 'root',
+              children: this.props.currentDashbordData
+            };
+            
+            var nodes = this.treemap.nodes(root);
 
             var children = nodes.filter(function(d) {
                 return !d.children;
@@ -77,15 +80,15 @@ class Chart extends Component{
 
 
             // create parent cells
-            var parentCells = chart.selectAll("g.cell.parent")
+            var parentCells = this.chart.selectAll("g.cell.parent")
                 .data(parents.slice(1), function(d) {
                     return "p-" + d.path;
                 });
             var parentEnterTransition = parentCells.enter()
                 .append("g")
                 .attr("class", "cell parent")
-                .on("click", function(d) {
-                    zoom(d);
+                .on("click", d => {
+                  
                 })
 
                 .append("svg")
@@ -143,7 +146,7 @@ class Chart extends Component{
                 .remove();
 
             // create children cells
-            var childrenCells = chart.selectAll("g.cell.child")
+            var childrenCells = this.chart.selectAll("g.cell.child")
                 .data(children, function(d) {
                     return "c-" + d.path;
                 });
@@ -151,11 +154,12 @@ class Chart extends Component{
             var childEnterTransition = childrenCells.enter()
                 .append("g")
                 .attr("class", "cell child")
-                .on("contextmenu", function(d,e) {
-                    zoom(node === d.parent ? root : d.parent);
+                .on("contextmenu", (d, e) => {
+                  zoom.call(this, node === d.parent ? root : d.parent);
                     currentEvent.preventDefault()
-                })
-                .on("click", () => {
+                  })
+                .on("click", (d) => {
+                  debugger
                     // location.href = 'http://www.baidu.com'
                 })
 
@@ -163,7 +167,9 @@ class Chart extends Component{
                 .attr("class", "clip");
             childEnterTransition.append("rect")
                 .classed("background", true)
-                .attr('filter',"url(#inset-shadow)")
+                // .attr('filter',"url(#inset-shadow)")
+                .attr('stroke','#0d3158')
+                .attr('stroke-width','1')
                 .style("fill", function(d) {
                     // return color(d.maxSeverity);
                 });
@@ -219,8 +225,8 @@ class Chart extends Component{
 
 
 
-            zoom(node);
-        });
+            zoom.call(this,node);
+        // });
 
 
         function size(d) {
@@ -235,8 +241,8 @@ class Chart extends Component{
 
         //and another one
         function textHeight(d) {
-            var ky = chartHeight / d.dy;
-            yscale.domain([d.y, d.y + d.dy]);
+            var ky = this.chartHeight / d.dy;
+            this.yscale.domain([d.y, d.y + d.dy]);
             return (ky * d.dy) / headerHeight;
         }
 
@@ -259,47 +265,47 @@ class Chart extends Component{
             return ((255 - bgDelta) < nThreshold) ? "#000000" : "#ffffff";
         }
 
-
+        
         function zoom(d) {
 
-            treemap
-                .padding([headerHeight / (chartHeight / d.dy), 0, 0, 0])
+            this.treemap
+                .padding([headerHeight / (this.chartHeight / d.dy), 0, 0, 0])
                 .nodes(d);
 
             // moving the next two lines above treemap layout messes up padding of zoom result
-            var kx = chartWidth / d.dx;
-            var ky = chartHeight / d.dy;
+            var kx = this.chartWidth / d.dx;
+            var ky = this.chartHeight / d.dy;
             var level = d;
 
-            xscale.domain([d.x, d.x + d.dx]);
-            yscale.domain([d.y, d.y + d.dy]);
+            this.xscale.domain([d.x, d.x + d.dx]);
+            this.yscale.domain([d.y, d.y + d.dy]);
 
             if (node != level) {
-                chart.selectAll(".cell.child .label")
+                this.chart.selectAll(".cell.child .label")
                     // .style("display", "none");
             }
-
-            var zoomTransition = chart.selectAll("g.cell").transition().duration(transitionDuration)
-                .attr("transform", function(d) {
-                    return "translate(" + xscale(d.x) + "," + yscale(d.y) + ")";
+            
+            var zoomTransition = this.chart.selectAll("g.cell").transition().duration(transitionDuration)
+                .attr("transform", (d) => {
+                  return "translate(" + this.xscale(d.x) + "," + this.yscale(d.y) + ")";
                 })
                 .each("start", function() {
                     d3.select(this).select("label")
                         .style("display", "none");
                 })
-                .each("end", function(d, i) {
-                    if (!i && (level !== self.root)) {
-                        chart.selectAll(".cell.child")
+                .each("end", (d, i) => {
+                   if (!i && (level !== self.root)) {
+                        this.chart.selectAll(".cell.child")
                             .filter(function(d) {
                                 return d.parent === self.node; // only get the children for selected group
                             })
                             .select(".label")
                             .style("display", "")
-                            .style("fill", function(d) {
-                                return idealTextColor(color(d.maxSeverity));
+                            .style("fill", (d) => {
+                              return idealTextColor(color(d.maxSeverity));
                             });
                     }
-                });
+                  })
 
             zoomTransition.select(".clip")
                 .attr("width", function(d) {
@@ -335,10 +341,9 @@ class Chart extends Component{
                 .attr("height", function(d) {
                     return d.children ? headerHeight : Math.max(0.01, (ky * d.dy));
                 })
-                .style("fill", function(d) {
-                    
-                    return d.children ? headerColor : color(d.maxSeverity);
-                });
+                .style("fill", d => {
+                  return d.children ? headerColor : this.color(d.maxSeverity);
+                } );
 
             node = d;
 
@@ -346,12 +351,10 @@ class Chart extends Component{
                 d3.event.stopPropagation();
             }
         }
+        }
+            
 
-        const treeMapNode = document.getElementById('treemap');
-        this.setTreemapHeight(treeMapNode);
-
-        this.myChart = echarts.init(treeMapNode);
-
+          
         setInterval( () =>{
             // var data = {"message":"热图查询成功","data":{"totalCriticalCnt":33,"totalMajorCnt":29,"totalInfoCnt":24,"totalMinorCnt":13,"totalWarnCnt":22,"picList":[{"name":"资源类型名称","value":19,"path":"entityTypeName","children":[{"name":"光缆","path":"entityTypeName\/guanglan","value":9,"maxSeverity":50},{"name":"计算机","path":"entityTypeName\/jisuanji","value":10,"maxSeverity":50}]},{"name":"告警级别","value":102,"path":"severity","children":[{"name":"紧急","path":"severity\/jinji","value":27,"maxSeverity":50},{"name":"警告","path":"severity\/jinggu","value":19,"maxSeverity":20},{"name":"次要","path":"severity\/ciyao","value":13,"maxSeverity":30},{"name":"主要","path":"severity\/zhuyao","value":22,"maxSeverity":40},{"name":"提醒","path":"severity\/dixing","value":21,"maxSeverity":10}]}]},"result":true}
             // .data.picList
@@ -359,9 +362,9 @@ class Chart extends Component{
             //     series: [{
             //         data: data
             //     }]
-            // });
+            // })
             this.props.requestFresh()
-        }, 60000);
+        }, 60000)
 
 
 

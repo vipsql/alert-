@@ -14,7 +14,7 @@ const AlertManageHead = ({
   )
 
   return (
-    <div>
+    <div className={styles.manageHead}>
         <div className={styles.focusSet} onClick={showTagsModal}>
           <i className={setClass}></i>关注设置
         </div>
