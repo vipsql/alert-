@@ -42,8 +42,8 @@ export default {
 
       const data = yield call(queryAlertBar, payload)
 
-      if(data.result){
-        const barData = data.data
+      if(data !== undefined){
+        const barData = data
         const endtTime = barData[barData.length - 1]['time']
         const startTime = endtTime - 3600000
 
@@ -63,7 +63,7 @@ export default {
         yield put({
           type: 'updateAlerBarData',
           payload: {
-            barData: data.data,
+            barData: data,
             begin: startTime,
             end: endtTime
           }

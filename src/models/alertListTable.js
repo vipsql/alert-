@@ -495,17 +495,17 @@ export default {
         ...extraParams
       })
 
-      if(listData.result){
+      if(listData !== undefined){
         if(isGroup){
 
           yield put({
             type: 'updateAlertListToGroup',
             payload: {
-              info: listData.data.datas,
+              info: listData.datas,
               isShowMore: false,
               isGroup: isGroup,
               groupBy: groupBy,
-              levels: listData.data.levels
+              levels: listData.levels
             }
           })
           yield put({
@@ -518,12 +518,12 @@ export default {
           yield put({
             type: 'updateAlertListToNoGroup',
             payload: {
-              info: listData.data.datas,
-              isShowMore: listData.data.hasNext,
+              info: listData.datas,
+              isShowMore: listData.hasNext,
               isGroup: false,
               orderBy: orderBy,
               orderType: orderType,
-              levels: listData.data.levels
+              levels: listData.levels
             }
           })
           yield put({

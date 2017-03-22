@@ -35,7 +35,6 @@ export default {
       if(isSet) {
         yield put({
           type: 'alertTagsSet/queryDashbordBySetted',
-          payload: userId
         })
         yield put({
           type: 'toggleAlertSetTip',

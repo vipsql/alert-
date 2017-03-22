@@ -16,6 +16,7 @@ import CloseModal from '../common/closeModal/index.js'
 import DispatchModal from '../common/dispatchModal/index.js'
 import RelieveModal from './relieveModal'
 import { classnames } from '../../utils'
+import CodeWords from '../../codewords.json'
 
 const TabPane = Tabs.TabPane
 
@@ -246,11 +247,10 @@ class AlertListManage extends Component{
           <ul className={styles.levelBar}>
             {
               Object.keys(levels).length !== 0 && Object.keys(levels).map( (key, index) => {
-                let levelName = key == 'jj' ? '紧急' :
-                                  key == 'zy' ? '主要' :
-                                    key == 'cy' ? '次要' :
-                                      key == 'gj' ? '警告' :
-                                        key == 'tx' ? '提醒' : undefined
+                let levelName = key == 'Critical' ? CodeWords['severity']['3'] :
+                                    key == 'Warning' ? CodeWords['severity']['2'] :
+                                      key == 'Information' ? CodeWords['severity']['1'] :
+                                        key == 'Ok' ? CodeWords['severity']['0'] : undefined
 
                 return (<li key={index}><LevelIcon extraStyle={styles.extraStyle} iconType={key} /><p>{`${levelName}（${levels[key]}）`}</p></li>)
               })

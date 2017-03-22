@@ -29,6 +29,7 @@ function Add({alertConfig, dispatch}){
         iconType: currentOperateAppType.name, // 用于确定Icon
         headerName: currentOperateAppType.name,
         appkey: UUID,
+        builtIn: 1,
         ...appTypeInfo,
 
         onOk: (e, form) => {

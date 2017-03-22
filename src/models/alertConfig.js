@@ -170,7 +170,7 @@ export default {
           type: currentEditApp.type,
           appKey: UUID
         })
-        if (editResult.result) {
+        if (editResult === undefined) {
           yield message.success('应用编辑成功', 3)
           yield put(routerRedux.goBack());
         } else {

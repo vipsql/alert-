@@ -8,7 +8,7 @@ export async function queryAlertListTime(data) {
 }
 // 查询告警柱状图
 export async function queryAlertBar(data) {
-
+  
   const options = {
     body: JSON.stringify(data),
     method: 'post'

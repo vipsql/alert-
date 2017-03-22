@@ -5,16 +5,14 @@ import { classnames } from '../../../utils'
 const levelIcon = ({extraStyle, iconType, initalIconState, onClick, iconState}) => {
 
     // mapping iconType to classname 
-    const iconStyle = iconType === 'jj' || iconType == 50
+    const iconStyle = iconType === 'jj' || iconType == 3 || iconType === 'Critical'
                     ? classnames(styles.iconMain, extraStyle, styles.jjColorIcon)
-                    : iconType === 'zy' || iconType == 40
-                        ? classnames(styles.iconMain, extraStyle, styles.zyColorIcon)
-                        : iconType === 'cy' || iconType == 30
-                            ? classnames(styles.iconMain, extraStyle, styles.cyColorIcon)
-                            : iconType === 'gj' || iconType == 20
-                                ? classnames(styles.iconMain, extraStyle, styles.gjColorIcon)
-                                : iconType === 'tx' || iconType == 10
-                                    ? classnames(styles.iconMain, extraStyle, styles.txColorIcon)
+                    : iconType === 'gj' || iconType == 2 || iconType === 'Warning'
+                        ? classnames(styles.iconMain, extraStyle, styles.gjColorIcon)
+                        : iconType === 'tx' || iconType == 1 || iconType === 'Information'
+                            ? classnames(styles.iconMain, extraStyle, styles.txColorIcon)
+                            : iconType === 'hf' || iconType == 0 || iconType === 'Ok'
+                                ? classnames(styles.iconMain, extraStyle, styles.hfColorIcon)
                                     : false
     
     const whiteIcon = classnames(styles.whiteIcon, iconStyle)
@@ -29,7 +27,7 @@ const levelIcon = ({extraStyle, iconType, initalIconState, onClick, iconState}) 
 }
 
 levelIcon.defaultProps = {
-    iconType: 'jj',
+    iconType: 'hf',
     initalIconState: true, // true --> fill
     onClick: () => {}
 }

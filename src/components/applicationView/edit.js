@@ -28,6 +28,7 @@ function Edit({dispatch, alertConfig}){
         iconType: currentEditApp['applyType'] !== undefined ? currentEditApp['applyType'].name : undefined, // 用于确定Icon
         headerName: currentEditApp['applyType'] !== undefined ? currentEditApp['applyType'].name : undefined,
         displayName: currentEditApp.displayName,
+        builtIn: currentEditApp.builtIn,
         appkey: UUID,
         ...appTypeInfo,
 

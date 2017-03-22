@@ -1,6 +1,7 @@
 import {parse} from 'qs'
 import pathToRegexp from 'path-to-regexp';
 import { getAllListTags } from '../services/alertListTags.js'
+import CodeWords from '../codewords.json'
 
 const initalState = {
     isSpread: false, // spread modal to select tags
@@ -88,28 +89,34 @@ export default {
     initalTagsList(state, { payload: tagsList }) {
       const { originTags } = state;
       let originTagsList = Object.keys(originTags) || [];
-      let serverityList = originTags['SEVERITY'].split(',');
+      let serverityList = originTags['severity'].split(',');
       const newList = tagsList.map( (group) => {
         group.values = group.values.map( (item) => {
           if (originTagsList.length !== 0
             && ((originTagsList[0] == group.field && originTags[`${originTagsList[0]}`] == item)
               || (originTagsList[originTagsList.length - 1] == group.field && serverityList.includes(item)))) {
-                return {
-                  name: item,
-                  selected: true
+                if (group.field == 'severity' || group.field == 'status') {
+                  return {
+                    name: CodeWords[group.field][item],
+                    selected: true
+                  }
+                } else {
+                  return {
+                    name: item,
+                    selected: true
+                  }
                 }
           }
-          // if (originTagsList.length !== 0
-          //   && ((originTagsList[0] == group.field && originTags[`${originTagsList[0]}`] == item)
-          //     || (originTagsList[1] == group.field && originTags[`${originTagsList[1]}`] == item))) {
-          //       return {
-          //         name: item,
-          //         selected: true
-          //       }
-          // }
-          return {
-            name: item,
-            selected: false
+          if (group.field == 'severity' || group.field == 'status') {
+            return {
+              name: CodeWords[group.field][item],
+              selected: false
+            }
+          } else {
+            return {
+              name: item,
+              selected: false
+            }
           }
         })
         return group

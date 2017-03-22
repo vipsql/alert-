@@ -7,7 +7,7 @@ import { classnames } from '../../utils'
 const Item = Form.Item;
 const applicationView = (props) => {
 
-    const {type, iconType, headerName, appkey, headerMessage, urlMessage, urlExample, form, onOk, keyCreate} = props;
+    const {type, builtIn, iconType, headerName, appkey, headerMessage, urlMessage, urlExample, form, onOk, keyCreate} = props;
     
     const { getFieldDecorator, getFieldsValue } = form;
 
@@ -49,11 +49,11 @@ const applicationView = (props) => {
                         appkey === undefined ? 
                         <Button type="primary" className={styles.createBtn} onClick={keyCreate}>点击生成AppKey</Button>
                         :
-                        <Input className={styles.readOnlyInput} readOnly value={`App key：${appkey}`} onClick={keyCreate}></Input>
+                        <Input className={styles.readOnlyInput} readOnly value={`App key：${appkey}`}></Input>
                     }
                 </div>
                 {
-                    type !== undefined && type == 0 ?
+                    type !== undefined && type == 0 && builtIn == 1 ?
                     <div className={styles.step2}>
                         <span className={styles.step2Icon}></span>
                         <p className={styles.stepName}>{`配置${headerName}`}</p>
