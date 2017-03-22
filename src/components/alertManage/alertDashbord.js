@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import styles from './index.less'
-import request from '../../utils/request'
-import { connect } from 'dva'
 import { Spin } from 'antd'
 import * as d3 from 'd3'
 import {event as currentEvent} from 'd3'
@@ -12,32 +10,31 @@ require('echarts/lib/chart/treemap')
 class Chart extends Component{
 
     constructor(props) {
-        super(props);
-        this.setTreemapHeight = this.setTreemapHeight.bind(this);
+        super(props)
+        this.setTreemapHeight = this.setTreemapHeight.bind(this)
     }
     setTreemapHeight(ele){
         // const _percent = 0.85 // 占屏比
 
-        const clientHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
-        ele.style.height = (clientHeight - 130) + 'px';
+        const clientHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight)
+        ele.style.height = (clientHeight - 130) + 'px'
 
     }
-
-    componentDidUpdate(){
-
-        
+    shouldComponentUpdate(nextProps){
+      return this.props.currentDashbordData !== nextProps.currentDashbordData
     }
     componentDidMount(){
-        
-        const severityToColor = {
-            '10':  '#a5f664',//提醒
-            '20':  '#fadc23',//警告
-            '30':  '#ffa03a',//次要
-            '40':  '#fa6a3e',//主要
-            '50':  '#f74421'//紧急
+
+    }
+    componentDidUpdate(){ 
+          const severityToColor = {
+            '0': '#ff9524', // 正常
+            '1': '#a5f664', // 提醒
+            '2': '#fadc23', // 警告
+            '3': '#eb5a30' // 紧急
         }
-        var chartWidth = 1000;
-        var chartHeight = 1000;
+        var chartWidth = document.documentElement.clientWidth - 160 - 90;
+        var chartHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight) - 180;
         var xscale = d3.scale.linear().range([0, chartWidth]);
         var yscale = d3.scale.linear().range([0, chartHeight]);
         var color = function(num){
@@ -57,15 +54,20 @@ class Chart extends Component{
                 return d.value;
             });
 
-        var chart = d3.select("#tree")
+        var chart = d3.select("#treemap")
             .append("svg:svg")
             .attr("width", chartWidth)
             .attr("height", chartHeight)
             .append("svg:g")
 
 
-        d3.json("../../../mock/alert.json", function(data) {
-            node = root = data;
+        // d3.json("../../../mock/alert.json", function(data) {
+        if(this.props.currentDashbordData){
+          node = root = {
+              path: 'root',
+              children: this.props.currentDashbordData
+            };
+            
             var nodes = treemap.nodes(root);
 
             var children = nodes.filter(function(d) {
@@ -164,6 +166,8 @@ class Chart extends Component{
             childEnterTransition.append("rect")
                 .classed("background", true)
                 .attr('filter',"url(#inset-shadow)")
+                .attr('stroke','#0d3158')
+                .attr('stroke-width','1')
                 .style("fill", function(d) {
                     // return color(d.maxSeverity);
                 });
@@ -220,7 +224,7 @@ class Chart extends Component{
 
 
             zoom(node);
-        });
+        // });
 
 
         function size(d) {
@@ -346,12 +350,10 @@ class Chart extends Component{
                 d3.event.stopPropagation();
             }
         }
+        }
+            
 
-        const treeMapNode = document.getElementById('treemap');
-        this.setTreemapHeight(treeMapNode);
-
-        this.myChart = echarts.init(treeMapNode);
-
+          
         setInterval( () =>{
             // var data = {"message":"热图查询成功","data":{"totalCriticalCnt":33,"totalMajorCnt":29,"totalInfoCnt":24,"totalMinorCnt":13,"totalWarnCnt":22,"picList":[{"name":"资源类型名称","value":19,"path":"entityTypeName","children":[{"name":"光缆","path":"entityTypeName\/guanglan","value":9,"maxSeverity":50},{"name":"计算机","path":"entityTypeName\/jisuanji","value":10,"maxSeverity":50}]},{"name":"告警级别","value":102,"path":"severity","children":[{"name":"紧急","path":"severity\/jinji","value":27,"maxSeverity":50},{"name":"警告","path":"severity\/jinggu","value":19,"maxSeverity":20},{"name":"次要","path":"severity\/ciyao","value":13,"maxSeverity":30},{"name":"主要","path":"severity\/zhuyao","value":22,"maxSeverity":40},{"name":"提醒","path":"severity\/dixing","value":21,"maxSeverity":10}]}]},"result":true}
             // .data.picList
@@ -359,9 +361,9 @@ class Chart extends Component{
             //     series: [{
             //         data: data
             //     }]
-            // });
+            // })
             this.props.requestFresh()
-        }, 60000);
+        }, 60000)
 
 
 
