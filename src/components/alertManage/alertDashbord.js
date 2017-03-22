@@ -68,7 +68,7 @@ class Chart extends Component{
               path: 'root',
               children: this.props.currentDashbordData
             };
-            debugger
+            
             var nodes = this.treemap.nodes(root);
 
             var children = nodes.filter(function(d) {
@@ -158,7 +158,8 @@ class Chart extends Component{
                   zoom.call(this, node === d.parent ? root : d.parent);
                     currentEvent.preventDefault()
                   })
-                .on("click", () => {
+                .on("click", (d) => {
+                  debugger
                     // location.href = 'http://www.baidu.com'
                 })
 
@@ -166,7 +167,7 @@ class Chart extends Component{
                 .attr("class", "clip");
             childEnterTransition.append("rect")
                 .classed("background", true)
-                .attr('filter',"url(#inset-shadow)")
+                // .attr('filter',"url(#inset-shadow)")
                 .attr('stroke','#0d3158')
                 .attr('stroke-width','1')
                 .style("fill", function(d) {
