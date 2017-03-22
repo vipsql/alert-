@@ -69,7 +69,7 @@ const alertApplication = ({dispatch, alertConfig}) => {
                 type: 'alertConfig/changeStatus',
                 payload: {
                     id: id,
-                    status: status
+                    status: status === true ? 1 : 0
                 }
             })
         },
@@ -95,7 +95,7 @@ const alertApplication = ({dispatch, alertConfig}) => {
                         }}><span>添加应用</span></Button>
                     </div>
                 </TabPane>
-                <TabPane tab="接出" key="1">
+                <TabPane tab="转出" key="1">
                     <ApplicationList {...appListProps} />
                     <div className={styles.addBtn}>
                         <Button type="primary" className={styles.appBtn} onClick={ () => {

@@ -28,7 +28,7 @@ export async function deleteApp(id) {
     method: 'POST'
   }
 
-  return request('/api/v2/application/updateStatus', options)
+  return request('/api/v2/application/delete', options)
 }
 
 // 查询配置种类

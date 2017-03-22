@@ -39,7 +39,7 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
           type: 'alertTagsSet/addAlertTags'
         })
       }} >确认</Button>
-      <Button type="ghost" onClick={ () => {
+      <Button type="ghost" className={styles.ghostBtn} onClick={ () => {
         dispatch({
           type: 'alertTagsSet/resetSelected',
         })

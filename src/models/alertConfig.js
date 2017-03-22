@@ -2,6 +2,7 @@ import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery, add, upda
 import {parse} from 'qs'
 import { message } from 'antd'
 import pathToRegexp from 'path-to-regexp';
+import { routerRedux } from 'dva/router';
 
 const initalState ={
 
@@ -9,42 +10,8 @@ const initalState ={
   applicationType: undefined, // 接入还是接出
   UUID: undefined, // UUID
 
-  applicationTypeData: [
-    {
-      appType: '监控类',
-      children: [
-        {
-          "id": "58c6817f5b71a79b448ccee8",
-          "name": "Moniter",
-          "type": "0",
-          "appType": "监控类"
-        },
-        {
-          "id": "58c6817f5b71a73b448ccee8",
-          "name": "Rest",
-          "type": "0",
-          "appType": "监控类"
-        }
-      ]
-    },
-    {
-      appType: '自动化类',
-      children: [
-        {
-          "id": "58c681cd5b71a73b048cceea",
-          "name": "ChatOps",
-          "type": "1",
-          "appType": "自动化类"
-        },
-        {
-          "id": "58c681cd5b71a73b448cceea",
-          "name": "ITSM",
-          "type": "1",
-          "appType": "自动化类"
-        }
-      ]
-    }
-  ], // 配置种类
+  applicationTypeData: [], // 配置种类
+
   currentOperateAppType: {}, //配置的应用详情
   currentEditApp: {}, // 编辑的应用
 
@@ -112,7 +79,6 @@ export default {
         if (pathToRegexp('/alertConfig/alertApplication/applicationView/edit/:appId').test(location.pathname)) {
           const match = pathToRegexp('/alertConfig/alertApplication/applicationView/edit/:appId').exec(location.pathname);
           const appId = match[1];
-          console.log(appId)
           dispatch({
             type: 'editApplicationView',
             payload: appId
@@ -134,11 +100,11 @@ export default {
     // 通过编辑进入详情页
     *editApplicationView({payload}, {select, put, call}) {
       if (payload !== undefined) {
-        const viewResult = yield call(update, payload)
-        if (viewResult.result) {
+        const viewResult = yield call(view, payload)
+        if (viewResult !== undefined) {
           yield put({
             type: 'setCurrent',
-            payload: viewResult.data || {}
+            payload: viewResult || {}
           })
         } else {
           yield message.error(`viewResult.message`, 3)
@@ -170,7 +136,7 @@ export default {
           type: currentOperateAppType.type,
           appKey: UUID
         })
-        if (addResult.result) {
+        if (addResult === undefined) {
           yield message.success('应用添加成功', 3)
           yield put(routerRedux.goBack());
         } else {
@@ -260,18 +226,17 @@ export default {
     *queryAplicationType({payload}, {select, put, call}) {
       if (payload !== undefined) {
         yield put({ type: 'toggleTypeModal', payload: true })
-        // const typeResult = yield call(typeQuery, payload)
-        // if (typeResult.result) {
-        //   yield put({
-        //     type: 'openTypeModal',
-        //     payload: {
-        //       modalStatus: true,
-        //       applicationTypeData: typeResult.data,
-        //     }
-        //   })
-        // } else {
-        //   yield message.error(`${typeResult.message}`, 2)
-        // }
+        const typeResult = yield call(typeQuery, payload)
+        if (typeResult !== undefined) {
+          yield put({
+            type: 'openTypeModal',
+            payload: {
+              applicationTypeData: typeResult,
+            }
+          })
+        } else {
+          yield message.error(`${typeResult.message}`, 2)
+        }
       } else {
         console.error('配置类型不能为空')
       }
@@ -280,7 +245,7 @@ export default {
     *changeStatus({payload}, {select, put, call}) {
       if (payload !== undefined && payload.id !== undefined && payload.status !== undefined) {
         const statusResult = yield call(changeAppStatus, payload)
-        if (statusResult) {
+        if (statusResult === undefined) {
           yield put({ 
             type: 'changeAppStatus', 
             payload: {
@@ -304,7 +269,7 @@ export default {
       })
       if (Object.keys(currentDeleteApp).length !== 0 && currentDeleteApp.id !== undefined) {
         const deleteResult = yield call(deleteApp, currentDeleteApp.id)
-        if (deleteResult.result) {
+        if (deleteResult === undefined) {
           yield put({ 
             type: 'deleteApplication', 
             payload: currentDeleteApp.id
@@ -361,7 +326,7 @@ export default {
       return { ...state, currentEditApp: payload, UUID: payload.appKey }
     },
     // 打开配置modal
-    openTypeModal(state, { payload: { applicationTypeData, modalStatus}}) {
+    openTypeModal(state, { payload: { applicationTypeData}}) {
       let typeObj = {};
       let newArr = [];
       let keys = [];
@@ -379,7 +344,7 @@ export default {
           children: typeObj[key]
         })
       })
-      return { ...state, applicationTypeData: newArr, isShowTypeModal: modalStatus }
+      return { ...state, applicationTypeData: newArr }
     },
     // 关闭modal
     toggleTypeModal(state, {payload: isShowTypeModal}) {
@@ -422,7 +387,7 @@ export default {
         }
         return status;
       })
-      return { ...state, applicationData: newData }
+      return { ...state, applicationData: newData, isShowDeteleModal: false}
     },
     setUUID(state, { payload }) {
       return { ...state, UUID: payload }

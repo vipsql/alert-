@@ -8,13 +8,7 @@ const initialState = {
     modalVisible: false,
     currentDashbordData: undefined,
     isLoading: true, //加载
-    levels: { //告警级别
-      jj: 23,
-      gj: 33,
-      tx: 44,
-      zy: 30,
-      cy: 11
-    }
+    levels: { }
 }
 
 export default {
@@ -43,8 +37,8 @@ export default {
         }
       })
 
-      const tagSet = yield isSetUserTags(userId)
-      if(tagSet.data.isSet) {
+      const isSet = yield isSetUserTags(userId)
+      if(isSet) {
         yield put({
           type: 'alertTagsSet/queryDashbordBySetted',
           payload: userId
@@ -69,14 +63,13 @@ export default {
         }
         
       }
-      const returnData = yield queryDashbord(payload)
-      const treemapData = returnData.data
+      const treemapData = yield queryDashbord(payload)
   
       if (typeof treemapData !== 'undefined') {
         yield put({
           type: 'setCurrentTreemap',
           payload: {
-            currentDashbordData:treemapData && treemapData.picList || [],
+            currentDashbordData: treemapData && treemapData.picList || [],
             isLoading: false
           }
         })
@@ -85,10 +78,9 @@ export default {
           type: 'setLevels',
           payload: {
             levels: {
-              totalMinorCnt: treemapData.totalMinorCnt, // 次要
+              totalOkCnt: treemapData.totalOkCnt, // 恢复
               totalCriticalCnt: treemapData.totalCriticalCnt, // 紧急
-              totalWarnCnt: treemapData.totalWarnCnt, // 告警
-              totalMajorCnt: treemapData.totalMajorCnt, // 主要
+              totalWarnCnt: treemapData.totalWarnCnt, // 警告
               totalInfoCnt: treemapData.totalInfoCnt // 提醒
             }
           }

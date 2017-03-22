@@ -25,8 +25,8 @@ function Edit({dispatch, alertConfig}){
     
     const editProps = {
         type: currentEditApp.type,
-        iconType: currentEditApp['applyType'].name, // 用于确定Icon
-        headerName: currentEditApp['applyType'].name,
+        iconType: currentEditApp['applyType'] !== undefined ? currentEditApp['applyType'].name : undefined, // 用于确定Icon
+        headerName: currentEditApp['applyType'] !== undefined ? currentEditApp['applyType'].name : undefined,
         displayName: currentEditApp.displayName,
         appkey: UUID,
         ...appTypeInfo,

@@ -10,8 +10,8 @@ export async function isSetUserTags(userId) {
     })
 }
 
-export async function getTagsByUser(userId) {
-    return request(`/api/v2/incident/tags/${userId}`, {
+export async function getTagsByUser() {
+    return request(`/api/v2/incident/tags/chosen`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

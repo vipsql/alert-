@@ -2,7 +2,7 @@
     "transferIn": {
         "children": [
             {
-                "name": "Moniter",
+                "name": "UYUN Monitor",
                 "pageInfo": {
                     "headerMessage": "使用Web Hook接入快速优云Monitor告警",
                     "urlMessage": "请手动配置优云Monitor的URL",
@@ -10,7 +10,7 @@
                 }
             },
             {
-                "name": "Rest",
+                "name": "rest",
                 "pageInfo": {
                     "headerMessage": "使用优云Alert Rest API，可以方便的接入自定义告警",
                     "urlMessage": "请手动配置优云Alert Rest API的URL",
@@ -22,13 +22,13 @@
     "transferOut": {
         "children": [
              {
-                "name": "ChatOps",
+                "name": "UYUN ChatOps",
                 "pageInfo": {
                     "headerMessage": "把优云Alert的告警快速分享到ChatOps群组"
                 }
             },
             {
-                "name": "ITSM",
+                "name": "Itsm",
                 "pageInfo": {
                     "headerMessage": "把优云Alert的告警快速创建为ITSM工单"
                 }

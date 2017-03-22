@@ -2,6 +2,7 @@ import {parse} from 'qs'
 import { tagsView } from '../services/alertManage.js'
 import { getTagsByUser, getAllTags, setUserTags } from '../services/alertTags.js'
 import { message } from 'antd';
+import CodeWords from '../codewords.json'
 
 const initialState = {
   tagNum: 0,
@@ -24,21 +25,21 @@ export default {
   effects: {
     *openFocusModal({payload}, {select, put, call}) {
       // search all tags
-      const { userId } = yield select( state => ({'userId': state.app.userId}))
+      //const { userId } = yield select( state => ({'userId': state.app.userId}))
       const allTags = yield getAllTags();
 
-      if (typeof allTags.data !== 'undefined' && allTags.data.length !== 0) {
+      if (typeof allTags !== 'undefined' && allTags.length !== 0) {
         yield put({
           type: 'setCurrentTags',
-          payload: allTags.data || []
+          payload: allTags || []
         })
         // search selected tags
-        const selectedTags = yield getTagsByUser(userId);
+        const selectedTags = yield getTagsByUser();
 
-        if (typeof selectedTags.data !== 'undefined') {
+        if (typeof selectedTags !== 'undefined') {
           yield put({
             type: 'setCurrentSelectTags',
-            payload: selectedTags.data
+            payload: selectedTags
           })
           // filter tags
           yield put({type: 'filterInitalTags'})
@@ -82,7 +83,7 @@ export default {
     },
     // commit tagIds by set modal
     *addAlertTags ({payload}, {select, put, call}) {
-      const { userId } = yield select( state => ({'userId': state.app.userId}))
+      //const { userId } = yield select( state => ({'userId': state.app.userId}))
       yield put({
         type: 'filterCommitTagsByTagList'
       })
@@ -93,9 +94,9 @@ export default {
         }
       })
 
-      const postResult = yield setUserTags({'userId': userId, 'tagIdList': commitTagIds});
+      const postResult = yield setUserTags({'tagIdList': commitTagIds});
 
-      if (postResult.result) {
+      if (postResult) {
         yield message.success('标签保存成功');
       } else {
         yield message.error('标签未保存成功');
@@ -133,7 +134,11 @@ export default {
         group.values = group.tags;
         delete group.tags;
         group.values.map( (tag) => {
-          tag.name = tag.value;
+          if (tag.key == 'severity' || tag.key == 'status') {
+            tag.name = CodeWords[tag.key][tag.value]
+          } else {
+            tag.name = tag.value;
+          }
           delete tag.value;
           return tag
         })
