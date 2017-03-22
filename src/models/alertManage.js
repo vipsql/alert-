@@ -31,13 +31,7 @@ export default {
   effects: {
     *alertManageSetup({payload}, {put, call, select}) {
 
-      const { userId } = yield select( state => {
-        return {
-          'userId': state.app.userId,
-        }
-      })
-
-      const isSet = yield isSetUserTags(userId)
+      const isSet = yield isSetUserTags()
       if(isSet) {
         yield put({
           type: 'alertTagsSet/queryDashbordBySetted',

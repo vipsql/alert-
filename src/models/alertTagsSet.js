@@ -52,13 +52,13 @@ export default {
       }
     },
     // inital dashbord when isSet is true
-    *queryDashbordBySetted({payload: userId}, {select, put, call}) {
-      const selectedTags = yield getTagsByUser(userId)
+    *queryDashbordBySetted({payload}, {select, put, call}) {
+      const selectedTags = yield getTagsByUser()
 
-      if (typeof selectedTags.data !== 'undefined') {
+      if (typeof selectedTags !== 'undefined') {
         yield put({
           type: 'filterCommitTags',
-          payload: selectedTags.data || []
+          payload: selectedTags || []
         })
 
         const { commitTagIds } = yield select( state => {

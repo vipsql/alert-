@@ -22,10 +22,10 @@ const AlertManageHead = ({
           <div className={styles.alertItemSet}>
             <p>最近一小时活跃告警：</p>
             <ul>
-              <li><LevelIcon extraStyle={styles.extraStyle} iconType='jj' /><p>紧急（{levels.totalCriticalCnt}）</p></li>
-              <li><LevelIcon extraStyle={styles.extraStyle} iconType='zy' /><p>恢复（{levels.totalOkCnt}）</p></li>
-              <li><LevelIcon extraStyle={styles.extraStyle} iconType='gj' /><p>警告（{levels.totalWarnCnt}）</p></li>
-              <li><LevelIcon extraStyle={styles.extraStyle} iconType='tx' /><p>提醒（{levels.totalInfoCnt}）</p></li>
+              <li><LevelIcon extraStyle={styles.extraStyle} iconType='jj' /><p>紧急（{levels.totalCriticalCnt !== undefined ? levels.totalCriticalCnt : 0}）</p></li>
+              <li><LevelIcon extraStyle={styles.extraStyle} iconType='zy' /><p>恢复（{levels.totalOkCnt !== undefined ? levels.totalOkCnt : 0}）</p></li>
+              <li><LevelIcon extraStyle={styles.extraStyle} iconType='gj' /><p>警告（{levels.totalWarnCnt !== undefined ? levels.totalWarnCnt : 0}）</p></li>
+              <li><LevelIcon extraStyle={styles.extraStyle} iconType='tx' /><p>提醒（{levels.totalInfoCnt !== undefined ? levels.totalInfoCnt : 0}）</p></li>
             </ul>
           </div>
         }
