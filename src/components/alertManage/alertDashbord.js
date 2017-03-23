@@ -38,7 +38,7 @@ class Chart extends Component{
       this.color = function(num){
           return severityToColor[num]
       };
-      
+
 
       this.chart = d3.select("#treemap")
           .append("svg:svg")
@@ -46,8 +46,8 @@ class Chart extends Component{
           .attr("height", this.chartHeight)
           .append("svg:g")
     }
-    componentDidUpdate(){ 
-         
+    componentDidUpdate(){
+
         this.treemap = d3.layout.treemap()
           .round(false)
           .size([this.chartWidth, this.chartHeight])
@@ -56,26 +56,26 @@ class Chart extends Component{
               return d.value;
         });
         var headerHeight = 40;
-        var headerColor = "transparent";
+        var headerColor = "#0d3158";
         var transitionDuration = 500;
         var root;
         var node;
 
-       
+
         // d3.json("../../../mock/alert.json", function(data) {
         if(this.props.currentDashbordData){
           node = root = {
               path: 'root',
               children: this.props.currentDashbordData
             };
-            
+
             var nodes = this.treemap.nodes(root);
 
             var children = nodes.filter(function(d) {
                 return !d.children;
             });
             var parents = nodes.filter(function(d) {
-                
+
                 return d.children;
             });
 
@@ -90,7 +90,7 @@ class Chart extends Component{
                 .append("g")
                 .attr("class", "cell parent")
                 .on("click", d => {
-                  
+
                 })
 
                 .append("svg")
@@ -173,7 +173,7 @@ class Chart extends Component{
                             alertListPath[temp] = keyValue;
                         }
                     }
-                    alertListPath.severity = d.maxSeverity == 0 
+                    alertListPath.severity = d.maxSeverity == 0
                                                 ? '0' : d.maxSeverity == 1
                                                     ? '1,0' : d.maxSeverity == 2
                                                         ? '2,1,0' : d.maxSeverity == 3
@@ -284,7 +284,7 @@ class Chart extends Component{
             return ((255 - bgDelta) < nThreshold) ? "#000000" : "#ffffff";
         }
 
-        
+
         function zoom(d) {
 
             this.treemap
@@ -303,7 +303,7 @@ class Chart extends Component{
                 this.chart.selectAll(".cell.child .label")
                     // .style("display", "none");
             }
-            
+
             var zoomTransition = this.chart.selectAll("g.cell").transition().duration(transitionDuration)
                 .attr("transform", (d) => {
                   return "translate(" + this.xscale(d.x) + "," + this.yscale(d.y) + ")";
@@ -371,9 +371,9 @@ class Chart extends Component{
             }
         }
         }
-            
 
-          
+
+
         setInterval( () =>{
             // var data = {"message":"热图查询成功","data":{"totalCriticalCnt":33,"totalMajorCnt":29,"totalInfoCnt":24,"totalMinorCnt":13,"totalWarnCnt":22,"picList":[{"name":"资源类型名称","value":19,"path":"entityTypeName","children":[{"name":"光缆","path":"entityTypeName\/guanglan","value":9,"maxSeverity":50},{"name":"计算机","path":"entityTypeName\/jisuanji","value":10,"maxSeverity":50}]},{"name":"告警级别","value":102,"path":"severity","children":[{"name":"紧急","path":"severity\/jinji","value":27,"maxSeverity":50},{"name":"警告","path":"severity\/jinggu","value":19,"maxSeverity":20},{"name":"次要","path":"severity\/ciyao","value":13,"maxSeverity":30},{"name":"主要","path":"severity\/zhuyao","value":22,"maxSeverity":40},{"name":"提醒","path":"severity\/dixing","value":21,"maxSeverity":10}]}]},"result":true}
             // .data.picList
