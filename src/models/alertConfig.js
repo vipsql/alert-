@@ -14,6 +14,7 @@ const initalState ={
 
   currentOperateAppType: {}, //配置的应用详情
   currentEditApp: {}, // 编辑的应用
+  currentDisplayName: undefined, // 增加时点击生成UUID重新渲染需要保存displayname
 
   isShowTypeModal: false, // 配置的modal
   isShowDeteleModal: false, // 删除的modal
@@ -319,7 +320,7 @@ export default {
           }
         })
       })
-      return { ...state, isShowTypeModal, UUID, currentOperateAppType: newObj}
+      return { ...state, isShowTypeModal, UUID, currentOperateAppType: newObj, currentDisplayName: undefined}
     },
     // 回显
     setCurrent(state, { payload }) {
@@ -389,8 +390,8 @@ export default {
       })
       return { ...state, applicationData: newData, isShowDeteleModal: false}
     },
-    setUUID(state, { payload }) {
-      return { ...state, UUID: payload }
+    setUUID(state, { payload: {UUID, currentDisplayName}}) {
+      return { ...state, UUID: UUID, currentDisplayName: currentDisplayName}
     }
   },
 

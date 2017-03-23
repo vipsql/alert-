@@ -47,7 +47,7 @@ const applicationView = (props) => {
                     </Form>
                     {
                         appkey === undefined ? 
-                        <Button type="primary" className={styles.createBtn} onClick={keyCreate}>点击生成AppKey</Button>
+                        <Button type="primary" className={styles.createBtn} onClick={() => {keyCreate(form)}}>点击生成AppKey</Button>
                         :
                         <Input className={styles.readOnlyInput} readOnly value={`App key：${appkey}`}></Input>
                     }

@@ -46,12 +46,7 @@ function Edit({dispatch, alertConfig}){
                 })
             })
         },
-        keyCreate: () => {
-            dispatch({
-                type: 'alertConfig/setUUID',
-                payload: getUUID(32)
-            })
-        }
+        keyCreate: () => {}
     }
     
     return (

@@ -6,7 +6,7 @@ import { getUUID } from '../../utils'
 
 function Add({alertConfig, dispatch}){
 
-    const { currentOperateAppType, UUID } = alertConfig;
+    const { currentOperateAppType, UUID, currentDisplayName } = alertConfig;
     let appTypeInfo = {};
     
     // 用于不同的type匹配不同的页面message
@@ -28,6 +28,7 @@ function Add({alertConfig, dispatch}){
         type: currentOperateAppType.type,
         iconType: currentOperateAppType.name, // 用于确定Icon
         headerName: currentOperateAppType.name,
+        displayName: currentDisplayName,
         appkey: UUID,
         builtIn: 1,
         ...appTypeInfo,
@@ -46,10 +47,14 @@ function Add({alertConfig, dispatch}){
                 })
             })
         },
-        keyCreate: () => {
+        keyCreate: (form) => {
+            let _UUID = getUUID(32);
             dispatch({
                 type: 'alertConfig/setUUID',
-                payload: getUUID(32)
+                payload: {
+                    UUID: _UUID,
+                    currentDisplayName: form.getFieldsValue().displayName
+                }
             })
         }
     }
