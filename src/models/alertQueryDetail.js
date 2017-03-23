@@ -52,7 +52,7 @@ export default {
     // 打开派发工单做的相应处理
     *openFormModal({payload}, {select, put, call}) { 
         const options = yield getFormOptions();
-        if (options !== undefined) {
+        if (options.result) {
             yield put({
                 type: 'setFormOptions',
                 payload: options.data || []
@@ -70,13 +70,13 @@ export default {
 
         const viewDetailAlertId = yield select( state => state.alertQuery.viewDetailAlertId)
         
-        if (typeof viewDetailAlertId === 'number') {
+        if ( viewDetailAlertId ) {
             const result = yield dispatchForm({
                 type: payload, 
                 alertId: viewDetailAlertId
             })
-            if (result.data !== undefined) {
-                yield window.open(result.data); 
+            if (result.result) {
+                yield window.open(result.data.url); 
             } else {
                 yield message.error(`派发工单失败`, 3);
             }
@@ -99,15 +99,15 @@ export default {
       
       if ( viewDetailAlertId ) {
         const detailResult = yield queryDetail(viewDetailAlertId);
-        if ( typeof detailResult !== 'undefined' ) {
+        if ( detailResult.result ) {
           yield put({
             type: 'setDetail',
-            payload: detailResult || {}
+            payload: detailResult.data || {}
           })
-          if (detailResult.orderInfo) {
+          if (detailResult.data.orderInfo) {
             yield put({
               type: 'setFormData',
-              payload: detailResult.orderInfo
+              payload: detailResult.data.orderInfo
             })
           }
           yield put({
@@ -141,7 +141,7 @@ export default {
             }
         })
         
-        if (typeof viewDetailAlertId === 'number') {
+        if (viewDetailAlertId) {
             let stringId = '' + viewDetailAlertId;
             const resultData = yield close({
                 userId: userId, 
@@ -197,10 +197,10 @@ export default {
             }
         })
         const columnResult = yield call(queryCloumns)
-        if (columnResult === undefined) {
+        if (!columnResult.result) {
             console.error('扩展字段查询失败')
         }
-        yield put({ type: 'initColumn', payload: {baseCols: columns, extend: columnResult || {}}})
+        yield put({ type: 'initColumn', payload: {baseCols: columns, extend: columnResult.data || {}}})
         
     },
     // 列定制

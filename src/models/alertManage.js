@@ -32,7 +32,7 @@ export default {
     *alertManageSetup({payload}, {put, call, select}) {
 
       const isSet = yield isSetUserTags()
-      if(isSet) {
+      if(isSet.result) {
         yield put({
           type: 'alertTagsSet/queryDashbordBySetted',
         })
@@ -57,12 +57,12 @@ export default {
         
       // }
       const treemapData = yield queryDashbord()
-  
-      if (typeof treemapData !== 'undefined') {
+
+      if (treemapData.result) {
         yield put({
           type: 'setCurrentTreemap',
           payload: {
-            currentDashbordData: treemapData && treemapData.picList || [],
+            currentDashbordData: treemapData.data && treemapData.data.picList || [],
             isLoading: false
           }
         })
@@ -71,10 +71,10 @@ export default {
           type: 'setLevels',
           payload: {
             levels: {
-              totalOkCnt: treemapData.totalOkCnt, // 恢复
-              totalCriticalCnt: treemapData.totalCriticalCnt, // 紧急
-              totalWarnCnt: treemapData.totalWarnCnt, // 警告
-              totalInfoCnt: treemapData.totalInfoCnt // 提醒
+              totalOkCnt: treemapData.data.totalOkCnt, // 恢复
+              totalCriticalCnt: treemapData.data.totalCriticalCnt, // 紧急
+              totalWarnCnt: treemapData.data.totalWarnCnt, // 警告
+              totalInfoCnt: treemapData.data.totalInfoCnt // 提醒
             }
           }
         })

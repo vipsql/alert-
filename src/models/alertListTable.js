@@ -496,17 +496,17 @@ export default {
         ...extraParams
       })
 
-      if(listData !== undefined){
+      if(listData.result){
         if(isGroup){
 
           yield put({
             type: 'updateAlertListToGroup',
             payload: {
-              info: listData.datas,
+              info: listData.data.datas,
               isShowMore: false,
               isGroup: isGroup,
               groupBy: groupBy,
-              levels: listData.levels
+              levels: listData.data.levels
             }
           })
           yield put({
@@ -519,12 +519,12 @@ export default {
           yield put({
             type: 'updateAlertListToNoGroup',
             payload: {
-              info: listData.datas,
-              isShowMore: listData.hasNext,
+              info: listData.data.datas,
+              isShowMore: listData.data.hasNext,
               isGroup: false,
               orderBy: orderBy,
               orderType: orderType,
-              levels: listData.levels
+              levels: listData.data.levels
             }
           })
           yield put({
@@ -566,8 +566,8 @@ export default {
 
       if (typeof haveChild !== undefined && !haveChild) {
         const childResult = yield call(queryChild, payload)
-        if (childResult !== undefined) {
-          yield put( { type: 'addChild', payload: { children: childResult, parentId: payload, isGroup: isGroup } })
+        if (childResult.result) {
+          yield put( { type: 'addChild', payload: { children: childResult.data, parentId: payload, isGroup: isGroup } })
 
         } else {
           console.error('查询子告警有误')
@@ -663,9 +663,9 @@ export default {
 
       const listReturnData = yield call(queryAlertList, params)
 
-      if (listReturnData !== undefined) {
+      if (listReturnData.result) {
 
-        listData = listData.concat(listReturnData.datas);
+        listData = listData.concat(listReturnData.data.datas);
 
         yield put({
           type: 'resetCheckAlert',
@@ -674,10 +674,10 @@ export default {
             newObj: listData
           }
         })
-        if (!listReturnData.hasNext) {
+        if (!listReturnData.data.hasNext) {
           yield put({
             type: 'updateShowMore',
-            payload: listReturnData.hasNext
+            payload: listReturnData.data.hasNext
           })
         }
 
@@ -685,7 +685,7 @@ export default {
           type: 'updateAlertListData',
           payload: {
             data: listData,
-            newLevels: listReturnData.levels
+            newLevels: listReturnData.data.levels
           }
         })
 

@@ -11,6 +11,9 @@ export async function queryAlertBar(data) {
   
   const options = {
     body: JSON.stringify(data),
+    headers: {
+        'Content-Type': 'application/json',
+    },
     method: 'post'
   }
 
@@ -21,6 +24,9 @@ export async function queryAlertBar(data) {
 export async function queryAlertList(data) {
   const options = {
     body: JSON.stringify(data),
+    headers: {
+        'Content-Type': 'application/json',
+    },
     method: 'post'
   }
 
@@ -29,7 +35,10 @@ export async function queryAlertList(data) {
 
 export async function queryChild(param) {
   const options = {
-    method: 'GET'
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+    }
   }
 
   return request(`/api/v2/incident/query/childs?incidentId=${param}`, options)

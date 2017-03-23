@@ -22,7 +22,7 @@ const relieveModal = ({alertOperation, dispatch}) => {
             type: 'alertOperation/relieveAlert'
         })
       }} >解除</Button>
-      <Button type="ghost" onClick={ () => {
+      <Button type="ghost" className={styles.ghostBtn} onClick={ () => {
         dispatch({
             type: 'alertOperation/toggleRelieveModal',
             payload: false
@@ -40,7 +40,7 @@ const relieveModal = ({alertOperation, dispatch}) => {
             footer={ modalFooter }
         >
             <div className={styles.relieveMain}>
-                <p>解除{`${relieveAlert.alertName}`}的合并告警</p>
+                <p>解除{`${relieveAlert.name}`}的合并告警</p>
             </div>
         </Modal>
     )

@@ -23,10 +23,10 @@ export default {
       // 打开派发工单做的相应处理
       *openFormModal({payload}, {select, put, call}) {
           const options = yield getFormOptions();
-          if (options !== undefined) {
+          if (options.result) {
               yield put({
                   type: 'setFormOptions',
-                  payload: options || []
+                  payload: options.data || []
               })
           } else {
               console.error('获取工单类型失败');
@@ -75,8 +75,8 @@ export default {
                   code: payload, 
                   id: viewDetailAlertId
               })
-              if (result !== undefined) {
-                  yield window.open(result.url); 
+              if (result.result) {
+                  yield window.open(result.data.url); 
               } else {
                   yield message.error(`派发工单失败`, 3);
               }

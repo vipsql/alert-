@@ -13,13 +13,18 @@ function isApiUrl(url) {
 }
 
 function checkStatus(response) {
+  debugger
   if (response.status >= 200 && response.status < 300) {
-    return response;
+    return {
+      result: true,
+      data: response.json()
+    }
+  } else {
+    return {
+      result: false,
+      data: Promise.resolve(response.json())
+    }
   }
-
-  const error = new Error(response.statusText);
-  error.response = response;
-  throw error;
 }
 
 /**
@@ -29,42 +34,41 @@ function checkStatus(response) {
  * @param  {object} [options] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
-// export default async function request(url, options) {
-  // var xhr = new XMLHttpRequest();
-  // xhr.open("GET", isApiUrl(url), true);
-  // xhr.setRequestHeader("Content-Type", options.headers.Content-Type);
-  // xhr.send(null);
+export default async function request(url, options) {
 
-//   const response = await fetch(isApiUrl(url), options);
-//     checkStatus(response);
-
-//     const data = await response.json();
-//     console.log(data);
-
-//     return data;
-// }
-
-/**
- * Requests a URL, returning a promise.
- *
- * @param  {string} url       The URL we want to request
- * @param  {object} [options] The options we want to pass to "fetch"
- * @return {object}           An object containing either "data" or "err"
- */
-export default function request (url, options) {
-    
-    const httpUrl = isApiUrl(url)
-
-    return Ajax.ajax({
-      url: httpUrl,
-      method: options.method || 'get',
-      contentType: 'application/json',
-      data: options.body || undefined,
-      processData: options.method === 'get',
-      dataType: 'JSON'
-    }).done( (data) => {
+    const response = await fetch(isApiUrl(url), options);
+    const data = await response.json()
+    if (response.status >= 200 && response.status < 300) {
+      return {
+        result: true,
+        data: data
+      }
+    } else {
       return data
-    }).fail( (xhr, textStatus, errorThrown) => {
-      return xhr.responseJson
-    })
+    }
 }
+
+/**
+ * Requests a URL, returning a promise.
+ *
+ * @param  {string} url       The URL we want to request
+ * @param  {object} [options] The options we want to pass to "fetch"
+ * @return {object}           An object containing either "data" or "err"
+ */
+// export default function request (url, options) {
+    
+//     const httpUrl = isApiUrl(url)
+
+//     return Ajax.ajax({
+//       url: httpUrl,
+//       method: options.method || 'get',
+//       contentType: 'application/json',
+//       data: options.body || undefined,
+//       processData: options.method === 'get',
+//       dataType: 'JSON'
+//     }).done( (data) => {
+//       return data
+//     }).fail( (xhr, textStatus, errorThrown) => {
+//       return xhr.responseJSON
+//     })
+// }

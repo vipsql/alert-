@@ -101,10 +101,10 @@ export default {
     *editApplicationView({payload}, {select, put, call}) {
       if (payload !== undefined) {
         const viewResult = yield call(view, payload)
-        if (viewResult !== undefined) {
+        if (viewResult.result) {
           yield put({
             type: 'setCurrent',
-            payload: viewResult || {}
+            payload: viewResult.data || {}
           })
         } else {
           yield message.error(`viewResult.message`, 3)
@@ -136,7 +136,7 @@ export default {
           type: currentOperateAppType.type,
           appKey: UUID
         })
-        if (addResult === undefined) {
+        if (addResult.result) {
           yield message.success('应用添加成功', 3)
           yield put(routerRedux.goBack());
         } else {
@@ -170,7 +170,7 @@ export default {
           type: currentEditApp.type,
           appKey: UUID
         })
-        if (editResult === undefined) {
+        if (editResult.result) {
           yield message.success('应用编辑成功', 3)
           yield put(routerRedux.goBack());
         } else {
@@ -209,9 +209,9 @@ export default {
       }
 
       const appResult = yield call(queryConfigAplication, params)
-      if (appResult !== undefined) {
+      if (appResult.result) {
         yield put({ type: 'setApplicationData', payload: {
-          applicationData: appResult || [],
+          applicationData: appResult.data || [],
           applicationType: type,
           orderBy: orderBy,
           orderType: orderType
@@ -227,11 +227,11 @@ export default {
       if (payload !== undefined) {
         yield put({ type: 'toggleTypeModal', payload: true })
         const typeResult = yield call(typeQuery, payload)
-        if (typeResult !== undefined) {
+        if (typeResult.result) {
           yield put({
             type: 'openTypeModal',
             payload: {
-              applicationTypeData: typeResult,
+              applicationTypeData: typeResult.data,
             }
           })
         } else {
@@ -245,7 +245,7 @@ export default {
     *changeStatus({payload}, {select, put, call}) {
       if (payload !== undefined && payload.id !== undefined && payload.status !== undefined) {
         const statusResult = yield call(changeAppStatus, payload)
-        if (statusResult === undefined) {
+        if (statusResult.result) {
           yield put({ 
             type: 'changeAppStatus', 
             payload: {
@@ -269,7 +269,7 @@ export default {
       })
       if (Object.keys(currentDeleteApp).length !== 0 && currentDeleteApp.id !== undefined) {
         const deleteResult = yield call(deleteApp, currentDeleteApp.id)
-        if (deleteResult === undefined) {
+        if (deleteResult.result) {
           yield put({ 
             type: 'deleteApplication', 
             payload: currentDeleteApp.id

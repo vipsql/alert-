@@ -60,10 +60,10 @@ export default {
 
       const tagsList = yield getAllListTags();
 
-      if (typeof tagsList !== 'undefined' && tagsList.length !== 0) {
+      if (tagsList.result && tagsList.data.length !== 0) {
         yield put({
           type: 'initalTagsList',
-          payload: tagsList || []
+          payload: tagsList.data || []
         })
       } else {
         console.error('查询所有标签失败');

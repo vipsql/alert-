@@ -15,6 +15,9 @@ export async function queryConfigAplication(params) {
 export async function changeAppStatus(params) {
   const options = {
     body: JSON.stringify(params),
+    headers: {
+        'Content-Type': 'application/json',
+    },
     method: 'POST'
   }
 
@@ -25,6 +28,9 @@ export async function changeAppStatus(params) {
 export async function deleteApp(id) {
   const options = {
     body: JSON.stringify({id: id}),
+    headers: {
+        'Content-Type': 'application/json',
+    },
     method: 'POST'
   }
 
@@ -45,6 +51,9 @@ export async function typeQuery(type) {
 export async function add(params) {
   const options = {
     body: JSON.stringify(params),
+    headers: {
+        'Content-Type': 'application/json',
+    },
     method: 'POST'
   }
 
@@ -55,6 +64,9 @@ export async function add(params) {
 export async function update(params) {
   const options = {
     body: JSON.stringify(params),
+    headers: {
+        'Content-Type': 'application/json',
+    },
     method: 'POST'
   }
 

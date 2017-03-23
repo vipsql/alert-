@@ -215,10 +215,10 @@ export default {
 
        const options = yield call(querySource)
        
-       if (options !== undefined) {
+       if (options.result) {
          yield put({
            type: 'setSourceOptions',
-           payload: options || [],
+           payload: options.data || [],
          })
        } else {
          yield message.error('查询告警来源失败', 3)
@@ -295,7 +295,7 @@ export default {
         ...currentQuery
       })
 
-      if(listData !== undefined){
+      if(listData.result){
         if(isGroup){
           
           yield put({
@@ -318,12 +318,12 @@ export default {
           yield put({
             type: 'updateAlertListToNoGroup',
             payload: {
-              info: listData.data,
-              isShowMore: listData.hasNext,
+              info: listData.data.data,
+              isShowMore: listData.data.hasNext,
               isGroup: false,
               orderBy: orderBy,
               orderType: orderType,
-              queryCount: countData !== undefined ? countData : {}
+              queryCount: countData.result ? countData.data : {}
             }
           })
           yield put({
@@ -385,14 +385,14 @@ export default {
 
       const listReturnData = yield call(queryAlertList, params)
 
-      if (listReturnData !== undefined) {
+      if (listReturnData.result) {
 
-        listData = listData.concat(listReturnData.data);
+        listData = listData.concat(listReturnData.data.data);
         
-        if (!listReturnData.hasNext) {
+        if (!listReturnData.data.hasNext) {
           yield put({
             type: 'updateShowMore',
-            payload: listReturnData.hasNext
+            payload: listReturnData.data.hasNext
           })
         }
 

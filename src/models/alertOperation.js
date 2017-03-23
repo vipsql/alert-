@@ -75,10 +75,10 @@ export default {
               }
           })
           const columnResult = yield call(queryCloumns)
-          if (columnResult === undefined) {
+          if (!columnResult.result) {
               console.error('扩展字段查询失败')
           }
-          yield put({ type: 'initColumn', payload: {baseCols: columns, extend: columnResult || {}}})
+          yield put({ type: 'initColumn', payload: {baseCols: columns, extend: columnResult.data || {}}})
       },
       // 打开解除告警modal
       *openRelieveModal({payload}, {select, put, call}) {
@@ -193,7 +193,7 @@ export default {
                   parentId: originAlert[0],
                   childs: filterListIds
               })
-              if (result === true) {
+              if (result.result) {
                   yield put({ type: 'alertListTable/resetCheckedAlert'})
                   yield put({ type: 'alertListTable/mergeChildAlert', payload: { pId: originAlert[0], cItems: filterList }})
                   yield message.success('合并成功', 3);
@@ -221,10 +221,10 @@ export default {
               })
           } else {
             const options = yield getFormOptions();
-            if (options !== undefined) {
+            if (options.result) {
                 yield put({
                     type: 'setFormOptions',
-                    payload: options || []
+                    payload: options.data || []
                 })
             } else {
                 console.error('获取工单类型失败');
@@ -297,8 +297,8 @@ export default {
                   code: payload, 
                   id: operateAlertIds[0]
               })
-              if (result !== undefined) {
-                  yield window.open(result.url);
+              if (result.result) {
+                  yield window.open(result.data.url);
                   yield put({ type: 'alertListTable/resetCheckedAlert'})
               }
           } else if (operateAlertIds.length === 0) {

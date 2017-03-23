@@ -37,15 +37,15 @@ export default {
       
       if (viewDetailAlertId) {
         const detailResult = yield queryDetail(viewDetailAlertId);
-        if ( typeof detailResult !== 'undefined' ) {
+        if ( detailResult.result ) {
           yield put({
             type: 'setDetail',
-            payload: detailResult || {}
+            payload: detailResult.data || {}
           })
-          if (detailResult.orderInfo) {
+          if (detailResult.data.orderInfo) {
             yield put({
               type: 'setFormData',
-              payload: detailResult.orderInfo
+              payload: detailResult.data.orderInfo
             })
           }
           yield put({

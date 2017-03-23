@@ -28,18 +28,18 @@ export default {
       //const { userId } = yield select( state => ({'userId': state.app.userId}))
       const allTags = yield getAllTags();
 
-      if (typeof allTags !== 'undefined' && allTags.length !== 0) {
+      if (allTags.result && allTags.data.length !== 0) {
         yield put({
           type: 'setCurrentTags',
-          payload: allTags || []
+          payload: allTags.data || []
         })
         // search selected tags
         const selectedTags = yield getTagsByUser();
 
-        if (typeof selectedTags !== 'undefined') {
+        if (selectedTags.result) {
           yield put({
             type: 'setCurrentSelectTags',
-            payload: selectedTags
+            payload: selectedTags.data
           })
           // filter tags
           yield put({type: 'filterInitalTags'})
@@ -76,7 +76,7 @@ export default {
 
       const postResult = yield setUserTags({'tagIdList': commitTagIds});
 
-      if (postResult) {
+      if (postResult.result) {
         yield message.success('标签保存成功');
       } else {
         yield message.error('标签未保存成功');
