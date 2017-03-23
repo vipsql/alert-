@@ -75,6 +75,7 @@ class Chart extends Component{
                 return !d.children;
             });
             var parents = nodes.filter(function(d) {
+                
                 return d.children;
             });
 
@@ -84,6 +85,7 @@ class Chart extends Component{
                 .data(parents.slice(1), function(d) {
                     return "p-" + d.path;
                 });
+
             var parentEnterTransition = parentCells.enter()
                 .append("g")
                 .attr("class", "cell parent")
@@ -113,12 +115,12 @@ class Chart extends Component{
                 .attr("y", "10")
                 .attr("transform", "translate(3, 13)")
                 .attr("width", function(d) {
-                    console.log(d.dx)
                     return Math.max(0.01, d.dx);
                 })
+                .attr('font-size', '14')
                 .attr("height", headerHeight)
                 .text(function(d) {
-                    return d.path;
+                    return d.name;
                 });
             // update transition
             var parentUpdateTransition = parentCells.transition().duration(transitionDuration);
@@ -137,9 +139,10 @@ class Chart extends Component{
                 .attr("width", function(d) {
                     return Math.max(0.01, d.dx);
                 })
-                .attr("height", headerHeight)
+                .attr('font-size', '20')
+                .attr("height", 20)
                 .text(function(d) {
-                    return d.path;
+                    return d.name;
                 });
             // remove transition
             parentCells.exit()
@@ -203,7 +206,7 @@ class Chart extends Component{
                 .attr("text-anchor", "middle")
                 // .style("display", "none")
                 .text(function(d) {
-                    return d.path;
+                    return d.name;
                 });
             // update transition
             var childUpdateTransition = childrenCells.transition().duration(transitionDuration);
@@ -232,7 +235,7 @@ class Chart extends Component{
                 .attr("text-anchor", "middle")
                 // .style("display", "none")
                 .text(function(d) {
-                    return d.path;
+                    return d.name;
                 });
 
             // exit transition
@@ -339,7 +342,7 @@ class Chart extends Component{
                     return d.children ? headerHeight : Math.max(0.01, (ky * d.dy));
                 })
                 .text(function(d) {
-                    return d.path;
+                    return d.name;
                 });
 
             zoomTransition.select(".child .label")
