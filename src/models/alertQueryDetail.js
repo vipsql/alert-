@@ -216,8 +216,12 @@ export default {
     initColumn(state, {payload: {baseCols, extend}}) {
         const { columnList } = state;
         let newList = columnList;
+        let haveExtend = false;
         baseCols.forEach( (column, index) => {
             newList.forEach( (group) => {
+                if (group.type == 1) {
+                    haveExtend = true;
+                }
                 group.cols.forEach( (col) => {
                   if (column.key === col.id) {
                       col.checked = true;
@@ -225,7 +229,7 @@ export default {
                 }) 
             })
         })
-        if (Object.keys(extend).length !== 0) {
+        if (Object.keys(extend).length !== 0 && !haveExtend) {
             extend.cols.forEach( (col) => {
                 col.checked = false;
             })

@@ -1,4 +1,6 @@
 import { request, packURL } from '../utils'
+import {stringify} from 'qs'
+
 export async function queryAlertListTime(data) {
   const options = {
     body: JSON.stringify(data),
@@ -41,5 +43,5 @@ export async function queryChild(param) {
     }
   }
 
-  return request(`/api/v2/incident/query/childs?incidentId=${param}`, options)
+  return request(`/api/v2/incident/query/childs?${stringify(param)}`, options)
 }

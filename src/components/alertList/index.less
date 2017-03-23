@@ -136,6 +136,26 @@
     .hiddenChild{
         display: none;
     }
+    .isSpread:nth-child(odd){
+        td{
+            background-color: #18477a;
+        }
+    }
+    .isSpread:nth-child(even){
+        td{
+            background-color: #1d5692;
+        }
+    }
+    .noSpread:nth-of-type(odd){
+        td{
+            background-color: #18477a;
+        }
+    }
+    .noSpread:nth-of-type(even){
+        td{
+            background-color: #1d5692;
+        }
+    }
     .even{
         td{
             background-color: #18477a;
@@ -156,9 +176,11 @@
       //background: white;
       //border-bottom: 1px solid #e4e7eb;
       &.tdBorderRight{
-        border-right: 1px solid #e4e7eb;
+        //border-right: 1px solid #e4e7eb;
+        border-right: 1px solid #0d5990;
         cursor: pointer;
-        color: #4082e6;
+        //color: #4082e6;
+        color: #4fb8f0;
         .relieveIcon{
             position: relative;
             left: 10px;
@@ -246,13 +268,13 @@
     position: relative;
     width: 100%;
     height: 100%;
-
     .lineDot{
       position: absolute;
       left: 0;
       top: 24px;
       height: 1px;
       background: #d5ddeb;
+      //background: #345374;
     }
     span{
       position: absolute;
@@ -263,19 +285,16 @@
       background: #f26d49;
       border-radius: 12px;
       &.jjLevel{
-          background: red;
+          background-color: #eb5a30;
       }
-      &.zyLevel{
-          background: #f57268;
-      }
-      &.cyLevel{
-          background: orange;
+      &.hfLevel{
+          background-color: #ff9524;
       }
       &.gjLevel{
-          background: #ffdd00;
+          background-color: #fadc23;
       }
       &.txLevel{
-          background: #10cc10;
+          background-color: #a5f664;
       }
     }
   }

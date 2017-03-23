@@ -114,6 +114,7 @@ export default {
           if (group.field == 'severity' || group.field == 'status') {
             return {
               name: CodeWords[group.field][item],
+              value: item,
               selected: false
             }
           } else {

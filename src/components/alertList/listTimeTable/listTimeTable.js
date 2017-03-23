@@ -4,6 +4,7 @@ import { connect } from 'dva'
 import { Popover } from 'antd'
 import styles from '../index.less'
 import LevelIcon from '../../common/levelIcon/index.js'
+import CodeWords from '../../../codewords.json'
 
 class ListTimeTable extends Component {
     componentDidMount(){
@@ -48,7 +49,7 @@ class ListTimeTable extends Component {
       } = this.props
       
       let colsKey = []
-      const theads = columns.filter( item => (item['key'] == 'entity' || item['key'] == 'alertName')).map( (item) => {
+      const theads = columns.filter( item => (item['key'] == 'entityName' || item['key'] == 'name')).map( (item) => {
         const width = item.width || 'auto'
         colsKey.push(item['key'])
         return (
@@ -117,7 +118,7 @@ class ListTimeTable extends Component {
 
          keys.forEach( (key, index) => {
            // const tdKey = item.date + key
-           const className = key == 'alertName' ? 'tdBorderRight' : ''
+           const className = key == 'name' ? 'tdBorderRight' : ''
            if(index == 0){
              TDS.push(
                <td key='sourceAlert'>
@@ -131,7 +132,7 @@ class ListTimeTable extends Component {
                </td>
              )
            }
-           if(key == 'alertName') {
+           if(key == 'name') {
              TDS.push(<td key={key} className={styles[className]} data-id={item.id} onClick={detailClick} >
               {item[key]}
               {
@@ -156,7 +157,7 @@ class ListTimeTable extends Component {
 
          keys.forEach( (key, index) => {
            // const tdKey = item.date + key
-           const className = key == 'alertName' ? 'tdBorderRight' : '';
+           const className = key == 'name' ? 'tdBorderRight' : '';
 
            if(key == 'alertName') {
              TDS.push(<td key={key} className={styles[className]} data-id={item.id} onClick={detailClick} >{item[key]}</td>)
@@ -183,25 +184,24 @@ class ListTimeTable extends Component {
         
         dots =  item.map( (itemDot, idx) => {
           const left = (itemDot.occurTime - begin) / (60 * 1000) * minuteToWidth
-          const iconColor = itemDot['severity'] == 10 ? 
-                              'txLevel' : itemDot['severity'] == 20 ?
-                                  'gjLevel' : itemDot['severity'] == 30 ?
-                                      'cyLevel' : itemDot['severity'] == 40 ?
-                                          'zyLevel' : itemDot['severity'] == 50 ? 
-                                              'jjLevel' : undefined
+          const iconColor = itemDot['severity'] == 3 ? 
+                              'jjLevel' : itemDot['severity'] == 2 ?
+                                  'gjLevel' : itemDot['severity'] == 1 ?
+                                      'txLevel' : itemDot['severity'] == 0 ?
+                                          'hfLevel' : undefined
           let newDate = new Date(+itemDot['occurTime'])
           const content = (
             <div>
-              <p>{`级别：${itemDot['severity'] == 10 ? '提醒' : itemDot['severity'] == 20 ? '警告' : itemDot['severity'] == 30 ? '次要': itemDot['severity'] == 40 ? '主要' : itemDot['severity'] == 50 ? '紧急' : '恢复' }`}</p>
+              <p>{`级别：${CodeWords['severity'][itemDot['severity']]}`}</p>
               <p>{`告警名称：${itemDot['name']}`}</p>
-              <p>{`告警ID：${itemDot['id']}`}</p>
+              <p>{`告警ID：${itemDot['incidentId']}`}</p>
               <p>{`发生时间：${newDate.getFullYear() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getDate() + ' ' + newDate.getHours() + ':' + newDate.getMinutes()}`}</p>
               <p>{`告警描述：${itemDot['description']}`}</p>
-              <p>{`来源：${itemDot['entityName']}`}</p>
+              <p>{`来源：${itemDot['source']}`}</p>
             </div>
           );
           return (
-            <Popover content={content} key={`dot-${idx}`}>
+            <Popover content={content} key={`dot-${idx}`} trigger={'click'} className={styles.myPopover}>
               <span style={{left: left  + 'px'}} className={styles[iconColor]} data-id={itemDot.id} onClick={detailClick}></span>
             </Popover>
 
@@ -223,7 +223,7 @@ class ListTimeTable extends Component {
         const childLineDotW = childDotsInfo.lineDotW
         const childLineDotLeft = childDotsInfo.lineDotLeft
         return (
-          <tr key={childIndex} className={!item.isSpread && styles.hiddenChild}>
+          <tr key={childIndex} className={!item.isSpread ? styles.hiddenChild : styles.noSpread}>
             <td key="checkbox"></td>
             {childTds}
             <td key="timeDot">
@@ -263,7 +263,6 @@ class ListTimeTable extends Component {
             
             groupItem.children.forEach( (item, index) => {
 
-              const colorClass = index % 2 === 0 ? styles['even'] : styles['odd']
               const tds = genTds(item, keys)
               const dotsInfo = genDots(item.timeLine, keys)
               const dots = dotsInfo.dots
@@ -281,7 +280,7 @@ class ListTimeTable extends Component {
               }
 
               commonTrs.push(
-                <tr key={index} className={groupItem.isGroupSpread !== undefined && !groupItem.isGroupSpread ? styles.hiddenChild : colorClass}>
+                <tr key={index} className={groupItem.isGroupSpread !== undefined && !groupItem.isGroupSpread ? styles.hiddenChild : styles.noSpread}>
                   <td key="checkbox" className={styles.checkstyle}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
                   {tds}
                   <td key="timeDot">
@@ -313,7 +312,6 @@ class ListTimeTable extends Component {
 
           data.forEach( (item, index) => {
 
-            const colorClass = index % 2 === 0 ? styles['even'] : styles['odd']
             let keys = colsKey;
             
             const tdCheck = Object.keys(checkAlert).length !== 0 ? 
@@ -341,7 +339,7 @@ class ListTimeTable extends Component {
             }
             
             tbodyCon.push(
-              <tr key={index} className={colorClass}>
+              <tr key={index} className={styles.noSpread}>
                 {tdCheck}
                 {tds}
                 <td key="timeDot">

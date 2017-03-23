@@ -215,8 +215,30 @@
             }
           }
           //--------popover---------
-          .ant-popover{
+          .ant-popover.ant-popover-placement-top{
             .ant-popover-content{
+              .ant-popover-arrow{
+                border-top-color: #000;
+                opacity: 0.6;
+              }
+              .ant-popover-arrow:after{
+                border-top-color: #000;
+                opacity: 0.6;
+              }
+              .ant-popover-inner{
+                opacity: 0.6;
+                background-color: #000;
+                p{
+                  color: #fff;
+                }
+              }
+            }
+          }
+          .ant-popover.ant-popover-placement-bottomRight{
+            .ant-popover-content{
+              .ant-popover-arrow{
+                border-bottom-color: #226eaf;
+              }
               .ant-popover-arrow::after{
                 border-bottom-color: #226eaf;
               }

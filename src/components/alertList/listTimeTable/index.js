@@ -26,7 +26,7 @@ const  ListTimeTableWrap = ({dispatch, alertListTable}) => {
     },
 
     checkAlertFunc(e){
-      const alertInfo = (e.target.getAttribute('data-all'));
+      const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
 
       dispatch({
         type: 'alertListTable/changeCheckAlert',

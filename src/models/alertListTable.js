@@ -565,7 +565,7 @@ export default {
       }
 
       if (typeof haveChild !== undefined && !haveChild) {
-        const childResult = yield call(queryChild, payload)
+        const childResult = yield call(queryChild, {incidentId: payload, begin: begin, end: end})
         if (childResult.result) {
           yield put( { type: 'addChild', payload: { children: childResult.data, parentId: payload, isGroup: isGroup } })
 

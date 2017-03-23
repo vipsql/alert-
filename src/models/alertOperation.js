@@ -39,20 +39,11 @@ const initalState = {
                 {id: 'source', name: '告警来源', checked: false,},
                 {id: 'status', name: '告警状态', checked: false,},
                 {id: 'description', name: '告警描述', checked: false,},
+                {id: 'count', name: '次数', checked: false,},
                 {id: 'lastTime', name: '持续时间', checked: false,},
                 {id: 'lastOccurTime', name: '发生时间', checked: false,}
             ]
-        },
-        // {
-        //     type: 1, // id 
-        //     name: '扩展',
-        //     cols: [
-        //         {id: 'position', name: '地理位置', checked: false,},
-        //         {id: 'responsibleDepartment', name: '所属单位', checked: false,},
-        //         {id: 'david', name: '运营商', checked: false,},
-        //         {id: 'responsiblePerson', name: '负责人', checked: false,}
-        //     ]
-        // },
+        }
     ],
 
     // 分组显示
@@ -127,7 +118,7 @@ export default {
           if (relieveAlert !== undefined && relieveAlert.id !== undefined) {
               let childResult = {}
               if (relieveAlert.childrenAlert === undefined) {
-                  childResult = yield call(queryChild, {alertId: relieveAlert.id, begin: begin, end: end})
+                  childResult = yield call(queryChild, {incidentId: relieveAlert.id, begin: begin, end: end})
               }
               const relieveResult = yield relieve({
                   parentId: relieveAlert.id
@@ -353,8 +344,12 @@ export default {
       initColumn(state, {payload: {baseCols, extend}}) {
         const { columnList } = state;
         let newList = columnList;
+        let haveExtend = false;
         baseCols.forEach( (column, index) => {
             newList.forEach( (group) => {
+                if (group.type == 1) {
+                    haveExtend = true;
+                }
                 group.cols.forEach( (col) => {
                 if (column.key === col.id) {
                     col.checked = true;
@@ -362,7 +357,7 @@ export default {
                 }) 
             })
         })
-        if (Object.keys(extend).length !== 0) {
+        if (Object.keys(extend).length !== 0 && !haveExtend) {
             extend.cols.forEach( (col) => {
                 col.checked = false;
             })
@@ -391,7 +386,7 @@ export default {
             return group;
         })
         
-        return { ...state, columnList: newList }
+        return { ...state, columnList: newList, selectColumn: arr }
       },
       // 设置合并子列表
       setMergeInfoList(state, { payload }) {

@@ -190,7 +190,7 @@ class ListTable extends Component {
       const childTds = getChildTds(childItem, keys)
       
       return (
-        <tr key={trKey} className={!item.isSpread && styles.hiddenChild}>
+        <tr key={trKey} className={!item.isSpread ? styles.hiddenChild : styles.noSpread}>
           {childTds}
         </tr>
       )
@@ -218,7 +218,6 @@ class ListTable extends Component {
 
           item.children !== undefined && item.children.forEach( (childItem, index) => {
             
-            const colorClass = index % 2 === 0 ? styles['even'] : styles['odd']
             const tds = getTds(childItem, keys)
 
             // 如果有子告警
@@ -237,7 +236,7 @@ class ListTable extends Component {
             const trKey = 'td' + index
             const tdKey = 'td' + index
             childtrs.push(
-                <tr key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread ? styles.hiddenChild : colorClass}>
+                <tr key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread ? styles.hiddenChild : styles.noSpread}>
                   {
                     sourceOrigin !== 'alertQuery' ?
                     <td key={tdKey} className={styles.checkstyle}><input type="checkbox" checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc}/></td>
@@ -258,7 +257,6 @@ class ListTable extends Component {
 
       data.length > 0 && data.children === undefined && data.forEach( (item, index) => {
 
-        const colorClass = index % 2 === 0 ? styles['even'] : styles['odd']
         const keys = colsKey
         const tds = getTds(item, keys)
         let commonTrs = []
@@ -276,7 +274,7 @@ class ListTable extends Component {
           childs = null
         }
         commonTrs.push(
-          <tr key={item.id} className={colorClass}>
+          <tr key={item.id} className={styles.noSpread}>
             {
               sourceOrigin !== 'alertQuery' && Object.keys(checkAlert).length !== 0 ?
               <td key={index} className={styles.checkstyle}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
