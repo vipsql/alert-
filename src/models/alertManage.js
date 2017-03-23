@@ -47,16 +47,16 @@ export default {
         })
       }
     }, 
-    *queryAlertDashbord({payload}, {call, put, select}) {
-      if(!payload){
-        payload = {
-          tagIds: yield select( state => {
-            return state.alertTagsSet.commitTagIds
-          })
-        }
+    *queryAlertDashbord({}, {call, put, select}) {
+      // if(!payload){
+      //   payload = {
+      //     tagIds: yield select( state => {
+      //       return state.alertTagsSet.commitTagIds
+      //     })
+      //   }
         
-      }
-      const treemapData = yield queryDashbord(payload)
+      // }
+      const treemapData = yield queryDashbord()
   
       if (typeof treemapData !== 'undefined') {
         yield put({

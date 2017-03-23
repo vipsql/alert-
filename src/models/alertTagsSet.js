@@ -53,32 +53,12 @@ export default {
     },
     // inital dashbord when isSet is true
     *queryDashbordBySetted({payload}, {select, put, call}) {
-      const selectedTags = yield getTagsByUser()
-
-      if (typeof selectedTags !== 'undefined') {
-        yield put({
-          type: 'filterCommitTags',
-          payload: selectedTags || []
-        })
-
-        const { commitTagIds } = yield select( state => {
-          return {
-            'commitTagIds': state.alertTagsSet.commitTagIds
-          }
-        })
 
         yield put({
           type: 'alertManage/queryAlertDashbord',
-          payload: {
-            tagIds: commitTagIds
-          }
         })
 
         yield put({ type: 'alertManage/toggleAlertSet', payload: true })
-
-      } else {
-        console.error('查询用户标签错误');
-      }
 
     },
     // commit tagIds by set modal
@@ -104,9 +84,6 @@ export default {
 
       yield put({
         type: 'alertManage/queryAlertDashbord',
-        payload: {
-          tagIds: commitTagIds
-        }
       })
 
       yield put({ type: 'alertManage/toggleAlertSet', payload: true })
@@ -174,16 +151,16 @@ export default {
       }
     },
     // 过滤commitTagIds的数据
-    filterCommitTags(state, { payload }) {
-      if (typeof payload !== 'undefined' && payload.length !== 0) {
-        const newCommitTagIds = payload.map( item => {
-          return item.id
-        } )
-        return { ...state, commitTagIds: newCommitTagIds }
-      } else {
-        return { ...state }
-      }
-    },
+    // filterCommitTags(state, { payload }) {
+    //   if (typeof payload !== 'undefined' && payload.length !== 0) {
+    //     const newCommitTagIds = payload.map( item => {
+    //       return item.id
+    //     } )
+    //     return { ...state, commitTagIds: newCommitTagIds }
+    //   } else {
+    //     return { ...state }
+    //   }
+    // },
     // 过滤commitTagIds的数据(关注设置时)
     filterCommitTagsByTagList(state, { payload }) {
       let newCommitTagIds = [];

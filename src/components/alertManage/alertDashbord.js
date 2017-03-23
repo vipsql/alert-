@@ -159,8 +159,24 @@ class Chart extends Component{
                     currentEvent.preventDefault()
                   })
                 .on("click", (d) => {
-                  debugger
-                    // location.href = 'http://www.baidu.com'
+                    let alertListPath = {};
+                    let keyValue = d.name;
+                    let pathArr = d.path.split('/');
+                    if ( pathArr !== undefined && pathArr[0] !== undefined && pathArr[1] !== undefined ) {
+                        let temp = pathArr[0];
+                        if ( pathArr[0] == 'severity' || pathArr[0] == 'status') {
+                            alertListPath[temp] = pathArr[1];
+                        } else {
+                            alertListPath[temp] = keyValue;
+                        }
+                    }
+                    alertListPath.severity = d.maxSeverity == 0 
+                                                ? '0' : d.maxSeverity == 1
+                                                    ? '1,0' : d.maxSeverity == 2
+                                                        ? '2,1,0' : d.maxSeverity == 3
+                                                            ? '3,2,1,0' : ''
+                    localStorage.setItem('alertListPath', JSON.stringify(alertListPath));
+                    window.location.hash = "#/alertManage/" + d.path;
                 })
 
                 .append("svg")
