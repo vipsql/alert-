@@ -3,6 +3,7 @@ import { Button, Spin } from 'antd';
 import LevelIcon from '../levelIcon/index.js'
 import styles from './index.less'
 import { classnames } from '../../../utils'
+import CodeWords from '../../../codewords.json'
 
 class ListTable extends Component {
   constructor(){
@@ -12,6 +13,7 @@ class ListTable extends Component {
     const {
       sourceOrigin,
       isGroup,
+      groupBy,
       isShowMore,
       data,
       columns,
@@ -184,13 +186,13 @@ class ListTable extends Component {
     }
 
     // 生成子告警行
-    const genchildTrs = (childItem, childIndex, keys, item) => {
+    const genchildTrs = (childItem, childIndex, keys, item, isGroup) => {
       
       const trKey = 'chTd' + childIndex
       const childTds = getChildTds(childItem, keys)
       
       return (
-        <tr key={trKey} className={!item.isSpread ? styles.hiddenChild : styles.noSpread}>
+        <tr key={trKey} className={!item.isSpread ? styles.hiddenChild : !isGroup ? styles.noSpread : styles.groupSpread}>
           {childTds}
         </tr>
       )
@@ -205,14 +207,24 @@ class ListTable extends Component {
             (<tr className={styles.trGroup} key={index}>
               <td colSpan={keys.length + 3}>
                 <span className={styles.expandIcon} data-classify={item.classify} onClick={spreadGroup}>+</span>
-                  {item.classify}
+                  {
+                    groupBy && groupBy == 'status' ?
+                    CodeWords['status'][item.classify]
+                    :
+                    item.classify
+                  }
               </td>
             </tr>)
             :
             (<tr className={styles.trGroup} key={index}>
               <td colSpan={keys.length + 3}>
                 <span className={styles.expandIcon} data-classify={item.classify} onClick={noSpreadGroup}>-</span>
-                  {item.classify}
+                  {
+                    groupBy && groupBy == 'status' ?
+                    CodeWords['status'][item.classify]
+                    :
+                    item.classify
+                  }
               </td>
             </tr>)
 
@@ -226,7 +238,7 @@ class ListTable extends Component {
 
               childs = childItem.childrenAlert.map ( (childAlertItem, childIndex) => {
 
-                return genchildTrs(childAlertItem, childIndex, keys, childItem)
+                return genchildTrs(childAlertItem, childIndex, keys, childItem, isGroup)
 
               })
             }else{
@@ -236,7 +248,7 @@ class ListTable extends Component {
             const trKey = 'td' + index
             const tdKey = 'td' + index
             childtrs.push(
-                <tr key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread ? styles.hiddenChild : styles.noSpread}>
+                <tr key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread ? styles.hiddenChild : styles.groupSpread}>
                   {
                     sourceOrigin !== 'alertQuery' ?
                     <td key={tdKey} className={styles.checkstyle}><input type="checkbox" checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc}/></td>
@@ -267,7 +279,7 @@ class ListTable extends Component {
 
           childs = item.childrenAlert.map ( (childItem, childIndex) => {
 
-            return genchildTrs(childItem, childIndex, keys, item)
+            return genchildTrs(childItem, childIndex, keys, item, isGroup)
 
           })
         }else{

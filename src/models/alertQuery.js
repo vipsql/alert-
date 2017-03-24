@@ -1,7 +1,6 @@
 import { querySource, queryAlertList, queryCount} from '../services/alertQuery'
-
+import { groupSort } from '../utils'
 import { message } from 'antd'
-
 import {parse} from 'qs'
 
 const initalState = {
@@ -24,6 +23,7 @@ const initalState = {
     pageSize: 20,
     currentPage: 1,
     
+    tempListData: [], //用于临时记录列表数据，在分组时取用这块的数据（避免连续分组时的BUG）
     data: [],
 
     columns: [{
@@ -81,8 +81,8 @@ export default {
       return { ...state, currentQuery }
     },
     // 更新data数据
-    updateAlertListData(state, {payload: data}) {
-      return { ...state, data }
+    updateAlertListData(state, {payload: {data, tempListData}}) {
+      return { ...state, data, tempListData }
     },
     // 存放告警来源的options
     setSourceOptions(state, { payload: sourceOptions}) {
@@ -120,9 +120,9 @@ export default {
       return { ...state, ...initalState }
     },
     // 不分组更新
-    updateAlertListToNoGroup(state, {payload: {info, isShowMore, isGroup, orderBy, orderType, queryCount}}) {
+    updateAlertListToNoGroup(state, {payload: {info, tempListData, isShowMore, isGroup, orderBy, orderType, queryCount}}) {
       
-      return { ...state, data: info, isShowMore, isGroup, orderBy, orderType, queryCount}
+      return { ...state, data: info, tempListData, isShowMore, isGroup, orderBy, orderType, queryCount}
     },
     // 分组时更新
     updateAlertListToGroup(state, {payload: {info, isShowMore, isGroup, groupBy, queryCount}}) {
@@ -315,6 +315,7 @@ export default {
             type: 'updateAlertListToNoGroup',
             payload: {
               info: listData.data.data,
+              tempListData: listData.data.data,
               isShowMore: listData.data.hasNext,
               isGroup: false,
               orderBy: orderBy,
@@ -343,8 +344,33 @@ export default {
 
     // 点击分组时触发
     *setGroup({payload}, {select, put, call}) {
+      const { tempListData, queryCount }=  yield select(state => {
+         return {
+           'tempListData': state.alertQuery.tempListData,
+           'queryCount': state.alertQuery.queryCount
+         }
+      })
       if (payload.isGroup) {
-        yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, groupBy: payload.group } })   
+        yield put({
+          type: 'toggleLoading',
+          payload: true
+        })
+        const groupList = yield groupSort()(tempListData, payload.group)
+        yield put({
+          type: 'updateAlertListToGroup',
+          payload: {
+            info: groupList,
+            isShowMore: false,
+            isGroup: true,
+            groupBy: payload.group,
+            queryCount: queryCount
+          }
+        })
+        yield put({
+          type: 'toggleLoading',
+          payload: false
+        })
+        //yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, groupBy: payload.group } })   
       } else {
         yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, orderBy: undefined, orderType: undefined } })
       }
@@ -394,7 +420,10 @@ export default {
 
         yield put({
           type: 'updateAlertListData',
-          payload: listData,
+          payload: {
+            data: listData,
+            tempListData: listData
+          }
         })
 
         yield put({ type: 'setMore', payload: currentPage })

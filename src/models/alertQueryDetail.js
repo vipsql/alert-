@@ -248,9 +248,9 @@ export default {
               }
               if (col.checked) {
                   if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count') {
-                      arr.push({ key: col.id, title: col.name, width: 150, order: true }) // order字段先定死
+                      arr.push({ key: col.id, title: col.name, order: true }) // order字段先定死
                   } else {
-                      arr.push({ key: col.id, title: col.name, width: 150 }) // width先定死
+                      arr.push({ key: col.id, title: col.name }) // width先定死
                   }
               }
               return col;

@@ -27,6 +27,7 @@ class ListTimeTable extends Component {
     render(){
       const {
         isGroup,
+        groupBy,
         gridWidth,
         minuteToWidth,
         begin,
@@ -216,14 +217,14 @@ class ListTimeTable extends Component {
       }
 
       // 生成子告警行
-      const genchildTrs = (childItem, childIndex, keys, item, lineDotW, lineDotLeft) => {
+      const genchildTrs = (childItem, childIndex, keys, item, isGroup, lineDotW, lineDotLeft) => {
         const childTds = getChildTds(childItem, keys)
         const childDotsInfo = genDots(childItem.timeLine, keys)
         const childDots = childDotsInfo.dots
         const childLineDotW = childDotsInfo.lineDotW
         const childLineDotLeft = childDotsInfo.lineDotLeft
         return (
-          <tr key={childIndex} className={!item.isSpread ? styles.hiddenChild : styles.noSpread}>
+          <tr key={childIndex} className={!item.isSpread ? styles.hiddenChild : !isGroup ? styles.noSpread : styles.groupSpread}>
             <td key="checkbox"></td>
             {childTds}
             <td key="timeDot">
@@ -248,14 +249,24 @@ class ListTimeTable extends Component {
           (<tr className={styles.trGroup} key={index}>
             <td colSpan={6}>
               <span className={styles.expandIcon} data-classify={groupItem.classify} onClick={spreadGroup}>+</span>
-                {groupItem.classify}
+                {
+                  groupBy && groupBy == 'status' ?
+                  CodeWords['status'][groupItem.classify]
+                  :
+                  groupItem.classify
+                }
             </td>
           </tr>)
           :
           (<tr className={styles.trGroup} key={index}>
             <td colSpan={6}>
               <span className={styles.expandIcon} data-classify={groupItem.classify} onClick={noSpreadGroup}>-</span>
-                {groupItem.classify}
+                {
+                  groupBy && groupBy == 'status' ?
+                  CodeWords['status'][groupItem.classify]
+                  :
+                  groupItem.classify
+                }
             </td>
           </tr>)
           
@@ -272,7 +283,7 @@ class ListTimeTable extends Component {
               if(item.childrenAlert && groupItem.isGroupSpread !== false){
                 childTrs = item.childrenAlert.map ( (childItem, childIndex) => {
                   //keys = Object.keys(childItem);
-                  return genchildTrs(childItem, childIndex, keys, item, lineDotW, lineDotLeft)
+                  return genchildTrs(childItem, childIndex, keys, item, isGroup, lineDotW, lineDotLeft)
 
                 })
               }else{
@@ -280,7 +291,7 @@ class ListTimeTable extends Component {
               }
 
               commonTrs.push(
-                <tr key={index} className={groupItem.isGroupSpread !== undefined && !groupItem.isGroupSpread ? styles.hiddenChild : styles.noSpread}>
+                <tr key={index} className={groupItem.isGroupSpread !== undefined && !groupItem.isGroupSpread ? styles.hiddenChild : styles.groupSpread}>
                   <td key="checkbox" className={styles.checkstyle}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
                   {tds}
                   <td key="timeDot">
@@ -331,7 +342,7 @@ class ListTimeTable extends Component {
 
               childTrs = item.childrenAlert.map ( (childItem, childIndex) => {
                 keys = colsKey
-                return genchildTrs(childItem, childIndex, keys, item, lineDotW, lineDotLeft)
+                return genchildTrs(childItem, childIndex, keys, item, isGroup, lineDotW, lineDotLeft)
 
               })
             }else{
