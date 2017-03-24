@@ -38,14 +38,14 @@ class ListTable extends Component {
     
     columns.forEach( (item) => {
       const isOrder = item.order || false
-      const width = item.width || 'auto'
+      //const width = item.width || 'auto'
       const orderTriangle = orderBy !== undefined && item['key'] == orderBy ? styles['orderTriang-active'] : undefined
       const orderTh_active = orderBy !== undefined && item['key'] == orderBy ? styles['orderTh-active'] : undefined
 
       colsKey.push(item['key'])
       
       theads.push(
-        <th key={item.key} width={width}>
+        <th key={item.key}>
           {!isGroup && isOrder ? <span className={ orderType !== undefined ? classnames(styles.orderTh, orderTh_active) : styles.orderTh} data-key={item['key']} onClick={ orderByTittle }>{item.title}</span>
           : `${item.title}`}
           {!isGroup && isOrder && 
@@ -299,7 +299,7 @@ class ListTable extends Component {
               <tr>
                 {
                   sourceOrigin !== 'alertQuery' ?
-                  <th key="checkAll" width={60} className={styles.checkstyle}><input type="checkbox" checked={selectedAll} onChange={toggleSelectedAll}/></th>
+                  <th key="checkAll" width={48} className={styles.checkstyle}><input type="checkbox" checked={selectedAll} onChange={toggleSelectedAll}/></th>
                   :
                   undefined
                 }
