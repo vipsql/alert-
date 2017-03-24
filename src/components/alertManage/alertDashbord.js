@@ -11,7 +11,8 @@ class Chart extends Component{
 
     constructor(props) {
         super(props)
-        this.setTreemapHeight = this.setTreemapHeight.bind(this)
+        this.setTreemapHeight = this.setTreemapHeight.bind(this);
+        this.timer = null // 定时器
     }
     setTreemapHeight(ele){
         // const _percent = 0.85 // 占屏比
@@ -24,27 +25,38 @@ class Chart extends Component{
       return this.props.currentDashbordData !== nextProps.currentDashbordData
     }
     componentDidMount(){
-      const self = this;
-       const severityToColor = {
+        const self = this;
+        const severityToColor = {
             '0': '#ff9524', // 正常
             '1': '#a5f664', // 提醒
             '2': '#fadc23', // 警告
             '3': '#eb5a30' // 紧急
         }
-      this.chartWidth = document.documentElement.clientWidth - 160 - 90;
-      this.chartHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight) - 180;
-      this.xscale = d3.scale.linear().range([0, this.chartWidth]);
-      this.yscale = d3.scale.linear().range([0, this.chartHeight]);
-      this.color = function(num){
-          return severityToColor[num]
-      };
+        this.chartWidth = document.documentElement.clientWidth - 160 - 90;
+        this.chartHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight) - 180;
+        this.xscale = d3.scale.linear().range([0, this.chartWidth]);
+        this.yscale = d3.scale.linear().range([0, this.chartHeight]);
+        this.color = function(num){
+            return severityToColor[num]
+        };
 
 
-      this.chart = d3.select("#treemap")
-          .append("svg:svg")
-          .attr("width", this.chartWidth)
-          .attr("height", this.chartHeight)
-          .append("svg:g")
+        this.chart = d3.select("#treemap")
+            .append("svg:svg")
+            .attr("width", this.chartWidth)
+            .attr("height", this.chartHeight)
+            .append("svg:g")
+
+        this.timer = setInterval( () =>{
+            // var data = {"message":"热图查询成功","data":{"totalCriticalCnt":33,"totalMajorCnt":29,"totalInfoCnt":24,"totalMinorCnt":13,"totalWarnCnt":22,"picList":[{"name":"资源类型名称","value":19,"path":"entityTypeName","children":[{"name":"光缆","path":"entityTypeName\/guanglan","value":9,"maxSeverity":50},{"name":"计算机","path":"entityTypeName\/jisuanji","value":10,"maxSeverity":50}]},{"name":"告警级别","value":102,"path":"severity","children":[{"name":"紧急","path":"severity\/jinji","value":27,"maxSeverity":50},{"name":"警告","path":"severity\/jinggu","value":19,"maxSeverity":20},{"name":"次要","path":"severity\/ciyao","value":13,"maxSeverity":30},{"name":"主要","path":"severity\/zhuyao","value":22,"maxSeverity":40},{"name":"提醒","path":"severity\/dixing","value":21,"maxSeverity":10}]}]},"result":true}
+            // .data.picList
+            // this.myChart.setOption({
+            //     series: [{
+            //         data: data
+            //     }]
+            // })
+            this.props.requestFresh()
+        }, 60000)
     }
     componentDidUpdate(){
 
@@ -372,22 +384,10 @@ class Chart extends Component{
         }
         }
 
+    }
 
-
-        setInterval( () =>{
-            // var data = {"message":"热图查询成功","data":{"totalCriticalCnt":33,"totalMajorCnt":29,"totalInfoCnt":24,"totalMinorCnt":13,"totalWarnCnt":22,"picList":[{"name":"资源类型名称","value":19,"path":"entityTypeName","children":[{"name":"光缆","path":"entityTypeName\/guanglan","value":9,"maxSeverity":50},{"name":"计算机","path":"entityTypeName\/jisuanji","value":10,"maxSeverity":50}]},{"name":"告警级别","value":102,"path":"severity","children":[{"name":"紧急","path":"severity\/jinji","value":27,"maxSeverity":50},{"name":"警告","path":"severity\/jinggu","value":19,"maxSeverity":20},{"name":"次要","path":"severity\/ciyao","value":13,"maxSeverity":30},{"name":"主要","path":"severity\/zhuyao","value":22,"maxSeverity":40},{"name":"提醒","path":"severity\/dixing","value":21,"maxSeverity":10}]}]},"result":true}
-            // .data.picList
-            // this.myChart.setOption({
-            //     series: [{
-            //         data: data
-            //     }]
-            // })
-            this.props.requestFresh()
-        }, 60000)
-
-
-
-
+    componentWillUnmount() {
+        clearInterval(this.timer)
     }
 
     render(){

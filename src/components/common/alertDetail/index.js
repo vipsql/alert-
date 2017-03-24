@@ -55,7 +55,7 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                     <p>基本信息</p>
                     <ul>
                         <li><span>ID:</span><span>{currentAlertDetail.id}</span></li>
-                        <li><span>状态:</span><span>{currentAlertDetail.status}<i className={classnames(setClass, styles.stateClass)}></i></span></li>
+                        <li><span>状态:</span><span>{CodeWords['status'][currentAlertDetail.status]}<i className={classnames(setClass, styles.stateClass)}></i></span></li>
                         <li><span>级别:</span><span className={severityColor}>{CodeWords['severity'][currentAlertDetail.severity]}</span></li>
                         <li><span>来源:</span><span>{currentAlertDetail.entityName}</span></li>
                         <li><span>描述:</span><span>{currentAlertDetail.description}</span></li>
