@@ -1,7 +1,7 @@
 import { request } from '../utils'
 
 export async function querySource() {
-    return request(`/api/v2/incident/querySourceTags`, {
+    return request(`/incident/querySourceTags`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -10,7 +10,7 @@ export async function querySource() {
 }
 
 export async function queryAlertList(params) {
-    return request(`/api/v2/incident/queryHistory`, {
+    return request(`/incident/queryHistory`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ export async function queryAlertList(params) {
 }
 
 export async function queryCount(params) {
-    return request(`/api/v2/incident/queryIncidentCount`, {
+    return request(`/incident/queryIncidentCount`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export async function queryCount(params) {
 }
 
 export async function queryCloumns() {
-    return request(`/api/v2/incident/queryExtendedTag`, {
+    return request(`/incident/queryExtendedTag`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

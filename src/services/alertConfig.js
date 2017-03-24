@@ -3,7 +3,7 @@ import {stringify} from 'qs'
 
 // 查询应用列表
 export async function queryConfigAplication(params) {
-  return request(`/api/v2/application/query?${stringify(params)}`, {
+  return request(`/application/query?${stringify(params)}`, {
       method: 'GET',
       headers: {
           'Content-Type': 'application/json',
@@ -21,7 +21,7 @@ export async function changeAppStatus(params) {
     method: 'POST'
   }
 
-  return request('/api/v2/application/updateStatus', options)
+  return request('/application/updateStatus', options)
 }
 
 // 删除
@@ -34,12 +34,12 @@ export async function deleteApp(id) {
     method: 'POST'
   }
 
-  return request('/api/v2/application/delete', options)
+  return request('/application/delete', options)
 }
 
 // 查询配置种类
 export async function typeQuery(type) {
-  return request(`/api/v2/applicationType/query?type=${type}`, {
+  return request(`/applicationType/query?type=${type}`, {
       method: 'GET',
       headers: {
           'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export async function add(params) {
     method: 'POST'
   }
 
-  return request('/api/v2/application/create', options)
+  return request('/application/create', options)
 }
 
 // 编辑
@@ -70,12 +70,12 @@ export async function update(params) {
     method: 'POST'
   }
 
-  return request('/api/v2/application/update', options)
+  return request('/application/update', options)
 }
 
 // 详情
 export async function view(id) {
-  return request(`/api/v2/application/getAppDetail/${id}`, {
+  return request(`/application/getAppDetail/${id}`, {
       method: 'GET',
       headers: {
           'Content-Type': 'application/json',

@@ -9,7 +9,7 @@ export async function queryAlertDashbord () {
 
 export async function login(userName) {
   
-  return request(`/api/v2/incident/getUserId/${userName}`, {
+  return request(`/incident/getUserId/${userName}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

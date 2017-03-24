@@ -29,6 +29,7 @@ const initalState = {
 
     // 列定制(点击需要初始化进行数据结构转换)
     selectColumn: [], // 选择的列
+    extendColumnList: [], //扩展字段
     columnList: [
         {
             type: 0, // id 
@@ -363,7 +364,7 @@ export default {
             })
             newList.push(extend)
         }
-        return { ...state, columnList: newList }
+        return { ...state, columnList: newList, extendColumnList: extend.cols }
       },
       // 列改变时触发
       setColumn(state, {payload: selectCol}) {

@@ -34,6 +34,7 @@ class AlertListManage extends Component{
     const operateProps = {
       selectGroup: alertOperation.selectGroup,
       columnList: alertOperation.columnList,
+      extendColumnList: alertOperation.extendColumnList,
 
       checkCloumFunc: (e) => {
         dispatch({
