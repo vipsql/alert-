@@ -1,5 +1,6 @@
 import { queryAlertList, queryChild, queryAlertListTime } from '../services/alertList'
 import {parse} from 'qs'
+import { groupSort } from '../utils'
 
 const initvalState = {
     isGroup: false,
@@ -29,7 +30,10 @@ const initvalState = {
 
     gridWidth: 100,
     minuteToWidth: 5, //以分钟单位计算间隔
+    
+    tempListData: [], //用于临时记录列表数据，在分组时取用这块的数据（避免连续分组时的BUG）
     data: [],
+
     columns: [{
       key: 'entityName',
       title: '对象',
@@ -131,7 +135,7 @@ export default {
       return { ...state, ...initvalState }
     },
     // 不分组更新
-    updateAlertListToNoGroup(state, {payload: {info, isShowMore, isGroup, levels, orderBy, orderType}}) {
+    updateAlertListToNoGroup(state, {payload: {info, isShowMore, isGroup, levels, orderBy, orderType, tempListData}}) {
       let checkList = {};
       info.forEach( (item, index) => {
         checkList[`${item.id}`] = {
@@ -139,7 +143,7 @@ export default {
           checked: false
         }
       })
-      return { ...state, checkAlert: checkList, data: info, isShowMore, isGroup, levels, orderBy, orderType}
+      return { ...state, checkAlert: checkList, data: info, tempListData, isShowMore, isGroup, levels, orderBy, orderType}
     },
     // 分组时更新
     updateAlertListToGroup(state, {payload: {info, isShowMore, isGroup, groupBy, levels}}) {
@@ -223,13 +227,13 @@ export default {
 
     },
     // 更新告警列表
-    updateAlertListData(state, {payload: { data, newLevels }}){
+    updateAlertListData(state, {payload: { data, newLevels, tempListData }}){
       let { levels } = state;
       let keys = Object.keys(newLevels);
       keys.forEach( (key) => {
         levels[key] = typeof levels[key] !== 'undefined' ? levels[key] + newLevels[key] : newLevels[key]
       })
-      return { ...state, data, levels: levels }
+      return { ...state, data, tempListData, levels: levels }
     },
     // 手动添加子告警
     addChild(state, { payload: {children, parentId, isGroup} }) {
@@ -520,6 +524,7 @@ export default {
             type: 'updateAlertListToNoGroup',
             payload: {
               info: listData.data.datas,
+              tempListData: listData.data.datas,
               isShowMore: listData.data.hasNext,
               isGroup: false,
               orderBy: orderBy,
@@ -623,8 +628,34 @@ export default {
 
     // 点击分组时触发
     *setGroup({payload}, {select, put, call}) {
+      const { tempListData, levels }=  yield select(state => {
+         return {
+           'tempListData': state.alertListTable.tempListData,
+           'levels': state.alertListTable.levels
+         }
+      })
+      
       if (payload.isGroup) {
-        yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, groupBy: payload.group } })
+        yield put({
+          type: 'toggleLoading',
+          payload: true
+        })
+        const groupList = yield groupSort()(tempListData, payload.group)
+        yield put({
+          type: 'updateAlertListToGroup',
+          payload: {
+            info: groupList,
+            isShowMore: false,
+            isGroup: true,
+            groupBy: payload.group,
+            levels: levels
+          }
+        })
+        yield put({
+          type: 'toggleLoading',
+          payload: false
+        })
+        //yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, groupBy: payload.group } })
       } else {
         yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, orderBy: undefined, orderType: undefined } })
       }
@@ -685,6 +716,7 @@ export default {
           type: 'updateAlertListData',
           payload: {
             data: listData,
+            tempListData: listData,
             newLevels: listReturnData.data.levels
           }
         })
