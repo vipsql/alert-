@@ -50,10 +50,10 @@ class ListTimeTable extends Component {
       
       let colsKey = []
       const theads = columns.filter( item => (item['key'] == 'entityName' || item['key'] == 'name')).map( (item) => {
-        const width = item.width || 'auto'
+        //const width = item.width || 'auto'
         colsKey.push(item['key'])
         return (
-          <th key={item.key} width={width}>
+          <th key={item.key}>
             {item.title}
           </th>
         )
@@ -133,7 +133,7 @@ class ListTimeTable extends Component {
              )
            }
            if(key == 'name') {
-             TDS.push(<td key={key} className={styles[className]} data-id={item.id} onClick={detailClick} >
+            TDS.push(<td key={key} className={styles[className]} data-id={item.id} onClick={detailClick} >
               {item[key]}
               {
                 item['hasChild'] === true ?
@@ -141,7 +141,7 @@ class ListTimeTable extends Component {
                 :
                 undefined
               }
-              </td>)
+            </td>)
            } else {
              TDS.push(<td key={key} className={styles[className]}>{item[key]}</td>)
            }
@@ -375,7 +375,7 @@ class ListTimeTable extends Component {
               {
                 data.length > 0 ? tbodyCon :
                 <tr>
-                  <td colSpan="6">暂无数据</td>
+                  <td colSpan="6" style={{textAlign: 'center'}}>暂无数据</td>
                 </tr>
               }
               </tbody>

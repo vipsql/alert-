@@ -67,11 +67,36 @@ Date.prototype.format = function (format) {
   return format
 }
 
+/**
+ *  前端分组
+ */
+function groupSort() {
+  var map = {};
+  var count = -1;
+  return function(originArr, groupSource) {
+    var targetArr = [];
+    originArr.forEach( (obj) => {
+      if (!map.hasOwnProperty(obj[groupSource])) {
+        map[obj[groupSource]] = {
+          classify: obj[groupSource],
+          children: []
+        }
+        map[obj[groupSource]].children.push(obj);
+        targetArr[++count] = map[obj[groupSource]];
+      } else {
+        map[obj[groupSource]].children.push(obj);
+      }
+    })
+    return targetArr;
+  }
+}
+
 module.exports = {
   menu,
   packURL,
   request,
   color,
   classnames,
-  getUUID
+  getUUID,
+  groupSort
 }
