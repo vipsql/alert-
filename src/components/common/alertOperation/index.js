@@ -6,7 +6,7 @@ import { classnames } from '../../../utils'
 
 const Option = Select.Option;
 const DropdownButton = Dropdown.Button;
-const alertOperation = ({position, columnList, selectGroup, checkCloumFunc, relieveFunc, dispatchFunc, closeFunc, mergeFunc, groupFunc, noGroupFunc}) => {
+const alertOperation = ({position, columnList, selectGroup, extendColumnList, checkCloumFunc, relieveFunc, dispatchFunc, closeFunc, mergeFunc, groupFunc, noGroupFunc}) => {
 
     const setClass = classnames(
         styles['icon'],
@@ -84,9 +84,14 @@ const alertOperation = ({position, columnList, selectGroup, checkCloumFunc, reli
                     <Select className={classnames(styles.setGroup, styles.selectSingle)} placeholder="分组显示" value={selectGroup} onChange={ (value) => {
                         groupFunc(value)
                     }}>
-                        <Option className={styles.menuItem} value="entityName">按对象分组</Option>
-                        <Option className={styles.menuItem} value="source">按来源分组</Option>
-                        <Option className={styles.menuItem} value="status">按状态分组</Option>
+                        <Option key={0} className={styles.menuItem} value="entityName">按对象分组</Option>
+                        <Option key={1} className={styles.menuItem} value="source">按来源分组</Option>
+                        <Option key={2} className={styles.menuItem} value="status">按状态分组</Option>
+                        {
+                            extendColumnList.length !== 0 && extendColumnList.map( (col, index) => {
+                            return <Option key={index + 3} className={styles.menuItem} value={col.id}>{`按${col.name}分组`}</Option>
+                            })
+                        }
                     </Select>
                     <i className={selectGroup !== '分组显示' && classnames(switchClass, styles.switch)} onClick={noGroupFunc}></i>
                 </div>
@@ -110,6 +115,7 @@ alertOperation.defaultProps = {
     position: 'list',
     columnList: [],
     selectGroup: '',
+    extendColumnList: [],
     checkCloumFunc: () => {},
     relieveFunc: () => {},
     dispatchFunc: () => {},
@@ -122,7 +128,6 @@ alertOperation.defaultProps = {
 alertOperation.propTypes = {
     position: React.PropTypes.oneOf(['list', 'timeAxis', 'detail']).isRequired,
     columnList: React.PropTypes.array,
-
 }
 
 export default alertOperation

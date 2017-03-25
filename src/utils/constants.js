@@ -1,4 +1,6 @@
 export default {
-    "api_root": "http://10.1.50.58:8180"
-    // "api_root": "http://10.1.50.70:8890"
+    "api_root": "http://10.1.50.58:8180/api/v2"
+    //"api_root": "http://10.1.200.112:8180/api/v2" // gu
+    //"api_root": "http://10.1.200.101:8100/api/v2"
+    //"api_root": "http://10.1.200.105:8100/api/v2"
 }

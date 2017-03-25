@@ -13,6 +13,8 @@ const initalState = {
     closeMessage: undefined,
     isDropdownSpread: false, // 是否展开关闭modal的dropdown
 
+    selectColumn: [], // 选择的列
+    extendColumnList: [], //扩展字段
     columnList: [
         {
             type: 0, // id 
@@ -235,7 +237,7 @@ export default {
             })
             newList.push(extend)
         }
-        return { ...state, columnList: newList }
+        return { ...state, columnList: newList, extendColumnList: extend.cols }
     },
     // 列改变时触发
     setColumn(state, {payload: selectCol}) {

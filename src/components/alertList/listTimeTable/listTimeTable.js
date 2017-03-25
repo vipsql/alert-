@@ -253,7 +253,7 @@ class ListTimeTable extends Component {
                   groupBy && groupBy == 'status' ?
                   CodeWords['status'][groupItem.classify]
                   :
-                  groupItem.classify
+                  groupItem.classify ? groupItem.classify : '未知'
                 }
             </td>
           </tr>)
@@ -265,7 +265,7 @@ class ListTimeTable extends Component {
                   groupBy && groupBy == 'status' ?
                   CodeWords['status'][groupItem.classify]
                   :
-                  groupItem.classify
+                  groupItem.classify ? groupItem.classify : '未知'
                 }
             </td>
           </tr>)

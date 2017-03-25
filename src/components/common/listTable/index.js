@@ -211,7 +211,7 @@ class ListTable extends Component {
                     groupBy && groupBy == 'status' ?
                     CodeWords['status'][item.classify]
                     :
-                    item.classify
+                    item.classify ? item.classify : '未知'
                   }
               </td>
             </tr>)
@@ -223,7 +223,7 @@ class ListTable extends Component {
                     groupBy && groupBy == 'status' ?
                     CodeWords['status'][item.classify]
                     :
-                    item.classify
+                    item.classify ? item.classify : '未知'
                   }
               </td>
             </tr>)

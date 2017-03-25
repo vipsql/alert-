@@ -16,7 +16,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
 
     const { haveQuery, sourceOptions, queryCount } = alertQuery;
     
-    const { selectGroup, columnList } = alertQueryDetail
+    const { selectGroup, columnList, extendColumnList } = alertQueryDetail
 
     const { getFieldDecorator, getFieldsValue } = form;
 
@@ -371,9 +371,14 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                           payload: value,
                       })
                   }}>
-                      <Option className={styles.menuItem} value="entityName">按对象分组</Option>
-                      <Option className={styles.menuItem} value="source">按来源分组</Option>
-                      <Option className={styles.menuItem} value="status">按状态分组</Option>
+                      <Option key={0} className={styles.menuItem} value="entityName">按对象分组</Option>
+                      <Option key={1} className={styles.menuItem} value="source">按来源分组</Option>
+                      <Option key={2} className={styles.menuItem} value="status">按状态分组</Option>
+                      {
+                        extendColumnList.length !== 0 && extendColumnList.map( (col, index) => {
+                          return <Option key={index + 3} className={styles.menuItem} value={col.id}>{`按${col.name}分组`}</Option>
+                        })
+                      }
                   </Select>
                   <i className={selectGroup !== '分组显示' && classnames(switchClass, styles.switch)} onClick={() => {
                       dispatch({
