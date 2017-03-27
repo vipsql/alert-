@@ -29,7 +29,19 @@ const setLang = function(lang){
 			  locale: 'en-us',
 			  data: appLocaleEnData,
 			}
-
+			// 内置属性
+			window._severity = {
+			  "0": "ok",
+			  "1": "Information",
+			  "2": "Warning",
+			  "3": "Critical"
+			}
+			window._status = {
+			  "0": "New",
+			  "40": "Acknowledged",
+			  "150": "Progressing",
+			  "255": "Resolved"
+			}
 			break
 		default:
 			appLocaleData = {
@@ -39,6 +51,19 @@ const setLang = function(lang){
 			  antd: null,
 			  locale: 'zh-cn',
 			  data: appLocaleZhData,
+			}
+			// 内置属性
+			window._severity = {
+			  "0": "正常",
+			  "1": "提醒",
+			  "2": "警告",
+			  "3": "紧急"
+			}
+			window._status = {
+			  "0": "新告警",
+			  "40": "已确认",
+			  "150": "处理中",
+			  "255": "已解决"
 			}
 			break
 
