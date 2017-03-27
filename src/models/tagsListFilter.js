@@ -1,7 +1,6 @@
 import {parse} from 'qs'
 import pathToRegexp from 'path-to-regexp';
 import { getAllListTags } from '../services/alertListTags.js'
-import CodeWords from '../codewords.json'
 
 const initalState = {
     isSpread: false, // spread modal to select tags
@@ -100,7 +99,7 @@ export default {
               || (originTagsList[originTagsList.length - 1] == group.field && serverityList.includes(item)))) {
                 if (group.field == 'severity' || group.field == 'status') {
                   return {
-                    name: CodeWords[group.field][item],
+                    name: window[`_${group.field}`][item],
                     value: item,
                     selected: true
                   }
@@ -113,7 +112,7 @@ export default {
           }
           if (group.field == 'severity' || group.field == 'status') {
             return {
-              name: CodeWords[group.field][item],
+              name: window[`_${group.field}`][item],
               value: item,
               selected: false
             }

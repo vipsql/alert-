@@ -10,3 +10,16 @@ window.appLocale = {
   locale: 'en-us',
   data: appLocaleData,
 };
+// 内置属性
+window._severity = {
+  "0": "ok",
+  "1": "Information",
+  "2": "Warning",
+  "3": "Critical"
+}
+window._status = {
+  "0": "New",
+  "40": "Acknowledged",
+  "150": "Progressing",
+  "255": "Resolved"
+}
