@@ -2,7 +2,6 @@ import {parse} from 'qs'
 import { tagsView } from '../services/alertManage.js'
 import { getTagsByUser, getAllTags, setUserTags } from '../services/alertTags.js'
 import { message } from 'antd';
-import CodeWords from '../codewords.json'
 
 const initialState = {
   tagNum: 0,
@@ -112,7 +111,7 @@ export default {
         delete group.tags;
         group.values.map( (tag) => {
           if (tag.key == 'severity' || tag.key == 'status') {
-            tag.name = CodeWords[tag.key][tag.value]
+            tag.name = window[`_${tag.key}`][tag.value]
           } else {
             tag.name = tag.value;
           }

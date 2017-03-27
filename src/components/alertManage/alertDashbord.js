@@ -351,7 +351,11 @@ class Chart extends Component{
                     return d.children ? headerHeight : Math.max(0.01, (ky * d.dy));
                 })
                 .text(function(d) {
-                    return d.name;
+                    if (!d.children && (d.parent.path == 'severity' || d.parent.path == 'status')) {
+                        return window[`_${d.parent.path}`][d.name]
+                    } else {
+                        return d.name;
+                    }
                 });
 
             zoomTransition.select(".child .label")

@@ -3,7 +3,6 @@ import { Button, Spin } from 'antd';
 import LevelIcon from '../levelIcon/index.js'
 import styles from './index.less'
 import { classnames } from '../../../utils'
-import CodeWords from '../../../codewords.json'
 
 class ListTable extends Component {
   constructor(){
@@ -209,7 +208,7 @@ class ListTable extends Component {
                 <span className={styles.expandIcon} data-classify={item.classify} onClick={spreadGroup}>+</span>
                   {
                     groupBy && groupBy == 'status' ?
-                    CodeWords['status'][item.classify]
+                    window['_status'][item.classify]
                     :
                     item.classify ? item.classify : '未知'
                   }
@@ -221,7 +220,7 @@ class ListTable extends Component {
                 <span className={styles.expandIcon} data-classify={item.classify} onClick={noSpreadGroup}>-</span>
                   {
                     groupBy && groupBy == 'status' ?
-                    CodeWords['status'][item.classify]
+                    window['_status'][item.classify]
                     :
                     item.classify ? item.classify : '未知'
                   }

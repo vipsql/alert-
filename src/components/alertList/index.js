@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 
-import { Tabs, Select } from 'antd';
+import { Tabs, Select, Switch } from 'antd';
 import ListTableWrap from './listTable'
 import ListTimeTableWrap from './listTimeTable'
 
@@ -16,7 +16,14 @@ import CloseModal from '../common/closeModal/index.js'
 import DispatchModal from '../common/dispatchModal/index.js'
 import RelieveModal from './relieveModal'
 import { classnames } from '../../utils'
-import CodeWords from '../../codewords.json'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+
+const localeMessage = defineMessages({
+  list: {
+    id: 'alertList_tabs_list',
+    defaultMessage: '列表'
+  }
+})
 
 const TabPane = Tabs.TabPane
 
@@ -226,12 +233,13 @@ class AlertListManage extends Component{
     )
 
     return (
-      <div>
+      <div style={{ position: 'relative'}}>
         <AlertTagsFilter />
+        <div className={styles.alertSwitch}><span>自动刷新</span><Switch/></div>
         <AlertBar />
         <div className={styles.alertListPage}>
           <Tabs>
-            <TabPane tab={<span className={tabList}>列表</span>} key={1}>
+            <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['list']} /></span>} key={1}>
               <AlertOperation position='list' {...operateProps}/>
               <ListTableWrap />
             </TabPane>
@@ -243,10 +251,10 @@ class AlertListManage extends Component{
           <ul className={styles.levelBar}>
             {
               Object.keys(levels).length !== 0 && Object.keys(levels).map( (key, index) => {
-                let levelName = key == 'Critical' ? CodeWords['severity']['3'] :
-                                    key == 'Warning' ? CodeWords['severity']['2'] :
-                                      key == 'Information' ? CodeWords['severity']['1'] :
-                                        key == 'Ok' ? CodeWords['severity']['0'] : undefined
+                let levelName = key == 'Critical' ? window['_severity']['3'] :
+                                    key == 'Warning' ? window['_severity']['2'] :
+                                      key == 'Information' ? window['_severity']['1'] :
+                                        key == 'Ok' ? window['_severity']['0'] : undefined
 
                 return (<li key={index}><LevelIcon extraStyle={styles.extraStyle} iconType={key} /><p>{`${levelName}（${levels[key]}）`}</p></li>)
               })

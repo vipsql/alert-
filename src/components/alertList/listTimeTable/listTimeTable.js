@@ -4,7 +4,6 @@ import { connect } from 'dva'
 import { Popover } from 'antd'
 import styles from '../index.less'
 import LevelIcon from '../../common/levelIcon/index.js'
-import CodeWords from '../../../codewords.json'
 
 class ListTimeTable extends Component {
     componentDidMount(){
@@ -193,7 +192,7 @@ class ListTimeTable extends Component {
           let newDate = new Date(+itemDot['occurTime'])
           const content = (
             <div>
-              <p>{`级别：${CodeWords['severity'][itemDot['severity']]}`}</p>
+              <p>{`级别：${window['_severity'][itemDot['severity']]}`}</p>
               <p>{`告警名称：${itemDot['name']}`}</p>
               <p>{`告警ID：${itemDot['incidentId']}`}</p>
               <p>{`发生时间：${newDate.getFullYear() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getDate() + ' ' + newDate.getHours() + ':' + newDate.getMinutes()}`}</p>
@@ -251,7 +250,7 @@ class ListTimeTable extends Component {
               <span className={styles.expandIcon} data-classify={groupItem.classify} onClick={spreadGroup}>+</span>
                 {
                   groupBy && groupBy == 'status' ?
-                  CodeWords['status'][groupItem.classify]
+                  window['_status'][groupItem.classify]
                   :
                   groupItem.classify ? groupItem.classify : '未知'
                 }
@@ -263,7 +262,7 @@ class ListTimeTable extends Component {
               <span className={styles.expandIcon} data-classify={groupItem.classify} onClick={noSpreadGroup}>-</span>
                 {
                   groupBy && groupBy == 'status' ?
-                  CodeWords['status'][groupItem.classify]
+                  window['_status'][groupItem.classify]
                   :
                   groupItem.classify ? groupItem.classify : '未知'
                 }
