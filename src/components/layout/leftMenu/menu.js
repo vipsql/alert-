@@ -9,7 +9,7 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 const messages = defineMessages({
    alertManage:{
       id: 'alertManage',
-      defaultMessage: '告警管理',
+      // defaultMessage: '告警管理',
     },
     alertQuery: {
       id: 'alertQuery',
