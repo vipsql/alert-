@@ -116,8 +116,8 @@ class AlertBar extends Component{
         const alertList = crossfilter(barData)
         const clientWidth = document.documentElement.clientWidth || document.body.clientWidth
         const leftMenuWidth = isResize ? 50 : 160 //是否折叠
-        const width = clientWidth - leftMenuWidth - 50;
-        console.log(isResize)
+        const width = clientWidth - leftMenuWidth - 90;
+        
         const height = 80
         const margins = {top: 0, right: 20, bottom: 25, left: 15}
         const dim = alertList.dimension(function(d) { return d.time; });
