@@ -88,9 +88,9 @@ const alertOperation = ({position, columnList, selectGroup, extendColumnList, ch
                         <Option key={1} className={styles.menuItem} value="source">按来源分组</Option>
                         <Option key={2} className={styles.menuItem} value="status">按状态分组</Option>
                         {
-                            extendColumnList.length !== 0 && extendColumnList.map( (col, index) => {
-                            return <Option key={index + 3} className={styles.menuItem} value={col.id}>{`按${col.name}分组`}</Option>
-                            })
+                            extendColumnList.length > 0 ? extendColumnList.map( (col, index) => {
+                                return <Option key={index + 3} className={styles.menuItem} value={col.id}>{`按${col.name}分组`}</Option>
+                            }) : <Option key='placeholder' style="display:none"></Option>
                         }
                     </Select>
                     <i className={selectGroup !== '分组显示' && classnames(switchClass, styles.switch)} onClick={noGroupFunc}></i>
