@@ -4,9 +4,6 @@ import { Spin } from 'antd'
 import * as d3 from 'd3'
 import {event as currentEvent} from 'd3'
 
-const echarts = require('echarts/lib/echarts')
-require('echarts/lib/chart/treemap')
-
 class Chart extends Component{
 
     constructor(props) {
