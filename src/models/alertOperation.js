@@ -14,6 +14,7 @@ const initalState = {
     isShowCloseModal: false, // 关闭
     isShowMergeModal: false, // 合并
     isShowRelieveModal: false, // 解除
+    isShowChatOpsModal: false, //chatops
 
     isDropdownSpread: false, // 是否展开关闭modal的dropdown
     closeMessage: undefined, // 关闭原因
@@ -304,6 +305,31 @@ export default {
             payload: false
           })
       },
+      // 打开分享到ChatOps的modal
+      *openChatOps({payload}, {select, put, call}) {
+          yield put({
+              type: 'alertList/toggleModalOrigin',
+              payload: payload
+          })
+          if (payload !== undefined && payload === 'detail') {
+              yield put({
+                  type: 'alertDetailOperation/openChatOps'
+              })
+          } else {
+            const options = yield getFormOptions();
+            if (options.result) {
+                yield put({
+                    type: 'setFormOptions',
+                    payload: {
+                        data: data || [],
+                        state: true
+                    }
+                })
+            } else {
+                yield message.error('获取ChatOps群组失败', 2);
+            }
+          }
+      },
       // 分组显示
       *groupView({payload}, {select, put, call}) {
           yield put({
@@ -412,6 +438,9 @@ export default {
       // 转换modal状态
       toggleFormModal(state, {payload: isShowFormModal}) {
           return { ...state, isShowFormModal }
+      },
+      toggleChatOpsModal(state, {payload: isShowChatOpsModal}) {
+          return { ...state, isShowChatOpsModal}
       },
       toggleCloseModal(state, {payload: isShowCloseModal}) {
           return { ...state, isShowCloseModal }

@@ -6,13 +6,31 @@ import { classnames } from '../../../utils'
 
 const Option = Select.Option;
 const DropdownButton = Dropdown.Button;
-const alertOperation = ({position, columnList, selectGroup, extendColumnList, checkCloumFunc, relieveFunc, dispatchFunc, closeFunc, mergeFunc, groupFunc, noGroupFunc}) => {
+const alertOperation = ({position, 
+    columnList, 
+    selectGroup, 
+    extendColumnList, 
+    checkCloumFunc, 
+    relieveFunc, 
+    dispatchFunc, 
+    closeFunc, 
+    mergeFunc, 
+    groupFunc, 
+    noGroupFunc,
+    showChatOpsFunc }) => {
 
     const setClass = classnames(
         styles['icon'],
         styles.iconfont,
         styles['icon-bushu']
     )
+
+    // <Select className={styles.selectSingle} defaultValue="0">
+    //     <Option value="0">抑制告警</Option>
+    //     <Option value="1">5分钟内不再提醒</Option>
+    //     <Option value="2">10分钟内不再提醒</Option>
+    //     <Option value="3">半小时内不再提醒</Option>
+    // </Select>
 
     const switchClass = classnames(
         styles['icon'],
@@ -66,17 +84,17 @@ const alertOperation = ({position, columnList, selectGroup, extendColumnList, ch
                 :
                 undefined
             }
-            <Select className={styles.selectSingle} defaultValue="0">
-                <Option value="0">抑制告警</Option>
-                <Option value="1">5分钟内不再提醒</Option>
-                <Option value="2">10分钟内不再提醒</Option>
-                <Option value="3">半小时内不再提醒</Option>
-            </Select>
-            <Select className={styles.selectSingle} defaultValue="0">
-                <Option value="0">更多操作</Option>
-                <Option value="1">转交他人</Option>
-                <Option value="2">分享到ChatOps</Option>
-                <Option value="3">添加备注</Option>
+            <Select className={styles.showChatOps}  placeholder='更多操作' onChange={ (operate) => {
+                switch (operate) {
+                    case 'ChatOps':
+                        showChatOpsFunc(position)
+                    break;
+                    default:
+                        () => {}
+                    break;
+                }
+            }}>
+                <Option value="ChatOps">分享到ChatOps</Option>
             </Select>
             {
                 position !== 'detail' ?
@@ -122,7 +140,8 @@ alertOperation.defaultProps = {
     closeFunc: () => {},
     mergeFunc: () => {},
     groupFunc: () => {},
-    noGroupFunc: () => {}
+    noGroupFunc: () => {},
+    showChatOpsFunc: () => {}
 }
 
 alertOperation.propTypes = {

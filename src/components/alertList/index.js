@@ -84,6 +84,12 @@ class AlertListManage extends Component{
         dispatch({
             type: 'alertOperation/noGroupView',
         })
+      },
+      showChatOpsFunc: (position) => {
+        dispatch({
+          type: 'alertOperation/openChatOps',
+          payload: position
+        })
       }
     }
 
