@@ -1,9 +1,7 @@
 {
   "private": true,
   "entry": {
-    "index": "./src/index.js",
-    "en-us": "./src/lang/en-us.js",
-    "zh-cn": "./src/lang/zh-cn.js"
+    "index": "./src/index.js"
   },
   "dependencies": {
     "antd": "^2.6.0",

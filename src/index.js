@@ -4,12 +4,78 @@ import dva from 'dva'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { LocaleProvider } from 'antd'
-import { addLocaleData, IntlProvider } from 'react-intl';
+import appLocaleZhData from 'react-intl/locale-data/zh'
+import zhMessages from '../locales/zh.json'
+import antdEn from 'antd/lib/locale-provider/en_US'
+import appLocaleEnData from 'react-intl/locale-data/en'
 
-const appLocale = window.appLocale;
+import enMessages from '../locales/en.json'
+import { addLocaleData, IntlProvider } from 'react-intl'
+
+
+const setLang = function(lang){
+	if(!lang){
+		lang = localStorage.getItem('__uyun_language') ? localStorage.getItem('__uyun_language') : 'zh-cn'
+	}
+
+	let appLocaleData
+	switch(lang){
+		case 'en-us':
+			appLocaleData = {
+			  messages: {
+			    ...enMessages
+			  },
+			  antd: antdEn,
+			  locale: 'en-us',
+			  data: appLocaleEnData,
+			}
+			// 内置属性
+			window._severity = {
+			  "0": "ok",
+			  "1": "Information",
+			  "2": "Warning",
+			  "3": "Critical"
+			}
+			window._status = {
+			  "0": "New",
+			  "40": "Acknowledged",
+			  "150": "Progressing",
+			  "255": "Resolved"
+			}
+			break
+		default:
+			appLocaleData = {
+			  messages: {
+			    ...zhMessages
+			  },
+			  antd: null,
+			  locale: 'zh-cn',
+			  data: appLocaleZhData,
+			}
+			// 内置属性
+			window._severity = {
+			  "0": "正常",
+			  "1": "提醒",
+			  "2": "警告",
+			  "3": "紧急"
+			}
+			window._status = {
+			  "0": "新告警",
+			  "40": "已确认",
+			  "150": "处理中",
+			  "255": "已解决"
+			}
+			break
+
+	}
+	return appLocaleData
+}
+
+const appLocale = setLang();
+
 
 addLocaleData(appLocale.data);
-// document.cookie="tenantId=330204b88c684a199250f06b85cdba71;token=tAdlPRFSCBWDkjbw9Kk0siyY9eSSMJvKPnwsy4+FL8I1hfN2dX9GtHepklMItNlrGUMDJ97PuBNQKklV1xyfJHty0i4vZ598C0484nYP/N8=;user=330204b88c684a199250f06b85cdba71;UM_distinctid=15b03fe04cf452-050f98d8efcb91-1d3e6850-1fa400-15b03fe04d014b"
+
 
 // 1. Initialize
 const app = dva()
