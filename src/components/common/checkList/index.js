@@ -1,8 +1,20 @@
 import React, { PropTypes, Component } from 'react'
 import styles from './index.less'
 import { classnames } from '../../../utils'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+
 
 const checkList = ({itemList, checkedNum, isSpreadTags, checkHandler, origin}) => {
+
+    const formatMessages = defineMessages({
+        text:{
+          id: 'alertManage_dashbord_selectedText',
+          defaultMessage: '已选择 {num} 个关注',
+          values: {
+            num: <span className={styles.textNum} >{checkedNum}</span>
+          }
+        }
+    })
 
     const setClass = classnames(
       styles['iconfont'],
@@ -29,7 +41,7 @@ const checkList = ({itemList, checkedNum, isSpreadTags, checkHandler, origin}) =
     return (
         <div className={styles.ckeckModalMain}>
             { typeof checkedNum !== 'undefined' 
-                ? <p className={styles.checkedText}>已选择<span>{checkedNum}</span>个关注内容</p>
+                ? <p className={styles.checkedText}><FormattedMessage {...formatMessages['text']} /></p>
                 : undefined }
             <ul>
                 {tags}

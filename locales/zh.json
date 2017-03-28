@@ -1,6 +1,28 @@
 {
-  "alertManage": "告警管理",
-  "alertQuery": "告警查询",
-  "alertConfig": "告警配置",
-  "watchManage": "值班管理"
+  "bread_integrationConfig": "应用配置",
+  "bread_integrations": "应用集成",
+  "bread_alertList": "告警列表",
+
+  "leftMenu_alertManage": "告警管理",
+  "leftMenu_alertQuery": "告警查询",
+  "leftMenu_alertConfig": "告警配置",
+  "leftMenu_watchManage": "值班管理",
+  "leftMenu_set": "设置",
+  "lefeMenu_help": "帮助",
+
+  "alertManage_addTags": "关注设置",
+  "alertManage_headerTitle": "最近一小时活跃告警: ",
+  "alertManage_noData": "告警看板暂无数据，请先设置关注数据",
+  "alertManage_dashbord_selectedText": "已选择 {num} 个关注",
+
+  "alertManage_setModal_ok": "确定",
+  "alertManage_setModal_reset": "重置",
+
+  "alertList_tabs_list": "列表",
+  "alertList_tabs_timeList": "时间线",
+  "alertList_autoRefresh": "自动刷新",
+  "alertOperate_dispatch": "派发工单",
+  "alertOperate_close": "关闭告警",
+  "alertOperate_merge": "合并告警",
+  "alertOperate_relieve": "解除告警"
 }

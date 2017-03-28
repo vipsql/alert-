@@ -1,7 +1,18 @@
 import React from 'react'
 import styles from '../main.less'
 import { classnames } from '../../../utils'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
+const formatMessages = defineMessages({
+    set:{
+      id: 'leftMenu_set',
+      defaultMessage: '设置',
+    },
+    help: {
+      id: 'lefeMenu_help',
+      defaultMessage: '帮助',
+    }
+})
 
 function FoldBar({ isFold, handleFoldMenu}){
   // const handleFoldMenu = () => {
@@ -31,8 +42,8 @@ function FoldBar({ isFold, handleFoldMenu}){
         <div className={styles.foldBarLine}></div>
         <i className={arrClass}></i>
       </div>
-      <div className={styles.menuSet}><a href="#alertSet"><i className={setClass}></i>{!isFold ? '设置' : ''}</a></div>
-      <div className={styles.menuHelp}><a href="#alertHelp"><i className={helpClass}></i>{!isFold ? '帮助' : ''}</a></div>
+      <div className={styles.menuSet}><a href="#alertSet"><i className={setClass}></i>{!isFold ? <FormattedMessage {...formatMessages['set']} /> : ''}</a></div>
+      <div className={styles.menuHelp}><a href="#alertHelp"><i className={helpClass}></i>{!isFold ? <FormattedMessage {...formatMessages['help']} /> : ''}</a></div>
     </div>
   )
 }

@@ -8,19 +8,19 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const messages = defineMessages({
    alertManage:{
-      id: 'alertManage',
-      // defaultMessage: '告警管理',
+      id: 'leftMenu_alertManage',
+      defaultMessage: '告警管理',
     },
     alertQuery: {
-      id: 'alertQuery',
+      id: 'leftMenu_alertQuery',
       defaultMessage: '告警查询',
     },
     alertConfig: {
-      id: 'alertConfig',
+      id: 'leftMenu_alertConfig',
       defaultMessage: '告警配置',
     },
     watchManage: {
-      id: 'watchManage',
+      id: 'leftMenu_watchManage',
       defaultMessage: '值班管理',
     }
 })
