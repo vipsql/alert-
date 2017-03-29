@@ -3,16 +3,54 @@ import { Select, Popover, Checkbox, Dropdown, Menu, Button } from 'antd';
 import { connect } from 'dva'
 import styles from './index.less'
 import { classnames } from '../../../utils'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const Option = Select.Option;
 const DropdownButton = Dropdown.Button;
-const alertOperation = ({position, columnList, selectGroup, extendColumnList, checkCloumFunc, relieveFunc, dispatchFunc, closeFunc, mergeFunc, groupFunc, noGroupFunc}) => {
+const alertOperation = ({position, 
+    columnList, 
+    selectGroup, 
+    extendColumnList, 
+    checkCloumFunc, 
+    relieveFunc, 
+    dispatchFunc, 
+    closeFunc, 
+    mergeFunc, 
+    groupFunc, 
+    noGroupFunc,
+    showChatOpsFunc }) => {
+
+    const localeMessage = defineMessages({
+      operate_dispatch: {
+        id: 'alertOperate_dispatch',
+        defaultMessage: '派发工单'
+      },
+      operate_close: {
+        id: 'alertOperate_close',
+        defaultMessage: '关闭告警'
+      },
+      operate_merge: {
+        id: 'alertOperate_merge',
+        defaultMessage: '合并告警'
+      },
+      operate_relieve: {
+        id: 'alertOperate_relieve',
+        defaultMessage: '解除告警'
+      }
+    })
 
     const setClass = classnames(
         styles['icon'],
         styles.iconfont,
         styles['icon-bushu']
     )
+
+    // <Select className={styles.selectSingle} defaultValue="0">
+    //     <Option value="0">抑制告警</Option>
+    //     <Option value="1">5分钟内不再提醒</Option>
+    //     <Option value="2">10分钟内不再提醒</Option>
+    //     <Option value="3">半小时内不再提醒</Option>
+    // </Select>
 
     const switchClass = classnames(
         styles['icon'],
@@ -47,36 +85,36 @@ const alertOperation = ({position, columnList, selectGroup, extendColumnList, ch
             undefined
     const menu = (
         <Menu onClick={ relieveFunc }>
-            <Menu.Item key="1" className={styles.menuItem}>解除告警</Menu.Item>
+            <Menu.Item key="1" className={styles.menuItem}><FormattedMessage {...localeMessage['operate_relieve']} /></Menu.Item>
         </Menu>
     )
     return (
         <div className={styles.operateMain}>
             <Button className={styles.myButton} onClick={ () => {
                 dispatchFunc(position)
-            } } >派发工单</Button>
+            } } ><FormattedMessage {...localeMessage['operate_dispatch']} /></Button>
             <Button className={styles.myButton} onClick={ () => {
                 closeFunc(position)
-            }} >关闭告警</Button>
+            }} ><FormattedMessage {...localeMessage['operate_close']} /></Button>
             {
                 position !== 'detail' ?
                 <DropdownButton overlay={menu} className={styles.myDropdown} trigger={['click']} onClick={ mergeFunc }>
-                    合并告警
+                    <FormattedMessage {...localeMessage['operate_merge']} />
                 </DropdownButton>
                 :
                 undefined
             }
-            <Select className={styles.selectSingle} defaultValue="0">
-                <Option value="0">抑制告警</Option>
-                <Option value="1">5分钟内不再提醒</Option>
-                <Option value="2">10分钟内不再提醒</Option>
-                <Option value="3">半小时内不再提醒</Option>
-            </Select>
-            <Select className={styles.selectSingle} defaultValue="0">
-                <Option value="0">更多操作</Option>
-                <Option value="1">转交他人</Option>
-                <Option value="2">分享到ChatOps</Option>
-                <Option value="3">添加备注</Option>
+            <Select className={styles.showChatOps}  placeholder='更多操作' onChange={ (operate) => {
+                switch (operate) {
+                    case 'ChatOps':
+                        showChatOpsFunc(position)
+                    break;
+                    default:
+                        () => {}
+                    break;
+                }
+            }}>
+                <Option value="ChatOps">分享到ChatOps</Option>
             </Select>
             {
                 position !== 'detail' ?
@@ -122,7 +160,8 @@ alertOperation.defaultProps = {
     closeFunc: () => {},
     mergeFunc: () => {},
     groupFunc: () => {},
-    noGroupFunc: () => {}
+    noGroupFunc: () => {},
+    showChatOpsFunc: () => {}
 }
 
 alertOperation.propTypes = {

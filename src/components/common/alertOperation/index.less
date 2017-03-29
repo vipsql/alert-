@@ -21,6 +21,23 @@
     }
 
     // cover ant-design Select style on local
+    .showChatOps{
+        width: 120px;
+        &:global.ant-select{
+            //color: #6c7480;
+            font-size: 13px;
+            font-weight: normal;
+            :global .ant-select-selection--single {
+                height: 30px;
+                :global .ant-select-selection__rendered{
+                    line-height: 28px;
+                    margin-left: 10px;
+                    margin-right: 10px;
+                    padding-right: 10px;
+                }
+            }
+        }
+    }
     .selectSingle{
         &.setGroup{
             float: right;
@@ -32,7 +49,6 @@
             font-weight: normal;
             :global .ant-select-selection--single {
                 height: 30px;
-                margin-right: 10px;
                 :global .ant-select-selection__rendered{
                     line-height: 28px;
                     margin-left: 10px;

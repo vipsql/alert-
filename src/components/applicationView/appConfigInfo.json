@@ -14,7 +14,7 @@
                 "pageInfo": {
                     "headerMessage": "使用优云Alert Rest API，可以方便的接入自定义告警",
                     "urlMessage": "请手动配置优云Alert Rest API的URL",
-                    "urlExample": "例如：http://xxx.uyun.cn/chatops/api/"
+                    "urlExample": "例如：http://10.1.50.58:8130?api_key=3ebe4f01053347748d7a3b1e112e1aca&app_key=49b31f99a44e48c8973753160ec89257"
                 }
             }
         ]

@@ -3,6 +3,14 @@ import styles from './index.less'
 import { Spin } from 'antd'
 import * as d3 from 'd3'
 import {event as currentEvent} from 'd3'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+
+const formatMessages = defineMessages({
+    noData:{
+      id: 'alertManage_noData',
+      defaultMessage: '告警看板暂无数据，请先设置关注数据',
+    }
+})
 
 class Chart extends Component{
 
@@ -395,7 +403,7 @@ class Chart extends Component{
             <div className={styles.loadingWrap}>
                 <Spin tip="加载中..." spinning= {this.props.isLoading}>
                     <div id="treemap" className={styles.treemap}></div>
-                    {(Array.isArray(this.props.currentDashbordData) && this.props.currentDashbordData.length < 1) && <div className={styles.alertNoData}>告警看板暂无数据</div>}
+                    {(Array.isArray(this.props.currentDashbordData) && this.props.currentDashbordData.length < 1) && <div className={styles.alertNoData}><FormattedMessage {...formatMessages['noData']} /></div>}
                 </Spin>
             </div>
         )

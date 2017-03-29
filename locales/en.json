@@ -1,6 +1,28 @@
 {
-  "alertManage": "alertManage",
-  "alertQuery": "alertQuery",
-  "alertConfig": "alertConfig",
-  "watchManage": "watchManage"
+  "bread_integrationConfig": "IntegrationConfig",
+  "bread_integrations": "Integrations",
+  "bread_alertList": "AlertList",
+
+  "leftMenu_alertManage": "Alerts",
+  "leftMenu_alertQuery": "Search",
+  "leftMenu_alertConfig": "alertConfig",
+  "leftMenu_watchManage": "watchManage",
+  "leftMenu_set": "Settings",
+  "lefeMenu_help": "Help",
+
+  "alertManage_addTags": "add Tags",
+  "alertManage_headerTitle": "Active Alerts last 60 minutes ",
+  "alertManage_noData": "No data in dashboard",
+  "alertManage_dashbord_selectedText": "{num} Tags selected",
+  
+  "alertManage_setModal_ok": "Ok",
+  "alertManage_setModal_reset": "Reset",
+
+  "alertList_tabs_list": "List View",
+  "alertList_tabs_timeList": "Timeline",
+  "alertList_autoRefresh": "Auto Refresh",
+  "alertOperate_dispatch": "Create Ticket",
+  "alertOperate_close": "Close Incident",
+  "alertOperate_merge": "Roll up",
+  "alertOperate_relieve": "Unroll up"
 }

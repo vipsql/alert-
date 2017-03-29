@@ -6,7 +6,22 @@ import { classnames } from '../../utils'
 import CheckList from '../common/checkList/index.js'
 import checkStyles from '../common/checkList/index.less'
 import dva from 'dva'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
+const formatMessages = defineMessages({
+    set:{
+      id: 'alertManage_addTags',
+      defaultMessage: '关注设置',
+    },
+    ok: {
+      id: 'alertManage_setModal_ok',
+      defaultMessage: '确认',
+    },
+    reset: {
+      id: 'alertManage_setModal_reset',
+      defaultMessage: '重置',
+    }
+})
 
 const AlertSetModal = ({dispatch, alertTagsSet}) => {
   const {
@@ -38,18 +53,18 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
         dispatch({
           type: 'alertTagsSet/addAlertTags'
         })
-      }} >确认</Button>
+      }} ><FormattedMessage {...formatMessages['ok']} /></Button>
       <Button type="ghost" className={styles.ghostBtn} onClick={ () => {
         dispatch({
           type: 'alertTagsSet/resetSelected',
         })
-      }}>重置</Button>
+      }}><FormattedMessage {...formatMessages['reset']} /></Button>
       </div>
     )
 
     return (
         <Modal
-          title="关注设置"
+          title={<FormattedMessage {...formatMessages['set']} />}
           maskClosable="true"
           onCancel={closeTagsModal}
           visible={modalVisible}

@@ -9,6 +9,7 @@ const initalState = {
     // 各个modal弹窗
     isShowFormModal: false, // 派发
     isShowCloseModal: false, // 关闭
+    isShowChatOpsModal: false, //chatops
 
     isDropdownSpread: false,
     closeMessage: undefined // 关闭原因
@@ -87,6 +88,21 @@ export default {
             type: 'toggleFormModal',
             payload: false
           })
+      },
+      // 打开分享到ChatOps的modal
+      *openChatOps({payload}, {select, put, call}) {
+          const options = yield getFormOptions();
+          if (options.result) {
+              yield put({
+                type: 'setFormOptions',
+                payload: {
+                    data: data || [],
+                    state: true
+                }
+              })
+          } else {
+              yield message.error('获取ChatOps群组失败', 2);
+          }
       }
 
   },
@@ -97,6 +113,9 @@ export default {
           return { ...state, formOptions: payload }
       },
       // 转换modal状态
+      toggleChatOpsModal(state, {payload: isShowChatOpsModal}) {
+          return { ...state, isShowChatOpsModal}
+      },
       toggleFormModal(state, {payload: isShowFormModal}) {
           return { ...state, isShowFormModal }
       },

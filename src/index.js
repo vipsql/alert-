@@ -37,9 +37,9 @@ const setLang = function(lang){
 			  "3": "Critical"
 			}
 			window._status = {
-			  "0": "New",
+			  "0": "Open",
 			  "40": "Acknowledged",
-			  "150": "Progressing",
+			  "150": "Assigned",
 			  "255": "Resolved"
 			}
 			break

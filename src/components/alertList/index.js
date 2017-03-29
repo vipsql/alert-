@@ -18,13 +18,6 @@ import RelieveModal from './relieveModal'
 import { classnames } from '../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
-const localeMessage = defineMessages({
-  list: {
-    id: 'alertList_tabs_list',
-    defaultMessage: '列表'
-  }
-})
-
 const TabPane = Tabs.TabPane
 
 class AlertListManage extends Component{
@@ -34,6 +27,21 @@ class AlertListManage extends Component{
 
   render(){
     const { alertDetail, alertListTable, alertList, dispatch, alertOperation, alertDetailOperation } = this.props;
+
+    const localeMessage = defineMessages({
+      tab_list: {
+        id: 'alertList_tabs_list',
+        defaultMessage: '列表'
+      },
+      tab_time: {
+        id: 'alertList_tabs_timeList',
+        defaultMessage: '时间线'
+      },
+      auto_refresh: {
+        id: 'alertList_autoRefresh',
+        defaultMessage: '自动刷新'
+      }
+    })
     
     const { levels } = alertListTable;
     const { alertOperateModalOrigin } = alertList
@@ -83,6 +91,12 @@ class AlertListManage extends Component{
       noGroupFunc: () => {
         dispatch({
             type: 'alertOperation/noGroupView',
+        })
+      },
+      showChatOpsFunc: (position) => {
+        dispatch({
+          type: 'alertOperation/openChatOps',
+          payload: position
         })
       }
     }
@@ -235,15 +249,15 @@ class AlertListManage extends Component{
     return (
       <div style={{ position: 'relative'}}>
         <AlertTagsFilter />
-        <div className={styles.alertSwitch}><span>自动刷新</span><Switch/></div>
+        <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch/></div>
         <AlertBar />
         <div className={styles.alertListPage}>
           <Tabs>
-            <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['list']} /></span>} key={1}>
+            <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key={1}>
               <AlertOperation position='list' {...operateProps}/>
               <ListTableWrap />
             </TabPane>
-            <TabPane tab={<span className={tabLine} >时间线</span>}  key={2}>
+            <TabPane tab={<span className={tabLine} ><FormattedMessage {...localeMessage['tab_time']} /></span>}  key={2}>
               <AlertOperation position='timeAxis' {...operateProps}/>
               <ListTimeTableWrap />
             </TabPane>
