@@ -56,7 +56,7 @@ class Chart extends Component{
         }, 60000)
     }
     componentDidUpdate(){
-
+        
         this.treemap = d3.layout.treemap()
           .round(false)
           .size([this.chartWidth, this.chartHeight])
@@ -70,10 +70,7 @@ class Chart extends Component{
         var root;
         var node;
 
-
-        // d3.json("../../../mock/alert.json", function(data) {
-        if(this.props.currentDashbordData){
-          node = root = {
+        node = root = {
               path: 'root',
               children: this.props.currentDashbordData
             };
@@ -88,7 +85,9 @@ class Chart extends Component{
                 return d.children;
             });
 
-
+        // d3.json("../../../mock/alert.json", function(data) {
+        if(this.props.currentDashbordData && children.length > 0){
+          
             // create parent cells
             var parentCells = this.chart.selectAll("g.cell.parent")
                 .data(parents.slice(1), function(d) {
@@ -295,7 +294,7 @@ class Chart extends Component{
 
 
         function zoom(d) {
-
+            
             this.treemap
                 .padding([headerHeight / (this.chartHeight / d.dy), 0, 0, 0])
                 .nodes(d);
