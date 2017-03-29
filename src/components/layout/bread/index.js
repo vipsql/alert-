@@ -7,31 +7,31 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const path = defineMessages({
   alertManage: {
-    id: 'leftMenu_alertManage',
+    id: 'leftMenu.alertManage',
     defaultMessage:'告警管理'
   },
   alertConfig: {
-    id: 'leftMenu_alertConfig',
+    id: 'leftMenu.alertConfig',
     defaultMessage: '告警配置',
   },
   alertQuery: {
-    id: 'leftMenu_alertQuery',
+    id: 'leftMenu.alertQuery',
     defaultMessage: '告警查询',
   },
   watchManage: {
-    id: 'leftMenu_watchManage',
+    id: 'leftMenu.watchManage',
     defaultMessage: '值班管理',
   },
   alertList:{
-    id: 'bread_alertList',
+    id: 'bread.alertList',
     defaultMessage:'告警列表'
   },
   integration:{
-    id: 'bread_integrations',
+    id: 'bread.integrations',
     defaultMessage: '应用集成'
   },
   integrationConfig: {
-    id: 'bread_integrationConfig',
+    id: 'bread.integrationConfig',
     defaultMessage: '应用配置'
   }
 })

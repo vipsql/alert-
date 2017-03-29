@@ -3,6 +3,7 @@ import { Button, Spin } from 'antd';
 import LevelIcon from '../levelIcon/index.js'
 import styles from './index.less'
 import { classnames } from '../../../utils'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 class ListTable extends Component {
   constructor(){
@@ -32,10 +33,58 @@ class ListTable extends Component {
       orderDown,
       orderBy,
       orderType,
-      orderByTittle
+      orderByTittle,
+      intl: {formatMessage}
     } = this.props
     let colsKey = []
     let theads = []
+
+    const formatMessages = defineMessages({
+        entityName:{
+          id: 'alertList.title.enityName',
+          defaultMessage: '对象',
+        },
+        name: {
+          id: 'alertList.title.name',
+          defaultMessage: '告警名称',
+        },
+        source: {
+          id: 'alertList.title.source',
+          defaultMessage: '告警来源',
+        },
+        status:{
+          id: 'alertList.title.status',
+          defaultMessage: '告警状态',
+        },
+        description:{
+          id: 'alertList.title.description',
+          defaultMessage: '告警描述',
+        },
+        count:{
+          id: 'alertList.title.count',
+          defaultMessage: '次数',
+        },
+        lastTime:{
+          id: 'alertList.title.lastTime',
+          defaultMessage: '持续时间',
+        },
+        lastOccurTime:{
+          id: 'alertList.title.lastOccurTime',
+          defaultMessage: '最后发送时间',
+        },
+        showMore: {
+          id: 'alertList.showMore',
+          defaultMessage: '显示更多',
+        },
+        noData: {
+          id: 'alertList.noListData',
+          defaultMessage: '暂无数据',
+        },
+        Unknown: {
+          id: 'alertList.unknown',
+          defaultMessage: '未知',
+        }
+    })
     
     columns.forEach( (item) => {
       const isOrder = item.order || false
@@ -47,8 +96,10 @@ class ListTable extends Component {
       
       theads.push(
         <th key={item.key}>
-          {!isGroup && isOrder ? <span className={ orderType !== undefined ? classnames(styles.orderTh, orderTh_active) : styles.orderTh} data-key={item['key']} onClick={ orderByTittle }>{item.title}</span>
-          : `${item.title}`}
+          {!isGroup && isOrder ? <span className={ orderType !== undefined ? classnames(styles.orderTh, orderTh_active) : styles.orderTh} data-key={item['key']} onClick={ orderByTittle }>{
+              item.title === undefined ? formatMessage({...formatMessages[item['key']]}) : `${item.title}`
+            }</span>
+          : item.title === undefined ? <FormattedMessage {...formatMessages[item['key']]} /> : `${item.title}`}
           {!isGroup && isOrder && 
             [<span className={ orderType !== undefined && orderType === 1 ? classnames(styles.orderTriangleUp, orderTriangle) : styles.orderTriangleUp} data-key={item['key']} key={1} onClick={ orderUp }></span>,
             <span className={ orderType !== undefined && orderType === 0 ? classnames(styles.orderTriangleDown, orderTriangle) : styles.orderTriangleDown} data-key={item['key']} key={0} onClick={ orderDown }></span>]}
@@ -101,16 +152,16 @@ class ListTable extends Component {
         if(key == 'status'){
           switch (data) {
             case 0:
-              data = `新告警`
+              data = window['_status']['0']
               break;
             case 40:
-              data = `已确认`
+              data = window['_status']['40']
               break;
             case 150:
-              data = `处理中`
+              data = window['_status']['150']
               break;
             case 255:
-              data = `已解决`
+              data = window['_status']['255']
               break;
             default:
               data
@@ -155,16 +206,16 @@ class ListTable extends Component {
         if(key == 'status'){
           switch (data) {
             case 0:
-              data = `新告警`
+              data = window['_status']['0']
               break;
             case 40:
-              data = `已确认`
+              data = window['_status']['40']
               break;
             case 150:
-              data = `处理中`
+              data = window['_status']['150']
               break;
             case 255:
-              data = `已解决`
+              data = window['_status']['255']
               break;
             default:
               data
@@ -210,7 +261,7 @@ class ListTable extends Component {
                     groupBy && groupBy == 'status' ?
                     window['_status'][item.classify]
                     :
-                    item.classify ? item.classify : '未知'
+                    item.classify ? item.classify : <FormattedMessage {...formatMessages['Unknown']} />
                   }
               </td>
             </tr>)
@@ -222,7 +273,7 @@ class ListTable extends Component {
                     groupBy && groupBy == 'status' ?
                     window['_status'][item.classify]
                     :
-                    item.classify ? item.classify : '未知'
+                    item.classify ? item.classify : <FormattedMessage {...formatMessages['Unknown']} />
                   }
               </td>
             </tr>)
@@ -325,13 +376,13 @@ class ListTable extends Component {
               {
                 data.length > 0 ? tbodyCon :
                 <tr>
-                  <td colSpan={columns.length + 3} style={{textAlign: 'center'}}>暂无数据</td>
+                  <td colSpan={columns.length + 3} style={{textAlign: 'center'}}><FormattedMessage {...formatMessages['noData']} /></td>
                 </tr>
               }
             </tbody>
           </table>
         </Spin>
-        {isShowMore && <div className={styles.loadMore}><Button onClick={loadMore}>显示更多</Button></div>}
+        {isShowMore && <div className={styles.loadMore}><Button onClick={loadMore}><FormattedMessage {...formatMessages['showMore']} /></Button></div>}
       </div>
     )
   }
@@ -350,4 +401,4 @@ ListTable.propTypes = {
   sourceOrigin: React.PropTypes.string.isRequired,
 }
 
-export default ListTable
+export default injectIntl(ListTable)

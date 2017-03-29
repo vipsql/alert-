@@ -28,31 +28,23 @@ const initalState = {
 
     columns: [{
       key: 'entityName',
-      title: '对象',
     }, {
       key: 'name',
-      title: '告警名称',
     }, {
       key: 'source',
-      title: '告警来源',
       order: true
     }, {
       key: 'status',
-      title: '告警状态',
     }, {
       key: 'description',
-      title: '告警描述',
     }, {
       key: 'count',
-      title: '次数',
       order: true
     }, {
       key: 'lastTime',
-      title: '持续时间',
       order: true
     }, {
       key: 'lastOccurTime',
-      title: '最后发送时间',
       order: true
     }],
 }

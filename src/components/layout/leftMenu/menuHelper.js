@@ -5,11 +5,11 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const formatMessages = defineMessages({
     set:{
-      id: 'leftMenu_set',
+      id: 'leftMenu.set',
       defaultMessage: '设置',
     },
     help: {
-      id: 'lefeMenu_help',
+      id: 'lefeMenu.help',
       defaultMessage: '帮助',
     }
 })

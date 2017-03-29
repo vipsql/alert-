@@ -5,8 +5,52 @@ import styles from './index.less'
 import mergeStyles from './mergeModal.less'
 import LevelIcon from '../common/levelIcon/index.js'
 import { classnames } from '../../utils'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const mergeModal = ({alertOperation, dispatch}) => {
+
+    const localeMessage = defineMessages({
+        modal_cancel: {
+            id: 'modal.cancel',
+            defaultMessage: '取消'
+        },
+        modal_operate: {
+            id: 'modal.operation',
+            defaultMessage: '操作'
+        },
+        modal_rollup: {
+            id: 'modal.rollup',
+            defaultMessage: '合并告警'
+        },
+        modal_remove: {
+            id: 'modal.remove',
+            defaultMessage: '移除'
+        },
+        modal_rollupTitle: {
+            id: 'modal.rollupTitle',
+            defaultMessage: '合并告警前，请选择一条告警做源告警'
+        },
+        entityName:{
+          id: 'alertList.title.enityName',
+          defaultMessage: '对象',
+        },
+        name: {
+          id: 'alertList.title.name',
+          defaultMessage: '告警名称',
+        },
+        source: {
+          id: 'alertList.title.source',
+          defaultMessage: '告警来源',
+        },
+        description:{
+          id: 'alertList.title.description',
+          defaultMessage: '告警描述',
+        },
+        lastTime:{
+          id: 'alertList.title.lastTime',
+          defaultMessage: '持续时间',
+        },
+    })
 
     const { isShowMergeModal, mergeInfoList, originAlert } = alertOperation;
     
@@ -28,7 +72,7 @@ const mergeModal = ({alertOperation, dispatch}) => {
         dispatch({
             type: 'alertOperation/mergeAlert',
         })
-      }} >合并</Button>
+      }} ><FormattedMessage {...localeMessage['modal_rollup']} /></Button>
       <Button type="ghost" className={styles.ghostBtn} onClick={ () => {
         dispatch({
             type: 'alertOperation/toggleMergeModal',
@@ -38,7 +82,7 @@ const mergeModal = ({alertOperation, dispatch}) => {
             type: 'alertOperation/selectRows',
             payload: []
         })
-      }}>取消</Button>
+      }}><FormattedMessage {...localeMessage['modal_cancel']} /></Button>
       </div>
     )
 
@@ -55,7 +99,7 @@ const mergeModal = ({alertOperation, dispatch}) => {
 
     return (
         <Modal
-          title="合并告警"
+          title={<FormattedMessage {...localeMessage['modal_rollup']} />}
           maskClosable="true"
           onCancel={ closeMergeModal }
           visible={ isShowMergeModal }
@@ -63,7 +107,7 @@ const mergeModal = ({alertOperation, dispatch}) => {
           width={900}
         >
             <div className={mergeStyles.mergeTable}>
-                <p className={mergeStyles.title}>合并告警前，请选择一条告警做源告警</p>
+                <p className={mergeStyles.title}><FormattedMessage {...localeMessage['modal_rollupTitle']} /></p>
                 <Table
                     columns={ [
                         {
@@ -74,27 +118,27 @@ const mergeModal = ({alertOperation, dispatch}) => {
                             }
                         },
                         {
-                            title: '对象',
+                            title: <FormattedMessage {...localeMessage['entityName']} />,
                             key: 'entityName',
                             dataIndex: 'entityName'
                         },
                         {
-                            title: '告警名称',
+                            title: <FormattedMessage {...localeMessage['name']} />,
                             key: 'name',
                             dataIndex: 'name'
                         },
                         {
-                            title: '来源',
+                            title: <FormattedMessage {...localeMessage['source']} />,
                             key: 'source',
                             dataIndex: 'source'
                         },
                         {
-                            title: '告警描述',
+                            title: <FormattedMessage {...localeMessage['description']} />,
                             key: 'description',
                             dataIndex: 'description'
                         },
                         {
-                            title: '持续时间',
+                            title: <FormattedMessage {...localeMessage['lastTime']} />,
                             key: 'lastTime',
                             dataIndex: 'lastTime',
                             render: (data) => {
@@ -102,7 +146,7 @@ const mergeModal = ({alertOperation, dispatch}) => {
                             }
                         },
                         {
-                            title: '操作',
+                            title: <FormattedMessage {...localeMessage['modal_operate']} />,
                             key: 'operation',
                             render: (text, record) => {
                                 return <a className={mergeStyles.remove} href="javascript:void(0)" onClick={ () => {
@@ -110,7 +154,7 @@ const mergeModal = ({alertOperation, dispatch}) => {
                                         type: 'alertOperation/removeAlert',
                                         payload: record.id,
                                     })
-                                }} >移除</a>
+                                }} ><FormattedMessage {...localeMessage['modal_remove']} /></a>
                             }
                         }
                     ]}

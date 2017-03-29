@@ -7,12 +7,13 @@ import { classnames } from '../../utils'
 import AlertDetail from '../common/alertDetail/index.js'
 import CloseModal from '../common/closeModal/index.js'
 import DispatchModal from '../common/dispatchModal/index.js'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const Item = Form.Item;
 const RangePicker = DatePicker.RangePicker;
 const InputGroup = Input.Group;
 const Option = Select.Option;
-const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
+const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {formatMessage}}) => {
 
     const { haveQuery, sourceOptions, queryCount } = alertQuery;
     
@@ -185,23 +186,148 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
       }
     }
 
+    const localeMessage = defineMessages({
+        occurTime: {
+            id: 'alertList.title.occurTime',
+            defaultMessage: '发生时间',
+        },
+        severity: {
+            id: 'alertList.title.severity',
+            defaultMessage: '告警级别',
+        },
+        entityName:{
+            id: 'alertList.title.enityName',
+            defaultMessage: '对象',
+        },
+        name: {
+            id: 'alertList.title.name',
+            defaultMessage: '告警名称',
+        },
+        source: {
+            id: 'alertList.title.source',
+            defaultMessage: '告警来源',
+        },
+        status:{
+            id: 'alertList.title.status',
+            defaultMessage: '告警状态',
+        },
+        description:{
+            id: 'alertList.title.description',
+            defaultMessage: '告警描述',
+        },
+        count:{
+            id: 'alertList.title.count',
+            defaultMessage: '次数',
+        },
+        lastTime:{
+            id: 'alertList.title.lastTime',
+            defaultMessage: '持续时间',
+        },
+        lastOccurTime:{
+            id: 'alertList.title.lastOccurTime',
+            defaultMessage: '最后发送时间',
+        },
+        basic: {
+            id: 'alertList.title.basic',
+            defaultMessage: '常规',
+        },
+        additional: {
+            id: 'alertList.title.additional',
+            defaultMessage: '扩展',
+        },
+        columns: {
+            id: 'alertOperate.columns',
+            defaultMessage: '列定制',
+        },
+        groupBy: {
+            id: 'alertOperate.groupBy',
+            defaultMessage: '分组显示',
+        },
+        groupByEnityName: {
+            id: 'alertOperate.groupByEnityName',
+            defaultMessage: '按对象分组',
+        },
+        groupBySource: {
+            id: 'alertOperate.groupBySource',
+            defaultMessage: '按来源分组',
+        },
+        groupByStatus: {
+            id: 'alertOperate.groupByStatus',
+            defaultMessage: '按状态分组',
+        },
+        groupByOther: {
+            id: 'alertOperate.groupByOther',
+            defaultMessage: '按{other}分组',
+        },
+        keyWords: {
+            id: 'alertQuery.label.keyWords',
+            defaultMessage: '关键字',
+        },
+        keyWords_placeholder: {
+            id: 'alertQuery.label.keyWords.placeholder',
+            defaultMessage: '请输入关键字',
+        },
+        tags: {
+            id: 'alertQuery.label.tags',
+            defaultMessage: '标签',
+        },
+        allSource: {
+            id: 'alertQuery.label.allSource',
+            defaultMessage: '所有来源',
+        },
+        severity_placeholder: {
+            id: 'alertQuery.label.severity.placeholder',
+            defaultMessage: '请选择级别',
+        },
+        allStatus: {
+            id: 'alertQuery.label.allStatus',
+            defaultMessage: '所有状态',
+        },
+        duration: {
+            id: 'alertQuery.label.duration',
+            defaultMessage: '持续时间',
+        },
+        duration_placeholder: {
+            id: 'alertQuery.label.duration.placeholder',
+            defaultMessage: '请选择持续时间',
+        },
+        noQueryData: {
+            id: 'alertQuery.noQueryData',
+            defaultMessage: '暂无数据，请先选择查询条件',
+        },
+        search: {
+            id: 'alertQuery.search',
+            defaultMessage: '搜索',
+        },
+        reset: {
+            id: 'alertQuery.reset',
+            defaultMessage: '重置',
+        },
+        result: {
+            id: 'alertQuery.result',
+            defaultMessage: "共{total}个结果（紧急{critical}个，警告{warning}个，提醒{informaiton}个，正常{ok}个）",
+        }
+    })
+
     const popoverContent = <div className={styles.popoverMain}>
         {
             columnList.map( (group, index) => {
                 return (
                     <div key={index} className={styles.colGroup}>
-                        <p>{group.name}</p>
+                        <p>{group.type == 0 ? <FormattedMessage {...localeMessage['basic']} /> : <FormattedMessage {...localeMessage['additional']} />}</p>
                         {
                             group.cols.map( (item, index) => {
                                 if (item.id === 'entityName' || item.id === 'name') {
-                                    return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={true} disabled={true} >{item.name}</Checkbox></div>
+                                    return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={true} disabled={true} >
+                                            { item.name === undefined ? <FormattedMessage {...localeMessage[item.id]} /> : item.name}
+                                           </Checkbox></div>
                                 } else {
                                     return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={item.checked} onChange={ (e) => {
                                         dispatch({
                                             type: 'alertQueryDetail/checkColumn',
                                             payload: e.target.value,
                                         })
-                                    }}>{item.name}</Checkbox></div>
+                                    }}>{ item.name === undefined ? <FormattedMessage {...localeMessage[item.id]} /> : item.name}</Checkbox></div>
                                 }
                             })
                         }
@@ -242,15 +368,15 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                 <Item
                   {...formItemLayout}
                   wrapperCol={{span: 5}}
-                  label='关键字'
+                  label={<FormattedMessage {...localeMessage['keyWords']} />}
                 > 
                   {getFieldDecorator('keyWordsType', {
                     initialValue: '1'
                   })(
                     <Select size='large'>
-                      <Option className={styles.keywordsMenuItem} value="1">节点名称</Option>
-                      <Option className={styles.keywordsMenuItem} value="3">标签</Option>
-                      <Option className={styles.keywordsMenuItem} value="2">描述</Option>
+                      <Option className={styles.keywordsMenuItem} value="1"><FormattedMessage {...localeMessage['entityName']} /></Option>
+                      <Option className={styles.keywordsMenuItem} value="3"><FormattedMessage {...localeMessage['tags']} /></Option>
+                      <Option className={styles.keywordsMenuItem} value="2"><FormattedMessage {...localeMessage['description']} /></Option>
                     </Select>
                   )}    
                 </Item>
@@ -260,20 +386,20 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
                   {getFieldDecorator('keyWords', {
                     
                   })(
-                    <Input placeholder='请输入关键字' />
+                    <Input placeholder={formatMessage({...localeMessage['keyWords_placeholder']})} />
                   )}
                 </Item>
               </Col>
               <Col span={8}>
                 <Item
                   {...formItemLayout}
-                  label='告警来源'
+                  label={<FormattedMessage {...localeMessage['source']} />}
                 >
                   {getFieldDecorator('source', {
                      initialValue: ''
                   })(
                       <Select>
-                          <Option value=''>所有来源</Option>
+                          <Option value=''><FormattedMessage {...localeMessage['allSource']} /></Option>
                         {
                           sourceOptions.map( (item, index) => {
                             return <Option key={index} value={item.value}>{item.value}</Option>
@@ -286,16 +412,16 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
               <Col span={8}>
                 <Item
                   {...formItemLayout}
-                  label='所属级别'
+                  label={<FormattedMessage {...localeMessage['severity']} />}
                 >
                   {getFieldDecorator('severity', {
                      
                   })(
-                      <Select placeholder='请选择级别'>
-                        <Option value="0">正常</Option>
-                        <Option value="1">提醒</Option>
-                        <Option value="2">警告</Option>
-                        <Option value="3">紧急</Option>
+                      <Select placeholder={formatMessage({...localeMessage['severity_placeholder']})}>
+                        <Option value="0">{window['_severity']['0']}</Option>
+                        <Option value="1">{window['_severity']['1']}</Option>
+                        <Option value="2">{window['_severity']['2']}</Option>
+                        <Option value="3">{window['_severity']['3']}</Option>
                       </Select>
                   )}
                 </Item>
@@ -305,7 +431,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
               <Col span={8}>
                 <Item
                   {...formItemLayout}
-                  label='发生时间'
+                  label={<FormattedMessage {...localeMessage['occurTime']} />}
                   wrapperCol={{span: 14}}
                 >
                   {getFieldDecorator('dateTime', {
@@ -318,17 +444,16 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
               <Col span={8}>
                 <Item
                   {...formItemLayout}
-                  label='对应状态'
+                  label={<FormattedMessage {...localeMessage['status']} />}
                 >
                   {getFieldDecorator('status', {
                      initialValue: ''
                   })(
                       <Select>
-                        <Option value="">所有状态</Option>
-                        <Option value="0">新告警</Option>
-                        <Option value="40">已确认</Option>
-                        <Option value="150">处理中</Option>
-                        <Option value="255">已解决</Option>
+                        <Option value=""><FormattedMessage {...localeMessage['allStatus']} /></Option>
+                        <Option value="0">{window['_status']['0']}</Option>
+                        <Option value="150">{window['_status']['150']}</Option>
+                        <Option value="255">{window['_status']['255']}</Option>
                       </Select>
                   )}
                 </Item>
@@ -336,51 +461,60 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
               <Col span={8}>
                 <Item
                   {...formItemLayout}
-                  label='持续时间'
+                  label={<FormattedMessage {...localeMessage['duration']} />}
                 >
                   {getFieldDecorator('duration', {
                      
                   })(
-                      <Select placeholder='请选择持续时间'>
-                        <Option value="1">{`< 15min`}</Option>
-                        <Option value="2">{`15 ~ 30min`}</Option>
-                        <Option value="3">{`30 ~ 60min`}</Option>
-                        <Option value="4">{`1 ~ 4h`}</Option>
-                        <Option value="5">{`> 4h`}</Option>
+                      <Select placeholder={formatMessage({...localeMessage['duration_placeholder']})}>
+                        <Option value="1">{`< 15 min`}</Option>
+                        <Option value="2">{`15 ~ 30 min`}</Option>
+                        <Option value="3">{`30 ~ 60 min`}</Option>
+                        <Option value="4">{`1 ~ 4 h`}</Option>
+                        <Option value="5">{`> 4 h`}</Option>
                       </Select>
                   )}
                 </Item>
               </Col>
             </Row>
             <Item wrapperCol={{ span: 10, offset: 2 }}>
-              <Button type="primary" size="default" htmlType="submit" onClick={ (e) => {onOk(e, form)} }>搜索</Button>
+              <Button type="primary" size="default" htmlType="submit" onClick={ (e) => {onOk(e, form)} }><FormattedMessage {...localeMessage['search']} /></Button>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <Button type="primary" size="default" onClick={ () => {form.resetFields()} }>重置</Button>
+              <Button type="primary" size="default" onClick={ () => {form.resetFields()} }><FormattedMessage {...localeMessage['reset']} /></Button>
             </Item>
           </Form>
-          {!haveQuery ? <div className={styles.alertListInfo}>暂无数据，请先选择查询条件</div> :
+          {!haveQuery ? <div className={styles.alertListInfo}><FormattedMessage {...localeMessage['noQueryData']} /></div> :
           <div>
             <div className={styles.queryOperate}>
               <div className={styles.count}>
-                {`共${queryCount.total !== undefined ? queryCount.total : 0}个结果（紧急${queryCount.critical !== undefined ? queryCount.critical : 0}个、警告${queryCount.warning !== undefined ? queryCount.warning : 0}个、提醒${queryCount.information !== undefined ? queryCount.information : 0}个、正常${queryCount.ok !== undefined ? queryCount.ok : 0}个）`}
+                <FormattedMessage {...localeMessage['result']} 
+                  values= {{
+                    total: queryCount.total !== undefined ? queryCount.total : 0,
+                    critical: queryCount.critical !== undefined ? queryCount.critical : 0,
+                    warning: queryCount.warning !== undefined ? queryCount.warning : 0,
+                    informaiton: queryCount.information !== undefined ? queryCount.information : 0,
+                    ok: queryCount.ok !== undefined ? queryCount.ok : 0
+                  }}
+                />
+                
               </div>
               <div className={styles.groupMain}>
-                  <Select className={classnames(styles.setGroup, styles.selectSingle)} placeholder="分组显示" value={selectGroup} onChange={ (value) => {
+                  <Select className={classnames(styles.setGroup, styles.selectSingle)} placeholder={formatMessage({...localeMessage['groupBy']})} value={selectGroup} onChange={ (value) => {
                       dispatch({
                           type: 'alertQueryDetail/groupView',
                           payload: value,
                       })
                   }}>
-                      <Option key={0} className={styles.menuItem} value="entityName">按对象分组</Option>
-                      <Option key={1} className={styles.menuItem} value="source">按来源分组</Option>
-                      <Option key={2} className={styles.menuItem} value="status">按状态分组</Option>
+                      <Option key={0} className={styles.menuItem} value="entityName"><FormattedMessage {...localeMessage['groupByEnityName']} /></Option>
+                      <Option key={1} className={styles.menuItem} value="source"><FormattedMessage {...localeMessage['groupBySource']} /></Option>
+                      <Option key={2} className={styles.menuItem} value="status"><FormattedMessage {...localeMessage['groupByStatus']} /></Option>
                       {
                         extendColumnList.length !== 0 ? extendColumnList.map( (col, index) => {
-                          return <Option key={index + 3} className={styles.menuItem} value={col.id}>{`按${col.name}分组`}</Option>
-                        }) : <Option key='placeholder' style="display:none"></Option>
+                          return <Option key={index + 3} className={styles.menuItem} value={col.id}><FormattedMessage {...localeMessage['groupByOther']} values={{other: col.name}}/></Option>
+                        }) : []
                       }
                   </Select>
-                  <i className={selectGroup !== '分组显示' && classnames(switchClass, styles.switch)} onClick={() => {
+                  <i className={selectGroup !== window['_groupBy'] && classnames(switchClass, styles.switch)} onClick={() => {
                       dispatch({
                           type: 'alertQueryDetail/noGroupView',
                       })
@@ -389,7 +523,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
               <Popover placement='bottomRight' trigger="click" content={popoverContent} >
                 <div className={classnames(styles.button, styles.rightBtn)}>
                     <i className={classnames(setClass, styles.setCol)}></i>
-                    <p className={styles.col}>列定制</p>
+                    <p className={styles.col}><FormattedMessage {...localeMessage['columns']} /></p>
                 </div>
               </Popover>
             </div>
@@ -409,11 +543,11 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail}) => {
     )
 }
 
-export default Form.create()(
+export default injectIntl(Form.create()(
   connect((state) => {
     return {
       alertQuery: state.alertQuery,
       alertQueryDetail: state.alertQueryDetail
     }
   })(alertQueryManage)
-)
+))

@@ -30,15 +30,15 @@ class AlertListManage extends Component{
 
     const localeMessage = defineMessages({
       tab_list: {
-        id: 'alertList_tabs_list',
+        id: 'alertList.tabs.list',
         defaultMessage: '列表'
       },
       tab_time: {
-        id: 'alertList_tabs_timeList',
+        id: 'alertList.tabs.timeList',
         defaultMessage: '时间线'
       },
       auto_refresh: {
-        id: 'alertList_autoRefresh',
+        id: 'alertList.autoRefresh',
         defaultMessage: '自动刷新'
       }
     })

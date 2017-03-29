@@ -64,7 +64,7 @@ const  ListTableWrap = ({dispatch, alertQuery}) => {
     },
     orderByTittle(e) {
       const orderKey = e.target.getAttribute('data-key');
-
+      
       dispatch({
         type: 'alertQuery/orderByTittle',
         payload: orderKey

@@ -31,7 +31,7 @@ const setLang = function(lang){
 			}
 			// 内置属性
 			window._severity = {
-			  "0": "ok",
+			  "0": "OK",
 			  "1": "Information",
 			  "2": "Warning",
 			  "3": "Critical"
@@ -42,6 +42,7 @@ const setLang = function(lang){
 			  "150": "Assigned",
 			  "255": "Resolved"
 			}
+			window._groupBy = 'GroupBy'
 			break
 		default:
 			appLocaleData = {
@@ -65,6 +66,7 @@ const setLang = function(lang){
 			  "150": "处理中",
 			  "255": "已解决"
 			}
+			window._groupBy = '分组显示'
 			break
 
 	}

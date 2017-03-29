@@ -34,23 +34,22 @@ const initalState = {
     columnList: [
         {
             type: 0, // id 
-            name: '常规',
             cols: [
-                {id: 'entityName', name: '对象', checked: false,},
-                {id: 'name', name: '告警名称', checked: false,},
-                {id: 'source', name: '告警来源', checked: false,},
-                {id: 'status', name: '告警状态', checked: false,},
-                {id: 'description', name: '告警描述', checked: false,},
-                {id: 'count', name: '次数', checked: false,},
-                {id: 'lastTime', name: '持续时间', checked: false,},
-                {id: 'lastOccurTime', name: '发生时间', checked: false,}
+                {id: 'entityName', checked: false,},
+                {id: 'name', checked: false,},
+                {id: 'source', checked: false,},
+                {id: 'status', checked: false,},
+                {id: 'description', checked: false,},
+                {id: 'count', checked: false,},
+                {id: 'lastTime', checked: false,},
+                {id: 'lastOccurTime', checked: false,}
             ]
         }
     ],
 
     // 分组显示
     isGroup: false,
-    selectGroup: '分组显示', // 默认是分组设置
+    selectGroup: window['_groupBy'], // 默认是分组设置
 }
 
 export default {
@@ -204,6 +203,13 @@ export default {
       },
       // 打开派发工单做的相应处理
       *openFormModal({payload}, {select, put, call}) {
+          // 触发筛选
+          yield put({ type: 'alertListTable/filterCheckAlert'})
+          const { operateAlertIds } = yield select( state => {
+              return {
+                  'operateAlertIds': state.alertListTable.operateAlertIds,
+              }
+          })
           yield put({
               type: 'alertList/toggleModalOrigin',
               payload: payload
@@ -213,22 +219,35 @@ export default {
                   type: 'alertDetailOperation/openFormModal'
               })
           } else {
-            const options = yield getFormOptions();
-            if (options.result) {
-                yield put({
-                    type: 'setFormOptions',
-                    payload: options.data || []
-                })
-            } else {
-                console.error('获取工单类型失败');
+            if ( operateAlertIds !== undefined ) {
+                if (operateAlertIds.length === 0) {
+                    yield message.error(`请先选择一条告警`, 3);
+                } else {
+                    const options = yield getFormOptions();
+                    if (options.result) {
+                        yield put({
+                            type: 'setFormOptions',
+                            payload: options.data || []
+                        })
+                    } else {
+                        console.error('获取工单类型失败');
+                    }
+                    yield put({
+                        type: 'toggleFormModal',
+                        payload: true
+                    })
+                }
             }
-            yield put({
-                type: 'toggleFormModal',
-                payload: true
-            })
           }
       },
       *openCloseModal({payload}, {select, put, call}) {
+          // 触发筛选
+          yield put({ type: 'alertListTable/filterCheckAlert'})
+          const { operateAlertIds } = yield select( state => {
+              return {
+                  'operateAlertIds': state.alertListTable.operateAlertIds,
+              }
+          })
           yield put({
               type: 'alertList/toggleModalOrigin',
               payload: payload.origin
@@ -237,8 +256,14 @@ export default {
               yield put({type: 'alertDetailOperation/setCloseMessge', payload: undefined})
               yield put({type: 'alertDetailOperation/toggleCloseModal',payload: payload.state})
           } else {
-              yield put({type: 'setCloseMessge', payload: undefined})
-              yield put({type: 'toggleCloseModal', payload: payload.state})
+              if ( operateAlertIds !== undefined ) {
+                if (operateAlertIds.length === 0) {
+                    yield message.error(`请先选择一条告警`, 3);
+                } else {
+                    yield put({type: 'setCloseMessge', payload: undefined})
+                    yield put({type: 'toggleCloseModal', payload: payload.state})
+                }
+              }
           }
       },
       // 关闭告警
@@ -384,7 +409,7 @@ export default {
                 }) 
             })
         })
-        if (Object.keys(extend).length !== 0 && !haveExtend) {
+        if (Object.keys(extend.cols).length !== 0 && !haveExtend) {
             extend.cols.forEach( (col) => {
                 col.checked = false;
             })

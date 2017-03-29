@@ -6,11 +6,11 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const formatMessages = defineMessages({
     set:{
-      id: 'alertManage_addTags',
+      id: 'alertManage.addTags',
       defaultMessage: '关注设置',
     },
     header: {
-      id: 'alertManage_headerTitle',
+      id: 'alertManage.headerTitle',
       defaultMessage: '最近一小时活跃告警: ',
     }
 })

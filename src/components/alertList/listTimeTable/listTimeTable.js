@@ -4,6 +4,7 @@ import { connect } from 'dva'
 import { Popover } from 'antd'
 import styles from '../index.less'
 import LevelIcon from '../../common/levelIcon/index.js'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 class ListTimeTable extends Component {
     componentDidMount(){
@@ -49,12 +50,59 @@ class ListTimeTable extends Component {
       } = this.props
       
       let colsKey = []
+      const formatMessages = defineMessages({
+          entityName:{
+            id: 'alertList.title.enityName',
+            defaultMessage: '对象',
+          },
+          name: {
+            id: 'alertList.title.name',
+            defaultMessage: '告警名称',
+          },
+          showMore: {
+            id: 'alertList.showMore',
+            defaultMessage: '显示更多',
+          },
+          noData: {
+            id: 'alertList.noListData',
+            defaultMessage: '暂无数据',
+          },
+          Unknown: {
+            id: 'alertList.unknown',
+            defaultMessage: '未知',
+          },
+          source: {
+            id: 'alertList.title.source',
+            defaultMessage: '告警来源',
+          },
+          description:{
+            id: 'alertList.title.description',
+            defaultMessage: '告警描述',
+          },
+          occurTime:{
+            id: 'alertList.title.occurTime',
+            defaultMessage: '发生时间',
+          },
+          incidentId: {
+            id: 'alertList.title.id',
+            defaultMessage: '告警ID',
+          },
+          name: {
+            id: 'alertList.title.name',
+            defaultMessage: '告警名称',
+          },
+          severity: {
+            id: 'alertList.title.severity',
+            defaultMessage: '告警级别',
+          },
+      })
+
       const theads = columns.filter( item => (item['key'] == 'entityName' || item['key'] == 'name')).map( (item) => {
         //const width = item.width || 'auto'
         colsKey.push(item['key'])
         return (
           <th key={item.key}>
-            {item.title}
+            {item.title === undefined ? <FormattedMessage {...formatMessages[item['key']]} /> : `${item.title}`}
           </th>
         )
       } )
@@ -192,12 +240,12 @@ class ListTimeTable extends Component {
           let newDate = new Date(+itemDot['occurTime'])
           const content = (
             <div>
-              <p>{`级别：${window['_severity'][itemDot['severity']]}`}</p>
-              <p>{`告警名称：${itemDot['name']}`}</p>
-              <p>{`告警ID：${itemDot['incidentId']}`}</p>
-              <p>{`发生时间：${newDate.getFullYear() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getDate() + ' ' + newDate.getHours() + ':' + newDate.getMinutes()}`}</p>
-              <p>{`告警描述：${itemDot['description']}`}</p>
-              <p>{`来源：${itemDot['source']}`}</p>
+              <p><FormattedMessage {...formatMessages['severity']} />{`：${window['_severity'][itemDot['severity']]}`}</p>
+              <p><FormattedMessage {...formatMessages['name']} />{`：${itemDot['name']}`}</p>
+              <p><FormattedMessage {...formatMessages['incidentId']} />{`：${itemDot['incidentId']}`}</p>
+              <p><FormattedMessage {...formatMessages['occurTime']} />{`：${newDate.getFullYear() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getDate() + ' ' + newDate.getHours() + ':' + newDate.getMinutes()}`}</p>
+              <p><FormattedMessage {...formatMessages['description']} />{`：${itemDot['description']}`}</p>
+              <p><FormattedMessage {...formatMessages['source']} />{`：${itemDot['source']}`}</p>
             </div>
           );
           return (
@@ -252,7 +300,7 @@ class ListTimeTable extends Component {
                   groupBy && groupBy == 'status' ?
                   window['_status'][groupItem.classify]
                   :
-                  groupItem.classify ? groupItem.classify : '未知'
+                  groupItem.classify ? groupItem.classify : <FormattedMessage {...formatMessages['Unknown']} />
                 }
             </td>
           </tr>)
@@ -264,7 +312,7 @@ class ListTimeTable extends Component {
                   groupBy && groupBy == 'status' ?
                   window['_status'][groupItem.classify]
                   :
-                  groupItem.classify ? groupItem.classify : '未知'
+                  groupItem.classify ? groupItem.classify : <FormattedMessage {...formatMessages['Unknown']} />
                 }
             </td>
           </tr>)
@@ -385,13 +433,13 @@ class ListTimeTable extends Component {
               {
                 data.length > 0 ? tbodyCon :
                 <tr>
-                  <td colSpan="6" style={{textAlign: 'center'}}>暂无数据</td>
+                  <td colSpan="6" style={{textAlign: 'center'}}><FormattedMessage {...formatMessages['noData']} /></td>
                 </tr>
               }
               </tbody>
             </table>
           </Spin>
-          {isShowMore && <div className={styles.loadMore}><Button onClick={loadMore}>显示更多</Button></div>}
+          {isShowMore && <div className={styles.loadMore}><Button onClick={loadMore}><FormattedMessage {...formatMessages['showMore']} /></Button></div>}
         </div>
       )
     }

@@ -36,35 +36,23 @@ const initvalState = {
 
     columns: [{
       key: 'entityName',
-      title: '对象',
-      width: 100,
     }, {
       key: 'name',
-      title: '告警名称',
-      width: 100,
     }, {
       key: 'source',
-      title: '告警来源',
-      width: 200,
       order: true
     }, {
       key: 'status',
-      title: '告警状态',
-      width: 150,
     }, {
       key: 'description',
-      title: '告警描述',
     }, {
       key: 'count',
-      title: '次数',
       order: true
     }, {
       key: 'lastTime',
-      title: '持续时间',
       order: true
     }, {
       key: 'lastOccurTime',
-      title: '最后发送时间',
       order: true
     }],
 }

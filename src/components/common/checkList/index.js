@@ -8,7 +8,7 @@ const checkList = ({itemList, checkedNum, isSpreadTags, checkHandler, origin}) =
 
     const formatMessages = defineMessages({
         text:{
-          id: 'alertManage_dashbord_selectedText',
+          id: 'alertManage.dashbord.selectedText',
           defaultMessage: '已选择 {num} 个关注',
           values: {
             num: <span className={styles.textNum} >{checkedNum}</span>

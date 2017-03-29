@@ -5,7 +5,7 @@ import { getFormOptions, dispatchForm, close, merge, relieve } from '../services
 
 const initalState = {
     isShowDetail: false, // 是否显示detail
-    selectGroup: '分组显示', // 默认是分组设置
+    selectGroup: window['_groupBy'], // 默认是分组设置
 
     isShowFormModal: false, // 派发工单modal
     formOptions: [],
@@ -18,16 +18,15 @@ const initalState = {
     columnList: [
         {
             type: 0, // id 
-            name: '常规',
             cols: [
-                {id: 'entityName', name: '对象', checked: true,},
-                {id: 'name', name: '告警名称', checked: false,},
-                {id: 'source', name: '告警来源', checked: false,},
-                {id: 'status', name: '告警状态', checked: true,},
-                {id: 'description', name: '告警描述', checked: false,},
-                {id: 'count', name: '次数', checked: false,},
-                {id: 'lastTime', name: '持续时间', checked: false,},
-                {id: 'lastOccurTime', name: '发生时间', checked: false,}
+                {id: 'entityName', checked: true,},
+                {id: 'name', checked: false,},
+                {id: 'source', checked: false,},
+                {id: 'status', checked: true,},
+                {id: 'description', checked: false,},
+                {id: 'count', checked: false,},
+                {id: 'lastTime', checked: false,},
+                {id: 'lastOccurTime', checked: false,}
             ]
         },
     ],
@@ -231,7 +230,7 @@ export default {
                 }) 
             })
         })
-        if (Object.keys(extend).length !== 0 && !haveExtend) {
+        if (Object.keys(extend.cols).length !== 0 && !haveExtend) {
             extend.cols.forEach( (col) => {
                 col.checked = false;
             })

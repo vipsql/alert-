@@ -7,7 +7,7 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const formatMessages = defineMessages({
     noData:{
-      id: 'alertManage_noData',
+      id: 'alertManage.noData',
       defaultMessage: '告警看板暂无数据，请先设置关注数据',
     }
 })

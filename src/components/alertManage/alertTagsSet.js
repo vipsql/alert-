@@ -10,15 +10,15 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const formatMessages = defineMessages({
     set:{
-      id: 'alertManage_addTags',
+      id: 'alertManage.addTags',
       defaultMessage: '关注设置',
     },
     ok: {
-      id: 'alertManage_setModal_ok',
+      id: 'alertManage.setModal.ok',
       defaultMessage: '确认',
     },
     reset: {
-      id: 'alertManage_setModal_reset',
+      id: 'alertManage.setModal.reset',
       defaultMessage: '重置',
     }
 })
