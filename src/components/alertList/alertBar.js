@@ -140,7 +140,7 @@ class AlertBar extends Component{
 
         chart.on('filtered', function(d, f){
           clearTimeout(timer)
-
+        
           timer = setTimeout( () => {
             dispatch({
               type: 'alertList/editAlertBar',

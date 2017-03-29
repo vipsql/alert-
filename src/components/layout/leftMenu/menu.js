@@ -33,8 +33,8 @@ const createMenus = (menus, isFold) => {
     const iconName = `icon-${item.icon}`
     const className = classnames(
       'icon',
-      styles[iconName],
-      styles.iconfont
+      iconName,
+      'iconfont'
 
     )
 

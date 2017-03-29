@@ -78,6 +78,8 @@ class Chart extends Component{
         var root;
         var node;
 
+        if(this.props.currentDashbordData.length < 1) return
+
         node = root = {
               path: 'root',
               children: this.props.currentDashbordData

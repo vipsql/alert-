@@ -19,21 +19,21 @@ function FoldBar({ isFold, handleFoldMenu}){
   //   const isExpand = isFold ? true : fasle
   //   handleFoldMenu(isExpand)
   // }
-  const muenClass = !isFold ? 'icon-cebianlanshouqi' : 'icon-cebianlanzhankai';
+  const menuClass = !isFold ? 'icon-cebianlanshouqi' : 'icon-cebianlanzhankai';
   const arrClass = classnames(
     styles['switchMenu'],
-    styles.iconfont,
-    styles[muenClass]
+    'iconfont',
+    menuClass
   )
   const setClass = classnames(
-    styles['icon'],
-    styles.iconfont,
-    styles['icon-bushu']
+    'icon',
+    'iconfont',
+    'icon-bushu'
   )
   const helpClass = classnames(
-    styles['icon'],
-    styles.iconfont,
-    styles['icon-bangzhu']
+    'icon',
+    'iconfont',
+    'icon-bangzhu'
   )
 
   return (
