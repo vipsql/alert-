@@ -8,33 +8,33 @@ import { Link } from 'dva/router'
 const alertConfig = (props) => {
 
     const yyjcClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-disanfangyingyongjicheng']
+        'icon',
+        'iconfont',
+        'icon-disanfangyingyongjicheng'
     )
 
     const glpzClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-gaojingguanlianpeizhi']
+        'icon',
+        'iconfont',
+        'icon-gaojingguanlianpeizhi'
     )
 
     const dzpzClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-gaojingdongzuopeizhi']
+        'icon',
+        'iconfont',
+        'icon-gaojingdongzuopeizhi'
     )
 
     const zxzbClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-zuoxizhibanpeizhi']
+        'icon',
+        'iconfont',
+        'icon-zuoxizhibanpeizhi'
     )
 
     const tjwhClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-tingjiweihupeizhi']
+        'icon',
+        'iconfont',
+        'icon-tingjiweihupeizhi'
     )
 
     return (
