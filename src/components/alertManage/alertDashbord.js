@@ -121,6 +121,8 @@ class Chart extends Component{
                 .attr("width", function(d) {
                     return Math.max(0.01, d.dx);
                 })
+                .attr('stroke','#163c67')
+                .attr('stroke-width','2')
                 .attr("height", headerHeight)
                 .style("fill", headerColor);
             parentEnterTransition.append('text')
@@ -209,7 +211,7 @@ class Chart extends Component{
             childEnterTransition.append("rect")
                 .classed("background", true)
                 // .attr('filter',"url(#inset-shadow)")
-                .attr('stroke','#0d3158')
+                .attr('stroke','#163c67')
                 .attr('stroke-width','1')
                 .style("fill", function(d) {
                     // return color(d.maxSeverity);
