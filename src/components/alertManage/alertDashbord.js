@@ -78,6 +78,8 @@ class Chart extends Component{
         var root;
         var node;
 
+        if(this.props.currentDashbordData.length < 1) return
+
         node = root = {
               path: 'root',
               children: this.props.currentDashbordData
@@ -119,6 +121,8 @@ class Chart extends Component{
                 .attr("width", function(d) {
                     return Math.max(0.01, d.dx);
                 })
+                .attr('stroke','#163c67')
+                .attr('stroke-width','2')
                 .attr("height", headerHeight)
                 .style("fill", headerColor);
             parentEnterTransition.append('text')
@@ -148,6 +152,10 @@ class Chart extends Component{
                 .attr("width", function(d) {
                     return Math.max(0.01, d.dx);
                 })
+                .attr("x", function(d) {
+                    return Math.max(0.01, d.dx/2);
+                })
+                .attr("y", "10")
                 .attr("height", headerHeight)
                 .style("fill", headerColor);
             parentUpdateTransition.select(".label")
@@ -203,7 +211,7 @@ class Chart extends Component{
             childEnterTransition.append("rect")
                 .classed("background", true)
                 // .attr('filter',"url(#inset-shadow)")
-                .attr('stroke','#0d3158')
+                .attr('stroke','#163c67')
                 .attr('stroke-width','1')
                 .style("fill", function(d) {
                     // return color(d.maxSeverity);
@@ -218,7 +226,7 @@ class Chart extends Component{
                 })
                 .attr("dy", ".35em")
                 .attr("fill", "#04203e")
-                .attr("font-size", "16")
+                .attr("font-size", "12")
                 .attr("text-anchor", "middle")
                 // .style("display", "none")
                 .text(function(d) {

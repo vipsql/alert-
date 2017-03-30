@@ -17,15 +17,15 @@ const alertTagsFilter = ({dispatch, tagListFilter}) => {
 
     const muenClass = !isSpread ? 'icon-xialasanjiao' : 'icon-xialasanjiao-copy';
     const arrClass = classnames(
-        styles['switchMenu'],
-        styles.iconfont,
-        styles[muenClass]
+        'switchMenu',
+        'iconfont',
+        muenClass
     )
 
     const switchClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-guolv']
+        'icon',
+        'iconfont',
+        'icon-guolv'
     )
 
     const clickBtn = () => {

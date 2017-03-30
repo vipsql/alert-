@@ -21,8 +21,8 @@ const AlertManageHead = ({
   showTagsModal
 }) => {
   const setClass = classnames(
-    styles['iconfont'],
-    styles['icon-bushu']
+    'iconfont',
+    'icon-bushu'
   )
 
   return (

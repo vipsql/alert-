@@ -34,6 +34,10 @@ module.exports = function (webpackConfig, env) {
              from: __dirname + '/iconfont/**',
              to: __dirname + '/dist/'
            },
+           {
+             from: __dirname + '/frontend/**',
+             to: __dirname + '/dist/'
+           },
        ])
 
    );

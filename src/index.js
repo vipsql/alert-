@@ -15,12 +15,12 @@ import { addLocaleData, IntlProvider } from 'react-intl'
 
 const setLang = function(lang){
 	if(!lang){
-		lang = localStorage.getItem('__uyun_language') ? localStorage.getItem('__uyun_language') : 'zh-cn'
+		lang = localStorage.getItem('UYUN_LANGUAGE_CONSTANT') ? localStorage.getItem('UYUN_LANGUAGE_CONSTANT') : 'zh-cn'
 	}
 
 	let appLocaleData
 	switch(lang){
-		case 'en-us':
+		case 'en_US':
 			appLocaleData = {
 			  messages: {
 			    ...enMessages

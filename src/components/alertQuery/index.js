@@ -27,15 +27,15 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
     };
 
     const switchClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-anonymous-iconfont']
+        'icon',
+        'iconfont',
+        'icon-anonymous-iconfont'
     )
 
     const setClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-bushu']
+        'icon',
+        'iconfont',
+        'icon-bushu'
     )
 
     const operateProps = {

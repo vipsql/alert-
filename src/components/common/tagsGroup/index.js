@@ -5,9 +5,9 @@ import { classnames } from '../../../utils'
 const tagsGroup = ({className, removeHandler, tagsList, haveTags}) => {
 
     const switchClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-anonymous-iconfont']
+        'icon',
+        'iconfont',
+        'icon-anonymous-iconfont'
     )
 
     return (

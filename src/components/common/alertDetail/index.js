@@ -53,18 +53,18 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
 
     // 目前只有完成，后期可根据状态改变class
     const setClass = classnames(
-      styles['iconfont'],
-      styles['icon-wancheng']
+      'iconfont',
+      'icon-wancheng'
     )
 
     const shanchuClass = classnames(
-      styles['iconfont'],
-      styles['icon-shanchux']
+      'iconfont',
+      'icon-shanchux'
     )
 
     const bianjiClass = classnames(
-      styles['iconfont'],
-      styles['icon-yijianfankui']
+      'iconfont',
+      'icon-yijianfankui'
     )
 
     // 根据severity选择不同的颜色
