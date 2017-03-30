@@ -94,6 +94,9 @@ class AlertBar extends Component{
     
     return this.props.alertList.barData !== nextProps.alertList.barData || this.props.alertList.isResize !== nextProps.alertList.isResize
   }
+  componentDidMount(){
+    
+  }
   componentDidUpdate(){
 
     let timer = null;

@@ -1,4 +1,5 @@
 dist
 .DS_Store
+.roadhogrc
 node_modules
 yarn.lock

@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { Button, Popover } from 'antd';
 import { connect } from 'dva'
-import ListTimeTable from './ListTimeTable'
+import ListTimeTable from './listTimeTable'
 import styles from '../index.less'
 
 // function ListTimeTableWrap({dispatch, alertListTimeTable}){
