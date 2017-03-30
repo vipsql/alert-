@@ -401,7 +401,7 @@ class Chart extends Component{
     render(){
         return (
             <div className={styles.loadingWrap}>
-                <Spin tip="加载中..." spinning= {this.props.isLoading}>
+                <Spin spinning= {this.props.isLoading}>
                     <div id="treemap" className={styles.treemap}></div>
                     {(Array.isArray(this.props.currentDashbordData) && this.props.currentDashbordData.length < 1) && <div className={styles.alertNoData}><FormattedMessage {...formatMessages['noData']} /></div>}
                 </Spin>

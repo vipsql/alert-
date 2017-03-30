@@ -1,67 +1,190 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'dva'
 import Detail from './detail'
-import AppConfigInfo from './appConfigInfo.json'
 import { getUUID } from '../../utils'
+import AlertREST from './UYUN_Alert_REST'
+import Monitor from './UYUN_Monitor'
+import Itsm from './UYUN_Itsm'
+import ChatOps from './UYUN_ChatOps'
 
-function Add({alertConfig, dispatch}){
+function Add(props){
 
-    const { currentOperateAppType, UUID, currentDisplayName } = alertConfig;
-    let appTypeInfo = {};
-    
-    // 用于不同的type匹配不同的页面message
-    if (currentOperateAppType.type == 0 ) {
-        AppConfigInfo['transferIn']['children'].forEach( (app) => {
-            if (app.name == currentOperateAppType.name) {
-                appTypeInfo = app.pageInfo
-            }
-        })
-    } else if (currentOperateAppType.type == 1 ) {
-        AppConfigInfo['transferOut']['children'].forEach( (app) => {
-            if (app.name == currentOperateAppType.name) {
-                appTypeInfo = app.pageInfo
-            }
-        })
-    }
-    
-    const addProps = {
-        type: currentOperateAppType.type,
-        iconType: currentOperateAppType.name, // 用于确定Icon
-        headerName: currentOperateAppType.name,
-        displayName: currentDisplayName,
-        appkey: UUID,
-        builtIn: 1,
-        ...appTypeInfo,
+    const { currentOperateAppType } = props.alertConfig;
 
-        onOk: (e, form) => {
-            e.preventDefault();
-            
-            form.validateFieldsAndScroll( (errors, values) => {
-                if (!!errors) {
-                    return;
-                }
-                const formData = form.getFieldsValue()
-                dispatch({
-                    type: 'alertConfig/addApplication',
-                    payload: formData
-                })
-            })
-        },
-        keyCreate: (form) => {
-            let _UUID = getUUID(32);
-            dispatch({
-                type: 'alertConfig/setUUID',
-                payload: {
-                    UUID: _UUID,
-                    currentDisplayName: form.getFieldsValue().displayName
-                }
-            })
+    const createApplication = ({alertConfig, dispatch}) => {
+        const { currentOperateAppType, UUID, currentDisplayName, apikey } = alertConfig;
+        let targetApplication;
+        switch (currentOperateAppType.name) {
+            case 'UYUN Alert REST API':
+                targetApplication = 
+                    <AlertREST 
+                        appkey={UUID}
+                        builtIn={1}
+                        displayName={currentDisplayName}
+                        url={window.location.host + '/openapi/v2/create?' + `api_key=${apikey}`}
+                        onOk={(e, form) => {
+                            e.preventDefault();
+                            
+                            form.validateFieldsAndScroll( (errors, values) => {
+                                if (!!errors) {
+                                    return;
+                                }
+                                const formData = form.getFieldsValue()
+                                dispatch({
+                                    type: 'alertConfig/addApplication',
+                                    payload: formData
+                                })
+                            })
+                        }}
+                        keyCreate={(form) => {
+                            let _UUID = getUUID(32);
+                            dispatch({
+                                type: 'alertConfig/setUUID',
+                                payload: {
+                                    UUID: _UUID,
+                                    currentDisplayName: form.getFieldsValue().displayName
+                                }
+                            })
+                        }}
+                    />
+                break;
+            case 'UYUN Monitor':
+                targetApplication = 
+                    <Monitor 
+                        appkey={UUID}
+                        displayName={currentDisplayName}
+                        builtIn={1}
+                        url={window.location.host + '/openapi/v2/create?' + `api_key=${apikey}`}
+                        onOk={(e, form) => {
+                            e.preventDefault();
+                            
+                            form.validateFieldsAndScroll( (errors, values) => {
+                                if (!!errors) {
+                                    return;
+                                }
+                                const formData = form.getFieldsValue()
+                                dispatch({
+                                    type: 'alertConfig/addApplication',
+                                    payload: formData
+                                })
+                            })
+                        }}
+                        keyCreate={(form) => {
+                            let _UUID = getUUID(32);
+                            dispatch({
+                                type: 'alertConfig/setUUID',
+                                payload: {
+                                    UUID: _UUID,
+                                    currentDisplayName: form.getFieldsValue().displayName
+                                }
+                            })
+                        }}
+                    />
+                break;
+            case 'UYUN Itsm':
+                targetApplication = 
+                    <Itsm 
+                        appkey={UUID}
+                        displayName={currentDisplayName}
+                        onOk={(e, form) => {
+                            e.preventDefault();
+                            
+                            form.validateFieldsAndScroll( (errors, values) => {
+                                if (!!errors) {
+                                    return;
+                                }
+                                const formData = form.getFieldsValue()
+                                dispatch({
+                                    type: 'alertConfig/addApplication',
+                                    payload: formData
+                                })
+                            })
+                        }}
+                        keyCreate={(form) => {
+                            let _UUID = getUUID(32);
+                            dispatch({
+                                type: 'alertConfig/setUUID',
+                                payload: {
+                                    UUID: _UUID,
+                                    currentDisplayName: form.getFieldsValue().displayName
+                                }
+                            })
+                        }}
+                    />
+                break;
+            case 'UYUN ChatOps':
+                targetApplication = 
+                    <ChatOps 
+                        appkey={UUID}
+                        displayName={currentDisplayName}
+                        onOk={(e, form) => {
+                            e.preventDefault();
+                            
+                            form.validateFieldsAndScroll( (errors, values) => {
+                                if (!!errors) {
+                                    return;
+                                }
+                                const formData = form.getFieldsValue()
+                                dispatch({
+                                    type: 'alertConfig/addApplication',
+                                    payload: formData
+                                })
+                            })
+                        }}
+                        keyCreate={(form) => {
+                            let _UUID = getUUID(32);
+                            dispatch({
+                                type: 'alertConfig/setUUID',
+                                payload: {
+                                    UUID: _UUID,
+                                    currentDisplayName: form.getFieldsValue().displayName
+                                }
+                            })
+                        }}
+                    />
+                break;
+            default:
+                targetApplication = 
+                    <AlertREST 
+                        appkey={UUID}
+                        builtIn={1}
+                        displayName={currentDisplayName}
+                        url={window.location.host + '/openapi/v2/create?' + `api_key=${apikey}`}
+                        onOk={(e, form) => {
+                            e.preventDefault();
+                            
+                            form.validateFieldsAndScroll( (errors, values) => {
+                                if (!!errors) {
+                                    return;
+                                }
+                                const formData = form.getFieldsValue()
+                                dispatch({
+                                    type: 'alertConfig/addApplication',
+                                    payload: formData
+                                })
+                            })
+                        }}
+                        keyCreate={(form) => {
+                            let _UUID = getUUID(32);
+                            dispatch({
+                                type: 'alertConfig/setUUID',
+                                payload: {
+                                    UUID: _UUID,
+                                    currentDisplayName: form.getFieldsValue().displayName
+                                }
+                            })
+                        }}
+                    />
+                break;
         }
+        return targetApplication
     }
-    
-    return (
-        <Detail {...addProps}/>
-    )
+
+    if (currentOperateAppType !== undefined && Object.keys(currentOperateAppType).length !== 0) {
+        return createApplication(props)
+    } else {
+        return false;
+    }
 }
 Add.propTypes = {
   dispatch: PropTypes.func

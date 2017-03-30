@@ -4,6 +4,7 @@ import { Modal, Button } from 'antd';
 import styles from './index.less'
 import { classnames } from '../../utils'
 import { Link } from 'dva/router'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const appSelectModal = ({alertConfig, dispatch}) => {
 
@@ -32,9 +33,20 @@ const appSelectModal = ({alertConfig, dispatch}) => {
         )
     })
 
+    const localeMessage = defineMessages({
+        newApplication: {
+            id: 'alertApplication.newApplication',
+            defaultMessage: '添加应用'
+        },
+        applicationMessage: {
+            id: 'alertApplication.modal.message',
+            defaultMessage: '请选择一款应用'
+        },
+    })
+
     return (
         <Modal
-          title="添加应用"
+          title={<FormattedMessage {...localeMessage['newApplication']} />}
           maskClosable="true"
           onCancel={ closeTypeModal }
           visible={ isShowTypeModal }
@@ -42,7 +54,7 @@ const appSelectModal = ({alertConfig, dispatch}) => {
           width={600}
         >
             <div className={styles.appModalMain}>
-                <p>请选择一款应用</p>
+                <p><FormattedMessage {...localeMessage['applicationMessage']} /></p>
                 <ul>
                     {lis}
                 </ul>

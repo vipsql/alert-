@@ -123,7 +123,7 @@ export default {
       return { ...state, ...initvalState }
     },
     // 不分组更新
-    updateAlertListToNoGroup(state, {payload: {info, isShowMore, isGroup, levels, orderBy, orderType, tempListData}}) {
+    updateAlertListToNoGroup(state, {payload: {info, isShowMore, isGroup, levels, orderBy, orderType, tempListData, currentPage}}) {
       let checkList = {};
       info.forEach( (item, index) => {
         checkList[`${item.id}`] = {
@@ -131,7 +131,7 @@ export default {
           checked: false
         }
       })
-      return { ...state, checkAlert: checkList, data: info, tempListData, isShowMore, isGroup, levels, orderBy, orderType}
+      return { ...state, checkAlert: checkList, data: info, tempListData, isShowMore, isGroup, levels, orderBy, orderType, currentPage}
     },
     // 分组时更新
     updateAlertListToGroup(state, {payload: {info, isShowMore, isGroup, groupBy, levels}}) {
@@ -514,6 +514,7 @@ export default {
               info: listData.data.datas,
               tempListData: listData.data.datas,
               isShowMore: listData.data.hasNext,
+              currentPage: 1,
               isGroup: false,
               orderBy: orderBy,
               orderType: orderType,

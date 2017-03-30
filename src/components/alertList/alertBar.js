@@ -179,7 +179,7 @@ class AlertBar extends Component{
           <div className={styles.xAxisLine}></div>
         </div>
         :
-        <Spin tip="加载中..." spinning={this.props.alertList.isLoading}>
+        <Spin spinning={this.props.alertList.isLoading}>
           <div className={styles.noTimeAlert}></div>
         </Spin>
         }

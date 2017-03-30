@@ -82,3 +82,13 @@ export async function view(id) {
       }
   })
 }
+//
+export async function getUserInfo() {
+  return request(`/dataService/getUserInfo`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
+

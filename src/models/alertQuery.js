@@ -112,9 +112,9 @@ export default {
       return { ...state, ...initalState }
     },
     // 不分组更新
-    updateAlertListToNoGroup(state, {payload: {info, tempListData, isShowMore, isGroup, orderBy, orderType, queryCount}}) {
+    updateAlertListToNoGroup(state, {payload: {info, tempListData, isShowMore, isGroup, orderBy, orderType, queryCount, currentPage}}) {
       
-      return { ...state, data: info, tempListData, isShowMore, isGroup, orderBy, orderType, queryCount}
+      return { ...state, data: info, tempListData, isShowMore, isGroup, orderBy, orderType, queryCount, currentPage}
     },
     // 分组时更新
     updateAlertListToGroup(state, {payload: {info, isShowMore, isGroup, groupBy, queryCount}}) {
@@ -312,6 +312,7 @@ export default {
               isGroup: false,
               orderBy: orderBy,
               orderType: orderType,
+              currentPage: 1,
               queryCount: countData.result ? countData.data : {}
             }
           })

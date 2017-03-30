@@ -416,7 +416,7 @@ class ListTimeTable extends Component {
 
       return(
         <div>
-          <Spin tip="加载中..." spinning={isLoading}>
+          <Spin spinning={isLoading}>
             <table width='100%' id="listTimeTable" className={styles.listTimeTable}>
               <thead>
                 <tr>

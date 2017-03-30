@@ -3,10 +3,33 @@ import { connect } from 'dva'
 import { Modal, Button } from 'antd';
 import styles from './index.less'
 import { classnames } from '../../utils'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const appDeleteModal = ({alertConfig, dispatch}) => {
 
     const { isShowDeteleModal, currentDeleteApp } = alertConfig;
+
+    const localeMessage = defineMessages({
+        delete: {
+            id: 'modal.delete',
+            defaultMessage: '删除'
+        },
+        cancel: {
+            id: 'modal.cancel',
+            defaultMessage: '取消'
+        },
+        deleteOperate: {
+            id: 'alertApplication.modal.deleteTitle',
+            defaultMessage: '删除应用'
+        },
+        deleteMessage: {
+            id: 'alertApplication.modal.deleteMessage',
+            defaultMessage: '您确定要删除{message}应用吗',
+            values: {
+                message: Object.keys(currentDeleteApp).length !== 0 ? currentDeleteApp['applyType']['name'] : '' 
+            }
+        }
+    })
     
     const closeDeleteModal = () => {
         dispatch({
@@ -24,23 +47,23 @@ const appDeleteModal = ({alertConfig, dispatch}) => {
         dispatch({
             type: 'alertConfig/deleteApp'
         })
-      }} >删除</Button>
+      }} ><FormattedMessage {...localeMessage['delete']} /></Button>
       <Button type="primary" onClick={ () => {
         closeDeleteModal()
-      }}>取消</Button>
+      }}><FormattedMessage {...localeMessage['cancel']} /></Button>
       </div>
     )
 
     return (
         <Modal
-          title="删除操作"
+          title={<FormattedMessage {...localeMessage['deleteOperate']} />}
           maskClosable="true"
           onCancel={ closeDeleteModal }
           visible={ isShowDeteleModal }
           footer={ modalFooter }
         >
             <div className={styles.delModalMain}>
-                <p>{`删除以后，数据无法恢复，您确定要删除${Object.keys(currentDeleteApp).length !== 0 ? currentDeleteApp['applyType']['name'] : '' }应用吗`}</p>
+                <p><FormattedMessage {...localeMessage['deleteMessage']} /></p>
             </div>
         </Modal>
     )

@@ -7,9 +7,10 @@ import { Link } from 'dva/router'
 import ApplicationList from '../common/applicationList'
 import AppSelectModal from './appSelectModal'
 import AppDeleteModal from './appDeleteModal'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const TabPane = Tabs.TabPane;
-const alertApplication = ({dispatch, alertConfig}) => {
+const alertApplication = ({dispatch, alertConfig, intl: {formatMessage}}) => {
 
     const { orderType, orderBy, applicationData } = alertConfig;
 
@@ -84,23 +85,38 @@ const alertApplication = ({dispatch, alertConfig}) => {
         }
     }
 
+    const localeMessage = defineMessages({
+        newApplication: {
+            id: 'alertApplication.newApplication',
+            defaultMessage: '添加应用'
+        },
+        incoming: {
+            id: 'alertApplication.incoming',
+            defaultMessage: '接入'
+        },
+        outgoing: {
+            id: 'alertApplication.outgoing',
+            defaultMessage: '转出'
+        },
+    })
+
     return (
         <div className={styles.myAppTabs}>
             <Tabs defaultActiveKey="0" type='line' onChange={ (tabKey) => {tabsChange(tabKey)}}>
-                <TabPane tab="接入" key="0">
+                <TabPane tab={formatMessage({...localeMessage['incoming']})} key="0">
                     <ApplicationList {...appListProps} />
                     <div className={styles.addBtn}>
                         <Button type="primary" className={styles.appBtn} onClick={ () => {
                             openAppModal(0) // 0 -> 接入
-                        }}><span>添加应用</span></Button>
+                        }}><span>{formatMessage({...localeMessage['newApplication']})}</span></Button>
                     </div>
                 </TabPane>
-                <TabPane tab="转出" key="1">
+                <TabPane tab={formatMessage({...localeMessage['outgoing']})} key="1">
                     <ApplicationList {...appListProps} />
                     <div className={styles.addBtn}>
                         <Button type="primary" className={styles.appBtn} onClick={ () => {
                             openAppModal(1) // 1 -> 接出
-                        }}><span>添加应用</span></Button>
+                        }}><span>{formatMessage({...localeMessage['newApplication']})}</span></Button>
                     </div>
                 </TabPane>
             </Tabs>
@@ -110,8 +126,8 @@ const alertApplication = ({dispatch, alertConfig}) => {
     )
 }
 
-export default connect((state) => {
+export default injectIntl(connect((state) => {
     return {
         alertConfig: state.alertConfig,
     }
-})(alertApplication)
+})(alertApplication))

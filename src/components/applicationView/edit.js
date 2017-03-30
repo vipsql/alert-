@@ -1,57 +1,140 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'dva'
 import Detail from './detail'
-import AppConfigInfo from './appConfigInfo.json'
 import { getUUID } from '../../utils'
+import AlertREST from './UYUN_Alert_REST'
+import Monitor from './UYUN_Monitor'
+import Itsm from './UYUN_Itsm'
+import ChatOps from './UYUN_ChatOps'
 
-function Edit({dispatch, alertConfig}){
-  const { currentEditApp, UUID } = alertConfig;
-    let appTypeInfo = {};
-    
-    // 用于不同的type匹配不同的页面message
-    if (currentEditApp.type == 0 ) {
-        AppConfigInfo['transferIn']['children'].forEach( (app) => {
-            if (app.name == currentEditApp['applyType'].name) {
-                appTypeInfo = app.pageInfo
-            }
-        })
-    } else if (currentEditApp.type == 1 ) {
-        AppConfigInfo['transferOut']['children'].forEach( (app) => {
-            if (app.name == currentEditApp['applyType'].name) {
-                appTypeInfo = app.pageInfo
-            }
-        })
+function Edit(props){
+    const { currentEditApp } = props.alertConfig;
+
+    const editApplication = ({alertConfig, dispatch}) => {
+        const { currentEditApp, UUID, apikey } = alertConfig;
+        let targetApplication;
+        switch (currentOperateAppType.name) {
+            case 'UYUN Alert REST API':
+                targetApplication = 
+                    <AlertREST 
+                        appkey={UUID}
+                        displayName={currentEditApp.displayName}
+                        builtIn={currentEditApp.builtIn}
+                        url={window.location.host + '/openapi/v2/create?' + `api_key=${apikey}`}
+                        onOk={(e, form) => {
+                            e.preventDefault();
+                            
+                            form.validateFieldsAndScroll( (errors, values) => {
+                                if (!!errors) {
+                                    return;
+                                }
+                                const formData = form.getFieldsValue()
+                                dispatch({
+                                    type: 'alertConfig/editApplication',
+                                    payload: formData
+                                })
+                            })
+                        }}
+                    />
+                break;
+            case 'UYUN Monitor':
+                targetApplication = 
+                    <Monitor 
+                        appkey={UUID}
+                        displayName={currentEditApp.displayName}
+                        builtIn={currentEditApp.builtIn}
+                        url={window.location.host + '/openapi/v2/create?' + `api_key=${apikey}`}
+                        onOk={(e, form) => {
+                            e.preventDefault();
+                            
+                            form.validateFieldsAndScroll( (errors, values) => {
+                                if (!!errors) {
+                                    return;
+                                }
+                                const formData = form.getFieldsValue()
+                                dispatch({
+                                    type: 'alertConfig/editApplication',
+                                    payload: formData
+                                })
+                            })
+                        }}
+                    />
+                break;
+            case 'UYUN Itsm':
+                targetApplication = 
+                    <Itsm 
+                        appkey={UUID}
+                        displayName={currentEditApp.displayName}
+                        onOk={(e, form) => {
+                            e.preventDefault();
+                            
+                            form.validateFieldsAndScroll( (errors, values) => {
+                                if (!!errors) {
+                                    return;
+                                }
+                                const formData = form.getFieldsValue()
+                                dispatch({
+                                    type: 'alertConfig/editApplication',
+                                    payload: formData
+                                })
+                            })
+                        }}
+                    />
+                break;
+            case 'UYUN ChatOps':
+                targetApplication = 
+                    <ChatOps 
+                        appkey={UUID}
+                        displayName={currentEditApp.displayName}
+                        onOk={(e, form) => {
+                            e.preventDefault();
+                            
+                            form.validateFieldsAndScroll( (errors, values) => {
+                                if (!!errors) {
+                                    return;
+                                }
+                                const formData = form.getFieldsValue()
+                                dispatch({
+                                    type: 'alertConfig/editApplication',
+                                    payload: formData
+                                })
+                            })
+                        }}
+                    />
+                break;
+            default:
+                targetApplication = 
+                    <AlertREST 
+                        appkey={UUID}
+                        displayName={currentEditApp.displayName}
+                        builtIn={currentEditApp.builtIn}
+                        url={window.location.host + '/openapi/v2/create?' + `api_key=${apikey}`}
+                        onOk={(e, form) => {
+                            e.preventDefault();
+                            
+                            form.validateFieldsAndScroll( (errors, values) => {
+                                if (!!errors) {
+                                    return;
+                                }
+                                const formData = form.getFieldsValue()
+                                dispatch({
+                                    type: 'alertConfig/editApplication',
+                                    payload: formData
+                                })
+                            })
+                        }}
+                    />
+                break;
+        }
+        return targetApplication
+    }
+
+    if (currentEditApp !== undefined && Object.keys(currentEditApp).length !== 0) {
+        return editApplication(props)
+    } else {
+        return false;
     }
     
-    const editProps = {
-        type: currentEditApp.type,
-        iconType: currentEditApp['applyType'] !== undefined ? currentEditApp['applyType'].name : undefined, // 用于确定Icon
-        headerName: currentEditApp['applyType'] !== undefined ? currentEditApp['applyType'].name : undefined,
-        displayName: currentEditApp.displayName,
-        builtIn: currentEditApp.builtIn,
-        appkey: UUID,
-        ...appTypeInfo,
-
-        onOk: (e, form) => {
-            e.preventDefault();
-            
-            form.validateFieldsAndScroll( (errors, values) => {
-                if (!!errors) {
-                    return;
-                }
-                const formData = form.getFieldsValue()
-                dispatch({
-                    type: 'alertConfig/editApplication',
-                    payload: formData
-                })
-            })
-        },
-        keyCreate: () => {}
-    }
-    
-    return (
-        <Detail {...editProps}/>
-    )
 }
 Edit.propTypes = {
   dispatch: PropTypes.func

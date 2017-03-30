@@ -4,11 +4,42 @@ import { connect } from 'dva'
 import styles from './index.less'
 import { classnames } from '../../../utils'
 import AlertOperation from '../alertOperation/index.js'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
-const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm, openForm, closeForm, openRemark, editRemark, closeRemark}) => {
+const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm, openForm, closeForm, openRemark, editRemark, closeRemark, intl: {formatMessage}}) => {
 
     const { currentAlertDetail, isSowOperateForm, operateForm, isShowRemark, operateRemark } = extraProps;
     const { getFieldDecorator, getFieldsValue } = form;
+
+    // <div className={styles.infoBody}>
+    //     <p className={styles.remarkTitle}>备注信息</p>
+    //     <div className={styles.remark} onClick={openRemark}>
+    //         <i className={classnames(styles.bianji, bianjiClass)}></i>
+    //         <span>添加备注</span>
+    //     </div>
+    //     {
+    //         isShowRemark ?
+    //         <Form>
+    //             <Form.Item>
+    //                 {getFieldDecorator('remark', {
+    //                     initialValue: operateRemark
+    //                 })(
+    //                     <Input type="textarea" placeholder="请输入备注信息" autosize={ true } />
+    //                 )}
+    //             </Form.Item>
+    //             <div className={styles.remarkOperate}>
+    //                 <Button type="primary" onClick={ () => {
+    //                     const formData = form.getFieldsValue();
+    //                     editRemark(formData)
+    //                 }}>保存</Button>
+    //                 &nbsp;
+    //                 <Button type="ghost" onClick={ closeRemark }>取消</Button>
+    //             </div>
+    //         </Form>
+    //         :
+    //         undefined
+    //     }
+    // </div>
     
     const dateTransfer = (begin, end) => {
         let date = {};
@@ -42,35 +73,113 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                                 : currentAlertDetail.severity == 1 ? styles.txLevel 
                                     : currentAlertDetail.severity == 0 ? styles.hfLevel : false
 
+    const localeMessage = defineMessages({
+        unknown: {
+            id: 'alertList.unknown',
+            defaultMessage: '未知',
+        },
+        severity: {
+            id: 'alertList.title.severity',
+            defaultMessage: '告警级别',
+        },
+        source: {
+            id: 'alertList.title.source',
+            defaultMessage: '告警来源',
+        },
+        status:{
+            id: 'alertList.title.status',
+            defaultMessage: '告警状态',
+        },
+        description:{
+            id: 'alertList.title.description',
+            defaultMessage: '告警描述',
+        },
+        count:{
+            id: 'alertList.title.count',
+            defaultMessage: '次数',
+        },
+        duration:{
+            id: 'alertQuery.label.duration',
+            defaultMessage: '持续时间',
+        },
+        firstOccurred:{
+            id: 'alertList.title.firstOccurred',
+            defaultMessage: '首次发生时间',
+        },
+        lastOccurTime:{
+            id: 'alertList.title.lastOccurTime',
+            defaultMessage: '最后发生时间',
+        },
+        basic: {
+            id: 'alertDetail.basic',
+            defaultMessage: '基本信息',
+        },
+        enrich: {
+            id: 'alertDetail.enrich',
+            defaultMessage: '丰富信息',
+        },
+        owner: {
+            id: 'alertDetail.owner',
+            defaultMessage: '负责人',
+        },
+        department: {
+            id: 'alertDetail.department',
+            defaultMessage: '负责部门',
+        },
+        hour: {
+            id: 'alertDetail.hour',
+            defaultMessage: '小时',
+        },
+        ticket: {
+            id: 'alertDetail.ticket',
+            defaultMessage: '工单',
+        },
+        edit: {
+            id: 'alertDetail.edit',
+            defaultMessage: '编辑',
+        },
+        save: {
+            id: 'alertDetail.save',
+            defaultMessage: '保存',
+        },
+        cancel: {
+            id: 'alertDetail.cancel',
+            defaultMessage: '取消',
+        },
+        text: {
+            id: 'alertDetail.text',
+            defaultMessage: '文本',
+        }
+    })
+
     return (
         <div className={styles.main}>
             <div className={styles.detailHead}>
-                <p>{currentAlertDetail.name ? currentAlertDetail.name : '未知'}</p>
+                <p>{currentAlertDetail.name ? currentAlertDetail.name : formatMessage({...localeMessage['unknown']}) }</p>
                 <i className={classnames(styles.shanChu, shanchuClass)} onClick={closeDeatilModal}></i>
                 <AlertOperation position="detail" {...operateProps}/>
             </div>
             <div className={styles.detailBody}>
                 <div className={styles.infoBody}>
-                    <p>基本信息</p>
+                    <p>{formatMessage({...localeMessage['basic']})}</p>
                     <ul>
-                        <li><span>ID:</span><span>{currentAlertDetail.id}</span></li>
-                        <li><span>状态:</span><span>{window['_status'][currentAlertDetail.status]}<i className={classnames(setClass, styles.stateClass)}></i></span></li>
-                        <li><span>级别:</span><span className={severityColor}>{window['_severity'][currentAlertDetail.severity]}</span></li>
-                        <li><span>来源:</span><span>{currentAlertDetail.source ? currentAlertDetail.source : '未知'}</span></li>
-                        <li><span>描述:</span><span>{currentAlertDetail.description}</span></li>
-                        <li><span>首次发生:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).begin}</span></li>
-                        <li><span>最后发生:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).end}</span></li>
-                        <li><span>持续时间:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).continueTime}小时</span></li>
-                        <li><span>报警次数:</span><span>{currentAlertDetail.count}</span></li>
-                        <li><span>负责人:</span><span>{currentAlertDetail.responsiblePerson ? currentAlertDetail.responsiblePerson : '暂无'}</span></li>
-                        <li><span>负责部门:</span><span>{currentAlertDetail.responsibleDepartment ? currentAlertDetail.responsibleDepartment : '暂无'}</span></li>
+                        <li><span>{formatMessage({...localeMessage['status']})}:</span><span>{window['_status'][currentAlertDetail.status]}<i className={classnames(setClass, styles.stateClass)}></i></span></li>
+                        <li><span>{formatMessage({...localeMessage['severity']})}:</span><span className={severityColor}>{window['_severity'][currentAlertDetail.severity]}</span></li>
+                        <li><span>{formatMessage({...localeMessage['source']})}:</span><span>{currentAlertDetail.source ? currentAlertDetail.source : formatMessage({...localeMessage['unknown']})}</span></li>
+                        <li><span>{formatMessage({...localeMessage['description']})}:</span><span>{currentAlertDetail.description}</span></li>
+                        <li><span>{formatMessage({...localeMessage['firstOccurred']})}:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).begin}</span></li>
+                        <li><span>{formatMessage({...localeMessage['lastOccurTime']})}:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).end}</span></li>
+                        <li><span>{formatMessage({...localeMessage['duration']})}:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).continueTime}&nbsp;{formatMessage({...localeMessage['hour']})}</span></li>
+                        <li><span>{formatMessage({...localeMessage['count']})}:</span><span>{currentAlertDetail.count}</span></li>
+                        <li><span>{formatMessage({...localeMessage['owner']})}:</span><span>{currentAlertDetail.responsiblePerson ? currentAlertDetail.responsiblePerson : formatMessage({...localeMessage['unknown']})}</span></li>
+                        <li><span>{formatMessage({...localeMessage['department']})}:</span><span>{currentAlertDetail.responsibleDepartment ? currentAlertDetail.responsibleDepartment : formatMessage({...localeMessage['unknown']})}</span></li>
                         <li className={styles.gongDan}>
-                            <span>工单:</span>
+                            <span>{formatMessage({...localeMessage['ticket']})}:</span>
                             {
                                 !isSowOperateForm ?
                                 <div className={styles.formMain}>
                                     <span className={operateForm !== undefined && operateForm != '' && styles.content}>{operateForm}</span>
-                                    <span className={styles.editForm} onClick={openForm}>编辑</span>
+                                    <span className={styles.editForm} onClick={openForm}>{formatMessage({...localeMessage['edit']})}</span>
                                 </div>
                                 :
                                 <Form>
@@ -78,16 +187,16 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                                         {getFieldDecorator('formContent', {
                                             initialValue: operateForm
                                         })(
-                                            <Input placeholder='文本'/>
+                                            <Input placeholder={formatMessage({...localeMessage['text']})}/>
                                         )}
                                     </Form.Item>
                                     <div className={styles.formMain}>
                                         <Button type="primary" onClick={ () => {
                                             const formData = form.getFieldsValue();
                                             editForm(formData)
-                                        }}>保存</Button>
+                                        }}>{formatMessage({...localeMessage['save']})}</Button>
                                         &nbsp;
-                                        <Button type="ghost" onClick={closeForm}>取消</Button>
+                                        <Button type="ghost" onClick={closeForm}>{formatMessage({...localeMessage['cancel']})}</Button>
                                     </div>
                                 </Form>
                             }
@@ -95,7 +204,7 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                     </ul>
                 </div>
                 <div className={styles.infoBody}>
-                    <p>丰富信息</p>
+                    <p>{formatMessage({...localeMessage['enrich']})}</p>
                     <ul>
                         {
                             currentAlertDetail.properties !== undefined && Array.isArray(currentAlertDetail.properties) && currentAlertDetail.properties.length !== 0 && currentAlertDetail.properties.map( (item, index) => {
@@ -104,35 +213,7 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                         }
                     </ul>
                 </div>
-                <div className={styles.infoBody}>
-                    <p className={styles.remarkTitle}>备注信息</p>
-                    <div className={styles.remark} onClick={openRemark}>
-                        <i className={classnames(styles.bianji, bianjiClass)}></i>
-                        <span>添加备注</span>
-                    </div>
-                    {
-                        isShowRemark ?
-                        <Form>
-                            <Form.Item>
-                                {getFieldDecorator('remark', {
-                                    initialValue: operateRemark
-                                })(
-                                    <Input type="textarea" placeholder="请输入备注信息" autosize={ true } />
-                                )}
-                            </Form.Item>
-                            <div className={styles.remarkOperate}>
-                                <Button type="primary" onClick={ () => {
-                                    const formData = form.getFieldsValue();
-                                    editRemark(formData)
-                                }}>保存</Button>
-                                &nbsp;
-                                <Button type="ghost" onClick={ closeRemark }>取消</Button>
-                            </div>
-                        </Form>
-                        :
-                        undefined
-                    }
-                </div>
+                
             </div>
         </div>
     )
@@ -153,4 +234,4 @@ alertDetail.propTypes = {
 
 }
 
-export default Form.create()(alertDetail)
+export default injectIntl(Form.create()(alertDetail))

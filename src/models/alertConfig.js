@@ -1,4 +1,4 @@
-import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery, add, update, view} from '../services/alertConfig'
+import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery, add, update, view, getUserInfo} from '../services/alertConfig'
 import {parse} from 'qs'
 import { message } from 'antd'
 import pathToRegexp from 'path-to-regexp';
@@ -9,6 +9,7 @@ const initalState ={
   isLoading: false,
   applicationType: undefined, // 接入还是接出
   UUID: undefined, // UUID
+  apikey: undefined,
 
   applicationTypeData: [], // 配置种类
 
@@ -22,21 +23,16 @@ const initalState ={
 
   columns: [{
     key: 'displayName',
-    title: '显示名'
   }, {
     key: 'name',
-    title: '应用名称'
   }, {
     key: 'createDate',
-    title: '添加时间',
     order: true
   }, {
     key: 'status',
-    title: '是否开启',
     order: true
   }, {
     key: 'operation',
-    title: '操作',
   }],
 
   applicationData: [],
@@ -93,6 +89,15 @@ export default {
     // 通过modal进入详情页
     *addApplicationView({payload}, {select, put, call}) {
       if (payload !== undefined) {
+        const info = yield call(getUserInfo)
+        if (info.result) {
+          yield put({
+            type: 'setApiKeys',
+            payload: info.data.apiKeys || undefined
+          })
+        } else {
+          yield message.error(`${info.message}`, 3)
+        }
         yield put({ type: 'initalAddAppView', payload: {isShowTypeModal: false, appTypeId: payload, UUID: undefined}}) // isShowTypeModal -> false, currentOperateAppType -> Object
       } else {
         console.error('appTypeId is null')
@@ -102,13 +107,22 @@ export default {
     *editApplicationView({payload}, {select, put, call}) {
       if (payload !== undefined) {
         const viewResult = yield call(view, payload)
+        const info = yield call(getUserInfo)
         if (viewResult.result) {
           yield put({
             type: 'setCurrent',
             payload: viewResult.data || {}
           })
+          if (info.result) {
+            yield put({
+              type: 'setApiKeys',
+              payload: info.data.apiKeys || undefined
+            })
+          } else {
+            yield message.error(`${info.message}`, 3)
+          }
         } else {
-          yield message.error(`viewResult.message`, 3)
+          yield message.error(`${viewResult.message}`, 3)
         }
       } else {
         console.error('appId is null')
@@ -141,7 +155,7 @@ export default {
           yield message.success('应用添加成功', 3)
           yield put(routerRedux.goBack());
         } else {
-          yield message.error(`addResult.message`, 3)
+          yield message.error(`${addResult.message}`, 3)
         }
       } else {
         console.error('displayName is null')
@@ -175,7 +189,7 @@ export default {
           yield message.success('应用编辑成功', 3)
           yield put(routerRedux.goBack());
         } else {
-          yield message.error(`editResult.message`, 3)
+          yield message.error(`${editResult.message}`, 3)
         }
       } else {
         console.error('displayName is null')
@@ -309,6 +323,9 @@ export default {
   },
 
   reducers: {
+    setApiKeys(state, { payload: apikey}) {
+      return { ...state, apikey }
+    },
     // 点开新增详情页面
     initalAddAppView(state, { payload: {isShowTypeModal, appTypeId, UUID}}) {
       const { applicationTypeData } = state;

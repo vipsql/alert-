@@ -3,6 +3,7 @@ import { Button, Spin, Switch } from 'antd';
 import styles from './index.less'
 import { classnames } from '../../../utils'
 import { Link } from 'dva/router'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 class applicationList extends Component {
   constructor(){
@@ -19,11 +20,47 @@ class applicationList extends Component {
       orderType,
       orderByTittle,
       switchClick,
-      deleteClick
+      deleteClick,
+      intl: {formatMessage}
     } = this.props
 
     let colsKey = []
     let theads = []
+
+    const formatMessages = defineMessages({
+        displayName: {
+          id: 'alertApplication.List.displayName',
+          defaultMessage: '应用显示名',
+        },
+        name: {
+          id: 'alertApplication.List.application',
+          defaultMessage: '应用名称',
+        },
+        createDate: {
+          id: 'alertApplication.List.createDate',
+          defaultMessage: '添加时间',
+        },
+        status: {
+          id: 'alertApplication.List.onOff',
+          defaultMessage: '是否开启',
+        },
+        operation: {
+          id: 'alertApplication.List.actions',
+          defaultMessage: '操作',
+        },
+        action_edit: {
+          id: 'alertApplication.List.edit',
+          defaultMessage: '编辑',
+        },
+        action_delete: {
+          id: 'alertApplication.List.delete',
+          defaultMessage: '删除',
+        },
+        noData: {
+          id: 'alertList.noListData',
+          defaultMessage: '暂无数据',
+        },
+    })
     
     columns.forEach( (item) => {
       const isOrder = item.order || false
@@ -35,8 +72,8 @@ class applicationList extends Component {
       
       theads.push(
         <th key={item.key} width={width}>
-          {isOrder ? <span className={ orderType !== undefined ? classnames(styles.orderTh, orderTh_active) : styles.orderTh} data-key={item['key']} onClick={ orderByTittle }>{item.title}</span>
-          : `${item.title}`}
+          {isOrder ? <span className={ orderType !== undefined ? classnames(styles.orderTh, orderTh_active) : styles.orderTh} data-key={item['key']} onClick={ orderByTittle }>{formatMessage({...formatMessages[item['key']]})}</span>
+          : <FormattedMessage {...formatMessages[item['key']]} />}
           {isOrder && 
             [<span className={ orderType !== undefined && orderType === 1 ? classnames(styles.orderTriangleUp, orderTriangle) : styles.orderTriangleUp} data-key={item['key']} key={1} onClick={ orderUp }></span>,
             <span className={ orderType !== undefined && orderType === 0 ? classnames(styles.orderTriangleDown, orderTriangle) : styles.orderTriangleDown} data-key={item['key']} key={0} onClick={ orderDown }></span>]}
@@ -91,9 +128,9 @@ class applicationList extends Component {
         }
         if(key == 'operation') {
           td = <td key={key}>
-           <Link to={`alertConfig/alertApplication/applicationView/edit/${item['id']}`}><Button className={styles.editBtn} size='small'>编辑</Button></Link>
+           <Link to={`alertConfig/alertApplication/applicationView/edit/${item['id']}`}><Button className={styles.editBtn} size='small'>{formatMessage({...formatMessages['action_edit']})}</Button></Link>
            &nbsp;&nbsp;
-           <Button size='small' className={styles.delBtn} disabled={item['status']} onClick={ () => {deleteClick(item)}}>删除</Button>
+           <Button size='small' className={styles.delBtn} disabled={item['status']} onClick={ () => {deleteClick(item)}}>{formatMessage({...formatMessages['action_delete']})}</Button>
           </td>
         } 
         if(key == 'displayName') {
@@ -122,7 +159,7 @@ class applicationList extends Component {
 
     return(
       <div>
-        <Spin tip="加载中..." spinning={isLoading}>
+        <Spin spinning={isLoading}>
           <table className={styles.listTable}>
             <thead>
               <tr> 
@@ -134,7 +171,7 @@ class applicationList extends Component {
               {
                 applicationData.length > 0 ? tbodyCon :
                 <tr>
-                  <td colSpan={columns.length + 1} style={{textAlign: 'center'}}>暂无数据</td>
+                  <td colSpan={columns.length + 1} style={{textAlign: 'center'}}><FormattedMessage {...formatMessages['noData']} /></td>
                 </tr>
               }
             </tbody>
@@ -153,4 +190,4 @@ applicationList.propTypes = {
   
 }
 
-export default applicationList
+export default injectIntl(applicationList)

@@ -32,7 +32,8 @@
   "alertList.title.count": "次数",
   "alertList.title.lastTime": "持续时间",
   "alertList.title.occurTime": "发生时间",
-  "alertList.title.lastOccurTime": "最后发送时间",
+  "alertList.title.firstOccurred": "首次发生时间",
+  "alertList.title.lastOccurTime": "最后发生时间",
   "alertList.title.basic": "常规",
   "alertList.title.additional": "扩展",
 
@@ -66,6 +67,7 @@
   "alertOperate.groupByStatus": "按状态分组",
   "alertOperate.groupByOther": "按{other}分组",
 
+  "modal.delete": "删除",
   "modal.cancel": "取消",
   "modal.createTicket": "派发工单",
   "modal.create": "派发",
@@ -85,5 +87,51 @@
   "modal.remove": "移除",
   "modal.rollupTitle": "合并告警前，请选择一条告警做源告警",
   "modal.unrollup": "解除告警",
-  "modal.unrollupMessage": "解除{name}的合并告警"
+  "modal.unrollupMessage": "解除{name}的合并告警",
+
+  "alertDetail.basic": "基本信息",
+  "alertDetail.enrich": "丰富信息",
+  "alertDetail.owner": "负责人",
+  "alertDetail.department": "负责部门",
+  "alertDetail.hour": "小时",
+  "alertDetail.ticket": "工单",
+  "alertDetail.edit": "编辑",
+  "alertDetail.save": "保存",
+  "alertDetail.cancel": "取消",
+  "alertDetail.text": "文本",
+
+  "alertConfig.integrations": "第三方应用集成",
+  "alertConfig.integrations.message": "接入第三方应用，如网络、服务器和应用监控工具、帮助台和客户支持、聊天协同等应用",
+
+  "alertApplication.newApplication": "添加应用",
+  "alertApplication.incoming": "接入",
+  "alertApplication.outgoing": "转出",
+  "alertApplication.modal.message": "请选择一款应用",
+  "alertApplication.modal.deleteTitle": "删除应用",
+  "alertApplication.modal.deleteMessage": "您确定要删除{message}应用吗",
+  "alertApplication.List.displayName": "应用显示名",
+  "alertApplication.List.application": "应用名称",
+  "alertApplication.List.createDate": "添加时间",
+  "alertApplication.List.onOff": "是否开启",
+  "alertApplication.List.actions": "操作",
+  "alertApplication.List.edit": "编辑",
+  "alertApplication.List.delete": "删除",
+
+  "alertApplication.rest.headerTitle": "使用优云Alert REST API，可以方便的接入自定义告警",
+  "alertApplication.rest.apidocument": "API使用文档",
+  "alertApplication.rest.step2": "向接口发送数据",
+  "alertApplication.rest.step2Message": "请复制以下URL至您的应用中",
+
+  "alertApplication.monitor.headerTitle": "使用Web Hook接入快速优云Monitor告警",
+  "alertApplication.monitor.step2": "向接口发送数据",
+  "alertApplication.monitor.step2Message": "请复制以下URL至您的应用中",
+
+  "alertApplication.itsm.headerTitle": "把优云Alert的告警快速创建为ITSM工单",
+  "alertApplication.chatOps.headerTitle": "把优云Alert的告警快速分享到ChatOps群组",
+
+  "alertApplication.displayName": "设定显示名",
+  "alertApplication.displayName.message": "设定一个显示名用于标识应用",
+  "alertApplication.displayName.placeholder": "请输入应用名称",
+  "alertApplication.appKey": "点击生成AppKey",
+  "alertApplication.save": "保存"
 }
