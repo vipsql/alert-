@@ -8,21 +8,26 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 class ListTimeTable extends Component {
     componentDidMount(){
-      const { setTimeLineWidth, begin, end  } = this.props
+      
 
       const table = document.getElementById('listTimeTable')
       const width = table.offsetWidth
       const timeLine = document.getElementById('timeLine')
       // 360 表格左侧宽度
       // 50 是最后一点预留位置
-      const lineW = width - 360 - 50
-      timeLine.style.width = lineW + 'px'
-      const gridWidth = lineW / 10
-      const countMins = (end - begin) / (60 * 1000)
-      const minuteToWidth = lineW / countMins
+      this.lineW = width - 360 - 100
+      timeLine.style.width = this.lineW + 'px'
+      this.gridWidth = this.lineW / 10
+      
 
-      setTimeLineWidth(gridWidth, minuteToWidth)
+      
 
+    }
+    componentDidUpdate(){
+      // const { setTimeLineWidth, begin, end  } = this.props
+      // const countMins = (end - begin) / (60 * 1000)
+      // const minuteToWidth = this.lineW / countMins
+      // setTimeLineWidth(this.gridWidth, minuteToWidth)
     }
     render(){
       const {
