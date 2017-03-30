@@ -3,7 +3,7 @@ import { connect } from 'dva'
 import { Modal, Button } from 'antd';
 import Chart from '../components/alertManage/alertDashbord'
 import AlertSet from '../components/alertManage/alertSet'
-import AlertManageHead from '../components/alertManage/AlertManageHead'
+import AlertManageHead from '../components/alertManage/alertManageHead'
 import AlertTagsSet from '../components/alertManage/alertTagsSet'
 
 

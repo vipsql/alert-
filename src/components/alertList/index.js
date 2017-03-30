@@ -236,21 +236,21 @@ class AlertListManage extends Component{
     }
 
     const tabList = classnames(
-      styles['iconfont'],
-      styles['icon-liebiao'],
-      styles['listTab']
+      'iconfont',
+      'icon-liebiao',
+      'listTab'
     )
     const tabLine = classnames(
-      styles['iconfont'],
-      styles['icon-shijian'],
-      styles['timeTab']
+      'iconfont',
+      'icon-shijian',
+      'timeTab'
     )
 
     return (
       <div style={{ position: 'relative'}}>
         <AlertTagsFilter />
         <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch/></div>
-        <AlertBar />
+        <AlertBar key={Math.random()}/>
         <div className={styles.alertListPage}>
           <Tabs>
             <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key={1}>
