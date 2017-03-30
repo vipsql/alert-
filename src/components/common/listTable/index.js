@@ -38,7 +38,7 @@ class ListTable extends Component {
     } = this.props
     let colsKey = []
     let theads = []
-
+    
     const formatMessages = defineMessages({
         entityName:{
           id: 'alertList.title.enityName',
@@ -146,7 +146,15 @@ class ListTable extends Component {
           td = <td key={key}>{data}</td>
         }
         if(key == 'lastTime'){
-          data = `${Math.floor(data/(60*60*1000))}h`
+          // 如果小于1小时 显示分钟
+          const hours = 60*60*1000
+          
+          if(data < hours){
+            
+            data = `${+(data/(60*1000)).toFixed(1)}min`
+          }else{
+            data = `${+(data/hours).toFixed(1)}h`
+          }
           td = <td key={key}>{data}</td>
         }
         if(key == 'status'){
@@ -200,7 +208,17 @@ class ListTable extends Component {
           td = <td key={key}>{data}</td>
         }
         if(key == 'lastTime'){
-          data = `${Math.floor(data/(60*60*1000))}h`
+          // 如果小于1小时 显示分钟
+          const hours = 60*60*1000
+          
+          if(data < hours){
+            
+            data = `${+(data/(60*1000)).toFixed(1)}min`
+          }else{
+            data = `${+(data/hours).toFixed(1)}h`
+          }
+          
+          
           td = <td key={key}>{data}</td>
         }
         if(key == 'status'){

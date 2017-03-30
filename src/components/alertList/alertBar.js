@@ -86,62 +86,61 @@ function n_minutes_interval(nmins) {
     });
 }
 
+
 class AlertBar extends Component{
   constructor(props){
     super(props)
+    
   }
+
   shouldComponentUpdate(nextProps, nextState){
     
     return this.props.alertList.barData !== nextProps.alertList.barData || this.props.alertList.isResize !== nextProps.alertList.isResize
   }
-  componentDidMount(){
-    
-  }
-  componentDidUpdate(){
+  renderBar(barData){
+    const startTime = barData[0]['time']
+    const endtTime = barData[barData.length - 1]['time']
+    const start = new Date(startTime)
+    const end = new Date(endtTime)
+    const latestHour = new Date(endtTime - 3600000)
 
+    // Create the crossfilter for the relevant dimensions and groups.
+    const min5 = n_minutes_interval(2);
+    const alertList = crossfilter(barData)
+    const clientWidth = document.documentElement.clientWidth || document.body.clientWidth
+    const leftMenuWidth = this.props.alertList.isResize ? 50 : 160 //是否折叠
+    const width = clientWidth - leftMenuWidth - 90;
+    
+    const height = 80
+    const margins = {top: 0, right: 20, bottom: 25, left: 15}
+    const dim = alertList.dimension(function(d) { return d.time; });
+    const grp = dim.group(min5).reduceSum(function(d) { return d.count; });
+    this.chart = dc.barChart(".dc-chart")
+                  .width(width)
+                  .height(height)
+                  .margins(margins)
+                  .dimension(dim)
+                  .group(grp)
+                  .round(dc.round.floor)
+                  .renderHorizontalGridLines(true)
+                  .x(d3.time.scale().domain([start, end]))
+                  .xUnits(min5.range)
+                  .filter([latestHour, end])
+
+    this.chart.xAxis().tickSize(0).tickPadding(10).tickFormat(d3.time.format('%H:%M'));
+    this.chart.render();
+  }
+  componentDidMount(){
     let timer = null;
 
-    const { barData, isResize } = this.props.alertList;
+    const { barData } = this.props.alertList;
     const { dispatch } = this.props;
 
     const len = barData.length;
 
     if(len > 0) {
-
-        const startTime = barData[0]['time']
-        const endtTime = barData[barData.length - 1]['time']
-        const start = new Date(startTime)
-        const end = new Date(endtTime)
-        const latestHour = new Date(endtTime - 3600000)
-
-        // Create the crossfilter for the relevant dimensions and groups.
-        const min5 = n_minutes_interval(2);
-        const alertList = crossfilter(barData)
-        const clientWidth = document.documentElement.clientWidth || document.body.clientWidth
-        const leftMenuWidth = isResize ? 50 : 160 //是否折叠
-        const width = clientWidth - leftMenuWidth - 90;
-        
-        const height = 80
-        const margins = {top: 0, right: 20, bottom: 25, left: 15}
-        const dim = alertList.dimension(function(d) { return d.time; });
-        const grp = dim.group(min5).reduceSum(function(d) { return d.count; });
-        const chart = dc.barChart(".dc-chart")
-                      .width(width)
-                      .height(height)
-                      .margins(margins)
-                      .dimension(dim)
-                      .group(grp)
-                      .round(dc.round.floor)
-                      .renderHorizontalGridLines(true)
-                      .x(d3.time.scale().domain([start, end]))
-                      .xUnits(min5.range)
-                      .filter([latestHour, end])
-
-        chart.xAxis().tickSize(0).tickPadding(10).tickFormat(d3.time.format('%H:%M'));
-        chart.render();
-
-
-        chart.on('filtered', function(d, f){
+        this.renderBar(barData)
+        this.chart.on('filtered', function(d, f){
           clearTimeout(timer)
         
           timer = setTimeout( () => {
@@ -155,9 +154,10 @@ class AlertBar extends Component{
           }, 1000)
         })
 
-
     }
-
+  }
+  componentDidUpdate(){
+    this.renderBar(this.props.alertList.barData)
     // setInterval(function(){
     //   alertList.remove()
     //   alertList.add(genData(new Date(2013, 10, 1, 3),new Date(2013, 10, 1, 7)))
