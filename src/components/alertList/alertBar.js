@@ -98,6 +98,9 @@ class AlertBar extends Component{
     return this.props.alertList.barData !== nextProps.alertList.barData || this.props.alertList.isResize !== nextProps.alertList.isResize
   }
   renderBar(barData){
+    const { dispatch } = this.props
+    let timer = null
+
     const startTime = barData[0]['time']
     const endtTime = barData[barData.length - 1]['time']
     const start = new Date(startTime)
@@ -127,32 +130,34 @@ class AlertBar extends Component{
                   .xUnits(min5.range)
                   .filter([latestHour, end])
 
-    this.chart.xAxis().tickSize(0).tickPadding(10).tickFormat(d3.time.format('%H:%M'));
-    this.chart.render();
+    this.chart.xAxis().tickSize(0).tickPadding(10).tickFormat(d3.time.format('%H:%M'))
+    this.chart.render()
+     this.chart.on('filtered', function(d, f){
+          
+      clearTimeout(timer)
+    
+      timer = setTimeout( () => {
+        dispatch({
+          type: 'alertList/editAlertBar',
+          payload: {
+            begin: f[0],
+            end: f[1]
+          }
+        })
+      }, 1000)
+    })
   }
   componentDidMount(){
-    let timer = null;
+    
 
     const { barData } = this.props.alertList;
-    const { dispatch } = this.props;
+    
 
     const len = barData.length;
 
     if(len > 0) {
         this.renderBar(barData)
-        this.chart.on('filtered', function(d, f){
-          clearTimeout(timer)
-        
-          timer = setTimeout( () => {
-            dispatch({
-              type: 'alertList/editAlertBar',
-              payload: {
-                begin: f[0],
-                end: f[1]
-              }
-            })
-          }, 1000)
-        })
+       
 
     }
   }
