@@ -15,12 +15,13 @@ const  ListTimeTableWrap = ({dispatch, alertListTable}) => {
       })
     },
     
-    setTimeLineWidth(gridWidth, minuteToWidth){
+    setTimeLineWidth(gridWidth, minuteToWidth, lineW){
       dispatch({
         type: 'alertListTable/setTimeLineWidth',
         payload: {
           gridWidth,
-          minuteToWidth
+          minuteToWidth,
+          lineW
         }
       })
     },
