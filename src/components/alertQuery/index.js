@@ -124,7 +124,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
         })
       },
       clickDropdown: (e) => {
-        const message = e.target.getAttribute('data-message')
+        const message = e.target.getAttribute('data-message') ||  e.target.parentNode.getAttribute('data-message')
         
         dispatch({
             type: 'alertQueryDetail/setCloseMessge',
@@ -360,6 +360,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
       })
     }
 
+    
     return (
         <div>
           <Form>
@@ -489,11 +490,11 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
               <div className={styles.count}>
                 <FormattedMessage {...localeMessage['result']} 
                   values= {{
-                    total: queryCount.total !== undefined ? queryCount.total : 0,
-                    critical: queryCount.critical !== undefined ? queryCount.critical : 0,
-                    warning: queryCount.warning !== undefined ? queryCount.warning : 0,
-                    informaiton: queryCount.information !== undefined ? queryCount.information : 0,
-                    ok: queryCount.ok !== undefined ? queryCount.ok : 0
+                    total: queryCount.total !== undefined ?'' + queryCount.total : 0,
+                    critical: queryCount.critical !== undefined ?'' +  queryCount.critical : 0,
+                    warning: queryCount.warning !== undefined ? '' +  queryCount.warning : 0,
+                    informaiton: queryCount.information !== undefined ?'' +  queryCount.information : 0,
+                    ok: queryCount.ok !== undefined ?'' +  queryCount.ok : 0
                   }}
                 />
                 

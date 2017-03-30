@@ -122,7 +122,7 @@ class Chart extends Component{
                     return Math.max(0.01, d.dx);
                 })
                 .attr('stroke','#163c67')
-                .attr('stroke-width','2')
+                .attr('stroke-width','4')
                 .attr("height", headerHeight)
                 .style("fill", headerColor);
             parentEnterTransition.append('text')
@@ -207,12 +207,14 @@ class Chart extends Component{
                 })
 
                 .append("svg")
-                .attr("class", "clip");
+                .attr("class", "clip")
+                
             childEnterTransition.append("rect")
                 .classed("background", true)
                 // .attr('filter',"url(#inset-shadow)")
                 .attr('stroke','#163c67')
-                .attr('stroke-width','1')
+                .attr('stroke-width','2')
+                .attr("style", "cursor:pointer")
                 .style("fill", function(d) {
                     // return color(d.maxSeverity);
                 });
@@ -228,6 +230,7 @@ class Chart extends Component{
                 .attr("fill", "#04203e")
                 .attr("font-size", "12")
                 .attr("text-anchor", "middle")
+                
                 // .style("display", "none")
                 .text(function(d) {
                     return d.name;
