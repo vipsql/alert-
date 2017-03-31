@@ -211,6 +211,9 @@ class Chart extends Component{
                 .on('mouseover', function(d){
                     d3Tip.show(d)
                 })
+                .on('mouseout', function(){
+                    d3Tip.hide()
+                })
                 // .on('mouseout', tip.hide)
 
                 .append("svg")

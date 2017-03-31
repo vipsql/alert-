@@ -35,10 +35,11 @@ export default class Tip {
     const t = currentEvent.target
     const tb = t.getBoundingClientRect()
     const o = offset(t)
-    el.textContent = this.format(d)
+    
+    el.innerHTML = '标签分组名：' + d.parent.name + '<br/>' + '活跃告警数:' + d.value
     el.style.display = 'block'
-    el.style.top = o.top - el.offsetHeight + 'px'
-    el.style.left = o.left - (el.offsetWidth / 2) + (tb.width / 2) + 'px'
+    el.style.top = o.top + 'px'
+    el.style.left = o.left + 'px'
     el.classList.add('alertShow')
   }
 
@@ -46,7 +47,7 @@ export default class Tip {
    * Hide tip.
    */
 
-  hide = _ => {
+  hide = () => {
     el.classList.remove('alertShow')
   }
 }
