@@ -80,16 +80,19 @@ export default {
         })
         if (currentAlertDetail !== undefined && Object.keys(currentAlertDetail).length !== 0 ) {
             let hostUrl = 'itsm.uyun.cn';
+            let callbackHostUrl = 'alert.uyun.cn';
             let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
             if (window.location.host.indexOf("alert") > -1) {
                 //域名访问
                 hostUrl = window.location.host.replace(/alert/, 'itsm');
+                callbackHostUrl = window.location.host;
             } else {
                 //顶级域名/Ip访问
-                hostUrl = window.location.host + '/itsm'
+                hostUrl = window.location.host + '/itsm';
+                callbackHostUrl = window.location.host + '/alert';
             }
             let callbackUrl = 
-                `http://${window.location.host}/openapi/v2/incident/handleOrder?incidentId=${currentAlertDetail['id']}&api_key=${userInfo.apiKeys[0]}`;
+                `http://${callbackHostUrl}/openapi/v2/incident/handleOrder?incidentId=${currentAlertDetail['id']}&api_key=${userInfo.apiKeys[0]}`;
             const result = {
                 id: payload, //payload
                 url: encodeURIComponent(callbackUrl),
