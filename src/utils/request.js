@@ -16,20 +16,6 @@ function isApiUrl(url) {
   return `${ROOT_PATH}${url}`;
 }
 
-function checkStatus(response) {
-  if (response.status >= 200 && response.status < 300) {
-    return {
-      result: true,
-      data: response.json()
-    }
-  } else {
-    return {
-      result: false,
-      data: Promise.resolve(response.json())
-    }
-  }
-}
-
 /**
  * Requests a URL, returning a promise.
  *
@@ -38,17 +24,23 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default async function request(url, options) {
+  
     options.credentials =  'include'
-    const response = await fetch(isApiUrl(url), options);
-    const data = await response.json()
-    if (response.status >= 200 && response.status < 300) {
-      return {
-        result: true,
-        data: data
+    
+      const response = await fetch(isApiUrl(url), options);
+      const data = await response.json()
+      if (response.status >= 200 && response.status < 300) {
+        return {
+          result: true,
+          data: data
+        }
+      } else if(response.status == 500){
+        // 未认证跳到租户
+        location.href = location.origin + '/tenant/#/login_admin/'
+      }else{
+        return data
       }
-    } else {
-      return data
-    }
+    
 }
 
 /**
