@@ -1,6 +1,6 @@
 import fetch from 'dva/fetch';
-import constants from './constants';
-const Ajax = require('robe-ajax')
+import constants from './constants'
+
 
 const ROOT_PATH = constants.api_root;
 
@@ -25,7 +25,7 @@ function isApiUrl(url) {
  */
 export default async function request(url, options) {
   
-    // options.credentials =  'include'
+    options.credentials =  'include'
     
       const response = await fetch(isApiUrl(url), options);
       const data = await response.json()
@@ -43,27 +43,3 @@ export default async function request(url, options) {
     
 }
 
-/**
- * Requests a URL, returning a promise.
- *
- * @param  {string} url       The URL we want to request
- * @param  {object} [options] The options we want to pass to "fetch"
- * @return {object}           An object containing either "data" or "err"
- */
-// export default function request (url, options) {
-    
-//     const httpUrl = isApiUrl(url)
-
-//     return Ajax.ajax({
-//       url: httpUrl,
-//       method: options.method || 'get',
-//       contentType: 'application/json',
-//       data: options.body || undefined,
-//       processData: options.method === 'get',
-//       dataType: 'JSON'
-//     }).done( (data) => {
-//       return data
-//     }).fail( (xhr, textStatus, errorThrown) => {
-//       return xhr.responseJSON
-//     })
-// }
