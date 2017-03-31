@@ -40,6 +40,8 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
     //         undefined
     //     }
     // </div>
+
+    // <i className={classnames(setClass, styles.stateClass)}></i>
     
     const dateTransfer = (begin, end) => {
         let date = {};
@@ -163,7 +165,7 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                 <div className={styles.infoBody}>
                     <p>{formatMessage({...localeMessage['basic']})}</p>
                     <ul>
-                        <li><span>{formatMessage({...localeMessage['status']})}:</span><span>{window['_status'][currentAlertDetail.status]}<i className={classnames(setClass, styles.stateClass)}></i></span></li>
+                        <li><span>{formatMessage({...localeMessage['status']})}:</span><span>{window['_status'][currentAlertDetail.status]}</span></li>
                         <li><span>{formatMessage({...localeMessage['severity']})}:</span><span className={severityColor}>{window['_severity'][currentAlertDetail.severity]}</span></li>
                         <li><span>{formatMessage({...localeMessage['source']})}:</span><span>{currentAlertDetail.source ? currentAlertDetail.source : formatMessage({...localeMessage['unknown']})}</span></li>
                         <li><span>{formatMessage({...localeMessage['description']})}:</span><span>{currentAlertDetail.description}</span></li>

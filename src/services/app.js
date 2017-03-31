@@ -16,3 +16,12 @@ export async function login(userName) {
     }
   })
 }
+
+export async function getUserInformation() {
+  return request(`/dataService/getUserInfo`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}

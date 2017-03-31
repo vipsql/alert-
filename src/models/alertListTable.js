@@ -1,5 +1,6 @@
 import { queryAlertList, queryChild, queryAlertListTime } from '../services/alertList'
 import {parse} from 'qs'
+import { message } from 'antd'
 import { groupSort } from '../utils'
 
 const initvalState = {
@@ -528,6 +529,8 @@ export default {
 
         }
 
+      } else {
+        yield message.error(window.__alert_appLocaleData.messages[listData.message], 2)
       }
     },
     // 展开子告警
@@ -564,7 +567,7 @@ export default {
           yield put( { type: 'addChild', payload: { children: childResult.data, parentId: payload, isGroup: isGroup } })
 
         } else {
-          console.error('查询子告警有误')
+          yield message.error(window.__alert_appLocaleData.messages[childResult.message], 2)
         }
       } else if (typeof haveChild !== undefined && haveChild){
         yield put( { type: 'toggleSpreadChild', payload: { parentId: payload, isGroup: isGroup} })
@@ -717,7 +720,7 @@ export default {
           payload: false
         })
       } else {
-        console.error('显示更多查询有错误');
+        yield message.error(window.__alert_appLocaleData.messages[listReturnData.message], 2)
       }
 
     },
@@ -743,7 +746,7 @@ export default {
         })
         yield put({ type: 'queryAlertList' })
       } else {
-        console.error('orderBy有误')
+        console.error('orderBy error')
       }
     }
   },

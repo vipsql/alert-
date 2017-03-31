@@ -1,6 +1,7 @@
 import {parse} from 'qs'
 import pathToRegexp from 'path-to-regexp';
 import { getAllListTags } from '../services/alertListTags.js'
+import { message } from 'antd'
 
 const initalState = {
     isSpread: false, // spread modal to select tags
@@ -65,7 +66,7 @@ export default {
           payload: tagsList.data || []
         })
       } else {
-        console.error('查询所有标签失败');
+        yield message.success(window.__alert_appLocaleData.messages[tagsList.message], 3);
       }
     },
     *changeTags({payload}, {select, put, call}) {

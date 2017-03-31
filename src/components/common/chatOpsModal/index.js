@@ -7,36 +7,36 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const Item = Form.Item;
 const Option = Select.Option;
-const dispatchModal = ({currentData, closeDispatchModal, onOk, onCancal, form, intl: {formatMessage}}) => {
+const chatOpsModal = ({currentData, closeChatOpsModal, onOk, onCancal, form, intl: {formatMessage}}) => {
 
     const localeMessage = defineMessages({
         modal_cancel: {
             id: 'modal.cancel',
             defaultMessage: '取消'
         },
-        modal_createTicket: {
-            id: 'modal.createTicket',
-            defaultMessage: '派发工单'
+        modal_shareChatOps: {
+            id: 'modal.shareChatOps',
+            defaultMessage: '分享到ChatOps'
         },
-        modal_create: {
-            id: 'modal.create',
-            defaultMessage: '派发'
+        modal_share: {
+            id: 'modal.share',
+            defaultMessage: '分享'
         },
-        modal_ticketType: {
-            id: 'modal.ticketType',
-            defaultMessage: '工单类型'
+        modal_roomName: {
+            id: 'modal.roomName',
+            defaultMessage: '群组名称'
         },
         modal_validating: {
             id: 'modal.validating',
             defaultMessage: '检验中...'
         },
-        modal_noTicketType: {
-            id: 'modal.noTicketType',
-            defaultMessage: '请输选择工单类型'
+        modal_noRoomName: {
+            id: 'modal.noRoomName',
+            defaultMessage: '请选择群组'
         },
     })
     
-    const { isShowFormModal, formOptions } = currentData;
+    const { isShowChatOpsModal, chatOpsRooms } = currentData;
     const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
     
     const modalFooter = []
@@ -46,12 +46,12 @@ const dispatchModal = ({currentData, closeDispatchModal, onOk, onCancal, form, i
             if (!!errors) {
                 return;
             }
-            const value = form.getFieldValue('formOption')
+            const value = form.getFieldValue('roomOption')
             onOk(value)
 
             form.resetFields();
         })
-      }} ><FormattedMessage {...localeMessage['modal_create']} /></Button>
+      }} ><FormattedMessage {...localeMessage['modal_share']} /></Button>
       <Button type="ghost" className={styles.ghostBtn} onClick={ () => {
         onCancal()
         form.resetFields();
@@ -61,28 +61,28 @@ const dispatchModal = ({currentData, closeDispatchModal, onOk, onCancal, form, i
 
     return (
         <Modal
-            title={<FormattedMessage {...localeMessage['modal_createTicket']} />}
+            title={<FormattedMessage {...localeMessage['modal_shareChatOps']} />}
             maskClosable="true"
-            onCancel={ closeDispatchModal }
-            visible={ isShowFormModal }
+            onCancel={ closeChatOpsModal }
+            visible={ isShowChatOpsModal }
             footer={ modalFooter }
         >
             <div className={styles.dispatchMain}>
                 <Form>
                     <Item
-                        label={<FormattedMessage {...localeMessage['modal_ticketType']} />}
+                        label={<FormattedMessage {...localeMessage['modal_roomName']} />}
                         hasFeedback
-                        help={isFieldValidating('formOption') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('formOption') || []).join(', ')}
+                        help={isFieldValidating('roomOption') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('roomOption') || []).join(', ')}
                     >
-                        {getFieldDecorator('formOption', {
+                        {getFieldDecorator('roomOption', {
                             rules: [
-                                { required: true, message: formatMessage({...localeMessage['modal_noTicketType']}) }
+                                { required: true, message: formatMessage({...localeMessage['modal_noRoomName']}) }
                             ]
                         })(
-                            <Select style={{width: '90%'}} placeholder={formatMessage({...localeMessage['modal_noTicketType']})}>
+                            <Select style={{width: '90%'}} placeholder={formatMessage({...localeMessage['modal_noRoomName']})}>
                                 {
-                                    formOptions.map( (item, index) => {
-                                        return <Option className={styles.menuItem} key={item.id} value={item.id}>{item.name}</Option>
+                                    chatOpsRooms.map( (item, index) => {
+                                        return <Option className={styles.menuItem} key={item._id} value={item['_id']}>{item.topic}</Option>
                                     })
                                 }
                             </Select>
@@ -94,15 +94,15 @@ const dispatchModal = ({currentData, closeDispatchModal, onOk, onCancal, form, i
     )
 }
 
-dispatchModal.defaultProps = {
+chatOpsModal.defaultProps = {
     currentData: {}, 
-    closeDispatchModal: () => {}, 
+    closeChatOpsModal: () => {}, 
     onOk: () => {}, 
     onCancal: () => {}
 }
 
-dispatchModal.propTypes = {
+chatOpsModal.propTypes = {
 
 }
 
-export default injectIntl(Form.create()(dispatchModal))
+export default injectIntl(Form.create()(chatOpsModal))

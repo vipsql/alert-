@@ -15,6 +15,7 @@ import MergeModal from './mergeModal'
 import CloseModal from '../common/closeModal/index.js'
 import DispatchModal from '../common/dispatchModal/index.js'
 import RelieveModal from './relieveModal'
+import ChatOpshModal from '../common/chatOpsModal/index.js'
 import { classnames } from '../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -235,6 +236,29 @@ class AlertListManage extends Component{
       }
     }
 
+    const chatOpsModalProps = {
+      currentData: alertOperateModalOrigin === 'detail' ? alertDetailOperation : alertOperation,
+
+      closeChatOpsModal: () => {
+        dispatch({
+            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleChatOpsModal' : 'alertOperation/toggleChatOpsModal',
+            payload: false
+        })
+      },
+      onOk: (value) => {
+        dispatch({
+            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/shareChatOps' : 'alertOperation/shareChatOps',
+            payload: value
+        })
+      },
+      onCancal: () => {
+        dispatch({
+            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleChatOpsModal' : 'alertOperation/toggleChatOpsModal',
+            payload: false
+        })
+      }
+    }
+
     const tabList = classnames(
       'iconfont',
       'icon-liebiao',
@@ -286,6 +310,7 @@ class AlertListManage extends Component{
         <MergeModal />
         <CloseModal {...closeModalProps}/>
         <DispatchModal {...dispatchModalProps}/>
+        <ChatOpshModal {...chatOpsModalProps}/>
         <RelieveModal />
       </div>
     )

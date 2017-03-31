@@ -44,10 +44,10 @@ export default {
           yield put({type: 'filterInitalTags'})
           yield put({type: 'toggleTagsModal', payload: true})
         } else {
-          console.error('查询用户已选择标签错误');
+          yield message.error(window.__alert_appLocaleData.messages[selectedTags.message], 2);
         }
       } else {
-        console.error('查询所有标签错误');
+        yield message.error(window.__alert_appLocaleData.messages[allTags.message], 2);
       }
     },
     // inital dashbord when isSet is true
@@ -76,9 +76,9 @@ export default {
       const postResult = yield setUserTags({'tagIdList': commitTagIds});
 
       if (postResult.result) {
-        yield message.success('标签保存成功');
+        yield message.success(window.__alert_appLocaleData.messages['constants.success'], 2);
       } else {
-        yield message.error('标签未保存成功');
+        yield message.error(window.__alert_appLocaleData.messages[postResult.message], 2);
       }
 
       yield put({

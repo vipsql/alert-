@@ -1,7 +1,8 @@
-import { login } from '../services/app'
+import { login, getUserInformation } from '../services/app'
 import { isSetUserTags } from '../services/alertTags.js'
 //import pathToRegexp from 'path-to-regexp';
 import {parse} from 'qs'
+import { message } from 'antd'
 
 
 const initialState = {
@@ -27,6 +28,9 @@ export default {
         }
         dispatch({
           type: 'isSetTags'
+        })
+        dispatch({
+          type: 'getUserInfo'
         })
       })
     },
@@ -75,6 +79,17 @@ export default {
         })
       }
     },
+    *getUserInfo({payload}, {put, call, select}) {
+      //const userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
+      //if (userInfo === null) {
+        const infoResult = yield getUserInformation()
+        if (infoResult.result) {
+          yield localStorage.setItem('UYUN_Alert_USERINFO', JSON.stringify(infoResult.data))
+        } else {
+          yield message.error(window.__alert_appLocaleData.messages[infoResult.message], 2)
+        }
+      //}
+    }
 
   },
   reducers: {

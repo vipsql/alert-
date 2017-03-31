@@ -70,6 +70,7 @@ const setLang = function(lang){
 			break
 
 	}
+	window.__alert_appLocaleData = appLocaleData
 	return appLocaleData
 }
 

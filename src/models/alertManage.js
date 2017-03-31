@@ -1,5 +1,6 @@
 import { queryDashbord } from '../services/alertManage'
 import { isSetUserTags } from '../services/alertTags.js'
+import { message } from 'antd'
 import {parse} from 'qs'
 
 const initialState = {
@@ -48,14 +49,7 @@ export default {
       }
     }, 
     *queryAlertDashbord({}, {call, put, select}) {
-      // if(!payload){
-      //   payload = {
-      //     tagIds: yield select( state => {
-      //       return state.alertTagsSet.commitTagIds
-      //     })
-      //   }
-        
-      // }
+      
       const treemapData = yield queryDashbord()
 
       if (treemapData.result) {
@@ -80,7 +74,7 @@ export default {
         })
 
       } else {
-        console.error(treemapData.message);
+        yield message.error(window.__alert_appLocaleData.messages[treemapData.message], 2)
       }
     }
   },

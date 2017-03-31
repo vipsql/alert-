@@ -2,6 +2,7 @@ import { querySource, queryAlertList, queryCount} from '../services/alertQuery'
 import { groupSort } from '../utils'
 import { message } from 'antd'
 import {parse} from 'qs'
+import { injectIntl, formatMessage, defineMessages, IntlProvider} from 'react-intl';
 
 const initalState = {
 
@@ -209,13 +210,12 @@ export default {
            payload: options.data || [],
          })
        } else {
-         yield message.error('查询告警来源失败', 3)
+         yield message.error(window.__alert_appLocaleData.messages[options.message], 3)
        }
     },
 
     // 点击查找
     *queryBefore({payload},{call, put, select}) {
-      console.log(payload)
       yield put({ type: 'setCurrentQuery', payload: payload })
       yield put({ type: 'queryAlertList'})
     },
@@ -282,7 +282,7 @@ export default {
       const countData = yield call(queryCount, {
         ...currentQuery
       })
-
+      
       if(listData.result){
         if(isGroup){
           
@@ -323,6 +323,8 @@ export default {
           
         }
 
+      } else {
+        yield message.error(window.__alert_appLocaleData.messages[listData.message], 2)
       }
     },
     // 展开组
@@ -426,7 +428,7 @@ export default {
           payload: false
         })
       } else {
-        console.error('显示更多查询有错误');
+        yield message.error(window.__alert_appLocaleData.messages[listReturnData.message], 2)
       }
       
     },
@@ -451,7 +453,7 @@ export default {
         })
         yield put({ type: 'queryAlertList' })   
       } else {
-        console.error('orderBy有误')
+        console.error('orderBy error')
       }
     }
   },

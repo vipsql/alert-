@@ -1,4 +1,4 @@
-import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery, add, update, view, getUserInfo} from '../services/alertConfig'
+import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery, add, update, view} from '../services/alertConfig'
 import {parse} from 'qs'
 import { message } from 'antd'
 import pathToRegexp from 'path-to-regexp';
@@ -89,14 +89,12 @@ export default {
     // 通过modal进入详情页
     *addApplicationView({payload}, {select, put, call}) {
       if (payload !== undefined) {
-        const info = yield call(getUserInfo)
-        if (info.result) {
+        const info = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
+        if (info !== undefined) {
           yield put({
             type: 'setApiKeys',
-            payload: info.data.apiKeys || undefined
+            payload: info.apiKeys[0] || undefined
           })
-        } else {
-          yield message.error(`${info.message}`, 3)
         }
         yield put({ type: 'initalAddAppView', payload: {isShowTypeModal: false, appTypeId: payload, UUID: undefined}}) // isShowTypeModal -> false, currentOperateAppType -> Object
       } else {
@@ -107,22 +105,20 @@ export default {
     *editApplicationView({payload}, {select, put, call}) {
       if (payload !== undefined) {
         const viewResult = yield call(view, payload)
-        const info = yield call(getUserInfo)
+        const info = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
         if (viewResult.result) {
           yield put({
             type: 'setCurrent',
             payload: viewResult.data || {}
           })
-          if (info.result) {
+          if (info !== undefined) {
             yield put({
               type: 'setApiKeys',
-              payload: info.data.apiKeys || undefined
+              payload: info.apiKeys[0] || undefined
             })
-          } else {
-            yield message.error(`${info.message}`, 3)
           }
         } else {
-          yield message.error(`${viewResult.message}`, 3)
+          yield message.error(window.__alert_appLocaleData.messages[viewResult.message], 3)
         }
       } else {
         console.error('appId is null')
@@ -139,7 +135,7 @@ export default {
 
       if (payload !== undefined && payload.displayName !== undefined) {
         if (UUID === undefined) {
-          yield message.error(`请先生成AppKey`, 3)
+          yield message.error(window.__alert_appLocaleData.messages['alertApplication.appKey.placeholder'], 3)
         }
         const addResult = yield call(add, {
           status: 1, // 默认启用
@@ -152,10 +148,10 @@ export default {
           appKey: UUID
         })
         if (addResult.result) {
-          yield message.success('应用添加成功', 3)
+          yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3)
           yield put(routerRedux.goBack());
         } else {
-          yield message.error(`${addResult.message}`, 3)
+          yield message.error(window.__alert_appLocaleData.messages[addResult.message], 3)
         }
       } else {
         console.error('displayName is null')
@@ -172,7 +168,7 @@ export default {
 
       if (payload !== undefined && payload.displayName !== undefined) {
         if (UUID === undefined) {
-          yield message.error(`请先生成AppKey`, 3)
+          yield message.error(window.__alert_appLocaleData.messages['alertApplication.appKey.placeholder'], 3)
         }
         const editResult = yield call(update, {
           id: currentEditApp.id,
@@ -186,10 +182,10 @@ export default {
           appKey: UUID
         })
         if (editResult.result) {
-          yield message.success('应用编辑成功', 3)
+          yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3)
           yield put(routerRedux.goBack());
         } else {
-          yield message.error(`${editResult.message}`, 3)
+          yield message.error(window.__alert_appLocaleData.messages[editResult.message], 3)
         }
       } else {
         console.error('displayName is null')
@@ -232,7 +228,7 @@ export default {
           orderType: orderType
         }})
       } else {
-        yield message.error(`${appResult.message}`, 2)
+        yield message.error(window.__alert_appLocaleData.messages[appResult.message], 2)
       }
 
       yield put({ type: 'toggleLoading', payload: false })
@@ -250,10 +246,10 @@ export default {
             }
           })
         } else {
-          yield message.error(`${typeResult.message}`, 2)
+          yield message.error(window.__alert_appLocaleData.messages[typeResult.message], 2)
         }
       } else {
-        console.error('配置类型不能为空')
+        console.error('application type is null')
       }
     },
     // 更改启用状态
@@ -269,10 +265,10 @@ export default {
             }
           })
         } else {
-          yield message.error(`${statusResult.message}`, 2)
+          yield message.error(window.__alert_appLocaleData.messages[statusResult.message], 2)
         }
       } else {
-        console.error('更改状态的相关信息为空')
+        console.error('edit infomation is null')
       }
     },
     // 删除时的操作
@@ -290,10 +286,10 @@ export default {
             payload: currentDeleteApp.id
           })
         } else {
-          yield message.error(`${deleteResult.message}`, 2)
+          yield message.error(window.__alert_appLocaleData.messages[deleteResult.message], 2)
         }
       } else {
-        console.error('应用为空')
+        console.error('application is null')
       } 
     },
     //orderList排序
@@ -317,7 +313,7 @@ export default {
         })
         yield put({ type: 'queryAplication' })
       } else {
-        console.error('orderBy有误')
+        console.error('orderBy error')
       }
     }
   },

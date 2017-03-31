@@ -1,10 +1,12 @@
 import {parse} from 'qs'
-import { getFormOptions, dispatchForm, close, merge, relieve } from '../services/alertOperation'
+import { getFormOptions, dispatchForm, close, merge, relieve, getChatOpsOptions, shareRoom} from '../services/alertOperation'
 import { message } from 'antd';
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const initalState = {
     // 操作的alertIds
     formOptions: [],
+    chatOpsRooms: [],
 
     // 各个modal弹窗
     isShowFormModal: false, // 派发
@@ -30,7 +32,7 @@ export default {
                   payload: options.data || []
               })
           } else {
-              console.error('获取工单类型失败');
+              yield message.error(`${options.errorMsg}`, 3)
           }
           yield put({
             type: 'toggleFormModal',
@@ -53,13 +55,13 @@ export default {
               })
               if (resultData.result) {
                   yield put({ type: 'alertListTable/deleteAlert', payload: [stringId]})
-                  yield message.success(`关闭成功`, 3);
+                  yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
                   yield put({ type: 'alertDetail/toggleDetailModal', payload: false})
               } else {
-                  yield message.error(`${resultData.message}`, 3);
+                  yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
               }
           } else {
-              console.error('请先选择告警/告警Id类型错误');
+              console.error('please select incidet/incident is error');
           }
           yield put({
             type: 'toggleCloseModal',
@@ -69,41 +71,85 @@ export default {
       // 确定派发工单
       *dispatchForm({payload}, {select, put, call}) {
 
-          const viewDetailAlertId = yield select( state => state.alertListTable.viewDetailAlertId)
-          
-          if ( viewDetailAlertId ) {
-              const result = yield dispatchForm({
-                  code: payload, 
-                  id: viewDetailAlertId
-              })
-              if (result.result) {
-                  yield window.open(result.data.url); 
-              } else {
-                  yield message.error(`派发工单失败`, 3);
-              }
-          } else {
-              console.error('请先选择告警/告警Id类型错误');
-          }
-          yield put({
-            type: 'toggleFormModal',
-            payload: false
-          })
+            const {currentAlertDetail} = yield select( state => {
+                return {
+                    'currentAlertDetail': state.alertDetail.currentAlertDetail
+                }
+            })
+            if (currentAlertDetail !== undefined && Object.keys(currentAlertDetail).length !== 0 ) {
+                let hostUrl = 'itsm.uyun.cn';
+                let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
+                if (window.location.host.indexOf("alert") > -1) {
+                    //域名访问
+                    hostUrl = window.location.host.replace(/alert/, 'itsm');
+                } else {
+                    //顶级域名/Ip访问
+                    hostUrl = window.location.host + '/itsm'
+                }
+                let callbackUrl = 
+                    `http://${window.location.host}/openapi/v2/incident/handleOrder?incidentId=${currentAlertDetail['id']}&api_key=${userInfo.apiKeys[0]}`;
+                const result = {
+                    id: payload, //payload
+                    url: encodeURIComponent(callbackUrl),
+                    title: encodeURIComponent(currentAlertDetail['name']),
+                    urgentLevel: currentAlertDetail['severity'] + 1,
+                    ticketDesc: encodeURIComponent(currentAlertDetail['description']),
+                    announcer: encodeURIComponent(userInfo['realName']),
+                    sourceId: currentAlertDetail['id']
+                }
+                
+                yield window.open(`http://${hostUrl}/#/create/${result.id}/${result.url}?ticketSource=${'alert'}&title=${result.title}&urgentLevel=${result.urgentLevel}&ticketDesc=${result.ticketDesc}&announcer=${result.announcer}&sourceId=${result.sourceId}`);
+            } else {
+                console.error('currentAlertDetail error');
+            }
+            yield put({
+                type: 'toggleFormModal',
+                payload: false
+            })
       },
       // 打开分享到ChatOps的modal
       *openChatOps({payload}, {select, put, call}) {
-          const options = yield getFormOptions();
-          if (options.result) {
-              yield put({
-                type: 'setFormOptions',
-                payload: {
-                    data: data || [],
-                    state: true
+          const options = yield getChatOpsOptions();
+            if (options.result) {
+                yield put({
+                    type: 'setChatOpsRoom',
+                    payload: options.data || [],
+                })
+            } else {
+                yield message.error(`${options.message}`, 2);
+            }
+            yield put({
+                type: 'toggleChatOpsModal',
+                payload: true
+            })
+      },
+      *shareChatOps({payload}, {select, put, call}) {
+        let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
+        const {currentAlertDetail} = yield select( state => {
+            return {
+                'currentAlertDetail': state.alertDetail.currentAlertDetail
+            }
+        })
+        if (currentAlertDetail !== undefined && Object.keys(currentAlertDetail).length !== 0) {
+            const shareResult = yield shareRoom(payload, 'ALERT', userInfo['userId'], {
+                body: {
+                    ...currentAlertDetail,
+                    type: 'alert',
+                    severityDesc: window['_severity'][currentAlertDetail['severity']],
+                    status: window['_status'][currentAlertDetail['status']],
                 }
-              })
-          } else {
-              yield message.error('获取ChatOps群组失败', 2);
-          }
-      }
+            });
+            if (shareResult.result) {
+                yield message.success(window.__alert_appLocaleData.messages['constants.success'], 2)
+            } else {
+                yield message.error(`${shareResult.message}`, 2)
+            }
+        }
+        yield put({
+            type: 'toggleChatOpsModal',
+            payload: false
+        })
+    }
 
   },
 
@@ -111,6 +157,10 @@ export default {
       // 设置工单类型
       setFormOptions(state, { payload }) {
           return { ...state, formOptions: payload }
+      },
+      // 设置chatOps群组
+      setChatOpsRoom(state, { payload }) {
+          return { ...state, chatOpsRooms: payload }
       },
       // 转换modal状态
       toggleChatOpsModal(state, {payload: isShowChatOpsModal}) {

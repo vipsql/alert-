@@ -7,6 +7,7 @@ import { classnames } from '../../utils'
 import AlertDetail from '../common/alertDetail/index.js'
 import CloseModal from '../common/closeModal/index.js'
 import DispatchModal from '../common/dispatchModal/index.js'
+import ChatOpshModal from '../common/chatOpsModal/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const Item = Form.Item;
@@ -48,6 +49,11 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
       closeFunc: (position) => {
         dispatch({
             type: 'alertQueryDetail/openCloseModal',
+        })
+      },
+      showChatOpsFunc: (position) => {
+        dispatch({
+          type: 'alertQueryDetail/openChatOps',
         })
       }
     }
@@ -181,6 +187,29 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
       onCancal: () => {
         dispatch({
             type: 'alertQueryDetail/toggleFormModal',
+            payload: false
+        })
+      }
+    }
+
+    const chatOpsModalProps = {
+      currentData: alertQueryDetail,
+
+      closeChatOpsModal: () => {
+        dispatch({
+            type: 'alertQueryDetail/toggleChatOpsModal',
+            payload: false
+        })
+      },
+      onOk: (value) => {
+        dispatch({
+            type: 'alertQueryDetail/shareChatOps',
+            payload: value
+        })
+      },
+      onCancal: () => {
+        dispatch({
+            type: 'alertQueryDetail/toggleChatOpsModal',
             payload: false
         })
       }
@@ -539,6 +568,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
           }
           <CloseModal {...closeModalProps}/>
           <DispatchModal {...dispatchModalProps}/>
+          <ChatOpshModal {...chatOpsModalProps}/>
         </div>
     )
 }

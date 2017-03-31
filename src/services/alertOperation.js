@@ -2,11 +2,65 @@ import { request, packURL } from '../utils'
 import querystring from 'querystring';
 
 export async function getFormOptions() {
-    return request(`/dataService/wos`, {
+    let hostUrl = 'itsm.uyundev.cn';
+    let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
+    
+    if (window.location.host.indexOf("alert") > -1) {
+        // 域名访问
+        hostUrl = window.location.host.replace(/alert/, 'itsm');
+
+    } else {
+        // 顶级域名/Ip访问
+        hostUrl = window.location.host + '/itsm'
+    }
+    console.log(hostUrl)
+    return request(`${hostUrl}/api/v2/chat/models/query?user_id=${userInfo.userId}&tenant_id=${userInfo.tenantId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         }
+    })
+}
+
+export async function getChatOpsOptions() {
+    let hostUrl = 'alert.uyundev.cn';
+    let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
+    
+    if (window.location.host.indexOf("alert") > -1) {
+        // 域名访问
+        hostUrl = window.location.host.replace(/alert/, 'chatops');
+
+    } else {
+        // 顶级域名/Ip访问
+        hostUrl = window.location.host
+    }
+    console.log(hostUrl)
+    return request(`/chatops/api/v2/chat/teams/5318c80c1f2a46e1a3a35f5565e632be/rooms`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+}
+
+export async function shareRoom(roomId, source, userId, param) {
+    let hostUrl = 'alert.uyundev.cn';
+
+    if (window.location.host.indexOf("alert") > -1) {
+        // 域名访问
+        hostUrl = window.location.host.replace(/alert/, 'chatops');
+
+    } else {
+        // 顶级域名/Ip访问
+        hostUrl = window.location.host
+    }
+    console.log(hostUrl)
+    return request(`/serviceapi/v2/robot/messages/send?roomId=${roomId}&source=${source}&userId=${userId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(param)
     })
 }
 

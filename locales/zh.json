@@ -1,4 +1,7 @@
 {
+  "constants.success": "成功",
+  "constants.error": "失败",
+
   "bread.integrationConfig": "应用配置",
   "bread.integrations": "应用集成",
   "bread.alertList": "告警列表",
@@ -67,13 +70,23 @@
   "alertOperate.groupByStatus": "按状态分组",
   "alertOperate.groupByOther": "按{other}分组",
 
+  "modal.operate.infoTip1": "请先选择一条告警",
+  "modal.operate.infoTip2": "只允许操作一条告警",
+  "modal.operate.infoTip3": "请先选择至少二条告警",
+  "modal.operate.infoTip4": "请先将多条告警合并为一条原告警",
+
+  "modal.shareChatOps": "分享到ChatOps",
+  "modal.share": "分享",
+  "modal.roomName": "群组名称",
+  "modal.noRoomName": "请选择群组",
+
   "modal.delete": "删除",
   "modal.cancel": "取消",
   "modal.createTicket": "派发工单",
   "modal.create": "派发",
   "modal.ticketType": "工单类型",
   "modal.validating": "检验中...",
-  "modal.noTicketType": "请输选择工单类型",
+  "modal.noTicketType": "请选择工单类型",
 
   "modal.close": "关闭",
   "modal.closeIncident": "关闭告警",
@@ -133,5 +146,25 @@
   "alertApplication.displayName.message": "设定一个显示名用于标识应用",
   "alertApplication.displayName.placeholder": "请输入应用名称",
   "alertApplication.appKey": "点击生成AppKey",
-  "alertApplication.save": "保存"
+  "alertApplication.appKey.placeholder": "请先生成AppKey",
+  "alertApplication.save": "保存",
+
+  "param.exp": "请求参数存在异常",
+  "auth.noexecute": "没有权限执行",
+  "application.appkey.notexist.exp": "请先创建一个appkey",
+  "application.builtIn.delete.exp": "不能删除内置应用",
+  "application.not.exist.exp": "不存在应用",
+  "applicationType.not.exist.exp": "不存在应用类型",
+  "incident.not.exist": "故障不存在或已被删除",
+  "incident.no.child": "子故障不存在",
+  "incident.status.not.open": "故障状态不是新告警",
+  "incident.not.merge.again": "已合并的故障不允许再次合并",
+  "incident.not.merge.self": "不允许故障自身合并",
+  "incident.format.error": "故障格式化错误",
+  "incidentid.can.not.be.empty": "故障不能为空",
+  "tag.id.list.can.not.be.null": "标签ID列表不能为空",
+  "decompose.incident.failed": "分解故障失败",
+  "user.not.exist": "用户不存在",
+  "tenant.not.exist": "租户不存在",
+  "tenant.no.apikey": "租户没有相应的apikey"
 }

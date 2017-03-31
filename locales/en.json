@@ -1,4 +1,7 @@
 {
+  "constants.success": "Success",
+  "constants.error": "Error",
+
   "bread.integrationConfig": "IntegrationConfig",
   "bread.integrations": "Integrations",
   "bread.alertList": "AlertList",
@@ -67,6 +70,16 @@
   "alertOperate.groupByStatus": "GroupBy Status",
   "alertOperate.groupByOther": "GroupBy {other}",
 
+  "modal.operate.infoTip1": "Please select an incident",
+  "modal.operate.infoTip2": "Only one incident is allowed to operate",
+  "modal.operate.infoTip3": "Please select at least two incidents",
+  "modal.operate.infoTip4": "Please roll Up incidents before operate",
+
+  "modal.shareChatOps": "Share to ChatOps",
+  "modal.share": "Share",
+  "modal.roomName": "Room Name",
+  "modal.noRoomName": "Please select room",
+
   "modal.delete": "Delete",
   "modal.cancel": "Cancel",
   "modal.createTicket": "Create Ticket",
@@ -133,5 +146,25 @@
   "alertApplication.displayName.message": "Set a display name to identify the application",
   "alertApplication.displayName.placeholder": "Please input an application name",
   "alertApplication.appKey": "Create AppKey",
-  "alertApplication.save": "Save"
+  "alertApplication.appKey.placeholder": "Please create AppKey",
+  "alertApplication.save": "Save",
+
+  "param.exp": "parse request param Error",
+  "auth.noexecute": "no permission to execute",
+  "application.appkey.notexist.exp": "please make an appkey first",
+  "application.builtIn.delete.exp": "unable to delete built-in application",
+  "application.not.exist.exp": "application not exist",
+  "applicationType.not.exist.exp": "applicationType not exist",
+  "incident.not.exist": "The incident does not exist or has been deleted",
+  "incident.no.child": "No child incident found",
+  "incident.status.not.open": "The status of the incident is not open",
+  "incident.not.merge.again": "The merged incident is not allowed to merge again",
+  "incident.not.merge.self": "Do not allow the incident to merge itself",
+  "incident.format.error": "incident format error",
+  "incidentid.can.not.be.empty": "incidentid can not be empty",
+  "tag.id.list.can.not.be.null": "tag id list can not be null",
+  "decompose.incident.failed": "decompose incident failed",
+  "user.not.exist": "The user does not exist",
+  "tenant.not.exist": "The tenant does not exist",
+  "tenant.no.apikey": "The tenant has not the corresponding api key"
 }

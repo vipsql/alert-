@@ -8,6 +8,10 @@ function isApiUrl(url) {
   if (url.startsWith(ROOT_PATH)) {
     return url;
   }
+  if (url.indexOf('itsm') > -1 || url.indexOf('chatops') > -1) {
+    return `http://${url}`
+    //return url;
+  }
 
   return `${ROOT_PATH}${url}`;
 }
@@ -34,7 +38,7 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default async function request(url, options) {
-    //options.credentials =  'include'
+    options.credentials =  'include'
     const response = await fetch(isApiUrl(url), options);
     const data = await response.json()
     if (response.status >= 200 && response.status < 300) {

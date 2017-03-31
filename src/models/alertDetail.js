@@ -53,10 +53,10 @@ export default {
             payload: true
           })
         } else {
-          yield message.error(`${detailResult.message}`, 3);
+          yield message.error(window.__alert_appLocaleData.messages[detailResult.message], 3);
         }
       } else {
-        console.error('viewDetailAlertId类型错误')
+        console.error('viewDetailAlertId type error')
       }
     },
     // 关闭时

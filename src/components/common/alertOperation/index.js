@@ -179,7 +179,7 @@ const alertOperation = ({position,
                 :
                 undefined
             }
-            <Select className={styles.showChatOps}  placeholder={formatMessage({...localeMessage['moreOperate']})} onChange={ (operate) => {
+            <Select className={styles.showChatOps} allowClear placeholder={formatMessage({...localeMessage['moreOperate']})} onChange={ (operate) => {
                 switch (operate) {
                     case 'ChatOps':
                         showChatOpsFunc(position)
