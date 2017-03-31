@@ -5,7 +5,7 @@ import { Popover } from 'antd'
 import styles from '../index.less'
 import LevelIcon from '../../common/levelIcon/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
-
+import { classnames } from '../../../utils'
 class ListTimeTable extends Component {
     componentDidMount(){
       
@@ -17,6 +17,7 @@ class ListTimeTable extends Component {
       // 360 表格左侧宽度
       // 50 是最后一点预留位置
       const lineW = width - 360 - 50
+     
       timeLine.style.width = lineW + 'px'
       this.gridWidth = lineW / 10
       const countMins = (end - begin) / (60 * 1000)
@@ -183,12 +184,17 @@ class ListTimeTable extends Component {
                </td>
              )
            }
+            const relieveIcon = classnames(
+                'iconfont',
+                'icon-zaixian',
+                styles.relieveIcon
+              )
            if(key == 'name') {
             TDS.push(<td key={key} className={styles[className]} data-id={item.id} onClick={detailClick} >
               {item[key]}
               {
                 item['hasChild'] === true ?
-                <span className={styles.relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
+                <span className={relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
                 :
                 undefined
               }
