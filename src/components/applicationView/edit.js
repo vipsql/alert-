@@ -13,7 +13,7 @@ function Edit(props){
     const editApplication = ({alertConfig, dispatch}) => {
         const { currentEditApp, UUID, apikey } = alertConfig;
         let targetApplication;
-        switch (currentOperateAppType.name) {
+        switch (currentEditApp.name) {
             case 'UYUN Alert REST API':
                 targetApplication = 
                     <AlertREST 

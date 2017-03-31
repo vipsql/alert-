@@ -35,7 +35,7 @@ export async function getChatOpsOptions() {
         hostUrl = window.location.host
     }
     console.log(hostUrl)
-    return request(`/chatops/api/v2/chat/teams/5318c80c1f2a46e1a3a35f5565e632be/rooms`, {
+    return request(`${hostUrl}/chatops/api/v2/chat/teams/${userInfo.tenantId}/rooms`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export async function shareRoom(roomId, source, userId, param) {
         hostUrl = window.location.host
     }
     console.log(hostUrl)
-    return request(`/serviceapi/v2/robot/messages/send?roomId=${roomId}&source=${source}&userId=${userId}`, {
+    return request(`${hostUrl}/serviceapi/v2/robot/messages/send?roomId=${roomId}&source=${source}&userId=${userId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
