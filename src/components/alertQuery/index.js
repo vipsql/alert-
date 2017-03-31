@@ -347,12 +347,19 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
           const formData = form.getFieldsValue()
           
           if (formData.dateTime !== undefined && formData.dateTime.length !== 0) {
-              debugger
-            formData.begin = formData.dateTime[0].toDate().getTime();
+            //   开始时间统一处理为当前日期的0点时间戳
+            const _begin = formData.dateTime[0].toDate()
+            _begin.setHours(0)
+            _begin.setMinutes(0)
+            _begin.setSeconds(0)
+            _begin.setMilliseconds(0) 
+            formData.begin = _begin.getTime()
+
             formData.end = formData.dateTime[1].toDate().getTime();
             delete formData.dateTime
           }
-          console.log(formData)
+          
+          
           dispatch({
             type: 'alertQuery/queryBefore',
             payload: formData
