@@ -347,6 +347,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
           const formData = form.getFieldsValue()
           
           if (formData.dateTime !== undefined && formData.dateTime.length !== 0) {
+              debugger
             formData.begin = formData.dateTime[0].toDate().getTime();
             formData.end = formData.dateTime[1].toDate().getTime();
             delete formData.dateTime

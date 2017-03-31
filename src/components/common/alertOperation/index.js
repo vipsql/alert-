@@ -113,9 +113,9 @@ const alertOperation = ({position,
     })
 
     const setClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-bushu']
+        'icon',
+        'iconfont',
+        'icon-bushu'
     )
 
     // <Select className={styles.selectSingle} defaultValue="0">
@@ -126,9 +126,9 @@ const alertOperation = ({position,
     // </Select>
 
     const switchClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-anonymous-iconfont']
+        'icon',
+        'iconfont',
+        'icon-anonymous-iconfont'
     )
 
     const popoverContent = position === 'list' ?
