@@ -177,12 +177,18 @@ class ListTable extends Component {
           }
           td = <td key={key}>{data}</td>
         }
+        
+        const relieveIcon = classnames(
+          'iconfont',
+          'icon-zaixian',
+          styles.relieveIcon
+        )
         if(key == 'name') {
           td = <td key={key} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >
             {data}
             {
               sourceOrigin !== 'alertQuery' && item['hasChild'] === true ?
-              <span className={styles.relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
+              <span className={relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
               :
               undefined
             }

@@ -4,6 +4,7 @@ import { connect } from 'dva'
 import ListTimeTable from './listTimeTable'
 import styles from '../index.less'
 
+
 // function ListTimeTableWrap({dispatch, alertListTimeTable}){
 const  ListTimeTableWrap = ({dispatch, alertListTable}) => {
   const props = {

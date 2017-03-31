@@ -4,6 +4,8 @@ import { Spin } from 'antd'
 import * as d3 from 'd3'
 import {event as currentEvent} from 'd3'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import Tip from './d3Tip'
+const d3Tip = new Tip
 
 const formatMessages = defineMessages({
     noData:{
@@ -51,6 +53,7 @@ class Chart extends Component{
             .attr("width", this.chartWidth)
             .attr("height", this.chartHeight)
             .append("svg:g")
+        
 
         this.timer = setInterval( () =>{
             // var data = {"message":"热图查询成功","data":{"totalCriticalCnt":33,"totalMajorCnt":29,"totalInfoCnt":24,"totalMinorCnt":13,"totalWarnCnt":22,"picList":[{"name":"资源类型名称","value":19,"path":"entityTypeName","children":[{"name":"光缆","path":"entityTypeName\/guanglan","value":9,"maxSeverity":50},{"name":"计算机","path":"entityTypeName\/jisuanji","value":10,"maxSeverity":50}]},{"name":"告警级别","value":102,"path":"severity","children":[{"name":"紧急","path":"severity\/jinji","value":27,"maxSeverity":50},{"name":"警告","path":"severity\/jinggu","value":19,"maxSeverity":20},{"name":"次要","path":"severity\/ciyao","value":13,"maxSeverity":30},{"name":"主要","path":"severity\/zhuyao","value":22,"maxSeverity":40},{"name":"提醒","path":"severity\/dixing","value":21,"maxSeverity":10}]}]},"result":true}
@@ -132,7 +135,7 @@ class Chart extends Component{
                 .attr("x", function(d) {
                     return Math.max(0.01, d.dx/2);
                 })
-                .attr("y", "10")
+                .attr("y", "12")
                 .attr("transform", "translate(3, 13)")
                 .attr("width", function(d) {
                     return Math.max(0.01, d.dx);
@@ -205,6 +208,10 @@ class Chart extends Component{
                     localStorage.setItem('alertListPath', JSON.stringify(alertListPath));
                     window.location.hash = "#/alertManage/" + d.path;
                 })
+                .on('mouseover', function(d){
+                    d3Tip.show(d)
+                })
+                // .on('mouseout', tip.hide)
 
                 .append("svg")
                 .attr("class", "clip")
@@ -228,9 +235,9 @@ class Chart extends Component{
                 })
                 .attr("dy", ".35em")
                 .attr("fill", "#04203e")
-                .attr("font-size", "12")
+                .attr("font-size", "13")
                 .attr("text-anchor", "middle")
-                
+                .style("opacity", function(d) { d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; })
                 // .style("display", "none")
                 .text(function(d) {
                     return d.name;
@@ -394,6 +401,8 @@ class Chart extends Component{
                 .style("fill", d => {
                   return d.children ? headerColor : this.color(d.maxSeverity);
                 } );
+
+            
 
             node = d;
 
