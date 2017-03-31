@@ -25,7 +25,7 @@ function isApiUrl(url) {
  */
 export default async function request(url, options) {
   
-    options.credentials =  'include'
+    // options.credentials =  'include'
     
       const response = await fetch(isApiUrl(url), options);
       const data = await response.json()
@@ -34,7 +34,7 @@ export default async function request(url, options) {
           result: true,
           data: data
         }
-      } else if(response.status == 500){
+      } else if(response.status == 401){
         // 未认证跳到租户
         location.href = location.origin + '/tenant/#/login_admin/'
       }else{
