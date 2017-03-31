@@ -2,19 +2,18 @@ import { request, packURL } from '../utils'
 import querystring from 'querystring';
 
 export async function getFormOptions() {
-    let hostUrl = 'itsm.uyundev.cn';
-    let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
+    let hostUrl = 'itsm.uyun.cn';
     
-    if (window.location.host.indexOf("alert") > -1) {
+    if (window.location.origin.indexOf("alert") > -1) {
         // 域名访问
-        hostUrl = window.location.host.replace(/alert/, 'itsm');
+        hostUrl = window.location.origin.replace(/alert/, 'itsm');
 
     } else {
         // 顶级域名/Ip访问
-        hostUrl = window.location.host + '/itsm'
+        hostUrl = window.location.origin + '/itsm'
     }
     console.log(hostUrl)
-    return request(`${hostUrl}/api/v2/chat/models/query?user_id=${userInfo.userId}&tenant_id=${userInfo.tenantId}`, {
+    return request(`/dataService/wos?domain=${encodeURIComponent(hostUrl)}`,  {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -26,13 +25,13 @@ export async function getChatOpsOptions() {
     let hostUrl = 'alert.uyundev.cn';
     let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
     
-    if (window.location.host.indexOf("alert") > -1) {
+    if (window.location.origin.indexOf("alert") > -1) {
         // 域名访问
-        hostUrl = window.location.host.replace(/alert/, 'chatops');
+        hostUrl = window.location.origin.replace(/alert/, 'chatops');
 
     } else {
         // 顶级域名/Ip访问
-        hostUrl = window.location.host
+        hostUrl = window.location.origin
     }
     console.log(hostUrl)
     return request(`${hostUrl}/chatops/api/v2/chat/teams/${userInfo.tenantId}/rooms`, {
@@ -46,13 +45,13 @@ export async function getChatOpsOptions() {
 export async function shareRoom(roomId, source, userId, param) {
     let hostUrl = 'alert.uyundev.cn';
 
-    if (window.location.host.indexOf("alert") > -1) {
+    if (window.location.origin.indexOf("alert") > -1) {
         // 域名访问
-        hostUrl = window.location.host.replace(/alert/, 'chatops');
+        hostUrl = window.location.origin.replace(/alert/, 'chatops');
 
     } else {
         // 顶级域名/Ip访问
-        hostUrl = window.location.host
+        hostUrl = window.location.origin
     }
     console.log(hostUrl)
     return request(`${hostUrl}/serviceapi/v2/robot/messages/send?roomId=${roomId}&source=${source}&userId=${userId}`, {

@@ -8,9 +8,9 @@ function isApiUrl(url) {
   if (url.startsWith(ROOT_PATH)) {
     return url;
   }
-  if (url.indexOf('itsm') > -1 || url.indexOf('chatops') > -1) {
-    return `http://${url}`
-    //return url;
+  if (url.indexOf('chatops') > -1) {
+    //return `http://${url}`
+    return url;
   }
 
   return `${ROOT_PATH}${url}`;

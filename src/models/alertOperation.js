@@ -252,17 +252,17 @@ export default {
                 let hostUrl = 'itsm.uyun.cn';
                 let callbackHostUrl = 'alert.uyun.cn';
                 let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
-                if (window.location.host.indexOf("alert") > -1) {
+                if (window.location.origin.indexOf("alert") > -1) {
                     // 域名访问
-                    hostUrl = window.location.host.replace(/alert/, 'itsm');
-                    callbackHostUrl = window.location.host;
+                    hostUrl = window.location.origin.replace(/alert/, 'itsm');
+                    callbackHostUrl = window.location.origin;
                 } else {
                     // 顶级域名/Ip访问
-                    hostUrl = window.location.host + '/itsm';
-                    callbackHostUrl = window.location.host + '/alert';
+                    hostUrl = window.location.origin + '/itsm';
+                    callbackHostUrl = window.location.origin + '/alert';
                 }
                 let callbackUrl = 
-                    `http://${callbackHostUrl}/openapi/v2/incident/handleOrder?incidentId=${selectedAlertIds[0]['id']}&api_key=${userInfo.apiKeys[0]}`;
+                    `${callbackHostUrl}/openapi/v2/incident/handleOrder?incidentId=${selectedAlertIds[0]['id']}&api_key=${userInfo.apiKeys[0]}`;
                 const result = {
                     id: payload, 
                     url: encodeURIComponent(callbackUrl),
@@ -273,7 +273,7 @@ export default {
                     sourceId: selectedAlertIds[0]['id']
                 }
                 
-                yield window.open(`http://${hostUrl}/#/create/${result.id}/${result.url}?ticketSource=${'alert'}&title=${result.title}&urgentLevel=${result.urgentLevel}&ticketDesc=${result.ticketDesc}&announcer=${result.announcer}&sourceId=${result.sourceId}`);
+                yield window.open(`${hostUrl}/#/create/${result.id}/${result.url}?ticketSource=${'alert'}&title=${result.title}&urgentLevel=${result.urgentLevel}&ticketDesc=${result.ticketDesc}&announcer=${result.announcer}&sourceId=${result.sourceId}`);
                 yield put({ type: 'alertListTable/resetCheckedAlert'})
           } else {
               console.error('selectedAlertIds error');
