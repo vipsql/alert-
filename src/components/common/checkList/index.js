@@ -17,8 +17,8 @@ const checkList = ({itemList, checkedNum, isSpreadTags, checkHandler, origin}) =
     })
 
     const setClass = classnames(
-      styles['iconfont'],
-      styles['icon-wancheng']
+      'iconfont',
+      'icon-wancheng'
     )
     
     const tags = itemList.map((item, index) => {

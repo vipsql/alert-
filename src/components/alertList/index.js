@@ -174,7 +174,7 @@ class AlertListManage extends Component{
         })
       },
       clickDropdown: (e) => {
-        const message = e.target.getAttribute('data-message')
+        const message = e.target.getAttribute('data-message') ||  e.target.parentNode.getAttribute('data-message')
         
         dispatch({
             type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/setCloseMessge' : 'alertOperation/setCloseMessge',
@@ -274,7 +274,7 @@ class AlertListManage extends Component{
       <div style={{ position: 'relative'}}>
         <AlertTagsFilter />
         <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch/></div>
-        <AlertBar key={Math.random()}/>
+        <AlertBar />
         <div className={styles.alertListPage}>
           <Tabs>
             <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key={1}>

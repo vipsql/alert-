@@ -29,6 +29,7 @@ const initvalState = {
 
     checkAlert: {}, //此对象将alertId作为属性，用来过滤checked的alert
 
+    lineW: 800, //时间线长度
     gridWidth: 100,
     minuteToWidth: 5, //以分钟单位计算间隔
     
@@ -68,6 +69,13 @@ export default {
     }
   },
   reducers: {
+    // 更新时间线每分钟占宽
+    updateMinToWidth(state, {payload: minuteToWidth}){
+      return {
+        ...state,
+        minuteToWidth
+      }
+    },
     // 折叠状态
     updateResize(state, { payload: isResize }){
       return {
@@ -200,11 +208,13 @@ export default {
       return { ...state, operateAlertIds: operateAlertIds, selectedAlertIds: selectedAlertIds }
     },
     // ----------------------------------------------------------------------------------------------
-    setTimeLineWidth(state,{payload: {gridWidth,minuteToWidth}}){
+    setTimeLineWidth(state,{payload: {gridWidth,minuteToWidth, lineW}}){
+    
       return{
         ...state,
         gridWidth,
-        minuteToWidth
+        minuteToWidth,
+        lineW
       }
     },
     // 自定义列
@@ -438,6 +448,7 @@ export default {
         end,
         pageSize,
         orderBy,
+        lineW,
         orderType
       } = yield select(state => {
         const alertListTable = state.alertListTable
@@ -447,11 +458,21 @@ export default {
           groupBy: alertListTable.groupBy,
           begin: alertListTable.begin,
           end: alertListTable.end,
+          lineW: alertListTable.lineW,
           pageSize: alertListTable.pageSize,
           orderBy: alertListTable.orderBy,
           orderType: alertListTable.orderType
         }
       })
+
+      // 更新每分钟占宽
+      const countMins = (end - begin) / (60 * 1000)
+      const minuteToWidth = lineW / countMins
+      yield put({
+        type: 'updateMinToWidth',
+        payload: minuteToWidth
+      })
+
       var extraParams = {};
 
       if(payload !== undefined && payload.isGroup !== undefined) {

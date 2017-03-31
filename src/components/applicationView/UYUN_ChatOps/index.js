@@ -13,9 +13,9 @@ const UYUN_ChatOps = (props) => {
     const { getFieldDecorator, getFieldsValue } = form;
 
     const chatOpsClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-chatops']
+        'icon',
+        'iconfont',
+        'icon-chatops'
     )
 
     const localeMessage = defineMessages({

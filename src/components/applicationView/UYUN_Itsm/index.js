@@ -13,9 +13,9 @@ const UYUN_Itsm = (props) => {
     const { getFieldDecorator, getFieldsValue } = form;
 
     const itsmClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-ITSM']
+        'icon',
+        'iconfont',
+        'icon-ITSM'
     )
 
     const localeMessage = defineMessages({

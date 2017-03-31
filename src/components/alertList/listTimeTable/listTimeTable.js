@@ -8,6 +8,7 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 class ListTimeTable extends Component {
     componentDidMount(){
+      
       const { setTimeLineWidth, begin, end  } = this.props
 
       const table = document.getElementById('listTimeTable')
@@ -17,14 +18,16 @@ class ListTimeTable extends Component {
       // 50 是最后一点预留位置
       const lineW = width - 360 - 50
       timeLine.style.width = lineW + 'px'
-      const gridWidth = lineW / 10
+      this.gridWidth = lineW / 10
       const countMins = (end - begin) / (60 * 1000)
       const minuteToWidth = lineW / countMins
-
-      setTimeLineWidth(gridWidth, minuteToWidth)
+      
+      setTimeLineWidth(this.gridWidth, minuteToWidth, lineW)
 
     }
+   
     render(){
+      
       const {
         isGroup,
         groupBy,

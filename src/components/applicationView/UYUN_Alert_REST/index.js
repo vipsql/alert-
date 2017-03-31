@@ -13,9 +13,9 @@ const UYUN_Alert_REST = (props) => {
     const { getFieldDecorator, getFieldsValue } = form;
 
     const alertClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-Alert']
+        'icon',
+        'iconfont',
+        'icon-Alert'
     )
 
     const localeMessage = defineMessages({

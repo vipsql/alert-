@@ -130,7 +130,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
         })
       },
       clickDropdown: (e) => {
-        const message = e.target.getAttribute('data-message')
+        const message = e.target.getAttribute('data-message') ||  e.target.parentNode.getAttribute('data-message')
         
         dispatch({
             type: 'alertQueryDetail/setCloseMessge',
@@ -376,11 +376,19 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
           const formData = form.getFieldsValue()
           
           if (formData.dateTime !== undefined && formData.dateTime.length !== 0) {
-            formData.begin = formData.dateTime[0].toDate().getTime();
+            //   开始时间统一处理为当前日期的0点时间戳
+            const _begin = formData.dateTime[0].toDate()
+            _begin.setHours(0)
+            _begin.setMinutes(0)
+            _begin.setSeconds(0)
+            _begin.setMilliseconds(0) 
+            formData.begin = _begin.getTime()
+
             formData.end = formData.dateTime[1].toDate().getTime();
             delete formData.dateTime
           }
-          console.log(formData)
+          
+          
           dispatch({
             type: 'alertQuery/queryBefore',
             payload: formData
@@ -389,6 +397,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
       })
     }
 
+    
     return (
         <div>
           <Form>
@@ -518,11 +527,11 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
               <div className={styles.count}>
                 <FormattedMessage {...localeMessage['result']} 
                   values= {{
-                    total: queryCount.total !== undefined ? queryCount.total : 0,
-                    critical: queryCount.critical !== undefined ? queryCount.critical : 0,
-                    warning: queryCount.warning !== undefined ? queryCount.warning : 0,
-                    informaiton: queryCount.information !== undefined ? queryCount.information : 0,
-                    ok: queryCount.ok !== undefined ? queryCount.ok : 0
+                    total: queryCount.total !== undefined ?'' + queryCount.total : 0,
+                    critical: queryCount.critical !== undefined ?'' +  queryCount.critical : 0,
+                    warning: queryCount.warning !== undefined ? '' +  queryCount.warning : 0,
+                    informaiton: queryCount.information !== undefined ?'' +  queryCount.information : 0,
+                    ok: queryCount.ok !== undefined ?'' +  queryCount.ok : 0
                   }}
                 />
                 

@@ -13,9 +13,9 @@ const UYUN_Monitor = (props) => {
     const { getFieldDecorator, getFieldsValue } = form;
 
     const monitorClass = classnames(
-        styles['icon'],
-        styles.iconfont,
-        styles['icon-monitor']
+        'icon',
+        'iconfont',
+        'icon-monitor'
     )
 
     const localeMessage = defineMessages({
