@@ -151,6 +151,10 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
         text: {
             id: 'alertDetail.text',
             defaultMessage: '文本',
+        },
+        tags: {
+            id: 'alertQuery.label.tags',
+            defaultMessage: '标签',
         }
     })
 
@@ -168,6 +172,25 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                         <li><span>{formatMessage({...localeMessage['status']})}:</span><span>{window['_status'][currentAlertDetail.status]}</span></li>
                         <li><span>{formatMessage({...localeMessage['severity']})}:</span><span className={severityColor}>{window['_severity'][currentAlertDetail.severity]}</span></li>
                         <li><span>{formatMessage({...localeMessage['source']})}:</span><span>{currentAlertDetail.source ? currentAlertDetail.source : formatMessage({...localeMessage['unknown']})}</span></li>
+                        {
+                            currentAlertDetail.tags !== null && currentAlertDetail.tags.length !== 0 ?
+                            <li><span>{formatMessage({...localeMessage['tags']})}:</span>
+                                {
+                                    currentAlertDetail.tags.map( (tag, index) => {
+                                        if (tag.key == 'severity' || tag.key == 'status') {
+                                            return <span key={index} className={styles.tag}>{`${tag.keyName} : `}{window[`_${tag.key}`][tag.value]}</span>
+                                        } else if (tag.value == '') {
+                                            return <span key={index} className={styles.tag}>{tag.keyName}</span>
+                                        } else {
+                                            return <span key={index} className={styles.tag}>{`${tag.keyName} : ${tag.value}`}</span>
+                                        }
+                                        
+                                    })
+                                }
+                            </li>
+                            :
+                            <li><span>{formatMessage({...localeMessage['tags']})}:</span><span>{formatMessage({...localeMessage['unknown']})}</span></li>
+                        }
                         <li><span>{formatMessage({...localeMessage['description']})}:</span><span>{currentAlertDetail.description}</span></li>
                         <li><span>{formatMessage({...localeMessage['firstOccurred']})}:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).begin}</span></li>
                         <li><span>{formatMessage({...localeMessage['lastOccurTime']})}:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).end}</span></li>
@@ -205,17 +228,21 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                         </li>
                     </ul>
                 </div>
-                <div className={styles.infoBody}>
-                    <p>{formatMessage({...localeMessage['enrich']})}</p>
-                    <ul>
-                        {
-                            currentAlertDetail.properties !== undefined && Array.isArray(currentAlertDetail.properties) && currentAlertDetail.properties.length !== 0 && currentAlertDetail.properties.map( (item, index) => {
-                                return <li key={index}><span>{item.name}</span><span>{item.val}</span></li>
-                            })
-                        }
-                    </ul>
-                </div>
-                
+                {
+                    currentAlertDetail.properties !== undefined && Array.isArray(currentAlertDetail.properties) && currentAlertDetail.properties.length !== 0 ?
+                    <div className={styles.infoBody}>
+                        <p>{formatMessage({...localeMessage['enrich']})}</p>
+                        <ul>
+                            {
+                                currentAlertDetail.properties.map( (item, index) => {
+                                    return <li key={index}><span>{item.name}</span><span>{item.val}</span></li>
+                                })
+                            }
+                        </ul>
+                    </div>
+                    :
+                    undefined
+                }              
             </div>
         </div>
     )
