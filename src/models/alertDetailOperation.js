@@ -98,10 +98,11 @@ export default {
                     urgentLevel: currentAlertDetail['severity'] + 1,
                     ticketDesc: encodeURIComponent(currentAlertDetail['description']),
                     announcer: encodeURIComponent(userInfo['realName']),
-                    sourceId: currentAlertDetail['id']
+                    sourceId: currentAlertDetail['id'],
+                    hideHeader: 1
                 }
                 
-                yield window.open(`${hostUrl}/#/create/${result.id}/${result.url}?ticketSource=${'alert'}&title=${result.title}&urgentLevel=${result.urgentLevel}&ticketDesc=${result.ticketDesc}&announcer=${result.announcer}&sourceId=${result.sourceId}`);
+                yield window.open(`${hostUrl}/#/create/${result.id}/${result.url}?ticketSource=${'alert'}&title=${result.title}&urgentLevel=${result.urgentLevel}&ticketDesc=${result.ticketDesc}&announcer=${result.announcer}&sourceId=${result.sourceId}&hideHeader=${result.hideHeader}`);
             } else {
                 console.error('currentAlertDetail error');
             }
