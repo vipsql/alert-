@@ -132,6 +132,10 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
             id: 'alertDetail.hour',
             defaultMessage: '小时',
         },
+        min: {
+            id: 'alertDetail.min',
+            defaultMessage: '分钟',
+        },
         ticket: {
             id: 'alertDetail.ticket',
             defaultMessage: '工单',
@@ -194,7 +198,7 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                         <li><span>{formatMessage({...localeMessage['description']})}:</span><span>{currentAlertDetail.description}</span></li>
                         <li><span>{formatMessage({...localeMessage['firstOccurred']})}:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).begin}</span></li>
                         <li><span>{formatMessage({...localeMessage['lastOccurTime']})}:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).end}</span></li>
-                        <li><span>{formatMessage({...localeMessage['duration']})}:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).continueTime}&nbsp;{formatMessage({...localeMessage['hour']})}</span></li>
+                        <li><span>{formatMessage({...localeMessage['duration']})}:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).continueTime}&nbsp;{currentAlertDetail.lastOccurTime - currentAlertDetail.firstOccurTime  > 3600000 ? formatMessage({...localeMessage['hour']}) : formatMessage({...localeMessage['min']})}</span></li>
                         <li><span>{formatMessage({...localeMessage['count']})}:</span><span>{currentAlertDetail.count}</span></li>
                         <li><span>{formatMessage({...localeMessage['owner']})}:</span><span>{currentAlertDetail.responsiblePerson ? currentAlertDetail.responsiblePerson : formatMessage({...localeMessage['unknown']})}</span></li>
                         <li><span>{formatMessage({...localeMessage['department']})}:</span><span>{currentAlertDetail.responsibleDepartment ? currentAlertDetail.responsibleDepartment : formatMessage({...localeMessage['unknown']})}</span></li>

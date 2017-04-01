@@ -14,16 +14,16 @@ class ListTimeTable extends Component {
       const table = document.getElementById('listTimeTable')
       const width = table.offsetWidth
       const timeLine = document.getElementById('timeLine')
-      // 360 表格左侧宽度
-      // 50 是最后一点预留位置
-      const lineW = width - 360 - 50
+      // 500                                                                                                                                                                  表格左侧宽度
+      // 100 是最后一点预留位置
+      const lineW = width - 500 - 80
      
       timeLine.style.width = lineW + 'px'
-      this.gridWidth = lineW / 10
+      const gridWidth = lineW / 10
       const countMins = (end - begin) / (60 * 1000)
       const minuteToWidth = lineW / countMins
       
-      setTimeLineWidth(this.gridWidth, minuteToWidth, lineW)
+      setTimeLineWidth(gridWidth, minuteToWidth, lineW)
 
     }
    
@@ -190,8 +190,8 @@ class ListTimeTable extends Component {
                 styles.relieveIcon
               )
            if(key == 'name') {
-            TDS.push(<td key={key} className={styles[className]} data-id={item.id} onClick={detailClick} >
-              {item[key]}
+            TDS.push(<td key={key} className={styles[className]} width="200" data-id={item.id} onClick={detailClick} >
+              <div key = 'nameDiv' className={styles['name']}>{item[key]}</div>
               {
                 item['hasChild'] === true ?
                 <span className={relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
@@ -199,6 +199,8 @@ class ListTimeTable extends Component {
                 undefined
               }
             </td>)
+           } else if(key == 'entityName'){
+             TDS.push(<td key={key} className={styles[className]} width="200"><div key = 'entityNameDiv' className={styles['entityName']}>{item[key]}</div></td>)
            } else {
              TDS.push(<td key={key} className={styles[className]}>{item[key]}</td>)
            }
@@ -454,3 +456,4 @@ class ListTimeTable extends Component {
     }
 }
 export default ListTimeTable
+     

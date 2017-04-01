@@ -107,6 +107,7 @@
   "alertDetail.owner": "Owner",
   "alertDetail.department": "Department",
   "alertDetail.hour": "Hours",
+  "alertDetail.min": "Mins",
   "alertDetail.ticket": "Ticket",
   "alertDetail.edit": "Edit",
   "alertDetail.save": "Save",
