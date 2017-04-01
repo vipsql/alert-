@@ -63,7 +63,7 @@ export default {
                 payload: options.data || []
             })
         } else {
-            yield message.error(`${options.errorMsg}`, 3)
+            yield message.error(`${options.message}`, 3)
         }
         yield put({
             type: 'toggleDispatchModal',
