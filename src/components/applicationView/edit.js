@@ -13,6 +13,15 @@ function Edit(props){
     const editApplication = ({alertConfig, dispatch}) => {
         const { currentEditApp, UUID, apikey } = alertConfig;
         let targetApplication;
+        let hostUrl = 'https://alert.uyun.cn'
+        if (window.location.origin.indexOf("alert") > -1) {
+        // 域名访问
+            hostUrl = window.location.origin
+
+        } else {
+            // 顶级域名/Ip访问
+            hostUrl = window.location.origin + '/alert'
+        }
         switch (currentEditApp.name) {
             case 'UYUN Alert REST API':
                 targetApplication = 
@@ -20,7 +29,7 @@ function Edit(props){
                         appkey={UUID}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}
-                        url={window.location.host + '/openapi/v2/create?' + `api_key=${apikey}`}
+                        url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
                         onOk={(e, form) => {
                             e.preventDefault();
                             
@@ -43,7 +52,7 @@ function Edit(props){
                         appkey={UUID}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}
-                        url={window.location.host + '/openapi/v2/create?' + `api_key=${apikey}`}
+                        url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
                         onOk={(e, form) => {
                             e.preventDefault();
                             
@@ -108,7 +117,7 @@ function Edit(props){
                         appkey={UUID}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}
-                        url={window.location.host + '/openapi/v2/create?' + `api_key=${apikey}`}
+                        url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
                         onOk={(e, form) => {
                             e.preventDefault();
                             

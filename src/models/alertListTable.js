@@ -442,6 +442,7 @@ export default {
       })
 
       var {
+        isGroup,
         groupBy,
         begin,
         end,
@@ -453,6 +454,7 @@ export default {
         const alertListTable = state.alertListTable
 
         return {
+          isGroup: alertListTable.isGroup,
           groupBy: alertListTable.groupBy,
           begin: alertListTable.begin,
           end: alertListTable.end,
@@ -476,7 +478,7 @@ export default {
       })
 
       var extraParams = {};
-
+      
       if(payload !== undefined && payload.isGroup !== undefined) {
         isGroup = payload.isGroup;
         groupBy = payload.groupBy;

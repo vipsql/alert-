@@ -14,6 +14,15 @@ function Add(props){
     const createApplication = ({alertConfig, dispatch}) => {
         const { currentOperateAppType, UUID, currentDisplayName, apikey } = alertConfig;
         let targetApplication;
+        let hostUrl = 'https://alert.uyun.cn'
+        if (window.location.origin.indexOf("alert") > -1) {
+        // 域名访问
+            hostUrl = window.location.origin
+
+        } else {
+            // 顶级域名/Ip访问
+            hostUrl = window.location.origin + '/alert'
+        }
         switch (currentOperateAppType.name) {
             case 'UYUN Alert REST API':
                 targetApplication = 
@@ -21,7 +30,7 @@ function Add(props){
                         appkey={UUID}
                         builtIn={1}
                         displayName={currentDisplayName}
-                        url={window.location.host + '/openapi/v2/create?' + `api_key=${apikey}`}
+                        url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
                         onOk={(e, form) => {
                             e.preventDefault();
                             
@@ -54,7 +63,7 @@ function Add(props){
                         appkey={UUID}
                         displayName={currentDisplayName}
                         builtIn={1}
-                        url={window.location.host + '/openapi/v2/create?' + `api_key=${apikey}`}
+                        url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
                         onOk={(e, form) => {
                             e.preventDefault();
                             
@@ -149,7 +158,7 @@ function Add(props){
                         appkey={UUID}
                         builtIn={1}
                         displayName={currentDisplayName}
-                        url={window.location.host + '/openapi/v2/create?' + `api_key=${apikey}`}
+                        url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
                         onOk={(e, form) => {
                             e.preventDefault();
                             

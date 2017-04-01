@@ -34,7 +34,7 @@ export async function getChatOpsOptions() {
         hostUrl = window.location.origin
     }
     param = {
-        url: `${hostUrl}/chatops/api/v2/chat/teams/${userInfo.tenantId}/rooms`
+        url: `${hostUrl}/chatops/api/v2/chat/teams/%s/rooms`
     }
     console.log(hostUrl)
     return request(`/dataService/rooms`, {
@@ -58,7 +58,7 @@ export async function shareRoom(roomId, source, userId, param) {
         hostUrl = window.location.origin
     }
     paramWrapper = {
-        url: `${hostUrl}/serviceapi/v2/robot/messages/send?roomId=${roomId}&source=${source}&userId=${userId}`,
+        url: `${hostUrl}/serviceapi/v2/robot/messages/send?roomId=${roomId}&source=${source}&userId=%s`,
         body: param
     }
     console.log(hostUrl)
