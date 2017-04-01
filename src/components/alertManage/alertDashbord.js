@@ -189,6 +189,7 @@ class Chart extends Component{
                     currentEvent.preventDefault()
                   })
                 .on("click", (d) => {
+                    d3Tip.hide()
                     let alertListPath = {};
                     let keyValue = d.name;
                     let pathArr = d.path.split('/');
@@ -208,12 +209,7 @@ class Chart extends Component{
                     localStorage.setItem('alertListPath', JSON.stringify(alertListPath));
                     window.location.hash = "#/alertManage/" + d.path;
                 })
-                .on('mouseover', function(d){
-                    d3Tip.show(d)
-                })
-                .on('mouseout', function(){
-                    d3Tip.hide()
-                })
+                
                 // .on('mouseout', tip.hide)
 
                 .append("svg")
@@ -227,7 +223,13 @@ class Chart extends Component{
                 .attr("style", "cursor:pointer")
                 .style("fill", function(d) {
                     // return color(d.maxSeverity);
-                });
+                })
+                .on('mouseover', function(d){
+                    d3Tip.show(d)
+                })
+                .on('mouseout', function(){
+                    d3Tip.hide()
+                })
             childEnterTransition.append('text')
                 .attr("class", "label")
                 .attr('x', function(d) {
@@ -243,8 +245,14 @@ class Chart extends Component{
                 .style("opacity", function(d) { d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; })
                 // .style("display", "none")
                 .text(function(d) {
-                    return d.name;
-                });
+                    return d.name
+                })
+                .on('mouseover', function(){  
+                    d3Tip.show(d)
+                })
+                .on('mouseout', function(){
+                    d3Tip.show(d)
+                })
             // update transition
             var childUpdateTransition = childrenCells.transition().duration(transitionDuration);
             childUpdateTransition.select(".cell")

@@ -29,6 +29,7 @@ export default async function request(url, options) {
     
       const response = await fetch(isApiUrl(url), options);
       const data = await response.json()
+      
       if (response.status >= 200 && response.status < 300) {
         return {
           result: true,

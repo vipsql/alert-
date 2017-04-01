@@ -119,7 +119,7 @@ class AlertBar extends Component{
     const dim = alertList.dimension(function(d) { return d.time; });
     const grp = dim.group(min5).reduceSum(function(d) { return d.count; });
     this.chart = dc.barChart(".dc-chart")
-                  .width(width)
+                   .width(width)
                   .height(height)
                   .margins(margins)
                   .dimension(dim)
@@ -147,29 +147,34 @@ class AlertBar extends Component{
       }, 1000)
     })
   }
+  componentWillUnmount(){
+    window.__alert_refresh_timer  && clearInterval(window.__alert_refresh_timer)
+    window.__alert_refresh_timer = null
+    localStorage.removeItem('__alert_refresh')
+  }
   componentDidMount(){
-    
+    this.chart = dc.barChart(".dc-chart")
+    const { barData } = this.props.alertList
+    const { dispatch }  = this.props
 
-    const { barData } = this.props.alertList;
-    
-
-    const len = barData.length;
+    const len = barData.length
 
     if(len > 0) {
         this.renderBar(barData)
-       
-
     }
+
+    
+      // alertList.remove()
+      // alertList.add(genData(new Date(2013, 10, 1, 3),new Date(2013, 10, 1, 7)))
+      // chart.x(d3.time.scale().domain([new Date(2013, 10, 1, 3),new Date(2013, 10, 1, 7)]))
+      //      .filter([new Date(2013, 10, 1, 4), new Date(2013, 10, 1, 7)])
+      // dc.redrawAll()
+    
   }
   componentDidUpdate(){
+    
     this.renderBar(this.props.alertList.barData)
-    // setInterval(function(){
-    //   alertList.remove()
-    //   alertList.add(genData(new Date(2013, 10, 1, 3),new Date(2013, 10, 1, 7)))
-    //   chart.x(d3.time.scale().domain([new Date(2013, 10, 1, 3),new Date(2013, 10, 1, 7)]))
-    //        .filter([new Date(2013, 10, 1, 4), new Date(2013, 10, 1, 7)])
-    //   dc.redrawAll()
-    // },3000)
+    
   }
   render(){
 

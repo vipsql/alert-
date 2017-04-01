@@ -259,6 +259,27 @@ class AlertListManage extends Component{
       }
     }
 
+    const refreshProps = {
+      onChange(checked){
+        localStorage.setItem('__alert_refresh',checked)
+        if(!checked){
+          __alert_refresh_timer && clearInterval(__alert_refresh_timer)
+          window.__alert_refresh_timer = null
+        }
+        
+        if(!window.__alert_refresh_timer){
+          
+          window.__alert_refresh_timer = setInterval(function(){
+            const originTags = localStorage.getItem('alertListPath')
+            dispatch({
+              type: 'alertList/queryAlertBar',
+              payload: JSON.parse(originTags) || {}
+            })
+          }, 60000)
+        }
+      }
+    }
+
     const tabList = classnames(
       'iconfont',
       'icon-liebiao',
@@ -273,7 +294,7 @@ class AlertListManage extends Component{
     return (
       <div style={{ position: 'relative'}}>
         <AlertTagsFilter />
-        <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch/></div>
+        <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch {...refreshProps}/></div>
         <AlertBar />
         <div className={styles.alertListPage}>
           <Tabs>
