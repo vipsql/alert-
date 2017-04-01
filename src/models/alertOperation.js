@@ -232,7 +232,7 @@ export default {
                         payload: options.data || []
                     })
                 } else {
-                    yield message.error(`${options.errorMsg}`, 3)
+                    yield message.error(`${options.message}`, 3)
                 }
                 yield put({
                     type: 'toggleFormModal',
@@ -270,10 +270,11 @@ export default {
                     urgentLevel: selectedAlertIds[0]['severity'] + 1,
                     ticketDesc: encodeURIComponent(selectedAlertIds[0]['description']),
                     announcer: encodeURIComponent(userInfo['realName']),
-                    sourceId: selectedAlertIds[0]['id']
+                    sourceId: selectedAlertIds[0]['id'],
+                    hideHeader: 1,
                 }
                 
-                yield window.open(`${hostUrl}/#/create/${result.id}/${result.url}?ticketSource=${'alert'}&title=${result.title}&urgentLevel=${result.urgentLevel}&ticketDesc=${result.ticketDesc}&announcer=${result.announcer}&sourceId=${result.sourceId}`);
+                yield window.open(`${hostUrl}/#/create/${result.id}/${result.url}?ticketSource=${'alert'}&title=${result.title}&urgentLevel=${result.urgentLevel}&ticketDesc=${result.ticketDesc}&announcer=${result.announcer}&sourceId=${result.sourceId}&hideHeader=${result.hideHeader}`);
                 yield put({ type: 'alertListTable/resetCheckedAlert'})
           } else {
               console.error('selectedAlertIds error');

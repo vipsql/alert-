@@ -130,7 +130,12 @@ class applicationList extends Component {
           td = <td key={key}>
            <Link to={`alertConfig/alertApplication/applicationView/edit/${item['id']}`}><Button className={styles.editBtn} size='small'>{formatMessage({...formatMessages['action_edit']})}</Button></Link>
            &nbsp;&nbsp;
-           <Button size='small' className={styles.delBtn} disabled={item['status'] || item['builtIn'] == 0} onClick={ () => {deleteClick(item)}}>{formatMessage({...formatMessages['action_delete']})}</Button>
+           {
+             item['builtIn'] != 0 ?
+             <Button size='small' className={styles.delBtn} disabled={item['status']} onClick={ () => {deleteClick(item)}}>{formatMessage({...formatMessages['action_delete']})}</Button>
+             :
+             undefined
+           }
           </td>
         } 
         if(key == 'displayName') {

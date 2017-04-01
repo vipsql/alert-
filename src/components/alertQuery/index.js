@@ -66,7 +66,11 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
         isShowRemark: alertQueryDetail.isShowRemark, 
         operateRemark: alertQueryDetail.operateRemark
       },
-      operateProps: {...operateProps},
+      operateProps: {
+          ...operateProps,
+        dispatchDisabled: !(alertQueryDetail['currentAlertDetail']['status'] == 0 && !alertQueryDetail['currentAlertDetail']['parentId']),
+        closeDisabled: alertQueryDetail['currentAlertDetail']['status'] == 255 || alertQueryDetail['currentAlertDetail']['status'] == 40,
+      },
 
       closeDeatilModal: () => {
         dispatch({

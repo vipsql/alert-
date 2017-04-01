@@ -234,6 +234,7 @@ export default {
       })
 
       var {
+        isGroup,
         groupBy,
         pageSize,
         orderBy,
@@ -243,6 +244,7 @@ export default {
         const alertQuery = state.alertQuery
 
         return {
+          isGroup: alertQuery.isGroup,
           groupBy: alertQuery.groupBy,
           pageSize: alertQuery.pageSize,
           orderBy: alertQuery.orderBy,
