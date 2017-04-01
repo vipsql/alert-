@@ -47,7 +47,13 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
         let date = {};
         let beginTime = new Date(+begin);
         let endTime = new Date(+end);
-        date.continueTime = Math.round(((+end) - (+begin)) / 1000 / 60 / 60); // hours
+        let continueTime = endTime - beginTime
+        if(continueTime > 3600000){
+            date.continueTime = (continueTime / 3600000).toFixed(1)     
+        }else{
+            date.continueTime = (continueTime / 60000).toFixed(1)
+        }
+        // date.continueTime = Math.round(((+end) - (+begin)) / 1000 / 60 / 60); // hours
         date.begin = beginTime.getFullYear() + '/' + (beginTime.getMonth() + 1) + '/' + beginTime.getDate() + ' ' + beginTime.getHours() + ':' + beginTime.getMinutes();
         date.end = endTime.getFullYear() + '/' + (endTime.getMonth() + 1) + '/' + endTime.getDate() + ' ' + endTime.getHours() + ':' + endTime.getMinutes();
         return date
