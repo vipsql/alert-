@@ -59,7 +59,7 @@ export async function shareRoom(roomId, source, userId, param) {
     }
     paramWrapper = {
         url: `${hostUrl}/serviceapi/v2/robot/messages/send?roomId=${roomId}&source=${source}&userId=%s`,
-        body: param
+        body: JSON.stringify(param)
     }
     console.log(hostUrl)
     return request(`/dataService/sendChatOps`, {

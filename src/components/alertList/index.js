@@ -110,7 +110,11 @@ class AlertListManage extends Component{
         isShowRemark: alertDetail.isShowRemark, 
         operateRemark: alertDetail.operateRemark
       },
-      operateProps: {...operateProps},
+      operateProps: {
+        ...operateProps,
+        dispatchDisabled: !(alertDetail['currentAlertDetail']['status'] == 0 && !alertDetail['currentAlertDetail']['parentId']),
+        closeDisabled: alertDetail['currentAlertDetail']['status'] == 255 || alertDetail['currentAlertDetail']['status'] == 40,
+      },
 
       closeDeatilModal: () => {
         dispatch({

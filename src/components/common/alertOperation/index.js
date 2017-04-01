@@ -19,6 +19,8 @@ const alertOperation = ({position,
     groupFunc, 
     noGroupFunc,
     showChatOpsFunc,
+    dispatchDisabled,
+    closeDisabled,
     intl: {formatMessage} }) => {
 
     const localeMessage = defineMessages({
@@ -165,10 +167,10 @@ const alertOperation = ({position,
     )
     return (
         <div className={styles.operateMain}>
-            <Button className={styles.myButton} onClick={ () => {
+            <Button className={styles.myButton} disabled={dispatchDisabled} onClick={ () => {
                 dispatchFunc(position)
             } } ><FormattedMessage {...localeMessage['operate_dispatch']} /></Button>
-            <Button className={styles.myButton} onClick={ () => {
+            <Button className={styles.myButton} disabled={closeDisabled} onClick={ () => {
                 closeFunc(position)
             }} ><FormattedMessage {...localeMessage['operate_close']} /></Button>
             {
@@ -236,7 +238,9 @@ alertOperation.defaultProps = {
     mergeFunc: () => {},
     groupFunc: () => {},
     noGroupFunc: () => {},
-    showChatOpsFunc: () => {}
+    showChatOpsFunc: () => {},
+    dispatchDisabled: false,
+    closeDisabled: false,
 }
 
 alertOperation.propTypes = {
