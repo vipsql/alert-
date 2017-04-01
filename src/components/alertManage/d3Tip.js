@@ -38,7 +38,7 @@ export default class Tip {
     
     el.innerHTML = '标签分组名：' + d.parent.name + '<br/>' + '活跃告警数:' + d.value
     el.style.display = 'block'
-    el.style.top = o.top + 'px'
+    el.style.top = o.top - 55 + 'px'
     el.style.left = o.left + 'px'
     el.classList.add('alertShow')
   }

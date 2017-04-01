@@ -70,10 +70,10 @@ export default {
   },
   reducers: {
     // 更新时间线每分钟占宽
-    updateMinToWidth(state, {payload: minuteToWidth}){
+    updateMinToWidth(state, {payload: payload}){
       return {
         ...state,
-        minuteToWidth
+        ...payload
       }
     },
     // 折叠状态
@@ -466,9 +466,13 @@ export default {
       // 更新每分钟占宽
       const countMins = (end - begin) / (60 * 1000)
       const minuteToWidth = lineW / countMins
+      const gridWidth = lineW / 10
       yield put({
         type: 'updateMinToWidth',
-        payload: minuteToWidth
+        payload: {
+          minuteToWidth,
+          gridWidth
+        }
       })
 
       var extraParams = {};

@@ -189,10 +189,10 @@
         }
     }
     td{
-      max-width: 150px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+    //   max-width: 150px;
+    //   overflow: hidden;
+    //   white-space: nowrap;
+    //   text-overflow: ellipsis;
       padding-right: 10px;
       height: 50px;
       line-height: 50px;
@@ -200,6 +200,10 @@
       color: #fff;
       border-bottom: 1px solid #1d558f;
       background-color: #1d5692;
+      .entityName{
+          width: 200px;
+          .text-overflow()
+      }
       //background: white;
       //border-bottom: 1px solid #e4e7eb;
       &.tdBorderRight{
@@ -209,12 +213,18 @@
         cursor: pointer;
         //color: #4082e6;
         color: #4fb8f0;
+        
         .relieveIcon{
             overflow: visible;
             position: absolute;
-            top: 16px;
-            right: 0px;
+            // top: 16px;
+            right: 2px;
             cursor: pointer;
+            z-index: 12;
+        }
+        .name{
+             width: 200px;
+            .text-overflow();
         }
       }
       &.tdBtn{

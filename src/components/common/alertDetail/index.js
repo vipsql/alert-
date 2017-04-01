@@ -47,7 +47,13 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
         let date = {};
         let beginTime = new Date(+begin);
         let endTime = new Date(+end);
-        date.continueTime = Math.round(((+end) - (+begin)) / 1000 / 60 / 60); // hours
+        let continueTime = endTime - beginTime
+        if(continueTime > 3600000){
+            date.continueTime = (continueTime / 3600000).toFixed(1)     
+        }else{
+            date.continueTime = (continueTime / 60000).toFixed(1)
+        }
+        // date.continueTime = Math.round(((+end) - (+begin)) / 1000 / 60 / 60); // hours
         date.begin = beginTime.getFullYear() + '/' + (beginTime.getMonth() + 1) + '/' + beginTime.getDate() + ' ' + beginTime.getHours() + ':' + beginTime.getMinutes();
         date.end = endTime.getFullYear() + '/' + (endTime.getMonth() + 1) + '/' + endTime.getDate() + ' ' + endTime.getHours() + ':' + endTime.getMinutes();
         return date
@@ -132,6 +138,10 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
             id: 'alertDetail.hour',
             defaultMessage: '小时',
         },
+        min: {
+            id: 'alertDetail.min',
+            defaultMessage: '分钟',
+        },
         ticket: {
             id: 'alertDetail.ticket',
             defaultMessage: '工单',
@@ -194,7 +204,7 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                         <li><span>{formatMessage({...localeMessage['description']})}:</span><span>{currentAlertDetail.description}</span></li>
                         <li><span>{formatMessage({...localeMessage['firstOccurred']})}:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).begin}</span></li>
                         <li><span>{formatMessage({...localeMessage['lastOccurTime']})}:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).end}</span></li>
-                        <li><span>{formatMessage({...localeMessage['duration']})}:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).continueTime}&nbsp;{formatMessage({...localeMessage['hour']})}</span></li>
+                        <li><span>{formatMessage({...localeMessage['duration']})}:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).continueTime}&nbsp;{currentAlertDetail.lastOccurTime - currentAlertDetail.firstOccurTime  > 3600000 ? formatMessage({...localeMessage['hour']}) : formatMessage({...localeMessage['min']})}</span></li>
                         <li><span>{formatMessage({...localeMessage['count']})}:</span><span>{currentAlertDetail.count}</span></li>
                         <li><span>{formatMessage({...localeMessage['owner']})}:</span><span>{currentAlertDetail.responsiblePerson ? currentAlertDetail.responsiblePerson : formatMessage({...localeMessage['unknown']})}</span></li>
                         <li><span>{formatMessage({...localeMessage['department']})}:</span><span>{currentAlertDetail.responsibleDepartment ? currentAlertDetail.responsibleDepartment : formatMessage({...localeMessage['unknown']})}</span></li>

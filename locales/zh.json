@@ -107,6 +107,7 @@
   "alertDetail.owner": "负责人",
   "alertDetail.department": "负责部门",
   "alertDetail.hour": "小时",
+  "alertDetail.min": "分钟",
   "alertDetail.ticket": "工单",
   "alertDetail.edit": "编辑",
   "alertDetail.save": "保存",
