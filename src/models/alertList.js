@@ -75,6 +75,8 @@ export default {
           type: 'alertListTable/queryAlertList',
         })
 
+        yield put({ type: 'alertOperation/removeGroupType'})
+
       }
 
     },
@@ -87,6 +89,7 @@ export default {
           begin: payload.begin,
           end: payload.end,
           currentPage: 1,
+          isGroup: false,
           orderBy: undefined,
           orderType: undefined,
         }
@@ -97,8 +100,7 @@ export default {
         type: 'alertListTable/queryAlertList',
       })
 
-    },
-    *editLevel() {
+      yield put({ type: 'alertOperation/removeGroupType'})
 
     }
 

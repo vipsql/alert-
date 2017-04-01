@@ -218,6 +218,7 @@ export default {
     *queryBefore({payload},{call, put, select}) {
       yield put({ type: 'setCurrentQuery', payload: payload })
       yield put({ type: 'queryAlertList'})
+      yield put({ type: 'alertQueryDetail/removeGroupType'})
     },
 
     //查询告警列表
@@ -233,7 +234,6 @@ export default {
       })
 
       var {
-        isGroup,
         groupBy,
         pageSize,
         orderBy,
@@ -243,7 +243,6 @@ export default {
         const alertQuery = state.alertQuery
 
         return {
-          isGroup: alertQuery.isGroup,
           groupBy: alertQuery.groupBy,
           pageSize: alertQuery.pageSize,
           orderBy: alertQuery.orderBy,
@@ -260,18 +259,12 @@ export default {
         orderType = payload.orderType;
       }
 
-      if(isGroup){
-        extraParams = {
-          groupBy: groupBy
-        }
-      }else{
-        // 这里触发时currentPage始终为1，如果从common取在分组转分页时会有问题
-        extraParams = {
-          pageSize: pageSize,
-          currentPage: 1,
-          orderBy: orderBy,
-          orderType: orderType
-        }
+      // 这里触发时currentPage始终为1，如果从common取在分组转分页时会有问题
+      extraParams = {
+        pageSize: pageSize,
+        currentPage: 1,
+        orderBy: orderBy,
+        orderType: orderType
       }
 
       const listData = yield call(queryAlertList, {
@@ -284,25 +277,6 @@ export default {
       })
       
       if(listData.result){
-        if(isGroup){
-          
-          yield put({
-            type: 'updateAlertListToGroup',
-            payload: {
-              info: listData.data.datas,
-              isShowMore: false,
-              isGroup: isGroup,
-              groupBy: groupBy,
-              queryCount: countData.result === true ? countData.data : {}
-            }
-          })
-          yield put({
-            type: 'toggleLoading',
-            payload: false
-          })
-
-        }else{
-        
           yield put({
             type: 'updateAlertListToNoGroup',
             payload: {
@@ -320,8 +294,6 @@ export default {
             type: 'toggleLoading',
             payload: false
           })
-          
-        }
 
       } else {
         yield message.error(window.__alert_appLocaleData.messages[listData.message], 2)

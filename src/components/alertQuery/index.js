@@ -378,13 +378,19 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
           if (formData.dateTime !== undefined && formData.dateTime.length !== 0) {
             //   开始时间统一处理为当前日期的0点时间戳
             const _begin = formData.dateTime[0].toDate()
+            const _end = formData.dateTime[1].toDate()
             _begin.setHours(0)
             _begin.setMinutes(0)
             _begin.setSeconds(0)
-            _begin.setMilliseconds(0) 
-            formData.begin = _begin.getTime()
+            _begin.setMilliseconds(0)
+            _end.setHours(0)
+            _end.setMinutes(0)
+            _end.setSeconds(0)
+            _end.setMilliseconds(0)
 
-            formData.end = formData.dateTime[1].toDate().getTime();
+            formData.begin = _begin.getTime()
+            formData.end = _end.getTime();
+            
             delete formData.dateTime
           }
           
