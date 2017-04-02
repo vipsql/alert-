@@ -34,6 +34,10 @@ class AlertListManage extends Component{
         id: 'alertList.tabs.list',
         defaultMessage: '列表'
       },
+      assign_ticket: {
+        id: 'alertDetail.ticket.assgin',
+        defaultMessage: '派发工单'
+      },
       tab_time: {
         id: 'alertList.tabs.timeList',
         defaultMessage: '时间线'
@@ -263,6 +267,36 @@ class AlertListManage extends Component{
       }
     }
 
+    const refreshProps = {
+      onChange(checked){
+        localStorage.setItem('__alert_refresh',checked)
+        if(!checked){
+          __alert_refresh_timer && clearInterval(__alert_refresh_timer)
+          window.__alert_refresh_timer = null
+        }
+        
+        if(!window.__alert_refresh_timer){
+          
+          window.__alert_refresh_timer = setInterval(function(){
+            const originTags = localStorage.getItem('alertListPath')
+            dispatch({
+              type: 'alertList/queryAlertBar',
+              payload: JSON.parse(originTags) || {}
+            })
+          }, 5000000)
+        }
+      }
+    }
+
+    const ticketModalProps = {
+      isShowTicketModal: alertDetail.isShowTicketModal,
+      ticketUrl: alertDetail.ticketUrl,
+      onCloseTicketModal(){
+        dispatch({
+          type: 'alertDetail/closeTicketModal'
+        })
+      }
+    }
     const tabList = classnames(
       'iconfont',
       'icon-liebiao',
@@ -273,11 +307,15 @@ class AlertListManage extends Component{
       'icon-shijian',
       'timeTab'
     )
+    const shanchuClass = classnames(
+      'iconfont',
+      'icon-shanchux'
+    )
 
     return (
       <div style={{ position: 'relative'}}>
         <AlertTagsFilter />
-        <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch/></div>
+        <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch {...refreshProps}/></div>
         <AlertBar />
         <div className={styles.alertListPage}>
           <Tabs>
@@ -311,6 +349,14 @@ class AlertListManage extends Component{
           :
           undefined
         }
+        <div className={ticketModalProps.isShowTicketModal ?  classnames(styles.ticketModal, styles.show) : styles.ticketModal }>
+          <div className={styles.detailHead}>
+                <p><FormattedMessage {...localeMessage['assign_ticket']}/></p> 
+                <i className={classnames(styles.shanChu, shanchuClass)} onClick={ticketModalProps.onCloseTicketModal}></i>
+            </div>
+          <iframe src={ticketModalProps.ticketUrl}>
+          </iframe>
+        </div>
         <MergeModal />
         <CloseModal {...closeModalProps}/>
         <DispatchModal {...dispatchModalProps}/>

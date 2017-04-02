@@ -35,8 +35,9 @@ export default {
   effects: {
     // 查询柱状图
     *queryAlertBar({payload}, {call, put, select}) {
+      
       // 触发这个effect的时机是在刷新/tag转变的时候（不保存状态--所以需要初始化commonList）
-      yield put({ type: 'alertListTable/clear' })
+      // yield put({ type: 'alertListTable/clear' })
 
       yield put({ type: 'toggleAlertBarLoading', payload: true })
 

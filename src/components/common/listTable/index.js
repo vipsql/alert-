@@ -151,7 +151,7 @@ class ListTable extends Component {
           
           if(data < hours){
             
-            data = `${+(data/(60*1000)).toFixed(1)}min`
+            data = `${+(data/(60*1000)).toFixed(1)}m`
           }else{
             data = `${+(data/hours).toFixed(1)}h`
           }
@@ -219,7 +219,7 @@ class ListTable extends Component {
           
           if(data < hours){
             
-            data = `${+(data/(60*1000)).toFixed(1)}min`
+            data = `${+(data/(60*1000)).toFixed(1)}m`
           }else{
             data = `${+(data/hours).toFixed(1)}h`
           }

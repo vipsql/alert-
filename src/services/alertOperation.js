@@ -2,18 +2,18 @@ import { request, packURL } from '../utils'
 import querystring from 'querystring';
 
 export async function getFormOptions() {
-    let hostUrl = 'itsm.uyun.cn';
+    // let hostUrl = 'itsm.uyun.cn';
     
-    if (window.location.origin.indexOf("alert") > -1) {
-        // 域名访问
-        hostUrl = window.location.origin.replace(/alert/, 'itsm');
+    // if (window.location.origin.indexOf("alert") > -1) {
+    //     // 域名访问
+    //     hostUrl = window.location.origin.replace(/alert/, 'itsm');
 
-    } else {
-        // 顶级域名/Ip访问
-        hostUrl = window.location.origin + '/itsm'
-    }
-    console.log(hostUrl)
-    return request(`/dataService/wos?domain=${encodeURIComponent(hostUrl)}`,  {
+    // } else {
+    //     // 顶级域名/Ip访问
+    //     hostUrl = window.location.origin + '/itsm'
+    // }
+    // console.log(hostUrl)
+    return request(`/dataService/wos`,  {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

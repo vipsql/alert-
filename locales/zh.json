@@ -114,6 +114,7 @@
   "alertDetail.save": "保存",
   "alertDetail.cancel": "取消",
   "alertDetail.text": "文本",
+  "alertDetail.ticket.assgin": "派发工单",
 
   "alertConfig.integrations": "第三方应用集成",
   "alertConfig.integrations.message": "接入第三方应用，如网络、服务器和应用监控工具、帮助台和客户支持、聊天协同等应用",
@@ -170,5 +171,7 @@
   "incident.resolved.not.close": "已解决的告警不能关闭",
   "user.not.exist": "用户不存在",
   "tenant.not.exist": "租户不存在",
-  "tenant.no.apikey": "租户没有相应的apikey"
+  "tenant.no.apikey": "租户没有相应的apikey",
+
+  "error.serverError": "服务端错误"
 }

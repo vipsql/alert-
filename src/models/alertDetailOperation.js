@@ -70,46 +70,38 @@ export default {
       },
       // 确定派发工单
       *dispatchForm({payload}, {select, put, call}) {
-
-            const {currentAlertDetail} = yield select( state => {
-                return {
-                    'currentAlertDetail': state.alertDetail.currentAlertDetail
-                }
+          const { viewDetailAlertId} = yield select( state => {
+              return {
+                  'viewDetailAlertId':state.alertListTable.viewDetailAlertId
+              }
+          })
+          if (viewDetailAlertId) {
+            let stringId = '' + viewDetailAlertId;
+            const data = yield call(dispatchForm, {
+                id: stringId,
+                code: payload
             })
-            if (currentAlertDetail !== undefined && Object.keys(currentAlertDetail).length !== 0 ) {
-                let hostUrl = 'itsm.uyun.cn';
-                let callbackHostUrl = 'alert.uyun.cn';
-                let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
-                if (window.location.origin.indexOf("alert") > -1) {
-                    //域名访问
-                    hostUrl = window.location.origin.replace(/alert/, 'itsm');
-                    callbackHostUrl = window.location.origin;
-                } else {
-                    //顶级域名/Ip访问
-                    hostUrl = window.location.origin + '/itsm';
-                    callbackHostUrl = window.location.origin + '/alert';
-                }
-                let callbackUrl = 
-                    `${callbackHostUrl}/openapi/v2/incident/handleOrder?incidentId=${currentAlertDetail['id']}&api_key=${userInfo.apiKeys[0]}`;
-                const result = {
-                    id: payload, //payload
-                    url: encodeURIComponent(callbackUrl),
-                    title: encodeURIComponent(currentAlertDetail['name']),
-                    urgentLevel: currentAlertDetail['severity'] + 1,
-                    ticketDesc: encodeURIComponent(currentAlertDetail['description']),
-                    announcer: encodeURIComponent(userInfo['realName']),
-                    sourceId: currentAlertDetail['resObjectId'] ? currentAlertDetail['resObjectId'] : '',
-                    hideHeader: 1
-                }
-                
-                yield window.open(`${hostUrl}/#/create/${result.id}/${result.url}?ticketSource=${'alert'}&title=${result.title}&urgentLevel=${result.urgentLevel}&ticketDesc=${result.ticketDesc}&announcer=${result.announcer}&sourceId=${result.sourceId}&hideHeader=${result.hideHeader}`);
+            if(data.result){
+                //window.open(data.data.url)
+                 yield put({ 
+                    type: 'alertDetail/toggleTicketModal', 
+                    payload: {
+                        isShowTicketModal: true,
+                        ticketUrl: data.data.url
+                    }
+                })
             } else {
-                console.error('currentAlertDetail error');
+                yield message.error(window.__alert_appLocaleData.messages[data.message], 3);
             }
-            yield put({
-                type: 'toggleFormModal',
-                payload: false
-            })
+            
+          }else{
+              console.error('selectedAlertIds error');
+          }
+
+          yield put({
+              type: 'toggleFormModal',
+              payload: false
+          })
       },
       // 打开分享到ChatOps的modal
       *openChatOps({payload}, {select, put, call}) {
@@ -183,6 +175,6 @@ export default {
       setCloseMessge(state, { payload: closeMessage}) {
           return { ...state, closeMessage }
       }
-
+      
   }
 }

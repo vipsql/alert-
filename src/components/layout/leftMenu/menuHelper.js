@@ -43,7 +43,7 @@ function FoldBar({ isFold, handleFoldMenu}){
         <i className={arrClass}></i>
       </div>
       <div className={styles.menuSet}><a href="#alertConfig"><i className={setClass}></i>{!isFold ? <FormattedMessage {...formatMessages['set']} /> : ''}</a></div>
-      <div className={styles.menuHelp}><a href="#alertHelp"><i className={helpClass}></i>{!isFold ? <FormattedMessage {...formatMessages['help']} /> : ''}</a></div>
+      {/*<div className={styles.menuHelp}><a href="#alertHelp"><i className={helpClass}></i>{!isFold ? <FormattedMessage {...formatMessages['help']} /> : ''}</a></div>*/}
     </div>
   )
 }
