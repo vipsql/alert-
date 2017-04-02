@@ -266,24 +266,27 @@ class AlertListManage extends Component{
         })
       }
     }
-
+    
     const refreshProps = {
       onChange(checked){
+        
         localStorage.setItem('__alert_refresh',checked)
         if(!checked){
-          __alert_refresh_timer && clearInterval(__alert_refresh_timer)
-          window.__alert_refresh_timer = null
-        }
-        
-        if(!window.__alert_refresh_timer){
+          window.__alert_refresh_timer && clearInterval(window.__alert_refresh_timer)
+          window.__alert_refresh_timer = undefined
           
-          window.__alert_refresh_timer = setInterval(function(){
-            const originTags = localStorage.getItem('alertListPath')
-            dispatch({
-              type: 'alertList/queryAlertBar',
-              payload: JSON.parse(originTags) || {}
-            })
-          }, 5000000)
+        }else{
+          if(!window.__alert_refresh_timer){
+            
+            window.__alert_refresh_timer = setInterval(function(){
+              
+              const originTags = localStorage.getItem('alertListPath')
+              dispatch({
+                type: 'alertList/queryAlertBar',
+                payload: JSON.parse(originTags) || {}
+              })
+            }, 3000)
+          }
         }
       }
     }
