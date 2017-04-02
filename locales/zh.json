@@ -168,5 +168,7 @@
   "decompose.incident.failed": "分解故障失败",
   "user.not.exist": "用户不存在",
   "tenant.not.exist": "租户不存在",
-  "tenant.no.apikey": "租户没有相应的apikey"
+  "tenant.no.apikey": "租户没有相应的apikey",
+
+  "error.serverError": "服务端错误"
 }

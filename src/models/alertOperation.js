@@ -265,6 +265,9 @@ export default {
                 })
 
                 yield put({ type: 'alertListTable/resetCheckedAlert'})
+            }else{
+                // 500 error
+                message.error(window.__alert_appLocaleData.messages['error.serverError'], 3);
             }
             
           }else{
