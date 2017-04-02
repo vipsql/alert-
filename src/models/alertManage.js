@@ -53,10 +53,15 @@ export default {
       const treemapData = yield queryDashbord()
 
       if (treemapData.result) {
+        let filterDate = [];
+        if (treemapData.data && treemapData.data.picList && treemapData.data.picList.length !== 0) {
+          filterDate = yield treemapData.data.picList.filter( item => item['path'] != 'status' )
+        }
+
         yield put({
           type: 'setCurrentTreemap',
           payload: {
-            currentDashbordData: treemapData.data && treemapData.data.picList || [],
+            currentDashbordData: filterDate || [],
             isLoading: false
           }
         })

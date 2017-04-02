@@ -156,37 +156,34 @@ export default {
     toggleOrder(state, {payload}) {
       return { ...state, ...payload }
     },
-    // 删除时触发
-    deleteAlert(state, {payload}) {
+    // 修改状态为处理中
+    changeCloseState(state, {payload}) {
       const { data, isGroup } = state;
       if (isGroup === true) {
         const newData = data.map( (group) => {
-          const arr = group.children.filter( (item) => {
-            let status = true;
+          const arr = group.children.map( (item) => {
             payload.forEach( (id) => {
               if (item.id == id) {
-                status = false;
+                item['status'] = 255; // 手动变为150 -> 已解决
               } 
             })
-            return status;
+            return item;
           })
           group.children = arr;
           return group;
         })
         return { ...state, data: newData }
       } else if (isGroup === false) {
-        const newData = data.filter( (item, index) => {
-          let status = true;
+        const newData = data.map( (item, index) => {
           payload.forEach( (id) => {
             if (item.id == id) {
-              status = false;
+              item['status'] = 255; // 手动变为150 -> 已解决
             } 
           })
-          return status;
+          return item;
         })
         return { ...state, data: newData }
       }
-      return { ...state }
     }
 
   },

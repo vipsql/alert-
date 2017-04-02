@@ -287,7 +287,7 @@ export default {
       return { ...state }
     },
     // 合并告警
-    mergeChildrenAlert(state, { payload: { parentId, childItems, isGroup}}) {
+    mergeChildrenAlert(state, { payload: { parentId, childItems, isGroup, relieveItem}}) {
       const { data, checkAlert } = state;
       const childIds = childItems.map( item => item.id )
       let childsItem = [];
@@ -307,10 +307,11 @@ export default {
             })
             return status;
           })
-          group.children = arr;
+          group.children = arr.concat(relieveItem);
           return group
         })
-        return { ...state, data: newData }
+        relieveItem.length !== 0 && relieveItem.forEach( (item) => { checkAlert[item.id] = { info: item, checked: false } })
+        return { ...state, data: newData, checkAlert: checkAlert }
       } else if (isGroup === false) {
         const newData = data.filter( (item) => {
           let status = true;
@@ -326,7 +327,9 @@ export default {
           })
           return status;
         })
-        return { ...state, data: newData }
+        newData.push(...relieveItem)
+        relieveItem.length !== 0 && relieveItem.forEach( (item) => { checkAlert[item.id] = { info: item, checked: false } })
+        return { ...state, data: newData, checkAlert: checkAlert }
       }
       return { ...state }
     },
@@ -395,39 +398,44 @@ export default {
     toggleOrder(state, {payload}) {
       return { ...state, ...payload }
     },
-    // 删除时触发
-    deleteAlert(state, {payload}) {
-      const { data, isGroup, checkAlert } = state;
+    // 修改状态为处理中
+    changeCloseState(state, {payload}) {
+      const { data, isGroup } = state;
       if (isGroup === true) {
         const newData = data.map( (group) => {
-          const arr = group.children.filter( (item) => {
-            let status = true;
+          const arr = group.children.map( (item) => {
             payload.forEach( (id) => {
               if (item.id == id) {
-                status = false;
-                delete checkAlert[item.id]
+                item['status'] = 255; // 手动变为150 -> 已解决
+              }
+              if (item.childrenAlert !== undefined) {
+                item.childrenAlert.forEach( (childItem) => {
+                  childItem['status'] = 255; // 子告警也变为已解决
+                })
               }
             })
-            return status;
+            return item;
           })
           group.children = arr;
           return group;
         })
-        return { ...state, data: newData, checkAlert: checkAlert}
+        return { ...state, data: newData }
       } else if (isGroup === false) {
-        const newData = data.filter( (item, index) => {
-          let status = true;
+        const newData = data.map( (item, index) => {
           payload.forEach( (id) => {
             if (item.id == id) {
-              status = false;
-              delete checkAlert[item.id]
+              item['status'] = 255; // 手动变为150 -> 已解决
+            }
+            if (item.childrenAlert !== undefined) {
+              item.childrenAlert.forEach( (childItem) => {
+                childItem['status'] = 255; // 子告警也变为已解决
+              })
             }
           })
-          return status;
+          return item;
         })
-        return { ...state, data: newData, checkAlert: checkAlert }
+        return { ...state, data: newData }
       }
-      return { ...state }
     }
 
   },
@@ -586,14 +594,38 @@ export default {
     },
     // 合并告警
     *mergeChildAlert({payload},{call, put, select}) {
-      const {data, isGroup} = yield select( state => {
+      let {totalItems, pId, cItems} = payload;
+      let relieveItem = []; // 需要释放的子告警
+      const {data, isGroup, begin, end} = yield select( state => {
         return {
           'isGroup': state.alertListTable.isGroup,
           'data': state.alertListTable.data,
+          'begin': state.alertListTable.begin,
+          'end': state.alertListTable.end
         }
       } )
+      // 处理合并的告警之前有子告警的情况，先释放子告警，再合并
+      for (let item of totalItems) {
+        // 先判断有没有子告警
+        if (item.hasChild) {
+          // 有子告警后判断是否需要通过查询得到子告警
+          let haveChild = !(typeof item.childrenAlert === 'undefined')
+          if (typeof haveChild !== undefined && !haveChild) {
+            const childResult = yield queryChild({incidentId: item.id, begin: begin, end: end})
+            if (childResult.result) {
+              yield relieveItem.push(...childResult.data)
+            } else {
+              yield message.error(window.__alert_appLocaleData.messages[childResult.message], 2)
+            }
+          } else if (typeof haveChild !== undefined && haveChild){
+            relieveItem.push(...item.childrenAlert)
+          } else {
+            console.error('haveChild is undefined')
+          }
+        }
+      }
       // push childrenAlert/ remove parent/ hasChild -> true/ isSpread -> true
-      yield put({ type: 'mergeChildrenAlert', payload: { parentId: payload.pId, childItems: payload.cItems, isGroup: isGroup}})
+      yield put({ type: 'mergeChildrenAlert', payload: { parentId: pId, childItems: cItems, isGroup: isGroup, relieveItem: relieveItem}})
     },
     // 解除告警
     *relieveChildAlert({payload},{call, put, select}) {

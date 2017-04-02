@@ -100,7 +100,7 @@ export default {
                 urgentLevel: currentAlertDetail['severity'] + 1,
                 ticketDesc: encodeURIComponent(currentAlertDetail['description']),
                 announcer: encodeURIComponent(userInfo['realName']),
-                sourceId: currentAlertDetail['id'],
+                sourceId: currentAlertDetail['resObjectId'] ? currentAlertDetail['resObjectId'] : '',
                 hideHeader: 1,
             }
             
@@ -172,7 +172,7 @@ export default {
                 closeMessage: payload
             })
             if (resultData.result) {
-                yield put({ type: 'alertQuery/deleteAlert', payload: [stringId]})
+                yield put({ type: 'alertQuery/changeCloseState', payload: [stringId]})
                 yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);

@@ -74,6 +74,7 @@
   "modal.operate.infoTip2": "Only one incident is allowed to operate",
   "modal.operate.infoTip3": "Please select at least two incidents",
   "modal.operate.infoTip4": "Please roll Up incidents before operate",
+  "modal.operate.allowRollUp": "Roll up operation allowed to open incident",
 
   "modal.shareChatOps": "Share to ChatOps",
   "modal.share": "Share",
@@ -165,6 +166,8 @@
   "incidentid.can.not.be.empty": "incidentid can not be empty",
   "tag.id.list.can.not.be.null": "tag id list can not be null",
   "decompose.incident.failed": "decompose incident failed",
+  "incident.resolved.not.merge": "The resolved incident is not allowed to merge",
+  "incident.resolved.not.close": "The resolved incident is not allowed to close",
   "user.not.exist": "The user does not exist",
   "tenant.not.exist": "The tenant does not exist",
   "tenant.no.apikey": "The tenant has not the corresponding api key"

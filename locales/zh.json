@@ -74,6 +74,7 @@
   "modal.operate.infoTip2": "只允许操作一条告警",
   "modal.operate.infoTip3": "请先选择至少二条告警",
   "modal.operate.infoTip4": "请先将多条告警合并为一条原告警",
+  "modal.operate.allowRollUp": "只允许新告警才能派发工单",
 
   "modal.shareChatOps": "分享到ChatOps",
   "modal.share": "分享",
@@ -165,6 +166,8 @@
   "incidentid.can.not.be.empty": "故障不能为空",
   "tag.id.list.can.not.be.null": "标签ID列表不能为空",
   "decompose.incident.failed": "分解故障失败",
+  "incident.resolved.not.merge": "已解决的告警不能合并",
+  "incident.resolved.not.close": "已解决的告警不能关闭",
   "user.not.exist": "用户不存在",
   "tenant.not.exist": "租户不存在",
   "tenant.no.apikey": "租户没有相应的apikey"

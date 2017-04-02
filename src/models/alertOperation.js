@@ -188,7 +188,7 @@ export default {
               })
               if (result.result) {
                   yield put({ type: 'alertListTable/resetCheckedAlert'})
-                  yield put({ type: 'alertListTable/mergeChildAlert', payload: { pId: originAlert[0], cItems: filterList }})
+                  yield put({ type: 'alertListTable/mergeChildAlert', payload: { pId: originAlert[0], cItems: filterList, totalItems: mergeInfoList }})
                   yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
               } else {
                   yield message.error(window.__alert_appLocaleData.messages[result.message], 3);
@@ -206,9 +206,10 @@ export default {
       *openFormModal({payload}, {select, put, call}) {
           // 触发筛选
           yield put({ type: 'alertListTable/filterCheckAlert'})
-          const { operateAlertIds } = yield select( state => {
+          const { operateAlertIds, selectedAlertIds } = yield select( state => {
               return {
                   'operateAlertIds': state.alertListTable.operateAlertIds,
+                  'selectedAlertIds': state.alertListTable.selectedAlertIds,
               }
           })
           yield put({
@@ -224,6 +225,8 @@ export default {
                 yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
             } else if (operateAlertIds.length > 1) {
                 yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip4'], 3);
+            } else if (selectedAlertIds.length === 1 && selectedAlertIds[0]['status'] == 0 ) { // 只能是新告警且不是子告警才能合并，子告警在该页面上没有checkbox所以不做判断
+                yield message.error(window.__alert_appLocaleData.messages['modal.operate.allowRollUp'], 3);
             } else {
                 const options = yield getFormOptions();
                 if (options.result) {
@@ -270,7 +273,7 @@ export default {
                     urgentLevel: selectedAlertIds[0]['severity'] + 1,
                     ticketDesc: encodeURIComponent(selectedAlertIds[0]['description']),
                     announcer: encodeURIComponent(userInfo['realName']),
-                    sourceId: selectedAlertIds[0]['id'],
+                    sourceId: selectedAlertIds[0]['resObjectId'] ? selectedAlertIds[0]['resObjectId'] : '',
                     hideHeader: 1,
                 }
                 
@@ -324,7 +327,7 @@ export default {
             })
             if (resultData.result) {
                 yield put({ type: 'alertListTable/resetCheckedAlert'})
-                yield put({ type: 'alertListTable/deleteAlert', payload: stingIds})
+                yield put({ type: 'alertListTable/changeCloseState', payload: stingIds})
                 yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);

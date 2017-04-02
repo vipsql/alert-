@@ -120,8 +120,9 @@ export default {
         })
         return group
       })
+      let filter = arr.filter( item => item['key'] != 'status' )
 
-      return { ...state, currentTagsList: arr }
+      return { ...state, currentTagsList: filter }
     },
     // 保存当前选择的标签列表(注意这里仅仅是保存，没有像setCurrentTags作数据过滤)
     setCurrentSelectTags(state, { payload: currentSelectTags }) {
