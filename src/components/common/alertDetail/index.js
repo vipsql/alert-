@@ -42,6 +42,30 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
     // </div>
 
     // <i className={classnames(setClass, styles.stateClass)}></i>
+
+    // !isSowOperateForm ?
+    // <div className={styles.formMain}>
+    //     <span className={operateForm !== undefined && operateForm != '' && styles.content}>{operateForm}</span>
+    //     <span className={styles.editForm} onClick={openForm}>{formatMessage({...localeMessage['edit']})}</span>
+    // </div>
+    // :
+    // <Form>
+    //     <Form.Item>
+    //         {getFieldDecorator('formContent', {
+    //             initialValue: operateForm
+    //         })(
+    //             <Input placeholder={formatMessage({...localeMessage['text']})}/>
+    //         )}
+    //     </Form.Item>
+    //     <div className={styles.formMain}>
+    //         <Button type="primary" onClick={ () => {
+    //             const formData = form.getFieldsValue();
+    //             editForm(formData)
+    //         }}>{formatMessage({...localeMessage['save']})}</Button>
+    //         &nbsp;
+    //         <Button type="ghost" onClick={closeForm}>{formatMessage({...localeMessage['cancel']})}</Button>
+    //     </div>
+    // </Form>
     
     const dateTransfer = (begin, end) => {
         let date = {};
@@ -212,31 +236,9 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                         <li><span>{formatMessage({...localeMessage['department']})}:</span><span>{currentAlertDetail.responsibleDepartment ? currentAlertDetail.responsibleDepartment : formatMessage({...localeMessage['unknown']})}</span></li>
                         <li className={styles.gongDan}>
                             <span>{formatMessage({...localeMessage['ticket']})}:</span>
-                            {
-                                !isSowOperateForm ?
-                                <div className={styles.formMain}>
-                                    <span className={operateForm !== undefined && operateForm != '' && styles.content}>{operateForm}</span>
-                                    <span className={styles.editForm} onClick={openForm}>{formatMessage({...localeMessage['edit']})}</span>
-                                </div>
-                                :
-                                <Form>
-                                    <Form.Item>
-                                        {getFieldDecorator('formContent', {
-                                            initialValue: operateForm
-                                        })(
-                                            <Input placeholder={formatMessage({...localeMessage['text']})}/>
-                                        )}
-                                    </Form.Item>
-                                    <div className={styles.formMain}>
-                                        <Button type="primary" onClick={ () => {
-                                            const formData = form.getFieldsValue();
-                                            editForm(formData)
-                                        }}>{formatMessage({...localeMessage['save']})}</Button>
-                                        &nbsp;
-                                        <Button type="ghost" onClick={closeForm}>{formatMessage({...localeMessage['cancel']})}</Button>
-                                    </div>
-                                </Form>
-                            }
+                            <div className={styles.formMain}>
+                                <span className={operateForm !== undefined && operateForm != '' && styles.content}>{operateForm ? operateForm : formatMessage({...localeMessage['unknown']})}</span>
+                            </div>
                         </li>
                     </ul>
                 </div>
