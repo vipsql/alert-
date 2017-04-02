@@ -242,15 +242,15 @@ class Chart extends Component{
                 .attr("fill", "#04203e")
                 .attr("font-size", "13")
                 .attr("text-anchor", "middle")
-                .style("opacity", function(d) { d.w = this.getComputedTextLength();console.log(d.w); return d.dx > d.w ? 1 : 0; })
+                .style("opacity", function(d) {console.log(this); d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; })
                 // .style("display", "none")
                 .text(function(d) {
                     return d.name
                 })
-                .on('mouseover', function(){  
+                .on('mouseover', function(d){  
                     d3Tip.show(d)
                 })
-                .on('mouseout', function(){
+                .on('mouseout', function(d){
                     d3Tip.show(d)
                 })
             // update transition
@@ -414,7 +414,6 @@ class Chart extends Component{
                 } );
 
             
-
             node = d;
 
             if (d3.event) {

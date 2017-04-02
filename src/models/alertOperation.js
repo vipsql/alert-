@@ -249,36 +249,58 @@ export default {
               }
           })
           if (selectedAlertIds.length === 1 && selectedAlertIds[0] !== undefined) {
-                let hostUrl = 'itsm.uyun.cn';
-                let callbackHostUrl = 'alert.uyun.cn';
-                let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
-                if (window.location.origin.indexOf("alert") > -1) {
-                    // 域名访问
-                    hostUrl = window.location.origin.replace(/alert/, 'itsm');
-                    callbackHostUrl = window.location.origin;
-                } else {
-                    // 顶级域名/Ip访问
-                    hostUrl = window.location.origin + '/itsm';
-                    callbackHostUrl = window.location.origin + '/alert';
-                }
-                let callbackUrl = 
-                    `${callbackHostUrl}/openapi/v2/incident/handleOrder?incidentId=${selectedAlertIds[0]['id']}&api_key=${userInfo.apiKeys[0]}`;
-                const result = {
-                    id: payload, 
-                    url: encodeURIComponent(callbackUrl),
-                    title: encodeURIComponent(selectedAlertIds[0]['name']),
-                    urgentLevel: selectedAlertIds[0]['severity'] + 1,
-                    ticketDesc: encodeURIComponent(selectedAlertIds[0]['description']),
-                    announcer: encodeURIComponent(userInfo['realName']),
-                    sourceId: selectedAlertIds[0]['id'],
-                    hideHeader: 1,
-                }
-                
-                yield window.open(`${hostUrl}/#/create/${result.id}/${result.url}?ticketSource=${'alert'}&title=${result.title}&urgentLevel=${result.urgentLevel}&ticketDesc=${result.ticketDesc}&announcer=${result.announcer}&sourceId=${result.sourceId}&hideHeader=${result.hideHeader}`);
+            const data = yield call(dispatchForm, {
+                id: selectedAlertIds[0]['id'],
+                code: payload
+            })
+            if(data.result){
+                // window.open(data.data.url)
+                // 显示工单modal
+                yield put({ 
+                    type: 'alertDetail/toggleTicketModal', 
+                    payload: {
+                        isShowTicketModal: true,
+                        ticketUrl: data.data.url
+                    }
+                })
+
                 yield put({ type: 'alertListTable/resetCheckedAlert'})
-          } else {
+            }
+            
+          }else{
               console.error('selectedAlertIds error');
           }
+        //   if (selectedAlertIds.length === 1 && selectedAlertIds[0] !== undefined) {
+        //         let hostUrl = 'itsm.uyun.cn';
+        //         let callbackHostUrl = 'alert.uyun.cn';
+        //         let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
+        //         if (window.location.origin.indexOf("alert") > -1) {
+        //             // 域名访问
+        //             hostUrl = window.location.origin.replace(/alert/, 'itsm');
+        //             callbackHostUrl = window.location.origin;
+        //         } else {
+        //             // 顶级域名/Ip访问
+        //             hostUrl = window.location.origin + '/itsm';
+        //             callbackHostUrl = window.location.origin + '/alert';
+        //         }
+        //         let callbackUrl = 
+        //             `${callbackHostUrl}/openapi/v2/incident/handleOrder?incidentId=${selectedAlertIds[0]['id']}&api_key=${userInfo.apiKeys[0]}`;
+        //         const result = {
+        //             id: payload, 
+        //             url: encodeURIComponent(callbackUrl),
+        //             title: encodeURIComponent(selectedAlertIds[0]['name']),
+        //             urgentLevel: selectedAlertIds[0]['severity'] + 1,
+        //             ticketDesc: encodeURIComponent(selectedAlertIds[0]['description']),
+        //             announcer: encodeURIComponent(userInfo['realName']),
+        //             sourceId: selectedAlertIds[0]['id'],
+        //             hideHeader: 1,
+        //         }
+                
+        //         yield window.open(`${hostUrl}/#/create/${result.id}/${result.url}?ticketSource=${'alert'}&title=${result.title}&urgentLevel=${result.urgentLevel}&ticketDesc=${result.ticketDesc}&announcer=${result.announcer}&sourceId=${result.sourceId}&hideHeader=${result.hideHeader}`);
+        //         yield put({ type: 'alertListTable/resetCheckedAlert'})
+        //   } else {
+        //       console.error('selectedAlertIds error');
+        //   }
 
           yield put({
             type: 'toggleFormModal',

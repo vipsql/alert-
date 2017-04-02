@@ -11,6 +11,8 @@ const initalState = {
 
   operateForm: undefined, // 操作工单（当前）
   isSowOperateForm: false, // 是否显示操作工单文本
+  isShowTicketModal: false, //派发工单框
+  ticketUrl: '', //工单链接
 
   operateRemark: undefined, // 备注信息
   isShowRemark: false, // 是否显示备注框
@@ -100,6 +102,17 @@ export default {
     // 存储备注信息
     setRemarkData(state, {payload: operateRemark}) {
       return { ...state, operateRemark }
+    },
+    // 派发工单框
+    toggleTicketModal(state, {payload: payload}){
+      return {...state , ...payload}
+    },
+    // 关闭工单
+    closeTicketModal(state){
+      return {
+        ...state,
+        isShowTicketModal: false
+      }
     }
   },
 }

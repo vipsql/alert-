@@ -70,42 +70,58 @@ export default {
       },
       // 确定派发工单
       *dispatchForm({payload}, {select, put, call}) {
-
-            const {currentAlertDetail} = yield select( state => {
-                return {
-                    'currentAlertDetail': state.alertDetail.currentAlertDetail
-                }
+            const { selectedAlertIds} = yield select( state => {
+              return {
+                  'selectedAlertIds':state.alertListTable.selectedAlertIds
+              }
+          })
+          if (selectedAlertIds.length === 1 && selectedAlertIds[0] !== undefined) {
+            const data = yield call(dispatchForm, {
+                id: selectedAlertIds[0]['id'],
+                code: payload
             })
-            if (currentAlertDetail !== undefined && Object.keys(currentAlertDetail).length !== 0 ) {
-                let hostUrl = 'itsm.uyun.cn';
-                let callbackHostUrl = 'alert.uyun.cn';
-                let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
-                if (window.location.origin.indexOf("alert") > -1) {
-                    //域名访问
-                    hostUrl = window.location.origin.replace(/alert/, 'itsm');
-                    callbackHostUrl = window.location.origin;
-                } else {
-                    //顶级域名/Ip访问
-                    hostUrl = window.location.origin + '/itsm';
-                    callbackHostUrl = window.location.origin + '/alert';
-                }
-                let callbackUrl = 
-                    `${callbackHostUrl}/openapi/v2/incident/handleOrder?incidentId=${currentAlertDetail['id']}&api_key=${userInfo.apiKeys[0]}`;
-                const result = {
-                    id: payload, //payload
-                    url: encodeURIComponent(callbackUrl),
-                    title: encodeURIComponent(currentAlertDetail['name']),
-                    urgentLevel: currentAlertDetail['severity'] + 1,
-                    ticketDesc: encodeURIComponent(currentAlertDetail['description']),
-                    announcer: encodeURIComponent(userInfo['realName']),
-                    sourceId: currentAlertDetail['id'],
-                    hideHeader: 1
-                }
-                
-                yield window.open(`${hostUrl}/#/create/${result.id}/${result.url}?ticketSource=${'alert'}&title=${result.title}&urgentLevel=${result.urgentLevel}&ticketDesc=${result.ticketDesc}&announcer=${result.announcer}&sourceId=${result.sourceId}&hideHeader=${result.hideHeader}`);
-            } else {
-                console.error('currentAlertDetail error');
+            if(data.result){
+                window.open(data.data.url)
             }
+            
+          }else{
+              console.error('selectedAlertIds error');
+          }
+            // const {currentAlertDetail} = yield select( state => {
+            //     return {
+            //         'currentAlertDetail': state.alertDetail.currentAlertDetail
+            //     }
+            // })
+            // if (currentAlertDetail !== undefined && Object.keys(currentAlertDetail).length !== 0 ) {
+            //     let hostUrl = 'itsm.uyun.cn';
+            //     let callbackHostUrl = 'alert.uyun.cn';
+            //     let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
+            //     if (window.location.origin.indexOf("alert") > -1) {
+            //         //域名访问
+            //         hostUrl = window.location.origin.replace(/alert/, 'itsm');
+            //         callbackHostUrl = window.location.origin;
+            //     } else {
+            //         //顶级域名/Ip访问
+            //         hostUrl = window.location.origin + '/itsm';
+            //         callbackHostUrl = window.location.origin + '/alert';
+            //     }
+            //     let callbackUrl = 
+            //         `${callbackHostUrl}/openapi/v2/incident/handleOrder?incidentId=${currentAlertDetail['id']}&api_key=${userInfo.apiKeys[0]}`;
+            //     const result = {
+            //         id: payload, //payload
+            //         url: encodeURIComponent(callbackUrl),
+            //         title: encodeURIComponent(currentAlertDetail['name']),
+            //         urgentLevel: currentAlertDetail['severity'] + 1,
+            //         ticketDesc: encodeURIComponent(currentAlertDetail['description']),
+            //         announcer: encodeURIComponent(userInfo['realName']),
+            //         sourceId: currentAlertDetail['id'],
+            //         hideHeader: 1
+            //     }
+                
+            //     yield window.open(`${hostUrl}/#/create/${result.id}/${result.url}?ticketSource=${'alert'}&title=${result.title}&urgentLevel=${result.urgentLevel}&ticketDesc=${result.ticketDesc}&announcer=${result.announcer}&sourceId=${result.sourceId}&hideHeader=${result.hideHeader}`);
+            // } else {
+            //     console.error('currentAlertDetail error');
+            // }
             yield put({
                 type: 'toggleFormModal',
                 payload: false

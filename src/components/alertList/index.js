@@ -34,6 +34,10 @@ class AlertListManage extends Component{
         id: 'alertList.tabs.list',
         defaultMessage: '列表'
       },
+      assign_ticket: {
+        id: 'alertDetail.ticket.assgin',
+        defaultMessage: '派发工单'
+      },
       tab_time: {
         id: 'alertList.tabs.timeList',
         defaultMessage: '时间线'
@@ -284,6 +288,15 @@ class AlertListManage extends Component{
       }
     }
 
+    const ticketModalProps = {
+      isShowTicketModal: alertDetail.isShowTicketModal,
+      ticketUrl: alertDetail.ticketUrl,
+      onCloseTicketModal(){
+        dispatch({
+          type: 'alertDetail/closeTicketModal'
+        })
+      }
+    }
     const tabList = classnames(
       'iconfont',
       'icon-liebiao',
@@ -293,6 +306,10 @@ class AlertListManage extends Component{
       'iconfont',
       'icon-shijian',
       'timeTab'
+    )
+    const shanchuClass = classnames(
+      'iconfont',
+      'icon-shanchux'
     )
 
     return (
@@ -332,6 +349,14 @@ class AlertListManage extends Component{
           :
           undefined
         }
+        <div className={ticketModalProps.isShowTicketModal ?  classnames(styles.ticketModal, styles.show) : styles.ticketModal }>
+          <div className={styles.detailHead}>
+                <p><FormattedMessage {...localeMessage['assign_ticket']}/></p> 
+                <i className={classnames(styles.shanChu, shanchuClass)} onClick={ticketModalProps.onCloseTicketModal}></i>
+            </div>
+          <iframe src={ticketModalProps.ticketUrl}>
+          </iframe>
+        </div>
         <MergeModal />
         <CloseModal {...closeModalProps}/>
         <DispatchModal {...dispatchModalProps}/>

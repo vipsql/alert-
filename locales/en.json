@@ -113,6 +113,7 @@
   "alertDetail.save": "Save",
   "alertDetail.cancel": "Cancel",
   "alertDetail.text": "Text",
+  "alertDetail.ticket.assgin": "Assgin Ticket",
 
   "alertConfig.integrations": "Integrations",
   "alertConfig.integrations.message": "Integrate with third-party applications, such as network and system monitoring tools, apm tools, collabration tools , customer supporting tools.",

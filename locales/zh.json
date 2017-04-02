@@ -113,6 +113,7 @@
   "alertDetail.save": "保存",
   "alertDetail.cancel": "取消",
   "alertDetail.text": "文本",
+  "alertDetail.ticket.assgin": "派发工单",
 
   "alertConfig.integrations": "第三方应用集成",
   "alertConfig.integrations.message": "接入第三方应用，如网络、服务器和应用监控工具、帮助台和客户支持、聊天协同等应用",
