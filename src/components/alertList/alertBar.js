@@ -153,7 +153,7 @@ class AlertBar extends Component{
     localStorage.removeItem('__alert_refresh')
   }
   componentDidMount(){
-    this.chart = dc.barChart(".dc-chart")
+    // this.chart = dc.barChart(".dc-chart")
     const { barData } = this.props.alertList
     const { dispatch }  = this.props
 

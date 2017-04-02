@@ -435,7 +435,8 @@ export default {
 
     //查询告警列表
     *queryAlertList({payload},{call, put, select}){
-
+     
+      // console.log(linew)
       yield put({
         type: 'toggleLoading',
         payload: true
@@ -452,7 +453,7 @@ export default {
         orderType
       } = yield select(state => {
         const alertListTable = state.alertListTable
-
+        console.log(alertListTable)
         return {
           isGroup: alertListTable.isGroup,
           groupBy: alertListTable.groupBy,
@@ -464,7 +465,7 @@ export default {
           orderType: alertListTable.orderType
         }
       })
-
+      
       // 更新每分钟占宽
       const countMins = (end - begin) / (60 * 1000)
       const minuteToWidth = lineW / countMins

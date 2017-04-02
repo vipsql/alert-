@@ -279,7 +279,7 @@ class AlertListManage extends Component{
               type: 'alertList/queryAlertBar',
               payload: JSON.parse(originTags) || {}
             })
-          }, 60000)
+          }, 5000000)
         }
       }
     }
