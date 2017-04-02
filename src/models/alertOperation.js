@@ -376,7 +376,6 @@ export default {
           }
       },
       *shareChatOps({payload}, {select, put, call}) {
-            let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
             const {selectedAlertIds} = yield select( state => {
                 return {
                     'selectedAlertIds':state.alertListTable.selectedAlertIds
@@ -384,7 +383,7 @@ export default {
             })
             if (selectedAlertIds.length === 1 && selectedAlertIds[0] !== undefined) {
                 delete selectedAlertIds[0]['timeLine']
-                const shareResult = yield shareRoom(payload, 'ALERT', userInfo['userId'], {
+                const shareResult = yield shareRoom(payload, {
                     body: {
                         ...selectedAlertIds[0],
                         type: 'alert',

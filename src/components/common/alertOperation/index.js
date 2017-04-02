@@ -181,18 +181,23 @@ const alertOperation = ({position,
                 :
                 undefined
             }
-            <Select className={styles.showChatOps} allowClear placeholder={formatMessage({...localeMessage['moreOperate']})} onChange={ (operate) => {
-                switch (operate) {
-                    case 'ChatOps':
-                        showChatOpsFunc(position)
-                    break;
-                    default:
-                        () => {}
-                    break;
-                }
-            }}>
-                <Option value="ChatOps"><FormattedMessage {...localeMessage['chatOps']} /></Option>
-            </Select>
+            {
+                window.__alert_appLocaleData.locale == 'zh-cn' ?
+                <Select className={styles.showChatOps} allowClear placeholder={formatMessage({...localeMessage['moreOperate']})} onChange={ (operate) => {
+                    switch (operate) {
+                        case 'ChatOps':
+                            showChatOpsFunc(position)
+                        break;
+                        default:
+                            () => {}
+                        break;
+                    }
+                }}>
+                    <Option value="ChatOps"><FormattedMessage {...localeMessage['chatOps']} /></Option>
+                </Select>
+                :
+                undefined
+            }
             {
                 position !== 'detail' ?
                 <div className={styles.groupMain}>

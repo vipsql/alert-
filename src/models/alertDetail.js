@@ -45,10 +45,10 @@ export default {
             type: 'setDetail',
             payload: detailResult.data || {}
           })
-          if (detailResult.data.orderInfo) {
+          if (detailResult.data.orderFlowNum) {
             yield put({
               type: 'setFormData',
-              payload: detailResult.data.orderInfo
+              payload: detailResult.data.orderFlowNum
             })
           }
           yield put({

@@ -38,6 +38,11 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
         'iconfont',
         'icon-bushu'
     )
+    
+    const shanchuClass = classnames(
+      'iconfont',
+      'icon-shanchux'
+    )
 
     const operateProps = {
 
@@ -219,6 +224,16 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
       }
     }
 
+    const ticketModalProps = {
+      isShowTicketModal: alertQueryDetail.isShowTicketModal,
+      ticketUrl: alertQueryDetail.ticketUrl,
+      onCloseTicketModal(){
+        dispatch({
+          type: 'alertQueryDetail/closeTicketModal'
+        })
+      }
+    }
+
     const localeMessage = defineMessages({
         occurTime: {
             id: 'alertList.title.occurTime',
@@ -339,7 +354,11 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
         result: {
             id: 'alertQuery.result',
             defaultMessage: "共{total}个结果（紧急{critical}个，警告{warning}个，提醒{informaiton}个，正常{ok}个）",
-        }
+        },
+        assign_ticket: {
+            id: 'alertDetail.ticket.assgin',
+            defaultMessage: '派发工单'
+        },
     })
 
     const popoverContent = <div className={styles.popoverMain}>
@@ -585,6 +604,14 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
             :
             undefined
           }
+          <div className={ticketModalProps.isShowTicketModal ?  classnames(styles.ticketModal, styles.show) : styles.ticketModal }>
+            <div className={styles.detailHead}>
+                <p><FormattedMessage {...localeMessage['assign_ticket']}/></p> 
+                <i className={classnames(styles.shanChu, shanchuClass)} onClick={ticketModalProps.onCloseTicketModal}></i>
+            </div>
+            <iframe src={ticketModalProps.ticketUrl}>
+            </iframe>
+          </div>
           <CloseModal {...closeModalProps}/>
           <DispatchModal {...dispatchModalProps}/>
           <ChatOpshModal {...chatOpsModalProps}/>

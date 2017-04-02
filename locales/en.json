@@ -104,7 +104,7 @@
   "modal.unrollupMessage": "Are you sure Unroll Up {name} incident",
 
   "alertDetail.basic": "Basic",
-  "alertDetail.enrich": "Enrich Information",
+  "alertDetail.enrich": "Additional",
   "alertDetail.owner": "Owner",
   "alertDetail.department": "Department",
   "alertDetail.hour": "Hours",

@@ -17,6 +17,9 @@ const initalState = {
     closeMessage: undefined,
     isDropdownSpread: false, // 是否展开关闭modal的dropdown
 
+    isShowTicketModal: false, //派发工单框
+    ticketUrl: '', //工单链接
+
     selectColumn: [], // 选择的列
     extendColumnList: [], //扩展字段
     columnList: [
@@ -73,40 +76,28 @@ export default {
     // 确定派发工单
     *dispatchForm({payload}, {select, put, call}) {
 
-        const {currentAlertDetail} = yield select( state => {
-            return {
-                'currentAlertDetail': state.alertQueryDetail.currentAlertDetail
-            }
-        })
-        if (currentAlertDetail !== undefined && Object.keys(currentAlertDetail).length !== 0 ) {
-            let hostUrl = 'itsm.uyun.cn';
-            let callbackHostUrl = 'alert.uyun.cn';
-            let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
-            if (window.location.origin.indexOf("alert") > -1) {
-                //域名访问
-                hostUrl = window.location.origin.replace(/alert/, 'itsm');
-                callbackHostUrl = window.location.origin;
+        const viewDetailAlertId = yield select( state => state.alertQuery.viewDetailAlertId )
+
+        if (viewDetailAlertId) {
+            let stringId = '' + viewDetailAlertId;
+            const data = yield call(dispatchForm, {
+                id: stringId,
+                code: payload
+            })
+            if(data.result){
+                //window.open(data.data.url)
+                 yield put({ 
+                    type: 'toggleTicketModal', 
+                    payload: {
+                        isShowTicketModal: true,
+                        ticketUrl: data.data.url
+                    }
+                })
             } else {
-                //顶级域名/Ip访问
-                hostUrl = window.location.origin + '/itsm';
-                callbackHostUrl = window.location.origin + '/alert';
+                yield message.error(window.__alert_appLocaleData.messages[data.message], 3);
             }
-            let callbackUrl = 
-                `${callbackHostUrl}/openapi/v2/incident/handleOrder?incidentId=${currentAlertDetail['id']}&api_key=${userInfo.apiKeys[0]}`;
-            const result = {
-                id: payload, //payload
-                url: encodeURIComponent(callbackUrl),
-                title: encodeURIComponent(currentAlertDetail['name']),
-                urgentLevel: currentAlertDetail['severity'] + 1,
-                ticketDesc: encodeURIComponent(currentAlertDetail['description']),
-                announcer: encodeURIComponent(userInfo['realName']),
-                sourceId: currentAlertDetail['resObjectId'] ? currentAlertDetail['resObjectId'] : '',
-                hideHeader: 1,
-            }
-            
-            yield window.open(`${hostUrl}/#/create/${result.id}/${result.url}?ticketSource=${'alert'}&title=${result.title}&urgentLevel=${result.urgentLevel}&ticketDesc=${result.ticketDesc}&announcer=${result.announcer}&sourceId=${result.sourceId}&hideHeader=${result.hideHeader}`);
         } else {
-            console.error('currentAlertDetail error');
+            console.error('selectedAlertIds error');
         }
         yield put({
           type: 'toggleDispatchModal',
@@ -129,10 +120,10 @@ export default {
             type: 'setDetail',
             payload: detailResult.data || {}
           })
-          if (detailResult.data.orderInfo) {
+          if (detailResult.data.orderFlowNum) {
             yield put({
               type: 'setFormData',
-              payload: detailResult.data.orderInfo
+              payload: detailResult.data.orderFlowNum
             })
           }
           yield put({
@@ -202,14 +193,13 @@ export default {
         })
     },
     *shareChatOps({payload}, {select, put, call}) {
-        let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
         const {currentAlertDetail} = yield select( state => {
             return {
                 'currentAlertDetail': state.alertQueryDetail.currentAlertDetail
             }
         })
         if (currentAlertDetail !== undefined && Object.keys(currentAlertDetail).length !== 0) {
-            const shareResult = yield shareRoom(payload, 'ALERT', userInfo['userId'], {
+            const shareResult = yield shareRoom(payload, {
                 body: {
                     ...currentAlertDetail,
                     type: 'alert',
@@ -388,6 +378,17 @@ export default {
     // 存储备注信息
     setRemarkData(state, {payload: operateRemark}) {
       return { ...state, operateRemark }
+    },
+    // 派发工单框
+    toggleTicketModal(state, {payload: payload}){
+        return {...state , ...payload}
+    },
+    // 关闭工单
+    closeTicketModal(state){
+        return {
+            ...state,
+            isShowTicketModal: false
+        }
     }
   },
 

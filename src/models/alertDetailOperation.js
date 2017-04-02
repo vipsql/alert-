@@ -105,7 +105,7 @@ export default {
       },
       // 打开分享到ChatOps的modal
       *openChatOps({payload}, {select, put, call}) {
-          const options = yield getChatOpsOptions();
+            const options = yield getChatOpsOptions();
             if (options.result) {
                 yield put({
                     type: 'setChatOpsRoom',
@@ -120,14 +120,13 @@ export default {
             })
       },
       *shareChatOps({payload}, {select, put, call}) {
-        let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
         const {currentAlertDetail} = yield select( state => {
             return {
                 'currentAlertDetail': state.alertDetail.currentAlertDetail
             }
         })
         if (currentAlertDetail !== undefined && Object.keys(currentAlertDetail).length !== 0) {
-            const shareResult = yield shareRoom(payload, 'ALERT', userInfo['userId'], {
+            const shareResult = yield shareRoom(payload, {
                 body: {
                     ...currentAlertDetail,
                     type: 'alert',
