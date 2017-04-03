@@ -14,6 +14,7 @@ const initalState = {
 
   isShowTicketModal: false, //派发工单框
   ticketUrl: '', //工单链接
+  ciUrl: '', //ci信息的链接
 
   operateRemark: undefined, // 备注信息
   isShowRemark: false, // 是否显示备注框
@@ -50,6 +51,12 @@ export default {
               type: 'setFormData',
               payload: detailResult.data.orderFlowNum
             })
+            if (detailResult.data.ciUrl !== undefined && detailResult.data.ciUrl != '') {
+              yield put({
+                type: 'setCiUrl',
+                payload: detailResult.data.ciUrl
+              })
+            }
           }
           yield put({
             type: 'toggleDetailModal',
@@ -114,6 +121,10 @@ export default {
             ...state,
             isShowTicketModal: false
         }
-    }
+    },
+    // ci链接
+    setCiUrl(state, {payload: ciUrl}) {
+        return { ...state, ciUrl: ciUrl}
+    },
   },
 }

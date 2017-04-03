@@ -105,6 +105,7 @@
 
   "alertDetail.basic": "基本信息",
   "alertDetail.enrich": "扩展信息",
+  "alertDetail.ciInfo": "CI信息",
   "alertDetail.owner": "负责人",
   "alertDetail.department": "负责部门",
   "alertDetail.hour": "小时",

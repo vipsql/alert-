@@ -69,7 +69,8 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
         isSowOperateForm: alertQueryDetail.isSowOperateForm, 
         operateForm: alertQueryDetail.operateForm, 
         isShowRemark: alertQueryDetail.isShowRemark, 
-        operateRemark: alertQueryDetail.operateRemark
+        operateRemark: alertQueryDetail.operateRemark,
+        ciUrl: alertQueryDetail.ciUrl
       },
       operateProps: {
           ...operateProps,

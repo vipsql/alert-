@@ -8,7 +8,7 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm, openForm, closeForm, openRemark, editRemark, closeRemark, intl: {formatMessage}}) => {
 
-    const { currentAlertDetail, isSowOperateForm, operateForm, isShowRemark, operateRemark } = extraProps;
+    const { currentAlertDetail, isSowOperateForm, operateForm, isShowRemark, operateRemark, ciUrl } = extraProps;
     const { getFieldDecorator, getFieldsValue } = form;
 
     // <div className={styles.infoBody}>
@@ -191,6 +191,10 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
         tags: {
             id: 'alertQuery.label.tags',
             defaultMessage: '标签',
+        },
+        ci: {
+            id: 'alertDetail.ciInfo',
+            defaultMessage: 'CI信息',
         }
     })
 
@@ -257,6 +261,17 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                     :
                     undefined
                 }              
+                {
+                    ciUrl !== '' ?
+                    <div className={classnames(styles.infoBody)}>
+                        <p>{formatMessage({...localeMessage['ci']})}</p>
+                        <div className={classnames(styles.iframeBody)}>
+                            <iframe src={ciUrl}></iframe>
+                        </div>
+                    </div>
+                    :
+                    undefined
+                }
             </div>
         </div>
     )
