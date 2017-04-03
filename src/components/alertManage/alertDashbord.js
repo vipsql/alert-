@@ -434,12 +434,16 @@ class Chart extends Component{
     }
 
     render(){
+        const hasData = Array.isArray(this.props.currentDashbordData) && this.props.currentDashbordData.length > 1
+        // 下面分开判断主要是为了没数据居中显示
         return (
+            <div>
             <div className={styles.loadingWrap}>
                 <Spin spinning= {this.props.isLoading}>
-                    <div id="treemap" className={styles.treemap}></div>
-                    {(Array.isArray(this.props.currentDashbordData) && this.props.currentDashbordData.length < 1) && <div className={styles.alertNoData}><FormattedMessage {...formatMessages['noData']} /></div>}
+                    { hasData &&  <div id="treemap" className={styles.treemap}></div> }
                 </Spin>
+            </div>
+            { !hasData && <div className={styles.alertNoData}><FormattedMessage {...formatMessages['noData']} /></div>}
             </div>
         )
     }

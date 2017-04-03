@@ -398,6 +398,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
           }
           const formData = form.getFieldsValue()
           
+          
           if (formData.dateTime !== undefined && formData.dateTime.length !== 0) {
             //   开始时间统一处理为当前日期的0点时间戳
             const _begin = formData.dateTime[0].toDate()
@@ -406,14 +407,19 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
             _begin.setMinutes(0)
             _begin.setSeconds(0)
             _begin.setMilliseconds(0)
-            _end.setHours(0)
-            _end.setMinutes(0)
-            _end.setSeconds(0)
-            _end.setMilliseconds(0)
+            // _end.setHours(0)
+            // _end.setMinutes(0)
+            // _end.setSeconds(0)
+            // _end.setMilliseconds(0)
 
             formData.begin = _begin.getTime()
             formData.end = _end.getTime();
             
+            delete formData.dateTime
+          }
+
+          // 修复选择时间后删掉时间重新搜索 参数不对bug
+          if(formData.dateTime.length == 0){
             delete formData.dateTime
           }
           
