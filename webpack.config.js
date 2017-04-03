@@ -33,6 +33,14 @@ module.exports = function (webpackConfig, env) {
            {
              from: __dirname + '/iconfont/**',
              to: __dirname + '/dist/'
+           },
+           {
+             from: __dirname + '/apidocs_en.html',
+             to: __dirname + '/dist/'
+           },
+           {
+             from: __dirname + '/apidocs_zh.html',
+             to: __dirname + '/dist/'
            }
        ])
 
