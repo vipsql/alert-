@@ -173,7 +173,9 @@
   "tenant.not.exist": "租户不存在",
   "tenant.no.apikey": "租户没有相应的apikey",
 
-  "error.serverError": "服务端错误"
+  "error.serverError": "服务端错误",
+  "treemap.tagsGroup": "标签分组名",
+  "treemap.activeAlerts": "活跃告警数"
 
   
 

@@ -173,7 +173,11 @@
   "tenant.not.exist": "The tenant does not exist",
   "tenant.no.apikey": "The tenant has not the corresponding api key",
 
-  "error.serverError": "Server Error"
+  "error.serverError": "Server Error",
 
+  "treemap.tagsGroup": "Tags Group",
+  "treemap.activeAlerts": "Active Alerts"
+
+  
   
 }
