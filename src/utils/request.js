@@ -25,7 +25,7 @@ function isApiUrl(url) {
  */
 export default async function request(url, options) {
   
-    options.credentials =  'include'
+    // options.credentials =  'include'
     
       const response = await fetch(isApiUrl(url), options);
       const data = await response.json()

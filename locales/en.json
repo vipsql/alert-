@@ -46,9 +46,9 @@
 
   "alertQuery.label.keyWords": "Keywords",
   "alertQuery.label.duration": "Duration",
-  "alertQuery.label.keyWords.placeholder": "Please enter Keywords",
-  "alertQuery.label.severity.placeholder": "Please select Severity",
-  "alertQuery.label.duration.placeholder": "Please select Duration",
+  "alertQuery.label.keyWords.placeholder": "Please Enter Keywords",
+  "alertQuery.label.severity.placeholder": "Please Select Severity",
+  "alertQuery.label.duration.placeholder": "Please Select Duration",
   "alertQuery.label.tags": "Tags",
   "alertQuery.label.allSource": "All Source",
   "alertQuery.label.allStatus": "All Status",
