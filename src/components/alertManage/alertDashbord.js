@@ -29,6 +29,7 @@ class Chart extends Component{
 
     }
     shouldComponentUpdate(nextProps){
+        console.log(this.props.currentDashbordData !== nextProps.currentDashbordData)
       return this.props.currentDashbordData !== nextProps.currentDashbordData
     }
     componentDidMount(){
@@ -242,11 +243,11 @@ class Chart extends Component{
                 .attr("fill", "#04203e")
                 .attr("font-size", "13")
                 .attr("text-anchor", "middle")
-                .style("opacity", function(d) {console.log(this); d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; })
                 // .style("display", "none")
                 .text(function(d) {
                     return d.name
                 })
+                .style("opacity", function(d) {console.log(d); d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; })
                 .on('mouseover', function(d){  
                     d3Tip.show(d)
                 })
@@ -401,6 +402,10 @@ class Chart extends Component{
                 .attr("y", function(d) {
                     return ky * d.dy / 2;
                 });
+            zoomTransition.select(".parent .label")
+                .attr("x", function(d) {
+                    return kx * d.dx / 2;
+                })
 
             zoomTransition.select("rect")
                 .attr("width", function(d) {
