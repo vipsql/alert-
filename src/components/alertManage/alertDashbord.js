@@ -23,13 +23,11 @@ class Chart extends Component{
     }
     setTreemapHeight(ele){
         // const _percent = 0.85 // 占屏比
-
         const clientHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight)
         ele.style.height = (clientHeight - 130) + 'px'
 
     }
     shouldComponentUpdate(nextProps){
-        console.log(this.props.currentDashbordData !== nextProps.currentDashbordData)
       return this.props.currentDashbordData !== nextProps.currentDashbordData
     }
     componentDidMount(){
@@ -82,7 +80,12 @@ class Chart extends Component{
         var root;
         var node;
 
-        if(this.props.currentDashbordData.length < 1) return
+        if(this.props.currentDashbordData.length < 1) {
+            d3.select("#treemap").select('svg').attr('height', 0)
+            return
+        }else{
+            d3.select("#treemap").select('svg').attr('height', this.chartHeight)
+        }
 
         node = root = {
               path: 'root',
@@ -434,12 +437,17 @@ class Chart extends Component{
     }
 
     render(){
+        const hasData = Array.isArray(this.props.currentDashbordData) && this.props.currentDashbordData.length > 0
+        
+        // 下面分开判断主要是为了没数据居中显示
         return (
+            <div>
             <div className={styles.loadingWrap}>
                 <Spin spinning= {this.props.isLoading}>
-                    <div id="treemap" className={styles.treemap}></div>
-                    {(Array.isArray(this.props.currentDashbordData) && this.props.currentDashbordData.length < 1) && <div className={styles.alertNoData}><FormattedMessage {...formatMessages['noData']} /></div>}
+                    <div id="treemap" className={styles.treemap}></div> 
                 </Spin>
+            </div>
+            { !hasData && <div className={styles.alertNoData}><FormattedMessage {...formatMessages['noData']} /></div>}
             </div>
         )
     }

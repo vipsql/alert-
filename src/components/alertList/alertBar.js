@@ -93,8 +93,7 @@ class AlertBar extends Component{
     
   }
 
-  shouldComponentUpdate(nextProps, nextState){
-    
+  shouldComponentUpdate(nextProps, nextState){   
     return this.props.alertList.barData !== nextProps.alertList.barData || this.props.alertList.isResize !== nextProps.alertList.isResize
   }
   renderBar(barData){
@@ -116,8 +115,8 @@ class AlertBar extends Component{
     
     const height = 80
     const margins = {top: 0, right: 20, bottom: 25, left: 15}
-    const dim = alertList.dimension(function(d) { return d.time; });
-    const grp = dim.group(min5).reduceSum(function(d) { return d.count; });
+    const dim = alertList.dimension(function(d) { return d.time; })
+    const grp = dim.group(min5).reduceSum(function(d) { return d.count; })
     this.chart = dc.barChart(".dc-chart")
                    .width(width)
                   .height(height)
