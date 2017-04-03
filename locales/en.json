@@ -105,6 +105,7 @@
 
   "alertDetail.basic": "Basic",
   "alertDetail.enrich": "Additional",
+  "alertDetail.ciInfo": "CI Infomation",
   "alertDetail.owner": "Owner",
   "alertDetail.department": "Department",
   "alertDetail.hour": "Hours",

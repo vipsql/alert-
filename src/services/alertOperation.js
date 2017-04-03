@@ -66,7 +66,7 @@ export async function shareRoom(roomId, param) {
     //     // 顶级域名/Ip访问
     //     hostUrl = window.location.origin
     // }
-    paramWrapper = {
+    let paramWrapper = {
         roomId: '' + roomId,
         body: JSON.stringify(param)
     }

@@ -19,6 +19,7 @@ const initalState = {
 
     isShowTicketModal: false, //派发工单框
     ticketUrl: '', //工单链接
+    ciUrl: '', //ci信息的链接
 
     selectColumn: [], // 选择的列
     extendColumnList: [], //扩展字段
@@ -124,6 +125,12 @@ export default {
             yield put({
               type: 'setFormData',
               payload: detailResult.data.orderFlowNum
+            })
+          }
+          if (detailResult.data.ciUrl !== undefined && detailResult.data.ciUrl != '') {
+            yield put({
+              type: 'setCiUrl',
+              payload: detailResult.data.ciUrl
             })
           }
           yield put({
@@ -382,6 +389,10 @@ export default {
     // 派发工单框
     toggleTicketModal(state, {payload: payload}){
         return {...state , ...payload}
+    },
+    // ci链接
+    setCiUrl(state, {payload: ciUrl}) {
+        return { ...state, ciUrl: ciUrl}
     },
     // 关闭工单
     closeTicketModal(state){

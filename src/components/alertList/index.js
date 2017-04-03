@@ -112,7 +112,8 @@ class AlertListManage extends Component{
         isSowOperateForm: alertDetail.isSowOperateForm, 
         operateForm: alertDetail.operateForm, 
         isShowRemark: alertDetail.isShowRemark, 
-        operateRemark: alertDetail.operateRemark
+        operateRemark: alertDetail.operateRemark,
+        ciUrl: alertDetail.ciUrl
       },
       operateProps: {
         ...operateProps,
