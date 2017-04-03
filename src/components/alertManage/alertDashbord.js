@@ -23,13 +23,11 @@ class Chart extends Component{
     }
     setTreemapHeight(ele){
         // const _percent = 0.85 // 占屏比
-
         const clientHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight)
         ele.style.height = (clientHeight - 130) + 'px'
 
     }
     shouldComponentUpdate(nextProps){
-        
       return this.props.currentDashbordData !== nextProps.currentDashbordData
     }
     componentDidMount(){
@@ -434,7 +432,7 @@ class Chart extends Component{
     }
 
     render(){
-        const hasData = Array.isArray(this.props.currentDashbordData) && this.props.currentDashbordData.length > 1
+        const hasData = Array.isArray(this.props.currentDashbordData) && this.props.currentDashbordData.length > 0
         // 下面分开判断主要是为了没数据居中显示
         return (
             <div>

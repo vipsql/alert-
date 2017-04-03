@@ -461,7 +461,6 @@ export default {
         orderType
       } = yield select(state => {
         const alertListTable = state.alertListTable
-        console.log(alertListTable)
         return {
           isGroup: alertListTable.isGroup,
           groupBy: alertListTable.groupBy,
