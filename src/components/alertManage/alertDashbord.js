@@ -29,7 +29,7 @@ class Chart extends Component{
 
     }
     shouldComponentUpdate(nextProps){
-        console.log(this.props.currentDashbordData !== nextProps.currentDashbordData)
+        
       return this.props.currentDashbordData !== nextProps.currentDashbordData
     }
     componentDidMount(){

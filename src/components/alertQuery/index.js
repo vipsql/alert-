@@ -420,7 +420,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
           }
 
           // 修复选择时间后删掉时间重新搜索 参数不对bug
-          if(formData.dateTime.length == 0){
+          if(formData.dateTime && formData.dateTime.length == 0){
             delete formData.dateTime
           }
           
