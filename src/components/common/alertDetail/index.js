@@ -195,6 +195,10 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
         ci: {
             id: 'alertDetail.ciInfo',
             defaultMessage: 'CI信息',
+        },
+        link:{
+            id: 'alertDetail.link',
+            defaultMessage: '链接',
         }
     })
 
@@ -265,9 +269,9 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                     ciUrl !== '' ?
                     <div className={classnames(styles.infoBody)}>
                         <p>{formatMessage({...localeMessage['ci']})}</p>
-                        <div className={classnames(styles.iframeBody)}>
-                            <iframe src={ciUrl}></iframe>
-                        </div>
+                        <ul>
+                            <li><span>{formatMessage({...localeMessage['link']})}:</span><span><a href={ciUrl}>{ciUrl}</a></span></li>
+                        </ul>
                     </div>
                     :
                     undefined

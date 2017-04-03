@@ -116,6 +116,7 @@
   "alertDetail.cancel": "Cancel",
   "alertDetail.text": "Text",
   "alertDetail.ticket.assgin": "Assgin Ticket",
+  "alertDetail.link": "Link",
 
   "alertConfig.integrations": "Integrations",
   "alertConfig.integrations.message": "Integrate with third-party applications, such as network and system monitoring tools, apm tools, collabration tools , customer supporting tools.",
@@ -136,7 +137,7 @@
 
   "alertApplication.rest.headerTitle": "Use the Alert REST API to build a custom integration.",
   "alertApplication.rest.apidocument": "API documents",
-  "alertApplication.rest.step2": "Send data to the Alert API",
+  "alertApplication.rest.step2": "Alert API",
   "alertApplication.rest.step2Message": "Please copy the URL below to your application.",
 
   "alertApplication.monitor.headerTitle": "Use Web Hook to build a integration between Uyun Alert and Uyun Monitor.",

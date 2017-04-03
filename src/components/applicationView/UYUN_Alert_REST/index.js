@@ -29,7 +29,7 @@ const UYUN_Alert_REST = (props) => {
         },
         rest_step2: {
             id: 'alertApplication.rest.step2',
-            defaultMessage: '向接口发送数据'
+            defaultMessage: '接口'
         },
         rest_step2Message: {
             id: 'alertApplication.rest.step2Message',
@@ -63,7 +63,7 @@ const UYUN_Alert_REST = (props) => {
                 <i className={classnames(alertClass, styles.headerIcon)}></i>
                 <span className={styles.headerContent}>
                     <p className={styles.headerName}>UYUN Alert REST API</p>
-                    <p>{formatMessage({...localeMessage['rest_headerTitle']})}<a href='#'>{formatMessage({...localeMessage['rest_apidocument']})}</a></p>
+                    <p>{formatMessage({...localeMessage['rest_headerTitle']})}</p>
                 </span>
             </div>
             <div className={styles.viewContent}>
@@ -94,8 +94,12 @@ const UYUN_Alert_REST = (props) => {
                     <div className={styles.step2}>
                         <span className={styles.step2Icon}></span>
                         <p className={styles.stepName}>{formatMessage({...localeMessage['rest_step2']})}</p>
-                        <p className={styles.stepMessage}>{formatMessage({...localeMessage['rest_step2Message']})}</p>
-                        <p className={styles.stepExample}>{appkey !== undefined ? url + `&app_key=${appkey}` : url}</p>
+                        {
+                            window.__alert_appLocaleData.locale == 'zh-cn' ?
+                            <iframe src={ appkey !== undefined ? `apidocs_zh.html?url=${url}&app_key=${appkey}` : `apidocs_zh.html?url=${url}`}/>
+                            :
+                            <iframe src={ appkey !== undefined ? `apidocs_en.html?url=${url}&app_key=${appkey}` : `apidocs_en.html?url=${url}`}/>
+                        }
                     </div>
                     : undefined
                 }

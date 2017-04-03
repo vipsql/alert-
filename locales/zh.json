@@ -116,6 +116,7 @@
   "alertDetail.cancel": "取消",
   "alertDetail.text": "文本",
   "alertDetail.ticket.assgin": "派发工单",
+  "alertDetail.link": "链接",
 
   "alertConfig.integrations": "第三方应用集成",
   "alertConfig.integrations.message": "接入第三方应用，如网络、服务器和应用监控工具、帮助台和客户支持、聊天协同等应用",
@@ -136,7 +137,7 @@
 
   "alertApplication.rest.headerTitle": "使用优云Alert REST API，可以方便的接入自定义告警",
   "alertApplication.rest.apidocument": "API使用文档",
-  "alertApplication.rest.step2": "向接口发送数据",
+  "alertApplication.rest.step2": "接口",
   "alertApplication.rest.step2Message": "请复制以下URL至您的应用中",
 
   "alertApplication.monitor.headerTitle": "使用Web Hook接入快速优云Monitor告警",

@@ -184,7 +184,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
 
       closeDispatchModal: () => {
         dispatch({
-            type: 'alertQueryDetail/toggleFormModal',
+            type: 'alertQueryDetail/toggleDispatchModal',
             payload: false
         })
       },
@@ -196,7 +196,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
       },
       onCancal: () => {
         dispatch({
-            type: 'alertQueryDetail/toggleFormModal',
+            type: 'alertQueryDetail/toggleDispatchModal',
             payload: false
         })
       }
