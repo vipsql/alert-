@@ -45,8 +45,9 @@ function Add(props){
                                 })
                             })
                         }}
-                        keyCreate={(form) => {
+                        keyCreate={(form, callback) => {
                             let _UUID = getUUID(32);
+                            callback(_UUID)
                             dispatch({
                                 type: 'alertConfig/setUUID',
                                 payload: {
@@ -173,8 +174,9 @@ function Add(props){
                                 })
                             })
                         }}
-                        keyCreate={(form) => {
+                        keyCreate={(form, callback) => {
                             let _UUID = getUUID(32);
+                            callback(_UUID)
                             dispatch({
                                 type: 'alertConfig/setUUID',
                                 payload: {

@@ -84,7 +84,9 @@ const UYUN_Alert_REST = (props) => {
                     </Form>
                     {
                         appkey === undefined ? 
-                        <Button type="primary" className={styles.createBtn} onClick={() => {keyCreate(form)}}>{formatMessage({...localeMessage['appKey']})}</Button>
+                        <Button type="primary" className={styles.createBtn} onClick={() => {keyCreate(form, (UUID) => {
+                            window.frames[0].postMessage(UUID, '/')
+                        })}}>{formatMessage({...localeMessage['appKey']})}</Button>
                         :
                         <p className={styles.readOnly}>{`App key：${appkey}`}</p>
                     }
@@ -96,9 +98,9 @@ const UYUN_Alert_REST = (props) => {
                         <p className={styles.stepName}>{formatMessage({...localeMessage['rest_step2']})}</p>
                         {
                             window.__alert_appLocaleData.locale == 'zh-cn' ?
-                            <iframe src={ appkey !== undefined ? `apidocs_zh.html?url=${url}&app_key=${appkey}` : `apidocs_zh.html?url=${url}`}/>
+                            <iframe src={ `apidocs_zh.html?url=${url}`}/>
                             :
-                            <iframe src={ appkey !== undefined ? `apidocs_en.html?url=${url}&app_key=${appkey}` : `apidocs_en.html?url=${url}`}/>
+                            <iframe src={ `apidocs_en.html?url=${url}`}/>
                         }
                     </div>
                     : undefined

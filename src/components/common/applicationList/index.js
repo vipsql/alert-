@@ -11,6 +11,7 @@ class applicationList extends Component {
   }
   render(){
     const {
+      applicationType,
       applicationData,
       columns,
       isLoading,
@@ -63,22 +64,21 @@ class applicationList extends Component {
     })
     
     columns.forEach( (item) => {
-      const isOrder = item.order || false
-      const width = item.width || 'auto'
-      const orderTriangle = orderBy !== undefined && item['key'] == orderBy ? styles['orderTriang-active'] : undefined
-      const orderTh_active = orderBy !== undefined && item['key'] == orderBy ? styles['orderTh-active'] : undefined
+        const isOrder = item.order || false
+        const width = item.width || 'auto'
+        const orderTriangle = orderBy !== undefined && item['key'] == orderBy ? styles['orderTriang-active'] : undefined
+        const orderTh_active = orderBy !== undefined && item['key'] == orderBy ? styles['orderTh-active'] : undefined
 
-      colsKey.push(item['key'])
-      
-      theads.push(
-        <th key={item.key} width={width}>
-          {isOrder ? <span className={ orderType !== undefined ? classnames(styles.orderTh, orderTh_active) : styles.orderTh} data-key={item['key']} onClick={ orderByTittle }>{formatMessage({...formatMessages[item['key']]})}</span>
-          : <FormattedMessage {...formatMessages[item['key']]} />}
-          {isOrder && 
-            [<span className={ orderType !== undefined && orderType === 1 ? classnames(styles.orderTriangleUp, orderTriangle) : styles.orderTriangleUp} data-key={item['key']} key={1} onClick={ orderUp }></span>,
-            <span className={ orderType !== undefined && orderType === 0 ? classnames(styles.orderTriangleDown, orderTriangle) : styles.orderTriangleDown} data-key={item['key']} key={0} onClick={ orderDown }></span>]}
-        </th>
-      )
+        colsKey.push(item['key'])
+        theads.push( !(applicationType == 1 && item['key'] == 'status') &&
+          <th key={item.key} width={width}>
+            {isOrder ? <span className={ orderType !== undefined ? classnames(styles.orderTh, orderTh_active) : styles.orderTh} data-key={item['key']} onClick={ orderByTittle }>{formatMessage({...formatMessages[item['key']]})}</span>
+            : <FormattedMessage {...formatMessages[item['key']]} />}
+            {isOrder && 
+              [<span className={ orderType !== undefined && orderType === 1 ? classnames(styles.orderTriangleUp, orderTriangle) : styles.orderTriangleUp} data-key={item['key']} key={1} onClick={ orderUp }></span>,
+              <span className={ orderType !== undefined && orderType === 0 ? classnames(styles.orderTriangleDown, orderTriangle) : styles.orderTriangleDown} data-key={item['key']} key={0} onClick={ orderDown }></span>]}
+          </th>
+        )
     } )
 
     let tbodyCon = [];
@@ -112,7 +112,7 @@ class applicationList extends Component {
         if(key == 'name'){
           td = <td key={key}>{item['applyType']['name']}</td>
         }
-        if(key == 'status'){
+        if(key == 'status' && applicationType !== undefined && applicationType == 0){
           switch (data) {
             case 0:
                data = false

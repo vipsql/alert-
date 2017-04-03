@@ -41,23 +41,23 @@
 	<table class="table-bordered table" width="100%">
 		<tbody>
 			<tr><td>URL</td><td id='url'></td></tr>
-			<tr><td>调用方式</td><td>POST</td></tr>
-			<tr><td>认证</td><td>不需要登录认证</td></tr>
+			<tr><td>Call</td><td>POST</td></tr>
+			<tr><td>Authentication</td><td>Not required</td></tr>
 			<tr>
-				<td>消息头参数(header)</td>
+				<td>Params(header)</td>
 				<td>
-					api_key* (必须)<br>
-					app_Key* (必须) (告警来源系统)
+					api_key* (required)<br>
+					app_Key* (required) (Created in first step, identify a source from which the alert was sent. )
 				</td>
 			</tr>
 			<tr>
-				<td>消息体参数(body)</td>
+				<td>Params(body)</td>
 				<td>
 					<pre>
 {
 	"severity":       "3",
-	"name":           "system.mem.pct_usage-CPU利用率",
-	"description":    "内存使用率超过80%",
+	"name":           "CPU overloaded",
+	"description":    "CPU is above upper limit (80%)%",
 	"occur_time":     1490251916807,
 	"entity_name":    "PC Server",
 	"entity_addr":    "10.2.1.2",
@@ -74,36 +74,79 @@
 			</tr>
 		</tbody>
 	</table>
-	<p>参数列表:</p>
-	<table class="table-list" width="100%">
-		<thead>
-			<tr><td>参数</td><td>是否必须</td><td>备注</td></tr>
-		</thead>
-		<tbody>
-			<tr><td>severity</td><td>可选</td><td>告警级别: Critical 3, Warning 2, Information 1, OK 0</td></tr>
-			<tr><td>name</td><td>必须</td><td>告警名称</td></tr>
-			<tr><td>description</td><td>可选</td><td>告警描述</td></tr>
-			<tr><td>occur_time</td><td>可选</td><td>发生时间</td></tr>
-			<tr><td>entity_name</td><td>可选</td><td>告警对象</td></tr>
-			<tr><td>entity_addr</td><td>可选</td><td>告警对象地址</td></tr>
-			<tr><td>merge_key</td><td>必须</td><td>指定用于告警合并的字段</td></tr>
-			<tr><td>properties</td><td>可选</td><td>告警的扩展字段，请使用 name, code, val的形式</td></tr>
-		</tbody>
+	<p>Parameters:</p>
+	<table class="table-bordered table" width="100%">
+				<tbody><tr>
+					<td>Filed</td>
+					<td>Required</td>
+					<td>Description</td>
+				</tr>
+				<tr>
+					<td>severity</td>
+					<td>Not required</td>
+					<td>Severity of alert:Critical 1, Warning 2, Information3, OK 4</td>
+				</tr>
+				<tr>
+					<td>name</td>
+					<td>Required</td>
+					<td>Alert Name</td>
+				</tr>
+				<tr>
+					<td>description</td>
+					<td>Not required</td>
+					<td>Additional text information</td>
+				</tr>
+				<tr>
+					<td>occur_time</td>
+					<td>Not required</td>
+					<td>Time that the alert occurred</td>
+				</tr>
+				<tr>
+					<td>entity_name</td>
+					<td>Not required</td>
+					<td>The entity</td>
+				</tr>
+				<tr>
+					<td>entity_addr</td>
+					<td>Not required</td>
+					<td>IP address that the alert occurred</td>
+				</tr>
+				<tr>
+					<td>app_key</td>
+					<td>Required</td>
+					<td>Created in first step, identify a source from which the alert was sent</td>
+				</tr>
+				<tr>
+					<td>status</td>
+					<td>Not required</td>
+					<td>New 1，Assgined 2，Closed 3</td>
+				</tr>
+				<tr>
+					<td>merge_key</td>
+					<td>Required</td>
+					<td>Merging Alerts into Incident</td>
+				</tr>
+				<tr>
+					<td>properties</td>
+					<td>Not required</td>
+					<td>Additional attributes，please use the name, key, value JSON pairs</td>
+				</tr>
+			</tbody>
 	</table>
-	<p>POST body方式</p>
+	<p>Send a Test Alert</p>
 	<pre id="example">
 curl -H "Content-type: application/json" -X POST -d '{
 	[{
 		"body": "{
-			'name':'activemq.broker.memory_pct-ActiveMQ内存使用率',
+			'name':'activemq.broker.memory_pct-ActiveMQ Memery overloaded',
 			'severity':3,
-			'description':'ActiveMQ内存使用率超过3%',
+			'description':'ActiveMQ Memery above upper limit (3%)%',
 			'occur_time':1490251916807,
 			'entity_name':'PC20151218',
 			'entity_addr':'10.1.113.28',
 			'source':'Monitor',
 			'merge_key':'source,entity_name,name',
-			'properties':[{'val': '派出所','code': 'belong','name': '所属单位'}]
+			'properties':[{'val': 'Financial','code': 'belong','name': 'Department'}]
 		}"
 	}] 
 }' </pre>
