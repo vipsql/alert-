@@ -113,7 +113,10 @@ export default {
     // 点击展开detail时的操作
     *openDetailModal({payload}, {select, put, call}) {
       const viewDetailAlertId = yield select( state => state.alertQuery.viewDetailAlertId )
-      
+      // 去除上一次的orderFlowNum和ciUrl地址
+      yield put({
+          type: 'beforeOpenDetail',
+      })
       if ( viewDetailAlertId ) {
         const detailResult = yield queryDetail(viewDetailAlertId);
         if ( detailResult.result ) {
@@ -322,6 +325,10 @@ export default {
       })
       
       return { ...state, columnList: newList, selectColumn: arr }
+    },
+    // beforeOpenDetail
+    beforeOpenDetail(state, {payload}) {
+        return { ...state, operateForm: initalState.operateForm, ciUrl: initalState.ciUrl}
     },
     // 设置分组显示的类型
     setGroupType(state, {payload: selectGroup}) {

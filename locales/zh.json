@@ -138,11 +138,14 @@
   "alertApplication.rest.headerTitle": "使用优云Alert REST API，可以方便的接入自定义告警",
   "alertApplication.rest.apidocument": "API使用文档",
   "alertApplication.rest.step2": "接口",
-  "alertApplication.rest.step2Message": "请复制以下URL至您的应用中",
 
   "alertApplication.monitor.headerTitle": "使用Web Hook接入快速优云Monitor告警",
   "alertApplication.monitor.step2": "向接口发送数据",
   "alertApplication.monitor.step2Message": "请复制以下URL至您的应用中",
+
+  "alertApplication.videoMon.headerTitle": "使用Web Hook接入快速优云VideoMON告警",
+  "alertApplication.videoMon.step2": "向接口发送数据",
+  "alertApplication.videoMon.step2Message": "请复制以下URL至您的应用中",
 
   "alertApplication.itsm.headerTitle": "把优云Alert的告警快速创建为ITSM工单",
   "alertApplication.chatOps.headerTitle": "把优云Alert的告警快速分享到ChatOps群组",

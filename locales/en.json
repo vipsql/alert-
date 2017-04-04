@@ -138,11 +138,14 @@
   "alertApplication.rest.headerTitle": "Use the Alert REST API to build a custom integration.",
   "alertApplication.rest.apidocument": "API documents",
   "alertApplication.rest.step2": "Alert API",
-  "alertApplication.rest.step2Message": "Please copy the URL below to your application.",
 
   "alertApplication.monitor.headerTitle": "Use Web Hook to build a integration between Uyun Alert and Uyun Monitor.",
   "alertApplication.monitor.step2": "Send data to the Monitor",
   "alertApplication.monitor.step2Message": "Please copy the URL below to your application.",
+
+  "alertApplication.videoMon.headerTitle": "Use Web Hook to build a integration between Uyun Alert and Uyun VideoMON.",
+  "alertApplication.videoMon.step2": "Send data to the Monitor",
+  "alertApplication.videoMon.step2Message": "Please copy the URL below to your application.",
 
   "alertApplication.itsm.headerTitle": "Build a integration between Uyun Alert and Uyun ITSM.",
   "alertApplication.chatOps.headerTitle": "Build a integration between Uyun Alert and Uyun ChatOps.",

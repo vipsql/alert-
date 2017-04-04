@@ -38,7 +38,10 @@ export default {
     // 点击展开detail时的操作
     *openDetailModal({payload}, {select, put, call}) {
       const viewDetailAlertId = yield select( state => state.alertListTable.viewDetailAlertId )
-      
+      // 去除上一次的orderFlowNum和ciUrl地址
+      yield put({
+          type: 'beforeOpenDetail',
+      })
       if (viewDetailAlertId) {
         const detailResult = yield queryDetail(viewDetailAlertId);
         if ( detailResult.result ) {
@@ -51,12 +54,12 @@ export default {
               type: 'setFormData',
               payload: detailResult.data.orderFlowNum
             })
-            if (detailResult.data.ciUrl !== undefined && detailResult.data.ciUrl != '') {
-              yield put({
-                type: 'setCiUrl',
-                payload: detailResult.data.ciUrl
-              })
-            }
+          }
+          if (detailResult.data.ciUrl !== undefined && detailResult.data.ciUrl != '') {
+            yield put({
+              type: 'setCiUrl',
+              payload: detailResult.data.ciUrl
+            })
           }
           yield put({
             type: 'toggleDetailModal',
@@ -83,6 +86,10 @@ export default {
   },
 
   reducers: {
+    // beforeOpenDetail
+    beforeOpenDetail(state, {payload}) {
+        return { ...state, operateForm: initalState.operateForm, ciUrl: initalState.ciUrl}
+    },
     // 初始化operateForm
     initalFormData(state) {
       return { ...state, operateRemark: state.currentAlertDetail.form }

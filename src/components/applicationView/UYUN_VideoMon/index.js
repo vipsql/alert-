@@ -6,30 +6,30 @@ import { classnames } from '../../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const Item = Form.Item;
-const UYUN_Alert_REST = (props) => {
+const UYUN_VideoMON = (props) => {
 
     const { builtIn, appkey, url, form, onOk, keyCreate, intl: {formatMessage}} = props;
     
     const { getFieldDecorator, getFieldsValue } = form;
 
-    const alertClass = classnames(
+    const videoMonClass = classnames(
         'icon',
         'iconfont',
-        'icon-Alert'
+        'icon-monitor'
     )
 
     const localeMessage = defineMessages({
-        rest_headerTitle: {
-            id: 'alertApplication.rest.headerTitle',
-            defaultMessage: '使用优云Alert REST API，可以方便的接入自定义告警'
+        videoMon_headerTitle: {
+            id: 'alertApplication.videoMon.headerTitle',
+            defaultMessage: '使用Web Hook接入快速优云VideoMON告警'
         },
-        rest_apidocument: {
-            id: 'alertApplication.rest.apidocument',
-            defaultMessage: 'API使用文档'
+        videoMon_step2: {
+            id: 'alertApplication.videoMon.step2',
+            defaultMessage: '向接口发送数据'
         },
-        rest_step2: {
-            id: 'alertApplication.rest.step2',
-            defaultMessage: '接口'
+        videoMon_step2Message: {
+            id: 'alertApplication.videoMon.step2Message',
+            defaultMessage: '请复制以下URL至您的应用中'
         },
         displayName: {
             id: 'alertApplication.displayName',
@@ -56,10 +56,10 @@ const UYUN_Alert_REST = (props) => {
     return (
         <div className={styles.detailView}>
             <div className={styles.viewHeader}>
-                <i className={classnames(alertClass, styles.headerIcon)}></i>
+                <i className={classnames(videoMonClass, styles.headerIcon)}></i>
                 <span className={styles.headerContent}>
-                    <p className={styles.headerName}>UYUN Alert REST API</p>
-                    <p>{formatMessage({...localeMessage['rest_headerTitle']})}</p>
+                    <p className={styles.headerName}>UYUN VideoMON</p>
+                    <p>{formatMessage({...localeMessage['videoMon_headerTitle']})}</p>
                 </span>
             </div>
             <div className={styles.viewContent}>
@@ -80,9 +80,7 @@ const UYUN_Alert_REST = (props) => {
                     </Form>
                     {
                         appkey === undefined ? 
-                        <Button type="primary" className={styles.createBtn} onClick={() => {keyCreate(form, (UUID) => {
-                            window.frames[0].postMessage(UUID, '/')
-                        })}}>{formatMessage({...localeMessage['appKey']})}</Button>
+                        <Button type="primary" className={styles.createBtn} onClick={() => {keyCreate(form)}}>{formatMessage({...localeMessage['appKey']})}</Button>
                         :
                         <p className={styles.readOnly}>{`App key：${appkey}`}</p>
                     }
@@ -91,13 +89,9 @@ const UYUN_Alert_REST = (props) => {
                     builtIn !== undefined && builtIn == 1 ?
                     <div className={styles.step2}>
                         <span className={styles.step2Icon}></span>
-                        <p className={styles.stepName}>{formatMessage({...localeMessage['rest_step2']})}</p>
-                        {
-                            window.__alert_appLocaleData.locale == 'zh-cn' ?
-                            <iframe src={ `apidocs_zh.html?url=${url}`}/>
-                            :
-                            <iframe src={ `apidocs_en.html?url=${url}`}/>
-                        }
+                        <p className={styles.stepName}>{formatMessage({...localeMessage['videoMon_step2']})}</p>
+                        <p className={styles.stepMessage}>{formatMessage({...localeMessage['videoMon_step2Message']})}</p>
+                        <p className={styles.stepExample}>{appkey !== undefined ? url + `&app_key=${appkey}` : url}</p>
                     </div>
                     : undefined
                 }
@@ -116,4 +110,4 @@ export default injectIntl(Form.create({
             }
         }
     }
-})(UYUN_Alert_REST))
+})(UYUN_VideoMON))

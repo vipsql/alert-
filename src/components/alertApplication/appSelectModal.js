@@ -51,7 +51,7 @@ const appSelectModal = ({alertConfig, dispatch}) => {
           onCancel={ closeTypeModal }
           visible={ isShowTypeModal }
           footer={ null }
-          width={600}
+          width={650}
         >
             <div className={styles.appModalMain}>
                 <p><FormattedMessage {...localeMessage['applicationMessage']} /></p>

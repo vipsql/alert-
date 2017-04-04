@@ -222,11 +222,11 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                                 {
                                     currentAlertDetail.tags.map( (tag, index) => {
                                         if (tag.key == 'severity' || tag.key == 'status') {
-                                            return <span key={index} className={styles.tag}>{`${tag.keyName} : `}{window[`_${tag.key}`][tag.value]}</span>
+                                            return <span title={`${tag.keyName} : ` + window[`_${tag.key}`][tag.value]} key={index} className={styles.tag}>{`${tag.keyName} : ` + window[`_${tag.key}`][tag.value]}</span>
                                         } else if (tag.value == '') {
-                                            return <span key={index} className={styles.tag}>{tag.keyName}</span>
+                                            return <span title={tag.keyName} key={index} className={styles.tag}>{tag.keyName}</span>
                                         } else {
-                                            return <span key={index} className={styles.tag}>{`${tag.keyName} : ${tag.value}`}</span>
+                                            return <span title={`${tag.keyName} : ${tag.value}`} key={index} className={styles.tag}>{`${tag.keyName} : ${tag.value}`}</span>
                                         }
                                         
                                     })
@@ -270,7 +270,7 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                     <div className={classnames(styles.infoBody)}>
                         <p>{formatMessage({...localeMessage['ci']})}</p>
                         <ul>
-                            <li><span>{formatMessage({...localeMessage['link']})}:</span><span><a href={ciUrl}>{ciUrl}</a></span></li>
+                            <li className={styles.cilink}><span>{formatMessage({...localeMessage['link']})}:</span><span><a href={ciUrl} target={'_blank'}>{ciUrl}</a></span></li>
                         </ul>
                     </div>
                     :

@@ -438,32 +438,6 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
         <div>
           <Form>
             <Row>
-              <Col span={8} className={styles.colStyle}>
-                <Item
-                  {...formItemLayout}
-                  wrapperCol={{span: 5}}
-                  label={<FormattedMessage {...localeMessage['keyWords']} />}
-                > 
-                  {getFieldDecorator('keyWordsType', {
-                    initialValue: '1'
-                  })(
-                    <Select size='large'>
-                      <Option className={styles.keywordsMenuItem} value="1"><FormattedMessage {...localeMessage['entityName']} /></Option>
-                      <Option className={styles.keywordsMenuItem} value="3"><FormattedMessage {...localeMessage['tags']} /></Option>
-                      <Option className={styles.keywordsMenuItem} value="2"><FormattedMessage {...localeMessage['description']} /></Option>
-                    </Select>
-                  )}    
-                </Item>
-                <Item
-                  wrapperCol={{span: 8, offset: 10}}
-                >
-                  {getFieldDecorator('keyWords', {
-                    
-                  })(
-                    <Input placeholder={formatMessage({...localeMessage['keyWords_placeholder']})} />
-                  )}
-                </Item>
-              </Col>
               <Col span={8}>
                 <Item
                   {...formItemLayout}
@@ -500,8 +474,6 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
                   )}
                 </Item>
               </Col>
-            </Row>
-            <Row>
               <Col span={8}>
                 <Item
                   {...formItemLayout}
@@ -515,6 +487,8 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
                   )}
                 </Item>
               </Col>
+            </Row>
+            <Row>
               <Col span={8}>
                 <Item
                   {...formItemLayout}
@@ -547,6 +521,34 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
                         <Option value="4">{`1 ~ 4 h`}</Option>
                         <Option value="5">{`> 4 h`}</Option>
                       </Select>
+                  )}
+                </Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col className={styles.colStyle}>
+                <Item
+                  labelCol={{span: 2}}
+                  wrapperCol={{span: 4}}
+                  label={<FormattedMessage {...localeMessage['keyWords']} />}
+                > 
+                  {getFieldDecorator('keyWordsType', {
+                    initialValue: '1'
+                  })(
+                    <Select size='large'>
+                      <Option className={styles.keywordsMenuItem} value="1"><FormattedMessage {...localeMessage['entityName']} /></Option>
+                      <Option className={styles.keywordsMenuItem} value="3"><FormattedMessage {...localeMessage['tags']} /></Option>
+                      <Option className={styles.keywordsMenuItem} value="2"><FormattedMessage {...localeMessage['description']} /></Option>
+                    </Select>
+                  )}    
+                </Item>
+                <Item
+                  wrapperCol={{span: 8, offset: 10}}
+                >
+                  {getFieldDecorator('keyWords', {
+                    
+                  })(
+                    <Input placeholder={formatMessage({...localeMessage['keyWords_placeholder']})} />
                   )}
                 </Item>
               </Col>
