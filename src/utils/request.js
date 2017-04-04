@@ -5,7 +5,7 @@ import constants from './constants'
 const ROOT_PATH = constants.api_root;
 
 function isApiUrl(url) {
-  if (url.startsWith(ROOT_PATH)) {
+  if (url.indexOf(ROOT_PATH) !== -1) {
     return url;
   }
   if (url.indexOf('chatops') > -1) {
@@ -25,7 +25,7 @@ function isApiUrl(url) {
  */
 export default async function request(url, options) {
   
-    options.credentials =  'include'
+      //options.credentials =  'include'
     
       const response = await fetch(isApiUrl(url), options);
       const data = await response.json()
