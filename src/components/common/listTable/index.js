@@ -184,7 +184,7 @@ class ListTable extends Component {
           styles.relieveIcon
         )
         if(key == 'name') {
-          td = <td key={key} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >
+          td = <td key={key} title={data} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >
             {data}
             {
               sourceOrigin !== 'alertQuery' && item['hasChild'] === true ?
@@ -193,8 +193,10 @@ class ListTable extends Component {
               undefined
             }
           </td>
+        } else if (key == 'description' || key == 'entityName'){
+           td = <td key={key} title={data}>{data}</td>
         } else {
-          td = <td key={key}>{data}</td>
+           td = <td key={key}>{data}</td>
         }
         tds.push(td)
       })
@@ -248,7 +250,9 @@ class ListTable extends Component {
           td = <td key={key}>{data}</td>
         }
         if(key == 'name') {
-          td = <td key={key} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >{data}</td>
+          td = <td key={key} title={data} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >{data}</td>
+        } else if (key == 'description' || key == 'entityName'){
+          td = <td key={key} title={data}>{data}</td>
         } else {
           td = <td key={key}>{data}</td>
         }

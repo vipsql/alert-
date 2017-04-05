@@ -211,10 +211,12 @@ export default {
         if (currentAlertDetail !== undefined && Object.keys(currentAlertDetail).length !== 0) {
             const shareResult = yield shareRoom(payload, {
                 body: {
-                    ...currentAlertDetail,
                     type: 'alert',
-                    severityDesc: window['_severity'][currentAlertDetail['severity']],
-                    status: window['_status'][currentAlertDetail['status']],
+                    data: {
+                        ...currentAlertDetail,
+                        severityDesc: window['_severity'][currentAlertDetail['severity']],
+                        status: window['_status'][currentAlertDetail['status']],
+                    }
                 }
             });
             if (shareResult.result) {

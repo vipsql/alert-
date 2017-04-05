@@ -191,7 +191,7 @@ class ListTimeTable extends Component {
               )
            if(key == 'name') {
             TDS.push(<td key={key} className={styles[className]} width="200" data-id={item.id} onClick={detailClick} >
-              <div key = 'nameDiv' className={styles['name']}>{item[key]}</div>
+              <div key = 'nameDiv' title={item[key]} className={styles['name']} data-id={item.id}>{item[key]}</div>
               {
                 item['hasChild'] === true ?
                 <span className={relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
@@ -200,7 +200,7 @@ class ListTimeTable extends Component {
               }
             </td>)
            } else if(key == 'entityName'){
-             TDS.push(<td key={key} className={styles[className]} width="200"><div key = 'entityNameDiv' className={styles['entityName']}>{item[key]}</div></td>)
+             TDS.push(<td key={key} title={item[key]} className={styles[className]} width="200"><div key = 'entityNameDiv' className={styles['entityName']}>{item[key]}</div></td>)
            } else {
              TDS.push(<td key={key} className={styles[className]}>{item[key]}</td>)
            }
@@ -218,8 +218,12 @@ class ListTimeTable extends Component {
            // const tdKey = item.date + key
            const className = key == 'name' ? 'tdBorderRight' : '';
 
-           if(key == 'alertName') {
-             TDS.push(<td key={key} className={styles[className]} data-id={item.id} onClick={detailClick} >{item[key]}</td>)
+           if(key == 'name') {
+             TDS.push(<td key={key} className={styles[className]} data-id={item.id} onClick={detailClick} >
+              <div key = 'nameDiv' title={item[key]} className={styles['name']} data-id={item.id}>{item[key]}</div>
+             </td>)
+           } else if (key == 'entityName') {
+             TDS.push(<td key={key} title={item[key]} className={styles[className]} width="200"><div key = 'entityNameDiv' className={styles['entityName']}>{item[key]}</div></td>)
            } else {
              TDS.push(<td key={key} className={styles[className]}>{item[key]}</td>)
            }
@@ -237,40 +241,49 @@ class ListTimeTable extends Component {
         let lineDotLeft = 0
         let lineDotW = 0
         
-        lineDotLeft = (item[0].occurTime - begin) / (60 * 1000) * minuteToWidth
-        const len = item.length
-        lineDotW = (item[len-1]['occurTime'] - item[0]['occurTime']) / (60 * 1000) * minuteToWidth
-        
-        dots =  item.map( (itemDot, idx) => {
-          const left = (itemDot.occurTime - begin) / (60 * 1000) * minuteToWidth
-          const iconColor = itemDot['severity'] == 3 ? 
-                              'jjLevel' : itemDot['severity'] == 2 ?
-                                  'gjLevel' : itemDot['severity'] == 1 ?
-                                      'txLevel' : itemDot['severity'] == 0 ?
-                                          'hfLevel' : undefined
-          let newDate = new Date(+itemDot['occurTime'])
-          const content = (
-            <div>
-              <p><FormattedMessage {...formatMessages['severity']} />{`：${window['_severity'][itemDot['severity']]}`}</p>
-              <p><FormattedMessage {...formatMessages['name']} />{`：${itemDot['name']}`}</p>
-              <p><FormattedMessage {...formatMessages['incidentId']} />{`：${itemDot['incidentId']}`}</p>
-              <p><FormattedMessage {...formatMessages['occurTime']} />{`：${newDate.getFullYear() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getDate() + ' ' + newDate.getHours() + ':' + newDate.getMinutes()}`}</p>
-              <p><FormattedMessage {...formatMessages['description']} />{`：${itemDot['description']}`}</p>
-              <p><FormattedMessage {...formatMessages['source']} />{`：${itemDot['source']}`}</p>
-            </div>
-          );
-          return (
-            <Popover content={content} key={`dot-${idx}`} trigger={'click'} className={styles.myPopover}>
-              <span style={{left: left  + 'px'}} className={styles[iconColor]} data-id={itemDot.id} onClick={detailClick}></span>
-            </Popover>
+        if (item !== undefined && item.length !== 0) {
+          lineDotLeft = (item[0].occurTime - begin) / (60 * 1000) * minuteToWidth
+          const len = item.length
+          lineDotW = (item[len-1]['occurTime'] - item[0]['occurTime']) / (60 * 1000) * minuteToWidth
+          
+          dots =  item.map( (itemDot, idx) => {
+            const left = (itemDot.occurTime - begin) / (60 * 1000) * minuteToWidth
+            const iconColor = itemDot['severity'] == 3 ? 
+                                'jjLevel' : itemDot['severity'] == 2 ?
+                                    'gjLevel' : itemDot['severity'] == 1 ?
+                                        'txLevel' : itemDot['severity'] == 0 ?
+                                            'hfLevel' : undefined
+            let newDate = new Date(+itemDot['occurTime'])
+            const content = (
+              <div>
+                <p><FormattedMessage {...formatMessages['severity']} />{`：${window['_severity'][itemDot['severity']]}`}</p>
+                <p><FormattedMessage {...formatMessages['name']} />{`：${itemDot['name']}`}</p>
+                <p><FormattedMessage {...formatMessages['incidentId']} />{`：${itemDot['incidentId']}`}</p>
+                <p><FormattedMessage {...formatMessages['occurTime']} />{`：${newDate.getFullYear() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getDate() + ' ' + newDate.getHours() + ':' + newDate.getMinutes()}`}</p>
+                <p><FormattedMessage {...formatMessages['description']} />{`：${itemDot['description']}`}</p>
+                <p><FormattedMessage {...formatMessages['source']} />{`：${itemDot['source']}`}</p>
+              </div>
+            );
+            return (
+              <Popover content={content} key={`dot-${idx}`} trigger={'click'} className={styles.myPopover}>
+                <span style={{left: left  + 'px'}} className={styles[iconColor]} data-id={itemDot.id} onClick={detailClick}></span>
+              </Popover>
 
-          )
-        })
-       
-        return {
-          dots,
-          lineDotW,
-          lineDotLeft
+            )
+          })
+        
+          return {
+            dots,
+            lineDotW,
+            lineDotLeft
+          }
+
+        } else {
+          return {
+            dots: [],
+            lineDotW: 0,
+            lineDotLeft: 0
+          }
         }
       }
 

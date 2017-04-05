@@ -385,10 +385,12 @@ export default {
                 delete selectedAlertIds[0]['timeLine']
                 const shareResult = yield shareRoom(payload, {
                     body: {
-                        ...selectedAlertIds[0],
                         type: 'alert',
-                        severityDesc: window['_severity'][selectedAlertIds[0]['severity']],
-                        status: window['_status'][selectedAlertIds[0]['status']],
+                        data: {
+                            ...selectedAlertIds[0],
+                            severityDesc: window['_severity'][selectedAlertIds[0]['severity']],
+                            status: window['_status'][selectedAlertIds[0]['status']]
+                        }
                     }
                 });
                 if (shareResult.result) {

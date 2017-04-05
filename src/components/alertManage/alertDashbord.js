@@ -33,10 +33,10 @@ class Chart extends Component{
     componentDidMount(){
         const self = this;
         const severityToColor = {
-            '0': '#ff9524', // 正常
-            '1': '#a5f664', // 提醒
-            '2': '#fadc23', // 警告
-            '3': '#eb5a30' // 紧急
+            '0': '#a5f664', // 正常
+            '1': '#fadc23', // 提醒
+            '2': '#ff9524', // 警告
+            '3': "#eb5a30" // 紧急
         }
         this.chartWidth = document.documentElement.clientWidth - 160 - 90;
         this.chartHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight) - 180;
