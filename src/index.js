@@ -10,7 +10,8 @@ import appLocaleEnData from 'react-intl/locale-data/en'
 
 import enMessages from '../locales/en.json'
 import { addLocaleData, IntlProvider } from 'react-intl'
-
+// import Perf from 'react-addons-perf'
+// window.Perf = Perf
 
 const setLang = function(lang){
 	if(!lang){

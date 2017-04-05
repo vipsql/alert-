@@ -36,7 +36,7 @@ export default class Tip {
     const tb = t.getBoundingClientRect()
     const o = offset(t)
     
-    el.innerHTML = `${__alert_appLocaleData.messages['treemap.tagsGroup']}: ` + d.parent.name + '<br/>' + `${__alert_appLocaleData.messages['treemap.activeAlerts']}: ` + d.value
+    el.innerHTML = `${__alert_appLocaleData.messages['treemap.tagsGroup']}: ` + d.name + '<br/>' + `${__alert_appLocaleData.messages['treemap.activeAlerts']}: ` + d.value
     el.style.display = 'block'
     el.style.top = o.top - 55 + 'px'
     el.style.left = o.left + 'px'
