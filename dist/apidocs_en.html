@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+  <style type="text/css">
+  	body{
+		font-family: '微软雅黑,Sansation Light,Helvetica Neue,Helvetica,Arial,sans-serif';
+		font-size: 13px;
+		color: #fff;
+	}
+	pre{
+		font-family: '微软雅黑,Sansation Light,Helvetica Neue,Helvetica,Arial,sans-serif';
+	}
+	td{
+		padding: 5px;
+		margin-bottom: 5px;
+		border: 1px solid #1f528b;
+	}
+	table{
+	    border-collapse: collapse;
+	}
+	.table-list thead{
+		background-color: #143355;
+		color: #4a88b6;
+		border-bottom: 1px solid #1f528b;
+	}
+	p{
+		font-size: 14px;
+		color: #6ec2ff;
+		margin-bottom: 18px;
+	}
+  </style>
+ </head>
+ <body onload="getUrl()">
+  <div>
+	<table class="table-bordered table" width="100%">
+		<tbody>
+			<tr><td>URL</td><td id='url'></td></tr>
+			<tr><td>Call</td><td>POST</td></tr>
+			<tr><td>Authentication</td><td>Not required</td></tr>
+			<tr>
+				<td>Params(header)</td>
+				<td>
+					api_key* (required)<br>
+					app_Key* (required) (Created in first step, identify a source from which the alert was sent. )
+				</td>
+			</tr>
+			<tr>
+				<td>Params(body)</td>
+				<td>
+					<pre>
+{
+	"severity":       "3",
+	"name":           "CPU overloaded",
+	"description":    "CPU is above upper limit (80%)%",
+	"occur_time":     1490251916807,
+	"entity_name":    "PC Server",
+	"entity_addr":    "10.2.1.2",
+	"merge_key":      "source,entity_name,name",
+	"properties":     [
+		{
+			"val": "dataCenter_A",		
+			"code": "location",
+			"name":	"Location"
+		}
+	]
+}</pre>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p>Parameters:</p>
+	<table class="table-list" width="100%">
+				<thead><tr>
+					<td>Filed</td>
+					<td>Required</td>
+					<td>Description</td>
+				</tr></thead>
+				<tbody><tr>
+					<td>severity</td>
+					<td>Not required</td>
+					<td>Severity of alert:Critical 1, Warning 2, Information3, OK 4</td>
+				</tr>
+				<tr>
+					<td>name</td>
+					<td>Required</td>
+					<td>Alert Name</td>
+				</tr>
+				<tr>
+					<td>description</td>
+					<td>Not required</td>
+					<td>Additional text information</td>
+				</tr>
+				<tr>
+					<td>occur_time</td>
+					<td>Not required</td>
+					<td>Time that the alert occurred</td>
+				</tr>
+				<tr>
+					<td>entity_name</td>
+					<td>Not required</td>
+					<td>The entity</td>
+				</tr>
+				<tr>
+					<td>entity_addr</td>
+					<td>Not required</td>
+					<td>IP address that the alert occurred</td>
+				</tr>
+				<tr>
+					<td>app_key</td>
+					<td>Required</td>
+					<td>Created in first step, identify a source from which the alert was sent</td>
+				</tr>
+				<tr>
+					<td>status</td>
+					<td>Not required</td>
+					<td>New 1，Assgined 2，Closed 3</td>
+				</tr>
+				<tr>
+					<td>merge_key</td>
+					<td>Required</td>
+					<td>Merging Alerts into Incident</td>
+				</tr>
+				<tr>
+					<td>properties</td>
+					<td>Not required</td>
+					<td>Additional attributes，please use the name, key, value JSON pairs</td>
+				</tr>
+			</tbody>
+	</table>
+	<p>Send a Test Alert</p>
+	<pre id="example">
+curl -H "Content-type: application/json" -X POST -d '{
+	[{
+		"body": "{
+			'name':'activemq.broker.memory_pct-ActiveMQ Memery overloaded',
+			'severity':3,
+			'description':'ActiveMQ Memery above upper limit (3%)%',
+			'occur_time':1490251916807,
+			'entity_name':'PC20151218',
+			'entity_addr':'10.1.113.28',
+			'source':'Monitor',
+			'merge_key':'source,entity_name,name',
+			'properties':[{'val': 'Financial','code': 'belong','name': 'Department'}]
+		}"
+	}] 
+}' </pre>
+	</div>
+ </body>
+ <script>
+ 	function getUrl() {
+		document.getElementById('url').innerHTML = window.parent.__alert_restApiUrl
+		document.getElementById('example').innerHTML = document.getElementById('example').innerHTML + '"' + window.parent.__alert_restApiUrl + '"'
+	}
+	window.addEventListener('message', function(e){
+		var len = document.getElementById('example').innerHTML.length;
+		if(e.source!=window.parent) return;
+		document.getElementById('url').innerHTML = document.getElementById('url').innerHTML + '&app_Key=' + e.data
+		document.getElementById('example').innerHTML = document.getElementById('example').innerHTML.slice( 0, len - 1 ) + '&app_Key=' + e.data + '"'
+	}, false);
+ </script>
+</html>

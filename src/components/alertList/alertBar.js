@@ -110,6 +110,7 @@ class AlertBar extends Component{
     const min5 = n_minutes_interval(2);
     const alertList = crossfilter(barData)
     const clientWidth = document.documentElement.clientWidth || document.body.clientWidth
+    
     const leftMenuWidth = this.props.alertList.isResize ? 50 : 160 //是否折叠
     const width = clientWidth - leftMenuWidth - 90;
     
