@@ -552,9 +552,9 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
                   )}
                 </Item>
               </Col>
-              <Button type="primary" size="default" htmlType="submit" onClick={ (e) => {onOk(e, form)} }><FormattedMessage {...localeMessage['search']} /></Button>
+              <Button type="primary" size="large" htmlType="submit" onClick={ (e) => {onOk(e, form)} }><FormattedMessage {...localeMessage['search']} /></Button>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <Button type="primary" size="default" onClick={ () => {form.resetFields()} }><FormattedMessage {...localeMessage['reset']} /></Button>
+              <Button type="primary" size="large" onClick={ () => {form.resetFields()} }><FormattedMessage {...localeMessage['reset']} /></Button>
             </Row>
           </Form>
           {!haveQuery ? <div className={styles.alertListInfo}><FormattedMessage {...localeMessage['noQueryData']} /></div> :
