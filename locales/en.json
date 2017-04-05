@@ -143,7 +143,7 @@
   "alertApplication.monitor.step2": "Send data to the Monitor",
   "alertApplication.monitor.step2Message": "Please copy the URL below to your application.",
 
-  "alertApplication.videoMon.headerTitle": "Use Web Hook to build a integration between Uyun Alert and Uyun VideoMON.",
+  "alertApplication.videoMon.headerTitle": "Use Web Hook to build a integration between Uyun Alert and Uyun VideoMon.",
   "alertApplication.videoMon.step2": "Send data to the Monitor",
   "alertApplication.videoMon.step2Message": "Please copy the URL below to your application.",
 

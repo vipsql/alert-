@@ -12,23 +12,23 @@ function Edit(props){
     const { currentEditApp } = props.alertConfig;
 
     const editApplication = ({alertConfig, dispatch}) => {
-        const { currentEditApp, UUID, apikey } = alertConfig;
+        const { currentEditApp, apikey } = alertConfig;
         let targetApplication;
         let hostUrl = 'https://alert.uyun.cn'
         if (window.location.origin.indexOf("alert") > -1) {
             // 域名访问
             hostUrl = window.location.origin
-            window.__alert_restApiUrl = hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`
+            window.__alert_restApiUrl = hostUrl + '/openapi/v2/create?' + `api_key=${apikey}` + `&app_key=${currentEditApp.appKey}`
         } else {
             // 顶级域名/Ip访问
             hostUrl = window.location.origin + '/alert'
-            window.__alert_restApiUrl = hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`
+            window.__alert_restApiUrl = hostUrl + '/openapi/v2/create?' + `api_key=${apikey}` + `&app_key=${currentEditApp.appKey}`
         }
-        switch (currentEditApp.name) {
+        switch (currentEditApp.applyType.name) {
             case 'UYUN Alert REST API':
                 targetApplication = 
                     <AlertREST 
-                        appkey={UUID}
+                        appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}
                         url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
@@ -51,7 +51,7 @@ function Edit(props){
             case 'UYUN Monitor':
                 targetApplication = 
                     <Monitor 
-                        appkey={UUID}
+                        appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}
                         url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
@@ -74,7 +74,7 @@ function Edit(props){
             case 'UYUN VideoMON':
                 targetApplication = 
                     <VideoMON 
-                        appkey={UUID}
+                        appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}
                         url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
@@ -97,7 +97,7 @@ function Edit(props){
             case 'UYUN Itsm':
                 targetApplication = 
                     <Itsm 
-                        appkey={UUID}
+                        appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         onOk={(e, form) => {
                             e.preventDefault();
@@ -118,7 +118,7 @@ function Edit(props){
             case 'UYUN ChatOps':
                 targetApplication = 
                     <ChatOps 
-                        appkey={UUID}
+                        appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         onOk={(e, form) => {
                             e.preventDefault();
@@ -139,7 +139,7 @@ function Edit(props){
             default:
                 targetApplication = 
                     <AlertREST 
-                        appkey={UUID}
+                        appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}
                         url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
