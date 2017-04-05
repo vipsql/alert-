@@ -50,7 +50,7 @@ const UYUN_Itsm = (props) => {
             <div className={styles.viewHeader}>
                 <i className={classnames(itsmClass, styles.headerIcon)}></i>
                 <span className={styles.headerContent}>
-                    <p className={styles.headerName}>UYUN Itsm</p>
+                    <p className={styles.headerName}>UYUN ITSM</p>
                     <p>{formatMessage({...localeMessage['itsm_headerTitle']})}</p>
                 </span>
             </div>

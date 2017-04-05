@@ -93,7 +93,7 @@ function Add(props){
                         }}
                     />
                 break;
-            case 'UYUN VideoMON':
+            case 'UYUN VideoMon':
                 targetApplication = 
                     <VideoMON 
                         appkey={UUID}
@@ -126,7 +126,7 @@ function Add(props){
                         }}
                     />
                 break;
-            case 'UYUN Itsm':
+            case 'UYUN ITSM':
                 targetApplication = 
                     <Itsm 
                         appkey={UUID}

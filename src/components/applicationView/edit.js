@@ -71,7 +71,7 @@ function Edit(props){
                         }}
                     />
                 break;
-            case 'UYUN VideoMON':
+            case 'UYUN VideoMon':
                 targetApplication = 
                     <VideoMON 
                         appkey={currentEditApp.appKey}
@@ -94,7 +94,7 @@ function Edit(props){
                         }}
                     />
                 break;
-            case 'UYUN Itsm':
+            case 'UYUN ITSM':
                 targetApplication = 
                     <Itsm 
                         appkey={currentEditApp.appKey}
