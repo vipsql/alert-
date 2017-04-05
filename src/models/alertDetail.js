@@ -126,7 +126,8 @@ export default {
     closeTicketModal(state){
         return {
             ...state,
-            isShowTicketModal: false
+            isShowTicketModal: false,
+            ticketUrl: '',
         }
     },
     // ci链接

@@ -284,12 +284,8 @@ export default {
     initColumn(state, {payload: {baseCols, extend}}) {
         const { columnList } = state;
         let newList = columnList;
-        let haveExtend = false;
         baseCols.forEach( (column, index) => {
             newList.forEach( (group) => {
-                if (group.type == 1) {
-                    haveExtend = true;
-                }
                 group.cols.forEach( (col) => {
                   if (column.key === col.id) {
                       col.checked = true;
@@ -297,11 +293,11 @@ export default {
                 }) 
             })
         })
-        if (extend.cols.length !== 0 && !haveExtend) {
+        if (extend.cols.length !== 0) {
             extend.cols.forEach( (col) => {
                 col.checked = false;
             })
-            newList.push(extend)
+            newList[1] = extend
         }
         return { ...state, columnList: newList, extendColumnList: extend.cols }
     },
@@ -428,7 +424,8 @@ export default {
     closeTicketModal(state){
         return {
             ...state,
-            isShowTicketModal: false
+            isShowTicketModal: false,
+            ticketUrl: '',
         }
     }
   },
