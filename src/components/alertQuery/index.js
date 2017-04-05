@@ -525,7 +525,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
                 </Item>
               </Col>
             </Row>
-            <Row>
+            <Row className={styles.rowStyle}>
               <Col className={styles.colStyle}>
                 <Item
                   labelCol={{span: 2}}
@@ -552,12 +552,10 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
                   )}
                 </Item>
               </Col>
-            </Row>
-            <Item wrapperCol={{ span: 10, offset: 2 }}>
               <Button type="primary" size="default" htmlType="submit" onClick={ (e) => {onOk(e, form)} }><FormattedMessage {...localeMessage['search']} /></Button>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <Button type="primary" size="default" onClick={ () => {form.resetFields()} }><FormattedMessage {...localeMessage['reset']} /></Button>
-            </Item>
+            </Row>
           </Form>
           {!haveQuery ? <div className={styles.alertListInfo}><FormattedMessage {...localeMessage['noQueryData']} /></div> :
           <div>

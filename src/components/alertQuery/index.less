@@ -202,32 +202,44 @@
 }
 
 // cover Col style
-.colStyle{
-    & > div:first-child{
-        & > div:last-child{
-            //width: 18%;
-            & > div{
+.rowStyle{
+    & > button{
+        position: absolute;
+        top: 0px;
+    }
+    button:nth-last-child(1){
+        right: 0px;
+    }
+    button:nth-last-child(2){
+        right: 100px;
+    }
+    .colStyle{
+        & > div:first-child{
+            & > div:last-child{
+                //width: 18%;
                 & > div{
                     & > div{
-                        border-top-right-radius: 0px;
-                        border-bottom-right-radius: 0px;
-                        border-right: none;
+                        & > div{
+                            border-top-right-radius: 0px;
+                            border-bottom-right-radius: 0px;
+                            border-right: none;
+                        }
                     }
                 }
             }
         }
-    }
-    & > div:last-child{
-        margin-bottom: 0px;
-        & > div{
-            position: absolute;
-            top: -57px;
-            width: 70%;
-            margin-left: 24.9%;
+        & > div:last-child{
+            margin-bottom: 0px;
             & > div{
-                & > input{
-                    border-top-left-radius: 0px;
-                    border-bottom-left-radius: 0px;
+                position: absolute;
+                top: -57px;
+                width: 55%;
+                margin-left: 24.9%;
+                & > div{
+                    & > input{
+                        border-top-left-radius: 0px;
+                        border-bottom-left-radius: 0px;
+                    }
                 }
             }
         }
