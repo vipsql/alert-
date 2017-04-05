@@ -18,9 +18,11 @@ function Edit(props){
         if (window.location.origin.indexOf("alert") > -1) {
             // 域名访问
             hostUrl = window.location.origin
+            window.__alert_restApiUrl = hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`
         } else {
             // 顶级域名/Ip访问
             hostUrl = window.location.origin + '/alert'
+            window.__alert_restApiUrl = hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`
         }
         switch (currentEditApp.name) {
             case 'UYUN Alert REST API':

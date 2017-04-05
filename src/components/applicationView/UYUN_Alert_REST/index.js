@@ -94,9 +94,9 @@ const UYUN_Alert_REST = (props) => {
                         <p className={styles.stepName}>{formatMessage({...localeMessage['rest_step2']})}</p>
                         {
                             window.__alert_appLocaleData.locale == 'zh-cn' ?
-                            <iframe src={ `apidocs_zh.html?url=${url}`}/>
+                            <iframe src={ `apidocs_zh.html`}/>
                             :
-                            <iframe src={ `apidocs_en.html?url=${url}`}/>
+                            <iframe src={ `apidocs_en.html`}/>
                         }
                     </div>
                     : undefined

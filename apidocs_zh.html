@@ -111,11 +111,8 @@ curl -H "Content-type: application/json" -X POST -d '{
  </body>
  <script>
  	function getUrl() {
-		 var urlArr = document.URL.split('url=')
-		 if (urlArr[1] !== undefined) {
-		 	document.getElementById('url').innerHTML = urlArr[1]
-			document.getElementById('example').innerHTML = document.getElementById('example').innerHTML + '"' + urlArr[1] + '"'
-		 }
+		document.getElementById('url').innerHTML = window.parent.__alert_restApiUrl
+		document.getElementById('example').innerHTML = document.getElementById('example').innerHTML + '"' + window.parent.__alert_restApiUrl + '"'
 	}
 	window.addEventListener('message', function(e){
 		var len = document.getElementById('example').innerHTML.length;
