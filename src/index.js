@@ -1,5 +1,4 @@
 import './index.html'
-//import './index-en.html'
 import dva from 'dva'
 import React from 'react'
 import ReactDOM from 'react-dom'
