@@ -41,6 +41,14 @@ module.exports = function (webpackConfig, env) {
            {
              from: __dirname + '/apidocs_zh.html',
              to: __dirname + '/dist/'
+           },
+           {
+             from: __dirname + '/polyfill-ie10.js',
+             to: __dirname + '/dist/'
+           },
+           {
+             from: __dirname + '/polyfill-ie11.js',
+             to: __dirname + '/dist/'
            }
        ])
 
