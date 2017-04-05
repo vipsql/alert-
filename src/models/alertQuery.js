@@ -197,7 +197,7 @@ export default {
        yield put({ type: 'alertQueryDetail/toggleDetailModal', payload: false })
        yield put({ type: 'clear'})
        // 列定制初始化
-       yield put({ type: 'alertQueryDetail/initalColumn'})
+       //yield put({ type: 'alertQueryDetail/initalColumn'})
 
        const options = yield call(querySource)
        
@@ -236,7 +236,8 @@ export default {
         pageSize,
         orderBy,
         orderType,
-        currentQuery
+        currentQuery,
+        columns
       } = yield select(state => {
         const alertQuery = state.alertQuery
 
@@ -246,7 +247,8 @@ export default {
           pageSize: alertQuery.pageSize,
           orderBy: alertQuery.orderBy,
           orderType: alertQuery.orderType,
-          currentQuery: alertQuery.currentQuery
+          currentQuery: alertQuery.currentQuery,
+          columns: alertQuery.columns
         }
       })
       var extraParams = {};
@@ -292,6 +294,13 @@ export default {
           yield put({
             type: 'toggleLoading',
             payload: false
+          })
+          yield put({
+            type: 'alertQueryDetail/initColumn',
+            payload: {
+              baseCols: columns, 
+              extend: listData.data.properties
+            }
           })
 
       } else {
@@ -397,6 +406,10 @@ export default {
         yield put({
           type: 'toggleLoading',
           payload: false
+        })
+        yield put({
+          type: 'alertQueryDetail/addProperties',
+          payload: listReturnData.data.properties
         })
       } else {
         yield message.error(window.__alert_appLocaleData.messages[listReturnData.message], 2)

@@ -61,19 +61,19 @@ export default {
 
   effects: {
       // 列定制初始化(将数据变为设定的结构)
-      *initalColumn({payload}, {select, put, call}) {
-          // 这里后期要先做查询得到扩展字段，再和columnList拼接
-          const { columns } = yield select( state => {
-              return {
-                  'columns': state.alertListTable.columns
-              }
-          })
-          const columnResult = yield call(queryCloumns)
-          if (!columnResult.result) {
-              yield message.error(window.__alert_appLocaleData.messages[columnResult.message], 2);
-          }
-          yield put({ type: 'initColumn', payload: {baseCols: columns, extend: columnResult.data || {}}})
-      },
+    //   *initalColumn({payload}, {select, put, call}) {
+    //       // 这里后期要先做查询得到扩展字段，再和columnList拼接
+    //       const { columns } = yield select( state => {
+    //           return {
+    //               'columns': state.alertListTable.columns
+    //           }
+    //       })
+    //       const columnResult = yield call(queryCloumns)
+    //       if (!columnResult.result) {
+    //           yield message.error(window.__alert_appLocaleData.messages[columnResult.message], 2);
+    //       }
+    //       yield put({ type: 'initColumn', payload: {baseCols: columns, extend: columnResult.data || {}}})
+    //   },
       // 打开解除告警modal
       *openRelieveModal({payload}, {select, put, call}) {
           // 触发筛选
@@ -458,13 +458,34 @@ export default {
                 }) 
             })
         })
-        if (Object.keys(extend.cols).length !== 0 && !haveExtend) {
+        if (extend.cols.length !== 0 && !haveExtend) {
             extend.cols.forEach( (col) => {
                 col.checked = false;
             })
             newList.push(extend)
         }
         return { ...state, columnList: newList, extendColumnList: extend.cols }
+      },
+      // show more时需要叠加columns
+      addProperties(state, {payload: properties}) {
+          const { columnList } = state;
+          let colIds = [];
+          columnList.forEach( (item) => {
+              if (item.type == 1) {
+                  item.cols.forEach( (col) => {
+                      colIds.push(col.id)
+                  }) 
+              }
+          })
+          if (properties.cols.length !== 0) {
+            properties.cols.forEach( (targetCol) => {
+                if (!colIds.includes(targetCol.id)) {
+                    targetCol.checked = false;
+                    columnList[columnList.length - 1].cols.push(targetCol)
+                }
+            })
+          }
+          return {...state, columnList: columnList, extendColumnList: columnList[columnList.length - 1].cols}
       },
       // 列改变时触发
       setColumn(state, {payload: selectCol}) {

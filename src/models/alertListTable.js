@@ -458,7 +458,8 @@ export default {
         pageSize,
         orderBy,
         lineW,
-        orderType
+        orderType,
+        columns,
       } = yield select(state => {
         const alertListTable = state.alertListTable
         return {
@@ -469,7 +470,8 @@ export default {
           lineW: alertListTable.lineW,
           pageSize: alertListTable.pageSize,
           orderBy: alertListTable.orderBy,
-          orderType: alertListTable.orderType
+          orderType: alertListTable.orderType,
+          columns: alertListTable.columns,
         }
       })
       
@@ -534,6 +536,13 @@ export default {
           yield put({
             type: 'toggleLoading',
             payload: false
+          })
+          yield put({
+            type: 'alertOperation/initColumn',
+            payload: {
+              baseCols: columns, 
+              extend: listData.data.properties
+            }
           })
 
       } else {
@@ -749,6 +758,10 @@ export default {
         yield put({
           type: 'toggleLoading',
           payload: false
+        })
+        yield put({
+          type: 'alertOperation/addProperties',
+          payload: listReturnData.data.properties
         })
       } else {
         yield message.error(window.__alert_appLocaleData.messages[listReturnData.message], 2)
