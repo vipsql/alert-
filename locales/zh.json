@@ -49,6 +49,7 @@
   "alertQuery.label.keyWords.placeholder": "请输入关键字",
   "alertQuery.label.severity.placeholder": "请选择级别",
   "alertQuery.label.duration.placeholder": "请选择持续时间",
+  "alertQuery.label.count.placeholder": "请选择告警次数",
   "alertQuery.label.tags": "标签",
   "alertQuery.label.allSource": "所有来源",
   "alertQuery.label.allStatus": "所有状态",

@@ -24,7 +24,7 @@ const checkList = ({itemList, checkedNum, isSpreadTags, checkHandler, origin}) =
     const tags = itemList.map((item, index) => {
       const tagsDetail = item.values.map((tag, index) => {
         return (
-          <span className={tag.selected && styles.tagsSelected} key={ index } data-id={origin === 'main' ? tag.id : tag.name} onClick={ (e) => {checkHandler(e)} }>
+          <span className={tag.selected && styles.tagsSelected} key={ index } data-id={origin === 'main' ? tag.id : JSON.stringify({field: item.name, name: tag.name})} onClick={ (e) => {checkHandler(e)} }>
             {tag.name}
             <i className={tag.selected && setClass}></i>
           </span>

@@ -49,6 +49,7 @@
   "alertQuery.label.keyWords.placeholder": "Please Enter Keywords",
   "alertQuery.label.severity.placeholder": "Please Select Severity",
   "alertQuery.label.duration.placeholder": "Please Select Duration",
+  "alertQuery.label.count.placeholder": "Please Select Count",
   "alertQuery.label.tags": "Tags",
   "alertQuery.label.allSource": "All Source",
   "alertQuery.label.allStatus": "All Status",

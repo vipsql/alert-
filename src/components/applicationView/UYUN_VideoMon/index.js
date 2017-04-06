@@ -15,7 +15,7 @@ const UYUN_VideoMON = (props) => {
     const videoMonClass = classnames(
         'icon',
         'iconfont',
-        'icon-monitor'
+        'icon-videomon'
     )
 
     const localeMessage = defineMessages({

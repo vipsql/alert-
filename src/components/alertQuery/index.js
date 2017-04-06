@@ -340,6 +340,10 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
             id: 'alertQuery.label.duration.placeholder',
             defaultMessage: '请选择持续时间',
         },
+        count_placeholder: {
+            id: 'alertQuery.label.count.placeholder',
+            defaultMessage: '请选择告警次数',
+        },
         noQueryData: {
             id: 'alertQuery.noQueryData',
             defaultMessage: '暂无数据，请先选择查询条件',
@@ -524,6 +528,23 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
                   )}
                 </Item>
               </Col>
+              <Col span={8}>
+                <Item
+                  {...formItemLayout}
+                  label={<FormattedMessage {...localeMessage['count']} />}
+                >
+                  {getFieldDecorator('count', {
+                     
+                  })(
+                      <Select placeholder={formatMessage({...localeMessage['count_placeholder']})}>
+                        <Option value="1">{`> 5`}</Option>
+                        <Option value="2">{`> 10`}</Option>
+                        <Option value="3">{`> 20`}</Option>
+                        <Option value="4">{`> 30`}</Option>
+                      </Select>
+                  )}
+                </Item>
+              </Col>
             </Row>
             <Row className={styles.rowStyle}>
               <Col className={styles.colStyle}>
@@ -539,6 +560,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
                       <Option className={styles.keywordsMenuItem} value="1"><FormattedMessage {...localeMessage['entityName']} /></Option>
                       <Option className={styles.keywordsMenuItem} value="3"><FormattedMessage {...localeMessage['tags']} /></Option>
                       <Option className={styles.keywordsMenuItem} value="2"><FormattedMessage {...localeMessage['description']} /></Option>
+                      <Option className={styles.keywordsMenuItem} value="4"><FormattedMessage {...localeMessage['name']} /></Option>
                     </Select>
                   )}    
                 </Item>

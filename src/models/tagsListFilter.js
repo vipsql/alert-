@@ -136,7 +136,7 @@ export default {
 
       const newList = tagsList.map( (item) => {
         item.values.map( (tag) => {
-          if (typeof selectTagName !== 'undefined' && tag.name == selectTagName) {
+          if (typeof selectTagName !== 'undefined' && item.name == selectTagName.field && tag.name == selectTagName.name) {
             tag.selected = !tag.selected;
           }
           return tag;
@@ -152,7 +152,7 @@ export default {
 
       const newList = tagsList.map( (item) => {
         item.values.map( (tag) => {
-          if (typeof selectTagName !== 'undefined' && tag.name == selectTagName && tag.selected) {
+          if (typeof selectTagName !== 'undefined' && item.name == selectTagName.field && tag.name == selectTagName.name && tag.selected) {
             tag.selected = !tag.selected;
           }
           return tag;

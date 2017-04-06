@@ -9,7 +9,7 @@ const tagsGroup = ({className, removeHandler, tagsList, haveTags}) => {
         'iconfont',
         'icon-anonymous-iconfont'
     )
-
+    
     return (
         haveTags ? <div className={className}>
                 <p className={styles.typeName}>{`${ tagsList.name }:`}</p>
@@ -18,7 +18,7 @@ const tagsGroup = ({className, removeHandler, tagsList, haveTags}) => {
                         return (
                             <div key={ index } className={styles.tagName}>
                                 <p>{ item.name }</p>
-                                <i className={switchClass} data-id={item.name} onClick={(e) => removeHandler(e)}></i>
+                                <i className={switchClass} data-id={JSON.stringify({field: tagsList.name, name: item.name})} onClick={(e) => removeHandler(e)}></i>
                             </div>
                         )
                     })

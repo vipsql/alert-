@@ -43,7 +43,7 @@ const alertTagsFilter = ({dispatch, tagListFilter}) => {
     }
 
     const itemSelect = (e) => {
-      let tagName = e.target.getAttribute('data-id');
+      let tagName = JSON.parse(e.target.getAttribute('data-id'));
       dispatch({
         type: 'tagListFilter/changeTags',
         payload: tagName
@@ -51,7 +51,7 @@ const alertTagsFilter = ({dispatch, tagListFilter}) => {
     }
 
     const removefun = (e) => {
-      let tagName = e.target.getAttribute('data-id');
+      let tagName = JSON.parse(e.target.getAttribute('data-id'));
       dispatch({
         type: 'tagListFilter/removeTag',
         payload: tagName
