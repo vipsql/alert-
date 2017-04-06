@@ -140,47 +140,63 @@
 
 }
 
-// popover card
-.popoverMain{
-    position: relative;
-    div:last-child{
-        margin-bottom: 5px;
-    }
-    .colGroup{
-        margin: 10px 10px 15px 10px;
-        width: 200px;
-        & > p{
-            color: #5994d6;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            line-height: 10px;
-            &:after {
-                position: relative;
-                content: " ";
-                display: inline-block;
-                height: 1px;
-                width: 90%;
-                background: #5994d6;
+.popover{
+    :global{
+        .ant-popover-content{
+            .ant-popover-arrow{
+                border-bottom-color: #226eaf;
+            }
+            .ant-popover-arrow::after{
+                border-bottom-color: #226eaf;
+            }
+            .ant-popover-inner{
+                background-color: #226eaf;
             }
         }
-        .inlineItem {
-            display: inline-block;
-            width: 100px;
-            padding-bottom: 5px;
-            :global{
-                .ant-checkbox-wrapper + span, .ant-checkbox + span{
+    }
+    // popover card
+    .popoverMain{
+        position: relative;
+        div:last-child{
+            margin-bottom: 5px;
+        }
+        .colGroup{
+            margin: 10px 10px 15px 10px;
+            width: 200px;
+            & > p{
+                color: #5994d6;
+                font-size: 13px;
+                font-weight: 600;
+                margin-bottom: 4px;
+                line-height: 10px;
+                &:after {
+                    position: relative;
+                    content: " ";
                     display: inline-block;
-                    white-space: nowrap;
-                    max-width: 80px;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    vertical-align: middle;
+                    height: 1px;
+                    width: 90%;
+                    background: #5994d6;
+                }
+            }
+            .inlineItem {
+                display: inline-block;
+                width: 100px;
+                padding-bottom: 5px;
+                :global{
+                    .ant-checkbox-wrapper + span, .ant-checkbox + span{
+                        display: inline-block;
+                        white-space: nowrap;
+                        max-width: 80px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        vertical-align: middle;
+                    }
                 }
             }
         }
     }
 }
+
 
 // cover menuitem
 .menuItem{

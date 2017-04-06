@@ -265,7 +265,7 @@ class ListTimeTable extends Component {
               </div>
             );
             return (
-              <Popover content={content} key={`dot-${idx}`} trigger={'click'} className={styles.myPopover}>
+              <Popover content={content} overlayClassName={styles.popover} key={`dot-${idx}`} className={styles.myPopover}>
                 <span style={{left: left  + 'px'}} className={styles[iconColor]} data-id={itemDot.id} onClick={detailClick}></span>
               </Popover>
 

@@ -454,7 +454,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
                           <Option value=''><FormattedMessage {...localeMessage['allSource']} /></Option>
                         {
                           sourceOptions.map( (item, index) => {
-                            return <Option key={index} value={item.value}>{item.value}</Option>
+                            return <Option key={index} value={item.key}>{item.value}</Option>
                           })
                         }
                       </Select>
@@ -616,7 +616,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
                       })
                   }}></i>
               </div>
-              <Popover placement='bottomRight' trigger="click" content={popoverContent} >
+              <Popover placement='bottomRight' overlayClassName={styles.popover} trigger="click" content={popoverContent} >
                 <div className={classnames(styles.button, styles.rightBtn)}>
                     <i className={classnames(setClass, styles.setCol)}></i>
                     <p className={styles.col}><FormattedMessage {...localeMessage['columns']} /></p>
