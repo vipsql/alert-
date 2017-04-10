@@ -17,7 +17,7 @@ class AlertSet extends Component{
     return (
       <div className={styles.alertSet}>
         <div className={styles.alertSetInfo}><FormattedMessage {...formatMessages['noData']} /></div>
-        {!hideAlertSetTip && <div className={styles.alertSetTip} style={{background: "url('"+imageUrl+"') no-repeat"}} onClick={onOk}></div>}
+        {!hideAlertSetTip && <div className={styles.alertSetTip} style={{background: "url('"+imageUrl+"')"}} onClick={onOk}></div>}
       </div>
     )
   }
