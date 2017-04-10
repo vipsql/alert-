@@ -26,9 +26,11 @@ export default {
             type: 'login'
           })
         }
-        dispatch({
-          type: 'isSetTags'
-        })
+        if (location.pathname === '/alertManage' || location.pathname === '/') {
+          dispatch({
+            type: 'isSetTags'
+          })
+        }
         dispatch({
           type: 'getUserInfo'
         })
