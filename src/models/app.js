@@ -66,7 +66,7 @@ export default {
       })
 
       const isSet = yield isSetUserTags(userId)
-      if(isSet.result) {
+      if(isSet.result && isSet.result.data) {
         yield put({
           type: 'showMask',
           payload: false

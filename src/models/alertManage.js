@@ -33,7 +33,7 @@ export default {
     *alertManageSetup({payload}, {put, call, select}) {
 
       const isSet = yield isSetUserTags()
-      if(isSet.result) {
+      if(isSet.result && isSet.result.data) {
         yield put({
           type: 'alertTagsSet/queryDashbordBySetted',
         })
