@@ -87,9 +87,28 @@ class Chart extends Component{
             d3.select("#treemap").select('svg').attr('height', this.chartHeight)
         }
 
+        let updateData = this.props.currentDashbordData
+        updateData.forEach((item, index) => {            
+            if(item.value == 0){item.noData = true}
+                if(item.children){
+                let hasZeros = 0
+                    item.children.forEach((childItem) => {
+                        if(childItem.value == 0){
+                            childItem.value = 1
+                        childItem.noData = true
+                        hasZeros++
+                        
+                        }else{
+                        
+                    }
+                    })
+                item.value = hasZeros
+                }
+        })
+
         node = root = {
               path: 'root',
-              children: this.props.currentDashbordData
+              children: updateData
             };
 
             var nodes = this.treemap.nodes(root);
@@ -103,7 +122,7 @@ class Chart extends Component{
             });
 
         // d3.json("../../../mock/alert.json", function(data) {
-        if(this.props.currentDashbordData && children.length > 0){
+        if(children.length > 0){
           
             // create parent cells
             var parentCells = this.chart.selectAll("g.cell.parent")
@@ -228,10 +247,10 @@ class Chart extends Component{
                 .style("fill", function(d) {
                     // return color(d.maxSeverity);
                 })
-                .on('mouseover', function(d){
+                .on('mouseenter', function(d){
                     d3Tip.show(d)
                 })
-                .on('mouseout', function(){
+                .on('mouseleave', function(){
                     d3Tip.hide()
                 })
             childEnterTransition.append('text')
@@ -250,11 +269,13 @@ class Chart extends Component{
                 .text(function(d) {
                     return d.name
                 })
-                .style("opacity", function(d) {console.log(d); d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; })
+                .style("opacity", function(d) { d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; })
                 .on('mouseover', function(d){  
+                    return false
                     d3Tip.show(d)
                 })
                 .on('mouseout', function(d){
+                    return false
                     d3Tip.show(d)
                 })
             // update transition
@@ -418,6 +439,9 @@ class Chart extends Component{
                     return d.children ? headerHeight : Math.max(0.01, (ky * d.dy));
                 })
                 .style("fill", d => {
+                    if(!d.children && d.noData){
+                      return '#ccc'
+                     }
                   return d.children ? headerColor : this.color(d.maxSeverity);
                 } );
 

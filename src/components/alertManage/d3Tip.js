@@ -39,7 +39,8 @@ export default class Tip {
     if (d.parent.name == 'severity' || d.parent.name == 'status') {
       temp = window[`_${d.parent.name}`][d.name]
     }
-    el.innerHTML = `${__alert_appLocaleData.messages['treemap.tagsGroup']}: ` + temp + '<br/>' + `${__alert_appLocaleData.messages['treemap.activeAlerts']}: ` + d.value
+    const val = d.noData ? 0 : d.value
+    el.innerHTML = `${__alert_appLocaleData.messages['treemap.tagsGroup']}: ` + temp + '<br/>' + `${__alert_appLocaleData.messages['treemap.activeAlerts']}: ` + val 
     el.style.display = 'block'
     el.style.top = o.top - 55 + 'px'
     el.style.left = o.left + 'px'
