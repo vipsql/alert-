@@ -228,7 +228,7 @@ class Chart extends Component{
                                                 ? '0' : d.maxSeverity == 1
                                                     ? '1,0' : d.maxSeverity == 2
                                                         ? '2,1,0' : d.maxSeverity == 3
-                                                            ? '3,2,1,0' : ''
+                                                            ? '3,2,1,0' : '3,2,1,0'
                     localStorage.setItem('alertListPath', JSON.stringify(alertListPath));
                     window.location.hash = "#/alertManage/" + d.path;
                 })
