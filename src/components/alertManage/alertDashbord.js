@@ -440,7 +440,7 @@ class Chart extends Component{
                 })
                 .style("fill", d => {
                     if(!d.children && d.noData){
-                      return '#ccc'
+                      return '#7ff5d9'
                      }
                   return d.children ? headerColor : this.color(d.maxSeverity);
                 } );
