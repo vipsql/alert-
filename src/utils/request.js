@@ -35,6 +35,7 @@ function ajax(url, options){
    return new Promise(function (resolve, reject) {
       const configs = {
         url,
+        cache: false,
         method: options.method || 'GET',
         data: options.body,
         headers: {
@@ -43,7 +44,7 @@ function ajax(url, options){
         xhrFields: {
           //withCredentials: true
         },
-        timeout: 10000
+        //timeout: 10000
       }
       $.ajax(configs).done( data => {
         resolve({

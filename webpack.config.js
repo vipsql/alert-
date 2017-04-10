@@ -49,6 +49,14 @@ module.exports = function (webpackConfig, env) {
            {
              from: __dirname + '/polyfill-ie11.js',
              to: __dirname + '/dist/'
+           },
+           {
+             from: __dirname + '/guideTip.png',
+             to: __dirname + '/dist/'
+           },
+           {
+             from: __dirname + '/guideTip_en.png',
+             to: __dirname + '/dist/'
            }
        ])
 

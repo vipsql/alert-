@@ -16,13 +16,14 @@ function Add(props){
         const { currentOperateAppType, UUID, currentDisplayName, apikey } = alertConfig;
         let targetApplication;
         let hostUrl = 'https://alert.uyun.cn'
-        if (window.location.origin.indexOf("alert") > -1) {
+        let origin = window.location.protocol + '//' +window.location.host;
+        if (origin.indexOf("alert") > -1) {
             // 域名访问
-            hostUrl = window.location.origin
+            hostUrl = origin
             window.__alert_restApiUrl = hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`
         } else {
             // 顶级域名/Ip访问
-            hostUrl = window.location.origin + '/alert'
+            hostUrl = origin + '/alert'
             window.__alert_restApiUrl = hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`
         }
         switch (currentOperateAppType.name) {

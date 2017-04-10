@@ -14,14 +14,15 @@ function Edit(props){
     const editApplication = ({alertConfig, dispatch}) => {
         const { currentEditApp, apikey } = alertConfig;
         let targetApplication;
-        let hostUrl = 'https://alert.uyun.cn'
-        if (window.location.origin.indexOf("alert") > -1) {
+        let hostUrl = 'https://alert.uyun.cn';
+        let origin = window.location.protocol + '//' +window.location.host;
+        if (origin.indexOf("alert") > -1) {
             // 域名访问
-            hostUrl = window.location.origin
+            hostUrl = origin
             window.__alert_restApiUrl = hostUrl + '/openapi/v2/create?' + `api_key=${apikey}` + `&app_key=${currentEditApp.appKey}`
         } else {
             // 顶级域名/Ip访问
-            hostUrl = window.location.origin + '/alert'
+            hostUrl = origin + '/alert'
             window.__alert_restApiUrl = hostUrl + '/openapi/v2/create?' + `api_key=${apikey}` + `&app_key=${currentEditApp.appKey}`
         }
         switch (currentEditApp.applyType.name) {

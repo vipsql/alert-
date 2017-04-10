@@ -13,10 +13,11 @@ class AlertSet extends Component{
 
   render(){
     const {onOk, hideAlertSetTip} = this.props
+    const imageUrl = window.__alert_appLocaleData.locale == 'zh-cn' ? 'guideTip.png' : 'guideTip_en.png';
     return (
       <div className={styles.alertSet}>
         <div className={styles.alertSetInfo}><FormattedMessage {...formatMessages['noData']} /></div>
-        {!hideAlertSetTip && <div className={styles.alertSetTip} onClick={onOk}></div>}
+        {!hideAlertSetTip && <div className={styles.alertSetTip} style={{background: "url('"+imageUrl+"') no-repeat"}} onClick={onOk}></div>}
       </div>
     )
   }
