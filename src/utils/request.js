@@ -47,14 +47,14 @@ function ajax(url, options){
       }
       $.ajax(configs).done( data => {
         resolve({
-            result: true,
-            data: data
-          })
+          result: true,
+          data: data
+        })
       }).fail((xhr, textStatus, error) => {
         if(textStatus == 401){
           location.href = location.origin + '/tenant/#/login_admin/'
         }else{
-          reject(xhr.responseJSON)
+          resolve(xhr.responseJSON)
         }
       })
   })
