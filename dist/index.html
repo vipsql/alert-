@@ -8,6 +8,11 @@
   <title>优云Alert</title>
   <link rel="stylesheet" type="text/css" href="/frontend/Layout-public.min.css" >
   <link rel="stylesheet" href="index.css" />
+  <script>
+    if ( window.navigator.userAgent.indexOf('Trident/') > -1 ) {
+      document.write('<'+'script src='+"polyfill-ie11.js"+'>'+'<\/script>')
+    }
+  </script>
   <!--[if lt IE 10]>
   <script src="polyfill-ie10.js"></script>
   <![endif]-->

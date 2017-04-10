@@ -135,21 +135,21 @@
 	</table>
 	<p>Send a Test Alert</p>
 	<pre id="example">
-curl -H "Content-type: application/json" -X POST -d '{
-	[{
+curl -H "Content-type: application/json;charset=utf-8" -X POST -d '[
+	{
 		"body": "{
-			'name':'activemq.broker.memory_pct-ActiveMQ Memery overloaded',
-			'severity':3,
-			'description':'ActiveMQ Memery above upper limit (3%)%',
-			'occur_time':1490251916807,
-			'entity_name':'PC20151218',
-			'entity_addr':'10.1.113.28',
-			'source':'Monitor',
-			'merge_key':'source,entity_name,name',
-			'properties':[{'val': 'Financial','code': 'belong','name': 'Department'}]
+			\"name\":\"activemq.broker.memory_pct-ActiveMQ Memery overloaded\",
+			\"severity\":3,
+			\"description\":\"ActiveMQ Memery above upper limit (3%)%\",
+			\"occur_time\":1490251916807,
+			\"entity_name\":\"PC20151218\",
+			\"entity_addr\":\"10.1.113.28\",
+			\"source\":\"Monitor\",
+			\"merge_key\":\"source,entity_name,name\",
+			\"properties\":[{\"val\": \"Financial\",\"code\": \"belong\",\"name\": \"Department\"}]
 		}"
-	}] 
-}' </pre>
+	}
+]' </pre>
 	</div>
  </body>
  <script>
@@ -161,7 +161,7 @@ curl -H "Content-type: application/json" -X POST -d '{
 		var len = document.getElementById('example').innerHTML.length;
 		if(e.source!=window.parent) return;
 		document.getElementById('url').innerHTML = document.getElementById('url').innerHTML + '&app_Key=' + e.data
-		document.getElementById('example').innerHTML = document.getElementById('example').innerHTML.slice( 0, len - 1 ) + '&app_Key=' + e.data + '"'
+		document.getElementById('example').innerHTML = document.getElementById('example').innerHTML.slice( 0, len - 1 ) + '\&app_Key=' + e.data + '"'
 	}, false);
  </script>
 </html>

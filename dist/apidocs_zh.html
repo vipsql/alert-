@@ -92,21 +92,21 @@
 	</table>
 	<p>POST body方式</p>
 	<pre id="example">
-curl -H "Content-type: application/json" -X POST -d '{
-	[{
+curl -H "Content-type: application/json;charset=utf-8" -X POST -d '[
+	{
 		"body": "{
-			'name':'activemq.broker.memory_pct-ActiveMQ内存使用率',
-			'severity':3,
-			'description':'ActiveMQ内存使用率超过3%',
-			'occur_time':1490251916807,
-			'entity_name':'PC20151218',
-			'entity_addr':'10.1.113.28',
-			'source':'Monitor',
-			'merge_key':'source,entity_name,name',
-			'properties':[{'val': '派出所','code': 'belong','name': '所属单位'}]
+			\"name\":\"activemq.broker.memory_pct-ActiveMQ内存使用率\",
+			\"severity\":3,
+			\"description\":\"ActiveMQ内存使用率超过3%\",
+			\"occur_time\":1490251916807,
+			\"entity_name\":\"PC20151218\",
+			\"entity_addr\":\"10.1.113.28\",
+			\"source\":\"Monitor\",
+			\"merge_key\":\"source,entity_name,name\",
+			\"properties\":[{\"val\": \"派出所\",\"code\": \"belong\",\"name\": \"所属单位\"}]
 		}"
-	}] 
-}' </pre>
+	}
+]' </pre>
 	</div>
  </body>
  <script>
@@ -118,7 +118,7 @@ curl -H "Content-type: application/json" -X POST -d '{
 		var len = document.getElementById('example').innerHTML.length;
 		if(e.source!=window.parent) return;
 		document.getElementById('url').innerHTML = document.getElementById('url').innerHTML + '&app_Key=' + e.data
-		document.getElementById('example').innerHTML = document.getElementById('example').innerHTML.slice( 0, len - 1 ) + '&app_Key=' + e.data + '"'
+		document.getElementById('example').innerHTML = document.getElementById('example').innerHTML.slice( 0, len - 1 ) + '\&app_Key=' + e.data + '"'
 	}, false);
  </script>
 </html>
