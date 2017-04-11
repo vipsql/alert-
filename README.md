@@ -55,22 +55,25 @@ git clone https://git.uyunsoft.cn/octopus/AlertFront.git
 
 进入目录安装依赖:
 
-```
+```shell
 npm i
 ```
 
 开发：
 
-```bash
+```shell
 npm run dev   
 
 打开 http://localhost:8000
 ```
 
+分支：
+线上分支：master
+开发分支：dev
 
 构建：
 
-```bash
+```shell
 npm run build
 
 将会生成dist目录
@@ -79,7 +82,7 @@ npm run build
 * atool-build, 打包工具
 * dora, 开发服务器
 * dora-plugin-webpack，dora 的插件，用于和 atool-buid 整合
-* 后续打算升级，从atool-build+dora到roadhog 
+* 后续打算升级，从atool-build+dora到roadhog
 
 ### 目前开发存在的问题
 * 现在的sever无法代理
@@ -93,4 +96,3 @@ npm run build
 * 掌握 dva 的[所有 API](https://github.com/dvajs/dva/blob/master/docs/API_zh-CN.md)
 * 查看 [dva 知识地图](https://github.com/dvajs/dva-knowledgemap) ，包含 ES6, React, dva 等所有基础知识
 * 查看 [更多 FAQ](https://github.com/dvajs/dva/issues?q=is%3Aissue+is%3Aclosed+label%3Afaq)，看看别人通常会遇到什么问题
-
