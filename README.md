@@ -75,6 +75,16 @@ npm run build
 
 将会生成dist目录
 ```
+### 注意事项
+* atool-build, 打包工具
+* dora, 开发服务器
+* dora-plugin-webpack，dora 的插件，用于和 atool-buid 整合
+* 后续打算升级，从atool-build+dora到roadhog 
+
+### 目前开发存在的问题
+* 现在的sever无法代理
+* 生成的资源文件无法自动替换，并且没有添加md5，导致缓存更新问题
+
 
 ### 友情链接
 * dva 的 [readme](https://github.com/dvajs/dva/blob/master/README_zh-CN.md) ，以及他们是如何串起来的
