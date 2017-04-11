@@ -39,6 +39,10 @@
 ```
 
 ### 快速开始
+安装dva-cli:
+```
+npm i dva-cli -g
+```
 
 克隆项目文件:
 
@@ -49,13 +53,13 @@ git clone https://git.uyunsoft.cn/octopus/AlertFront.git
 进入目录安装依赖:
 
 ```
-npm i 或者 yarn install
+npm i
 ```
 
 开发：
 
 ```bash
-npm run dev    # 使用mock拦截请求，数据存储在localStroge里
+npm run dev   
 
 打开 http://localhost:8000
 ```
@@ -69,7 +73,11 @@ npm run build
 将会生成dist目录
 ```
 
-### 注意事项
+### 友情链接
+* dva 的 [readme](https://github.com/dvajs/dva/blob/master/README_zh-CN.md) ，以及他们是如何串起来的
 
-- 生产环境中，已有数据接口，请将`src/utils/index.js`第四行 `require('./mock.js')`注释
-- 开发环境中，如再mock目录新增文件，请在`src/utils/mock.js`第二行的`mockData`数组中添加
+* 理解 dva 的 [8 个概念](https://github.com/dvajs/dva/blob/master/docs/Concepts_zh-CN.md) ，以及他们是如何串起来的
+* 掌握 dva 的[所有 API](https://github.com/dvajs/dva/blob/master/docs/API_zh-CN.md)
+* 查看 [dva 知识地图](https://github.com/dvajs/dva-knowledgemap) ，包含 ES6, React, dva 等所有基础知识
+* 查看 [更多 FAQ](https://github.com/dvajs/dva/issues?q=is%3Aissue+is%3Aclosed+label%3Afaq)，看看别人通常会遇到什么问题
+* 如果你基于 dva-cli 创建项目，最好了解他的 [配置方式]
