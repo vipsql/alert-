@@ -4,8 +4,7 @@
 
 ## 特性
 
-- 基于[react](https://github.com/facebook/react)，[ant-design](https://github.com/ant-design/ant-design)，[dva](https://github.com/dvajs/dva)，[Mock](https://github.com/nuysoft/Mock)
-- 基于[Mock](https://github.com/nuysoft/Mock)实现脱离后端独立开发
+- 基于[react](https://github.com/facebook/react)，[ant-design](https://github.com/ant-design/ant-design)，[dva](https://github.com/dvajs/dva)
 - 基于Antd UI 设计语言，针对产品定制
 - 基于[dva](https://github.com/dvajs/dva)动态加载 Model 和路由，按需加载
 - 浅度响应式设计
@@ -22,8 +21,12 @@
 ### 目录结构
 
 ```bash
-├── /mock/           # 数据mock的接口文件
+
 ├── /dist/           # 项目输出目录
+├── /iconfont/       # 字体目录
+├── /locales/        # 国际化资源文件
+├── /layout/         # 公用头部（暂时不需要了）
+├── /mock/           # 数据mock的接口文件
 ├── /src/            # 项目源码目录
 │ ├── /components/   # 项目组件
 │ ├── /routes/       # 路由组件
