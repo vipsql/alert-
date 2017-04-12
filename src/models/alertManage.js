@@ -43,6 +43,10 @@ export default {
         })
       } else {
         yield put({
+          type: 'toggleAlertSetTip',
+          payload: false
+        })
+        yield put({
           type: 'toggleAlertSet',
           payload: false
         })

@@ -45,7 +45,7 @@ const setLang = function(lang){
 			  "255": "Resolved"
 			}
 			window._groupBy = 'GroupBy'
-			document.title = 'Uyun Alert'
+			document.title = 'Alert'
 			break
 		default:
 			appLocaleData = {
@@ -70,7 +70,7 @@ const setLang = function(lang){
 			  "255": "已解决"
 			}
 			window._groupBy = '分组显示'
-			document.title = '优云Alert'
+			document.title = 'Alert'
 			break
 
 	}
