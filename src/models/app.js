@@ -10,7 +10,7 @@ const initialState = {
   userName: 'admin', // 前端先写死，后期改用localstorge来存储
   userId: 'admin', // localStorage.getItem('userId') || '',
   isFold: false, //false展开
-  isShowMask: true // 遮罩层
+  isShowMask: false // 遮罩层
 }
 
 export default {
