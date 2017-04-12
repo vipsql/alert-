@@ -4,8 +4,7 @@
 
 ## 特性
 
-- 基于[react](https://github.com/facebook/react)，[ant-design](https://github.com/ant-design/ant-design)，[dva](https://github.com/dvajs/dva)，[Mock](https://github.com/nuysoft/Mock)
-- 基于[Mock](https://github.com/nuysoft/Mock)实现脱离后端独立开发
+- 基于[react](https://github.com/facebook/react)，[ant-design](https://github.com/ant-design/ant-design)，[dva](https://github.com/dvajs/dva)
 - 基于Antd UI 设计语言，针对产品定制
 - 基于[dva](https://github.com/dvajs/dva)动态加载 Model 和路由，按需加载
 - 浅度响应式设计
@@ -22,8 +21,12 @@
 ### 目录结构
 
 ```bash
-├── /mock/           # 数据mock的接口文件
+
 ├── /dist/           # 项目输出目录
+├── /iconfont/       # 字体目录
+├── /locales/        # 国际化资源文件
+├── /layout/         # 公用头部（暂时不需要了）
+├── /mock/           # 数据mock的接口文件
 ├── /src/            # 项目源码目录
 │ ├── /components/   # 项目组件
 │ ├── /routes/       # 路由组件
@@ -39,6 +42,10 @@
 ```
 
 ### 快速开始
+安装dva-cli:
+```
+npm i dva-cli -g
+```
 
 克隆项目文件:
 
@@ -49,13 +56,13 @@ git clone https://git.uyunsoft.cn/octopus/AlertFront.git
 进入目录安装依赖:
 
 ```
-npm i 或者 yarn install
+npm i
 ```
 
 开发：
 
 ```bash
-npm run dev    # 使用mock拦截请求，数据存储在localStroge里
+npm run dev   
 
 打开 http://localhost:8000
 ```
@@ -68,8 +75,22 @@ npm run build
 
 将会生成dist目录
 ```
-
 ### 注意事项
+* atool-build, 打包工具
+* dora, 开发服务器
+* dora-plugin-webpack，dora 的插件，用于和 atool-buid 整合
+* 后续打算升级，从atool-build+dora到roadhog 
 
-- 生产环境中，已有数据接口，请将`src/utils/index.js`第四行 `require('./mock.js')`注释
-- 开发环境中，如再mock目录新增文件，请在`src/utils/mock.js`第二行的`mockData`数组中添加
+### 目前开发存在的问题
+* 现在的sever无法代理
+* 生成的资源文件无法自动替换，并且没有添加md5，导致缓存更新问题
+
+
+### 友情链接
+* dva 的 [readme](https://github.com/dvajs/dva/blob/master/README_zh-CN.md) ，以及他们是如何串起来的
+
+* 理解 dva 的 [8 个概念](https://github.com/dvajs/dva/blob/master/docs/Concepts_zh-CN.md) ，以及他们是如何串起来的
+* 掌握 dva 的[所有 API](https://github.com/dvajs/dva/blob/master/docs/API_zh-CN.md)
+* 查看 [dva 知识地图](https://github.com/dvajs/dva-knowledgemap) ，包含 ES6, React, dva 等所有基础知识
+* 查看 [更多 FAQ](https://github.com/dvajs/dva/issues?q=is%3Aissue+is%3Aclosed+label%3Afaq)，看看别人通常会遇到什么问题
+

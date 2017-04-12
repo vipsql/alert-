@@ -1,5 +1,10 @@
 
 .DS_Store
 .roadhogrc
-node_modules
+
+.idea/
+.vscode/
+node_modules/
+
+npm-debug*
 yarn.lock
