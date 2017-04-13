@@ -1,41 +1,45 @@
 @import "../vars.less";
 
-.configHome{
-    & > a > div{
-        position: relative;
-        border: 1px solid transparent;
-        height: 145px;
-        margin-bottom: 18px;
-        background-color: #19508a;
-        border-radius: 2px;
-        transition: all .5s;
-        &:hover{
-            top: -4px;
-            left: -4px;
-            box-shadow: 5px 5px 2px #17375d;
-            background-color: #316fb4;
-        }
-        .configIcon{
-            position: absolute;
-            left: 32px;
-            top: 40px;
-            line-height: 60px;
-            font-size: 60px;
-            color: #81c5f6;
-        }
-        .title{
-            position: absolute;
-            top: 40px;
-            left: 134px;
-            font-size: 24px;
-            color: #fff;
-        }
-        .message{
-            position: absolute;
-            top: 90px;
-            left: 134px;
-            font-size: 14px;
-            color: #9ad0f7;
-        }
+.configHome {
+  & > a > div {
+    position: relative;
+    border: 1px solid transparent;
+    height: 145px;
+    margin-bottom: 18px;
+    background-color: #19508a;
+    border-radius: 2px;
+    transition: all 0.5s;
+
+    &:hover {
+      top: -4px;
+      left: -4px;
+      box-shadow: 5px 5px 2px #17375d;
+      background-color: #316fb4;
     }
+
+    .configIcon {
+      position: absolute;
+      left: 32px;
+      top: 40px;
+      line-height: 60px;
+      font-size: 60px;
+      color: #81c5f6;
+    }
+
+    .title {
+      position: absolute;
+      top: 40px;
+      left: 134px;
+      font-size: 24px;
+      color: #fff;
+    }
+
+    .message {
+      position: absolute;
+      top: 90px;
+      left: 134px;
+      font-size: 14px;
+      color: #9ad0f7;
+    }
+  }
 }
