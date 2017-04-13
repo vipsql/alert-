@@ -53,7 +53,16 @@ export default function ({history, app}) {
           }
         },
         {
-          path: 'alertConfig/:alertApplication',
+          path: 'alertConfig/alertAssociationRules',
+          name: 'alertAssociationRules',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              cb(null, require('./routes/alertAssociationRules'))
+            }, 'alertAssociationRules')
+          }
+        },
+        {
+          path: 'alertConfig/alertApplication',
           name: 'alertApplication',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -62,7 +71,7 @@ export default function ({history, app}) {
           }
         },
         {
-          path: 'alertConfig/:alertApplication/:applicationView',
+          path: 'alertConfig/alertApplication/applicationView',
           name: 'applicationView',
           childRoutes: [
             {

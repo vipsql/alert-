@@ -5,14 +5,14 @@ import { classnames } from '../../../utils'
 import { Link } from 'dva/router'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
-class applicationList extends Component {
+class commonList extends Component {
   constructor(){
     super()
   }
   render(){
     const {
-      applicationType,
-      applicationData,
+      pageBy,
+      listData,
       columns,
       isLoading,
       orderUp,
@@ -22,46 +22,14 @@ class applicationList extends Component {
       orderByTittle,
       switchClick,
       deleteClick,
+      spreadGroup,
+      noSpreadGroup,
+      formatMessages,
       intl: {formatMessage}
     } = this.props
 
     let colsKey = []
     let theads = []
-
-    const formatMessages = defineMessages({
-        displayName: {
-          id: 'alertApplication.List.displayName',
-          defaultMessage: '应用显示名',
-        },
-        name: {
-          id: 'alertApplication.List.application',
-          defaultMessage: '应用名称',
-        },
-        createDate: {
-          id: 'alertApplication.List.createDate',
-          defaultMessage: '添加时间',
-        },
-        status: {
-          id: 'alertApplication.List.onOff',
-          defaultMessage: '是否开启',
-        },
-        operation: {
-          id: 'alertApplication.List.actions',
-          defaultMessage: '操作',
-        },
-        action_edit: {
-          id: 'alertApplication.List.edit',
-          defaultMessage: '编辑',
-        },
-        action_delete: {
-          id: 'alertApplication.List.delete',
-          defaultMessage: '删除',
-        },
-        noData: {
-          id: 'alertList.noListData',
-          defaultMessage: '暂无数据',
-        },
-    })
     
     columns.forEach( (item) => {
         const isOrder = item.order || false
@@ -70,8 +38,8 @@ class applicationList extends Component {
         const orderTh_active = orderBy !== undefined && item['key'] == orderBy ? styles['orderTh-active'] : undefined
 
         colsKey.push(item['key'])
-        theads.push( !(applicationType == 1 && item['key'] == 'status') &&
-          <th key={item.key} width={width}>
+
+        theads.push(<th key={item.key} width={width}>
             {isOrder ? <span className={ orderType !== undefined ? classnames(styles.orderTh, orderTh_active) : styles.orderTh} data-key={item['key']} onClick={ orderByTittle }>{formatMessage({...formatMessages[item['key']]})}</span>
             : <FormattedMessage {...formatMessages[item['key']]} />}
             {isOrder && 
@@ -99,8 +67,8 @@ class applicationList extends Component {
       return year + '/' + month + '/' + day + ' ' + hours + ':' + mins
     }
 
-    // 生成每一列的参数
-    const getTds = (item, keys, itemIndex) => {
+    // 生成每一行的参数 --> 应用
+    const getAppTds = (item, keys, itemIndex) => {
       let tds = [];
       keys.forEach((key, index) => {
         let data = item[key];
@@ -112,7 +80,7 @@ class applicationList extends Component {
         if(key == 'name'){
           td = <td key={key}>{item['applyType']['name']}</td>
         }
-        if(key == 'status' && applicationType !== undefined && applicationType == 0){
+        if(key == 'status'){
           switch (data) {
             case 0:
                data = false
@@ -147,10 +115,86 @@ class applicationList extends Component {
       return tds
     }
 
-    applicationData.length > 0 && applicationData.forEach( (item, index) => {
+    // 生成每一行参数 --> 配置规则
+    const getRuleTds = (item, keys) => {
+      let tds = [];
+      keys.forEach((key, index) => {
+        let data = item[key];
+        let td;
+        if(key == 'status'){
+          switch (data) {
+            case 0:
+               data = false
+              break;
+            case 1:
+               data = true
+              break;
+            default:
+               data = false
+              break;
+          }
+          td = <td key={key}><Switch checked={data} onChange={ (status) => {switchClick(item['id'], status)} }/></td>
+        } else if (key == 'operation') {
+          td = <td key={key}>
+           <Link to={`alertConfig/alertApplication/applicationView/edit/${item['id']}`}><Button className={styles.editBtn} size='small'>{formatMessage({...formatMessages['action_edit']})}</Button></Link>
+           &nbsp;&nbsp;
+           <Button size='small' className={styles.delBtn} onClick={ () => {deleteClick(item)}}>{formatMessage({...formatMessages['action_delete']})}</Button>
+          </td>
+        } else {
+          td = <td key={key}>{data}</td>
+        }
+
+        tds.push(td)
+      })
+      tds.unshift(<td width="30" key='space-col-td'></td>)
+      return tds
+    }
+
+    if (pageBy !== undefined && pageBy === 'associationRule') {
+      listData.length > 0 && listData.forEach( (item, index) => {
+        let keys = colsKey;
+
+        let groupTr = null
+        let commonTrs = []
+        
+        groupTr = item.isGroupSpread === false ?
+        (<tr className={styles.trGroup} key={index}>
+          <td colSpan={6}>
+            <span className={styles.expandIcon} data-classify={item.classify} onClick={spreadGroup}>+</span>
+              {formatMessage({...formatMessages[`ruleTypeNum_${item.classify}`]})}
+          </td>
+        </tr>)
+        :
+        (<tr className={styles.trGroup} key={index}>
+          <td colSpan={6}>
+            <span className={styles.expandIcon} data-classify={item.classify} onClick={noSpreadGroup}>-</span>
+              {formatMessage({...formatMessages[`ruleTypeNum_${item.classify}`]})}
+          </td>
+        </tr>)
+
+        if (item.children !== undefined) {
+
+          item.children.forEach( (childItem, index) => {
+            const tds = getRuleTds(childItem, keys)
+            commonTrs.push(
+              <tr key={index} className={item.isGroupSpread !== undefined && !item.isGroupSpread ? styles.hiddenChild : styles.groupSpread}>
+                {tds}
+              </tr>
+            )
+          })
+    
+        }
+
+        tbodyCon.push(
+          groupTr,
+          commonTrs
+        )
+      })
+    } else {
+      listData.length > 0 && listData.forEach( (item, index) => {
         const colorClass = index % 2 === 0 ? styles['even'] : styles['odd']
         const keys = colsKey
-        const tds = getTds(item, keys, index)
+        const tds = getAppTds(item, keys, index)
         let commonTrs = []
 
         commonTrs.push(
@@ -159,8 +203,8 @@ class applicationList extends Component {
             </tr>
         )
         tbodyCon.push(commonTrs)
-    })
-
+      })
+    }
 
     return(
       <div>
@@ -174,7 +218,7 @@ class applicationList extends Component {
             </thead>
             <tbody>
               {
-                applicationData.length > 0 ? tbodyCon :
+                listData.length > 0 ? tbodyCon :
                 <tr>
                   <td colSpan={columns.length + 1} style={{textAlign: 'center'}}><FormattedMessage {...formatMessages['noData']} /></td>
                 </tr>
@@ -187,12 +231,12 @@ class applicationList extends Component {
   }
 }
 
-applicationList.defaultProps = {
+commonList.defaultProps = {
 
 }
 
-applicationList.propTypes = { 
+commonList.propTypes = { 
   
 }
 
-export default injectIntl(applicationList)
+export default injectIntl(commonList)
