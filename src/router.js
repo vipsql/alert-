@@ -48,18 +48,14 @@ export default function({history, app}) {
               cb(null, require('./routes/alertConfig'))
             }, 'alertConfig')
           }
-<<<<<<< HEAD
         }, { // 临时添加路由，规则编辑页面
-          path: 'alertConfig/alertApplication/ruleEditor',
+          path: 'alertConfig/alertAssociationRules/ruleEditor',
           name: 'ruleEditor',
           getComponent(nextState, cb) {
             require.ensure([], require => {
               cb(null, require('./routes/ruleEditor'))
             }, 'ruleEditor')
           }
-        }, {
-          path: 'alertConfig/:alertApplication',
-=======
         },
         {
           path: 'alertConfig/alertAssociationRules',
@@ -72,21 +68,15 @@ export default function({history, app}) {
         },
         {
           path: 'alertConfig/alertApplication',
->>>>>>> fa45d9fe69fdce6a8774c5ed93776f5903f37ad5
           name: 'alertApplication',
           getComponent(nextState, cb) {
             require.ensure([], require => {
               cb(null, require('./routes/alertApplication'))
             }, 'alertApplication')
           }
-<<<<<<< HEAD
-        }, {
-          path: 'alertConfig/:alertApplication/:applicationView',
-=======
         },
         {
           path: 'alertConfig/alertApplication/applicationView',
->>>>>>> fa45d9fe69fdce6a8774c5ed93776f5903f37ad5
           name: 'applicationView',
           childRoutes: [
             {
