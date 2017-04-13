@@ -58,7 +58,7 @@ const alertConfig = (props) => {
                 <p className={styles.message}><FormattedMessage {...localeMessage['integrationsMessage']} /></p>
             </div>
           </Link>
-          <Link to={`/alertConfig/alertApplication`} >
+          <Link to={`/alertConfig/alertAssociationRules`} >
             <div>
                 <i className={classnames(glpzClass, styles.configIcon)}></i>
                 <p className={styles.title}>告警关联配置</p>
@@ -67,6 +67,7 @@ const alertConfig = (props) => {
           </Link>
         </div>
     )
+          
         //   <Link to={`/alertConfig/alertApplication`} >
         //     <div>
         //         <i className={classnames(dzpzClass, styles.configIcon)}></i>
