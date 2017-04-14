@@ -7,9 +7,6 @@ import styles from './condition.less';
 const Option = Select.Option;
 const keyList = [
   {
-    name: '请选择维度',
-    value: ''
-  }, {
     name: '告警级别',
     value: 'level'
   }, {
@@ -40,9 +37,6 @@ const optList = [
 ];
 const valueList = [
   {
-    name: '请选择对应标签',
-    value: ''
-  }, {
     name: 'CMDB',
     value: 'CMDB'
   }, {
@@ -58,46 +52,57 @@ const valueList = [
 ];
 
 class Condition extends Component {
-  render() {
-    const {key, opt, value} = this.props;
+  // 创建条件
+  createConditionItem() {
+    const {_key, opt, value} = this.props;
     return (
-      <div className="condition">
-        <Select style={{ width: 100 }} defaultValue={key}>
+      <div className={styles.conditionItem}>
+        <Select className={styles.key} style={{ width: 100 }} defaultValue={_key} placeholder="请选择维度">
           {
             keyList.map(item => (
-              <Option value={item.value}>{item.name}</Option>
+              <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
             ))
           }
         </Select>
-        <Select style={{ width: 70 }} defaultValue={opt}>
+        <Select className={styles.opt} style={{ width: 100 }} defaultValue={opt} placeholder="请选择条件">
           {
             optList.map(item => (
-              <Option value={item.value}>{item.name}</Option>
+              <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
             ))
           }
         </Select>
-        <Select style={{ width: 130 }} defaultValue={value}>
+        <Select className={styles.value} style={{ width: 130 }} defaultValue={value} placeholder="请选择对应标签">
           {
             valueList.map(item => (
-              <Option value={item.value}>{item.name}</Option>
+              <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
             ))
           }
         </Select>
+        <i className={styles.delete}> X </i>
+      </div>
+    );
+  }
+  render() {
+    return (
+      <div className={styles.conditionWrapList}>
+        { this.createConditionItem() }
       </div>
     );
   }
 }
 
 Condition.defaultProps = {
-  key: '',
-  opt: 'equal',
-  value: ''
+  _key: undefined,
+  opt: undefined,
+  value: undefined,
+  logic: undefined
 };
 
 Condition.propsTypes = {
-  key: PropTypes.string.isRequired, // 维度
-  opt: PropTypes.string.isRequired, // 逻辑操作
-  value: PropTypes.string.isRequired // 对应标签
+  _key: PropTypes.string, // 维度
+  opt: PropTypes.string, // 操作
+  value: PropTypes.string, // 对应标签
+  logic: PropTypes.string // 逻辑
 };
 
 export default Condition;
