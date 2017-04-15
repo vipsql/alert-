@@ -96,6 +96,17 @@ const conditionData = { // 模拟数据
         opt: 'equal',
         value: 'CMDB',
       }]
+    }, {
+      logic: 'and',
+      content: [{
+        key: 'level',
+        opt: 'equal',
+        value: 'Monitor',
+      }, {
+        key: 'status',
+        opt: 'equal',
+        value: 'CMDB',
+      }]
     }]
   }]
 };
@@ -105,13 +116,15 @@ class DefineConditions extends Component {
     super(props);
 
     this.levelTag = 0; // 当前数据的层级标识
-    this.conditionsDom = []; // Virtual Dom List
+    this.conditionsDom = []; // 元素列表
   }
   // 创建条件头部
   createTitle(item) {
     const { logic } = item;
     return (
-      <div className={styles.title}>
+      <div className={cls(
+          styles.title,
+        )}>
         <Select defaultValue={logic}>
           <Option value="and">满足全部</Option>
           <Option value="or">满足任意</Option>
@@ -147,37 +160,22 @@ class DefineConditions extends Component {
       this.createConditionList(node)
     );
     for (let i = child.length - 1; i >=0; i -= 1) {
+      console.log(i, child[i]);
       // 先序遍历
       this.createAll(child[i]);
     }
     this.conditionsDom.unshift(domList);
-    // console.log(this.conditionsDom)
     return this.conditionsDom;
   }
-  // 广度优先：
-  // createAll(data) {
-  //   const domList = [];
-  //   data.map((item, index) => {
-  //     const { child = [] } = item;
-  //     if (child.length !== 0) {
-  //       this.createAll(child);
-  //     }
-  //     domList.push(
-  //       this.createTitle(item, index),
-  //       this.createConditionList(item, index)
-  //     );
-  //   });
-  //   this.levelTag += 1;
-  //   this.conditionsDom.unshift(domList);
-  //   return this.conditionsDom;
-  // }
   render() {
     return (
       <div className={styles.defineConditions}>
         <h2>定义条件</h2>
-        {
-          this.createAll(conditionData)
-        }
+        <div className={styles.conditionList}>
+          {
+            this.createAll(conditionData)
+          }
+        </div>
       </div>
     );
   }

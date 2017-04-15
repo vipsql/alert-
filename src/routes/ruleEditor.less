@@ -6,6 +6,26 @@
 :global(#ruleEditor) {
   color: #fff;
   h2 {
+    position: relative;
+    display: inline-block;
+    color: #6ac5fe;
+    line-height: 48px;
+    font-size: 13px;
     font-weight: normal;
+    border-bottom: 2px solid #6ac5fe;
+    z-index: 1;
+  }
+  & > div {
+    position: relative;
+    &:after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 100%;
+      position: absolute;
+      top: 49px;
+      left: 0;
+      background-color: #225188;
+    }
   }
 }

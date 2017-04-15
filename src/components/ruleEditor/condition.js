@@ -83,11 +83,7 @@ class Condition extends Component {
     );
   }
   render() {
-    return (
-      <div className={styles.conditionWrapList}>
-        { this.createConditionItem() }
-      </div>
-    );
+    return this.createConditionItem();
   }
 }
 

@@ -26,6 +26,7 @@ function RuleEditor(dispatch) {
       <AlertSource />
       <DefineConditions />
       <SetActions />
+      <span className="submit">保存</span>
     </div>
   );
 }
