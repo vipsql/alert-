@@ -13,7 +13,7 @@ import Condition from './condition';
 import styles from './defineConditions.less';
 
 const Option = Select.Option;
-const conditionData = [{ // 模拟数据
+const conditionData = { // 模拟数据
   // 一级条件
   logic: 'or',
   content: [{
@@ -31,7 +31,7 @@ const conditionData = [{ // 模拟数据
     content: [{
       key: 'source',
       opt: 'equal',
-      value: 'APM',
+      value: 'Monitor',
     }, {
       key: 'duration',
       opt: 'equal',
@@ -54,7 +54,7 @@ const conditionData = [{ // 模拟数据
       content: [{
         key: 'level',
         opt: 'equal',
-        value: 'Monitor',
+        value: 'CMDB',
       }, {
         key: 'status',
         opt: 'equal',
@@ -94,11 +94,11 @@ const conditionData = [{ // 模拟数据
       }, {
         key: 'status',
         opt: 'equal',
-        value: 'Monitor',
+        value: 'CMDB',
       }]
     }]
   }]
-}];
+};
 
 class DefineConditions extends Component {
   constructor(props) {
@@ -108,10 +108,10 @@ class DefineConditions extends Component {
     this.conditionsDom = []; // Virtual Dom List
   }
   // 创建条件头部
-  createTitle(item, index) {
+  createTitle(item) {
     const { logic } = item;
     return (
-      <div key={'conditionTitle_' + index} className={styles.title}>
+      <div className={styles.title}>
         <Select defaultValue={logic}>
           <Option value="and">满足全部</Option>
           <Option value="or">满足任意</Option>
@@ -125,7 +125,7 @@ class DefineConditions extends Component {
     );
   }
   // 创建条件内容
-  createConditionList(item, index) {
+  createConditionList(item) {
     const { content } = item;
     return content.map((_item, _index) => {
       const { key, opt, value} = _item;
@@ -137,26 +137,40 @@ class DefineConditions extends Component {
       return <Condition {...itemData} />
     });
   }
-  // 合并创建
-  createAll(data) {
+  // 对数据进行深度遍历并创建 Dom
+  // 深度优先
+  createAll(node) {
+    const { child = [] } = node;
     const domList = [];
-    data.map((item, index) => {
-      const { child = [] } = item;
-      // if (child.length !== 0) {
-      //   this.createAll(child);
-      // }
-      if (this.levelTag === 0) {
-        this.createAll(child);
-      }
-      domList.push(
-        this.createTitle(item, index),
-        this.createConditionList(item, index)
-      );
-    });
-    this.levelTag += 1;
+    domList.push(
+      this.createTitle(node),
+      this.createConditionList(node)
+    );
+    for (let i = child.length - 1; i >=0; i -= 1) {
+      // 先序遍历
+      this.createAll(child[i]);
+    }
     this.conditionsDom.unshift(domList);
+    // console.log(this.conditionsDom)
     return this.conditionsDom;
   }
+  // 广度优先：
+  // createAll(data) {
+  //   const domList = [];
+  //   data.map((item, index) => {
+  //     const { child = [] } = item;
+  //     if (child.length !== 0) {
+  //       this.createAll(child);
+  //     }
+  //     domList.push(
+  //       this.createTitle(item, index),
+  //       this.createConditionList(item, index)
+  //     );
+  //   });
+  //   this.levelTag += 1;
+  //   this.conditionsDom.unshift(domList);
+  //   return this.conditionsDom;
+  // }
   render() {
     return (
       <div className={styles.defineConditions}>
