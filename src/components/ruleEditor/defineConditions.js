@@ -111,20 +111,21 @@ const conditionData = { // 模拟数据
   }]
 };
 
-class DefineConditions extends Component {
-  constructor(props) {
-    super(props);
+let treeTag = 0; // 当前数据的层级标识
+let conditionsDom = []; // 元素列表
 
-    this.levelTag = 0; // 当前数据的层级标识
-    this.conditionsDom = []; // 元素列表
-  }
+class DefineConditions extends Component {
   // 创建条件头部
-  createTitle(item) {
+  createTitle(item, level) {
     const { logic } = item;
     return (
       <div className={cls(
           styles.title,
-        )}>
+        )}
+        style={{
+          marginLeft: level * 50
+        }}
+      >
         <Select defaultValue={logic}>
           <Option value="and">满足全部</Option>
           <Option value="or">满足任意</Option>
@@ -138,34 +139,34 @@ class DefineConditions extends Component {
     );
   }
   // 创建条件内容
-  createConditionList(item) {
+  createConditionList(item, level) {
     const { content } = item;
     return content.map((_item, _index) => {
       const { key, opt, value} = _item;
       const itemData = {
         _key: key,
         opt,
-        value
+        value,
+        level
       };
       return <Condition {...itemData} />
     });
   }
   // 对数据进行深度遍历并创建 Dom
   // 深度优先
-  createAll(node) {
+  createAll(node, treeTag) {
     const { child = [] } = node;
     const domList = [];
     domList.push(
-      this.createTitle(node),
-      this.createConditionList(node)
+      this.createTitle(node, treeTag),
+      this.createConditionList(node, treeTag)
     );
-    for (let i = child.length - 1; i >=0; i -= 1) {
-      console.log(i, child[i]);
-      // 先序遍历
-      this.createAll(child[i]);
+    for (let i = child.length - 1; i >= 0; i -= 1) {
+      // 先序遍历，treeTag + 1 是当前值 + 1，不会改变自身的值
+      this.createAll(child[i], treeTag + 1);
     }
-    this.conditionsDom.unshift(domList);
-    return this.conditionsDom;
+    conditionsDom.unshift(domList);
+    return conditionsDom;
   }
   render() {
     return (
@@ -173,7 +174,7 @@ class DefineConditions extends Component {
         <h2>定义条件</h2>
         <div className={styles.conditionList}>
           {
-            this.createAll(conditionData)
+            this.createAll(conditionData, treeTag)
           }
         </div>
       </div>

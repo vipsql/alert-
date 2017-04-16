@@ -54,9 +54,9 @@ const valueList = [
 class Condition extends Component {
   // 创建条件
   createConditionItem() {
-    const {_key, opt, value} = this.props;
+    const {_key, opt, value, level} = this.props;
     return (
-      <div className={styles.conditionItem}>
+      <div style={{marginLeft: level*50}} className={styles.conditionItem}>
         <Select className={styles.key} style={{ width: 100 }} defaultValue={_key} placeholder="请选择维度">
           {
             keyList.map(item => (
@@ -91,14 +91,16 @@ Condition.defaultProps = {
   _key: undefined,
   opt: undefined,
   value: undefined,
-  logic: undefined
+  logic: undefined,
+  level: undefined,
 };
 
 Condition.propsTypes = {
   _key: PropTypes.string, // 维度
   opt: PropTypes.string, // 操作
   value: PropTypes.string, // 对应标签
-  logic: PropTypes.string // 逻辑
+  logic: PropTypes.string, // 逻辑
+  level: PropTypes.number // 逻辑
 };
 
 export default Condition;
