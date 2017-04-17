@@ -3,7 +3,9 @@ import React, {
   Component
 } from 'react';
 import { default as cls } from 'classnames';
-import { Form, Input, Radio, Select, Tabs } from 'antd';
+import moment from 'moment';
+import _ from 'lodash';
+import { Form, Input, Radio, Select, Tabs, DatePicker, Popover } from 'antd';
 import Condition from './condition';
 
 import styles from './index.less';
@@ -12,6 +14,7 @@ const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
+const { RangePicker } = DatePicker;
 
 const conditionData = { // 模拟数据
   // 一级条件
@@ -101,24 +104,35 @@ const conditionData = { // 模拟数据
       content: [{
         key: 'level',
         opt: 'equal',
-        value: 'Monitor',
+        value: 'APM',
       }, {
         key: 'status',
         opt: 'equal',
-        value: 'CMDB',
+        value: 'APM',
       }]
     }]
   }]
 };
 
-let treeTag = 0; // 当前数据的层级标识
+const WeekArray = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 let conditionsDom = []; // 元素列表
+let treeTag = 0; // 当前数据的层级标识
+
 
 class RuleEditor extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      type: props.type,
+      time: props.time
+    };
+  }
+
   componentDidMount() {
     const { setFieldsValue } = this.props.form;
     const { name, type, description } = this.props;
-    setFieldsValue({ // 此处会造成 render 两次
+    setFieldsValue({ // 此处对表单进行赋值，会造成 render 两次
       name,
       type,
       description,
@@ -134,7 +148,7 @@ class RuleEditor extends Component {
         )}
       >
         <label>条件：</label>
-        <Select defaultValue={logic}>
+        <Select placeholder="请选择条件">
           <Option value="and">满足全部</Option>
           <Option value="or">满足任意</Option>
           <Option value="not">都不满足</Option>
@@ -177,6 +191,32 @@ class RuleEditor extends Component {
     return conditionsDom;
   }
 
+  // 更改时间类型
+  changeType(event) {
+    this.setState({
+      type: event.target.value
+    });
+  }
+
+  // 更改时间周期
+  changeTimeCycle(type, event) {
+    const _time = _.cloneDeep(this.state.time);
+    _time.timeCycle = type;
+    this.setState({
+      time: _time
+    });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    this.props.form.validateFields((errors, values) => {
+      if (errors) {
+        console.warn('[表单错误]', errors);
+        return false;
+      }
+    });
+  }
+
   render() {
     conditionsDom = []; // 重置，防止重复 render
 
@@ -189,12 +229,13 @@ class RuleEditor extends Component {
       labelCol: { span: 2 },
       wrapperCol: { span: 10 }
     }
-    console.log(this.props);
+    console.info('[render][props]', this.props);
 
     return (
-      <Form id="RuleEditor">
+      <Form id="RuleEditor" onSubmit={this.submit}>
+
+        <h2>基本信息</h2>
         <div className={styles.baseInfo}>
-          <h2>基本信息</h2>
           <FormItem
             {...itemLayout}
             label="规则名称"
@@ -226,17 +267,61 @@ class RuleEditor extends Component {
             {getFieldDecorator('type', {
               rules: [],
             })(
-              <RadioGroup>
-                <Radio value={1}>非周期性规则</Radio>
-                <Radio value={2}>周期性规则</Radio>
-                <Radio value={3}>固定时间窗规则</Radio>
+              <RadioGroup
+                onChange={this.changeType.bind(this)}
+              >
+                <Radio value='0'>任意时间均执行</Radio>
+                <Radio value='1'>周期性执行</Radio>
+                <Radio value='2'>固定时间段执行</Radio>
               </RadioGroup>
             )}
+
+            {
+              this.state.type === '1' &&
+              <div className="rangeTime">
+                <Popover
+                  trigger="click"
+                  placement="bottomLeft"
+                  content={(
+                    <div className={styles.timeCycle}>
+                      <div className={styles.timeCycleHd}>
+                        <span onClick={this.changeTimeCycle.bind(this, '0')}>每日</span>
+                        <span onClick={this.changeTimeCycle.bind(this, '1')}>每周</span>
+                        <span onClick={this.changeTimeCycle.bind(this, '2')}>每月</span>
+                      </div>
+                      <div className={styles.timeCycleBd}>
+                        { // 每周
+                          this.state.time.timeCycle === '1' &&
+                          _.range(7).map(item => <span>{WeekArray[item]}</span>)
+                        }
+                        { // 每月
+                          this.state.time.timeCycle === '2' &&
+                          _.range(1, 32).map(item => <span>{item}</span>)
+                        }
+                      </div>
+                    </div>
+                  )}
+                >
+                  <span>请选择定时规则</span>
+                </Popover>
+              </div>
+            }
+            {
+              this.state.type === '2' &&
+              <RangePicker
+                // showTime
+                // allowClear
+                format="YYYY-MM-DD"
+                placeholder={['请选择起始日期', '请选择结束日期']}
+                onChange={this.changeDate}
+                // onOk={onOk}
+              />
+            }
           </FormItem>
         </div>
 
+        <h2>告警来源</h2>
         <div className={styles.alertSource}>
-          <h2>告警来源</h2>
           <FormItem
             {...itemLayout}
             label="告警来源"
@@ -248,13 +333,13 @@ class RuleEditor extends Component {
               }]
             })(
               <Select
-                showSearch
-                optionFilterProp="children"
+                // showSearch
+                // optionFilterProp="children"
                 style={{ width: 200 }}
-                // placeholder="请选择告警来源"
-                filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                placeholder="请选择告警来源"
+                getPopupContainer={() => document.querySelector('#xxx')}
+                // filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
               >
-                <Option value="">请选择告警来源</Option>
                 <Option value="CMDB">CMDB</Option>
                 <Option value="Monitor">Monitor</Option>
                 <Option value="APM">APM</Option>
@@ -263,17 +348,15 @@ class RuleEditor extends Component {
           </FormItem>
         </div>
 
+        <h2>定义条件</h2>
         <div className={styles.defineConditions}>
-          <h2>定义条件</h2>
-          <div className={styles.conditionList}>
-            {
-              this.createAll(this.props.conditionData, treeTag)
-            }
-          </div>
+          {
+            this.createAll(this.props.condition, treeTag)
+          }
         </div>
 
+        <h2>设置动作</h2>
         <div className={styles.setActions}>
-          <h2>设置动作</h2>
           <Tabs animated={false} defaultActiveKey={this.props.tab}>
             <TabPane tab="关闭/删除告警" key="1">
               <div>
@@ -288,9 +371,9 @@ class RuleEditor extends Component {
                 <em>关闭将状态改为已解决，删除从数据库物理删除</em>
               </div>
             </TabPane>
-            <TabPane tab="升级/降级告警" key="2">
-
-            </TabPane>
+            {
+              // <TabPane tab="升级/降级告警" key="2"></TabPane>
+            }
             <TabPane tab="告警通知" key="3">
 
             </TabPane>
@@ -324,6 +407,7 @@ class RuleEditor extends Component {
             </TabPane>
           </Tabs>
         </div>
+        <span onClick={this.handleSubmit.bind(this)} className={styles.submit}>提交</span>
       </Form>
     );
   }
@@ -331,16 +415,66 @@ class RuleEditor extends Component {
 
 RuleEditor.defaultProps = {
   name: '',
-  type: 1,
   description: '',
-  conditionData: conditionData,
+  type: '0',
+  time: {
+    dayStart: '',
+    dayEnd: '',
+    timeCycle: '',
+    timeCycleWeek: '',
+    timeCycleMonth: '',
+    timeStart: '',
+    timeEnd: ''
+  },
+  source: '',
+  // condition: {
+  //   content: [],
+  //   child: [],
+  //   logic: ''
+  // },
+  condition: conditionData,
 };
 
 RuleEditor.propTypes = {
-  name: PropTypes.string.isRequired, // 规则名称
-  type: PropTypes.number.isRequired, // 规则类型
-  description: PropTypes.string, // 规则描述
-  conditionData: PropTypes.object, // 条件数据，最多3级
+  /* 基本信息 */
+  // 规则名称
+  name: PropTypes.string.isRequired,
+  // 规则描述
+  description: PropTypes.string.isRequired,
+  // 规则类型（0:任意时间执行；1:周期性执行；2:固定时间段执行）
+  type: PropTypes.string.isRequired,
+  time: PropTypes.shape({
+    // 固定时间段执行必填（在未来确定的某一时间段执行一次）
+    dayStart: PropTypes.string.isRequired,
+    dayEnd: PropTypes.string.isRequired,
+
+    // 周期性执行必填（0：每天；1：每周；2：每月）
+    timeCycle: PropTypes.string.isRequired,
+    // 时间周期为每周必填（0～6：周一～周日）
+    timeCycleWeek: PropTypes.string.isRequired,
+    // 时间周期为每月必填（0～30:1号～31号）
+    timeCycleMonth: PropTypes.string.isRequired,
+    timeStart: PropTypes.string.isRequired,
+    timeEnd: PropTypes.string.isRequired
+  }),
+
+  /* 告警来源 */
+  source: PropTypes.string.isRequired,
+
+  /* 定义条件 */
+  condition: PropTypes.shape({
+    content: PropTypes.array.isRequired,
+    child: PropTypes.array.isRequired,
+    logic: PropTypes.string.isRequired
+  }),
+
+  /* 设定动作 */
+  // 动作类型
+  tab: PropTypes.string,
+  action: PropTypes.string,
+  itsm: PropTypes.string,
+  chatops: PropTypes.string,
+
 };
 
 export default Form.create()(RuleEditor);

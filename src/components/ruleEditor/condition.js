@@ -52,6 +52,10 @@ const valueList = [
 ];
 
 class Condition extends Component {
+  // 删除条件项
+  deleteItem() {
+    console.log('[删除]');
+  }
   // 创建条件
   createConditionItem() {
     const {_key, opt, value, level} = this.props;
@@ -81,7 +85,7 @@ class Condition extends Component {
             ))
           }
         </Select>
-        <i className={styles.delete}> X </i>
+        <i className={styles.delete} onClick={this.deleteItem.bind(this)}>X</i>
       </div>
     );
   }
