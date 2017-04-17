@@ -10,29 +10,16 @@ import React, {
 import {
   connect
 } from 'dva';
-import {
-  BaseInfo,
-  AlertSource,
-  DefineConditions,
-  SetActions
-} from '../components/ruleEditor';
+import RuleEditor from '../components/ruleEditor';
 
-import styles from './ruleEditor.less';
-
-function RuleEditor(dispatch) {
+function ruleEditor(dispatch) {
   return (
-    <div id="ruleEditor">
-      <BaseInfo />
-      <AlertSource />
-      <DefineConditions />
-      <SetActions />
-      <span className="submit">保存</span>
-    </div>
+    <RuleEditor />
   );
 }
 
-RuleEditor.propTypes = {
+ruleEditor.propTypes = {
   dispatch: PropTypes.func
 };
 
-export default connect()(RuleEditor);
+export default connect()(ruleEditor);
