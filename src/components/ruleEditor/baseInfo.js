@@ -22,11 +22,20 @@ class BaseInfo extends Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
+    const nameLayout = {
+      labelCol: { span: 2 },
+      wrapperCol: { span: 4 }
+    };
+    const desLayout = {
+      labelCol: { span: 2 },
+      wrapperCol: { span: 10 }
+    }
     return (
       <div className={styles.baseInfo}>
         <h2>基本信息</h2>
         <Form>
           <FormItem
+            {...nameLayout}
             label="规则名称"
           >
             {getFieldDecorator('name', {
@@ -40,6 +49,7 @@ class BaseInfo extends Component {
             )}
           </FormItem>
           <FormItem
+            {...desLayout}
             label="规则描述"
           >
             {getFieldDecorator('description', {
@@ -49,6 +59,7 @@ class BaseInfo extends Component {
             )}
           </FormItem>
           <FormItem
+            {...desLayout}
             label="规则类型"
           >
             {getFieldDecorator('type', {

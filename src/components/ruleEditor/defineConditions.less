@@ -1,5 +1,10 @@
 .title {
-  color: #fff;
+  padding: 0 15px;
+  color: #6ac5fe;
+  height: 55px;
+  line-height: 55px;
+  background-color: #0d3562;
+  border: 1px dashed #2769a2;
 }
 .level1 {
   margin-left: 10px;
@@ -12,9 +17,50 @@
 }
 .btnWrap {
   float: right;
+  & > span {
+    width: 70px;
+    height: 32px;
+    line-height: 32px;
+    background-color: #158ad4;
+    text-align: center;
+    color: #fff;
+    border-radius: 2px;
+  }
 }
 .conditionList {
   width: 65%;
+  padding: 25px;
+  & > div {
+    position: relative;
+    margin-bottom: 7px;
+    &:before {
+      content:  '';
+      position: absolute;
+      top: 10px;
+      left: -35px;
+      display: block;
+      width: 20px;
+      height: 20px;
+      background-color: transparent;
+      border-width: 0 0 1px 1px;
+      border-color: #2769a2;
+      border-style: solid;
+    }
+  }
+  :global(.treeTag0) {
+    &:before {
+      display: none;
+    }
+  }
+  :global(.treeTag1) {
+    margin-left: 50px;
+  }
+  :global(.treeTag2) {
+    margin-left: 100px;
+    .addBlock {
+      display: none;
+    }
+  }
 }
 .btnWrap {
   float: right;
@@ -25,8 +71,9 @@
   margin-left: 10px;
 }
 .addLine {
-
+  position: relative;
 }
 .addBlock {
-
+  position: relative;
 }
+

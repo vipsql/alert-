@@ -121,11 +121,10 @@ class DefineConditions extends Component {
     return (
       <div className={cls(
           styles.title,
+          `treeTag${level}`
         )}
-        style={{
-          marginLeft: level * 50
-        }}
       >
+        <label>条件：</label>
         <Select defaultValue={logic}>
           <Option value="and">满足全部</Option>
           <Option value="or">满足任意</Option>

@@ -56,7 +56,10 @@ class Condition extends Component {
   createConditionItem() {
     const {_key, opt, value, level} = this.props;
     return (
-      <div style={{marginLeft: level*50}} className={styles.conditionItem}>
+      <div className={cls(
+        styles.conditionItem,
+        `treeTag${level}`
+      )}>
         <Select className={styles.key} style={{ width: 100 }} defaultValue={_key} placeholder="请选择维度">
           {
             keyList.map(item => (

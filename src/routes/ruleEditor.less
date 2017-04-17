@@ -28,4 +28,42 @@
       background-color: #225188;
     }
   }
+
+  :global {
+    .ant-form, .ant-tabs {
+      padding: 25px;
+    }
+    .ant-select-selection{
+      border-radius: 2px;
+    }
+    .ant-input {
+      border-radius: 2px;
+    }
+    .ant-tabs-bar {
+      border-bottom: 0;
+      background-color: transparent;
+    }
+    .ant-tabs-tab {
+      width: auto;
+      background-color: #095a95;
+      color: #9dd6ff;
+      height: 28px;
+      line-height: 28px;
+      padding: 0 12px;
+      border: 1px solid #297ebb;
+      border-radius: 2px;
+      margin-right: 10px;
+    }
+    .ant-tabs-tab-active {
+      background-color: #158ad4;
+      color: #fff;
+      border-color: #158ad4;
+      margin-bottom: 0;
+    }
+  }
+  // :global(.ant-form-item) {
+  //   &:last-child {
+  //     margin-bottom: 0;
+  //   }
+  // }
 }

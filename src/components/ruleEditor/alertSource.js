@@ -20,11 +20,16 @@ class AlertSource extends Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
+    const sourceLayout = {
+      labelCol: { span: 2 },
+      wrapperCol: { span: 4 }
+    };
     return (
       <div className="AlertSource">
         <h2>告警来源</h2>
         <Form>
           <FormItem
+            {...sourceLayout}
             label="告警来源"
           >
             {getFieldDecorator('source', {
