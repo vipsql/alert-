@@ -30,6 +30,10 @@ const path = defineMessages({
     id: 'bread.integrations',
     defaultMessage: '应用集成'
   },
+  associationRules: {
+    id: 'bread.association',
+    defaultMessage: '关联配置'
+  },
   integrationConfig: {
     id: 'bread.integrationConfig',
     defaultMessage: '应用配置'
@@ -52,12 +56,17 @@ function Bread ({ location, appTypeName }) {
       <Breadcrumb.Item key="alertList"><FormattedMessage {...path['alertList']}/></Breadcrumb.Item>
     )
 
-  }else if(pathDepth.length > 2 && pathDepth.length < 4 && pathDepth.indexOf('alertConfig') > -1){ //告警配置
+  } else if(pathDepth.length > 2 && pathDepth.length < 4 && pathDepth.indexOf('alertApplication') > -1){ //告警配置
     breads.push(
       <Breadcrumb.Item key="alertConfig"><a href="#alertConfig"><FormattedMessage {...path['alertConfig']}/></a></Breadcrumb.Item>,
       <Breadcrumb.Item key="alertApplication"><FormattedMessage {...path['integration']}/></Breadcrumb.Item>
     )
-  }else if(pathDepth.length > 3 && pathDepth.indexOf('alertConfig') > -1){ // 告警配置应用详情
+  } else if(pathDepth.length > 2 && pathDepth.length < 4 && pathDepth.indexOf('alertAssociationRules') > -1){
+    breads.push(
+      <Breadcrumb.Item key="alertConfig"><a href="#alertConfig"><FormattedMessage {...path['alertConfig']}/></a></Breadcrumb.Item>,
+      <Breadcrumb.Item key="alertAssociationRules"><FormattedMessage {...path['associationRules']}/></Breadcrumb.Item>
+    )
+  } else if(pathDepth.length > 3 && pathDepth.indexOf('alertConfig') > -1){ // 告警配置应用详情
     breads.push(
       <Breadcrumb.Item key="alertConfig"><a href="#alertConfig"><FormattedMessage {...path['alertConfig']}/></a></Breadcrumb.Item>,
       <Breadcrumb.Item key="alertApplication"><a href="#alertConfig/alertApplication"><FormattedMessage {...path['integration']}/></a></Breadcrumb.Item>,

@@ -46,6 +46,10 @@ const alertAssociationRules = ({dispatch, alertAssociationRules, intl: {formatMe
                 id: 'alertAssociationRules.List.delete',
                 defaultMessage: '删除',
             },
+            Unknown: {
+                id: 'alertList.unknown',
+                defaultMessage: '未知',
+            },
             noData: {
                 id: 'alertList.noListData',
                 defaultMessage: '暂无数据',

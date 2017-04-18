@@ -6,7 +6,7 @@
       -ms-overflow-style: none;
       height: 100%;
       // overflow-y: hidden;
-      font-family: '微软雅黑,Sansation Light,Helvetica Neue,Helvetica,Arial,sans-serif';
+      font-family: "微软雅黑",Helvetica Neue,Helvetica,STHeiTi,Arial,sans-serif;
       // &.blue{
         background-color: @blue1;
 
@@ -27,10 +27,13 @@
           }
           //--------breadcrumb---------
           .ant-breadcrumb{
-          font-size: 14px;
+            font-size: 14px;
+            .ant-breadcrumb-separator{
+              color: #6ab7fe;
+            }
           }
           .ant-breadcrumb a{
-            color: #6398c2;
+            color: #6ab7fe;
           }
           .ant-breadcrumb > span:last-child{
             color: @white2;
@@ -85,9 +88,9 @@
           .ant-select-dropdown-menu-item{
             background-color: #1d6aa7;
             color: #6ac5fe;
-
+            text-overflow: ellipsis
           }
-          .ant-select-dropdown-menu-item-selected{
+          .ant-select-dropdown-menu-item-selected, .ant-select-dropdown-menu-item-selected:hover{
             color: #fff;
           }
           .ant-select-dropdown-menu-item:hover, .ant-select-dropdown-menu-item-active{

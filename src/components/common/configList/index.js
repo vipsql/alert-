@@ -161,14 +161,14 @@ class commonList extends Component {
         (<tr className={styles.trGroup} key={index}>
           <td colSpan={6}>
             <span className={styles.expandIcon} data-classify={item.classify} onClick={spreadGroup}>+</span>
-              {formatMessage({...formatMessages[`ruleTypeNum_${item.classify}`]})}
+              {item.classify !== undefined ? formatMessage({...formatMessages[`ruleTypeNum_${item.classify}`]}) : formatMessage({...formatMessages['Unknown']})}
           </td>
         </tr>)
         :
         (<tr className={styles.trGroup} key={index}>
           <td colSpan={6}>
             <span className={styles.expandIcon} data-classify={item.classify} onClick={noSpreadGroup}>-</span>
-              {formatMessage({...formatMessages[`ruleTypeNum_${item.classify}`]})}
+              {item.classify !== undefined ? formatMessage({...formatMessages[`ruleTypeNum_${item.classify}`]}) : formatMessage({...formatMessages['Unknown']})}
           </td>
         </tr>)
 

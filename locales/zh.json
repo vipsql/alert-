@@ -5,6 +5,7 @@
   "bread.integrationConfig": "应用配置",
   "bread.integrations": "应用集成",
   "bread.alertList": "告警列表",
+  "bread.association": "关联配置",
 
   "leftMenu.alertManage": "告警管理",
   "leftMenu.alertQuery": "告警查询",
@@ -82,6 +83,7 @@
   "modal.roomName": "群组名称",
   "modal.noRoomName": "请选择群组",
 
+  "modal.ok": "确定",
   "modal.delete": "删除",
   "modal.cancel": "取消",
   "modal.createTicket": "派发工单",
@@ -146,6 +148,22 @@
   "alertApplication.monitor.step2": "向接口发送数据",
   "alertApplication.monitor.step2Message": "请复制以下URL至您的应用中",
 
+  "alertApplication.trap.headerTitle": "接入第三方监控系统发出的SNMP Trap告警",
+  "alertApplication.trap.step2": "配置SNMP Trap",
+  "alertApplication.trap.step2Message": "本步骤主要完成配置SMNPTrap解析规则的定义",
+  "alertApplication.trap.step2Info": "在配置SNMPTrap规则之前，建议在您的监控系统中开启SNMPTrap并发送到{url}，端口号为{port}",
+  "alertApplication.trap.newRule": "添加规则",
+  "alertApplication.trap.ruleName": "规则名称",
+  "alertApplication.trap.description": "告警描述",
+  "alertApplication.trap.action": "操作",
+  "alertApplication.trap.action_edit": "编辑",
+  "alertApplication.trap.action_delete": "删除",
+
+  "modal.trap.ruleName": "规则名称",
+  "modal.trap.ruleName_placeholder": "请输入规则名称",
+  "modal.trap.ruleDescription": "规则描述",
+  "modal.trap.ruleDescription_placeholder": "请输入规则描述",
+  
   "alertApplication.videoMon.headerTitle": "使用Web Hook接入快速优云VideoMon告警",
   "alertApplication.videoMon.step2": "向接口发送数据",
   "alertApplication.videoMon.step2Message": "请复制以下URL至您的应用中",

@@ -83,3 +83,23 @@ export async function view(id) {
   })
 }
 
+// 在snmp页面查询映射字段
+export async function getField() {
+  return request(`/application/matchFilterValue`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
+
+// 在snmp页面查询filter字段
+export async function getSource() {
+  return request(`/application/filterFieldValue`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
+

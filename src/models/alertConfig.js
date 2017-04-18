@@ -97,6 +97,19 @@ export default {
           })
         }
         yield put({ type: 'initalAddAppView', payload: {isShowTypeModal: false, appTypeId: payload, UUID: undefined}}) // isShowTypeModal -> false, currentOperateAppType -> Object
+        const { currentOperateAppType } = yield select( state => {
+          return {
+            'currentOperateAppType': state.alertConfig.currentOperateAppType,
+          }
+        })
+        // 如果是SNMP Trap
+        switch(currentOperateAppType.name) {
+          case 'UYUN TRAP':
+              yield put({ type: 'snmpTrapRules/setAppRules', payload: []})
+            break;
+          default:
+            break;
+        }
       } else {
         console.error('appTypeId is null')
       }
@@ -117,6 +130,15 @@ export default {
               payload: info.apiKeys[0] || undefined
             })
           }
+          if (viewResult.data.applyType !== undefined) {
+            switch(viewResult.data.applyType.name) {
+              case 'UYUN TRAP':
+                  yield put({ type: 'snmpTrapRules/setAppRules', payload: viewResult.data.appRules || []})
+                break;
+              default:
+                break;
+            }
+          }
         } else {
           yield message.error(window.__alert_appLocaleData.messages[viewResult.message], 3)
         }
@@ -126,10 +148,11 @@ export default {
     },
     // 新增应用
     *addApplication({payload}, {select, put, call}) {
-      const { UUID, currentOperateAppType } = yield select( state => {
+      const { UUID, currentOperateAppType, appRules } = yield select( state => {
         return {
           'UUID': state.alertConfig.UUID,
-          'currentOperateAppType': state.alertConfig.currentOperateAppType
+          'currentOperateAppType': state.alertConfig.currentOperateAppType,
+          'appRules': state.snmpTrapRules.appRules
         }
       })
 
@@ -137,7 +160,7 @@ export default {
         if (UUID === undefined) {
           yield message.error(window.__alert_appLocaleData.messages['alertApplication.appKey.placeholder'], 3)
         }
-        const addResult = yield call(add, {
+        const params = {
           status: 1, // 默认启用
           integration: '',
           displayName: payload.displayName,
@@ -146,7 +169,16 @@ export default {
           },
           type: currentOperateAppType.type,
           appKey: UUID
-        })
+        }
+        // 如果是SNMP Trap
+        switch(currentOperateAppType.name) {
+          case 'UYUN TRAP':
+              yield params.appRules = appRules;
+            break;
+          default:
+            break;
+        }
+        const addResult = yield call(add, params)
         if (addResult.result) {
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3)
           yield put(routerRedux.goBack());
@@ -159,10 +191,11 @@ export default {
     },
     // 编辑
     *editApplication({payload}, {select, put, call}) {
-      const { UUID, currentEditApp } = yield select( state => {
+      const { UUID, currentEditApp, appRules } = yield select( state => {
         return {
           'UUID': state.alertConfig.UUID,
-          'currentEditApp': state.alertConfig.currentEditApp
+          'currentEditApp': state.alertConfig.currentEditApp,
+          'appRules': state.snmpTrapRules.appRules
         }
       })
 
@@ -170,7 +203,7 @@ export default {
         if (UUID === undefined) {
           yield message.error(window.__alert_appLocaleData.messages['alertApplication.appKey.placeholder'], 3)
         }
-        const editResult = yield call(update, {
+        const params = {
           id: currentEditApp.id,
           status: currentEditApp.status,
           integration: currentEditApp.integration,
@@ -180,7 +213,16 @@ export default {
           },
           type: currentEditApp.type,
           appKey: UUID
-        })
+        }
+        // 如果是SNMP Trap
+        switch(currentEditApp.applyType.name) {
+          case 'UYUN TRAP':
+              yield params.appRules = appRules;
+            break;
+          default:
+            break;
+        }
+        const editResult = yield call(update, params)
         if (editResult.result) {
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3)
           yield put(routerRedux.goBack());

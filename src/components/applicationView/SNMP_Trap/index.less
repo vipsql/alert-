@@ -1,0 +1,431 @@
+@import "../../vars.less";
+
+.detailView{
+    padding: 16px 30px;
+    background-color: #173b65;
+    .viewHeader{
+        position: relative;
+        .headerIcon{
+            font-size: 45px;
+            color: #0e9ce0;
+        }
+        .headerContent{
+            position: absolute;
+            top: 5px;
+            left: 58px;
+            font-size: 13px;
+            color: #fff;
+            .headerName{
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            p{
+                color: #6ec2ff;
+                margin-left: 5px;
+                a{
+                    margin-left: 12px;
+                    color: #6ec2ff;
+                    border-bottom: 1px solid #4a8cc3;
+                    &:hover{
+                        color: #3498df;
+                    }
+                }
+            }
+        }
+    }
+    .viewContent{
+        position: relative;
+        .stepLine{
+            top: 40px;
+            position: absolute;
+            display: inline-block;
+            width: 3px;
+            left: 20px;
+            height: 169px;
+            background: #2980bf;
+            z-index: 998;
+        }
+        .step1, .step2{
+            position: relative;
+            padding-top: 20px;
+            padding-left: 58px;
+            margin-bottom: 50px;
+            .viewForm{
+                display: inline-block;
+                vertical-align: top;
+                :global{
+                    .ant-form-item{
+                        margin-bottom: 0px;
+                        .ant-form-item-control{
+                            line-height: 0px;
+                            .ant-input-lg{
+                                height: 28px;
+                            }
+                        }
+                    }
+                }
+                .nameInput{
+                    width: 200px;
+                    color: #9dd7ff;
+                }
+            }
+            & .readOnly{
+                margin-top: 10px;
+                font-size: 12px;
+                color: #fff;
+            }
+            & .createBtn{
+                margin-left: 10px;
+                background-color: #0d5990;
+                border-color: #297ebb;
+                &:hover{
+                    border-color: #2bb4f4;
+                }
+            }
+            & > span:first-child{
+                position: absolute;
+                top: 16px;
+                left: 8px;
+                width: 28px;
+                height: 28px;
+                background: #2980bf;
+                border-radius: 100%;
+                display: inline-block;
+                z-index: 999
+            }
+            .step1Icon{
+                &:before{
+                    display: inline-block;
+                    content: '1';
+                    color: #fff;
+                    font-size: 13px;
+                    position: relative;
+                    top: 4px;
+                    left: 10px;
+                }
+            }
+            .step2Icon{
+                &:before{
+                    display: inline-block;
+                    content: '2';
+                    color: #fff;
+                    font-size: 13px;
+                    position: relative;
+                    top: 4px;
+                    left: 10px;
+                }
+            }
+            .stepName{
+                font-size: 14px;
+                color: #6ec2ff;
+                margin-bottom: 18px;
+            }
+            .stepMessage{
+                font-size: 12px;
+                color: #fff;
+                margin-bottom: 10px;
+            }
+            .stepExample{
+                font-size: 13px;
+                color: #9dd6ff;
+            }
+            .ruleTable{
+                margin-top: 10px;
+                :global{
+                    .ant-table-thead > tr > th{
+                        background: #0f2f51;
+                        color: #66b4e9;
+                        border-bottom: 2px solid #17487d;
+                        font-size: 12px;
+                        text-align: left;
+                        padding: 13px 20px;
+                    }
+                    .ant-table-tbody > tr > td{
+                        text-align: left;
+                        padding: 13px 20px;
+                        border-bottom: 1px solid #17477b;
+                        color: #fff;
+                        :local{
+                            .delBtn{
+                                font-weight: normal;
+                                border: 1px solid #d85735;
+                                background: #d85735;
+                                span{
+                                    color: #fff;
+                                }
+                            }
+                            .editBtn{
+                                font-weight: normal;
+                                border: 1px solid #2096e0;
+                                background: #2096e0;
+                                span{
+                                    color: #fff;
+                                }
+                            }
+                        }
+                    }
+                    .ant-table-tbody > tr:nth-child(odd){
+                        background: #123c68;
+                    }
+                    .ant-table-tbody > tr:nth-child(even){
+                        background: #16477b;
+                    }
+                    .ant-table-tbody > tr:hover > td{
+                        background: none;
+                    }
+                    .ant-table-placeholder{
+                        border-bottom: 1px solid #17477b;
+                        background: #16477b;
+                        color: #66b4e9;
+                    }
+                }
+            }
+        }
+        & > button:last-child{
+            margin-left: 58px;
+        }
+    }
+}
+
+// common modal footer
+.modalFooter{
+    height: 60px;
+    line-height: 60px;
+    margin: -10px -16px -10px -10px;
+    //background: #f2f7fc;
+    background: #145e99;
+    text-align: center;
+    button{
+        width: 82px;
+    }
+    .ghostBtn{
+        color: #fff;
+        background-color: #108ee9;
+        border-color: #108ee9;
+        &:hover{
+            color: #fff;
+            background-color: #49a9ee;
+            border-color: #49a9ee;
+        }
+    }
+}
+
+.ruleMain{
+    .ruleForm{
+        :global{
+            .ant-form-item{
+                margin-bottom: 15px;
+                :local{
+                    .mergeMessage{
+                        position: absolute;
+                        top: 0px;
+                        right: 60px;
+                        margin-left: 5px;
+                        color: #70c3fb;
+                        display: inline-block;
+                        &:before{
+                            display: inline-block;
+                            margin-right: 4px;
+                            content: "*";
+                            font-family: SimSun;
+                            line-height: 1;
+                            font-size: 12px;
+                            color: #70c3fb;
+                        }
+                    }
+                }
+            }
+        }
+        .mergeInput{
+            position: relative;
+            width: 60%;
+        }
+        // input + Icon
+        .composeContainer{
+            position: relative;
+            & > input{
+                padding-right: 25px;
+            }
+            .composeIcon{
+                position: absolute;
+                top: 5px;
+                right: 4px;
+                font-size: 20px;
+                line-height: 20px;
+                color: #13456d;
+                cursor: pointer
+            }
+        }
+        .paramBlock{
+            position: relative;
+            padding: 0px 26px;
+            margin-bottom: 10px;
+            & > span:first-child{
+                font-size: 13px
+            }
+            .modalTable{
+                margin-left: 10px;
+                display: inline-block;
+                vertical-align: top;
+                width: 90%;
+                .expression{
+                    color: #fff;
+                }
+                :global{
+                    .ant-table-thead > tr > th{
+                        background: #13456d;
+                        color: #67b6eb;
+                        border-bottom: 2px solid #1c68a3;
+                        font-size: 12px;
+                        text-align: left;
+                        padding: 10px 15px;
+                        //white-space: nowrap;
+                    }
+                    .ant-table-tbody > tr > td{
+                        text-align: left;
+                        padding: 10px 15px;
+                        border-bottom: 1px solid #1c68a3;
+                        color: #fff;
+                        //white-space: nowrap;
+                        :local{
+                            .delBtn{
+                                font-weight: normal;
+                                border: 1px solid #d85735;
+                                background: #d85735;
+                                span{
+                                    color: #fff;
+                                }
+                            }
+                            .editBtn{
+                                font-weight: normal;
+                                border: 1px solid #2096e0;
+                                background: #2096e0;
+                                span{
+                                    color: #fff;
+                                }
+                                &[disabled]{
+                                    opacity: 0.5;
+                                }
+                            }
+                        }
+                    }
+                    .ant-table-tbody > tr:nth-child(odd){
+                        background: #175586;
+                    }
+                    .ant-table-tbody > tr:nth-child(even){
+                        background: #1a6098;
+                    }
+                    .ant-table-tbody > tr:hover > td{
+                        background: none;
+                    }
+                    .ant-table-placeholder{
+                        border-bottom: 1px solid #1c68a3;
+                        background: #1a6098;
+                        color: #67b6eb;
+                    }
+                    // select filed
+                    .ant-select-search--inline .ant-select-search__field{
+                        color: #fff;
+                    }
+                }
+            }
+            ul{
+                display: inline-block;
+                margin-left: 10px;
+                vertical-align: top;
+                li{
+                    position: relative;
+                    border: 1px dashed #124679;
+                    padding: 8px 15px;
+                    margin-bottom: 5px;
+                    width: 595px;
+                    :global{
+                        .ant-select{
+                            margin-right: 5px;
+                            width: 25%;
+                        }
+                        .ant-input{
+                            width: 30%
+                        }
+                    }
+                    .shanChu{
+                        position: absolute;
+                        top: 5px;
+                        right: 10px;
+                        font-size: 24px;
+                        cursor: pointer;
+                        color: #095a95
+                    }
+                }
+            }
+            .addBtn{
+                margin-left: 65px;
+                margin-top: 10px;
+                :global{
+                    .ant-btn{
+                        padding: 2px 10px;
+                    }
+                }
+                button > span{
+                    position: relative;
+                    bottom: 1px;
+                    font-size: 13px;
+                }
+                button > span:before{
+                    position: relative;
+                    top: 1px;
+                    display: inline-block;
+                    content: '+';
+                    font-size: 18px;
+                    padding-right: 5px;
+                }
+
+            }
+        }
+    }
+}
+
+// popover
+.popover{
+    :global{
+        .ant-popover-content{
+            .ant-popover-arrow{
+                border-bottom-color: transparent;
+            }
+            .ant-popover-arrow::after{
+                border-bottom-color: transparent;
+            }
+            .ant-popover-inner{
+                opacity: 0.9;
+                background-color: #13456d;
+                .ant-popover-inner-content{
+                    color: #fff;
+                    padding: 5px 10px;
+                }
+            }
+        }
+    }
+    .popoverMain{
+        width: 250px;
+        span{
+            display: inline-block;
+            margin-right: 10px;
+            color: #528bca;
+            cursor: pointer;
+            transition: color 0.5s ease-out;
+            &.selected{
+                color: #fff;
+            }
+            &:hover{
+                color: #fff;
+            }
+        }
+        & > span:last-child{
+            margin-right: 0px;
+        }
+        span.noData{
+            text-align: center;
+        }
+    }
+}
