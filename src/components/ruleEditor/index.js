@@ -5,13 +5,24 @@ import React, {
 import { default as cls } from 'classnames';
 import moment from 'moment';
 import _ from 'lodash';
-import { Form, Input, Radio, Select, Tabs, DatePicker, Popover } from 'antd';
+import {
+  Form,
+  Input,
+  Radio,
+  Select,
+  Tabs,
+  DatePicker,
+  Popover,
+  Checkbox,
+  Slider
+} from 'antd';
 import Condition from './condition';
 
 import styles from './index.less';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
+const CheckboxGroup = Checkbox.Group;
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
 const { RangePicker } = DatePicker;
@@ -114,7 +125,21 @@ const conditionData = { // 模拟数据
   }]
 };
 
-const WeekArray = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+const WeekArray = [
+  {label: '周一', value: '0'},
+  {label: '周二', value: '1'},
+  {label: '周三', value: '2'},
+  {label: '周四', value: '3'},
+  {label: '周五', value: '4'},
+  {label: '周六', value: '5'},
+  {label: '周日', value: '6'}
+];
+const MonthArray = _.range(31).map(item => {
+  return {
+    label: item + 1,
+    value: item.toString()
+  };
+});
 let conditionsDom = []; // 元素列表
 let treeTag = 0; // 当前数据的层级标识
 
@@ -125,10 +150,17 @@ class RuleEditor extends Component {
 
     this.state = {
       type: props.type,
-      time: props.time
+      time: props.time,
+      timeStart: {
+        hours: 0,
+        mins: 0
+      },
+      timeEnd: {
+        hours: 0,
+        mins: 0
+      }
     };
   }
-
   componentDidMount() {
     const { setFieldsValue } = this.props.form;
     const { name, type, description } = this.props;
@@ -138,88 +170,9 @@ class RuleEditor extends Component {
       description,
     });
   }
-
-  createTitle(item, level) {
-    const { logic } = item;
-    return (
-      <div className={cls(
-          styles.title,
-          `treeTag${level}`
-        )}
-      >
-        <label>条件：</label>
-        <Select placeholder="请选择条件">
-          <Option value="and">满足全部</Option>
-          <Option value="or">满足任意</Option>
-          <Option value="not">都不满足</Option>
-        </Select>
-        <div className={styles.btnWrap}>
-          <span className={cls(styles.btn, styles.addBlock)}>+嵌套</span>
-          <span className={cls(styles.btn, styles.addLine)}>+条件</span>
-        </div>
-      </div>
-    );
-  }
-  // 创建条件内容
-  createConditionList(item, level) {
-    const { content } = item;
-    return content.map((_item, _index) => {
-      const { key, opt, value} = _item;
-      const itemData = {
-        _key: key,
-        opt,
-        value,
-        level
-      };
-      return <Condition {...itemData} />
-    });
-  }
-  // 对数据进行深度遍历并创建 Dom
-  // 深度优先
-  createAll(node, treeTag) {
-    const { child = [] } = node;
-    const domList = [];
-    domList.push(
-      this.createTitle(node, treeTag),
-      this.createConditionList(node, treeTag)
-    );
-    for (let i = child.length - 1; i >= 0; i -= 1) {
-      // 先序遍历，treeTag + 1 是当前值 + 1，不会改变自身的值
-      this.createAll(child[i], treeTag + 1);
-    }
-    conditionsDom.unshift(domList);
-    return conditionsDom;
-  }
-
-  // 更改时间类型
-  changeType(event) {
-    this.setState({
-      type: event.target.value
-    });
-  }
-
-  // 更改时间周期
-  changeTimeCycle(type, event) {
-    const _time = _.cloneDeep(this.state.time);
-    _time.timeCycle = type;
-    this.setState({
-      time: _time
-    });
-  }
-
-  handleSubmit(event) {
-    event.preventDefault();
-    this.props.form.validateFields((errors, values) => {
-      if (errors) {
-        console.warn('[表单错误]', errors);
-        return false;
-      }
-    });
-  }
-
   render() {
     conditionsDom = []; // 重置，防止重复 render
-
+    const { time, timeStart, timeEnd } = this.state;
     const { getFieldDecorator } = this.props.form;
     const itemLayout = {
       labelCol: { span: 2 },
@@ -228,8 +181,57 @@ class RuleEditor extends Component {
     const desLayout = {
       labelCol: { span: 2 },
       wrapperCol: { span: 10 }
+    };
+
+    // 执行周期的文字提醒，待完成
+    const compiled = _.template('${ timeCycle } 的 ${ timeCycleWeek } ${ timeCycleMonth } ${ timeStart } 到 ${ timeEnd } 执行');
+    let Msg = {
+      timeCycle: time.timeCycle.replace(/\d/g, function(matchs) {
+        const map = {
+          '0': '每天',
+          '1': '每周',
+          '2': '每月',
+        };
+        return map[matchs];
+      }),
+      timeCycleWeek: time.timeCycleWeek,
+      timeCycleMonth: time.timeCycleMonth,
+      timeStart: time.timeStart,
+      timeEnd: time.timeEnd
+    };
+
+    let cycleDay = '';
+    switch(time.timeCycle) {
+      case '1':
+        const timeCycleWeekArr = time.timeCycleWeek.split(',');
+        let _timeCycleWeekArr = timeCycleWeekArr.map(item => {
+          return item.replace(/\d/g, matchs => {
+            return WeekArray[matchs].label;
+          });
+        });
+        _.remove(_timeCycleWeekArr, item => item === '');
+        cycleDay = `${_timeCycleWeekArr}${_timeCycleWeekArr.length === 0 ? '' : '、'}`;
+        break;
+      case '2':
+        const timeCycleMonthArr = time.timeCycleMonth.split(',');
+        let _timeCycleMonthArr = timeCycleMonthArr.map(item => {
+          if (item !== '') {
+            return (parseInt(item) + 1).toString();
+          } else {
+            return '';
+          }
+        });
+        _.remove(_timeCycleMonthArr, item => item === '');
+        cycleDay = `${_timeCycleMonthArr}${_timeCycleMonthArr.length === 0 ? '' : '、'}`;
+        break;
+      default:
+        cycleDay = '';
     }
-    console.info('[render][props]', this.props);
+    const cycleTime = `${timeStart.hours}:${timeStart.mins}~${timeEnd.hours}:${timeEnd.mins}`;
+    const timeString = `${cycleDay}${cycleTime}`;
+
+    // console.info('[props]', this.props);
+    console.info('[state]', this.state);
 
     return (
       <Form id="RuleEditor" onSubmit={this.submit}>
@@ -278,44 +280,82 @@ class RuleEditor extends Component {
 
             {
               this.state.type === '1' &&
-              <div className="rangeTime">
+              <div className={styles.pickTimeWrap}>
                 <Popover
                   trigger="click"
                   placement="bottomLeft"
+                  overlayClassName="pickTime"
                   content={(
                     <div className={styles.timeCycle}>
                       <div className={styles.timeCycleHd}>
-                        <span onClick={this.changeTimeCycle.bind(this, '0')}>每日</span>
-                        <span onClick={this.changeTimeCycle.bind(this, '1')}>每周</span>
-                        <span onClick={this.changeTimeCycle.bind(this, '2')}>每月</span>
+                        <span className={cls({
+                          'active': time.timeCycle === '0'
+                        })} onClick={this.changeTimeCycleType.bind(this, '0')}>每日</span>
+                        <span className={cls({
+                          'active': time.timeCycle === '1'
+                        })} onClick={this.changeTimeCycleType.bind(this, '1')}>每周</span>
+                        <span className={cls({
+                          'active': time.timeCycle === '2'
+                        })} onClick={this.changeTimeCycleType.bind(this, '2')}>每月</span>
                       </div>
                       <div className={styles.timeCycleBd}>
+                        {
+                          time.timeCycle !== '0' &&
+                          <p>请选择具体执行周期：</p>
+                        }
                         { // 每周
-                          this.state.time.timeCycle === '1' &&
-                          _.range(7).map(item => <span>{WeekArray[item]}</span>)
+                          time.timeCycle === '1' &&
+                          <CheckboxGroup options={WeekArray} defaultValue={time.timeCycleWeek.split(',')} className="weekCycle" onChange={this.changeTimeCycle.bind(this, 'timeCycleWeek')} />
                         }
                         { // 每月
-                          this.state.time.timeCycle === '2' &&
-                          _.range(1, 32).map(item => <span>{item}</span>)
+                          time.timeCycle === '2' &&
+                          <CheckboxGroup options={MonthArray} defaultValue={time.timeCycleMonth.split(',')} onChange={this.changeTimeCycle.bind(this, 'timeCycleMonth')} />
                         }
+                        <div className={styles.timeWrap}>
+                          <div className={styles.timeStart}>
+                            <p>起始执行时间：</p>
+                            <Slider onChange={this.changeTime.bind(this, 'timeStart', 'hours')} value={timeStart.hours} className={cls(styles.hours, `timeMarks${timeStart.hours}`)} tipFormatter={null} max={23} />
+                            <Slider onChange={this.changeTime.bind(this, 'timeStart', 'mins')} value={timeStart.mins} className={cls(styles.mins, `timeMarks${timeStart.mins}`)} tipFormatter={null} max={59} />
+                          </div>
+                          <div className={styles.timeEnd}>
+                            <p>结束执行时间：</p>
+                            <Slider onChange={this.changeTime.bind(this, 'timeEnd', 'hours')} value={timeEnd.hours} className={cls(styles.hours, `timeMarks${timeEnd.hours}`)} tipFormatter={null} max={23} />
+                            <Slider onChange={this.changeTime.bind(this, 'timeEnd', 'mins')} value={timeEnd.mins} className={cls(styles.mins, `timeMarks${timeEnd.mins}`)} tipFormatter={null} max={59} />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
                 >
-                  <span>请选择定时规则</span>
+                  <Input placeholder="请选择定时规则" readOnly value={timeString} className={styles.selectTime} />
                 </Popover>
               </div>
             }
             {
               this.state.type === '2' &&
-              <RangePicker
-                // showTime
-                // allowClear
-                format="YYYY-MM-DD"
-                placeholder={['请选择起始日期', '请选择结束日期']}
-                onChange={this.changeDate}
-                // onOk={onOk}
-              />
+              <div className={styles.pickTimeWrap}>
+                <RangePicker
+                  // showTime
+                  // allowClear
+                  format="YYYY-MM-DD"
+                  placeholder={['请选择起始日期', '请选择结束日期']}
+                  onChange={this.changeDate}
+                  // onOk={onOk}
+                />
+              </div>
+            }
+            {
+              // <p className={styles.timeMessage}>
+              //   {
+              //     compiled({
+              //       timeCycle: Msg.timeCycle,
+              //       timeCycleWeek: Msg.timeCycleWeek,
+              //       timeCycleMonth: Msg.timeCycleMonth,
+              //       timeStart: Msg.timeStart,
+              //       timeEnd: Msg.timeEnd
+              //     })
+              //   }
+              // </p>
             }
           </FormItem>
         </div>
@@ -337,7 +377,7 @@ class RuleEditor extends Component {
                 // optionFilterProp="children"
                 style={{ width: 200 }}
                 placeholder="请选择告警来源"
-                getPopupContainer={() => document.querySelector('#xxx')}
+                // getPopupContainer={() => document.querySelector('#xxx')}
                 // filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
               >
                 <Option value="CMDB">CMDB</Option>
@@ -411,6 +451,136 @@ class RuleEditor extends Component {
       </Form>
     );
   }
+
+  // 是否选中时间周期
+  isTimeChecked(event) {
+    // debugger
+    return true;
+  }
+
+  // 创建条件头
+  createTitle(item, level) {
+    const { logic } = item;
+    return (
+      <div className={cls(
+          styles.title,
+          `treeTag${level}`
+        )}
+      >
+        <label>条件：</label>
+        <Select placeholder="请选择条件">
+          <Option value="and">满足全部</Option>
+          <Option value="or">满足任意</Option>
+          <Option value="not">都不满足</Option>
+        </Select>
+        <div className={styles.btnWrap}>
+          <span className={cls(styles.btn, styles.addBlock)}>+嵌套</span>
+          <span className={cls(styles.btn, styles.addLine)}>+条件</span>
+        </div>
+      </div>
+    );
+  }
+  // 创建条件内容
+  createConditionList(item, level) {
+    const { content } = item;
+    return content.map((_item, _index) => {
+      const { key, opt, value} = _item;
+      const itemData = {
+        _key: key,
+        opt,
+        value,
+        level
+      };
+      return <Condition {...itemData} />
+    });
+  }
+  // 对数据进行深度遍历并创建 Dom
+  // 深度优先
+  createAll(node, treeTag) {
+    const { child = [] } = node;
+    const domList = [];
+    domList.push(
+      this.createTitle(node, treeTag),
+      this.createConditionList(node, treeTag)
+    );
+    for (let i = child.length - 1; i >= 0; i -= 1) {
+      // 先序遍历，treeTag + 1 是当前值 + 1，不会改变自身的值
+      this.createAll(child[i], treeTag + 1);
+    }
+    conditionsDom.unshift(domList);
+    return conditionsDom;
+  }
+
+  // 更改规则类型
+  changeType(event) {
+    this.setState({
+      type: event.target.value,
+      // timeStart: {
+      //   hours: 0,
+      //   mins: 0
+      // },
+      // timeEnd: {
+      //   hours: 0,
+      //   mins: 0
+      // }
+    });
+  }
+
+  // 更改时间周期类型
+  changeTimeCycleType(type, event) {
+    const _time = _.cloneDeep(this.state.time);
+    _time.timeCycle = type;
+    this.setState({
+      time: _time
+    });
+  }
+
+
+  // 更改时间周期
+  changeTimeCycle(name, options) {
+    console.log(options);
+    const _time = _.cloneDeep(this.state.time);
+    // const value = event.target.value.toString();
+    // const timeArr = _time[name].split(',');
+    _.remove(options, item => item === '');
+    _time[name] = _.uniq(options).sort((pre, next) => pre - next).join(',');
+
+    // if (event.target.checked) { // 选中状态
+    //   timeArr.push(value);
+    //   _.remove(timeArr, item => item === '');
+    //   _time[name] = _.uniq(timeArr).sort((pre, next) => pre - next).join(',');
+    // } else { // 取消选中
+    //   _time[name] = _.remove(_time[name].replace(`${value}`, '').split(',')).join(',');
+    // }
+    this.setState({
+      time: _time
+    });
+  }
+
+  // 更改执行时间
+  changeTime(name, type, value) {
+    const _time = _.cloneDeep(this.state[name]);
+    _time[type] = value;
+    if (name === 'timeStart') {
+      this.setState({
+        timeStart: _time
+      });
+    } else {
+      this.setState({
+        timeEnd: _time
+      });
+    }
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    this.props.form.validateFields((errors, values) => {
+      if (errors) {
+        console.warn('[表单错误]', errors);
+        return false;
+      }
+    });
+  }
 }
 
 RuleEditor.defaultProps = {
@@ -420,19 +590,19 @@ RuleEditor.defaultProps = {
   time: {
     dayStart: '',
     dayEnd: '',
-    timeCycle: '',
+    timeCycle: '0',
     timeCycleWeek: '',
     timeCycleMonth: '',
     timeStart: '',
     timeEnd: ''
   },
   source: '',
-  // condition: {
-  //   content: [],
-  //   child: [],
-  //   logic: ''
-  // },
-  condition: conditionData,
+  condition: {
+    content: [],
+    child: [],
+    logic: ''
+  },
+  // condition: conditionData,
 };
 
 RuleEditor.propTypes = {
