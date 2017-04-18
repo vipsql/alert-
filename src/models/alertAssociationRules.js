@@ -114,7 +114,7 @@ export default {
           'associationRules': state.alertAssociationRules.associationRules
         }
       })
-      const groupList = yield groupSort()(associationRules, 'ruleType')
+      const groupList = associationRules[0].classify !== undefined ? associationRules : yield groupSort()(associationRules, 'ruleType')
       yield put({ type: 'setRulesListData', payload: {
         associationRules: groupList,
       }})
