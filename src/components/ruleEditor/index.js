@@ -1,0 +1,480 @@
+import React, {
+  PropTypes,
+  Component
+} from 'react';
+import { default as cls } from 'classnames';
+import moment from 'moment';
+import _ from 'lodash';
+import { Form, Input, Radio, Select, Tabs, DatePicker, Popover } from 'antd';
+import Condition from './condition';
+
+import styles from './index.less';
+
+const FormItem = Form.Item;
+const RadioGroup = Radio.Group;
+const TabPane = Tabs.TabPane;
+const Option = Select.Option;
+const { RangePicker } = DatePicker;
+
+const conditionData = { // 模拟数据
+  // 一级条件
+  logic: 'or',
+  content: [{
+    key: 'level',
+    opt: 'equal',
+    value: 'CMDB',
+  }, {
+    key: 'source',
+    opt: 'equal',
+    value: 'CMDB',
+  }],
+  // 二级条件（一级条件的补充条件）
+  child: [{
+    logic: 'and',
+    content: [{
+      key: 'source',
+      opt: 'equal',
+      value: 'Monitor',
+    }, {
+      key: 'duration',
+      opt: 'equal',
+      value: 'APM',
+    }],
+    // 三级条件
+    child: [{
+      logic: 'not',
+      content: [{
+        key: 'duration',
+        opt: 'equal',
+        value: 'Monitor',
+      }, {
+        key: 'level',
+        opt: 'equal',
+        value: 'Monitor',
+      }]
+    }, {
+      logic: 'not',
+      content: [{
+        key: 'level',
+        opt: 'equal',
+        value: 'CMDB',
+      }, {
+        key: 'status',
+        opt: 'equal',
+        value: 'Monitor',
+      }]
+    }]
+  },{
+    // 二级条件（一级条件的补充条件）
+    logic: 'and',
+    content: [{
+      key: 'source',
+      opt: 'equal',
+      value: 'APM',
+    }, {
+      key: 'duration',
+      opt: 'equal',
+      value: 'APM',
+    }],
+    // 三级条件
+    child: [{
+      logic: 'not',
+      content: [{
+        key: 'duration',
+        opt: 'equal',
+        value: 'Monitor',
+      }, {
+        key: 'level',
+        opt: 'equal',
+        value: 'Monitor',
+      }]
+    }, {
+      logic: 'not',
+      content: [{
+        key: 'level',
+        opt: 'equal',
+        value: 'Monitor',
+      }, {
+        key: 'status',
+        opt: 'equal',
+        value: 'CMDB',
+      }]
+    }, {
+      logic: 'and',
+      content: [{
+        key: 'level',
+        opt: 'equal',
+        value: 'APM',
+      }, {
+        key: 'status',
+        opt: 'equal',
+        value: 'APM',
+      }]
+    }]
+  }]
+};
+
+const WeekArray = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+let conditionsDom = []; // 元素列表
+let treeTag = 0; // 当前数据的层级标识
+
+
+class RuleEditor extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      type: props.type,
+      time: props.time
+    };
+  }
+
+  componentDidMount() {
+    const { setFieldsValue } = this.props.form;
+    const { name, type, description } = this.props;
+    setFieldsValue({ // 此处对表单进行赋值，会造成 render 两次
+      name,
+      type,
+      description,
+    });
+  }
+
+  createTitle(item, level) {
+    const { logic } = item;
+    return (
+      <div className={cls(
+          styles.title,
+          `treeTag${level}`
+        )}
+      >
+        <label>条件：</label>
+        <Select placeholder="请选择条件">
+          <Option value="and">满足全部</Option>
+          <Option value="or">满足任意</Option>
+          <Option value="not">都不满足</Option>
+        </Select>
+        <div className={styles.btnWrap}>
+          <span className={cls(styles.btn, styles.addBlock)}>+嵌套</span>
+          <span className={cls(styles.btn, styles.addLine)}>+条件</span>
+        </div>
+      </div>
+    );
+  }
+  // 创建条件内容
+  createConditionList(item, level) {
+    const { content } = item;
+    return content.map((_item, _index) => {
+      const { key, opt, value} = _item;
+      const itemData = {
+        _key: key,
+        opt,
+        value,
+        level
+      };
+      return <Condition {...itemData} />
+    });
+  }
+  // 对数据进行深度遍历并创建 Dom
+  // 深度优先
+  createAll(node, treeTag) {
+    const { child = [] } = node;
+    const domList = [];
+    domList.push(
+      this.createTitle(node, treeTag),
+      this.createConditionList(node, treeTag)
+    );
+    for (let i = child.length - 1; i >= 0; i -= 1) {
+      // 先序遍历，treeTag + 1 是当前值 + 1，不会改变自身的值
+      this.createAll(child[i], treeTag + 1);
+    }
+    conditionsDom.unshift(domList);
+    return conditionsDom;
+  }
+
+  // 更改时间类型
+  changeType(event) {
+    this.setState({
+      type: event.target.value
+    });
+  }
+
+  // 更改时间周期
+  changeTimeCycle(type, event) {
+    const _time = _.cloneDeep(this.state.time);
+    _time.timeCycle = type;
+    this.setState({
+      time: _time
+    });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    this.props.form.validateFields((errors, values) => {
+      if (errors) {
+        console.warn('[表单错误]', errors);
+        return false;
+      }
+    });
+  }
+
+  render() {
+    conditionsDom = []; // 重置，防止重复 render
+
+    const { getFieldDecorator } = this.props.form;
+    const itemLayout = {
+      labelCol: { span: 2 },
+      wrapperCol: { span: 4 }
+    };
+    const desLayout = {
+      labelCol: { span: 2 },
+      wrapperCol: { span: 10 }
+    }
+    console.info('[render][props]', this.props);
+
+    return (
+      <Form id="RuleEditor" onSubmit={this.submit}>
+
+        <h2>基本信息</h2>
+        <div className={styles.baseInfo}>
+          <FormItem
+            {...itemLayout}
+            label="规则名称"
+          >
+            {getFieldDecorator('name', {
+              rules: [{
+                required: true,
+                whitespace: true,
+                message: '规则名称不能为空'
+              }],
+            })(
+              <Input placeholder="请输入规则名称" />
+            )}
+          </FormItem>
+          <FormItem
+            {...desLayout}
+            label="规则描述"
+          >
+            {getFieldDecorator('description', {
+              rules: [],
+            })(
+              <Input type="textarea" placeholder="请为规则添加描述" />
+            )}
+          </FormItem>
+          <FormItem
+            {...desLayout}
+            label="规则类型"
+          >
+            {getFieldDecorator('type', {
+              rules: [],
+            })(
+              <RadioGroup
+                onChange={this.changeType.bind(this)}
+              >
+                <Radio value='0'>任意时间均执行</Radio>
+                <Radio value='1'>周期性执行</Radio>
+                <Radio value='2'>固定时间段执行</Radio>
+              </RadioGroup>
+            )}
+
+            {
+              this.state.type === '1' &&
+              <div className="rangeTime">
+                <Popover
+                  trigger="click"
+                  placement="bottomLeft"
+                  content={(
+                    <div className={styles.timeCycle}>
+                      <div className={styles.timeCycleHd}>
+                        <span onClick={this.changeTimeCycle.bind(this, '0')}>每日</span>
+                        <span onClick={this.changeTimeCycle.bind(this, '1')}>每周</span>
+                        <span onClick={this.changeTimeCycle.bind(this, '2')}>每月</span>
+                      </div>
+                      <div className={styles.timeCycleBd}>
+                        { // 每周
+                          this.state.time.timeCycle === '1' &&
+                          _.range(7).map(item => <span>{WeekArray[item]}</span>)
+                        }
+                        { // 每月
+                          this.state.time.timeCycle === '2' &&
+                          _.range(1, 32).map(item => <span>{item}</span>)
+                        }
+                      </div>
+                    </div>
+                  )}
+                >
+                  <span>请选择定时规则</span>
+                </Popover>
+              </div>
+            }
+            {
+              this.state.type === '2' &&
+              <RangePicker
+                // showTime
+                // allowClear
+                format="YYYY-MM-DD"
+                placeholder={['请选择起始日期', '请选择结束日期']}
+                onChange={this.changeDate}
+                // onOk={onOk}
+              />
+            }
+          </FormItem>
+        </div>
+
+        <h2>告警来源</h2>
+        <div className={styles.alertSource}>
+          <FormItem
+            {...itemLayout}
+            label="告警来源"
+          >
+            {getFieldDecorator('source', {
+              rules: [{
+                required: true,
+                message: '告警来源不能为空'
+              }]
+            })(
+              <Select
+                // showSearch
+                // optionFilterProp="children"
+                style={{ width: 200 }}
+                placeholder="请选择告警来源"
+                getPopupContainer={() => document.querySelector('#xxx')}
+                // filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              >
+                <Option value="CMDB">CMDB</Option>
+                <Option value="Monitor">Monitor</Option>
+                <Option value="APM">APM</Option>
+              </Select>
+            )}
+          </FormItem>
+        </div>
+
+        <h2>定义条件</h2>
+        <div className={styles.defineConditions}>
+          {
+            this.createAll(this.props.condition, treeTag)
+          }
+        </div>
+
+        <h2>设置动作</h2>
+        <div className={styles.setActions}>
+          <Tabs animated={false} defaultActiveKey={this.props.tab}>
+            <TabPane tab="关闭/删除告警" key="1">
+              <div>
+                <span>针对符合条件的告警，执行</span>
+                <Select
+                  style={{ width: 100 }}
+                  defaultValue={this.props.action}
+                >
+                  <Option value="delete">删除</Option>
+                  <Option value="close">关闭</Option>
+                </Select>
+                <em>关闭将状态改为已解决，删除从数据库物理删除</em>
+              </div>
+            </TabPane>
+            {
+              // <TabPane tab="升级/降级告警" key="2"></TabPane>
+            }
+            <TabPane tab="告警通知" key="3">
+
+            </TabPane>
+            <TabPane tab="告警派单" key="4">
+              <div>
+                <span>工单类别：</span>
+                <Select
+                  style={{ width: 100 }}
+                  defaultValue={this.props.itsm}
+                >
+                  <Option value="group1">组1</Option>
+                  <Option value="group2">组2</Option>
+                </Select>
+                <em>选择工单类型，派发到ITSM</em>
+              </div>
+            </TabPane>
+            <TabPane tab="抑制告警" key="5">
+
+            </TabPane>
+            <TabPane tab="分享到Chatops" key="6">
+              <div>
+                <span>Chatops群组：</span>
+                <Select
+                  style={{ width: 100 }}
+                  defaultValue={this.props.chatops}
+                >
+                  <Option value="group1">组1</Option>
+                  <Option value="group2">组2</Option>
+                </Select>
+              </div>
+            </TabPane>
+          </Tabs>
+        </div>
+        <span onClick={this.handleSubmit.bind(this)} className={styles.submit}>提交</span>
+      </Form>
+    );
+  }
+}
+
+RuleEditor.defaultProps = {
+  name: '',
+  description: '',
+  type: '0',
+  time: {
+    dayStart: '',
+    dayEnd: '',
+    timeCycle: '',
+    timeCycleWeek: '',
+    timeCycleMonth: '',
+    timeStart: '',
+    timeEnd: ''
+  },
+  source: '',
+  // condition: {
+  //   content: [],
+  //   child: [],
+  //   logic: ''
+  // },
+  condition: conditionData,
+};
+
+RuleEditor.propTypes = {
+  /* 基本信息 */
+  // 规则名称
+  name: PropTypes.string.isRequired,
+  // 规则描述
+  description: PropTypes.string.isRequired,
+  // 规则类型（0:任意时间执行；1:周期性执行；2:固定时间段执行）
+  type: PropTypes.string.isRequired,
+  time: PropTypes.shape({
+    // 固定时间段执行必填（在未来确定的某一时间段执行一次）
+    dayStart: PropTypes.string.isRequired,
+    dayEnd: PropTypes.string.isRequired,
+
+    // 周期性执行必填（0：每天；1：每周；2：每月）
+    timeCycle: PropTypes.string.isRequired,
+    // 时间周期为每周必填（0～6：周一～周日）
+    timeCycleWeek: PropTypes.string.isRequired,
+    // 时间周期为每月必填（0～30:1号～31号）
+    timeCycleMonth: PropTypes.string.isRequired,
+    timeStart: PropTypes.string.isRequired,
+    timeEnd: PropTypes.string.isRequired
+  }),
+
+  /* 告警来源 */
+  source: PropTypes.string.isRequired,
+
+  /* 定义条件 */
+  condition: PropTypes.shape({
+    content: PropTypes.array.isRequired,
+    child: PropTypes.array.isRequired,
+    logic: PropTypes.string.isRequired
+  }),
+
+  /* 设定动作 */
+  // 动作类型
+  tab: PropTypes.string,
+  action: PropTypes.string,
+  itsm: PropTypes.string,
+  chatops: PropTypes.string,
+
+};
+
+export default Form.create()(RuleEditor);
