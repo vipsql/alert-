@@ -227,8 +227,11 @@ class RuleEditor extends Component {
       default:
         cycleDay = '';
     }
-    const cycleTime = `${timeStart.hours}:${timeStart.mins}~${timeEnd.hours}:${timeEnd.mins}`;
-    const timeString = `${cycleDay}${cycleTime}`;
+    const cycleTimeStart = `${timeStart.hours}:${timeStart.mins}`;
+    const cycleTimeEnd = `${timeEnd.hours}:${timeEnd.mins}`;
+    console.log(moment(cycleTimeStart, 'H:mm').format("HH:mm"))
+    // debugger
+    const timeString = `${cycleDay}${moment(cycleTimeStart, 'H:mm').format("HH:mm")} - ${moment(cycleTimeEnd, 'H:mm').format("HH:mm")}`;
 
     // console.info('[props]', this.props);
     console.info('[state]', this.state);
