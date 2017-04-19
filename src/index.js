@@ -107,6 +107,9 @@ app.model(require('./models/alertQuery'))
 app.model(require('./models/alertQueryDetail'))
 // 告警配置
 app.model(require('./models/alertConfig'))
+app.model(require('./models/snmpTrapRules'))
+// 关联规则
+app.model(require('./models/alertAssociationRules'))
 // 值班管理
 app.model(require('./models/watchManage'))
 // 3. Router

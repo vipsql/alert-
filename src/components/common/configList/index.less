@@ -70,6 +70,14 @@
     }
   }
   tbody{
+    .hiddenChild{
+        display: none;
+    }
+    .groupSpread{
+        td{
+            background-color: #18477a;
+        }
+    }
     tr{
         td{
             :global{
@@ -118,6 +126,27 @@
                 background-color: #1d5692;
             }
         }
+    }
+
+    tr.trGroup{
+      td {
+        background: #143c67;
+        text-align: left;
+        .expandIcon{
+          display: inline-block;
+          margin: 18px 10px 0 12px;
+          width: 14px;
+          height: 14px;
+          line-height: 14px;
+          text-align: center;
+          background: #4082e6;
+          color: white;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: bold;
+          border-radius: 3px;
+        }
+      }
     }
 
   }
