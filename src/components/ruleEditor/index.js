@@ -11,21 +11,23 @@ import {
   Radio,
   Select,
   Tabs,
-  DatePicker,
   Popover,
-  Checkbox,
-  Slider
+  Checkbox
 } from 'antd';
+import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
 import Condition from './condition';
+import TimeSlider from './timeSlider';
 
 import styles from './index.less';
+import '../../../node_modules/rc-calendar/assets/index.css';
+import en_US from 'rc-calendar/lib/locale/en_US';
+import zh_CN from 'rc-calendar/lib/locale/zh_CN';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const CheckboxGroup = Checkbox.Group;
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
-const { RangePicker } = DatePicker;
 
 const conditionData = { // 模拟数据
   // 一级条件
@@ -183,23 +185,7 @@ class RuleEditor extends Component {
       wrapperCol: { span: 10 }
     };
 
-    // 执行周期的文字提醒，待完成
-    const compiled = _.template('${ timeCycle } 的 ${ timeCycleWeek } ${ timeCycleMonth } ${ timeStart } 到 ${ timeEnd } 执行');
-    let Msg = {
-      timeCycle: time.timeCycle.replace(/\d/g, function(matchs) {
-        const map = {
-          '0': '每天',
-          '1': '每周',
-          '2': '每月',
-        };
-        return map[matchs];
-      }),
-      timeCycleWeek: time.timeCycleWeek,
-      timeCycleMonth: time.timeCycleMonth,
-      timeStart: time.timeStart,
-      timeEnd: time.timeEnd
-    };
-
+    // 时间选择器选择之后的文字信息反馈，用'、'号隔开，同类信息用','隔开
     let cycleDay = '';
     switch(time.timeCycle) {
       case '1':
@@ -229,9 +215,8 @@ class RuleEditor extends Component {
     }
     const cycleTimeStart = `${timeStart.hours}:${timeStart.mins}`;
     const cycleTimeEnd = `${timeEnd.hours}:${timeEnd.mins}`;
-    console.log(moment(cycleTimeStart, 'H:mm').format("HH:mm"))
-    // debugger
-    const timeString = `${cycleDay}${moment(cycleTimeStart, 'H:mm').format("HH:mm")} - ${moment(cycleTimeEnd, 'H:mm').format("HH:mm")}`;
+    // console.log(moment(cycleTimeStart, 'H:mm').format("HH:mm"))
+    const timeString = `${cycleDay}${moment(cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(cycleTimeEnd, 'H:mm').format("HH:mm")}`;
 
     // console.info('[props]', this.props);
     console.info('[state]', this.state);
@@ -314,18 +299,7 @@ class RuleEditor extends Component {
                           time.timeCycle === '2' &&
                           <CheckboxGroup options={MonthArray} defaultValue={time.timeCycleMonth.split(',')} onChange={this.changeTimeCycle.bind(this, 'timeCycleMonth')} />
                         }
-                        <div className={styles.timeWrap}>
-                          <div className={styles.timeStart}>
-                            <p>起始执行时间：</p>
-                            <Slider onChange={this.changeTime.bind(this, 'timeStart', 'hours')} value={timeStart.hours} className={cls(styles.hours, `timeMarks${timeStart.hours}`)} tipFormatter={null} max={23} />
-                            <Slider onChange={this.changeTime.bind(this, 'timeStart', 'mins')} value={timeStart.mins} className={cls(styles.mins, `timeMarks${timeStart.mins}`)} tipFormatter={null} max={59} />
-                          </div>
-                          <div className={styles.timeEnd}>
-                            <p>结束执行时间：</p>
-                            <Slider onChange={this.changeTime.bind(this, 'timeEnd', 'hours')} value={timeEnd.hours} className={cls(styles.hours, `timeMarks${timeEnd.hours}`)} tipFormatter={null} max={23} />
-                            <Slider onChange={this.changeTime.bind(this, 'timeEnd', 'mins')} value={timeEnd.mins} className={cls(styles.mins, `timeMarks${timeEnd.mins}`)} tipFormatter={null} max={59} />
-                          </div>
-                        </div>
+                        <TimeSlider timeStart={timeStart} timeEnd={timeEnd} changeTime={this.changeTime.bind(this)} />
                       </div>
                     </div>
                   )}
@@ -337,28 +311,26 @@ class RuleEditor extends Component {
             {
               this.state.type === '2' &&
               <div className={styles.pickTimeWrap}>
-                <RangePicker
-                  // showTime
-                  // allowClear
-                  format="YYYY-MM-DD"
-                  placeholder={['请选择起始日期', '请选择结束日期']}
-                  onChange={this.changeDate}
-                  // onOk={onOk}
-                />
+                <Popover
+                  trigger="click"
+                  placement="bottomLeft"
+                  overlayClassName="pickTime"
+                  content={(
+                    <div className={styles.timeCycle}>
+                      <RangeCalendar onChange={this.changeDate.bind(this)} dateInputPlaceholder={['请选择起始日期', '请选择结束日期']} className={styles.calendar} locale={zh_CN} renderFooter={() => {
+                        return (
+                          <div className={styles.timeCycleBd}>
+                            <TimeSlider />
+                          </div>
+                        );
+                      }} />
+
+                    </div>
+                  )}
+                >
+                  <Input placeholder="请选择定时规则" readOnly className={styles.selectTime} />
+                </Popover>
               </div>
-            }
-            {
-              // <p className={styles.timeMessage}>
-              //   {
-              //     compiled({
-              //       timeCycle: Msg.timeCycle,
-              //       timeCycleWeek: Msg.timeCycleWeek,
-              //       timeCycleMonth: Msg.timeCycleMonth,
-              //       timeStart: Msg.timeStart,
-              //       timeEnd: Msg.timeEnd
-              //     })
-              //   }
-              // </p>
             }
           </FormItem>
         </div>
@@ -455,12 +427,6 @@ class RuleEditor extends Component {
     );
   }
 
-  // 是否选中时间周期
-  isTimeChecked(event) {
-    // debugger
-    return true;
-  }
-
   // 创建条件头
   createTitle(item, level) {
     const { logic } = item;
@@ -518,14 +484,6 @@ class RuleEditor extends Component {
   changeType(event) {
     this.setState({
       type: event.target.value,
-      // timeStart: {
-      //   hours: 0,
-      //   mins: 0
-      // },
-      // timeEnd: {
-      //   hours: 0,
-      //   mins: 0
-      // }
     });
   }
 
@@ -543,18 +501,8 @@ class RuleEditor extends Component {
   changeTimeCycle(name, options) {
     console.log(options);
     const _time = _.cloneDeep(this.state.time);
-    // const value = event.target.value.toString();
-    // const timeArr = _time[name].split(',');
     _.remove(options, item => item === '');
     _time[name] = _.uniq(options).sort((pre, next) => pre - next).join(',');
-
-    // if (event.target.checked) { // 选中状态
-    //   timeArr.push(value);
-    //   _.remove(timeArr, item => item === '');
-    //   _time[name] = _.uniq(timeArr).sort((pre, next) => pre - next).join(',');
-    // } else { // 取消选中
-    //   _time[name] = _.remove(_time[name].replace(`${value}`, '').split(',')).join(',');
-    // }
     this.setState({
       time: _time
     });
@@ -573,6 +521,25 @@ class RuleEditor extends Component {
         timeEnd: _time
       });
     }
+  }
+
+  // 更改固定时间段, event 为一个数组，包含起始时间和结束时间
+  changeDate(event) {
+    // const _time = _.cloneDeep(this.state.time);
+    // const { timeStart, timeEnd } = this.state;
+    // console.log(moment(event[0]), _time)
+    // for (let i = 0, len = event.length; i < len; i += 1) {
+    //   let _day = moment(event[i]).format();
+    //   let _dayTime = _day.substr(11, 8);
+
+    //   if (i === 0) {
+    //     _time['dayStart'] = _day.replace(_dayTime, `${_time['dayStart'].hours}:${_time['dayStart'].mins}`);
+    //   } else {
+    //     _time['dayEnd'] = _day.replace(_dayTime, `${_time['dayEnd'].hours}:${_time['dayEnd'].mins}`);
+    //   }
+    // }
+
+    // console.log(moment(event[0]), _time)
   }
 
   handleSubmit(event) {
