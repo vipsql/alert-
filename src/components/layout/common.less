@@ -5,7 +5,7 @@
       -ms-overflow-style: none;
       height: 100%;
       // overflow-y: hidden;
-      font-family: '微软雅黑,Sansation Light,Helvetica Neue,Helvetica,Arial,sans-serif';
+      font-family: '微软雅黑',Sansation Light,Helvetica Neue,Helvetica,Arial,sans-serif;
       // &.blue{
         background-color: @blue1;
 
@@ -13,7 +13,10 @@
           // cover global ant styles with blue
           //--------breadcrumb---------
           .ant-breadcrumb{
-          font-size: 14px;
+            font-size: 14px;
+            .ant-breadcrumb-separator{
+              color: #6398c2;
+            }
           }
           .ant-breadcrumb a{
             color: #6398c2;
@@ -201,6 +204,9 @@
           }
           //--------Modal---------
           .ant-modal{
+            .ant-modal-title{
+              color: #fff;
+            }
             .ant-modal-header,{
               background: #1d6aa7;
               border-bottom-color: #135991;

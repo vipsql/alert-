@@ -14,8 +14,8 @@ const initvalState = {
     isShowMore: false,
     isLoading: false,
 
-    orderBy: undefined,
-    orderType: undefined,
+    orderBy: 'lastOccurTime',
+    orderType: 0,
     pageSize: 20,
     currentPage: 1,
 
