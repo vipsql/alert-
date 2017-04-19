@@ -16,11 +16,20 @@ export default function({history, app}) {
         {
           path: 'alertManage',
           name: 'alertManage',
-          getComponent(nextState, cb) {
+          getComponent (nextState, cb) {
+            cb(null, require('./routes/alertManage'))
             require.ensure([], require => {
-              // app.model(require('./models/alertManage'))
-              cb(null, require('./routes/alertManage'))
-            }, 'alertManage')
+              let isLoadModal = false
+              app._models.forEach(function(ele) {
+                if(ele.namespace == 'alertManage'){
+                  isLoadModal = true
+                }
+               
+              });
+              if(!isLoadModal){
+               app.model(require('./models/alertManage'))
+              }
+            },'alertManage')
           }
         }, {
           path: 'alertManage/:alertClassify/:alertList',

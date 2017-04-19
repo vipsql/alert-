@@ -109,16 +109,19 @@ class ListTable extends Component {
 
     let tbodyCon = [];
 
-    const formatDate = function(date){
-      const d = new Date(date)
-      let hours = d.getHours()
-      let mins = d.getMinutes()
+    const formatDate = function(time){
+      const d = new Date(time);
+      let year = d.getFullYear();
+      let month = d.getMonth() + 1;
+      let date = d.getDate();
+      let hours = d.getHours();
+      let mins = d.getMinutes();
 
       hours = hours < 10 ? '0' + hours : hours
       mins = mins < 10 ? '0' + mins : mins
 
 
-      return hours + ':' + mins
+      return year + '/' + month + '/' + date + ' ' + hours + ':' + mins
     }
 
     // 生成每一列的参数

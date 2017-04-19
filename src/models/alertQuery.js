@@ -19,8 +19,8 @@ const initalState = {
     isShowMore: false,
     isLoading: false,
 
-    orderBy: undefined,
-    orderType: undefined,
+    orderBy: 'lastOccurTime',
+    orderType: 0,
     pageSize: 20,
     currentPage: 1,
     
@@ -196,6 +196,7 @@ export default {
     *alertQuerySetup({payload},{call, put, select}){
        yield put({ type: 'alertQueryDetail/toggleDetailModal', payload: false })
        yield put({ type: 'clear'})
+       yield put({ type: 'queryAlertList'})
        // 列定制初始化
        //yield put({ type: 'alertQueryDetail/initalColumn'})
 
