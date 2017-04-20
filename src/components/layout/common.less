@@ -20,9 +20,9 @@
             // box-shadow: 0 0 20px rgba(100, 100, 100, 0.2) !important;
           }
           .ant-popover-arrow {
-            border-bottom-color: rgb(34, 110, 175, 0.7) !important;
+            border-bottom-color: rgb(34, 110, 175, 0.7);
             &:after {
-              border-bottom-color: #226eaf !important;
+              border-bottom-color: #226eaf;
             }
           }
           //--------breadcrumb---------
@@ -363,6 +363,9 @@
 }
 
 
+:global .ant-spin-blur:after {
+  background: transparent;
+}
 
 :global .vertical-center-modal {
   display: flex;

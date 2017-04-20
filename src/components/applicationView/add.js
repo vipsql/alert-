@@ -94,7 +94,7 @@ function Add(props){
                         }}
                     />
                 break;
-            case 'UYUN TRAP':
+            case 'SNMPTrap':
                 targetApplication = 
                     <Trap
                         dispatch={dispatch}

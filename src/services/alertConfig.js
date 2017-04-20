@@ -85,7 +85,7 @@ export async function view(id) {
 
 // 在snmp页面查询映射字段
 export async function getField() {
-  return request(`/application/matchFilterValue`, {
+  return request(`/applyRule/matchFilterValue`, {
       method: 'GET',
       headers: {
           'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ export async function getField() {
 
 // 在snmp页面查询filter字段
 export async function getSource() {
-  return request(`/application/filterFieldValue`, {
+  return request(`/applyRule/filterFieldValue`, {
       method: 'GET',
       headers: {
           'Content-Type': 'application/json',

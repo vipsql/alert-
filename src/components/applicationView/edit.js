@@ -73,7 +73,7 @@ function Edit(props){
                         }}
                     />
                 break;
-            case 'UYUN TRAP':
+            case 'SNMPTrap':
                 targetApplication = 
                     <Trap 
                         appkey={currentEditApp.appKey}

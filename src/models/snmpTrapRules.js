@@ -7,6 +7,12 @@ const initalState = {
   isShowTrapModal: false,
   appRules: [], // 规则
   filterSource: [], // fiter选项
+  CMDBClass: [
+    { code: '1', name: 'Monitor'},
+    { code: '2', name: 'Show'},
+    { code: '3', name: 'CMDB'},
+    { code: '4', name: 'Alert'}
+  ], // 绑定CMDB类
   operateType: undefined, // 操作类型
   operateAppRules: {
       // "id": "12db4357920c4819bae6552aa83e61eb",
@@ -38,7 +44,6 @@ const initalState = {
       // "mergeKey": "$enity_name"
   }, // 操作的对象
   __matchProps: [], //['description', 'source', 'tags'], // 查询得到的映射字段
-  __groupFieldProps: [], //['source', 'tags'], // 字段组合_字段（映射剩下的那些）
   __groupComposeProps: [], //['enity_name', 'name'], // 字段组合_组合（已选择映射字段）
   __mergeProps: [], //['enity_name', 'name', 'description', 'source', 'tags', 'abc'], // 合并字段（映射字段 + 新字段）
 
@@ -154,9 +159,8 @@ export default {
         ...state,
         filterSource: source,
         __matchProps: fields,
-        __groupFieldProps: fields,
         __groupComposeProps: [],
-        __mergeProps: fields,
+        __mergeProps: [],
         operateAppRules: initalState.operateAppRules,
         operateType
       }
@@ -167,49 +171,32 @@ export default {
       let operateAppRules = {};
       let selectedMatchFields = [];
       let selectedGroupFields = [];
-      let __matchProps = [];
-      let __groupFieldProps = [];
+      let __matchProps = [].concat(fields);
       let __groupComposeProps = [];
-      let __mergeProps = [].concat(fields);
+      let __mergeProps = [];
       appRules.forEach( (rule, index) => {
-        if (rule.id == id) { 
+        if (rule.id == id) {
           operateAppRules = rule;
           selectedMatchFields = Object.keys(operateAppRules.matchFields);
           selectedGroupFields = Object.keys(operateAppRules.groupFields);
-          Object.keys(rule.matchFields).length !== 0 && Object.keys(rule.matchFields).forEach( (field, index) => {
-            __groupComposeProps.push(field);
-          })
-          Object.keys(rule.properties).length !== 0 && Object.keys(rule.properties).forEach( (item, index) => {
-            __mergeProps.push(item.code);
-          })
         }
       })
-      __groupFieldProps = fields.filter( (field, index) => {
-        let status = true;
-        __groupComposeProps.forEach( (select, index) => {
-          if ( field == select ) { status = false; }
-        })
-        if (selectedGroupFields.length > 0) {
-          selectedGroupFields.forEach( (key) => {
-            if (key === field) { status = false; }
-          })
-        }
-        return status
+      selectedMatchFields.length > 0 && selectedMatchFields.forEach( (field, index) => {
+         __groupComposeProps.push(field);
+         if (__matchProps.includes(field)) {
+           __matchProps = __matchProps.filter( match => match !== field )
+         }
       })
-      __matchProps = fields.filter( (field) => {
-        let status = true;
-        if (selectedMatchFields.length > 0) {
-          selectedMatchFields.forEach( (key) => {
-            if (key === field) { status = false; }
-          })
-        }
-        return status
+      selectedGroupFields.length > 0 && selectedGroupFields.forEach( (field, index) => {
+         if (__matchProps.includes(field)) {
+           __matchProps = __matchProps.filter( match => match !== field )
+         }
       })
+
       return {
         ...state,
         filterSource: source,
         __matchProps,
-        __groupFieldProps,
         __groupComposeProps,
         __mergeProps,
         operateAppRules,

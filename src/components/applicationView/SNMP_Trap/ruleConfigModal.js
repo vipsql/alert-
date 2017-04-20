@@ -1,25 +1,27 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'dva'
-import { Modal, Button, Form, Select, Row, Col, Input, Table, Popover} from 'antd';
+import { Modal, Button, Form, Select, Row, Col, Input, Table, Popover, Radio} from 'antd';
 import styles from './index.less'
 import { classnames } from '../../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const Item = Form.Item;
 const Option = Select.Option;
+const RadioGroup = Radio.Group;
 class ruleModal extends Component{
 
     constructor(props){
         console.log('constructor modal')
         super(props);
         this.state = {
+            dataSource: 1,
             filterFields: [{ key: undefined, ruleMatch: '3'}],
             matchFields: [{'OID': undefined, 'mapper': undefined, 'enitable': true}],
             properties: [{'oid': undefined, 'code': undefined, 'name': undefined, 'enitable': true}],
             groupFieldsList: [{'field': undefined, 'compose': undefined, 'enitable': true}],
+            levelList: [{'trap': undefined, 'severity': undefined, 'enitable': true}],
             mergeKey: '', 
             __matchProps: [],
-            __groupFieldProps: [],
             __groupComposeProps: [],
             __mergeProps: [],
         }
@@ -27,24 +29,24 @@ class ruleModal extends Component{
         this.addFieldMapper = this.addFieldMapper.bind(this)
         this.enitFieldMapper = this.enitFieldMapper.bind(this)
         this.deleFieldMapper = this.deleFieldMapper.bind(this)
-        this.addFieldExtend = this.addFieldExtend.bind(this)
-        this.deleFieldExtend = this.deleFieldExtend.bind(this)
         this.addComposeField = this.addComposeField.bind(this)
         this.editComposeField = this.editComposeField.bind(this)
         this.deleComposeField = this.deleComposeField.bind(this)
+        this.clickCompose = this.clickCompose.bind(this)
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.snmpTrapRules !== this.props.snmpTrapRules) {
-            console.log(nextProps.snmpTrapRules.operateAppRules)
+            //console.log(nextProps.snmpTrapRules.levelList)
             this.setState({
+                dataSource: nextProps.snmpTrapRules.operateAppRules.dataSource || 1,
                 filterFields: nextProps.snmpTrapRules.operateAppRules.filterFields || [{ key: undefined, ruleMatch: '3'}],
                 matchFields: nextProps.snmpTrapRules.matchFieldsList.length !== 0 ? nextProps.snmpTrapRules.matchFieldsList : [{'OID': undefined, 'mapper': undefined, 'enitable': true}],
                 properties: nextProps.snmpTrapRules.operateAppRules.properties !== undefined && nextProps.snmpTrapRules.operateAppRules.properties.length !== 0 ? nextProps.snmpTrapRules.operateAppRules.properties : [{'oid': undefined, 'code': undefined, 'name': undefined, 'enitable': true}],
                 groupFieldsList: nextProps.snmpTrapRules.groupFieldsList.length !== 0 ? nextProps.snmpTrapRules.groupFieldsList : [{'field': undefined, 'compose': undefined, 'enitable': true}],
-                mergekey: nextProps.snmpTrapRules.operateAppRules.mergeKey || '', 
+                levelList: nextProps.snmpTrapRules.levelList.length !== 0 ? nextProps.snmpTrapRules.levelList : [{'trap': undefined, 'severity': undefined, 'enitable': true}],
+                mergeKey: nextProps.snmpTrapRules.operateAppRules.mergeKey || '', 
                 __matchProps: nextProps.snmpTrapRules.__matchProps,
-                __groupFieldProps: nextProps.snmpTrapRules.__groupFieldProps,
                 __groupComposeProps: nextProps.snmpTrapRules.__groupComposeProps,
                 __mergeProps: nextProps.snmpTrapRules.__mergeProps,
             })
@@ -61,13 +63,31 @@ class ruleModal extends Component{
         return newData
     }
 
+    // 点击合并原则时触发
+    clickCompose() {
+        let __newMergeProps = [];
+        this.state.matchFields.forEach( (field) => {
+            if (field['enitable'] === undefined && field['mapper'] !== undefined)
+                !__newMergeProps.includes(field['mapper']) && __newMergeProps.push(field['mapper'])
+        })
+        this.state.properties.forEach( (field) => {
+            if (field['enitable'] === undefined && field['code'] !== undefined && field['code'] !== '')
+                !__newMergeProps.includes(field['code']) && __newMergeProps.push(field['code'])
+        })
+        this.state.groupFieldsList.forEach( (field) => {
+            if (field['enitable'] === undefined  && field['field'] !== undefined)
+                !__newMergeProps.includes(field['field']) && __newMergeProps.push(field['field'])
+        })
+        this.setState({ __mergeProps: [...__newMergeProps]})
+    }
+
     // 在增加映射字段时 --> 减少字段组合中的可选字段，增加组合的可选项目
     addFieldMapper(data, targetIndex, key, targetValue) {
         //TODO
         let newMatchFields = []
         let __newMatchProps = []
-        let __newGroupFieldProps = []
         let __newGroupComposeProps = []
+        
         data.forEach( (item, itemIndex) => {
             if (targetIndex === itemIndex) {
                 item[key] = targetValue 
@@ -80,11 +100,11 @@ class ruleModal extends Component{
             }
             newMatchFields.push(item)
         })
+        
         this.state.__matchProps.forEach( (child) => {
-            if (!__newGroupComposeProps.includes(child)) { __newGroupFieldProps.push(child) }
             if (data[targetIndex]['mapper'] !== child) { __newMatchProps.push(child) }
         })
-        this.setState({ matchFields: [ ...newMatchFields ], __matchProps: __newMatchProps ,__groupFieldProps: __newGroupFieldProps, __groupComposeProps: __newGroupComposeProps })
+        this.setState({ matchFields: [ ...newMatchFields ], __matchProps: __newMatchProps, __groupComposeProps: __newGroupComposeProps })
     }
 
     // 在编辑映射字段时 --> 将内容补到__matchProps中
@@ -92,6 +112,7 @@ class ruleModal extends Component{
         //TODO
         let newMatchFields = []
         let __newMatchProps = [].concat(this.state.__matchProps)
+        
         data.forEach( (item, itemIndex) => {
             if (targetIndex === itemIndex) {
                 item[key] = targetValue 
@@ -101,76 +122,51 @@ class ruleModal extends Component{
         if (data[targetIndex]['mapper'] !== undefined && !__newMatchProps.includes(data[targetIndex]['mapper'])) { 
             __newMatchProps.push(data[targetIndex]['mapper']) 
         }
-        this.setState({ matchFields: [ ...newMatchFields ], __matchProps: __newMatchProps})
+        
+        this.setState({ matchFields: [ ...newMatchFields ], __matchProps: __newMatchProps })
     }
 
     // 在删除映射字段时 --> 增加字段组合中的可选字段，减少组合的可选项目
     deleFieldMapper(data, targetIndex) {
         let __newMatchProps = [].concat(this.state.__matchProps)
-        let __newGroupFieldProps = []
         let __newGroupComposeProps = []
+        
         let newMatchFields = data.filter( (item, itemIndex) => {
             if (itemIndex !== targetIndex) {
-                !__newGroupComposeProps.includes(item['mapper']) && __newGroupComposeProps.push(item['mapper'])
+                !__newGroupComposeProps.includes(item['mapper']) && __newGroupComposeProps.push(item['mapper']);
             }
             if (itemIndex === targetIndex && item['enitable'] === undefined) {
                 if ( item['mapper'] !== undefined) { __newMatchProps.unshift(item['mapper'])}
             }
             return itemIndex !== targetIndex 
         })
-        __newGroupFieldProps = this.state.__matchProps.filter( child => !__newGroupComposeProps.includes(child))
-        this.setState({ matchFields: [ ...newMatchFields ], __matchProps: __newMatchProps ,__groupFieldProps: __newGroupFieldProps, __groupComposeProps: __newGroupComposeProps })
+
+        this.setState({ matchFields: [ ...newMatchFields ], __matchProps: __newMatchProps, __groupComposeProps: __newGroupComposeProps })
     }
 
-    // 在扩展字段保存时 --> mergekey可选增加
-    addFieldExtend(data, targetIndex, key, targetValue) {
-        //TODO
-        let newProperties = []
-        let __newMergeProps = []
-        data.forEach( (item, itemIndex) => {
-            if (targetIndex === itemIndex) {
-                item[key] = targetValue 
-            }
-            item['code'] !== undefined && item['code'] !== '' && !__newMergeProps.includes(item['code']) && __newMergeProps.push(item['code'])
-            newProperties.push(item)
-        })
-        this.setState({ properties: [ ...newProperties ], __mergeProps: __newMergeProps.concat(this.state.__matchProps) })
-    }
-    
-    // 在扩展字段保存时 --> mergekey可选减少
-    deleFieldExtend(data, targetIndex) {
-        let __newMergeProps = []
-        let newMatchFields = data.filter( (item, itemIndex) => {
-            if (itemIndex !== targetIndex) {
-                item['code'] !== undefined && item['code'] !== '' && !__newMergeProps.includes(item['code']) && __newMergeProps.push(item['code'])
-            }
-            return itemIndex !== targetIndex 
-        })
-        this.setState({ properties: [ ...newMatchFields ], __mergeProps: __newMergeProps.concat(this.state.__matchProps) })
-    }
-
-    // 在编辑字段组合时 --> 将内容补到__groupFieldProps中
+    // 在编辑字段组合时 --> 将内容补到__matchProps中
     editComposeField(data, targetIndex, key, targetValue) {
         //TODO
         let newGroupFieldsList = []
-        let __newGroupFieldProps = [].concat(this.state.__groupFieldProps)
+        let __newMatchProps = [].concat(this.state.__matchProps)
         data.forEach( (item, itemIndex) => {
             if (targetIndex === itemIndex) {
                 item[key] = targetValue 
             }
             newGroupFieldsList.push(item)
         })
-        if (data[targetIndex]['field'] !== undefined && !__newGroupFieldProps.includes(data[targetIndex]['field'])) { 
-            __newGroupFieldProps.push(data[targetIndex]['field']) 
+        if (data[targetIndex]['field'] !== undefined && !__newMatchProps.includes(data[targetIndex]['field'])) { 
+            __newMatchProps.push(data[targetIndex]['field']) 
         }
-        this.setState({ groupFieldsList: [ ...newGroupFieldsList ], __groupFieldProps: __newGroupFieldProps})
+
+        this.setState({ groupFieldsList: [ ...newGroupFieldsList ], __matchProps: __newMatchProps })
     }
 
     // 在新增字段组合时 --> 除掉已经选择的
     addComposeField(data, targetIndex, key, targetValue) {
         //TODO
+        let __newMatchProps = []
         let newGroupFieldsList = []
-        let __newGroupFieldProps = []
         data.forEach( (item, itemIndex) => {
             if (targetIndex === itemIndex) {
                 item[key] = targetValue 
@@ -181,26 +177,27 @@ class ruleModal extends Component{
             }
             newGroupFieldsList.push(item)
         })
-        this.state.__groupFieldProps.forEach( (child) => {
-            if (data[targetIndex]['field'] !== child) { __newGroupFieldProps.push(child) }
+        
+        this.state.__matchProps.forEach( (child) => {
+            if (data[targetIndex]['field'] !== child) { __newMatchProps.push(child) }
         })
-        this.setState({ groupFieldsList: [ ...newGroupFieldsList ], __groupFieldProps: __newGroupFieldProps })
+        this.setState({ groupFieldsList: [ ...newGroupFieldsList ], __matchProps: __newMatchProps })
     }
 
     // 在删除字段组合时 --> 补全删除的
     deleComposeField(data, targetIndex) {
-        let __newGroupFieldProps = [].concat(this.state.__groupFieldProps)
+        let __newMatchProps = [].concat(this.state.__matchProps)
         let newGroupFieldsList = data.filter( (item, itemIndex) => {
             if (itemIndex === targetIndex && item['enitable'] === undefined) {
-                if ( item['field'] !== undefined) { __newGroupFieldProps.unshift(item['field'])}
+                if ( item['field'] !== undefined) { __newMatchProps.unshift(item['field'])}
             }
             return itemIndex !== targetIndex 
         })
-        this.setState({ groupFieldsList: [ ...newGroupFieldsList ], __groupFieldProps: __newGroupFieldProps })
+
+        this.setState({ groupFieldsList: [ ...newGroupFieldsList ], __matchProps: __newMatchProps })
     }
 
     render() {
-        //console.log(this.state)
         const { snmpTrapRules, okRule, closeModal, form, intl: {formatMessage} } = this.props;
         const { isShowTrapModal } = snmpTrapRules
         const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
@@ -313,7 +310,7 @@ class ruleModal extends Component{
                 onCancel={ closeModal }
                 visible={ isShowTrapModal }
                 footer={ modalFooter }
-                width={750}
+                width={850}
             >
                 <div className={styles.ruleMain}>
                     <Form className={styles.ruleForm}>
@@ -345,6 +342,17 @@ class ruleModal extends Component{
                             })(
                                 <Input type="textarea" autosize={{ minRows: 2, maxRows: 6 }} placeholder={formatMessage({...localeMessage['ruleDescription_placeholder']})}></Input>
                             )}
+                        </Item>
+                        <Item
+                            {...itemLayout}
+                            label={'数据源'}
+                        >
+                            <RadioGroup onChange={(e) => {
+                                this.setState({ dataSource: e.target.value })
+                            }} value={this.state.dataSource}>
+                                <Radio value={1}>网络设备</Radio>
+                                <Radio value={2}>第三方监控系统</Radio>
+                            </RadioGroup>
                         </Item>
                         <div className={styles.paramBlock}>
                             <span>过滤条件:</span>
@@ -395,6 +403,7 @@ class ruleModal extends Component{
                                     },
                                     {
                                         title: '字段映射',
+                                        width: '150px',
                                         dataIndex: 'mapper',
                                         key: 'mapper',
                                         render: (text, record, index) => {
@@ -542,7 +551,8 @@ class ruleModal extends Component{
                                                         enitable ?
                                                         <Button size='small' disabled={ oid === undefined || oid === '' || code === undefined || code === '' || name === undefined || name === ''} className={styles.editBtn} onClick={ () => {
                                                             //TODO
-                                                            this.addFieldExtend(this.state.properties, index, 'enitable', undefined)
+                                                            let data = this.replaceFunc(this.state.properties, index, 'enitable', undefined)
+                                                            this.setState({ properties: [ ...data ] })
                                                         }}>保存</Button>
                                                         :
                                                         <Button size='small' className={styles.editBtn} onClick={ () => {
@@ -554,7 +564,8 @@ class ruleModal extends Component{
                                                     &nbsp;&nbsp;
                                                     <Button size='small' className={styles.delBtn} onClick={ () => {
                                                         //TODO
-                                                        this.deleFieldExtend(this.state.properties, index)
+                                                        let data = this.state.properties.filter( (property, itenIndex) => itenIndex !== index )
+                                                        this.setState({ properties: [ ...data ] })
                                                     }}>删除</Button>
                                                 </span>
                                             )
@@ -584,6 +595,7 @@ class ruleModal extends Component{
                                     {
                                         title: '字段',
                                         dataIndex: 'field',
+                                        width: '150px',
                                         key: 'field',
                                         render: (text, record, index) => {
                                             let { enitable } = this.state.groupFieldsList[index];
@@ -597,7 +609,7 @@ class ruleModal extends Component{
                                                     this.setState({ groupFieldsList: [ ...data ] })
                                                 }}>
                                                     {
-                                                        this.state.__groupFieldProps.length > 0 ? this.state.__groupFieldProps.map( (field, index) => {
+                                                        this.state.__matchProps.length > 0 ? this.state.__matchProps.map( (field, index) => {
                                                             return <Option key={index} value={field}>{field}</Option>
                                                         }) : []
                                                     }
@@ -712,7 +724,7 @@ class ruleModal extends Component{
                                             //TODO
                                             this.setState({ mergeKey: e.target.value })
                                         }} />
-                                        <Popover placement='bottomRight' overlayClassName={styles.popover} trigger="click" content={
+                                        <Popover placement='bottomRight' overlayClassName={styles.popover} onClick={ this.clickCompose } trigger="click" content={
                                             <div className={styles.popoverMain}>
                                                 {
                                                     this.state.__mergeProps.length > 0 ? this.state.__mergeProps.map( (field, itemIndex) => {
@@ -745,23 +757,149 @@ class ruleModal extends Component{
                         </Item>
                         <Item
                             {...itemLayout}
-                            label='告警等级'
+                            label='绑定CMDB类'
                             hasFeedback
-                            help={isFieldValidating('severity') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('severity') || []).join(', ')}
+                            help={isFieldValidating('classCode') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('classCode') || []).join(', ')}
                         >
-                            {getFieldDecorator('severity', {
+                            {getFieldDecorator('classCode', {
                                 rules: [
-                                    { required: true, message: '请输入告警等级' }
+                                    { required: true, message: '请选择需要绑定CMDB类' }
                                 ]
                             })(
-                                <Select placeholder={'请输入告警等级'}>
-                                    <Option value="0">{window['_severity']['0']}</Option>
-                                    <Option value="1">{window['_severity']['1']}</Option>
-                                    <Option value="2">{window['_severity']['2']}</Option>
-                                    <Option value="3">{window['_severity']['3']}</Option>
+                                <Select placeholder={'请选择需要绑定CMDB类'}>
+                                    {
+                                        snmpTrapRules.CMDBClass.length > 0 ? snmpTrapRules.CMDBClass.map( (item, index) => {
+                                            return <Option key={index} value={item.code}>{item.name}</Option>
+                                        }) : []
+                                    }
                                 </Select>
                             )}
                         </Item>
+                        {
+                            this.state.dataSource == 1 ?
+                            <Item
+                                {...itemLayout}
+                                label='告警等级'
+                                hasFeedback
+                                help={isFieldValidating('severity') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('severity') || []).join(', ')}
+                            >
+                                {getFieldDecorator('severity', {
+                                    rules: [
+                                        { required: true, message: '请输入告警等级' }
+                                    ]
+                                })(
+                                    <Select placeholder={'请输入告警等级'}>
+                                        <Option value="0">{window['_severity']['0']}</Option>
+                                        <Option value="1">{window['_severity']['1']}</Option>
+                                        <Option value="2">{window['_severity']['2']}</Option>
+                                        <Option value="3">{window['_severity']['3']}</Option>
+                                    </Select>
+                                )}
+                            </Item>
+                            :
+                            <div className={styles.paramBlock}>
+                                <span>级别映射:</span>
+                                <Table 
+                                    className={styles.modalTable}
+                                    columns={[
+                                        {
+                                            title: 'Trap级别',
+                                            dataIndex: 'trap',
+                                            key: 'trap',
+                                            render: (text, record, index) => {
+                                                let { trap, enitable } = this.state.levelList[index];
+                                                return (
+                                                    enitable ?
+                                                    <Input value={text} onChange={(e) => {
+                                                        //TODO
+                                                        let data = this.replaceFunc(this.state.levelList, index, 'trap', e.target.value)
+                                                        this.setState({ levelList: [ ...data ] })
+                                                    }} />
+                                                    :
+                                                    text
+                                                )
+                                            }
+                                        },
+                                        {
+                                            title: '表达式',
+                                            key: 'expression',
+                                            render: (text, record, index) => {
+                                                return <span className={styles.expression}>=</span>
+                                            }
+                                        },
+                                        {
+                                            title: 'Alert级别',
+                                            dataIndex: 'severity',
+                                            key: 'severity',
+                                            render: (text, record, index) => {
+                                                let { severity, enitable } = this.state.levelList[index];
+                                                return (
+                                                    enitable ?
+                                                    <Select notFoundContent='Not Found' value={text} onChange={(value) => {
+                                                        //TODO
+                                                        let data = this.replaceFunc(this.state.levelList, index, 'severity', value)
+                                                        this.setState({ levelList: [ ...data ] })
+                                                    }}>
+                                                        <Option value="0">{window['_severity']['0']}</Option>
+                                                        <Option value="1">{window['_severity']['1']}</Option>
+                                                        <Option value="2">{window['_severity']['2']}</Option>
+                                                        <Option value="3">{window['_severity']['3']}</Option>
+                                                    </Select>
+                                                    :
+                                                    text
+                                                )
+                                            }
+                                        },
+                                        {
+                                            title: '操作',
+                                            width: '125px',
+                                            key: 'operation',
+                                            render: (text, record, index) => {
+                                                let { trap, severity, enitable } = this.state.levelList[index];
+                                                return (
+                                                    <span>
+                                                        {
+                                                            enitable ?
+                                                            <Button size='small' disabled={ trap === undefined || trap === '' || severity === undefined } className={styles.editBtn} onClick={ () => {
+                                                                //TODO
+                                                                let data = this.replaceFunc(this.state.levelList, index, 'enitable', undefined)
+                                                                this.setState({ levelList: [ ...data ] })
+                                                            }}>保存</Button>
+                                                            :
+                                                            <Button size='small' className={styles.editBtn} onClick={ () => {
+                                                                //TODO
+                                                                let data = this.replaceFunc(this.state.levelList, index, 'enitable', true)
+                                                                this.setState({ levelList: [ ...data ] })
+                                                            }}>编辑</Button>
+                                                        }
+                                                        &nbsp;&nbsp;
+                                                        <Button size='small' className={styles.delBtn} onClick={ () => {
+                                                            //TODO
+                                                            let data = this.state.levelList.filter( (level, itenIndex) => itenIndex !== index )
+                                                            this.setState({ levelList: [ ...data ] })
+                                                        }}>删除</Button>
+                                                    </span>
+                                                )
+                                            }
+                                        }
+                                    ]}
+                                    pagination={false}
+                                    dataSource={this.state.levelList}
+                                />
+                                <span className={styles.alertMessage}>Alert级别定义：紧急 - 3，警告 - 2，提醒 - 1，正常 - 0</span>
+                                <div className={styles.addBtn}>
+                                    <Button type="primary" className={styles.appBtn} onClick={ () => {
+                                        //TODO
+                                        this.setState({
+                                            levelList: [
+                                                ...this.state.levelList,
+                                                {'trap': undefined, 'severity': undefined, 'enitable': true}
+                                            ]
+                                        })
+                                    }}><span>添加行</span></Button>
+                                </div>
+                            </div>
+                        }
                     </Form>
                 </div>
             </Modal>
@@ -788,6 +926,9 @@ export default injectIntl(Form.create({
             },
             severity: {
                 value: typeof props.snmpTrapRules.operateAppRules.severity !== 'undefined' ? `${props.snmpTrapRules.operateAppRules.severity}` : undefined
+            },
+            classCode: {
+                value: typeof props.snmpTrapRules.operateAppRules.classCode !== 'undefined' ? `${props.snmpTrapRules.operateAppRules.classCode}` : undefined
             }
         }
     }
