@@ -178,8 +178,9 @@ class RuleEditor extends Component {
       /* 来源 */
       source: props.source,
       /* 条件 */
-      condition: makeCondition(_.cloneDeep(props.condition))
+      condition: makeCondition(_.cloneDeep(props.condition)),
       /* 动作 */
+      action: props.action
     };
   }
   componentDidMount() {
@@ -729,12 +730,37 @@ RuleEditor.propTypes = {
   }),
 
   /* 设定动作 */
-  // 动作类型
-  tab: PropTypes.string,
-  action: PropTypes.string,
-  itsm: PropTypes.string,
-  chatops: PropTypes.string,
-
+  action: PropTypes.shape({
+    tenant: PropTypes.string.isRequired, // 租户 id
+    actionDelOrClose: PropTypes.shape({
+      operation: PropTypes.number.isRequired,
+      type: PropTypes.number.isRequired
+    }),
+    actionNotification: PropTypes.shape({
+      recipients: PropTypes.array.isRequired,
+      notificationMode: PropTypes.shape({
+        notificationMode: PropTypes.array.isRequired,
+        emailTitle: PropTypes.string.isRequired,
+        emailMessage: PropTypes.string.isRequired,
+        smsMessage: PropTypes.string.isRequired
+      }),
+      type: PropTypes.number.isRequired
+    }),
+    actionITSM: PropTypes.shape({
+      itsmModelId: PropTypes.string.isRequired,
+      param: PropTypes.shape({
+        cesjo: PropTypes.string.isRequired
+      }),
+      type: PropTypes.number.isRequired
+    }),
+    actionSuppress: PropTypes.shape({
+      type: PropTypes.number.isRequired
+    }),
+    actionChatOps: PropTypes.shape({
+      chatOpsRoomId: PropTypes.string.isRequired,
+      type: PropTypes.number.isRequired
+    }),
+  })
 };
 
 export default Form.create()(RuleEditor);
