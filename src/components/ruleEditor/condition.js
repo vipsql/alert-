@@ -53,39 +53,39 @@ const valueList = [
 
 class Condition extends Component {
   // 删除条件项
-  deleteItem() {
-    console.log('[删除]');
-  }
+  // deleteLine() {
+  //   console.log('删除条件项');
+  // }
   // 创建条件
   createConditionItem() {
-    const {_key, opt, value, level} = this.props;
+    const {node, _key, opt, value, level, index, deleteLine, _this} = this.props;
     return (
-      <div className={cls(
+      <div key={new Date().getTime() + 'level' + level} className={cls(
         styles.conditionItem,
         `treeTag${level}`
       )}>
-        <Select className={styles.key} style={{ width: 100 }} defaultValue={_key} placeholder="请选择维度">
+        <Select className={styles.key} style={{ width: 100 }} value={_key} placeholder="请选择维度">
           {
             keyList.map(item => (
               <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
             ))
           }
         </Select>
-        <Select className={styles.opt} style={{ width: 100 }} defaultValue={opt} placeholder="请选择条件">
+        <Select className={styles.opt} style={{ width: 100 }} value={opt} placeholder="请选择条件">
           {
             optList.map(item => (
               <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
             ))
           }
         </Select>
-        <Select className={styles.value} style={{ width: 130 }} defaultValue={value} placeholder="请选择对应标签">
+        <Select className={styles.value} style={{ width: 130 }} value={value} placeholder="请选择对应标签">
           {
             valueList.map(item => (
               <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
             ))
           }
         </Select>
-        <i className={styles.delete} onClick={this.deleteItem.bind(this)}>X</i>
+        <i className={styles.delete} onClick={deleteLine.bind(_this, node, level, index)}>X</i>
       </div>
     );
   }

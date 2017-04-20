@@ -4,6 +4,7 @@ import React, {
 } from 'react';
 import { default as cls } from 'classnames';
 import moment from 'moment';
+import 'moment/locale/zh-cn';
 import _ from 'lodash';
 import {
   Form,
@@ -28,6 +29,8 @@ const RadioGroup = Radio.Group;
 const CheckboxGroup = Checkbox.Group;
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
+
+moment.locale('zh-cn'); // 设定时间国际化
 
 const conditionData = { // 模拟数据
   // 一级条件
@@ -144,13 +147,24 @@ const MonthArray = _.range(31).map(item => {
 });
 let conditionsDom = []; // 元素列表
 let treeTag = 0; // 当前数据的层级标识
+let leafTag = 0; // 叶子 id
 
+// 处理条件数据，给每一条数据加上唯一 id
+const makeCondition = node => {
+  const { child = [] } = node;
+  node.id = leafTag;
+  leafTag += 1;
+  for (let i = child.length - 1; i >= 0; i -= 1) {
+    makeCondition(child[i]);
+  }
+  return node;
+};
 
 class RuleEditor extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
+      /* 时间 */
       type: props.type,
       time: props.time,
       timeStart: {
@@ -158,9 +172,14 @@ class RuleEditor extends Component {
         mins: 0
       },
       timeEnd: {
-        hours: 0,
-        mins: 0
-      }
+        hours: 23,
+        mins: 59
+      },
+      /* 来源 */
+      source: props.source,
+      /* 条件 */
+      condition: makeCondition(_.cloneDeep(props.condition))
+      /* 动作 */
     };
   }
   componentDidMount() {
@@ -174,7 +193,7 @@ class RuleEditor extends Component {
   }
   render() {
     conditionsDom = []; // 重置，防止重复 render
-    const { time, timeStart, timeEnd } = this.state;
+    const { time, timeStart, timeEnd, source, condition } = this.state;
     const { getFieldDecorator } = this.props.form;
     const itemLayout = {
       labelCol: { span: 2 },
@@ -215,8 +234,9 @@ class RuleEditor extends Component {
     }
     const cycleTimeStart = `${timeStart.hours}:${timeStart.mins}`;
     const cycleTimeEnd = `${timeEnd.hours}:${timeEnd.mins}`;
-    // console.log(moment(cycleTimeStart, 'H:mm').format("HH:mm"))
-    const timeString = `${cycleDay}${moment(cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(cycleTimeEnd, 'H:mm').format("HH:mm")}`;
+
+    const cycleTimeString = time.timeCycle ? `${cycleDay}${moment(cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(cycleTimeEnd, 'H:mm').format("HH:mm")}` : '';
+    const dayTimeString = time.dayStart && time.dayEnd ? `${moment(time.dayStart).format('YYYY-MM-DD')} ~ ${moment(time.dayEnd).format('YYYY-MM-DD')}、${moment(cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(cycleTimeEnd, 'H:mm').format("HH:mm")}` : '';
 
     // console.info('[props]', this.props);
     console.info('[state]', this.state);
@@ -286,7 +306,7 @@ class RuleEditor extends Component {
                           'active': time.timeCycle === '2'
                         })} onClick={this.changeTimeCycleType.bind(this, '2')}>每月</span>
                       </div>
-                      <div className={styles.timeCycleBd}>
+                      <div className={cls(styles.timeCycleBd, `${time.timeCycle.length === 0 ? styles.hidden : ''}`)}>
                         {
                           time.timeCycle !== '0' &&
                           <p>请选择具体执行周期：</p>
@@ -304,7 +324,7 @@ class RuleEditor extends Component {
                     </div>
                   )}
                 >
-                  <Input placeholder="请选择定时规则" readOnly value={timeString} className={styles.selectTime} />
+                  <Input placeholder="请选择定时规则" readOnly value={cycleTimeString} className={styles.selectTime} />
                 </Popover>
               </div>
             }
@@ -317,10 +337,12 @@ class RuleEditor extends Component {
                   overlayClassName="pickTime"
                   content={(
                     <div className={styles.timeCycle}>
-                      <RangeCalendar onChange={this.changeDate.bind(this)} dateInputPlaceholder={['请选择起始日期', '请选择结束日期']} className={styles.calendar} locale={zh_CN} renderFooter={() => {
+                      <RangeCalendar
+                        // defaultSelectedValue={[moment(time.dayStart), moment(time.dayEnd)]}
+                        onChange={this.changeDate.bind(this)} dateInputPlaceholder={['请选择起始日期', '请选择结束日期']} className={styles.calendar} locale={zh_CN} renderFooter={() => {
                         return (
                           <div className={styles.timeCycleBd}>
-                            <TimeSlider />
+                            <TimeSlider timeStart={timeStart} timeEnd={timeEnd} changeTime={this.changeTime.bind(this)} />
                           </div>
                         );
                       }} />
@@ -328,7 +350,7 @@ class RuleEditor extends Component {
                     </div>
                   )}
                 >
-                  <Input placeholder="请选择定时规则" readOnly className={styles.selectTime} />
+                  <Input placeholder="请选择定时规则" readOnly value={dayTimeString} className={styles.selectTime} />
                 </Popover>
               </div>
             }
@@ -344,6 +366,7 @@ class RuleEditor extends Component {
             {getFieldDecorator('source', {
               rules: [{
                 required: true,
+                setFieldsValue: source,
                 message: '告警来源不能为空'
               }]
             })(
@@ -352,6 +375,7 @@ class RuleEditor extends Component {
                 // optionFilterProp="children"
                 style={{ width: 200 }}
                 placeholder="请选择告警来源"
+                onChange={this.changeSource.bind(this)}
                 // getPopupContainer={() => document.querySelector('#xxx')}
                 // filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
               >
@@ -366,7 +390,7 @@ class RuleEditor extends Component {
         <h2>定义条件</h2>
         <div className={styles.defineConditions}>
           {
-            this.createAll(this.props.condition, treeTag)
+            this.createAll(condition, treeTag)
           }
         </div>
 
@@ -379,6 +403,7 @@ class RuleEditor extends Component {
                 <Select
                   style={{ width: 100 }}
                   defaultValue={this.props.action}
+                  placeholder="请选择操作"
                 >
                   <Option value="delete">删除</Option>
                   <Option value="close">关闭</Option>
@@ -398,6 +423,7 @@ class RuleEditor extends Component {
                 <Select
                   style={{ width: 100 }}
                   defaultValue={this.props.itsm}
+                  placeholder="请选择类别"
                 >
                   <Option value="group1">组1</Option>
                   <Option value="group2">组2</Option>
@@ -414,6 +440,7 @@ class RuleEditor extends Component {
                 <Select
                   style={{ width: 100 }}
                   defaultValue={this.props.chatops}
+                  placeholder="请选择群组"
                 >
                   <Option value="group1">组1</Option>
                   <Option value="group2">组2</Option>
@@ -427,9 +454,16 @@ class RuleEditor extends Component {
     );
   }
 
+  // 更改来源
+  changeSource(value) {
+    this.setState({
+      source: value
+    });
+  }
+
   // 创建条件头
-  createTitle(item, level) {
-    const { logic } = item;
+  createTitle(node, level) {
+    const { logic } = node;
     return (
       <div className={cls(
           styles.title,
@@ -437,28 +471,41 @@ class RuleEditor extends Component {
         )}
       >
         <label>条件：</label>
-        <Select placeholder="请选择条件">
+        <Select value={logic} placeholder="请选择条件">
           <Option value="and">满足全部</Option>
           <Option value="or">满足任意</Option>
           <Option value="not">都不满足</Option>
         </Select>
         <div className={styles.btnWrap}>
-          <span className={cls(styles.btn, styles.addBlock)}>+嵌套</span>
-          <span className={cls(styles.btn, styles.addLine)}>+条件</span>
+          {
+            level !== 2 && // 三级条件不显示增加嵌套按钮
+            <span onClick={this.addBlock.bind(this, node, level)} className={cls(styles.btn, styles.addBlock)}>+嵌套</span>
+          }
+          <span onClick={this.addLine.bind(this, node, level)} className={cls(styles.btn, styles.addLine)}>+条件</span>
         </div>
+        {
+          level !== 0 && // 一级条件不显示删除按钮
+          <i className={styles.delete} onClick={this.deleteBlock.bind(this, node, level)}>X</i>
+        }
       </div>
     );
   }
+
   // 创建条件内容
-  createConditionList(item, level) {
-    const { content } = item;
+  createConditionList(node, level) {
+    const { content } = node;
+    // debugger
     return content.map((_item, _index) => {
       const { key, opt, value} = _item;
       const itemData = {
-        _key: key,
+        node,
         opt,
         value,
-        level
+        level,
+        _key: key,
+        _this: this,
+        index: _index,
+        deleteLine: this.deleteLine
       };
       return <Condition {...itemData} />
     });
@@ -478,6 +525,76 @@ class RuleEditor extends Component {
     }
     conditionsDom.unshift(domList);
     return conditionsDom;
+  }
+
+  treeControl(type, node, item, x) { // deleteLine 时，x 为索引，其它时候为新建项
+    const { content = [] ,child = [] } = node;
+    if (node.id === item.id) { // 一级嵌套（增）一级条件（增、删）
+      type === 'addBlock' && child.push(x);
+      type === 'addLine' && content.push(x);
+      type === 'deleteLine' && content.splice(x, 1);
+      console.log(content, child)
+    } else { // 二、三级嵌套（增、删）二、三级条件（增、删）
+      for (let i = child.length - 1; i >= 0; i -= 1) {
+        if (item.id === child[i].id) {
+          type === 'deleteBlock' && child.splice(i, 1);
+          type === 'addBlock' && child[i].child.push(x);
+          type === 'deleteLine' && child[i].content.splice(i, 1);
+          type === 'addLine' && child[i].content.push(x);
+        } else {
+          this.treeControl(type, child[i], item, x);
+        }
+      }
+    }
+  }
+
+  // 删除嵌套
+  deleteBlock(item, level, event) {
+    const _condition = _.cloneDeep(this.state.condition);
+    this.treeControl('deleteBlock', _condition, item);
+    this.setState({
+      condition: _condition
+    });
+  }
+
+  // 增加嵌套
+  addBlock(item, level, event) {
+    const _condition = _.cloneDeep(this.state.condition);
+    const newBlock = {
+      id: leafTag,
+      content: [],
+      child: [],
+      logic: undefined
+    };
+    leafTag += 1;
+    this.treeControl('addBlock', _condition, item, newBlock);
+    this.setState({
+      condition: _condition
+    });
+  }
+
+  // 删除条件
+  deleteLine(item, level, index, event) {
+    console.log(this);
+    const _condition = _.cloneDeep(this.state.condition);
+    this.treeControl('deleteLine', _condition, item, index);
+    this.setState({
+      condition: _condition
+    });
+  }
+
+  // 增加条件
+  addLine(item, level, event) {
+    const _condition = _.cloneDeep(this.state.condition);
+    const newLine = {
+      key: undefined,
+      opt: undefined,
+      value: undefined
+    };
+    this.treeControl('addLine', _condition, item, newLine);
+    this.setState({
+      condition: _condition
+    });
   }
 
   // 更改规则类型
@@ -525,21 +642,24 @@ class RuleEditor extends Component {
 
   // 更改固定时间段, event 为一个数组，包含起始时间和结束时间
   changeDate(event) {
-    // const _time = _.cloneDeep(this.state.time);
+    const _time = _.cloneDeep(this.state.time);
     // const { timeStart, timeEnd } = this.state;
-    // console.log(moment(event[0]), _time)
-    // for (let i = 0, len = event.length; i < len; i += 1) {
-    //   let _day = moment(event[i]).format();
-    //   let _dayTime = _day.substr(11, 8);
-
-    //   if (i === 0) {
-    //     _time['dayStart'] = _day.replace(_dayTime, `${_time['dayStart'].hours}:${_time['dayStart'].mins}`);
-    //   } else {
-    //     _time['dayEnd'] = _day.replace(_dayTime, `${_time['dayEnd'].hours}:${_time['dayEnd'].mins}`);
-    //   }
-    // }
-
-    // console.log(moment(event[0]), _time)
+    // console.log(event, cycleTimeStart, cycleTimeEnd)
+    for (let i = 0, len = event.length; i < len; i += 1) {
+      let _day = moment(event[i]).format().toString(); // 当前日历组件选择的时间
+      // let _dayStr = _day.substr(11, 8); // 需要被替换的时间（时:分:秒）字符串
+      i === 0
+        ? _time['dayStart'] = _day
+        : _time['dayEnd'] = _day;
+      // if (i === 0) {
+      //   _time['dayStart'] = _day.replace(_dayStr, `${moment(cycleTimeStart, 'H:mm').format("HH:mm").toString()}:00`);
+      // } else {
+      //   _time['dayEnd'] = _day.replace(_dayStr, `${moment(cycleTimeEnd, 'H:mm').format("HH:mm").toString()}:00`);
+      // }
+    }
+    this.setState({
+      time: _time
+    });
   }
 
   handleSubmit(event) {
@@ -560,7 +680,7 @@ RuleEditor.defaultProps = {
   time: {
     dayStart: '',
     dayEnd: '',
-    timeCycle: '0',
+    timeCycle: '',
     timeCycleWeek: '',
     timeCycleMonth: '',
     timeStart: '',
@@ -570,7 +690,7 @@ RuleEditor.defaultProps = {
   condition: {
     content: [],
     child: [],
-    logic: ''
+    logic: undefined
   },
   // condition: conditionData,
 };
@@ -605,7 +725,7 @@ RuleEditor.propTypes = {
   condition: PropTypes.shape({
     content: PropTypes.array.isRequired,
     child: PropTypes.array.isRequired,
-    logic: PropTypes.string.isRequired
+    logic: PropTypes.string
   }),
 
   /* 设定动作 */
