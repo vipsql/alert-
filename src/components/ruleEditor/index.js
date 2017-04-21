@@ -130,6 +130,11 @@ const conditionData = { // 模拟数据
   }]
 };
 
+const NotificationModeArr = [
+  {label: '电子邮件', value: 1},
+  {label: '短信息', value: 2},
+  {label: '分享到ChatOps私聊窗口', value: 3}
+]
 const WeekArray = [
   {label: '周一', value: '0'},
   {label: '周二', value: '1'},
@@ -194,7 +199,7 @@ class RuleEditor extends Component {
   }
   render() {
     conditionsDom = []; // 重置，防止重复 render
-    const { time, timeStart, timeEnd, source, condition } = this.state;
+    const { time, timeStart, timeEnd, source, condition, action } = this.state;
     const { getFieldDecorator } = this.props.form;
     const itemLayout = {
       labelCol: { span: 2 },
@@ -243,7 +248,7 @@ class RuleEditor extends Component {
     console.info('[state]', this.state);
 
     return (
-      <Form id="RuleEditor" onSubmit={this.submit}>
+      <Form id="RuleEditor" onSubmit={this.submit} hideRequiredMark={false}>
 
         <h2>基本信息</h2>
         <div className={styles.baseInfo}>
@@ -372,13 +377,9 @@ class RuleEditor extends Component {
               }]
             })(
               <Select
-                // showSearch
-                // optionFilterProp="children"
                 style={{ width: 200 }}
                 placeholder="请选择告警来源"
                 onChange={this.changeSource.bind(this)}
-                // getPopupContainer={() => document.querySelector('#xxx')}
-                // filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
               >
                 <Option value="CMDB">CMDB</Option>
                 <Option value="Monitor">Monitor</Option>
@@ -397,17 +398,23 @@ class RuleEditor extends Component {
 
         <h2>设置动作</h2>
         <div className={styles.setActions}>
-          <Tabs animated={false} defaultActiveKey={this.props.tab}>
-            <TabPane tab="关闭/删除告警" key="1">
+          <Tabs animated={false} activeKey={action.type[0].toString()} onChange={this.changeActionType.bind(this)}>
+            <TabPane tab="关闭/删除告警" key="1" className={styles.actionDelOrClose}>
               <div>
-                <span>针对符合条件的告警，执行</span>
+                <span className={styles.label}>针对符合条件的告警，执行</span>
                 <Select
                   style={{ width: 100 }}
-                  defaultValue={this.props.action}
+                  // defaultValue={this.props.action}
+                  value={action.actionDelOrClose.operation ? action.actionDelOrClose.operation.toString() : undefined}
                   placeholder="请选择操作"
+                  onChange={this.changeAction.bind(this, 1)}
                 >
-                  <Option value="delete">删除</Option>
-                  <Option value="close">关闭</Option>
+                  <Option value="1">删除</Option>
+                  <Option value="2">关闭</Option>
+                  {
+                    // <Option value="3">升级</Option>
+                    // <Option value="4">降级</Option>
+                  }
                 </Select>
                 <em>关闭将状态改为已解决，删除从数据库物理删除</em>
               </div>
@@ -415,24 +422,51 @@ class RuleEditor extends Component {
             {
               // <TabPane tab="升级/降级告警" key="2"></TabPane>
             }
-            <TabPane tab="告警通知" key="3">
+            <TabPane tab="告警通知" key="3" className={styles.actionNotification}>
+              <div>
+                <FormItem
+                  {...desLayout}
+                  label="通知对象"
+                >
+                  {getFieldDecorator('recipients', {
+                    rules: [{
+                      required: true,
+                      message: '通知对象不能为空'
+                    }]
+                  })(
+                    <Select
+                      mode="multiple"
+                      style={{ width: 200 }}
+                      placeholder="请选择通知对象"
+                      onChange={this.changeAction.bind(this, 3)}
+                      className={styles.recipients}
+                    >
+                      <Option value="CMDB">CMDB</Option>
+                      <Option value="Monitor">Monitor</Option>
+                      <Option value="APM">APM</Option>
+                    </Select>
+                  )}
+                </FormItem>
 
+              </div>
             </TabPane>
-            <TabPane tab="告警派单" key="4">
+            <TabPane tab="告警派单" key="4" className={styles.actionITSM}>
               <div>
                 <span>工单类别：</span>
                 <Select
                   style={{ width: 100 }}
-                  defaultValue={this.props.itsm}
                   placeholder="请选择类别"
+                  value={action.actionITSM.itsmModelId}
+                  onChange={this.changeAction.bind(this, 4)}
                 >
                   <Option value="group1">组1</Option>
                   <Option value="group2">组2</Option>
                 </Select>
                 <em>选择工单类型，派发到ITSM</em>
+                <Input className={styles.text} onBlur={this.changeAction.bind(this, 4)} defaultValue={action.actionITSM.param.cesjo} type="textarea" placeholder="请输入派单信息" />
               </div>
             </TabPane>
-            <TabPane tab="抑制告警" key="5">
+            <TabPane tab="抑制告警" key="5" className={styles.actionSuppress}>
 
             </TabPane>
             <TabPane tab="分享到Chatops" key="6">
@@ -440,8 +474,9 @@ class RuleEditor extends Component {
                 <span>Chatops群组：</span>
                 <Select
                   style={{ width: 100 }}
-                  defaultValue={this.props.chatops}
+                  value={action.actionChatOps.chatOpsRoomId}
                   placeholder="请选择群组"
+                  onChange={this.changeAction.bind(this, 6)}
                 >
                   <Option value="group1">组1</Option>
                   <Option value="group2">组2</Option>
@@ -453,6 +488,45 @@ class RuleEditor extends Component {
         <span onClick={this.handleSubmit.bind(this)} className={styles.submit}>提交</span>
       </Form>
     );
+  }
+
+  changeAction(type, value) {
+    const _action = _.cloneDeep(this.state.action);
+    switch(type) {
+      case 1: // 关闭/删除告警
+        _action.actionDelOrClose.operation = parseInt(value, 10);
+        break;
+      case 2: // 升级/降级告警
+        break;
+      case 3: // 告警通知
+        break;
+      case 4: // 告警派单
+        if (value.target) {
+          _action.actionITSM.param.cesjo = value.target.value;
+        } else {
+          _action.actionITSM.itsmModelId = value;
+        }
+        break;
+      case 5: // 抑制告警
+        break;
+      case 6: // 分享到Chatops
+        _action.actionChatOps.chatOpsRoomId = value;
+        break;
+      default:
+        throw new Error('未指定动作类型');
+    }
+    this.setState({
+      action: _action
+    });
+  }
+
+  // 更改动作类型
+  changeActionType(value) {
+    const _action = _.cloneDeep(this.state.action);
+    _action.type = [parseInt(value, 10)];
+    this.setState({
+      action: _action
+    });
   }
 
   // 更改来源
@@ -641,13 +715,13 @@ class RuleEditor extends Component {
     }
   }
 
-  // 更改固定时间段, event 为一个数组，包含起始时间和结束时间
-  changeDate(event) {
+  // 更改固定时间段, momentArray 为一个数组，包含起始时间和结束时间
+  changeDate(momentArray) {
     const _time = _.cloneDeep(this.state.time);
     // const { timeStart, timeEnd } = this.state;
-    // console.log(event, cycleTimeStart, cycleTimeEnd)
-    for (let i = 0, len = event.length; i < len; i += 1) {
-      let _day = moment(event[i]).format().toString(); // 当前日历组件选择的时间
+    // console.log(momentArray, cycleTimeStart, cycleTimeEnd)
+    for (let i = 0, len = momentArray.length; i < len; i += 1) {
+      let _day = moment(momentArray[i]).format().toString(); // 当前日历组件选择的时间
       // let _dayStr = _day.substr(11, 8); // 需要被替换的时间（时:分:秒）字符串
       i === 0
         ? _time['dayStart'] = _day
@@ -694,6 +768,31 @@ RuleEditor.defaultProps = {
     logic: undefined
   },
   // condition: conditionData,
+  action: {
+    tenant: '',
+    type: [1],
+    actionDelOrClose: {
+      operation: undefined
+    },
+    actionNotification: {
+      recipients: [],
+      notificationMode: {
+        notificationMode: [],
+        emailTitle: '',
+        emailMessage: '',
+        smsMessage: ''
+      }
+    },
+    actionITSM: {
+      itsmModelId: undefined,
+      param: {
+        cesjo: ''
+      }
+    },
+    actionChatOps: {
+      chatOpsRoomId: undefined
+    }
+  }
 };
 
 RuleEditor.propTypes = {
@@ -732,33 +831,39 @@ RuleEditor.propTypes = {
   /* 设定动作 */
   action: PropTypes.shape({
     tenant: PropTypes.string.isRequired, // 租户 id
+    //DELETE_OR_CLOSE(1, "关闭/删除告警"),
+    //UPGRADE_OR_DEGRADE(2, "升级/降级告警"),
+    //NOTIFICATION(3, "告警通知"),
+    //ITSM_TICKET(4, "告警派单"),
+    //SUPPRESS(5, "抑制告警"),
+    //CHATOPS_GROUP(6, "分享到Chatops"); 下同
+    type: PropTypes.array.isRequired, // 目前动作类型只支持单选，防止需求变更，用数组来存
     actionDelOrClose: PropTypes.shape({
-      operation: PropTypes.number.isRequired,
-      type: PropTypes.number.isRequired
+      //具体动作:
+      //DELETE(1, "删除"),
+      //CLOSE(2, "关闭"),
+      //UPGRADE(3, "升级"),
+      //DEGRADE(4, "降级");
+      operation: PropTypes.number
     }),
     actionNotification: PropTypes.shape({
       recipients: PropTypes.array.isRequired,
       notificationMode: PropTypes.shape({
+        // EMAIL(1，"电子邮件")，SMS(2，"短信")，CHATOPS_PRIVATE(3，"Chatops私聊")，多选
         notificationMode: PropTypes.array.isRequired,
         emailTitle: PropTypes.string.isRequired,
         emailMessage: PropTypes.string.isRequired,
         smsMessage: PropTypes.string.isRequired
-      }),
-      type: PropTypes.number.isRequired
+      })
     }),
     actionITSM: PropTypes.shape({
-      itsmModelId: PropTypes.string.isRequired,
+      itsmModelId: PropTypes.string,
       param: PropTypes.shape({
-        cesjo: PropTypes.string.isRequired
-      }),
-      type: PropTypes.number.isRequired
-    }),
-    actionSuppress: PropTypes.shape({
-      type: PropTypes.number.isRequired
+        cesjo: PropTypes.string
+      })
     }),
     actionChatOps: PropTypes.shape({
-      chatOpsRoomId: PropTypes.string.isRequired,
-      type: PropTypes.number.isRequired
+      chatOpsRoomId: PropTypes.string
     }),
   })
 };
