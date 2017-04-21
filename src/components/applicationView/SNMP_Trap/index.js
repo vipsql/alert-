@@ -88,18 +88,31 @@ const SNMP_Trap = (props) => {
 
     const matchFieldsList = []
     const groupFieldsList = []
-    snmpTrapRules.operateAppRules.matchFields !== undefined && Object.keys(snmpTrapRules.operateAppRules.matchFields).length !== 0 && Object.keys(snmpTrapRules.operateAppRules.matchFields).forEach( (key, index) => {
-        matchFieldsList.push({'OID': snmpTrapRules.operateAppRules.matchFields[key], 'mapper': key})
-    })
-    snmpTrapRules.operateAppRules.groupFields !== undefined && Object.keys(snmpTrapRules.operateAppRules.groupFields).length !== 0 && Object.keys(snmpTrapRules.operateAppRules.groupFields).forEach( (key, index) => {
-        groupFieldsList.push({'compose': snmpTrapRules.operateAppRules.groupFields[key], 'field': key})
-    })
+    const levelList = []
+    snmpTrapRules.operateAppRules.matchFields !== undefined 
+        && Object.keys(snmpTrapRules.operateAppRules.matchFields).length !== 0 
+            && Object.keys(snmpTrapRules.operateAppRules.matchFields).forEach( (key, index) => {
+                matchFieldsList.push({'OID': snmpTrapRules.operateAppRules.matchFields[key], 'mapper': key})
+            })
+    snmpTrapRules.operateAppRules.groupFields !== undefined 
+        && Object.keys(snmpTrapRules.operateAppRules.groupFields).length !== 0 
+            && Object.keys(snmpTrapRules.operateAppRules.groupFields).forEach( (key, index) => {
+                groupFieldsList.push({'compose': snmpTrapRules.operateAppRules.groupFields[key], 'field': key})
+            })
+    snmpTrapRules.operateAppRules.dataSource !== undefined 
+        && snmpTrapRules.operateAppRules.dataSource == 2 
+            && snmpTrapRules.operateAppRules.level !== undefined 
+                && Object.keys(snmpTrapRules.operateAppRules.level).length !== 0 
+                    && Object.keys(snmpTrapRules.operateAppRules.level).forEach( (trap, index) => {
+                        levelList.push({ 'severity': snmpTrapRules.operateAppRules.level[trap], 'trap': trap })
+                    })
     
     const ruleModalProps = {
         snmpTrapRules: {
             ...snmpTrapRules,
             matchFieldsList: matchFieldsList,
-            groupFieldsList: groupFieldsList
+            groupFieldsList: groupFieldsList,
+            levelList: levelList
         },
         okRule: (state, form) => {
             form.validateFieldsAndScroll( (errors, values) => {
@@ -114,7 +127,7 @@ const SNMP_Trap = (props) => {
                 const formData = form.getFieldsValue()
                 appRule.name = formData.ruleName;
                 appRule.description = formData.description;
-                appRule.severity = formData.severity;
+                appRule.classCode = formData.classCode;
                 state.filterFields.forEach( (filter) => {if (filter.key !== undefined) { appRule.filterFields.push(filter) }})
                 state.matchFields.forEach( (matchField) => {if (matchField.OID !== undefined && matchField.OID !== '' && matchField.mapper !== undefined) { 
                     Object.defineProperty(appRule.matchFields, matchField.mapper, {
@@ -132,8 +145,24 @@ const SNMP_Trap = (props) => {
                         writable: true
                     })
                  }})
+                if (state.dataSource !== undefined) {
+                    if (state.dataSource === 1)
+                        appRule.severity = formData.severity;
+                    if (state.dataSource === 2) {
+                        appRule.level = {};
+                        state.levelList.forEach( (level) => {if (level.trap !== undefined && level.trap !== '' && level.severity !== undefined) {
+                            Object.defineProperty(appRule.level, level.trap, {
+                                configurable: true,
+                                enumerable: true,
+                                value: level.severity,
+                                writable: true
+                            })
+                        }})
+                    }   
+                }   
                 appRule.properties = state.properties.filter( (property) => { delete property.enitable; return property.code !== undefined && property.code !== '' && property.name !== undefined && property.name !== '' && property.oid !== undefined && property.oid !== ''})
-                appRule.mergeKey = state.mergekey
+                appRule.mergeKey = state.mergeKey
+                appRule.dataSource = state.dataSource
 
                 dispatch({
                     type: 'snmpTrapRules/saveRule',

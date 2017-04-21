@@ -104,7 +104,7 @@ export default {
         })
         // 如果是SNMP Trap
         switch(currentOperateAppType.name) {
-          case 'UYUN TRAP':
+          case 'SNMPTrap':
               yield put({ type: 'snmpTrapRules/setAppRules', payload: []})
             break;
           default:
@@ -132,7 +132,7 @@ export default {
           }
           if (viewResult.data.applyType !== undefined) {
             switch(viewResult.data.applyType.name) {
-              case 'UYUN TRAP':
+              case 'SNMPTrap':
                   yield put({ type: 'snmpTrapRules/setAppRules', payload: viewResult.data.appRules || []})
                 break;
               default:
@@ -172,7 +172,7 @@ export default {
         }
         // 如果是SNMP Trap
         switch(currentOperateAppType.name) {
-          case 'UYUN TRAP':
+          case 'SNMPTrap':
               yield params.appRules = appRules;
             break;
           default:
@@ -216,7 +216,7 @@ export default {
         }
         // 如果是SNMP Trap
         switch(currentEditApp.applyType.name) {
-          case 'UYUN TRAP':
+          case 'SNMPTrap':
               yield params.appRules = appRules;
             break;
           default:
