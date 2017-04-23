@@ -282,7 +282,7 @@ class RuleEditor extends Component {
           </FormItem>
           <FormItem
             {...desLayout}
-            label="规则类型"
+            label="执行安排"
           >
             {getFieldDecorator('type', {
               rules: [],
@@ -374,11 +374,11 @@ class RuleEditor extends Component {
             label="告警来源"
           >
             {getFieldDecorator('source', {
-              rules: [{
-                required: true,
-                setFieldsValue: source,
-                message: '告警来源不能为空'
-              }]
+              // rules: [{
+              //   required: true,
+              //   setFieldsValue: source,
+              //   message: '告警来源不能为空'
+              // }]
             })(
               <Select
                 style={{ width: 200 }}
@@ -526,7 +526,7 @@ class RuleEditor extends Component {
                   <Option value="group2">组2</Option>
                 </Select>
                 <em>选择工单类型，派发到ITSM</em>
-                <Input className={styles.text} onBlur={this.changeAction.bind(this, 4)} defaultValue={action.actionITSM.param.cesjo} type="textarea" placeholder="请输入派单信息" />
+                <Input className={styles.text} onBlur={this.changeAction.bind(this, 4)} defaultValue={action.actionITSM.param.cesjo} type="textarea" placeholder="映射配置" />
               </div>
             </TabPane>
             <TabPane tab="抑制告警" key="5" className={styles.actionSuppress}>
@@ -534,7 +534,7 @@ class RuleEditor extends Component {
             </TabPane>
             <TabPane tab="分享到Chatops" key="6">
               <div>
-                <span>Chatops群组：</span>
+                <span>ChatOps群组：</span>
                 <Select
                   style={{ width: 100 }}
                   value={action.actionChatOps.chatOpsRoomId}
