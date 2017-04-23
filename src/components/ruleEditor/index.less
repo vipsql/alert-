@@ -86,8 +86,6 @@
         }
       }
     }
-
-
   }
   .pickTime {
     .ant-popover-inner-content {
@@ -438,4 +436,68 @@
   .recipients{
     width: 100% !important;
   }
+}
+
+.notificationTabs {
+  position: relative;
+  margin-left: 8.333%;
+  :global {
+    .ant-tabs-tab {
+      height: 30px !important;
+      line-height: 30px !important;
+      border-color: #6ca4cd !important;
+      border-style: dashed !important;
+    }
+    .ant-tabs-tab-active {
+      background-color: #1681c4 !important;
+    }
+    .ant-checkbox-wrapper {
+      margin-right: 5px;
+      & + span {
+        padding: 0;
+      }
+    }
+    .ant-tabs-tabpane {
+      padding: 0 !important;
+      // & > div {
+      //   position: relative;
+      // }
+    }
+    .ant-form-item-label,
+    .ant-form-item-control-wrapper {
+      float: left;
+    }
+    .ant-form-item-label label {
+      position: relative;
+      top: -5px;
+    }
+  }
+  .mailTitle {
+    :global {
+      .ant-form-item-control-wrapper {
+        width: 40%;
+      }
+    }
+  }
+  .msgContent {
+    :global {
+      .ant-form-item-control-wrapper {
+        width: 60%;
+      }
+    }
+  }
+}
+
+
+.insertVar {
+  cursor: pointer;
+  position: absolute;
+  top: 26px;
+  left: -65px;
+  display: inline-block;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 5px;
+  color: #5994d6;
+  background-color: #09284b;
 }

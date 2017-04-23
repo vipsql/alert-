@@ -397,8 +397,8 @@ class RuleEditor extends Component {
         </div>
 
         <h2>设置动作</h2>
-        <div className={styles.setActions}>
-          <Tabs animated={false} activeKey={action.type[0].toString()} onChange={this.changeActionType.bind(this)}>
+        {/*<div className={styles.setActions}>*/}
+          <Tabs className={styles.setActions} animated={false} activeKey={action.type[0].toString()} onChange={this.changeActionType.bind(this)}>
             <TabPane tab="关闭/删除告警" key="1" className={styles.actionDelOrClose}>
               <div>
                 <span className={styles.label}>针对符合条件的告警，执行</span>
@@ -428,12 +428,12 @@ class RuleEditor extends Component {
                   {...desLayout}
                   label="通知对象"
                 >
-                  {getFieldDecorator('recipients', {
+                  {/*{getFieldDecorator('recipients', {
                     rules: [{
                       required: true,
                       message: '通知对象不能为空'
                     }]
-                  })(
+                  })(*/}
                     <Select
                       mode="multiple"
                       style={{ width: 200 }}
@@ -445,9 +445,66 @@ class RuleEditor extends Component {
                       <Option value="Monitor">Monitor</Option>
                       <Option value="APM">APM</Option>
                     </Select>
-                  )}
+                  {/*)}*/}
                 </FormItem>
+                <Tabs animated={false} className={styles.notificationTabs}>
+                  <TabPane tab={<div><Checkbox value={1} /><span>电子邮件</span></div>} key="1">
+                    <div>
+                      <FormItem
+                        label="邮件标题"
+                        className={styles.mailTitle}
+                      >
+                        {/*{getFieldDecorator('emailTitle', {
+                          rules: [{
+                            required: true,
+                            message: '邮件标题不能为空'
+                          }]
+                        })(*/}
+                          <Input placeholder="来自告警$(Alert_name)的通知" />
+                        {/*)}*/}
+                      </FormItem>
+                      <FormItem
+                        label="邮件内容"
+                        className={styles.msgContent}
+                      >
+                        {/*{getFieldDecorator('emailTitle', {
+                          rules: [{
+                            required: true,
+                            message: '邮件内容不能为空'
+                          }]
+                        })(*/}
+                          <Input type="textarea" placeholder="${serverity}，${entity_name}于{occurtime}发生，具体信息为${description}" />
+                        {/*)}*/}
+                        <Popover placement="bottomLeft" trigger="click" content={<div><span>Close</span></div>}>
+                          <div className={styles.insertVar}>插入变量</div>
+                        </Popover>
+                      </FormItem>
 
+                    </div>
+                  </TabPane>
+                  <TabPane tab={<div><Checkbox value={2} /><span>短信息</span></div>} key="2">
+                    <div>
+                      <FormItem
+                        label="信息内容"
+                        className={styles.msgContent}
+                      >
+                        {/*{getFieldDecorator('emailTitle', {
+                          rules: [{
+                            required: true,
+                            message: '信息内容不能为空'
+                          }]
+                        })(*/}
+                          <Input type="textarea" placeholder="${serverity}，${entity_name}于{occurtime}发生，具体信息为${description}" />
+                        {/*)}*/}
+                          <Popover placement="bottomLeft" trigger="click" content={<div><span>Close</span></div>}>
+                            <div className={styles.insertVar}>插入变量</div>
+                          </Popover>
+                      </FormItem>
+
+                    </div>
+                  </TabPane>
+                  <TabPane tab={<div><Checkbox value={3} /><span>分享到ChatOps私聊窗口</span></div>} key="3" />
+                </Tabs>
               </div>
             </TabPane>
             <TabPane tab="告警派单" key="4" className={styles.actionITSM}>
@@ -484,7 +541,7 @@ class RuleEditor extends Component {
               </div>
             </TabPane>
           </Tabs>
-        </div>
+        {/*</div>*/}
         <span onClick={this.handleSubmit.bind(this)} className={styles.submit}>提交</span>
       </Form>
     );
@@ -499,6 +556,7 @@ class RuleEditor extends Component {
       case 2: // 升级/降级告警
         break;
       case 3: // 告警通知
+        debugger;
         break;
       case 4: // 告警派单
         if (value.target) {
