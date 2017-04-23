@@ -138,7 +138,7 @@ const alertAssociationRules = ({dispatch, alertAssociationRules, intl: {formatMe
         <div className={styles.rulesTable}>
             <div className={styles.addBtn}>
                 <Button type="primary" className={styles.appBtn} onClick={ () => {
-                    //window.location.hash
+                    window.location.hash = '#/alertConfig/alertAssociationRules/ruleEditor'
                 }}><span>{formatMessage({...localeMessage['newRule']})}</span></Button>
                 <p className={styles.total}><FormattedMessage {...localeMessage['ruleTotal']} values={{num: `${alertAssociationRules.associationRulesTotal}`}}/></p>
             </div>

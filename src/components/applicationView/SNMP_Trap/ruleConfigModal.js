@@ -249,6 +249,142 @@ class ruleModal extends Component{
             ruleDescription_placeholder: {
                 id: 'modal.trap.ruleDescription_placeholder',
                 defaultMessage: '请输入规则描述'
+            },
+            rule_dataSource: {
+                id: 'modal.trap.dataSource',
+                defaultMessage: '数据源'
+            },
+            rule_dataSource_netWork: {
+                id: 'modal.trap.dataSource.netWork',
+                defaultMessage: '网络设备'
+            },
+            rule_dataSource_thirdParty: {
+                id: 'modal.trap.dataSource.thirdParty',
+                defaultMessage: '第三方监控系统'
+            },
+            rule_filter: {
+                id: 'modal.trap.filter',
+                defaultMessage: '过滤条件:'
+            },
+            rule_filter_Exact: {
+                id: 'modal.trap.filter.Exact',
+                defaultMessage: '精确匹配'
+            },
+            rule_filter_Inexact: {
+                id: 'modal.trap.filter.Inexact',
+                defaultMessage: '模糊匹配'
+            },
+            rule_filter_Range: {
+                id: 'modal.trap.filter.Range',
+                defaultMessage: '范围'
+            },
+            rule_filter_Regular: {
+                id: 'modal.trap.filter.Regular',
+                defaultMessage: '正则表达式'
+            },
+            rule_Condition: {
+                id: 'modal.trap.condition',
+                defaultMessage: '添加条件'
+            },
+            rule_addRow: {
+                id: 'modal.trap.addRow',
+                defaultMessage: '添加行'
+            },
+            rule_fieldMatch: {
+                id: 'modal.trap.fieldMatch',
+                defaultMessage: '字段匹配:'
+            },
+            rule_fieldMatch_mapper: {
+                id: 'modal.trap.fieldMatch.mapper',
+                defaultMessage: '字段映射'
+            },
+            rule_expression: {
+                id: 'modal.trap.expression',
+                defaultMessage: '表达式'
+            },
+            rule_OID: {
+                id: 'modal.trap.OID',
+                defaultMessage: 'OID'
+            },
+            rule_action: {
+                id: 'modal.trap.action',
+                defaultMessage: '操作'
+            },
+            rule_action_edit: {
+                id: 'modal.trap.action.edit',
+                defaultMessage: '编辑'
+            },
+            rule_action_save: {
+                id: 'modal.trap.action.save',
+                defaultMessage: '保存'
+            },
+            rule_action_delete: {
+                id: 'modal.trap.action.delete',
+                defaultMessage: '删除'
+            },
+            rule_fieldEnrich: {
+                id: 'modal.trap.fieldEnrich',
+                defaultMessage: '字段扩展:'
+            },
+            rule_fieldEnrich_newField: {
+                id: 'modal.trap.fieldEnrich.newField',
+                defaultMessage: '新字段名'
+            },
+            rule_fieldEnrich_displayName: {
+                id: 'modal.trap.fieldEnrich.displayName',
+                defaultMessage: '显示名'
+            },
+            rule_fieldsComposition: {
+                id: 'modal.trap.fieldsComposition',
+                defaultMessage: '字段组合:'
+            },
+            rule_fieldsComposition_field: {
+                id: 'modal.trap.fieldsComposition.field',
+                defaultMessage: '字段'
+            },
+            rule_fieldsComposition_compose: {
+                id: 'modal.trap.fieldsComposition.composition',
+                defaultMessage: '组合'
+            },
+            rule_noSelectField: {
+                id: 'modal.trap.noSelectField',
+                defaultMessage: '没有可选字段'
+            },
+            rule_mergeKeys: {
+                id: 'modal.trap.mergeKeys',
+                defaultMessage: '合并原则'
+            },
+            rule_mergeKeys_message: {
+                id: 'modal.trap.mergeKeys.message',
+                defaultMessage: '指定合并告警的关键字段'
+            },
+            rule_bindCMDB: {
+                id: 'modal.trap.bindCMDB',
+                defaultMessage: '绑定CMDB类'
+            },
+            rule_bindCMDB_placeholder: {
+                id: 'modal.trap.bindCMDB.placeholder',
+                defaultMessage: '请选择需要绑定的CMDB类'
+            },
+            rule_severityMapper: {
+                id: 'modal.trap.severityMapper',
+                defaultMessage: '级别映射'
+            },
+            rule_severityMapper_placeholder: {
+                id: 'modal.trap.severityMapper.placeholder',
+                defaultMessage: '请输入告警级别'
+            },
+            rule_severityMapper_trap: {
+                id: 'modal.trap.severityMapper.trap',
+                defaultMessage: 'Trap级别'
+            },
+            rule_severityMapper_alert: {
+                id: 'modal.trap.severityMapper.alert',
+                defaultMessage: 'Alert级别'
+            },
+            rule_severityMapper_message: {
+                id: 'modal.trap.severityMapper.message',
+                defaultMessage: 'Alert级别定义：紧急 - 3，警告 - 2，提醒 - 1，正常 - 0'
             }
         })
 
@@ -283,10 +419,10 @@ class ruleModal extends Component{
                         let data = this.replaceFunc(this.state.filterFields, index, 'ruleMatch', value)
                         this.setState({ filterFields: [ ...data ] })
                     }}>
-                        <Option value={'3'}>精确匹配</Option>
-                        <Option value={'2'}>模糊匹配</Option>
-                        <Option value={'4'}>范围</Option>
-                        <Option value={'1'}>正则表达式</Option>
+                        <Option value={'3'}>{formatMessage({...localeMessage['rule_filter_Exact']})}</Option>
+                        <Option value={'2'}>{formatMessage({...localeMessage['rule_filter_Inexact']})}</Option>
+                        <Option value={'4'}>{formatMessage({...localeMessage['rule_filter_Range']})}</Option>
+                        <Option value={'1'}>{formatMessage({...localeMessage['rule_filter_Regular']})}</Option>
                     </Select>
                     {
                         this.state.filterFields[index]['ruleMatch'] === "3" && this.state.filterFields[index]['key'] === "Snmp TrapOID" ?
@@ -390,17 +526,21 @@ class ruleModal extends Component{
                         </Item>
                         <Item
                             {...itemLayout}
-                            label={'数据源'}
+                            wrapperCol={{span: 12}}
+                            label={formatMessage({...localeMessage['rule_dataSource']})}
                         >
                             <RadioGroup onChange={(e) => {
                                 this.setState({ dataSource: e.target.value })
                             }} value={this.state.dataSource}>
-                                <Radio value={1}>网络设备</Radio>
-                                <Radio value={2}>第三方监控系统</Radio>
+                                <Radio value={1}>{formatMessage({...localeMessage['rule_dataSource_netWork']})}</Radio>
+                                <Radio value={2}>{formatMessage({...localeMessage['rule_dataSource_thirdParty']})}</Radio>
                             </RadioGroup>
                         </Item>
-                        <div className={styles.paramBlock}>
-                            <span>过滤条件:</span>
+                        <Item
+                            {...itemLayout}
+                            wrapperCol={{span: 18}}
+                            label={formatMessage({...localeMessage['rule_filter']})}
+                        >
                             <ul className={styles.filterContainer}>
                                 { filters }
                             </ul>
@@ -413,16 +553,19 @@ class ruleModal extends Component{
                                             { key: undefined, ruleMatch: '3'}
                                         ]
                                     })
-                                }}><span>添加条件</span></Button>
+                                }}><span>{formatMessage({...localeMessage['rule_Condition']})}</span></Button>
                             </div>
-                        </div>
-                        <div className={styles.paramBlock}>
-                            <span>字段匹配:</span>
+                        </Item>
+                        <Item
+                            {...itemLayout}
+                            wrapperCol={{span: 20}}
+                            label={formatMessage({...localeMessage['rule_fieldMatch']})}
+                        >
                             <Table 
                                 className={styles.modalTable}
                                 columns={[
                                     {
-                                        title: 'OID',
+                                        title: <FormattedMessage {...localeMessage['rule_OID']}/>,
                                         dataIndex: 'OID',
                                         width: '200px',
                                         key: 'OID',
@@ -456,14 +599,14 @@ class ruleModal extends Component{
                                         }
                                     },
                                     {
-                                        title: '表达式',
+                                        title: <FormattedMessage {...localeMessage['rule_expression']}/>,
                                         key: 'expression',
                                         render: (text, record, index) => {
                                             return <span className={styles.expression}>=</span>
                                         }
                                     },
                                     {
-                                        title: '字段映射',
+                                        title: <FormattedMessage {...localeMessage['rule_fieldMatch_mapper']}/>,
                                         dataIndex: 'mapper',
                                         key: 'mapper',
                                         render: (text, record, index) => {
@@ -489,8 +632,8 @@ class ruleModal extends Component{
                                         }
                                     },
                                     {
-                                        title: '操作',
-                                        width: '125px',
+                                        title: <FormattedMessage {...localeMessage['rule_action']}/>,
+                                        width: '135px',
                                         key: 'operation',
                                         render: (text, record, index) => {
                                             let { OID, mapper, enitable } = this.state.matchFields[index];
@@ -500,18 +643,18 @@ class ruleModal extends Component{
                                                         enitable ?
                                                         <Button size='small' disabled={ OID === undefined || OID === '' || mapper === undefined } className={styles.editBtn} onClick={ () => {
                                                             this.addFieldMapper(this.state.matchFields, index, 'enitable', undefined)
-                                                        }}>保存</Button>
+                                                        }}>{formatMessage({...localeMessage['rule_action_save']})}</Button>
                                                         :
                                                         <Button size='small' className={styles.editBtn} onClick={ () => {
                                                             //TODO
                                                             this.enitFieldMapper(this.state.matchFields, index, 'enitable', true)
-                                                        }}>编辑</Button>
+                                                        }}>{formatMessage({...localeMessage['rule_action_edit']})}</Button>
                                                     }
                                                     &nbsp;&nbsp;
                                                     <Button size='small' className={styles.delBtn} onClick={ () => {
                                                         //TODO
                                                         this.deleFieldMapper(this.state.matchFields, index)
-                                                    }}>删除</Button>
+                                                    }}>{formatMessage({...localeMessage['rule_action_delete']})}</Button>
                                                 </span>
                                             )
                                         }
@@ -529,16 +672,19 @@ class ruleModal extends Component{
                                             {'OID': undefined, 'mapper': undefined, 'enitable': true}
                                         ]
                                     })
-                                }}><span>添加行</span></Button>
+                                }}><span>{formatMessage({...localeMessage['rule_addRow']})}</span></Button>
                             </div>
-                        </div>
-                        <div className={styles.paramBlock}>
-                            <span>字段扩展:</span>
+                        </Item>
+                        <Item
+                            {...itemLayout}
+                            wrapperCol={{span: 20}}
+                            label={formatMessage({...localeMessage['rule_fieldEnrich']})}
+                        >
                             <Table 
                                 className={styles.modalTable}
                                 columns={[
                                     {
-                                        title: 'OID',
+                                        title: <FormattedMessage {...localeMessage['rule_OID']}/>,
                                         dataIndex: 'oid',
                                         width: '150px',
                                         key: 'oid',
@@ -572,15 +718,15 @@ class ruleModal extends Component{
                                         }
                                     },
                                     {
-                                        title: '表达式',
-                                        width: '70px',
+                                        title: <FormattedMessage {...localeMessage['rule_expression']}/>,
+                                        width: '95px',
                                         key: 'expression',
                                         render: (text, record, index) => {
                                             return <span className={styles.expression}>=</span>
                                         }
                                     },
                                     {
-                                        title: '新字段名',
+                                        title: <FormattedMessage {...localeMessage['rule_fieldEnrich_newField']}/>,
                                         dataIndex: 'code',
                                         key: 'code',
                                         render: (text, record, index) => {
@@ -598,7 +744,7 @@ class ruleModal extends Component{
                                         }
                                     },
                                     {
-                                        title: '显示名',
+                                        title: <FormattedMessage {...localeMessage['rule_fieldEnrich_displayName']}/>,
                                         dataIndex: 'name',
                                         key: 'name',
                                         render: (text, record, index) => {
@@ -616,8 +762,8 @@ class ruleModal extends Component{
                                         }
                                     },
                                     {
-                                        title: '操作',
-                                        width: '125px',
+                                        title: <FormattedMessage {...localeMessage['rule_action']}/>,
+                                        width: '135px',
                                         key: 'operation',
                                         render: (text, record, index) => {
                                             let { oid, code, name, enitable } = this.state.properties[index];
@@ -629,20 +775,20 @@ class ruleModal extends Component{
                                                             //TODO
                                                             let data = this.replaceFunc(this.state.properties, index, 'enitable', undefined)
                                                             this.setState({ properties: [ ...data ] })
-                                                        }}>保存</Button>
+                                                        }}>{formatMessage({...localeMessage['rule_action_save']})}</Button>
                                                         :
                                                         <Button size='small' className={styles.editBtn} onClick={ () => {
                                                             //TODO
                                                             let data = this.replaceFunc(this.state.properties, index, 'enitable', true)
                                                             this.setState({ properties: [ ...data ] })
-                                                        }}>编辑</Button>
+                                                        }}>{formatMessage({...localeMessage['rule_action_edit']})}</Button>
                                                     }
                                                     &nbsp;&nbsp;
                                                     <Button size='small' className={styles.delBtn} onClick={ () => {
                                                         //TODO
                                                         let data = this.state.properties.filter( (property, itenIndex) => itenIndex !== index )
                                                         this.setState({ properties: [ ...data ] })
-                                                    }}>删除</Button>
+                                                    }}>{formatMessage({...localeMessage['rule_action_delete']})}</Button>
                                                 </span>
                                             )
                                         }
@@ -660,16 +806,19 @@ class ruleModal extends Component{
                                             {'oid': undefined, 'code': undefined, 'name': undefined, 'enitable': true}
                                         ]
                                     })
-                                }}><span>添加行</span></Button>
+                                }}><span>{formatMessage({...localeMessage['rule_addRow']})}</span></Button>
                             </div>
-                        </div>
-                        <div className={styles.paramBlock}>
-                            <span>字段组合:</span>
+                        </Item>
+                        <Item
+                            {...itemLayout}
+                            wrapperCol={{span: 20}}
+                            label={formatMessage({...localeMessage['rule_fieldsComposition']})}
+                        >
                             <Table 
                                 className={styles.modalTable}
                                 columns={[
                                     {
-                                        title: '字段',
+                                        title: <FormattedMessage {...localeMessage['rule_fieldsComposition_field']}/>,
                                         dataIndex: 'field',
                                         width: '150px',
                                         key: 'field',
@@ -696,7 +845,7 @@ class ruleModal extends Component{
                                         }
                                     },
                                     {
-                                        title: '组合',
+                                        title: <FormattedMessage {...localeMessage['rule_fieldsComposition_compose']}/>,
                                         dataIndex: 'compose',
                                         key: 'compose',
                                         render: (text, record, index) => {
@@ -731,7 +880,7 @@ class ruleModal extends Component{
                                                                         let data = this.replaceFunc(this.state.groupFieldsList, index, 'compose', value)
                                                                         this.setState({ groupFieldsList: [ ...data ] })
                                                                     }}>{field}</span>
-                                                                }) : <span className={styles.noData}>没有可选字段</span>
+                                                                }) : <span className={styles.noData}>{formatMessage({...localeMessage['rule_noSelectField']})}</span>
                                                             }
                                                         </div>
                                                     } >
@@ -744,8 +893,8 @@ class ruleModal extends Component{
                                         }
                                     },
                                     {
-                                        title: '操作',
-                                        width: '125px',
+                                        title: <FormattedMessage {...localeMessage['rule_action']}/>,
+                                        width: '135px',
                                         key: 'operation',
                                         render: (text, record, index) => {
                                             let { compose, field, enitable } = this.state.groupFieldsList[index];
@@ -756,18 +905,18 @@ class ruleModal extends Component{
                                                         <Button size='small' disabled={ field === undefined || compose === undefined || compose === ''} className={styles.editBtn} onClick={ () => {
                                                             //TODO
                                                             this.addComposeField(this.state.groupFieldsList, index, 'enitable', undefined)
-                                                        }}>保存</Button>
+                                                        }}>{formatMessage({...localeMessage['rule_action_save']})}</Button>
                                                         :
                                                         <Button size='small' className={styles.editBtn} onClick={ () => {
                                                             //TODO
                                                             this.editComposeField(this.state.groupFieldsList, index, 'enitable', true)
-                                                        }}>编辑</Button>
+                                                        }}>{formatMessage({...localeMessage['rule_action_edit']})}</Button>
                                                     }
                                                     &nbsp;&nbsp;
                                                     <Button size='small' className={styles.delBtn} onClick={ () => {
                                                         //TODO
                                                         this.deleComposeField(this.state.groupFieldsList, index)
-                                                    }}>删除</Button>
+                                                    }}>{formatMessage({...localeMessage['rule_action_delete']})}</Button>
                                                 </span>
                                             )
                                         }
@@ -785,12 +934,12 @@ class ruleModal extends Component{
                                             {'field': undefined, 'compose': undefined, 'enitable': true}
                                         ]
                                     })
-                                }}><span>添加行</span></Button>
+                                }}><span>{formatMessage({...localeMessage['rule_addRow']})}</span></Button>
                             </div>
-                        </div>
+                        </Item>
                         <Item
                             {...itemLayout}
-                            label='合并原则'
+                            label={formatMessage({...localeMessage['rule_mergeKeys']})}
                             wrapperCol={{span: 18}}
                         >
                             <div className={styles.mergeInput}>
@@ -820,7 +969,7 @@ class ruleModal extends Component{
                                                                 value = this.state.mergeKey + `$${e.target.getAttribute('data-content')}`;
                                                             this.setState({ mergeKey: value })
                                                         }}>{field}</span>
-                                                    }) : <span className={styles.noData}>没有可选字段</span>
+                                                    }) : <span className={styles.noData}>{formatMessage({...localeMessage['rule_noSelectField']})}</span>
                                                 }
                                             </div>
                                         } >
@@ -829,20 +978,20 @@ class ruleModal extends Component{
                                     </div>
                                 )}
                             </div>
-                            <span className={styles.mergeMessage}>指定合并告警的关键字段</span>
+                            <span className={styles.mergeMessage}>{formatMessage({...localeMessage['rule_mergeKeys_message']})}</span>
                         </Item>
                         <Item
                             {...itemLayout}
-                            label='绑定CMDB类'
+                            label={formatMessage({...localeMessage['rule_bindCMDB']})}
                             hasFeedback
                             help={isFieldValidating('classCode') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('classCode') || []).join(', ')}
                         >
                             {getFieldDecorator('classCode', {
                                 rules: [
-                                    { required: true, message: '请选择需要绑定CMDB类' }
+                                    { required: true, message: formatMessage({...localeMessage['rule_bindCMDB_placeholder']}) }
                                 ]
                             })(
-                                <Select placeholder={'请选择需要绑定CMDB类'}>
+                                <Select placeholder={formatMessage({...localeMessage['rule_bindCMDB_placeholder']})}>
                                     {
                                         snmpTrapRules.CMDBClass.length > 0 ? snmpTrapRules.CMDBClass.map( (item, index) => {
                                             return <Option key={index} value={item.code}>{item.name}</Option>
@@ -855,16 +1004,16 @@ class ruleModal extends Component{
                             this.state.dataSource == 1 ?
                             <Item
                                 {...itemLayout}
-                                label='告警等级'
+                                label={formatMessage({...localeMessage['rule_severityMapper']})}
                                 hasFeedback
                                 help={isFieldValidating('severity') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('severity') || []).join(', ')}
                             >
                                 {getFieldDecorator('severity', {
                                     rules: [
-                                        { required: true, message: '请输入告警等级' }
+                                        { required: true, message: formatMessage({...localeMessage['rule_severityMapper_placeholder']}) }
                                     ]
                                 })(
-                                    <Select placeholder={'请输入告警等级'}>
+                                    <Select placeholder={formatMessage({...localeMessage['rule_severityMapper_placeholder']})}>
                                         <Option value="0">{window['_severity']['0']}</Option>
                                         <Option value="1">{window['_severity']['1']}</Option>
                                         <Option value="2">{window['_severity']['2']}</Option>
@@ -873,13 +1022,16 @@ class ruleModal extends Component{
                                 )}
                             </Item>
                             :
-                            <div className={styles.paramBlock}>
-                                <span>级别映射:</span>
+                            <Item
+                                {...itemLayout}
+                                wrapperCol={{span: 20}}
+                                label={formatMessage({...localeMessage['rule_severityMapper']})}
+                            >
                                 <Table 
                                     className={styles.modalTable}
                                     columns={[
                                         {
-                                            title: 'Trap级别',
+                                            title: <FormattedMessage {...localeMessage['rule_severityMapper_trap']}/>,
                                             dataIndex: 'trap',
                                             key: 'trap',
                                             render: (text, record, index) => {
@@ -897,14 +1049,14 @@ class ruleModal extends Component{
                                             }
                                         },
                                         {
-                                            title: '表达式',
+                                            title: <FormattedMessage {...localeMessage['rule_expression']}/>,
                                             key: 'expression',
                                             render: (text, record, index) => {
                                                 return <span className={styles.expression}>=</span>
                                             }
                                         },
                                         {
-                                            title: 'Alert级别',
+                                            title: <FormattedMessage {...localeMessage['rule_severityMapper_alert']}/>,
                                             dataIndex: 'severity',
                                             key: 'severity',
                                             render: (text, record, index) => {
@@ -927,8 +1079,8 @@ class ruleModal extends Component{
                                             }
                                         },
                                         {
-                                            title: '操作',
-                                            width: '125px',
+                                            title: <FormattedMessage {...localeMessage['rule_action']}/>,
+                                            width: '135px',
                                             key: 'operation',
                                             render: (text, record, index) => {
                                                 let { trap, severity, enitable } = this.state.levelList[index];
@@ -940,20 +1092,20 @@ class ruleModal extends Component{
                                                                 //TODO
                                                                 let data = this.replaceFunc(this.state.levelList, index, 'enitable', undefined)
                                                                 this.setState({ levelList: [ ...data ] })
-                                                            }}>保存</Button>
+                                                            }}>{formatMessage({...localeMessage['rule_action_save']})}</Button>
                                                             :
                                                             <Button size='small' className={styles.editBtn} onClick={ () => {
                                                                 //TODO
                                                                 let data = this.replaceFunc(this.state.levelList, index, 'enitable', true)
                                                                 this.setState({ levelList: [ ...data ] })
-                                                            }}>编辑</Button>
+                                                            }}>{formatMessage({...localeMessage['rule_action_edit']})}</Button>
                                                         }
                                                         &nbsp;&nbsp;
                                                         <Button size='small' className={styles.delBtn} onClick={ () => {
                                                             //TODO
                                                             let data = this.state.levelList.filter( (level, itenIndex) => itenIndex !== index )
                                                             this.setState({ levelList: [ ...data ] })
-                                                        }}>删除</Button>
+                                                        }}>{formatMessage({...localeMessage['rule_action_delete']})}</Button>
                                                     </span>
                                                 )
                                             }
@@ -962,7 +1114,7 @@ class ruleModal extends Component{
                                     pagination={false}
                                     dataSource={this.state.levelList}
                                 />
-                                <span className={styles.alertMessage}>Alert级别定义：紧急 - 3，警告 - 2，提醒 - 1，正常 - 0</span>
+                                <span className={styles.alertMessage}>{formatMessage({...localeMessage['rule_severityMapper_message']})}</span>
                                 <div className={styles.addBtn}>
                                     <Button type="primary" className={styles.appBtn} onClick={ () => {
                                         //TODO
@@ -972,9 +1124,9 @@ class ruleModal extends Component{
                                                 {'trap': undefined, 'severity': undefined, 'enitable': true}
                                             ]
                                         })
-                                    }}><span>添加行</span></Button>
+                                    }}><span>{formatMessage({...localeMessage['rule_addRow']})}</span></Button>
                                 </div>
-                            </div>
+                            </Item>
                         }
                     </Form>
                 </div>

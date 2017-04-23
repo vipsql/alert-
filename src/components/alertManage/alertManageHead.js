@@ -12,9 +12,37 @@ const formatMessages = defineMessages({
       id: 'alertManage.addTags',
       defaultMessage: '关注设置',
     },
-    header: {
-      id: 'alertManage.headerTitle',
-      defaultMessage: '最近 1 小时活跃告警: ',
+    oneHour: {
+      id: 'alertManage.oneHour',
+      defaultMessage: '最近 1 小时',
+    },
+    fourHours: {
+      id: 'alertManage.fourHours',
+      defaultMessage: '最近 4 小时'
+    },
+    oneDay: {
+      id: 'alertManage.oneDay',
+      defaultMessage: '最近 24 小时'
+    },
+    sevenDays: {
+      id: 'alertManage.sevenDays',
+      defaultMessage: '最近 7 天'
+    },
+    fifteenDays: {
+      id: 'alertManage.fifteenDays',
+      defaultMessage: '最近 15 天'
+    },
+    thirtyDays: {
+      id: 'alertManage.thirtyDays',
+      defaultMessage: '最近 30 天'
+    },
+    newIncident: {
+      id: 'alertManage.newIncident',
+      defaultMessage: '待处理告警'
+    },
+    assignedIncident: {
+      id: 'alertManage.assignedIncident',
+      defaultMessage: '处理中告警'
     }
 })
 
@@ -40,18 +68,18 @@ const AlertManageHead = ({
             <Select defaultValue='lastOneHour' style={{ width: 150 }} onChange={ (value) => {
               queryByTime(value)
             }}>
-              <Option value='lastOneHour'>最近 1 小时</Option>
-              <Option value='lastFourHour'>最近 4 小时</Option>
-              <Option value='lastOneDay'>最近 24 小时</Option>
-              <Option value='lastOneWeek'>最近 7 天</Option>
-              <Option value='lastFifteenDay'>最近 15 天</Option>
-              <Option value='lastOneMonth'>最近 30 天</Option>
+              <Option value='lastOneHour'><FormattedMessage {...formatMessages['oneHour']}/></Option>
+              <Option value='lastFourHour'><FormattedMessage {...formatMessages['fourHours']}/></Option>
+              <Option value='lastOneDay'><FormattedMessage {...formatMessages['oneDay']}/></Option>
+              <Option value='lastOneWeek'><FormattedMessage {...formatMessages['sevenDays']}/></Option>
+              <Option value='lastFifteenDay'><FormattedMessage {...formatMessages['fifteenDays']}/></Option>
+              <Option value='lastOneMonth'><FormattedMessage {...formatMessages['thirtyDays']}/></Option>
             </Select>
             <RadioGroup className={styles.myRadioGroup} defaultValue='NEW' onChange={ (e) => {
               queryByStatus(e.target.value)
             }}>
-              <Radio value='NEW'>待处理告警</Radio>
-              <Radio value='PROGRESSING'>处理中告警</Radio>
+              <Radio value='NEW'><FormattedMessage {...formatMessages['newIncident']}/></Radio>
+              <Radio value='PROGRESSING'><FormattedMessage {...formatMessages['assignedIncident']}/></Radio>
             </RadioGroup>
           </div>
         }

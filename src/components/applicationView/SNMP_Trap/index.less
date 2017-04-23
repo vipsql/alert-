@@ -220,8 +220,7 @@
                     .mergeMessage{
                         position: absolute;
                         top: 0px;
-                        right: 60px;
-                        margin-left: 5px;
+                        left: 380px;
                         color: #70c3fb;
                         display: inline-block;
                         &:before{
@@ -257,146 +256,130 @@
                 cursor: pointer
             }
         }
-        .paramBlock{
-            position: relative;
-            padding: 0px 38px;
-            margin-bottom: 10px;
-            & > span:first-child{
-                font-size: 13px
+        .modalTable{
+            .expression{
+                color: #fff;
             }
-            .modalTable{
-                margin-left: 10px;
-                display: inline-block;
-                vertical-align: top;
-                width: 90%;
-                .expression{
+            :global{
+                .ant-table-thead > tr > th{
+                    background: #13456d;
+                    color: #67b6eb;
+                    border-bottom: 2px solid #1c68a3;
+                    font-size: 12px;
+                    text-align: left;
+                    padding: 10px 15px;
+                    //white-space: nowrap;
+                }
+                .ant-table-tbody > tr > td{
+                    text-align: left;
+                    padding: 10px 15px;
+                    border-bottom: 1px solid #1c68a3;
+                    color: #fff;
+                    //white-space: nowrap;
+                    :local{
+                        .delBtn{
+                            font-weight: normal;
+                            border: 1px solid #d85735;
+                            background: #d85735;
+                            span{
+                                color: #fff;
+                            }
+                        }
+                        .editBtn{
+                            font-weight: normal;
+                            border: 1px solid #2096e0;
+                            background: #2096e0;
+                            span{
+                                color: #fff;
+                            }
+                            &[disabled]{
+                                opacity: 0.5;
+                            }
+                        }
+                    }
+                }
+                .ant-table-tbody > tr:nth-child(odd){
+                    background: #175586;
+                }
+                .ant-table-tbody > tr:nth-child(even){
+                    background: #1a6098;
+                }
+                .ant-table-tbody > tr:hover > td{
+                    background: none;
+                }
+                .ant-table-placeholder{
+                    border-bottom: 1px solid #1c68a3;
+                    background: #1a6098;
+                    color: #67b6eb;
+                }
+                // select filed
+                .ant-select-search--inline .ant-select-search__field{
                     color: #fff;
                 }
+            }
+        }
+        ul.filterContainer{
+            display: inline-block;
+            vertical-align: top;
+            & > li{
+                position: relative;
+                border: 1px dashed #124679;
+                padding: 8px 15px;
+                margin-bottom: 5px;
+                width: 600px;
                 :global{
-                    .ant-table-thead > tr > th{
-                        background: #13456d;
-                        color: #67b6eb;
-                        border-bottom: 2px solid #1c68a3;
-                        font-size: 12px;
-                        text-align: left;
-                        padding: 10px 15px;
-                        //white-space: nowrap;
+                    .ant-select{
+                        margin-right: 5px;
+                        width: 25%;
                     }
-                    .ant-table-tbody > tr > td{
-                        text-align: left;
-                        padding: 10px 15px;
-                        border-bottom: 1px solid #1c68a3;
-                        color: #fff;
-                        //white-space: nowrap;
-                        :local{
-                            .delBtn{
-                                font-weight: normal;
-                                border: 1px solid #d85735;
-                                background: #d85735;
-                                span{
-                                    color: #fff;
-                                }
-                            }
-                            .editBtn{
-                                font-weight: normal;
-                                border: 1px solid #2096e0;
-                                background: #2096e0;
-                                span{
-                                    color: #fff;
-                                }
-                                &[disabled]{
-                                    opacity: 0.5;
-                                }
-                            }
-                        }
-                    }
-                    .ant-table-tbody > tr:nth-child(odd){
-                        background: #175586;
-                    }
-                    .ant-table-tbody > tr:nth-child(even){
-                        background: #1a6098;
-                    }
-                    .ant-table-tbody > tr:hover > td{
-                        background: none;
-                    }
-                    .ant-table-placeholder{
-                        border-bottom: 1px solid #1c68a3;
-                        background: #1a6098;
-                        color: #67b6eb;
-                    }
-                    // select filed
-                    .ant-select-search--inline .ant-select-search__field{
-                        color: #fff;
+                    .ant-input{
+                        width: 30%
                     }
                 }
+                .shanChu{
+                    position: absolute;
+                    //top: 5px;
+                    right: 10px;
+                    font-size: 24px;
+                    cursor: pointer;
+                    color: #095a95
+                }
             }
-            ul.filterContainer{
+        }
+        .alertMessage{
+            color: #70c3fb;
+            display: inline-block;
+            &:before{
                 display: inline-block;
-                margin-left: 10px;
-                vertical-align: top;
-                & > li{
-                    position: relative;
-                    border: 1px dashed #124679;
-                    padding: 8px 15px;
-                    margin-bottom: 5px;
-                    width: 600px;
-                    :global{
-                        .ant-select{
-                            margin-right: 5px;
-                            width: 25%;
-                        }
-                        .ant-input{
-                            width: 30%
-                        }
-                    }
-                    .shanChu{
-                        position: absolute;
-                        top: 5px;
-                        right: 10px;
-                        font-size: 24px;
-                        cursor: pointer;
-                        color: #095a95
-                    }
-                }
-            }
-            .alertMessage{
-                margin-top: 5px;
-                margin-left: 65px;
+                margin-right: 4px;
+                content: "*";
+                font-family: SimSun;
+                line-height: 1;
+                font-size: 12px;
                 color: #70c3fb;
+            }
+        }
+        .addBtn{
+            margin-top: 10px;
+            :global{
+                .ant-btn{
+                    padding: 2px 10px;
+                }
+            }
+            button > span{
+                position: relative;
+                bottom: 1px;
+                font-size: 13px;
+            }
+            button > span:before{
+                position: relative;
+                top: 1px;
                 display: inline-block;
-                &:before{
-                    display: inline-block;
-                    margin-right: 4px;
-                    content: "*";
-                    font-family: SimSun;
-                    line-height: 1;
-                    font-size: 12px;
-                    color: #70c3fb;
-                }
+                content: '+';
+                font-size: 18px;
+                padding-right: 5px;
             }
-            .addBtn{
-                margin-left: 65px;
-                margin-top: 10px;
-                :global{
-                    .ant-btn{
-                        padding: 2px 10px;
-                    }
-                }
-                button > span{
-                    position: relative;
-                    bottom: 1px;
-                    font-size: 13px;
-                }
-                button > span:before{
-                    position: relative;
-                    top: 1px;
-                    display: inline-block;
-                    content: '+';
-                    font-size: 18px;
-                    padding-right: 5px;
-                }
 
-            }
         }
     }
 }
