@@ -644,7 +644,7 @@ class RuleEditor extends Component {
         )}
       >
         <label>条件：</label>
-        <Select value={logic} placeholder="请选择条件">
+        <Select value={logic} placeholder="请选择条件" onChange={this.changeTitleLogic.bind(this, node, level)}>
           <Option value="and">满足全部</Option>
           <Option value="or">满足任意</Option>
           <Option value="not">都不满足</Option>
@@ -678,7 +678,8 @@ class RuleEditor extends Component {
         _key: key,
         _this: this,
         index: _index,
-        deleteLine: this.deleteLine
+        deleteLine: this.deleteLine,
+        changeConditionContent: this.changeConditionContent
       };
       return <Condition {...itemData} />
     });
@@ -700,13 +701,43 @@ class RuleEditor extends Component {
     return conditionsDom;
   }
 
-  treeControl(type, node, item, x) { // deleteLine 时，x 为索引，其它时候为新建项
-    const { content = [] ,child = [] } = node;
+  // 修改条件头逻辑
+  changeTitleLogic(item, level, value) {
+    let _condition = _.cloneDeep(this.state.condition);
+    this.treeControl('changeLogic', _condition, item, value);
+    this.setState({
+      condition: _condition
+    });
+  }
+
+  // 修改条件内容
+  changeConditionContent(item, index, contentType, value) {
+    let _condition = _.cloneDeep(this.state.condition);
+    this.treeControl(contentType, _condition, item, value, index);
+    this.setState({
+      condition: _condition
+    });
+  }
+
+  /**
+   * x 默认为为新建项
+   * deleteLine 时，x 为索引
+   * changeLogic 时，x 为逻辑值
+   * conditionIndex 为条件 content 索引
+   */
+  treeControl(type, node, item, x, conditionIndex = null) {
+    let { content = [] ,child = [] } = node;
     if (node.id === item.id) { // 一级嵌套（增）一级条件（增、删）
       type === 'addBlock' && child.push(x);
       type === 'addLine' && content.push(x);
       type === 'deleteLine' && content.splice(x, 1);
-      console.log(content, child)
+      if (type === 'changeLogic') {
+        node.logic = x;
+      }
+      if (/key|opt|value/.test(type)) {
+        content[conditionIndex][type] = x;
+      }
+
     } else { // 二、三级嵌套（增、删）二、三级条件（增、删）
       for (let i = child.length - 1; i >= 0; i -= 1) {
         if (item.id === child[i].id) {
@@ -714,8 +745,14 @@ class RuleEditor extends Component {
           type === 'addBlock' && child[i].child.push(x);
           type === 'deleteLine' && child[i].content.splice(i, 1);
           type === 'addLine' && child[i].content.push(x);
+          if (type === 'changeLogic') {
+            child[i].logic = x;
+          }
+          if (/key|opt|value/.test(type)) {
+            child[i].content[conditionIndex][type] = x;
+          }
         } else {
-          this.treeControl(type, child[i], item, x);
+          this.treeControl(type, child[i], item, x, conditionIndex);
         }
       }
     }

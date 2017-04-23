@@ -58,27 +58,27 @@ class Condition extends Component {
   // }
   // 创建条件
   createConditionItem() {
-    const {node, _key, opt, value, level, index, deleteLine, _this} = this.props;
+    const {node, _key, opt, value, level, index, deleteLine, changeConditionContent, _this} = this.props;
     return (
       <div key={new Date().getTime() + 'level' + level} className={cls(
         styles.conditionItem,
         `treeTag${level}`
       )}>
-        <Select className={styles.key} style={{ width: 100 }} value={_key} placeholder="请选择维度">
+        <Select onChange={changeConditionContent.bind(_this, node, index, 'key')} className={styles.key} style={{ width: 100 }} value={_key} placeholder="请选择维度">
           {
             keyList.map(item => (
               <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
             ))
           }
         </Select>
-        <Select className={styles.opt} style={{ width: 100 }} value={opt} placeholder="请选择条件">
+        <Select onChange={changeConditionContent.bind(_this, node, index, 'opt')} className={styles.opt} style={{ width: 100 }} value={opt} placeholder="请选择条件">
           {
             optList.map(item => (
               <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
             ))
           }
         </Select>
-        <Select className={styles.value} style={{ width: 130 }} value={value} placeholder="请选择对应标签">
+        <Select onChange={changeConditionContent.bind(_this, node, index, 'value')} className={styles.value} style={{ width: 130 }} value={value} placeholder="请选择对应标签">
           {
             valueList.map(item => (
               <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
