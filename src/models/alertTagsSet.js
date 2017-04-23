@@ -55,6 +55,10 @@ export default {
 
         yield put({
           type: 'alertManage/queryAlertDashbord',
+          payload: {
+            selectedTime: 'lastOneHour',
+            selectedStatus: 'NEW'
+          }
         })
 
         yield put({ type: 'alertManage/toggleAlertSet', payload: true })

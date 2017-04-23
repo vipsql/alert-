@@ -103,3 +103,22 @@ export async function getSource() {
   })
 }
 
+// 在snmp页面查询CMDB字段
+export async function getCMDBSource() {
+  return request(`/applyRule/cmdbCategory`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
+
+// 在snmp页面查询OID字段
+export async function getOID() {
+  return request(`/applyRule/latelyTrap`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}

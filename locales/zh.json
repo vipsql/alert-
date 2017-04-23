@@ -15,7 +15,7 @@
   "lefeMenu.help": "帮助",
 
   "alertManage.addTags": "关注设置",
-  "alertManage.headerTitle": "最近一小时活跃告警: ",
+  "alertManage.headerTitle": "最近 1 小时活跃告警: ",
   "alertManage.noData": "告警看板暂无数据，请先设置关注数据",
   "alertManage.dashbord.selectedText": "已选择 {num} 个关注",
 
@@ -61,6 +61,7 @@
 
   "alertOperate.dispatch": "派发工单",
   "alertOperate.close": "关闭告警",
+  "alertOperate.resolve": "解决告警",
   "alertOperate.merge": "合并告警",
   "alertOperate.relieve": "解除告警",
   "alertOperate.moreAcitons": "更多操作",
@@ -93,9 +94,13 @@
   "modal.noTicketType": "请选择工单类型",
 
   "modal.close": "关闭",
+  "modal.resolve": "解决",
   "modal.closeIncident": "关闭告警",
+  "modal.resolveIncident": "解决告警",
   "modal.closeReason": "关闭理由",
+  "modal.resolveReason": "解决理由",
   "modal.noCloseReason": "请选择关闭理由",
+  "modal.noResolveReason": "请输入解决理由",
   "modal.closeReason.1": "故障已解决",
   "modal.closeReason.2": "计划停机",
   "modal.closeReason.3": "监控系统误报",
@@ -123,6 +128,8 @@
 
   "alertConfig.integrations": "第三方应用集成",
   "alertConfig.integrations.message": "接入第三方应用，如网络、服务器和应用监控工具、帮助台和客户支持、聊天协同等应用",
+  "alertConfig.correlation": "告警关联配置",
+  "alertConfig.correlation.message": "设置告警关联规则",
 
   "alertApplication.newApplication": "添加应用",
   "alertApplication.incoming": "接入",

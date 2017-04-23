@@ -1,5 +1,5 @@
 import {parse} from 'qs'
-import { getFormOptions, dispatchForm, close, merge, relieve, getChatOpsOptions, shareRoom} from '../services/alertOperation'
+import { getFormOptions, dispatchForm, close, resolve, merge, relieve, getChatOpsOptions, shareRoom} from '../services/alertOperation'
 import { queryAlertList, queryChild, queryAlertListTime } from '../services/alertList'
 import { queryCloumns } from '../services/alertQuery'
 import { message } from 'antd';
@@ -14,12 +14,10 @@ const initalState = {
     // 各个modal弹窗
     isShowFormModal: false, // 派发
     isShowCloseModal: false, // 关闭
+    isShowResolveModal: false, // 解决
     isShowMergeModal: false, // 合并
     isShowRelieveModal: false, // 解除
     isShowChatOpsModal: false, //chatops
-
-    isDropdownSpread: false, // 是否展开关闭modal的dropdown
-    closeMessage: undefined, // 关闭原因
 
     isSelectAlert: false, // 是否选择了告警
     isSelectOrigin: false, // 是否选择了源告警
@@ -296,13 +294,11 @@ export default {
               payload: payload.origin
           })
           if (payload.origin !== undefined && payload.origin === 'detail') {
-              yield put({type: 'alertDetailOperation/setCloseMessge', payload: undefined})
               yield put({type: 'alertDetailOperation/toggleCloseModal',payload: payload.state})
           } else {
             if (operateAlertIds.length === 0) {
                 yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
             } else {
-                yield put({type: 'setCloseMessge', payload: undefined})
                 yield put({type: 'toggleCloseModal', payload: payload.state})
             }
           }
@@ -333,6 +329,58 @@ export default {
 
           yield put({
             type: 'toggleCloseModal',
+            payload: false
+          })
+      },
+      // 打开解决告警
+      *openResolveModal({payload}, {select, put, call}) {
+          // 触发筛选
+          yield put({ type: 'alertListTable/filterCheckAlert'})
+          const { operateAlertIds } = yield select( state => {
+              return {
+                  'operateAlertIds': state.alertListTable.operateAlertIds,
+              }
+          })
+          yield put({
+              type: 'alertList/toggleModalOrigin',
+              payload: payload.origin
+          })
+          if (payload.origin !== undefined && payload.origin === 'detail') {
+              yield put({type: 'alertDetailOperation/toggleResolveModal',payload: payload.state})
+          } else {
+            if (operateAlertIds.length === 0) {
+                yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
+            } else {
+                yield put({type: 'toggleResolveModal', payload: payload.state})
+            }
+          }
+      },
+      // 解决告警
+      *resolveAlert({payload}, {select, put, call}) {
+          const { operateAlertIds } = yield select( state => {
+              return {
+                  'operateAlertIds': state.alertListTable.operateAlertIds,
+              }
+          })
+          if ( operateAlertIds !== undefined ) {
+            let stingIds = operateAlertIds.map( item => '' + item)
+            const resultData = yield resolve({
+                incidentIds: stingIds,
+                resolveMessage: payload
+            })
+            if (resultData.result) {
+                yield put({ type: 'alertListTable/resetCheckedAlert'})
+                //yield put({ type: 'alertListTable/changeCloseState', payload: stingIds})
+                yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+            } else {
+                yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
+            }
+          } else {
+              console.error('operateAlertIds error');
+          }
+
+          yield put({
+            type: 'toggleResolveModal',
             payload: false
           })
       },
@@ -546,6 +594,9 @@ export default {
       toggleRelieveModal(state, {payload: isShowRelieveModal}) {
           return { ...state, isShowRelieveModal }
       },
+      toggleResolveModal(state, {payload: isShowResolveModal}) {
+          return { ...state, isShowResolveModal }
+      },
       // selectRows是合并告警时触发
       selectRows(state, {payload: originAlert}) {
           return { ...state, originAlert }
@@ -555,13 +606,6 @@ export default {
           const { mergeInfoList } = state;
           const newList = mergeInfoList.filter( (item) => (item.id !== payload) )
           return { ...state, mergeInfoList: newList}
-      },
-      // 是否展开dropdown - closemodal
-      toggleDropdown(state, { payload: isDropdownSpread }) {
-          return { ...state, isDropdownSpread }
-      },
-      setCloseMessge(state, { payload: closeMessage}) {
-          return { ...state, closeMessage }
       }
   }
 }

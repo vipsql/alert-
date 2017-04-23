@@ -49,7 +49,7 @@ export default {
             type: 'setDetail',
             payload: detailResult.data || {}
           })
-          if (detailResult.data.orderFlowNum) {
+          if (detailResult.data && detailResult.data.orderFlowNum) {
             yield put({
               type: 'setFormData',
               payload: detailResult.data.orderFlowNum
