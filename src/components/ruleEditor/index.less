@@ -432,15 +432,54 @@
     margin-right: 10px;
   }
 }
+.notificationTabsLabel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 8.333%;
+  margin-top: 59px;
+  text-align: right;
+  font-size: 13px;
+  &:after {
+    content: ":";
+    margin: 0 8px 0 2px;
+    position: relative;
+    top: -0.5px;
+  }
+}
 .actionNotification{
+  & > div {
+    position: relative;
+  }
   .recipients{
     width: 100% !important;
+    :global {
+      .ant-select-selection--multiple .ant-select-selection__choice {
+        background-color: #158ad4;
+        color: #fff;
+        border-radius: 2px;
+      }
+      .ant-select-selection__choice__remove{
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        padding: 0;
+        top: 2px;
+        right: 0;
+        color: #fff;
+        border-radius: 50%;
+        background-color: #094e80;
+      }
+    }
   }
 }
 
 .notificationTabs {
   position: relative;
   margin-left: 8.333%;
+  overflow: visible;
   :global {
     .ant-tabs-tab {
       height: 30px !important;
@@ -488,7 +527,18 @@
   }
 }
 
-
+.varsWrap {
+  // position: relative;
+  border: 0;
+  :global {
+    .ant-popover-arrow {
+      display: none;
+    }
+    .ant-popover-inner {
+      background-color: #09284b;
+    }
+  }
+}
 .insertVar {
   cursor: pointer;
   position: absolute;
@@ -500,4 +550,13 @@
   padding: 0 5px;
   color: #5994d6;
   background-color: #09284b;
+}
+.varList {
+  position: relative;
+  color: #fff;
+  span {
+    position: relative;
+    margin: 0 5px;
+    cursor: pointer;
+  }
 }

@@ -185,7 +185,8 @@ class RuleEditor extends Component {
       /* 条件 */
       condition: makeCondition(_.cloneDeep(props.condition)),
       /* 动作 */
-      action: props.action
+      action: props.action,
+      insertVars: props.insertVars
     };
   }
   componentDidMount() {
@@ -246,6 +247,9 @@ class RuleEditor extends Component {
 
     // console.info('[props]', this.props);
     console.info('[state]', this.state);
+
+    this.emailVarContent = this.vars('emailMessage');
+    this.smsVarContent = this.vars('smsMessage');
 
     return (
       <Form id="RuleEditor" onSubmit={this.submit} hideRequiredMark={false}>
@@ -397,7 +401,7 @@ class RuleEditor extends Component {
         </div>
 
         <h2>设置动作</h2>
-        {/*<div className={styles.setActions}>*/}
+        <div className={styles.setActions}>
           <Tabs className={styles.setActions} animated={false} activeKey={action.type[0].toString()} onChange={this.changeActionType.bind(this)}>
             <TabPane tab="关闭/删除告警" key="1" className={styles.actionDelOrClose}>
               <div>
@@ -424,6 +428,7 @@ class RuleEditor extends Component {
             }
             <TabPane tab="告警通知" key="3" className={styles.actionNotification}>
               <div>
+                <span className={styles.notificationTabsLabel}>通知方式</span>
                 <FormItem
                   {...desLayout}
                   label="通知对象"
@@ -448,7 +453,8 @@ class RuleEditor extends Component {
                   {/*)}*/}
                 </FormItem>
                 <Tabs animated={false} className={styles.notificationTabs}>
-                  <TabPane tab={<div><Checkbox value={1} /><span>电子邮件</span></div>} key="1">
+                  <TabPane tab={<div><Checkbox value={1} onChange={this.changeAction.bind(this, 3)} /><span>电子邮件</span></div>} key="1">
+
                     <div>
                       <FormItem
                         label="邮件标题"
@@ -460,7 +466,7 @@ class RuleEditor extends Component {
                             message: '邮件标题不能为空'
                           }]
                         })(*/}
-                          <Input placeholder="来自告警$(Alert_name)的通知" />
+                          <Input id="emailTitle" onBlur={this.changeAction.bind(this, 3)} placeholder="来自告警$(Alert_name)的通知" />
                         {/*)}*/}
                       </FormItem>
                       <FormItem
@@ -473,16 +479,16 @@ class RuleEditor extends Component {
                             message: '邮件内容不能为空'
                           }]
                         })(*/}
-                          <Input type="textarea" placeholder="${serverity}，${entity_name}于{occurtime}发生，具体信息为${description}" />
+                          <Input id="emailMessage" value={action.actionNotification.notificationMode.emailMessage} onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder="${serverity}，${entity_name}于{occurtime}发生，具体信息为${description}" />
                         {/*)}*/}
-                        <Popover placement="bottomLeft" trigger="click" content={<div><span>Close</span></div>}>
+                        <Popover overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={this.emailVarContent}>
                           <div className={styles.insertVar}>插入变量</div>
                         </Popover>
                       </FormItem>
 
                     </div>
                   </TabPane>
-                  <TabPane tab={<div><Checkbox value={2} /><span>短信息</span></div>} key="2">
+                  <TabPane tab={<div><Checkbox value={2} onChange={this.changeAction.bind(this, 3)} /><span>短信息</span></div>} key="2">
                     <div>
                       <FormItem
                         label="信息内容"
@@ -494,16 +500,16 @@ class RuleEditor extends Component {
                             message: '信息内容不能为空'
                           }]
                         })(*/}
-                          <Input type="textarea" placeholder="${serverity}，${entity_name}于{occurtime}发生，具体信息为${description}" />
+                          <Input id="smsMessage" value={action.actionNotification.notificationMode.smsMessage} onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder="${serverity}，${entity_name}于{occurtime}发生，具体信息为${description}" />
                         {/*)}*/}
-                          <Popover placement="bottomLeft" trigger="click" content={<div><span>Close</span></div>}>
+                          <Popover overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={this.smsVarContent}>
                             <div className={styles.insertVar}>插入变量</div>
                           </Popover>
                       </FormItem>
 
                     </div>
                   </TabPane>
-                  <TabPane tab={<div><Checkbox value={3} /><span>分享到ChatOps私聊窗口</span></div>} key="3" />
+                  <TabPane tab={<div><Checkbox value={3} onChange={this.changeAction.bind(this, 3)} /><span>分享到ChatOps私聊窗口</span></div>} key="3" />
                 </Tabs>
               </div>
             </TabPane>
@@ -541,10 +547,31 @@ class RuleEditor extends Component {
               </div>
             </TabPane>
           </Tabs>
-        {/*</div>*/}
+        </div>
         <span onClick={this.handleSubmit.bind(this)} className={styles.submit}>提交</span>
       </Form>
     );
+  }
+
+  // 插入变量的内容
+  vars(type) {
+    const { insertVars } = this.state;
+    return (
+      <div className={styles.varList}>
+        {insertVars.map(item => <span key={`${'${'}${item}${'}'}`} onClick={this.insertVar.bind(this, type, item)}>{item}</span>)}
+      </div>
+    );
+  }
+
+  // 插入变量
+  insertVar(type, item, event) {
+    const _action = _.cloneDeep(this.state.action);
+    let mode = _action.actionNotification.notificationMode;
+    mode[type] += '${' + item + '}';
+    _action.actionNotification.notificationMode.notificationMode = mode.notificationMode;
+    this.setState({
+      action: _action
+    });
   }
 
   changeAction(type, value) {
@@ -556,7 +583,20 @@ class RuleEditor extends Component {
       case 2: // 升级/降级告警
         break;
       case 3: // 告警通知
-        debugger;
+        let mode = _action.actionNotification.notificationMode;
+        if (_.isArray(value)) { // 通知对象
+          _action.actionNotification.recipients = value;
+        } else if (value.target.type === 'checkbox') { // 通知方式
+          if (value.target.checked) { // 选中此通知方式
+            mode.notificationMode.push(value.target.value);
+            mode.notificationMode = _.uniq(mode.notificationMode);
+          } else { // 移除此通知方式
+            mode.notificationMode = mode.notificationMode.filter(item => item !== value.target.value);
+          }
+        } else { // 文本
+          mode[value.target.id] = value.target.value;
+        }
+        _action.actionNotification.notificationMode.notificationMode = mode.notificationMode;
         break;
       case 4: // 告警派单
         if (value.target) {
@@ -850,7 +890,8 @@ RuleEditor.defaultProps = {
     actionChatOps: {
       chatOpsRoomId: undefined
     }
-  }
+  },
+  insertVars: ['xx','aa','bb','gg']
 };
 
 RuleEditor.propTypes = {
