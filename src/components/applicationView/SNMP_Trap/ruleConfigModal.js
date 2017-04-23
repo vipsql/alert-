@@ -25,6 +25,9 @@ class ruleModal extends Component{
             __groupComposeProps: [],
             __mergeProps: [],
         }
+        
+        this.haveOIDChildrenList = false; // Trap OID + 精确匹配时 --> true
+
         this.replaceFunc = this.replaceFunc.bind(this)
         this.addFieldMapper = this.addFieldMapper.bind(this)
         this.enitFieldMapper = this.enitFieldMapper.bind(this)
@@ -45,7 +48,7 @@ class ruleModal extends Component{
                 properties: nextProps.snmpTrapRules.operateAppRules.properties !== undefined && nextProps.snmpTrapRules.operateAppRules.properties.length !== 0 ? nextProps.snmpTrapRules.operateAppRules.properties : [{'oid': undefined, 'code': undefined, 'name': undefined, 'enitable': true}],
                 groupFieldsList: nextProps.snmpTrapRules.groupFieldsList.length !== 0 ? nextProps.snmpTrapRules.groupFieldsList : [{'field': undefined, 'compose': undefined, 'enitable': true}],
                 levelList: nextProps.snmpTrapRules.levelList.length !== 0 ? nextProps.snmpTrapRules.levelList : [{'trap': undefined, 'severity': undefined, 'enitable': true}],
-                mergeKey: nextProps.snmpTrapRules.operateAppRules.mergeKey || '', 
+                mergeKey: nextProps.snmpTrapRules.operateAppRules.mergeKey || '',
                 __matchProps: nextProps.snmpTrapRules.__matchProps,
                 __groupComposeProps: nextProps.snmpTrapRules.__groupComposeProps,
                 __mergeProps: nextProps.snmpTrapRules.__mergeProps,
@@ -208,6 +211,12 @@ class ruleModal extends Component{
             'icon-anonymous-iconfont'
         )
 
+        const composeClass = classnames(
+            'icon',
+            'iconfont',
+            'icon-snmp'
+        )
+
         const localeMessage = defineMessages({
             modal_ok: {
                 id: 'modal.ok',
@@ -279,11 +288,26 @@ class ruleModal extends Component{
                         <Option value={'4'}>范围</Option>
                         <Option value={'1'}>正则表达式</Option>
                     </Select>
-                    <Input value={filter.value} onChange={ (e) => {
-                        //TODO
-                        let data = this.replaceFunc(this.state.filterFields, index, 'value', e.target.value)
-                        this.setState({ filterFields: [ ...data ] })
-                    }}/>
+                    {
+                        this.state.filterFields[index]['ruleMatch'] === "3" && this.state.filterFields[index]['key'] === "Snmp TrapOID" ?
+                        <Select mode='combobox' style={{width: '30%'}} value={filter.value} onChange={ (value) => {
+                            //TODO
+                            let data = this.replaceFunc(this.state.filterFields, index, 'value', value)
+                            this.setState({ filterFields: [ ...data ] })
+                        }}>
+                            {
+                                this.props.snmpTrapRules.OIDList.length > 0 ? this.props.snmpTrapRules.OIDList.map( (oid, oidIndex) => {
+                                    return <Option key={oidIndex} value={oid.oid}><span title={oid.oid}>{oid.oid}</span></Option>
+                                }) : []
+                            }
+                        </Select>
+                        :
+                        <Input value={filter.value} onChange={ (e) => {
+                            //TODO
+                            let data = this.replaceFunc(this.state.filterFields, index, 'value', e.target.value)
+                            this.setState({ filterFields: [ ...data ] })
+                        }}/>
+                    }
                     {
                         index !== 0 ?
                         <i className={classnames(styles.shanChu, shanchuClass)} onClick={() => {
@@ -303,6 +327,27 @@ class ruleModal extends Component{
             wrapperCol: { span: 8 },
         }
 
+        this.haveOIDChildrenList = false;
+        let targetOIDList = [].concat(this.props.snmpTrapRules.OIDList);
+        let oidChildrenList = [];
+        this.state.filterFields.length > 0 && this.state.filterFields.forEach( (filter, index) => {
+            if (filter['ruleMatch'] === "3" && filter['key'] === 'Snmp TrapOID') {
+                this.haveOIDChildrenList = true;
+                let status = false;
+                targetOIDList.length > 0 && targetOIDList.forEach( (oid, oidIndex) => {
+                    if (oid.oid === filter['value']) {
+                        status = true;
+                        Object.keys(oid.bindingOIDs).length > 0 && Object.keys(oid.bindingOIDs).forEach( (key) => {
+                            oidChildrenList.push({'name': key, 'description': `${key} --> ${oid.bindingOIDs[key]}`})
+                        })
+                    }
+                })
+                if (status) {
+                    targetOIDList = targetOIDList.filter( oid => oid.oid !== filter['value'])
+                }
+            }
+        })
+        
         return (
             <Modal
                 title={<FormattedMessage {...localeMessage['addRule']} />}
@@ -356,7 +401,7 @@ class ruleModal extends Component{
                         </Item>
                         <div className={styles.paramBlock}>
                             <span>过滤条件:</span>
-                            <ul>
+                            <ul className={styles.filterContainer}>
                                 { filters }
                             </ul>
                             <div className={styles.addBtn}>
@@ -379,16 +424,32 @@ class ruleModal extends Component{
                                     {
                                         title: 'OID',
                                         dataIndex: 'OID',
+                                        width: '200px',
                                         key: 'OID',
                                         render: (text, record, index) => {
                                             let { OID, enitable } = this.state.matchFields[index];
                                             return (
                                                 enitable ?
-                                                <Input value={text} onChange={(e) => {
-                                                    //TODO
-                                                    let data = this.replaceFunc(this.state.matchFields, index, 'OID', e.target.value)
-                                                    this.setState({ matchFields: [ ...data ] })
-                                                }} />
+                                                (
+                                                    this.haveOIDChildrenList ?
+                                                    <Select mode='combobox' value={text} onChange={ (value) => {
+                                                        //TODO
+                                                        let data = this.replaceFunc(this.state.matchFields, index, 'OID', value)
+                                                        this.setState({ matchFields: [ ...data ] })
+                                                    }}>
+                                                        {
+                                                            oidChildrenList.length > 0 ? oidChildrenList.map( (oid, oidIndex) => {
+                                                                return <Option key={oidIndex} value={oid.name}><span title={oid.description}>{oid.description}</span></Option>
+                                                            }) : []
+                                                        }
+                                                    </Select>
+                                                    :
+                                                    <Input value={text} onChange={(e) => {
+                                                        //TODO
+                                                        let data = this.replaceFunc(this.state.matchFields, index, 'OID', e.target.value)
+                                                        this.setState({ matchFields: [ ...data ] })
+                                                    }} />
+                                                )
                                                 :
                                                 text
                                             )
@@ -403,7 +464,6 @@ class ruleModal extends Component{
                                     },
                                     {
                                         title: '字段映射',
-                                        width: '150px',
                                         dataIndex: 'mapper',
                                         key: 'mapper',
                                         render: (text, record, index) => {
@@ -480,16 +540,32 @@ class ruleModal extends Component{
                                     {
                                         title: 'OID',
                                         dataIndex: 'oid',
+                                        width: '150px',
                                         key: 'oid',
                                         render: (text, record, index) => {
                                             let { oid, enitable } = this.state.properties[index];
                                             return (
                                                 enitable ?
-                                                <Input value={text} onChange={(e) => {
-                                                    //TODO
-                                                    let data = this.replaceFunc(this.state.properties, index, 'oid', e.target.value)
-                                                    this.setState({ properties: [ ...data ] })
-                                                }} />
+                                                (
+                                                    this.haveOIDChildrenList ?
+                                                    <Select mode='combobox' value={text} onChange={ (value) => {
+                                                        //TODO
+                                                        let data = this.replaceFunc(this.state.properties, index, 'oid', value)
+                                                        this.setState({ properties: [ ...data ] })
+                                                    }}>
+                                                        {
+                                                            oidChildrenList.length > 0 ? oidChildrenList.map( (oid, oidIndex) => {
+                                                                return <Option key={oidIndex} value={oid.name}><span title={oid.description}>{oid.description}</span></Option>
+                                                            }) : []
+                                                        }
+                                                    </Select>
+                                                    :
+                                                    <Input value={text} onChange={(e) => {
+                                                        //TODO
+                                                        let data = this.replaceFunc(this.state.properties, index, 'oid', e.target.value)
+                                                        this.setState({ properties: [ ...data ] })
+                                                    }} />
+                                                )
                                                 :
                                                 text
                                             )
@@ -659,7 +735,7 @@ class ruleModal extends Component{
                                                             }
                                                         </div>
                                                     } >
-                                                        <i className={classnames(styles.composeIcon, shanchuClass)}></i>
+                                                        <i className={classnames(styles.composeIcon, composeClass)}></i>
                                                     </Popover>
                                                 </div>
                                                 :
@@ -748,7 +824,7 @@ class ruleModal extends Component{
                                                 }
                                             </div>
                                         } >
-                                            <i className={classnames(styles.composeIcon, shanchuClass)}></i>
+                                            <i className={classnames(styles.composeIcon, composeClass)}></i>
                                         </Popover>
                                     </div>
                                 )}

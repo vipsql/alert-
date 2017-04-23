@@ -61,6 +61,7 @@
 
   "alertOperate.dispatch": "Create Ticket",
   "alertOperate.close": "Close",
+  "alertOperate.resolve": "Resolve",
   "alertOperate.merge": "Roll Up",
   "alertOperate.relieve": "Unroll Up",
   "alertOperate.moreAcitons": "More Acitons",
@@ -93,9 +94,13 @@
   "modal.noTicketType": "Please select ticket type",
 
   "modal.close": "Close",
+  "modal.resolve": "Resolve",
   "modal.closeIncident": "Close Incident",
+  "modal.resolveIncident": "Resolve Incident",
   "modal.closeReason": "Close Reason",
+  "modal.resolveReason": "Resolve Reason",
   "modal.noCloseReason": "Please entere a reason",
+  "modal.noResolveReason": "Please entere a reason",
   "modal.closeReason.1": "Resolved",
   "modal.closeReason.2": "Maintenance",
   "modal.closeReason.3": "Not an incident",
@@ -123,6 +128,8 @@
 
   "alertConfig.integrations": "Integrations",
   "alertConfig.integrations.message": "Integrate with third-party applications, such as network and system monitoring tools, apm tools, collabration tools , customer supporting tools.",
+  "alertConfig.correlation": "Correlation Configuration",
+  "alertConfig.correlation.message": "Correlation Rule",
 
   "alertApplication.newApplication": "New Application",
   "alertApplication.incoming": "Incoming",
