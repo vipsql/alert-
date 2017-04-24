@@ -2,7 +2,7 @@ import {parse} from 'qs'
 import { message } from 'antd'
 import pathToRegexp from 'path-to-regexp';
 import { routerRedux } from 'dva/router';
-import { queryRulesList } from '../services/alertAssociationRules';
+import { queryRulesList, changeRuleStatus, deleteRule, viewRule } from '../services/alertAssociationRules';
 import { groupSort } from '../utils'
 
 const initalState = {
@@ -15,10 +15,10 @@ const initalState = {
       key: 'description'
     },
     {
-      key: 'createPerson'
+      key: 'owner'
     },
     {
-      key: 'status',
+      key: 'flag',
       order: true
     },
     {
@@ -26,32 +26,8 @@ const initalState = {
     }
   ],
   associationRulesTotal: 0,
-  associationRules: [
-    {
-      ruleType: 0,
-      id: '11',
-      ruleName: '新告警通知',
-      description: '这是一个描述',
-      createPerson: '创建人',
-      status: 0
-    },
-    {
-      ruleType: 1,
-      id: '21',
-      ruleName: '新告警通知',
-      description: '这是一个描述',
-      createPerson: '创建人',
-      status: 0
-    },
-    {
-      ruleType: 2,
-      id: '31',
-      ruleName: '新告警通知',
-      description: '这是一个描述',
-      createPerson: '创建人',
-      status: 0
-    }
-  ], // 配置规则列表
+  associationRules: [], // 配置规则列表
+  currentEditRule: {}, // 当前编辑的规则
   orderBy: undefined, // 排序字段
   orderType: undefined, // 1 --> 升序
 }
@@ -67,6 +43,18 @@ export default {
         if (location.pathname === '/alertConfig/alertAssociationRules') {
           dispatch({
             type: 'queryAssociationRules',
+          })
+        }
+      })
+    },
+    editAssociationRulesSetup({dispatch, history}) {
+      history.listen((location) => {
+        if (pathToRegexp('/alertConfig/alertAssociationRules/ruleEditor/edit/:ruleId').test(location.pathname)) {
+          const match = pathToRegexp('/alertConfig/alertAssociationRules/ruleEditor/edit/:ruleId').exec(location.pathname);
+          const ruleId = match[1];
+          dispatch({
+            type: 'queryAssociationRuleView',
+            payload: ruleId
           })
         }
       })
@@ -109,6 +97,57 @@ export default {
 
       yield put({ type: 'toggleLoading', payload: false })
 
+    },
+    // 编辑查询
+    *queryAssociationRuleView({payload}, {select, put, call}) {
+      if (payload !== undefined) {
+        const viewResult = yield call(viewRule, payload)
+        if (viewResult.result) {
+          yield put({
+            type: 'setCurrent',
+            payload: viewResult.data || {}
+          })
+        } else {
+          yield message.error(window.__alert_appLocaleData.messages[viewResult.message], 3)
+        }
+      } else {
+        console.error('ruleId is null')
+      }
+    },
+    // 更改状态
+    *changeStatus({payload}, {select, put, call}) {
+      if (payload !== undefined && payload.ruleId !== undefined && payload.status !== undefined) {
+        const ruleResult = yield call(changeRuleStatus, payload.ruleId)
+        if (ruleResult.result) {
+          yield put({
+            type: 'changeRuleStatus', 
+            payload: {
+              id: payload.ruleId,
+              status: payload.status
+            }
+          })
+        } else {
+          yield message.error(window.__alert_appLocaleData.messages[ruleResult.message], 2)
+        }
+      } else {
+        console.error('changeStatus infomation is null')
+      }
+    },
+    // 删除规则
+    *deleteRule({payload}, {select, put, call}) {
+      if (payload !== undefined) {
+        const deleteResult = yield call(deleteRule, payload)
+        if (deleteResult.result) {
+          yield put({
+            type: 'deleteRuleOperate', 
+            payload: payload
+          })
+        } else {
+          yield message.error(window.__alert_appLocaleData.messages[deleteResult.message], 2)
+        }
+      } else {
+        console.error('deleteId is null')
+      }
     },
     //orderList排序
     *orderList({payload}, {select, put, call}) {
@@ -170,6 +209,34 @@ export default {
         return group
       })
       return { ...state, associationRules: newData }
+    },
+    // 更改状态 
+    changeRuleStatus(state, { payload: {id, status} }) {
+      const { associationRules } = state;
+      const newData = associationRules.map( (item) => {
+        item.children.length > 0 && item.children.map( (childrenItem) => {
+          if (childrenItem.id == id) {
+            childrenItem.flag = status 
+          }
+        })
+        return item;
+      })
+      return { ...state, associationRules: newData }
+    },
+    // 删除
+    deleteRuleOperate(state, { payload }) {
+      const { associationRules } = state;
+      const newData = associationRules.map( (item) => {
+        let temp = item.children.filter( (childrenItem) => {
+          return childrenItem.id !== payload
+        })
+        item.children = temp
+        return item;
+      })
+      return { ...state, associationRules: newData }
+    },
+    setCurrent(state, { payload }) {
+      return { ...state, currentEditRule: payload }
     }
   },
 }

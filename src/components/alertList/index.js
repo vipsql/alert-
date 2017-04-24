@@ -365,7 +365,7 @@ class AlertListManage extends Component{
                 let levelName = key == 'Critical' ? window['_severity']['3'] :
                                     key == 'Warning' ? window['_severity']['2'] :
                                       key == 'Information' ? window['_severity']['1'] :
-                                        key == 'Ok' ? window['_severity']['0'] : undefined
+                                        key == 'OK' ? window['_severity']['0'] : undefined
 
                 return (<li key={index}><LevelIcon extraStyle={styles.extraStyle} iconType={key} /><p>{`${levelName}（${levels[key]}）`}</p></li>)
               })

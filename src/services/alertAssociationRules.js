@@ -10,3 +10,33 @@ export async function queryRulesList(params) {
       }
   })
 }
+
+// 更改状态
+export async function changeRuleStatus(params) {
+  return request(`/rule/changeFlag?ruleId=${params}`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
+
+// 删除
+export async function deleteRule(params) {
+  return request(`/rule/deleteRule?ruleId=${params}`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
+
+// 单条查询
+export async function viewRule(params) {
+  return request(`/rule/queryRule?ruleId=${params}`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}

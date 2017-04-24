@@ -12,7 +12,14 @@ import {
 } from 'dva';
 import RuleEditor from '../components/ruleEditor';
 
-function ruleEditor(dispatch) {
+function ruleEditor(props) {
+  
+  if (props.route.path.indexOf('add') > -1) {
+    console.log(props);
+  }
+  if (props.route.path.indexOf('edit') > -1) {
+    console.log(props);
+  }
   return (
     <RuleEditor />
   );
@@ -22,4 +29,4 @@ ruleEditor.propTypes = {
   dispatch: PropTypes.func
 };
 
-export default connect()(ruleEditor);
+export default connect(({alertAssociationRules}) => ({alertAssociationRules}))(ruleEditor);
