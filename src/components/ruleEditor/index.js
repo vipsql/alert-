@@ -604,8 +604,7 @@ class RuleEditor extends Component {
               }
             }
           });
-          debugger
-          _action.actionNotification.recipients = value;
+          _action.actionNotification.recipients = arr;
         } else if (value.target.type === 'checkbox') { // 通知方式
           if (value.target.checked) { // 选中此通知方式
             mode.notificationMode.push(value.target.value);
