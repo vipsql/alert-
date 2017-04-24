@@ -451,9 +451,9 @@ class RuleEditor extends Component {
                       onChange={this.changeAction.bind(this, 3)}
                       className={styles.recipients}
                     >
-                      <Option value="CMDB">CMDB</Option>
-                      <Option value="Monitor">Monitor</Option>
-                      <Option value="APM">APM</Option>
+                      {
+                        this.props.alertAssociationRules.users.map((item, index) => <Option key={item.userId} value={item.userId}>{item.realName}</Option>)
+                      }
                     </Select>
                   {/*)}*/}
                 </FormItem>
@@ -590,6 +590,21 @@ class RuleEditor extends Component {
       case 3: // 告警通知
         let mode = _action.actionNotification.notificationMode;
         if (_.isArray(value)) { // 通知对象
+          const { users } = this.props.alertAssociationRules;
+          let arr = [];
+          users.forEach((item, index) => {
+            for (let i = value.length; i >= 0; i -= 1) {
+              if (value[i] === item.userId) {
+                arr.push({
+                  userId: item.userId,
+                  realName: item.realName,
+                  mobile: item.mobile,
+                  email: item.email
+                }) ;
+              }
+            }
+          });
+          debugger
           _action.actionNotification.recipients = value;
         } else if (value.target.type === 'checkbox') { // 通知方式
           if (value.target.checked) { // 选中此通知方式

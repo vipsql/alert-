@@ -17,4 +17,4 @@ ruleEditor.propTypes = {
   dispatch: PropTypes.func
 };
 
-export default connect(({ruleEditor}) => ({ruleEditor}))(ruleEditor);
+export default connect((alertAssociationRules) => (alertAssociationRules))(ruleEditor);

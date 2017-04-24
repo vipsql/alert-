@@ -54,6 +54,7 @@ const initalState = {
   ], // 配置规则列表
   orderBy: undefined, // 排序字段
   orderType: undefined, // 1 --> 升序
+  users: [], // 用户列表
 }
 
 export default {
@@ -149,7 +150,12 @@ export default {
       const result = yield call(getUsers ,params);
       if (result.result) {
         // message.success('保存成功');
-
+        yield put({
+          type: 'updateUsers',
+          payload: {
+            data: result.data
+          }
+        });
       } else {
         message.error(result.message);
       }
@@ -203,6 +209,12 @@ export default {
         return group
       })
       return { ...state, associationRules: newData }
+    },
+
+    // 更新用户列表
+    updateUsers(state, { payload }) {
+      const { users } = state;
+      return { ...state, users: payload.data }
     }
   },
 }
