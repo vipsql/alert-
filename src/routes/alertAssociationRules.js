@@ -4,7 +4,7 @@ import AlertAssociationRules from '../components/alertAssociationRules'
 
 function alertAssociationRules(props){
   return (
-      <AlertAssociationRules {...props}/>
+    <AlertAssociationRules {...props}/>
   )
 }
 alertAssociationRules.propTypes = {

@@ -45,7 +45,7 @@ const conditionData = { // 模拟数据
     value: 'CMDB',
   }],
   // 二级条件（一级条件的补充条件）
-  child: [{
+  complex: [{
     logic: 'and',
     content: [{
       key: 'source',
@@ -57,7 +57,7 @@ const conditionData = { // 模拟数据
       value: 'APM',
     }],
     // 三级条件
-    child: [{
+    complex: [{
       logic: 'not',
       content: [{
         key: 'duration',
@@ -93,7 +93,7 @@ const conditionData = { // 模拟数据
       value: 'APM',
     }],
     // 三级条件
-    child: [{
+    complex: [{
       logic: 'not',
       content: [{
         key: 'duration',
@@ -156,11 +156,11 @@ let leafTag = 0; // 叶子 id
 
 // 处理条件数据，给每一条数据加上唯一 id
 const makeCondition = node => {
-  const { child = [] } = node;
+  const { complex = [] } = node;
   node.id = leafTag;
   leafTag += 1;
-  for (let i = child.length - 1; i >= 0; i -= 1) {
-    makeCondition(child[i]);
+  for (let i = complex.length - 1; i >= 0; i -= 1) {
+    makeCondition(complex[i]);
   }
   return node;
 };
@@ -188,6 +188,12 @@ class RuleEditor extends Component {
       action: props.action,
       insertVars: props.insertVars
     };
+  }
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'alertAssociationRules/getUsers'
+    });
   }
   componentDidMount() {
     const { setFieldsValue } = this.props.form;
@@ -239,13 +245,12 @@ class RuleEditor extends Component {
       default:
         cycleDay = '';
     }
-    const cycleTimeStart = `${timeStart.hours}:${timeStart.mins}`;
-    const cycleTimeEnd = `${timeEnd.hours}:${timeEnd.mins}`;
+    this.cycleTimeStart = `${timeStart.hours}:${timeStart.mins}`;
+    this.cycleTimeEnd = `${timeEnd.hours}:${timeEnd.mins}`;
 
-    const cycleTimeString = time.timeCycle ? `${cycleDay}${moment(cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(cycleTimeEnd, 'H:mm').format("HH:mm")}` : '';
-    const dayTimeString = time.dayStart && time.dayEnd ? `${moment(time.dayStart).format('YYYY-MM-DD')} ~ ${moment(time.dayEnd).format('YYYY-MM-DD')}、${moment(cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(cycleTimeEnd, 'H:mm').format("HH:mm")}` : '';
+    const cycleTimeString = time.timeCycle ? `${cycleDay}${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}` : '';
+    const dayTimeString = time.dayStart && time.dayEnd ? `${moment(time.dayStart).format('YYYY-MM-DD')} ~ ${moment(time.dayEnd).format('YYYY-MM-DD')}、${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}` : '';
 
-    // console.info('[props]', this.props);
     console.info('[state]', this.state);
 
     this.emailVarContent = this.vars('emailMessage');
@@ -687,15 +692,15 @@ class RuleEditor extends Component {
   // 对数据进行深度遍历并创建 Dom
   // 深度优先
   createAll(node, treeTag) {
-    const { child = [] } = node;
+    const { complex = [] } = node;
     const domList = [];
     domList.push(
       this.createTitle(node, treeTag),
       this.createConditionList(node, treeTag)
     );
-    for (let i = child.length - 1; i >= 0; i -= 1) {
+    for (let i = complex.length - 1; i >= 0; i -= 1) {
       // 先序遍历，treeTag + 1 是当前值 + 1，不会改变自身的值
-      this.createAll(child[i], treeTag + 1);
+      this.createAll(complex[i], treeTag + 1);
     }
     conditionsDom.unshift(domList);
     return conditionsDom;
@@ -726,9 +731,9 @@ class RuleEditor extends Component {
    * conditionIndex 为条件 content 索引
    */
   treeControl(type, node, item, x, conditionIndex = null) {
-    let { content = [] ,child = [] } = node;
+    let { content = [] ,complex = [] } = node;
     if (node.id === item.id) { // 一级嵌套（增）一级条件（增、删）
-      type === 'addBlock' && child.push(x);
+      type === 'addBlock' && complex.push(x);
       type === 'addLine' && content.push(x);
       type === 'deleteLine' && content.splice(x, 1);
       if (type === 'changeLogic') {
@@ -739,20 +744,20 @@ class RuleEditor extends Component {
       }
 
     } else { // 二、三级嵌套（增、删）二、三级条件（增、删）
-      for (let i = child.length - 1; i >= 0; i -= 1) {
-        if (item.id === child[i].id) {
-          type === 'deleteBlock' && child.splice(i, 1);
-          type === 'addBlock' && child[i].child.push(x);
-          type === 'deleteLine' && child[i].content.splice(i, 1);
-          type === 'addLine' && child[i].content.push(x);
+      for (let i = complex.length - 1; i >= 0; i -= 1) {
+        if (item.id === complex[i].id) {
+          type === 'deleteBlock' && complex.splice(i, 1);
+          type === 'addBlock' && complex[i].complex.push(x);
+          type === 'deleteLine' && complex[i].content.splice(i, 1);
+          type === 'addLine' && complex[i].content.push(x);
           if (type === 'changeLogic') {
-            child[i].logic = x;
+            complex[i].logic = x;
           }
           if (/key|opt|value/.test(type)) {
-            child[i].content[conditionIndex][type] = x;
+            complex[i].content[conditionIndex][type] = x;
           }
         } else {
-          this.treeControl(type, child[i], item, x, conditionIndex);
+          this.treeControl(type, complex[i], item, x, conditionIndex);
         }
       }
     }
@@ -773,7 +778,7 @@ class RuleEditor extends Component {
     const newBlock = {
       id: leafTag,
       content: [],
-      child: [],
+      complex: [],
       logic: undefined
     };
     leafTag += 1;
@@ -853,19 +858,11 @@ class RuleEditor extends Component {
   // 更改固定时间段, momentArray 为一个数组，包含起始时间和结束时间
   changeDate(momentArray) {
     const _time = _.cloneDeep(this.state.time);
-    // const { timeStart, timeEnd } = this.state;
-    // console.log(momentArray, cycleTimeStart, cycleTimeEnd)
     for (let i = 0, len = momentArray.length; i < len; i += 1) {
       let _day = moment(momentArray[i]).format().toString(); // 当前日历组件选择的时间
-      // let _dayStr = _day.substr(11, 8); // 需要被替换的时间（时:分:秒）字符串
       i === 0
         ? _time['dayStart'] = _day
         : _time['dayEnd'] = _day;
-      // if (i === 0) {
-      //   _time['dayStart'] = _day.replace(_dayStr, `${moment(cycleTimeStart, 'H:mm').format("HH:mm").toString()}:00`);
-      // } else {
-      //   _time['dayEnd'] = _day.replace(_dayStr, `${moment(cycleTimeEnd, 'H:mm').format("HH:mm").toString()}:00`);
-      // }
     }
     this.setState({
       time: _time
@@ -873,11 +870,92 @@ class RuleEditor extends Component {
   }
 
   handleSubmit(event) {
+    const { dispatch, form } = this.props;
+    const { type, source, condition, time, timeStart, timeEnd, action } = this.state;
+    const { getFieldValue } = form;
     event.preventDefault();
     this.props.form.validateFields((errors, values) => {
       if (errors) {
-        console.warn('[表单错误]', errors);
+        // console.warn('[表单错误]', errors);
         return false;
+      } else {
+        let _time = {};
+        let hmStart = `${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")}:00`;
+        let hmEnd = `${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}:00`;
+        let local = moment().format().substr(19, 6);
+        /* 动作 */
+        let _actionDelOrClose = undefined;
+        let _actionNotification = undefined;
+        let _actionITSM = undefined;
+        let _actionSuppress = undefined;
+        let _actionChatOps = undefined;
+
+        switch(type) {
+          case '1': // 周期
+            if (_time.timeCycle === '1') { // 每周
+              _time.timeCycle = time.timeCycle;
+              _time.timeCycleWeek = time.timeCycleWeek;
+            }
+            if (_time.timeCycle === '2') { // 每月
+              _time.timeCycle = time.timeCycle;
+              _time.timeCycleMonth = time.timeCycleMonth;
+            }
+            _time.timeStart = `${hmStart}.000${local}`;
+            _time.timeEnd = `${hmEnd}.000${local}`;
+            break;
+          case '2': // 固定
+            _time.dayStart = time.dayStart.replace(time.dayStart.substr(11, 8), hmStart).replace('+', '.000+');
+            _time.dayEnd = time.dayEnd.replace(time.dayStart.substr(11, 8), hmEnd).replace('+', '.000+');
+            break;
+          default:
+            break;
+        }
+
+        switch(action.type[0]) {
+          case 1:
+            _actionDelOrClose = action.actionDelOrClose;
+            break;
+          case 3:
+            _actionNotification = action.actionNotification;
+            break;
+          case 4:
+            _actionITSM = action.actionITSM;
+            break;
+          case 5:
+            _actionSuppress = action.actionSuppress;
+            break;
+          case 6:
+            _actionChatOps = action.actionChatOps;
+            break;
+          default:
+            break;
+        }
+
+        const params = {
+          rule: {
+            name: getFieldValue('name'),
+            description: getFieldValue('description'),
+            type,
+            time: type === 0 ? undefined : _time,
+            source,
+            condition,
+          },
+          action: {
+            tenant: undefined,
+            type: action.type,
+            actionDelOrClose: _actionDelOrClose,
+            actionNotification: _actionNotification,
+            actionITSM: _actionITSM,
+            actionSuppress: _actionSuppress,
+            actionChatOps: _actionChatOps
+          }
+        };
+        dispatch({
+          type: 'alertAssociationRules/createRule',
+          payload: {
+            ...params
+          }
+        });
       }
     });
   }
@@ -888,9 +966,9 @@ RuleEditor.defaultProps = {
   description: '',
   type: '0',
   time: {
-    dayStart: '',
-    dayEnd: '',
-    timeCycle: '',
+    dayStart: moment().format(),
+    dayEnd: moment().format(),
+    timeCycle: '0',
     timeCycleWeek: '',
     timeCycleMonth: '',
     timeStart: '',
@@ -898,8 +976,14 @@ RuleEditor.defaultProps = {
   },
   source: '',
   condition: {
-    content: [],
-    child: [],
+    content: [
+      {
+        key: undefined,
+        opt: undefined,
+        value: undefined
+      }
+    ],
+    complex: [],
     logic: undefined
   },
   // condition: conditionData,
@@ -960,7 +1044,7 @@ RuleEditor.propTypes = {
   /* 定义条件 */
   condition: PropTypes.shape({
     content: PropTypes.array.isRequired,
-    child: PropTypes.array.isRequired,
+    complex: PropTypes.array.isRequired,
     logic: PropTypes.string
   }),
 

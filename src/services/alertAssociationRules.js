@@ -31,6 +31,15 @@ export async function deleteRule(params) {
   })
 }
 
+export async function getUsers(params) {
+  return request(`/rule/getUsers`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
+
 // 单条查询
 export async function viewRule(params) {
   return request(`/rule/queryRule?ruleId=${params}`, {
@@ -38,5 +47,15 @@ export async function viewRule(params) {
       headers: {
           'Content-Type': 'application/json',
       }
+  })
+}
+
+export async function createRule(params) {
+  return request(`/rule/createRule`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params)
   })
 }
