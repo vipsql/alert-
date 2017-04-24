@@ -2,7 +2,7 @@ import {parse} from 'qs'
 import { message } from 'antd'
 import pathToRegexp from 'path-to-regexp';
 import { routerRedux } from 'dva/router';
-import { queryRulesList } from '../services/alertAssociationRules';
+import { queryRulesList, createRule, getUsers } from '../services/alertAssociationRules';
 import { groupSort } from '../utils'
 
 const initalState = {
@@ -72,7 +72,7 @@ export default {
       })
     }
   },
-  
+
   effects: {
     *queryAssociationRules({payload}, {select, put, call}) {
       yield put({ type: 'toggleLoading', payload: true })
@@ -112,7 +112,13 @@ export default {
     },
     //orderList排序
     *orderList({payload}, {select, put, call}) {
-      yield put({ type: 'queryAssociationRules', payload: {orderBy: payload.orderBy, orderType: payload.orderType } })
+      yield put({
+        type: 'queryAssociationRules',
+        payload: {
+          orderBy: payload.orderBy,
+          orderType: payload.orderType
+        }
+      })
     },
     //orderByTittle
     *orderByTittle({payload}, {select, put, call}) {
@@ -133,7 +139,34 @@ export default {
       } else {
         console.error('orderBy error')
       }
-    }
+    },
+
+    // 获取用户
+    *getUsers({payload}, {select, put, call}) {
+      const params = {
+        ...payload
+      };
+      const result = yield call(getUsers ,params);
+      if (result.result) {
+        // message.success('保存成功');
+
+      } else {
+        message.error(result.message);
+      }
+    },
+
+    // 保存规划
+    *createRule({payload}, {select, put, call}) {
+      const params = {
+        ...payload
+      };
+      const result = yield call(createRule ,params);
+      if (result.result) {
+        message.success('保存成功');
+      } else {
+        message.error(result.message);
+      }
+    },
   },
 
   reducers: {

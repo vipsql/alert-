@@ -10,3 +10,24 @@ export async function queryRulesList(params) {
       }
   })
 }
+
+
+export async function getUsers(params) {
+  return request(`/rule/getUsers`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
+
+
+export async function createRule(params) {
+  return request(`/rule/createRule`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params)
+  })
+}
