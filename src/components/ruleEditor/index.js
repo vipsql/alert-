@@ -196,18 +196,16 @@ class RuleEditor extends Component {
     });
   }
   componentDidMount() {
-    const { setFieldsValue } = this.props.form;
-    const { name, type, description } = this.props;
-    setFieldsValue({ // 此处对表单进行赋值，会造成 render 两次
-      name,
-      type,
-      description,
+  }
+  componentWillReceiveProps(nextProps, nextState) {
+    this.setState({
+      name: nextProps.name,
+      description: nextProps.description,
     });
   }
   render() {
     conditionsDom = []; // 重置，防止重复 render
     const { time, timeStart, timeEnd, source, condition, action } = this.state;
-    const { getFieldDecorator } = this.props.form;
     const itemLayout = {
       labelCol: { span: 2 },
       wrapperCol: { span: 4 }
@@ -220,7 +218,7 @@ class RuleEditor extends Component {
     // 时间选择器选择之后的文字信息反馈，用'、'号隔开，同类信息用','隔开
     let cycleDay = '';
     switch(time.timeCycle) {
-      case '1':
+      case 1:
         const timeCycleWeekArr = time.timeCycleWeek.split(',');
         let _timeCycleWeekArr = timeCycleWeekArr.map(item => {
           return item.replace(/\d/g, matchs => {
@@ -230,7 +228,7 @@ class RuleEditor extends Component {
         _.remove(_timeCycleWeekArr, item => item === '');
         cycleDay = `${_timeCycleWeekArr}${_timeCycleWeekArr.length === 0 ? '' : '、'}`;
         break;
-      case '2':
+      case 2:
         const timeCycleMonthArr = time.timeCycleMonth.split(',');
         let _timeCycleMonthArr = timeCycleMonthArr.map(item => {
           if (item !== '') {
@@ -248,7 +246,7 @@ class RuleEditor extends Component {
     this.cycleTimeStart = `${timeStart.hours}:${timeStart.mins}`;
     this.cycleTimeEnd = `${timeEnd.hours}:${timeEnd.mins}`;
 
-    const cycleTimeString = time.timeCycle ? `${cycleDay}${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}` : '';
+    const cycleTimeString = time.timeCycle >= 0 ? `${cycleDay}${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}` : '';
     const dayTimeString = time.dayStart && time.dayEnd ? `${moment(time.dayStart).format('YYYY-MM-DD')} ~ ${moment(time.dayEnd).format('YYYY-MM-DD')}、${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}` : '';
 
     console.info('[state]', this.state);
@@ -265,44 +263,34 @@ class RuleEditor extends Component {
             {...itemLayout}
             label="规则名称"
           >
-            {getFieldDecorator('name', {
-              rules: [{
-                required: true,
-                whitespace: true,
-                message: '规则名称不能为空'
-              }],
-            })(
-              <Input placeholder="请输入规则名称" />
-            )}
+              <Input value={this.state.name} placeholder="请输入规则名称" />
+
           </FormItem>
           <FormItem
             {...desLayout}
             label="规则描述"
           >
-            {getFieldDecorator('description', {
-              rules: [],
-            })(
-              <Input type="textarea" placeholder="请为规则添加描述" />
-            )}
+
+              <Input value={this.state.description} type="textarea" placeholder="请为规则添加描述" />
+
           </FormItem>
           <FormItem
             {...desLayout}
             label="执行安排"
           >
-            {getFieldDecorator('type', {
-              rules: [],
-            })(
+
               <RadioGroup
                 onChange={this.changeType.bind(this)}
+                value={this.state.type}
               >
-                <Radio value='0'>任意时间均执行</Radio>
-                <Radio value='1'>周期性执行</Radio>
-                <Radio value='2'>固定时间段执行</Radio>
+                <Radio value={0}>任意时间均执行</Radio>
+                <Radio value={1}>周期性执行</Radio>
+                <Radio value={2}>固定时间段执行</Radio>
               </RadioGroup>
-            )}
+
 
             {
-              this.state.type === '1' &&
+              this.state.type === 1 &&
               <div className={styles.pickTimeWrap}>
                 <Popover
                   trigger="click"
@@ -312,26 +300,26 @@ class RuleEditor extends Component {
                     <div className={styles.timeCycle}>
                       <div className={styles.timeCycleHd}>
                         <span className={cls({
-                          'active': time.timeCycle === '0'
-                        })} onClick={this.changeTimeCycleType.bind(this, '0')}>每日</span>
+                          'active': time.timeCycle === 0
+                        })} onClick={this.changeTimeCycleType.bind(this, 0)}>每日</span>
                         <span className={cls({
-                          'active': time.timeCycle === '1'
-                        })} onClick={this.changeTimeCycleType.bind(this, '1')}>每周</span>
+                          'active': time.timeCycle === 1
+                        })} onClick={this.changeTimeCycleType.bind(this, 1)}>每周</span>
                         <span className={cls({
-                          'active': time.timeCycle === '2'
-                        })} onClick={this.changeTimeCycleType.bind(this, '2')}>每月</span>
+                          'active': time.timeCycle === 2
+                        })} onClick={this.changeTimeCycleType.bind(this, 2)}>每月</span>
                       </div>
                       <div className={cls(styles.timeCycleBd, `${time.timeCycle.length === 0 ? styles.hidden : ''}`)}>
                         {
-                          time.timeCycle !== '0' &&
+                          time.timeCycle !== 0 &&
                           <p>请选择具体执行周期：</p>
                         }
                         { // 每周
-                          time.timeCycle === '1' &&
+                          time.timeCycle === 1 &&
                           <CheckboxGroup options={WeekArray} defaultValue={time.timeCycleWeek.split(',')} className="weekCycle" onChange={this.changeTimeCycle.bind(this, 'timeCycleWeek')} />
                         }
                         { // 每月
-                          time.timeCycle === '2' &&
+                          time.timeCycle === 2 &&
                           <CheckboxGroup options={MonthArray} defaultValue={time.timeCycleMonth.split(',')} onChange={this.changeTimeCycle.bind(this, 'timeCycleMonth')} />
                         }
                         <TimeSlider timeStart={timeStart} timeEnd={timeEnd} changeTime={this.changeTime.bind(this)} />
@@ -344,7 +332,7 @@ class RuleEditor extends Component {
               </div>
             }
             {
-              this.state.type === '2' &&
+              this.state.type === 2 &&
               <div className={styles.pickTimeWrap}>
                 <Popover
                   trigger="click"
@@ -378,13 +366,6 @@ class RuleEditor extends Component {
             {...itemLayout}
             label="告警来源"
           >
-            {getFieldDecorator('source', {
-              // rules: [{
-              //   required: true,
-              //   setFieldsValue: source,
-              //   message: '告警来源不能为空'
-              // }]
-            })(
               <Select
                 style={{ width: 200 }}
                 placeholder="请选择告警来源"
@@ -394,7 +375,6 @@ class RuleEditor extends Component {
                 <Option value="Monitor">Monitor</Option>
                 <Option value="APM">APM</Option>
               </Select>
-            )}
           </FormItem>
         </div>
 
@@ -413,17 +393,12 @@ class RuleEditor extends Component {
                 <span className={styles.label}>针对符合条件的告警，执行</span>
                 <Select
                   style={{ width: 100 }}
-                  // defaultValue={this.props.action}
                   value={action.actionDelOrClose.operation ? action.actionDelOrClose.operation.toString() : undefined}
                   placeholder="请选择操作"
                   onChange={this.changeAction.bind(this, 1)}
                 >
                   <Option value="1">删除</Option>
                   <Option value="2">关闭</Option>
-                  {
-                    // <Option value="3">升级</Option>
-                    // <Option value="4">降级</Option>
-                  }
                 </Select>
                 <em>关闭将状态改为已解决，删除从数据库物理删除</em>
               </div>
@@ -438,12 +413,6 @@ class RuleEditor extends Component {
                   {...desLayout}
                   label="通知对象"
                 >
-                  {/*{getFieldDecorator('recipients', {
-                    rules: [{
-                      required: true,
-                      message: '通知对象不能为空'
-                    }]
-                  })(*/}
                     <Select
                       mode="multiple"
                       style={{ width: 200 }}
@@ -455,7 +424,6 @@ class RuleEditor extends Component {
                         this.props.alertAssociationRules.users.map((item, index) => <Option key={item.userId} value={item.userId}>{item.realName}</Option>)
                       }
                     </Select>
-                  {/*)}*/}
                 </FormItem>
                 <Tabs animated={false} className={styles.notificationTabs}>
                   <TabPane tab={<div><Checkbox value={1} onChange={this.changeAction.bind(this, 3)} /><span>电子邮件</span></div>} key="1">
@@ -465,27 +433,17 @@ class RuleEditor extends Component {
                         label="邮件标题"
                         className={styles.mailTitle}
                       >
-                        {/*{getFieldDecorator('emailTitle', {
-                          rules: [{
-                            required: true,
-                            message: '邮件标题不能为空'
-                          }]
-                        })(*/}
                           <Input id="emailTitle" onBlur={this.changeAction.bind(this, 3)} placeholder="来自告警$(Alert_name)的通知" />
-                        {/*)}*/}
+
                       </FormItem>
                       <FormItem
                         label="邮件内容"
                         className={styles.msgContent}
                       >
-                        {/*{getFieldDecorator('emailTitle', {
-                          rules: [{
-                            required: true,
-                            message: '邮件内容不能为空'
-                          }]
-                        })(*/}
-                          <Input id="emailMessage" value={action.actionNotification.notificationMode.emailMessage} onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder="${serverity}，${entity_name}于{occurtime}发生，具体信息为${description}" />
-                        {/*)}*/}
+                          <Input id="emailMessage"
+                            // value={action.actionNotification.notificationMode.emailMessage}
+                            onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder="${serverity}，${entity_name}于{occurtime}发生，具体信息为${description}" />
+
                         <Popover overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={this.emailVarContent}>
                           <div className={styles.insertVar}>插入变量</div>
                         </Popover>
@@ -499,14 +457,10 @@ class RuleEditor extends Component {
                         label="信息内容"
                         className={styles.msgContent}
                       >
-                        {/*{getFieldDecorator('emailTitle', {
-                          rules: [{
-                            required: true,
-                            message: '信息内容不能为空'
-                          }]
-                        })(*/}
-                          <Input id="smsMessage" value={action.actionNotification.notificationMode.smsMessage} onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder="${serverity}，${entity_name}于{occurtime}发生，具体信息为${description}" />
-                        {/*)}*/}
+                          <Input id="smsMessage"
+                            // value={action.actionNotification.notificationMode.smsMessage}
+                            onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder="${serverity}，${entity_name}于{occurtime}发生，具体信息为${description}" />
+
                           <Popover overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={this.smsVarContent}>
                             <div className={styles.insertVar}>插入变量</div>
                           </Popover>
@@ -524,14 +478,16 @@ class RuleEditor extends Component {
                 <Select
                   style={{ width: 100 }}
                   placeholder="请选择类别"
-                  value={action.actionITSM.itsmModelId}
+                  // value={action.actionITSM.itsmModelId}
                   onChange={this.changeAction.bind(this, 4)}
                 >
                   <Option value="group1">组1</Option>
                   <Option value="group2">组2</Option>
                 </Select>
                 <em>选择工单类型，派发到ITSM</em>
-                <Input className={styles.text} onBlur={this.changeAction.bind(this, 4)} defaultValue={action.actionITSM.param.cesjo} type="textarea" placeholder="映射配置" />
+                <Input className={styles.text} onBlur={this.changeAction.bind(this, 4)}
+                  // defaultValue={action.actionITSM.param.cesjo}
+                  type="textarea" placeholder="映射配置" />
               </div>
             </TabPane>
             <TabPane tab="抑制告警" key="5" className={styles.actionSuppress}>
@@ -542,7 +498,7 @@ class RuleEditor extends Component {
                 <span>ChatOps群组：</span>
                 <Select
                   style={{ width: 100 }}
-                  value={action.actionChatOps.chatOpsRoomId}
+                  // value={action.actionChatOps.chatOpsRoomId}
                   placeholder="请选择群组"
                   onChange={this.changeAction.bind(this, 6)}
                 >
@@ -905,19 +861,19 @@ class RuleEditor extends Component {
         let _actionChatOps = undefined;
 
         switch(type) {
-          case '1': // 周期
-            if (_time.timeCycle === '1') { // 每周
+          case 1: // 周期
+            if (_time.timeCycle === 1) { // 每周
               _time.timeCycle = time.timeCycle;
               _time.timeCycleWeek = time.timeCycleWeek;
             }
-            if (_time.timeCycle === '2') { // 每月
+            if (_time.timeCycle === 2) { // 每月
               _time.timeCycle = time.timeCycle;
               _time.timeCycleMonth = time.timeCycleMonth;
             }
             _time.timeStart = `${hmStart}.000${local}`;
             _time.timeEnd = `${hmEnd}.000${local}`;
             break;
-          case '2': // 固定
+          case 2: // 固定
             _time.dayStart = time.dayStart.replace(time.dayStart.substr(11, 8), hmStart).replace('+', '.000+');
             _time.dayEnd = time.dayEnd.replace(time.dayStart.substr(11, 8), hmEnd).replace('+', '.000+');
             break;
@@ -978,11 +934,11 @@ class RuleEditor extends Component {
 RuleEditor.defaultProps = {
   name: '',
   description: '',
-  type: '0',
+  type: 0,
   time: {
     dayStart: moment().format(),
     dayEnd: moment().format(),
-    timeCycle: '0',
+    timeCycle: 0,
     timeCycleWeek: '',
     timeCycleMonth: '',
     timeStart: '',
@@ -1036,24 +992,24 @@ RuleEditor.propTypes = {
   // 规则描述
   description: PropTypes.string.isRequired,
   // 规则类型（0:任意时间执行；1:周期性执行；2:固定时间段执行）
-  type: PropTypes.string.isRequired,
+  type: PropTypes.number.isRequired,
   time: PropTypes.shape({
     // 固定时间段执行必填（在未来确定的某一时间段执行一次）
-    dayStart: PropTypes.string.isRequired,
-    dayEnd: PropTypes.string.isRequired,
+    dayStart: PropTypes.string,
+    dayEnd: PropTypes.string,
 
     // 周期性执行必填（0：每天；1：每周；2：每月）
-    timeCycle: PropTypes.string.isRequired,
+    timeCycle: PropTypes.number,
     // 时间周期为每周必填（0～6：周一～周日）
-    timeCycleWeek: PropTypes.string.isRequired,
+    timeCycleWeek: PropTypes.string,
     // 时间周期为每月必填（0～30:1号～31号）
-    timeCycleMonth: PropTypes.string.isRequired,
+    timeCycleMonth: PropTypes.string,
     timeStart: PropTypes.string.isRequired,
     timeEnd: PropTypes.string.isRequired
   }),
 
   /* 告警来源 */
-  source: PropTypes.string.isRequired,
+  source: PropTypes.string,
 
   /* 定义条件 */
   condition: PropTypes.shape({
@@ -1102,4 +1058,17 @@ RuleEditor.propTypes = {
   })
 };
 
-export default Form.create()(RuleEditor);
+export default RuleEditor;
+// export default Form.create()(RuleEditor);
+// export default Form.create({
+//   mapPropsToFields: (props) => {
+//     return {
+//       name: {
+//         value: props.name
+//       },
+//       description: {
+//         value: props.description
+//       }
+//     }
+//   }
+// })(RuleEditor);
