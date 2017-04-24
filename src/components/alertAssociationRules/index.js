@@ -18,7 +18,7 @@ const alertAssociationRules = ({dispatch, alertAssociationRules, intl: {formatMe
         listData: alertAssociationRules.associationRules,
 
         formatMessages: defineMessages({
-            ruleName: {
+            name: {
                 id: 'alertAssociationRules.List.ruleName',
                 defaultMessage: '规则名称',
             },

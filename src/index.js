@@ -41,7 +41,8 @@ const setLang = function(lang){
 			  "0": "Open",
 			  "40": "Acknowledged",
 			  "150": "Assigned",
-			  "255": "Resolved"
+				"190": "Resolved",
+			  "255": "Closed"
 			}
 			window._groupBy = 'GroupBy'
 			document.title = 'Alert'
@@ -66,7 +67,8 @@ const setLang = function(lang){
 			  "0": "新告警",
 			  "40": "已确认",
 			  "150": "处理中",
-			  "255": "已解决"
+				"190": "已解决",
+			  "255": "已关闭"
 			}
 			window._groupBy = '分组显示'
 			document.title = 'Alert'

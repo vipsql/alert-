@@ -83,6 +83,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
           ...operateProps,
         dispatchDisabled: !(alertQueryDetail['currentAlertDetail']['status'] == 0 && !alertQueryDetail['currentAlertDetail']['parentId']),
         closeDisabled: alertQueryDetail['currentAlertDetail']['status'] == 255 || alertQueryDetail['currentAlertDetail']['status'] == 40,
+        resolveDisabled: alertQueryDetail['currentAlertDetail']['status'] == 255 || alertQueryDetail['currentAlertDetail']['status'] == 190,
       },
 
       closeDeatilModal: () => {
@@ -517,6 +518,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
                         <Option value=""><FormattedMessage {...localeMessage['allStatus']} /></Option>
                         <Option value="0">{window['_status']['0']}</Option>
                         <Option value="150">{window['_status']['150']}</Option>
+                        <Option value="190">{window['_status']['190']}</Option>
                         <Option value="255">{window['_status']['255']}</Option>
                       </Select>
                   )}

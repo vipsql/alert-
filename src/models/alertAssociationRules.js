@@ -9,7 +9,7 @@ const initalState = {
   isLoading: false,
   columns: [
     {
-      key: 'ruleName'
+      key: 'name'
     },
     {
       key: 'description'
@@ -75,49 +75,40 @@ export default {
   
   effects: {
     *queryAssociationRules({payload}, {select, put, call}) {
-      // yield put({ type: 'toggleLoading', payload: true })
+      yield put({ type: 'toggleLoading', payload: true })
 
-      // var { orderBy, orderType } = yield select( state => {
-      //   return {
-      //     'orderBy': state.alertAssociationRules.orderBy,
-      //     'orderType': state.alertAssociationRules.orderType
-      //   }
-      // })
-
-      // if (payload !== undefined && payload.orderType !== undefined) {
-      //   orderType = payload.orderType;
-      //   orderBy = payload.orderBy;
-      // }
-
-      // const params = {
-      //   orderType: orderType,
-      //   orderBy: orderBy
-      // }
-
-      // const ruleResult = yield call(queryRulesList, params)
-      // if (ruleResult.result) {
-      //   const groupList = yield groupSort()(ruleResult.data, 'ruleType')
-      //   yield put({ type: 'setRulesListData', payload: {
-      //     associationRules: groupList,
-      //     associationRulesTotal: ruleResult.data.length,
-      //     orderBy: orderBy,
-      //     orderType: orderType
-      //   }})
-      // } else {
-      //   yield message.error(window.__alert_appLocaleData.messages[ruleResult.message], 2)
-      // }
-
-      // yield put({ type: 'toggleLoading', payload: false })
-
-      var { associationRules } = yield select( state => {
+      var { orderBy, orderType } = yield select( state => {
         return {
-          'associationRules': state.alertAssociationRules.associationRules
+          'orderBy': state.alertAssociationRules.orderBy,
+          'orderType': state.alertAssociationRules.orderType
         }
       })
-      const groupList = associationRules[0].classify !== undefined ? associationRules : yield groupSort()(associationRules, 'ruleType')
-      yield put({ type: 'setRulesListData', payload: {
-        associationRules: groupList,
-      }})
+
+      if (payload !== undefined && payload.orderType !== undefined) {
+        orderType = payload.orderType;
+        orderBy = payload.orderBy;
+      }
+
+      const params = {
+        orderType: orderType,
+        orderBy: orderBy
+      }
+
+      const ruleResult = yield call(queryRulesList, params)
+      if (ruleResult.result) {
+        const groupList = yield groupSort()(ruleResult.data, 'type')
+        yield put({ type: 'setRulesListData', payload: {
+          associationRules: groupList,
+          associationRulesTotal: ruleResult.data.length,
+          orderBy: orderBy,
+          orderType: orderType
+        }})
+      } else {
+        yield message.error(window.__alert_appLocaleData.messages[ruleResult.message], 2)
+      }
+
+      yield put({ type: 'toggleLoading', payload: false })
+
     },
     //orderList排序
     *orderList({payload}, {select, put, call}) {

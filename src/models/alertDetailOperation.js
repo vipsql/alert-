@@ -52,7 +52,7 @@ export default {
                   closeMessage: payload
               })
               if (resultData.result) {
-                  yield put({ type: 'alertListTable/changeCloseState', payload: [stringId]})
+                  yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: [stringId], status: 255}})
                   yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
                   yield put({ type: 'alertDetail/toggleDetailModal', payload: false})
               } else {
@@ -81,7 +81,7 @@ export default {
                   resolveMessage: payload
               })
               if (resultData.result) {
-                  //yield put({ type: 'alertListTable/changeCloseState', payload: [stringId]})
+                  yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: [stringId], status: 190}})
                   yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
                   yield put({ type: 'alertDetail/toggleDetailModal', payload: false})
               } else {

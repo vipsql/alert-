@@ -22,6 +22,7 @@ const alertOperation = ({position,
     showChatOpsFunc,
     dispatchDisabled,
     closeDisabled,
+    resolveDisabled,
     intl: {formatMessage} }) => {
 
     const localeMessage = defineMessages({
@@ -178,7 +179,7 @@ const alertOperation = ({position,
             <Button className={styles.myButton} disabled={closeDisabled} onClick={ () => {
                 closeFunc(position)
             }} ><FormattedMessage {...localeMessage['operate_close']} /></Button>
-            <Button className={styles.myButton} onClick={ () => {
+            <Button className={styles.myButton} disabled={resolveDisabled} onClick={ () => {
                 resolveFunc(position)
             }} ><FormattedMessage {...localeMessage['operate_resolve']} /></Button>
             {
@@ -255,6 +256,7 @@ alertOperation.defaultProps = {
     showChatOpsFunc: () => {},
     dispatchDisabled: false,
     closeDisabled: false,
+    resolveDisabled: false
 }
 
 alertOperation.propTypes = {

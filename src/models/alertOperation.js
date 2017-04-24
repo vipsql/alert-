@@ -318,7 +318,7 @@ export default {
             })
             if (resultData.result) {
                 yield put({ type: 'alertListTable/resetCheckedAlert'})
-                yield put({ type: 'alertListTable/changeCloseState', payload: stingIds})
+                yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 255}})
                 yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
@@ -370,7 +370,7 @@ export default {
             })
             if (resultData.result) {
                 yield put({ type: 'alertListTable/resetCheckedAlert'})
-                //yield put({ type: 'alertListTable/changeCloseState', payload: stingIds})
+                yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 190}})
                 yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);

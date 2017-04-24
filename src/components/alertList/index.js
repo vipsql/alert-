@@ -142,6 +142,7 @@ class AlertListManage extends Component{
         ...operateProps,
         dispatchDisabled: !(alertDetail['currentAlertDetail']['status'] == 0 && !alertDetail['currentAlertDetail']['parentId']),
         closeDisabled: alertDetail['currentAlertDetail']['status'] == 255 || alertDetail['currentAlertDetail']['status'] == 40,
+        resolveDisabled: alertDetail['currentAlertDetail']['status'] == 255 || alertDetail['currentAlertDetail']['status'] == 190,
       },
 
       closeDeatilModal: () => {

@@ -171,7 +171,7 @@ export default {
                 closeMessage: payload
             })
             if (resultData.result) {
-                yield put({ type: 'alertQuery/changeCloseState', payload: [stringId]})
+                yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: [stringId], status: 255}})
                 yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
@@ -199,7 +199,7 @@ export default {
                 resolveMessage: payload
             })
             if (resultData.result) {
-                //yield put({ type: 'alertQuery/changeCloseState', payload: [stringId]})
+                yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: [stringId], status: 190}})
                 yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
