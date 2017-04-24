@@ -8,8 +8,22 @@ import { connect } from 'dva';
 import RuleEditor from '../components/ruleEditor';
 
 function ruleEditor(props) {
+  let ruleProps = {
+    ...props,
+  }
+
+  if (props.route.path.indexOf('edit') > -1 && Object.keys(props.alertAssociationRules.currentEditRule).length !== 0) {
+    ruleProps = {
+      ...props,
+      ...props.alertAssociationRules.currentEditRule,
+      ...props.alertAssociationRules.currentEditRule.rule
+    }
+    delete ruleProps.rule;
+    console.log(ruleProps);
+  }
+
   return (
-    <RuleEditor { ...props } />
+    <RuleEditor { ...ruleProps } />
   );
 }
 

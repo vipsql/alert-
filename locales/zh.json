@@ -4,6 +4,8 @@
 
   "bread.integrationConfig": "应用配置",
   "bread.integrations": "应用集成",
+  "bread.association.add": "添加规则",
+  "bread.association.edit": "编辑规则",
   "bread.alertList": "告警列表",
   "bread.association": "关联配置",
 

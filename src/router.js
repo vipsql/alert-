@@ -57,15 +57,7 @@ export default function({history, app}) {
               cb(null, require('./routes/alertConfig'))
             }, 'alertConfig')
           }
-        }, { // 临时添加路由，规则编辑页面
-          path: 'alertConfig/alertAssociationRules/ruleEditor',
-          name: 'ruleEditor',
-          getComponent(nextState, cb) {
-            require.ensure([], require => {
-              cb(null, require('./routes/ruleEditor'))
-            }, 'ruleEditor')
-          }
-        },
+        }, 
         {
           path: 'alertConfig/alertAssociationRules',
           name: 'alertAssociationRules',
@@ -74,6 +66,30 @@ export default function({history, app}) {
               cb(null, require('./routes/alertAssociationRules'))
             }, 'alertAssociationRules')
           }
+        },
+        { // 临时添加路由，规则编辑页面
+          path: 'alertConfig/alertAssociationRules/ruleEditor',
+          name: 'ruleEditor',
+          childRoutes: [
+            {
+              path: 'add',
+              name: 'addRuleEditor',
+              getComponent(nextState, cb) {
+                require.ensure([], require => {
+                  cb(null, require('./routes/ruleEditor'))
+                }, 'ruleEditor')
+              }
+            },
+            {
+              path: 'edit/:ruleId',
+              name: 'editRuleEditor',
+              getComponent(nextState, cb) {
+                require.ensure([], require => {
+                  cb(null, require('./routes/ruleEditor'))
+                }, 'ruleEditor')
+              }
+            },
+          ]
         },
         {
           path: 'alertConfig/alertApplication',

@@ -4,6 +4,8 @@
 
   "bread.integrationConfig": "IntegrationConfig",
   "bread.integrations": "Integrations",
+  "bread.association.add": "Add Rule",
+  "bread.association.edit": "Edit Rule",
   "bread.alertList": "AlertList",
   "bread.association": "Correlation Configuration",
 

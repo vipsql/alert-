@@ -26,11 +26,11 @@ const alertAssociationRules = ({dispatch, alertAssociationRules, intl: {formatMe
                 id: 'alertAssociationRules.List.description',
                 defaultMessage: '描述',
             },
-            createPerson: {
+            owner: {
                 id: 'alertAssociationRules.List.createPerson',
                 defaultMessage: '创建人',
             },
-            status: {
+            flag: {
                 id: 'alertAssociationRules.List.onOff',
                 defaultMessage: '是否开启',
             },
@@ -99,10 +99,19 @@ const alertAssociationRules = ({dispatch, alertAssociationRules, intl: {formatMe
             })
         },
         switchClick: (id, status) => {
-            
+            dispatch({
+                type: 'alertAssociationRules/changeStatus',
+                payload: {
+                    ruleId: id,
+                    status: status
+                }
+            })
         },
-        deleteClick: (item) => {
-            
+        deleteClick: (id) => {
+            dispatch({
+                type: 'alertAssociationRules/deleteRule',
+                payload: id
+            })
         },
         spreadGroup: (e) => {
             const groupClassify = e.target.getAttribute('data-classify')
@@ -138,7 +147,7 @@ const alertAssociationRules = ({dispatch, alertAssociationRules, intl: {formatMe
         <div className={styles.rulesTable}>
             <div className={styles.addBtn}>
                 <Button type="primary" className={styles.appBtn} onClick={ () => {
-                    window.location.hash = '#/alertConfig/alertAssociationRules/ruleEditor'
+                    window.location.hash = '#/alertConfig/alertAssociationRules/ruleEditor/add'
                 }}><span>{formatMessage({...localeMessage['newRule']})}</span></Button>
                 <p className={styles.total}><FormattedMessage {...localeMessage['ruleTotal']} values={{num: `${alertAssociationRules.associationRulesTotal}`}}/></p>
             </div>

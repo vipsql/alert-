@@ -121,24 +121,13 @@ class commonList extends Component {
       keys.forEach((key, index) => {
         let data = item[key];
         let td;
-        if(key == 'status'){
-          switch (data) {
-            case 0:
-               data = false
-              break;
-            case 1:
-               data = true
-              break;
-            default:
-               data = false
-              break;
-          }
+        if(key == 'flag'){
           td = <td key={key}><Switch checked={data} onChange={ (status) => {switchClick(item['id'], status)} }/></td>
         } else if (key == 'operation') {
           td = <td key={key}>
-           <Link to={`alertConfig/alertApplication/applicationView/edit/${item['id']}`}><Button className={styles.editBtn} size='small'>{formatMessage({...formatMessages['action_edit']})}</Button></Link>
+           <Link to={`alertConfig/alertAssociationRules/ruleEditor/edit/${item['id']}`}><Button className={styles.editBtn} size='small'>{formatMessage({...formatMessages['action_edit']})}</Button></Link>
            &nbsp;&nbsp;
-           <Button size='small' className={styles.delBtn} onClick={ () => {deleteClick(item)}}>{formatMessage({...formatMessages['action_delete']})}</Button>
+           <Button size='small' className={styles.delBtn} onClick={ () => {deleteClick(item['id'])}}>{formatMessage({...formatMessages['action_delete']})}</Button>
           </td>
         } else {
           td = <td key={key}>{data}</td>

@@ -58,7 +58,7 @@ const setLang = function(lang){
 			}
 			// 内置属性
 			window._severity = {
-			  "0": "正常",
+			  "0": "恢复",
 			  "1": "提醒",
 			  "2": "警告",
 			  "3": "紧急"
