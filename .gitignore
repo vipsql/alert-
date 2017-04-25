@@ -5,7 +5,7 @@
 .idea/
 .vscode/
 node_modules/
-dist/
+
 public/
 
 npm-debug*
