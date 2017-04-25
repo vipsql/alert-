@@ -198,6 +198,12 @@ class RuleEditor extends Component {
     dispatch({
       type: 'alertAssociationRules/getUsers'
     });
+    dispatch({
+      type: 'alertAssociationRules/querySource'
+    });
+    dispatch({
+      type: 'alertAssociationRules/queryAttributes'
+    });
   }
   componentDidMount() {
   }
@@ -379,9 +385,9 @@ class RuleEditor extends Component {
               value={this.state.source === '' ? undefined : this.state.source}
               onChange={this.changeSource.bind(this)}
             >
-              <Option value="CMDB">CMDB</Option>
-              <Option value="Monitor">Monitor</Option>
-              <Option value="APM">APM</Option>
+              {
+                this.props.alertAssociationRules.source.map(item => <Option key={item.key} value={item.key}>{item.value}</Option>)
+              }
             </Select>
           </FormItem>
         </div>
@@ -752,6 +758,8 @@ class RuleEditor extends Component {
         opt,
         value,
         level,
+        source: this.props.alertAssociationRules.source || [],
+        attributes: this.props.alertAssociationRules.attributes || {},
         _key: key,
         _this: this,
         index: _index,
@@ -812,7 +820,15 @@ class RuleEditor extends Component {
         node.logic = x;
       }
       if (/key|opt|value/.test(type)) {
-        content[conditionIndex][type] = x;
+        if (type === 'key') {
+          content[conditionIndex]['value'] = undefined;
+        }
+        if (x.target) {
+          content[conditionIndex][type] = x.target.value;
+        } else {
+          content[conditionIndex][type] = x;
+        }
+
       }
 
     } else { // 二、三级嵌套（增、删）二、三级条件（增、删）
@@ -826,7 +842,14 @@ class RuleEditor extends Component {
             complex[i].logic = x;
           }
           if (/key|opt|value/.test(type)) {
-            complex[i].content[conditionIndex][type] = x;
+            if (type === 'key') {
+              complex[i].content[conditionIndex]['value'] = undefined;
+            }
+            if (x.target) {
+              content[conditionIndex][type] = x.target.value;
+            } else {
+              content[conditionIndex][type] = x;
+            }
           }
         } else {
           this.treeControl(type, complex[i], item, x, conditionIndex);
