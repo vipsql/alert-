@@ -27,7 +27,7 @@
       border-bottom: 1px solid #245893;
       line-height: 30px;
       padding-bottom: 5px;
-      padding-left: 65px;
+      padding-left: 60px;
       font-size: 13px;
       // if no spread li
       &.hidden{
@@ -37,48 +37,63 @@
       &:last-child{
         border-bottom: none;
       }
-      span.wapper{
-        position: relative;
+      div.wapper{
         display: inline-block;
-        padding: 0 5px;
-        //color:#828b9a;
-        color: #fff;
-        margin-right: 10px;
-        margin-bottom: 5px;
-        cursor: pointer;
-        width: 90px;
-        height: 30px;
-        text-align: center;
-        span.content{
+        overflow: hidden;
+        transition: height .5s ease-out;
+        .inner{
           display: inline-block;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          width: 65px;
-          position: absolute;
-          top: 0px;
-          right: 18px;
-        }
-        i{
-          position: absolute;
-          top: 0px;
-          right: 5px;
-          font-size: 14px;
-        }
-        &.tagsSelected{
-          //background: #66a6fe;
-          background: #144478;
-          border-radius: 3px;
-          color: white;
-          &:hover{
-          //  background: none;
+          .arrow{
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            cursor: pointer;
+            color: #fff;
           }
-        }
-        &:hover{
-          background: #144478;
-          //background: #66a6fe;
-          color: white;
-          border-radius: 3px;
+          span.wapper{
+            position: relative;
+            display: inline-block;
+            padding: 0 5px;
+            //color:#828b9a;
+            color: #fff;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            width: 90px;
+            height: 30px;
+            text-align: center;
+            span.content{
+              display: inline-block;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              width: 65px;
+              position: absolute;
+              top: 0px;
+              right: 18px;
+            }
+            i{
+              position: absolute;
+              top: 0px;
+              right: 5px;
+              font-size: 14px;
+            }
+            &.tagsSelected{
+              //background: #66a6fe;
+              background: #144478;
+              border-radius: 3px;
+              color: white;
+              &:hover{
+              //  background: none;
+              }
+            }
+            &:hover{
+              background: #144478;
+              //background: #66a6fe;
+              color: white;
+              border-radius: 3px;
+            }
+          }
         }
       }
       .tagsName{
@@ -92,6 +107,7 @@
         //font-weight: bold;
         margin-right: 20px;
       }
+      
     }
 
 }
