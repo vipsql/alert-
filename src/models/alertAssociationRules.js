@@ -207,7 +207,9 @@ export default {
       };
       const result = yield call(createRule ,params);
       if (result.result) {
-        message.success('保存成功');
+        // message.success('保存成功');
+        yield put(routerRedux.goBack());
+        yield put({type: 'clear'});
       } else {
         message.error(result.message);
       }
@@ -284,6 +286,9 @@ export default {
     },
     setCurrent(state, { payload }) {
       return { ...state, currentEditRule: payload }
-    }
+    },
+    clear(state, {payload}) {
+      return { ...state, currentEditRule: {} }
+    },
   },
 }
