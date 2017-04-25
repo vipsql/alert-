@@ -45,7 +45,6 @@ const setLang = function(lang){
 			  "255": "Closed"
 			}
 			window._groupBy = 'GroupBy'
-			document.title = 'Alert'
 			break
 		default:
 			appLocaleData = {
@@ -71,7 +70,7 @@ const setLang = function(lang){
 			  "255": "已关闭"
 			}
 			window._groupBy = '分组显示'
-			document.title = 'Alert'
+			
 			break
 
 	}
