@@ -53,7 +53,7 @@ const initalState = {
   source: [], // 来源列表
   attributes: {}, // 维度列表
   field: [], // 映射字段
-  rooms: {}, // chatOps 群组
+  rooms: [], // chatOps 群组
   wos: [], // 工单类型
   ITSMParam: '', // 映射配置
 }
@@ -81,7 +81,7 @@ export default {
           dispatch({
             type: 'queryAssociationRuleView',
             payload: ruleId
-          })
+          });
         }
       })
     }
@@ -108,7 +108,8 @@ export default {
         orderBy: orderBy
       }
 
-      const ruleResult = yield call(queryRulesList, params)
+      const ruleResult = yield call(queryRulesList, params);
+      yield put({type: 'clear'});
       if (ruleResult.result) {
         const groupList = yield groupSort()(ruleResult.data, 'type')
         yield put({ type: 'setRulesListData', payload: {
@@ -213,6 +214,7 @@ export default {
       };
       const result = yield call(getChatOpsOptions ,params);
       if (result.result) {
+        // debugger
         // message.success('保存成功');
         yield put({
           type: 'updateRooms',
@@ -253,7 +255,7 @@ export default {
         yield put({
           type: 'updateITSMParam',
           payload: {
-            data: result.data
+            data: result.data.json
           }
         });
       } else {
@@ -343,7 +345,7 @@ export default {
       if (result.result) {
         // message.success('保存成功');
         yield put(routerRedux.goBack());
-        yield put({type: 'clear'});
+        // yield put({type: 'clear'});
       } else {
         message.error(result.message);
       }
@@ -431,16 +433,18 @@ export default {
       return { ...state, field: payload.data }
     },
     updateRooms(state, {payload}) {
+      debugger
       return { ...state, rooms: payload.data }
     },
     updateWos(state, {payload}) {
       return { ...state, wos: payload.data }
     },
     updateITSMParam(state, {payload}) {
+      // debugger
       return { ...state, ITSMParam: payload.data }
     },
     clear(state, {payload}) {
-      return { ...state, currentEditRule: {} }
+      return { ...state, currentEditRule: {}, ITSMParam: '' }
     },
   },
 }

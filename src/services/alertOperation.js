@@ -3,7 +3,7 @@ import querystring from 'querystring';
 
 export async function getFormOptions() {
     // let hostUrl = 'itsm.uyun.cn';
-    
+
     // if (window.location.origin.indexOf("alert") > -1) {
     //     // 域名访问
     //     hostUrl = window.location.origin.replace(/alert/, 'itsm');
@@ -25,7 +25,7 @@ export async function getChatOpsOptions() {
     // let hostUrl = 'alert.uyundev.cn';
     // let param = {};
     // let userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'));
-    
+
     // if (window.location.origin.indexOf("alert") > -1) {
     //     // 域名访问
     //     hostUrl = window.location.origin.replace(/alert/, 'chatops');
@@ -70,7 +70,7 @@ export async function shareRoom(roomId, param) {
         roomId: '' + roomId,
         body: JSON.stringify(param)
     }
-    
+
     return request(`/dataService/sendChatOps`, {
         method: 'POST',
         headers: {

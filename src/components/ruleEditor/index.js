@@ -190,7 +190,7 @@ class RuleEditor extends Component {
       sms: false,
       chatops: false,
       recipients: [],
-      // isShowITSMparam: false,
+      ITSMParam: '',
     };
   }
   componentWillMount() {
@@ -207,9 +207,9 @@ class RuleEditor extends Component {
     dispatch({
       type: 'alertAssociationRules/getField'
     });
-    dispatch({
-      type: 'alertAssociationRules/getRooms'
-    });
+    // dispatch({
+    //   type: 'alertAssociationRules/getRooms'
+    // });
     dispatch({
       type: 'alertAssociationRules/getWos'
     });
@@ -217,15 +217,27 @@ class RuleEditor extends Component {
   componentDidMount() {
   }
   componentWillReceiveProps(nextProps, nextState) {
-    this.setState({
-      name: nextProps.name,
-      description: nextProps.description,
-      type: nextProps.type,
-      source: nextProps.source,
-      condition: makeCondition(_.cloneDeep(nextProps.condition)),
-      action: nextProps.action
-    });
-    this.isChecked();
+    if (this.props.name !== nextProps.name) {
+      this.setState({
+        name: nextProps.name,
+        description: nextProps.description,
+        type: nextProps.type,
+        source: nextProps.source,
+        condition: makeCondition(_.cloneDeep(nextProps.condition)),
+        action: nextProps.action
+      });
+      this.isChecked();
+    }
+
+    if (nextProps.alertAssociationRules.ITSMParam) {
+      // let a = nextProps.alertAssociationRules.ITSMParam;
+      // console.log(a)
+      // debugger
+      this.setState({
+        ITSMParam: JSON.stringify(JSON.parse(nextProps.alertAssociationRules.ITSMParam), null, 2)
+      })
+    }
+
   }
 
   render() {
@@ -278,7 +290,7 @@ class RuleEditor extends Component {
 
     this.emailVarContent = this.vars('emailMessage');
     this.smsVarContent = this.vars('smsMessage');
-    console.log('sss', this.state.recipients)
+
     return (
       <Form id="RuleEditor" onSubmit={this.submit} hideRequiredMark={false}>
 
@@ -410,7 +422,7 @@ class RuleEditor extends Component {
 
         <h2>设置动作</h2>
         <div className={styles.setActions}>
-          <Tabs className={styles.setActions} animated={false} activeKey={action.type[0].toString()} onChange={this.changeActionType.bind(this)}>
+          <Tabs className={styles.setActions} animated={false} defaultActiveKey={action.type[0].toString()} onChange={this.changeActionType.bind(this)}>
 
             <TabPane tab="关闭/删除告警" key="1" className={styles.actionDelOrClose}>
               <div>
@@ -513,9 +525,9 @@ class RuleEditor extends Component {
                 </Select>
                 <em>选择工单类型，派发到ITSM</em>
                 <Input className={cls(styles.text, {
-                  'hidden': !(action.actionITSM && action.actionITSM.itsmModelId)
-                })} onBlur={this.changeAction.bind(this, 4)}
-                  defaultValue={this.props.alertAssociationRules.ITSMParam}
+                  // 'hidden': !(action.actionITSM && action.actionITSM.itsmModelId)
+                })} onChange={this.changeAction.bind(this, 4)}
+                  value={this.state.ITSMParam}
                   type="textarea" placeholder="映射配置" />
               </div>
             </TabPane>
@@ -532,7 +544,7 @@ class RuleEditor extends Component {
                   onChange={this.changeAction.bind(this, 6)}
                 >
                   {
-                    // this.props.alertAssociationRules.rooms.map(item => <Option key={item.id}>{item.name}</Option>)
+                    this.props.alertAssociationRules.rooms.map(item => <Option key={item.id}>{item.topic}</Option>)
                   }
                 </Select>
               </div>
@@ -575,7 +587,6 @@ class RuleEditor extends Component {
     }
 
     recipients = _action.actionNotification.recipients.map(item => item.userId);
-    console.log('isChecked运行了')
 
     this.setState({
       email: email,
@@ -691,18 +702,18 @@ class RuleEditor extends Component {
         if (value.target) {
           _action.actionITSM.param.cesjo = value.target.value.replace(/\s|\n/g, "").replace(/\"/g, "\\\"");
           console.log(value.target.value.replace(/\s|\n/g, "").replace(/\"/g, "\\\""))
-          // debugger
+          this.setState({
+            ITSMParam: _action.actionITSM.param.cesjo
+          });
         } else {
           _action.actionITSM.itsmModelId = value;
+          // debugger;
           dispatch({
             type: 'alertAssociationRules/getshowITSMParam',
             payload: {
               id: value
             }
           });
-          // this.setState({
-          //   isShowITSMparam: true
-          // });
         }
         break;
       case 5: // 抑制告警

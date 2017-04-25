@@ -61,17 +61,6 @@ export async function createRule(params) {
   })
 }
 
-// 获取 chatops 群组
-export async function getRooms(params) {
-  return request(`/dataService/rooms`, {
-      method: 'GET',
-      headers: {
-          'Content-Type': 'application/json',
-      }
-  })
-}
-
-
 // 获取工单
 export async function getWos(params) {
   return request(`/dataService/wos`, {
