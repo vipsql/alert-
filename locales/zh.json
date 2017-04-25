@@ -66,7 +66,7 @@
   "alertQuery.noQueryData": "暂无数据，请先选择查询条件",
   "alertQuery.search": "搜索",
   "alertQuery.reset": "重置",
-  "alertQuery.result": "共{total}个结果（紧急{critical}个，警告{warning}个，提醒{informaiton}个，正常{ok}个）",
+  "alertQuery.result": "共{total}个结果（紧急{critical}个，警告{warning}个，提醒{informaiton}个，恢复{ok}个）",
 
   "alertOperate.dispatch": "派发工单",
   "alertOperate.close": "关闭告警",
@@ -209,10 +209,11 @@
   "modal.trap.bindCMDB": "绑定CMDB类",
   "modal.trap.bindCMDB.placeholder": "请选择需要绑定的CMDB类",
   "modal.trap.severityMapper": "级别映射",
+  "modal.trap.severityMapper.severity": "告警等级",
   "modal.trap.severityMapper.placeholder": "请输入告警级别",
   "modal.trap.severityMapper.trap": "Trap级别",
   "modal.trap.severityMapper.alert": "Alert级别",
-  "modal.trap.severityMapper.message": "Alert级别定义：紧急 - 3，警告 - 2，提醒 - 1，正常 - 0",
+  "modal.trap.severityMapper.message": "Alert级别定义：紧急 - 3，警告 - 2，提醒 - 1，恢复 - 0",
   
   "alertApplication.videoMon.headerTitle": "使用Web Hook接入快速优云VideoMon告警",
   "alertApplication.videoMon.step2": "向接口发送数据",
