@@ -2,7 +2,19 @@ import {parse} from 'qs'
 import { message } from 'antd'
 import pathToRegexp from 'path-to-regexp';
 import { routerRedux } from 'dva/router';
-import { queryRulesList, changeRuleStatus, deleteRule, viewRule, createRule, getUsers } from '../services/alertAssociationRules';
+import {
+  queryRulesList,
+  changeRuleStatus,
+  deleteRule,
+  viewRule,
+  createRule,
+  getUsers,
+  getRooms,
+  getWos
+} from '../services/alertAssociationRules';
+import {
+  querySource
+} from '../services/alertQuery';
 import { groupSort } from '../utils'
 
 const initalState = {
@@ -31,6 +43,7 @@ const initalState = {
   orderBy: undefined, // 排序字段
   orderType: undefined, // 1 --> 升序
   users: [], // 用户列表
+  source: [], // 来源列表
 }
 
 export default {
@@ -200,6 +213,24 @@ export default {
       }
     },
 
+    // 获取来源
+    *querySource({payload}, {select, put, call}) {
+      const params = {
+        ...payload
+      };
+      const result = yield call(querySource ,params);
+      if (result.result) {
+        yield put({
+          type: 'updateSource',
+          payload: {
+            data: result.data
+          }
+        });
+      } else {
+        message.error(result.message);
+      }
+    },
+
     // 保存规划
     *createRule({payload}, {select, put, call}) {
       const params = {
@@ -286,6 +317,9 @@ export default {
     },
     setCurrent(state, { payload }) {
       return { ...state, currentEditRule: payload }
+    },
+    updateSource(state, {payload}) {
+      return { ...state, source: payload.data }
     },
     clear(state, {payload}) {
       return { ...state, currentEditRule: {} }

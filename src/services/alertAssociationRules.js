@@ -50,6 +50,7 @@ export async function viewRule(params) {
   })
 }
 
+// 创建规则
 export async function createRule(params) {
   return request(`/rule/createRule`, {
       method: 'POST',
@@ -59,3 +60,25 @@ export async function createRule(params) {
       body: JSON.stringify(params)
   })
 }
+
+// 获取 chatops 群组
+export async function getRooms(params) {
+  return request(`/dataService/rooms`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
+
+
+// 获取工单
+export async function getWos(params) {
+  return request(`/dataService/wos`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
+

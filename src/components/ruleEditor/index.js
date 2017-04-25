@@ -198,6 +198,9 @@ class RuleEditor extends Component {
     dispatch({
       type: 'alertAssociationRules/getUsers'
     });
+    dispatch({
+      type: 'alertAssociationRules/querySource'
+    });
   }
   componentDidMount() {
   }
@@ -379,9 +382,9 @@ class RuleEditor extends Component {
               value={this.state.source === '' ? undefined : this.state.source}
               onChange={this.changeSource.bind(this)}
             >
-              <Option value="CMDB">CMDB</Option>
-              <Option value="Monitor">Monitor</Option>
-              <Option value="APM">APM</Option>
+              {
+                this.props.alertAssociationRules.source.map(item => <Option key={item.key} value={item.key}>{item.value}</Option>)
+              }
             </Select>
           </FormItem>
         </div>
@@ -752,6 +755,7 @@ class RuleEditor extends Component {
         opt,
         value,
         level,
+        source: this.props.alertAssociationRules.source || [],
         _key: key,
         _this: this,
         index: _index,
@@ -812,6 +816,9 @@ class RuleEditor extends Component {
         node.logic = x;
       }
       if (/key|opt|value/.test(type)) {
+        if (type === 'key') {
+          content[conditionIndex]['value'] = undefined;
+        }
         content[conditionIndex][type] = x;
       }
 
@@ -826,6 +833,9 @@ class RuleEditor extends Component {
             complex[i].logic = x;
           }
           if (/key|opt|value/.test(type)) {
+            if (type === 'key') {
+              complex[i].content[conditionIndex]['value'] = undefined;
+            }
             complex[i].content[conditionIndex][type] = x;
           }
         } else {

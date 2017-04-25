@@ -23,33 +23,74 @@ const keyList = [
 const optList = [
   {
     name: '等于',
-    value: 'equal'
+    value: '='
   }, {
     name: '不等于',
-    value: 'unequal'
+    value: '!='
   }, {
     name: '包含',
-    value: 'include'
+    value: '>='
   }, {
     name: '不包含',
-    value: 'notinclude'
+    value: '><'
+  }, {
+    name: '大于',
+    value: '>'
+  }, {
+    name: '小于',
+    value: '<'
   }
 ];
-const valueList = [
-  {
-    name: 'CMDB',
-    value: 'CMDB'
-  }, {
-    name: 'APM',
-    value: 'APM'
-  }, {
-    name: 'Monitor',
-    value: 'Monitor'
-  }, {
-    name: 'ChatOps',
-    value: 'ChatOps'
-  }
-];
+const valueList = {
+  level: [
+    {
+      name: '恢复',
+      value: '0'
+    }, {
+      name: '提醒',
+      value: '1'
+    }, {
+      name: '警告',
+      value: '2'
+    }, {
+      name: '紧急',
+      value: '3'
+    }
+  ],
+  status: [
+    {
+      name: '新告警',
+      value: '0',
+    },{
+      name: '处理中',
+      value: '1',
+    },{
+      name: '已解决',
+      value: '2',
+    },{
+      name: '已关闭',
+      value: '3',
+    }
+  ],
+  duration: [
+    {
+      name: '< 15 min',
+      value: '1'
+    },{
+      name: '15 ~ 30 min',
+      value: '2'
+    },{
+      name: '30 ~ 60 min',
+      value: '3'
+    },{
+      name: '1 ~ 4 h',
+      value: '4'
+    },{
+      name: '> 4 h',
+      value: '5'
+    },
+  ]
+};
 
 class Condition extends Component {
   // 删除条件项
@@ -58,7 +99,10 @@ class Condition extends Component {
   // }
   // 创建条件
   createConditionItem() {
-    const {node, _key, opt, value, level, index, deleteLine, changeConditionContent, _this} = this.props;
+    const {node, source, _key, opt, value, level, index, deleteLine, changeConditionContent, _this} = this.props;
+    valueList.source = source.map(item => {
+      return { name: item.value, value: item.key };
+    });
     return (
       <div key={new Date().getTime() + 'level' + level} className={cls(
         styles.conditionItem,
@@ -80,7 +124,8 @@ class Condition extends Component {
         </Select>
         <Select onChange={changeConditionContent.bind(_this, node, index, 'value')} className={styles.value} style={{ width: 130 }} value={value} placeholder="请选择对应标签">
           {
-            valueList.map(item => (
+            valueList[_key] &&
+            valueList[_key].map(item => (
               <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
             ))
           }
