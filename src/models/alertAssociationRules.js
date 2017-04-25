@@ -16,6 +16,9 @@ import {
 import {
   querySource
 } from '../services/alertQuery';
+import {
+  getField
+} from '../services/alertConfig';
 import { groupSort } from '../utils'
 
 const initalState = {
@@ -46,6 +49,7 @@ const initalState = {
   users: [], // 用户列表
   source: [], // 来源列表
   attributes: {}, // 维度列表
+  field: [], // 映射字段
 }
 
 export default {
@@ -215,6 +219,24 @@ export default {
       }
     },
 
+    // 获取映射字段
+    *getField({payload}, {select, put, call}) {
+      const params = {
+        ...payload
+      };
+      const result = yield call(getField ,params);
+      if (result.result) {
+        yield put({
+          type: 'updateField',
+          payload: {
+            data: result.data
+          }
+        });
+      } else {
+        message.error(result.message);
+      }
+    },
+
     // 获取维度
     *queryAttributes({payload}, {select, put, call}) {
       const params = {
@@ -343,6 +365,9 @@ export default {
     },
     updateAttributes(state, {payload}) {
       return { ...state, attributes: payload.data }
+    },
+    updateField(state, {payload}) {
+      return { ...state, field: payload.data }
     },
     clear(state, {payload}) {
       return { ...state, currentEditRule: {} }

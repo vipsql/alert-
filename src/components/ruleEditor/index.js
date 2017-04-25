@@ -186,7 +186,6 @@ class RuleEditor extends Component {
       condition: makeCondition(_.cloneDeep(props.condition)),
       /* 动作 */
       action: props.action,
-      insertVars: props.insertVars,
       email: false,
       sms: false,
       chatops: false,
@@ -203,6 +202,9 @@ class RuleEditor extends Component {
     });
     dispatch({
       type: 'alertAssociationRules/queryAttributes'
+    });
+    dispatch({
+      type: 'alertAssociationRules/getField'
     });
   }
   componentDidMount() {
@@ -574,10 +576,10 @@ class RuleEditor extends Component {
 
   // 插入变量的内容
   vars(type) {
-    const { insertVars } = this.state;
+    const { field = [] } = this.props.alertAssociationRules;
     return (
       <div className={styles.varList}>
-        {insertVars.map(item => <span key={`${'${'}${item}${'}'}`} onClick={this.insertVar.bind(this, type, item)}>{item}</span>)}
+        {field.map(item => <span key={`${'${'}${item}${'}'}`} onClick={this.insertVar.bind(this, type, item)}>{item}</span>)}
       </div>
     );
   }
@@ -828,9 +830,7 @@ class RuleEditor extends Component {
         } else {
           content[conditionIndex][type] = x;
         }
-
       }
-
     } else { // 二、三级嵌套（增、删）二、三级条件（增、删）
       for (let i = complex.length - 1; i >= 0; i -= 1) {
         if (item.id === complex[i].id) {
@@ -1103,7 +1103,7 @@ RuleEditor.defaultProps = {
       chatOpsRoomId: undefined
     }
   },
-  insertVars: ['xx','aa','bb','gg']
+  insertVars: []
 };
 
 RuleEditor.propTypes = {
