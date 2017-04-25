@@ -100,6 +100,16 @@ export async function close(param) {
     })
 }
 
+export async function resolve(param) {
+    return request(`/incident/resolve`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(param)
+    })
+}
+
 export async function merge(param) {
     return request(`/incident/merge`, {
         method: 'POST',

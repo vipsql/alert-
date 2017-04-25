@@ -157,14 +157,14 @@ export default {
       return { ...state, ...payload }
     },
     // 修改状态为处理中
-    changeCloseState(state, {payload}) {
+    changeCloseState(state, {payload: {arrList, status}}) {
       const { data, isGroup } = state;
       if (isGroup === true) {
         const newData = data.map( (group) => {
           const arr = group.children.map( (item) => {
-            payload.forEach( (id) => {
+            arrList.forEach( (id) => {
               if (item.id == id) {
-                item['status'] = 255; // 手动变为150 -> 已解决
+                item['status'] = status; // 手动变为150 -> 已解决
               } 
             })
             return item;
@@ -175,9 +175,9 @@ export default {
         return { ...state, data: newData }
       } else if (isGroup === false) {
         const newData = data.map( (item, index) => {
-          payload.forEach( (id) => {
+          arrList.forEach( (id) => {
             if (item.id == id) {
-              item['status'] = 255; // 手动变为150 -> 已解决
+              item['status'] = status; // 手动变为150 -> 已解决
             } 
           })
           return item;

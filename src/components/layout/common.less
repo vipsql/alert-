@@ -1,6 +1,7 @@
 @import "../vars.less";
 :global{
   html{
+    min-width: 1200px;
     body{
       -ms-overflow-style: none;
       height: 100%;
@@ -11,6 +12,19 @@
 
         :global {
           // cover global ant styles with blue
+          //--------popover------------
+          .ant-popover-inner {
+            border: none;
+            background-color: #226eaf;
+            // border-radius: 0 !important;
+            // box-shadow: 0 0 20px rgba(100, 100, 100, 0.2) !important;
+          }
+          .ant-popover-arrow {
+            border-bottom-color: rgb(34, 110, 175, 0.7);
+            &:after {
+              border-bottom-color: #226eaf;
+            }
+          }
           //--------breadcrumb---------
           .ant-breadcrumb{
             font-size: 14px;
@@ -19,7 +33,7 @@
             }
           }
           .ant-breadcrumb a{
-            color: #6398c2;
+            color: #6ab7fe;
           }
           .ant-breadcrumb > span:last-child{
             color: @white2;
@@ -27,6 +41,9 @@
             cursor: default;
           }
           //--------Form---------
+          .ant-form-item {
+            color: inherit;
+          }
           .ant-form .ant-form-item-label label{
             color: #fff;
             font-size: 13px;
@@ -44,6 +61,9 @@
             }
           }
           //--------Select---------
+          .ant-select-combobox .ant-select-search__field{
+              color: #fff;
+          }
           .ant-select .ant-select-selection:hover{
             border-color: #2bb4f4;
           }
@@ -71,9 +91,9 @@
           .ant-select-dropdown-menu-item{
             background-color: #1d6aa7;
             color: #6ac5fe;
-
+            text-overflow: ellipsis
           }
-          .ant-select-dropdown-menu-item-selected{
+          .ant-select-dropdown-menu-item-selected, .ant-select-dropdown-menu-item-selected:hover{
             color: #fff;
           }
           .ant-select-dropdown-menu-item:hover, .ant-select-dropdown-menu-item-active{
@@ -204,14 +224,11 @@
           }
           //--------Modal---------
           .ant-modal{
-            .ant-modal-title{
-              color: #fff;
-            }
-            .ant-modal-header,{
+            .ant-modal-header{
               background: #1d6aa7;
               border-bottom-color: #135991;
-              color: #fff;
               .ant-modal-title{
+                color: #fff;
                 font-size: 16px;
                 font-weight: normal;
               }
@@ -239,8 +256,17 @@
             }
           }
         }
+        //--------radio---------
+        .ant-radio-inner{
+          border-color: #2972b1;
+          background-color: #2972b1;
+          &:after{
+            background-color: #fff;
+          }
+        }
         //--------Tabs---------
         .ant-tabs{
+          color: inherit;
             .ant-tabs-bar{
                 .ant-tabs-nav-wrap{
                   margin-bottom: 0px;
@@ -347,10 +373,9 @@
   margin: 16px auto !important;
 }
 
-:global .ant-popover-inner {
-  border: none;
-  border-radius: 0;
-  box-shadow: 0 0 20px rgba(100, 100, 100, 0.2);
+
+:global .ant-spin-blur:after {
+  background: transparent;
 }
 
 :global .vertical-center-modal {

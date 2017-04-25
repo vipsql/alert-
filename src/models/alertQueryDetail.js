@@ -1,7 +1,7 @@
 import {parse} from 'qs'
 import { queryDetail } from '../services/alertDetail'
 import { queryCloumns } from '../services/alertQuery'
-import { getFormOptions, dispatchForm, close, merge, relieve, getChatOpsOptions, shareRoom } from '../services/alertOperation'
+import { getFormOptions, dispatchForm, close, resolve, merge, relieve, getChatOpsOptions, shareRoom } from '../services/alertOperation'
 import { message } from 'antd'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -14,8 +14,7 @@ const initalState = {
     formOptions: [],
     chatOpsRooms: [], // 群组
     isShowCloseModal: false,
-    closeMessage: undefined,
-    isDropdownSpread: false, // 是否展开关闭modal的dropdown
+    isShowResolveModal: false,
 
     isShowTicketModal: false, //派发工单框
     ticketUrl: '', //工单链接
@@ -107,7 +106,6 @@ export default {
     },
     // 打开关闭工单
     *openCloseModal({payload}, {select, put, call}) {
-        yield put({type: 'setCloseMessge', payload: undefined})
         yield put({type: 'toggleCloseModal', payload: true })  
     },
     // 点击展开detail时的操作
@@ -124,7 +122,7 @@ export default {
             type: 'setDetail',
             payload: detailResult.data || {}
           })
-          if (detailResult.data.orderFlowNum) {
+          if (detailResult.data && detailResult.data.orderFlowNum) {
             yield put({
               type: 'setFormData',
               payload: detailResult.data.orderFlowNum
@@ -173,7 +171,7 @@ export default {
                 closeMessage: payload
             })
             if (resultData.result) {
-                yield put({ type: 'alertQuery/changeCloseState', payload: [stringId]})
+                yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: [stringId], status: 255}})
                 yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
@@ -183,6 +181,34 @@ export default {
         }
         yield put({
           type: 'toggleCloseModal',
+          payload: false
+        })
+    },
+    // 解决告警
+    *resolveAlert({payload}, {select, put, call}) {
+        const { viewDetailAlertId } = yield select( state => {
+            return {
+                'viewDetailAlertId': state.alertQuery.viewDetailAlertId
+            }
+        })
+        
+        if (viewDetailAlertId) {
+            let stringId = '' + viewDetailAlertId;
+            const resultData = yield resolve({
+                incidentIds: [stringId],
+                resolveMessage: payload
+            })
+            if (resultData.result) {
+                yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: [stringId], status: 190}})
+                yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+            } else {
+                yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
+            }
+        } else {
+            console.error('select incident/incident type error');
+        }
+        yield put({
+          type: 'toggleResolveModal',
           payload: false
         })
     },
@@ -389,12 +415,8 @@ export default {
     toggleCloseModal(state, {payload: isShowCloseModal}) {
         return { ...state, isShowCloseModal }
     },
-    setCloseMessge(state, { payload: closeMessage}) {
-        return { ...state, closeMessage }
-    },
-    // 是否展开dropdown - closemodal
-    toggleDropdown(state, { payload: isDropdownSpread }) {
-        return { ...state, isDropdownSpread }
+    toggleResolveModal(state, {payload: isShowResolveModal}) {
+        return { ...state, isShowResolveModal }
     },
     // 切换工单的状态
     toggleFormModal(state, {payload: isSowOperateForm}) {

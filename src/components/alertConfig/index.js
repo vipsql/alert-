@@ -47,6 +47,14 @@ const alertConfig = (props) => {
             id: 'alertConfig.integrations.message',
             defaultMessage: '接入第三方应用，如网络、服务器和应用监控工具、帮助台和客户支持、聊天协同等应用'
         },
+        correlationConfiguration: {
+            id: 'alertConfig.correlation',
+            defaultMessage: '告警关联配置'
+        },
+        correlationMessage: {
+            id: 'alertConfig.correlation.message',
+            defaultMessage: '设置告警关联规则'
+        }
     })
 
     return (
@@ -58,8 +66,16 @@ const alertConfig = (props) => {
                 <p className={styles.message}><FormattedMessage {...localeMessage['integrationsMessage']} /></p>
             </div>
           </Link>
+          <Link to={`/alertConfig/alertAssociationRules`} >
+            <div>
+                <i className={classnames(glpzClass, styles.configIcon)}></i>
+                <p className={styles.title}><FormattedMessage {...localeMessage['correlationConfiguration']} /></p>
+                <p className={styles.message}><FormattedMessage {...localeMessage['correlationMessage']} /></p>
+            </div>
+          </Link>
         </div>
     )
+          
         //   <Link to={`/alertConfig/alertApplication`} >
         //     <div>
         //         <i className={classnames(dzpzClass, styles.configIcon)}></i>

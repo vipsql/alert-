@@ -5,10 +5,12 @@ import {parse} from 'qs'
 
 const initialState = {
     isSetAlert: false, // 是否设置过告警标签
-    hideAlertSetTip: false, // 设置提示false有提示
+    hideAlertSetTip: true, // 设置提示false有提示
     modalVisible: false,
     currentDashbordData: undefined,
     isLoading: true, //加载
+    selectedTime: 'lastOneHour', // 选择的最近时间
+    selectedStatus: 'NEW', // 选择的过滤状态
     levels: { }
 }
 
@@ -52,9 +54,29 @@ export default {
         })
       }
     }, 
-    *queryAlertDashbord({}, {call, put, select}) {
+    *queryAlertDashbord({payload}, {call, put, select}) {
+
+      let { selectedTime, selectedStatus } = yield select( state => {
+        return {
+          'selectedTime': state.alertManage.selectedTime,
+          'selectedStatus': state.alertManage.selectedStatus
+        }
+      })
+
+      if (payload !== undefined && payload.selectedTime !== undefined) {
+        selectedTime = payload.selectedTime
+      }
+
+      if (payload !== undefined && payload.selectedStatus !== undefined) {
+        selectedStatus = payload.selectedStatus
+      }
+
+      const params = {
+        timeBucket: selectedTime,
+        status: selectedStatus
+      }
       
-      const treemapData = yield queryDashbord()
+      const treemapData = yield queryDashbord(params)
 
       if (treemapData.result) {
         let filterDate = [];
@@ -66,7 +88,9 @@ export default {
           type: 'setCurrentTreemap',
           payload: {
             currentDashbordData: filterDate || [],
-            isLoading: false
+            isLoading: false,
+            selectedTime: selectedTime,
+            selectedStatus: selectedStatus
           }
         })
 
@@ -94,8 +118,8 @@ export default {
       return { ...state, isSetAlert }
     },
     // 显示treemap
-    setCurrentTreemap(state, { payload: {currentDashbordData,isLoading} }){
-      return { ...state, currentDashbordData, isLoading}
+    setCurrentTreemap(state, { payload: {currentDashbordData, isLoading, selectedTime, selectedStatus} }){
+      return { ...state, currentDashbordData, isLoading, selectedTime, selectedStatus}
     },
     // 设置告警状态
     setLevels(state, {payload}) {

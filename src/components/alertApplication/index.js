@@ -4,7 +4,7 @@ import styles from './index.less'
 import { Row, Col, Tabs, Button } from 'antd'
 import { classnames } from '../../utils'
 import { Link } from 'dva/router'
-import ApplicationList from '../common/applicationList'
+import ApplicationList from '../common/configList'
 import AppSelectModal from './appSelectModal'
 import AppDeleteModal from './appDeleteModal'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
@@ -31,9 +31,50 @@ const alertApplication = ({dispatch, alertConfig, intl: {formatMessage}}) => {
             payload: type
         })
     }
-
+    
     const appListProps = {
         ...alertConfig,
+
+        pageBy: 'application',
+
+        columns: alertConfig.columns !== undefined && alertConfig.applicationType == 0 ? alertConfig.columns : alertConfig.columns.filter( item => item['key'] !== 'status'),
+
+        listData: alertConfig.applicationData,
+
+        formatMessages: defineMessages({
+            displayName: {
+                id: 'alertApplication.List.displayName',
+                defaultMessage: '应用显示名',
+            },
+            name: {
+                id: 'alertApplication.List.application',
+                defaultMessage: '应用名称',
+            },
+            createDate: {
+                id: 'alertApplication.List.createDate',
+                defaultMessage: '添加时间',
+            },
+            status: {
+                id: 'alertApplication.List.onOff',
+                defaultMessage: '是否开启',
+            },
+            operation: {
+                id: 'alertApplication.List.actions',
+                defaultMessage: '操作',
+            },
+            action_edit: {
+                id: 'alertApplication.List.edit',
+                defaultMessage: '编辑',
+            },
+            action_delete: {
+                id: 'alertApplication.List.delete',
+                defaultMessage: '删除',
+            },
+            noData: {
+                id: 'alertList.noListData',
+                defaultMessage: '暂无数据',
+            },
+        }),
 
         orderUp: (e) => {
             const orderKey = e.target.getAttribute('data-key');
@@ -98,26 +139,35 @@ const alertApplication = ({dispatch, alertConfig, intl: {formatMessage}}) => {
             id: 'alertApplication.outgoing',
             defaultMessage: '转出'
         },
+        incomingTotal: {
+            id: 'alertApplication.incomingTotal',
+            defaultMessage: '接入应用总数: {num}'
+        },
+        outgoingTotal: {
+            id: 'alertApplication.outgoingTotal',
+            defaultMessage: '转出应用总数: {num}'
+        }
     })
 
     return (
         <div className={styles.myAppTabs}>
+            <div className={styles.addBtn}>
+                <Button type="primary" className={styles.appBtn} onClick={ () => {
+                    openAppModal(alertConfig.applicationType) // 1 -> 接出
+                }}><span>{formatMessage({...localeMessage['newApplication']})}</span></Button>
+                {
+                    alertConfig.applicationType == 1 ?
+                    <p className={styles.total}><FormattedMessage {...localeMessage['outgoingTotal']} values={{num: alertConfig.applicationData.length}}/></p>
+                    :
+                    <p className={styles.total}><FormattedMessage {...localeMessage['incomingTotal']} values={{num: alertConfig.applicationData.length}}/></p>
+                }
+            </div>
             <Tabs defaultActiveKey="0" type='line' onChange={ (tabKey) => {tabsChange(tabKey)}}>
                 <TabPane tab={formatMessage({...localeMessage['incoming']})} key="0">
                     <ApplicationList {...appListProps} />
-                    <div className={styles.addBtn}>
-                        <Button type="primary" className={styles.appBtn} onClick={ () => {
-                            openAppModal(0) // 0 -> 接入
-                        }}><span>{formatMessage({...localeMessage['newApplication']})}</span></Button>
-                    </div>
                 </TabPane>
                 <TabPane tab={formatMessage({...localeMessage['outgoing']})} key="1">
                     <ApplicationList {...appListProps} />
-                    <div className={styles.addBtn}>
-                        <Button type="primary" className={styles.appBtn} onClick={ () => {
-                            openAppModal(1) // 1 -> 接出
-                        }}><span>{formatMessage({...localeMessage['newApplication']})}</span></Button>
-                    </div>
                 </TabPane>
             </Tabs>
             <AppSelectModal />

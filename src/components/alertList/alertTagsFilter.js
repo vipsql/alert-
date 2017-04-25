@@ -43,6 +43,7 @@ const alertTagsFilter = ({dispatch, tagListFilter}) => {
     }
 
     const itemSelect = (e) => {
+      e.stopPropagation();
       let tagName = JSON.parse(e.target.getAttribute('data-id'));
       dispatch({
         type: 'tagListFilter/changeTags',

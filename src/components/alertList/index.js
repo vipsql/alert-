@@ -16,6 +16,7 @@ import CloseModal from '../common/closeModal/index.js'
 import DispatchModal from '../common/dispatchModal/index.js'
 import RelieveModal from './relieveModal'
 import ChatOpshModal from '../common/chatOpsModal/index.js'
+import ResolveModal from '../common/resolveModal/index.js'
 import { classnames } from '../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -95,6 +96,15 @@ class AlertListManage extends Component{
             }
         })
       },
+      resolveFunc: (position) => {
+        dispatch({
+            type: 'alertOperation/openResolveModal',
+            payload: {
+                state: true,
+                origin: position
+            }
+        })
+      },
       mergeFunc: () => {
         dispatch({
             type: 'alertOperation/openMergeModal',
@@ -132,6 +142,7 @@ class AlertListManage extends Component{
         ...operateProps,
         dispatchDisabled: !(alertDetail['currentAlertDetail']['status'] == 0 && !alertDetail['currentAlertDetail']['parentId']),
         closeDisabled: alertDetail['currentAlertDetail']['status'] == 255 || alertDetail['currentAlertDetail']['status'] == 40,
+        resolveDisabled: alertDetail['currentAlertDetail']['status'] == 255 || alertDetail['currentAlertDetail']['status'] == 190,
       },
 
       closeDeatilModal: () => {
@@ -189,49 +200,52 @@ class AlertListManage extends Component{
     const closeModalProps = {
       currentData: alertOperateModalOrigin === 'detail' ? alertDetailOperation : alertOperation,
 
-      closeCloseModal: () => {
+      onOk: (form) => {
+        form.validateFieldsAndScroll( (errors, values) => {
+            if (!!errors) {
+                return;
+            }
+            const formData = form.getFieldsValue()
+            
+            dispatch({
+                type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/closeAlert' : 'alertOperation/closeAlert',
+                payload: formData.closeMessage
+            })
+            form.resetFields();
+        })
+      },
+      onCancal: (form) => {
         dispatch({
             type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleCloseModal' : 'alertOperation/toggleCloseModal',
             payload: false
         })
-      },
-      clickDropdown: (e) => {
-        const message = e.target.getAttribute('data-message') ||  e.target.parentNode.getAttribute('data-message')
-        
-        dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/setCloseMessge' : 'alertOperation/setCloseMessge',
-            payload: message
+        form.resetFields();
+      }
+    }
+
+    const resolveModalProps = {
+      currentData: alertOperateModalOrigin === 'detail' ? alertDetailOperation : alertOperation,
+
+      onOk: (form) => {
+        form.validateFieldsAndScroll( (errors, values) => {
+            if (!!errors) {
+                return;
+            }
+            const formData = form.getFieldsValue()
+            
+            dispatch({
+                type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/resolveAlert' : 'alertOperation/resolveAlert',
+                payload: formData.resolveMessage
+            })
+            form.resetFields();
         })
       },
-      onOk: (closeMessage) => {
+      onCancal: (form) => {
         dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/closeAlert' : 'alertOperation/closeAlert',
-            payload: closeMessage
-        })
-      },
-      onCancal: () => {
-        dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleCloseModal' : 'alertOperation/toggleCloseModal',
+            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleResolveModal' : 'alertOperation/toggleResolveModal',
             payload: false
         })
-      },
-      okCloseMessage: (isDropdownSpread) => {
-        dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleDropdown' : 'alertOperation/toggleDropdown',
-            payload: !isDropdownSpread
-        })
-      },
-      editCloseMessage: (e) => {
-        dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/setCloseMessge' : 'alertOperation/setCloseMessge',
-            payload: e.target.value
-        })
-      },
-      mouseLeaveDropdown: () => {
-        dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleDropdown' : 'alertOperation/toggleDropdown',
-            payload: false
-        })
+        form.resetFields();
       }
     }
 
@@ -351,7 +365,7 @@ class AlertListManage extends Component{
                 let levelName = key == 'Critical' ? window['_severity']['3'] :
                                     key == 'Warning' ? window['_severity']['2'] :
                                       key == 'Information' ? window['_severity']['1'] :
-                                        key == 'Ok' ? window['_severity']['0'] : undefined
+                                        key == 'OK' ? window['_severity']['0'] : undefined
 
                 return (<li key={index}><LevelIcon extraStyle={styles.extraStyle} iconType={key} /><p>{`${levelName}（${levels[key]}）`}</p></li>)
               })
@@ -378,6 +392,7 @@ class AlertListManage extends Component{
         <CloseModal {...closeModalProps}/>
         <DispatchModal {...dispatchModalProps}/>
         <ChatOpshModal {...chatOpsModalProps}/>
+        <ResolveModal {...resolveModalProps}/>
         <RelieveModal />
       </div>
     )

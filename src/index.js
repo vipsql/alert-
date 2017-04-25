@@ -41,7 +41,8 @@ const setLang = function(lang){
 			  "0": "Open",
 			  "40": "Acknowledged",
 			  "150": "Assigned",
-			  "255": "Resolved"
+				"190": "Resolved",
+			  "255": "Closed"
 			}
 			window._groupBy = 'GroupBy'
 			document.title = 'Alert'
@@ -57,7 +58,7 @@ const setLang = function(lang){
 			}
 			// 内置属性
 			window._severity = {
-			  "0": "正常",
+			  "0": "恢复",
 			  "1": "提醒",
 			  "2": "警告",
 			  "3": "紧急"
@@ -66,7 +67,8 @@ const setLang = function(lang){
 			  "0": "新告警",
 			  "40": "已确认",
 			  "150": "处理中",
-			  "255": "已解决"
+				"190": "已解决",
+			  "255": "已关闭"
 			}
 			window._groupBy = '分组显示'
 			document.title = 'Alert'
@@ -107,6 +109,9 @@ app.model(require('./models/alertQuery'))
 app.model(require('./models/alertQueryDetail'))
 // 告警配置
 app.model(require('./models/alertConfig'))
+app.model(require('./models/snmpTrapRules'))
+// 关联规则
+app.model(require('./models/alertAssociationRules'))
 // 值班管理
 app.model(require('./models/watchManage'))
 // 3. Router

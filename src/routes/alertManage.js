@@ -44,6 +44,23 @@ function AlertManage({dispatch, alertManage}){
       dispatch({
         type: 'alertTagsSet/openFocusModal',
       })
+    },
+
+    queryByTime(time){
+      dispatch({
+        type: 'alertManage/queryAlertDashbord',
+        payload: {
+          selectedTime: time
+        }
+      })
+    },
+    queryByStatus(status){
+      dispatch({
+        type: 'alertManage/queryAlertDashbord',
+        payload: {
+          selectedStatus: status
+        }
+      })
     }
 
   }

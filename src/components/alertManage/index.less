@@ -26,6 +26,10 @@
 }
 .manageHead{
   overflow: hidden;
+  .myRadioGroup{
+    color: #fff;
+    margin-left: 29px;
+  }
 }
 .loadingWrap{
   position: relative;
@@ -88,30 +92,25 @@
     font-size: 14px;
   }
 }
-.alertItemSet{
-  position: relative;
-  margin-right: 50%;
-  top: 8px;
-  color: @white2;
-  ul{
+
+ul.alertStatus{
+  position: absolute;
+  right: 10px;
+  top: 65px;
+  li{
     position: relative;
-    left: 180px;
-    top: -18px;
-    li{
+    margin-right: 15px;
+    float: left;
+    p{
+      display: inline-block;
       position: relative;
-      margin-right: 15px;
-      float: left;
-      p{
-        display: inline-block;
-        position: relative;
-        left: 8px;
-        color: #4990c4;
-      }
-      .extraStyle{
-        display: inline-block;
-        position: relative;
-        top: 2px;
-      }
+      left: 8px;
+      color: #4990c4;
+    }
+    .extraStyle{
+      display: inline-block;
+      position: relative;
+      top: 2px;
     }
   }
 }

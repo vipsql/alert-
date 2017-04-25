@@ -1,12 +1,12 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'dva'
-import Detail from './detail'
 import { getUUID } from '../../utils'
 import AlertREST from './UYUN_Alert_REST'
 import Monitor from './UYUN_Monitor'
 import Itsm from './UYUN_Itsm'
 import ChatOps from './UYUN_ChatOps'
 import VideoMON from './UYUN_VideoMon'
+import Trap from './SNMP_Trap'
 
 function Add(props){
 
@@ -68,6 +68,40 @@ function Add(props){
                         displayName={currentDisplayName}
                         builtIn={1}
                         url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
+                        onOk={(e, form) => {
+                            e.preventDefault();
+                            
+                            form.validateFieldsAndScroll( (errors, values) => {
+                                if (!!errors) {
+                                    return;
+                                }
+                                const formData = form.getFieldsValue()
+                                dispatch({
+                                    type: 'alertConfig/addApplication',
+                                    payload: formData
+                                })
+                            })
+                        }}
+                        keyCreate={(form) => {
+                            let _UUID = getUUID(32);
+                            dispatch({
+                                type: 'alertConfig/setUUID',
+                                payload: {
+                                    UUID: _UUID,
+                                    currentDisplayName: form.getFieldsValue().displayName
+                                }
+                            })
+                        }}
+                    />
+                break;
+            case 'SNMPTrap':
+                targetApplication = 
+                    <Trap
+                        dispatch={dispatch}
+                        appkey={UUID}
+                        displayName={currentDisplayName}
+                        builtIn={1}
+                        url={hostUrl}
                         onOk={(e, form) => {
                             e.preventDefault();
                             

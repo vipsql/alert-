@@ -171,6 +171,9 @@ class ListTable extends Component {
             case 150:
               data = window['_status']['150']
               break;
+            case 190:
+              data = window['_status']['190']
+              break;
             case 255:
               data = window['_status']['255']
               break;
@@ -242,6 +245,9 @@ class ListTable extends Component {
               break;
             case 150:
               data = window['_status']['150']
+              break;
+            case 190:
+              data = window['_status']['190']
               break;
             case 255:
               data = window['_status']['255']

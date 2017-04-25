@@ -8,6 +8,7 @@ import AlertDetail from '../common/alertDetail/index.js'
 import CloseModal from '../common/closeModal/index.js'
 import DispatchModal from '../common/dispatchModal/index.js'
 import ChatOpshModal from '../common/chatOpsModal/index.js'
+import ResolveModal from '../common/resolveModal/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const Item = Form.Item;
@@ -56,6 +57,12 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
             type: 'alertQueryDetail/openCloseModal',
         })
       },
+      resolveFunc: (position) => {
+        dispatch({
+            type: 'alertQueryDetail/toggleResolveModal',
+            payload: true
+        })
+      },
       showChatOpsFunc: (position) => {
         dispatch({
           type: 'alertQueryDetail/openChatOps',
@@ -76,6 +83,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
           ...operateProps,
         dispatchDisabled: !(alertQueryDetail['currentAlertDetail']['status'] == 0 && !alertQueryDetail['currentAlertDetail']['parentId']),
         closeDisabled: alertQueryDetail['currentAlertDetail']['status'] == 255 || alertQueryDetail['currentAlertDetail']['status'] == 40,
+        resolveDisabled: alertQueryDetail['currentAlertDetail']['status'] == 255 || alertQueryDetail['currentAlertDetail']['status'] == 190,
       },
 
       closeDeatilModal: () => {
@@ -133,49 +141,54 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
     const closeModalProps = {
       currentData: alertQueryDetail,
 
-      closeCloseModal: () => {
+      onOk: (form) => {
+        form.validateFieldsAndScroll( (errors, values) => {
+            if (!!errors) {
+                return;
+            }
+            const formData = form.getFieldsValue()
+            
+            dispatch({
+                type: 'alertQueryDetail/closeAlert',
+                payload: formData.closeMessage
+            })
+            form.resetFields();
+        })
+
+      },
+      onCancal: (form) => {
         dispatch({
             type: 'alertQueryDetail/toggleCloseModal',
             payload: false
         })
-      },
-      clickDropdown: (e) => {
-        const message = e.target.getAttribute('data-message') ||  e.target.parentNode.getAttribute('data-message')
-        
-        dispatch({
-            type: 'alertQueryDetail/setCloseMessge',
-            payload: message
+        form.resetFields();
+      }
+    }
+
+    const resolveModalProps = {
+      currentData: alertQueryDetail,
+
+      onOk: (form) => {
+        form.validateFieldsAndScroll( (errors, values) => {
+            if (!!errors) {
+                return;
+            }
+            const formData = form.getFieldsValue()
+            
+            dispatch({
+                type: 'alertQueryDetail/resolveAlert',
+                payload: formData.resolveMessage
+            })
+            form.resetFields();
         })
+
       },
-      onOk: (closeMessage) => {
+      onCancal: (form) => {
         dispatch({
-            type: 'alertQueryDetail/closeAlert',
-            payload: closeMessage
-        })
-      },
-      onCancal: () => {
-        dispatch({
-            type: 'alertQueryDetail/toggleCloseModal',
+            type: 'alertQueryDetail/toggleResolveModal',
             payload: false
         })
-      },
-      okCloseMessage: (isDropdownSpread) => {
-        dispatch({
-            type: 'alertQueryDetail/toggleDropdown',
-            payload: !isDropdownSpread
-        })
-      },
-      editCloseMessage: (e) => {
-        dispatch({
-            type: 'alertQueryDetail/setCloseMessge',
-            payload: e.target.value
-        })
-      },
-      mouseLeaveDropdown: () => {
-        dispatch({
-            type: 'alertQueryDetail/toggleDropdown',
-            payload: false
-        })
+        form.resetFields();
       }
     }
 
@@ -505,6 +518,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
                         <Option value=""><FormattedMessage {...localeMessage['allStatus']} /></Option>
                         <Option value="0">{window['_status']['0']}</Option>
                         <Option value="150">{window['_status']['150']}</Option>
+                        <Option value="190">{window['_status']['190']}</Option>
                         <Option value="255">{window['_status']['255']}</Option>
                       </Select>
                   )}
@@ -644,6 +658,7 @@ const alertQueryManage = ({dispatch, form, alertQuery, alertQueryDetail, intl: {
           <CloseModal {...closeModalProps}/>
           <DispatchModal {...dispatchModalProps}/>
           <ChatOpshModal {...chatOpsModalProps}/>
+          <ResolveModal {...resolveModalProps}/>
         </div>
     )
 }

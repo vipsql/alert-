@@ -14,13 +14,15 @@ const alertOperation = ({position,
     checkCloumFunc, 
     relieveFunc, 
     dispatchFunc, 
-    closeFunc, 
+    closeFunc,
+    resolveFunc,
     mergeFunc, 
     groupFunc, 
     noGroupFunc,
     showChatOpsFunc,
     dispatchDisabled,
     closeDisabled,
+    resolveDisabled,
     intl: {formatMessage} }) => {
 
     const localeMessage = defineMessages({
@@ -31,6 +33,10 @@ const alertOperation = ({position,
         operate_close: {
             id: 'alertOperate.close',
             defaultMessage: '关闭告警'
+        },
+        operate_resolve: {
+            id: 'alertOperate.resolve',
+            defaultMessage: '解决告警'
         },
         operate_merge: {
             id: 'alertOperate.merge',
@@ -173,6 +179,9 @@ const alertOperation = ({position,
             <Button className={styles.myButton} disabled={closeDisabled} onClick={ () => {
                 closeFunc(position)
             }} ><FormattedMessage {...localeMessage['operate_close']} /></Button>
+            <Button className={styles.myButton} disabled={resolveDisabled} onClick={ () => {
+                resolveFunc(position)
+            }} ><FormattedMessage {...localeMessage['operate_resolve']} /></Button>
             {
                 position !== 'detail' ?
                 <DropdownButton overlay={menu} className={styles.myDropdown} trigger={['click']} onClick={ mergeFunc }>
@@ -240,12 +249,14 @@ alertOperation.defaultProps = {
     relieveFunc: () => {},
     dispatchFunc: () => {},
     closeFunc: () => {},
+    resolveFunc: () => {},
     mergeFunc: () => {},
     groupFunc: () => {},
     noGroupFunc: () => {},
     showChatOpsFunc: () => {},
     dispatchDisabled: false,
     closeDisabled: false,
+    resolveDisabled: false
 }
 
 alertOperation.propTypes = {

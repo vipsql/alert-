@@ -7,7 +7,7 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const Item = Form.Item;
 const Option = Select.Option;
-const closeModal = ({currentData, closeCloseModal, clickDropdown, onOk, onCancal, okCloseMessage, editCloseMessage, mouseLeaveDropdown, form, intl: {formatMessage}}) => {
+const closeModal = ({currentData, onOk, onCancal, form, intl: {formatMessage}}) => {
     
     const localeMessage = defineMessages({
         modal_cancel: {
@@ -30,6 +30,10 @@ const closeModal = ({currentData, closeCloseModal, clickDropdown, onOk, onCancal
             id: 'modal.noCloseReason',
             defaultMessage: '请选择关闭理由'
         },
+        modal_validating: {
+            id: 'modal.validating',
+            defaultMessage: '检验中...'
+        },
         modal_closeReason_1: {
             id: 'modal.closeReason.1',
             defaultMessage: '故障已解决'
@@ -44,16 +48,16 @@ const closeModal = ({currentData, closeCloseModal, clickDropdown, onOk, onCancal
         },
     })
 
-    const { isShowCloseModal, isDropdownSpread, closeMessage } = currentData;
+    const { isShowCloseModal } = currentData;
     const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
 
     const modalFooter = []
     modalFooter.push(<div className={styles.modalFooter}>
       <Button type="primary" onClick={ () => {
-        onOk(closeMessage)
+        onOk(form)
       }} ><FormattedMessage {...localeMessage['modal_close']} /></Button>
       <Button type="ghost" className={styles.ghostBtn} onClick={ () => {
-        onCancal()
+        onCancal(form)
       }}><FormattedMessage {...localeMessage['modal_cancel']} /></Button>
       </div>
     )
@@ -62,7 +66,7 @@ const closeModal = ({currentData, closeCloseModal, clickDropdown, onOk, onCancal
         <Modal
             title={<FormattedMessage {...localeMessage['modal_closeIncident']} />}
             maskClosable="true"
-            onCancel={ closeCloseModal }
+            onCancel={ () => { onCancal(form) } }
             visible={ isShowCloseModal }
             footer={ modalFooter }
         >
@@ -70,23 +74,22 @@ const closeModal = ({currentData, closeCloseModal, clickDropdown, onOk, onCancal
                 <Form>
                     <Item
                         label={<FormattedMessage {...localeMessage['modal_closeReason']} />}
-                        required
+                        hasFeedback
+                        help={isFieldValidating('closeMessage') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('closeMessage') || []).join(', ')}
                     >
-                        <Input style={{width: '100%'}} placeholder={formatMessage({...localeMessage['modal_noCloseReason']})} onClick={ (e) => {
-                            okCloseMessage(isDropdownSpread)
-                        }} value={closeMessage} onChange={ (e) => {
-                            editCloseMessage(e)
-                        }}/>
+                        {getFieldDecorator('closeMessage', {
+                            rules: [
+                                { required: true, message: formatMessage({...localeMessage['modal_noCloseReason']})}
+                            ]
+                        })(
+                            <Select mode='combobox' placeholder={formatMessage({...localeMessage['modal_noCloseReason']})}>
+                                <Option value={formatMessage({...localeMessage['modal_closeReason_1']})}>{formatMessage({...localeMessage['modal_closeReason_1']})}</Option>
+                                <Option value={formatMessage({...localeMessage['modal_closeReason_2']})}>{formatMessage({...localeMessage['modal_closeReason_2']})}</Option>
+                                <Option value={formatMessage({...localeMessage['modal_closeReason_3']})}>{formatMessage({...localeMessage['modal_closeReason_3']})}</Option>
+                            </Select>
+                        )}
                     </Item>
-
                 </Form>
-                <ul onMouseLeave={ () => {
-                    mouseLeaveDropdown()
-                }} className={isDropdownSpread ? styles.selectDropdown : classnames(styles.selectDropdown, styles['selectDropdown-hidden'])}>
-                    <li data-message={formatMessage({...localeMessage['modal_closeReason_1']})} onClick={(e) => {clickDropdown(e)}}><FormattedMessage {...localeMessage['modal_closeReason_1']} /></li>
-                    <li data-message={formatMessage({...localeMessage['modal_closeReason_2']})} onClick={(e) => {clickDropdown(e)}}><FormattedMessage {...localeMessage['modal_closeReason_2']} /></li>
-                    <li data-message={formatMessage({...localeMessage['modal_closeReason_3']})} onClick={(e) => {clickDropdown(e)}}><FormattedMessage {...localeMessage['modal_closeReason_3']} /></li>
-                </ul>
             </div>
         </Modal>
     )
@@ -94,13 +97,8 @@ const closeModal = ({currentData, closeCloseModal, clickDropdown, onOk, onCancal
 
 closeModal.defaultProps = {
     currentData: {}, 
-    closeCloseModal: () => {}, 
-    clickDropdown: () => {}, 
     onOk: () => {}, 
-    onCancal: () => {}, 
-    okCloseMessage: () => {}, 
-    editCloseMessage: () => {}, 
-    mouseLeaveDropdown: () => {}, 
+    onCancal: () => {},
 }
 
 closeModal.propTypes = {

@@ -83,3 +83,42 @@ export async function view(id) {
   })
 }
 
+// 在snmp页面查询映射字段
+export async function getField() {
+  return request(`/applyRule/matchFilterValue`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
+
+// 在snmp页面查询filter字段
+export async function getSource() {
+  return request(`/applyRule/filterFieldValue`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
+
+// 在snmp页面查询CMDB字段
+export async function getCMDBSource() {
+  return request(`/applyRule/cmdbCategory`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
+
+// 在snmp页面查询OID字段
+export async function getOID() {
+  return request(`/applyRule/latelyTrap`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
