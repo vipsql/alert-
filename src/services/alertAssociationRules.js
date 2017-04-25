@@ -75,10 +75,20 @@ export async function getRooms(params) {
 // 获取工单
 export async function getWos(params) {
   return request(`/dataService/wos`, {
-      method: 'GET',
-      headers: {
-          'Content-Type': 'application/json',
-      }
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+}
+
+// 获取工单映射配置
+export async function getshowITSMParam(params) {
+  return request(`/rule/showITSMParam?modelId=${params.id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
   })
 }
 
