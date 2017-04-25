@@ -30,6 +30,7 @@ const initalState = {
   currentEditRule: {}, // 当前编辑的规则
   orderBy: undefined, // 排序字段
   orderType: undefined, // 1 --> 升序
+  users: [], // 用户列表
 }
 
 export default {
@@ -120,7 +121,7 @@ export default {
         const ruleResult = yield call(changeRuleStatus, payload.ruleId)
         if (ruleResult.result) {
           yield put({
-            type: 'changeRuleStatus', 
+            type: 'changeRuleStatus',
             payload: {
               id: payload.ruleId,
               status: payload.status
@@ -139,7 +140,7 @@ export default {
         const deleteResult = yield call(deleteRule, payload)
         if (deleteResult.result) {
           yield put({
-            type: 'deleteRuleOperate', 
+            type: 'deleteRuleOperate',
             payload: payload
           })
         } else {
@@ -188,7 +189,12 @@ export default {
       const result = yield call(getUsers ,params);
       if (result.result) {
         // message.success('保存成功');
-
+        yield put({
+          type: 'updateUsers',
+          payload: {
+            data: result.data
+          }
+        });
       } else {
         message.error(result.message);
       }
@@ -243,13 +249,21 @@ export default {
       })
       return { ...state, associationRules: newData }
     },
-    // 更改状态 
+
+
+    // 更新用户列表
+    updateUsers(state, { payload }) {
+      const { users } = state;
+      return { ...state, users: payload.data }
+    },
+
+    // 更改状态
     changeRuleStatus(state, { payload: {id, status} }) {
       const { associationRules } = state;
       const newData = associationRules.map( (item) => {
         item.children.length > 0 && item.children.map( (childrenItem) => {
           if (childrenItem.id == id) {
-            childrenItem.flag = status 
+            childrenItem.flag = status
           }
         })
         return item;
