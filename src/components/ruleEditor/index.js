@@ -186,17 +186,32 @@ class RuleEditor extends Component {
       condition: makeCondition(_.cloneDeep(props.condition)),
       /* 动作 */
       action: props.action,
-      insertVars: props.insertVars,
       email: false,
       sms: false,
       chatops: false,
       recipients: [],
+      // isShowITSMparam: false,
     };
   }
   componentWillMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'alertAssociationRules/getUsers'
+    });
+    dispatch({
+      type: 'alertAssociationRules/querySource'
+    });
+    dispatch({
+      type: 'alertAssociationRules/queryAttributes'
+    });
+    dispatch({
+      type: 'alertAssociationRules/getField'
+    });
+    dispatch({
+      type: 'alertAssociationRules/getRooms'
+    });
+    dispatch({
+      type: 'alertAssociationRules/getWos'
     });
   }
   componentDidMount() {
@@ -379,9 +394,9 @@ class RuleEditor extends Component {
               value={this.state.source === '' ? undefined : this.state.source}
               onChange={this.changeSource.bind(this)}
             >
-              <Option value="CMDB">CMDB</Option>
-              <Option value="Monitor">Monitor</Option>
-              <Option value="APM">APM</Option>
+              {
+                this.props.alertAssociationRules.source.map(item => <Option key={item.key} value={item.key}>{item.value}</Option>)
+              }
             </Select>
           </FormItem>
         </div>
@@ -492,12 +507,15 @@ class RuleEditor extends Component {
                   value={action.actionITSM ? action.actionITSM.itsmModelId : undefined}
                   onChange={this.changeAction.bind(this, 4)}
                 >
-                  <Option value="group1">组1</Option>
-                  <Option value="group2">组2</Option>
+                  {
+                    this.props.alertAssociationRules.wos.map(item => <Option key={item.id}>{item.name}</Option>)
+                  }
                 </Select>
                 <em>选择工单类型，派发到ITSM</em>
-                <Input className={styles.text} onBlur={this.changeAction.bind(this, 4)}
-                  defaultValue={action.actionITSM ? action.actionITSM.param.cesjo : undefined}
+                <Input className={cls(styles.text, {
+                  'hidden': !(action.actionITSM && action.actionITSM.itsmModelId)
+                })} onBlur={this.changeAction.bind(this, 4)}
+                  defaultValue={this.props.alertAssociationRules.ITSMParam}
                   type="textarea" placeholder="映射配置" />
               </div>
             </TabPane>
@@ -513,8 +531,9 @@ class RuleEditor extends Component {
                   placeholder="请选择群组"
                   onChange={this.changeAction.bind(this, 6)}
                 >
-                  <Option value="group1">组1</Option>
-                  <Option value="group2">组2</Option>
+                  {
+                    // this.props.alertAssociationRules.rooms.map(item => <Option key={item.id}>{item.name}</Option>)
+                  }
                 </Select>
               </div>
             </TabPane>
@@ -568,10 +587,10 @@ class RuleEditor extends Component {
 
   // 插入变量的内容
   vars(type) {
-    const { insertVars } = this.state;
+    const { field = [] } = this.props.alertAssociationRules;
     return (
       <div className={styles.varList}>
-        {insertVars.map(item => <span key={`${'${'}${item}${'}'}`} onClick={this.insertVar.bind(this, type, item)}>{item}</span>)}
+        {field.map(item => <span key={`${'${'}${item}${'}'}`} onClick={this.insertVar.bind(this, type, item)}>{item}</span>)}
       </div>
     );
   }
@@ -599,6 +618,7 @@ class RuleEditor extends Component {
   }
 
   changeAction(type, value) {
+    const { dispatch } = this.props;
     const _action = _.cloneDeep(this.state.action);
     switch(type) {
       case 1: // 关闭/删除告警
@@ -669,9 +689,20 @@ class RuleEditor extends Component {
           };
         }
         if (value.target) {
-          _action.actionITSM.param.cesjo = value.target.value;
+          _action.actionITSM.param.cesjo = value.target.value.replace(/\s|\n/g, "").replace(/\"/g, "\\\"");
+          console.log(value.target.value.replace(/\s|\n/g, "").replace(/\"/g, "\\\""))
+          // debugger
         } else {
           _action.actionITSM.itsmModelId = value;
+          dispatch({
+            type: 'alertAssociationRules/getshowITSMParam',
+            payload: {
+              id: value
+            }
+          });
+          // this.setState({
+          //   isShowITSMparam: true
+          // });
         }
         break;
       case 5: // 抑制告警
@@ -752,6 +783,8 @@ class RuleEditor extends Component {
         opt,
         value,
         level,
+        source: this.props.alertAssociationRules.source || [],
+        attributes: this.props.alertAssociationRules.attributes || {},
         _key: key,
         _this: this,
         index: _index,
@@ -812,9 +845,15 @@ class RuleEditor extends Component {
         node.logic = x;
       }
       if (/key|opt|value/.test(type)) {
-        content[conditionIndex][type] = x;
+        if (type === 'key') {
+          content[conditionIndex]['value'] = undefined;
+        }
+        if (x.target) {
+          content[conditionIndex][type] = x.target.value;
+        } else {
+          content[conditionIndex][type] = x;
+        }
       }
-
     } else { // 二、三级嵌套（增、删）二、三级条件（增、删）
       for (let i = complex.length - 1; i >= 0; i -= 1) {
         if (item.id === complex[i].id) {
@@ -826,7 +865,14 @@ class RuleEditor extends Component {
             complex[i].logic = x;
           }
           if (/key|opt|value/.test(type)) {
-            complex[i].content[conditionIndex][type] = x;
+            if (type === 'key') {
+              complex[i].content[conditionIndex]['value'] = undefined;
+            }
+            if (x.target) {
+              content[conditionIndex][type] = x.target.value;
+            } else {
+              content[conditionIndex][type] = x;
+            }
           }
         } else {
           this.treeControl(type, complex[i], item, x, conditionIndex);
@@ -1080,7 +1126,7 @@ RuleEditor.defaultProps = {
       chatOpsRoomId: undefined
     }
   },
-  insertVars: ['xx','aa','bb','gg']
+  insertVars: []
 };
 
 RuleEditor.propTypes = {

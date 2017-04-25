@@ -370,6 +370,10 @@ class ruleModal extends Component{
                 id: 'modal.trap.severityMapper',
                 defaultMessage: '级别映射'
             },
+            rule_severityMapper_severity: {
+                id: 'modal.trap.severityMapper.severity',
+                defaultMessage: '告警等级'
+            },
             rule_severityMapper_placeholder: {
                 id: 'modal.trap.severityMapper.placeholder',
                 defaultMessage: '请输入告警级别'
@@ -1010,7 +1014,7 @@ class ruleModal extends Component{
                             this.state.dataSource == 1 ?
                             <Item
                                 {...itemLayout}
-                                label={formatMessage({...localeMessage['rule_severityMapper']})}
+                                label={formatMessage({...localeMessage['rule_severityMapper_severity']})}
                                 hasFeedback
                                 help={isFieldValidating('severity') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('severity') || []).join(', ')}
                             >

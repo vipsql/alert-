@@ -209,6 +209,7 @@
   "modal.trap.bindCMDB": "Binding CI Class",
   "modal.trap.bindCMDB.placeholder": "Pleasr Enter Binding CI Class",
   "modal.trap.severityMapper": "Severity",
+  "modal.trap.severityMapper.severity": "Severity",
   "modal.trap.severityMapper.placeholder": "Pleasr Enter Severity",
   "modal.trap.severityMapper.trap": "Trap",
   "modal.trap.severityMapper.alert": "Alert",

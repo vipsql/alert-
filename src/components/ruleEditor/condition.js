@@ -1,55 +1,82 @@
 import React, {PropTypes, Component} from 'react';
 import {default as cls} from 'classnames';
-import {Select} from 'antd';
+import {Select, Input} from 'antd';
 
 import styles from './condition.less';
 
 const Option = Select.Option;
-const keyList = [
-  {
-    name: '告警级别',
-    value: 'level'
-  }, {
-    name: '告警来源',
-    value: 'source'
-  }, {
-    name: '告警状态',
-    value: 'status'
-  }, {
-    name: '持续时间',
-    value: 'duration'
-  }
-];
+
 const optList = [
   {
     name: '等于',
-    value: 'equal'
+    value: '='
   }, {
     name: '不等于',
-    value: 'unequal'
+    value: '!='
   }, {
     name: '包含',
-    value: 'include'
+    value: '>='
   }, {
     name: '不包含',
-    value: 'notinclude'
+    value: '><'
+  }, {
+    name: '大于',
+    value: '>'
+  }, {
+    name: '小于',
+    value: '<'
   }
 ];
-const valueList = [
-  {
-    name: 'CMDB',
-    value: 'CMDB'
-  }, {
-    name: 'APM',
-    value: 'APM'
-  }, {
-    name: 'Monitor',
-    value: 'Monitor'
-  }, {
-    name: 'ChatOps',
-    value: 'ChatOps'
-  }
-];
+const valueList = {
+  severity: [
+    {
+      name: '恢复',
+      value: '0'
+    }, {
+      name: '提醒',
+      value: '1'
+    }, {
+      name: '警告',
+      value: '2'
+    }, {
+      name: '紧急',
+      value: '3'
+    }
+  ],
+  status: [
+    {
+      name: '新告警',
+      value: '0',
+    },{
+      name: '处理中',
+      value: '1',
+    },{
+      name: '已解决',
+      value: '2',
+    },{
+      name: '已关闭',
+      value: '3',
+    }
+  ],
+  duration: [
+    {
+      name: '< 15 min',
+      value: '1'
+    },{
+      name: '15 ~ 30 min',
+      value: '2'
+    },{
+      name: '30 ~ 60 min',
+      value: '3'
+    },{
+      name: '1 ~ 4 h',
+      value: '4'
+    },{
+      name: '> 4 h',
+      value: '5'
+    },
+  ]
+};
 
 class Condition extends Component {
   // 删除条件项
@@ -58,7 +85,17 @@ class Condition extends Component {
   // }
   // 创建条件
   createConditionItem() {
-    const {node, _key, opt, value, level, index, deleteLine, changeConditionContent, _this} = this.props;
+    const keyList = [];
+    const {node, source, attributes, _key, opt, value, level, index, deleteLine, changeConditionContent, _this} = this.props;
+    valueList.source = source.map(item => {
+      return { name: item.value, value: item.key };
+    });
+    for (let i in attributes) {
+      keyList.push({
+        name: attributes[i],
+        value: i
+      });
+    };
     return (
       <div key={new Date().getTime() + 'level' + level} className={cls(
         styles.conditionItem,
@@ -67,24 +104,33 @@ class Condition extends Component {
         <Select onChange={changeConditionContent.bind(_this, node, index, 'key')} className={styles.key} style={{ width: 100 }} value={_key} placeholder="请选择维度">
           {
             keyList.map(item => (
-              <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
+              <Option value={item.value}>{item.name}</Option>
             ))
           }
         </Select>
         <Select onChange={changeConditionContent.bind(_this, node, index, 'opt')} className={styles.opt} style={{ width: 100 }} value={opt} placeholder="请选择条件">
           {
             optList.map(item => (
-              <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
+              <Option value={item.value}>{item.name}</Option>
             ))
           }
         </Select>
-        <Select onChange={changeConditionContent.bind(_this, node, index, 'value')} className={styles.value} style={{ width: 130 }} value={value} placeholder="请选择对应标签">
-          {
-            valueList.map(item => (
-              <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
-            ))
-          }
-        </Select>
+        {
+          /severity|status|duration|source/.test(_key) &&
+          <Select onChange={changeConditionContent.bind(_this, node, index, 'value')} className={styles.value} style={{ width: 130 }} value={value} placeholder="请选择对应标签">
+            {
+              valueList[_key] &&
+              valueList[_key].map(item => (
+                <Option value={item.value}>{item.name}</Option>
+              ))
+            }
+          </Select>
+        }
+        {
+          !/severity|status|duration|source/.test(_key) &&
+          <Input placeholder="请输入对应条件" style={{ width: 130 }} onBlur={changeConditionContent.bind(_this, node, index, 'value')} defaultValue={value} />
+        }
+
         <i className={styles.delete} onClick={deleteLine.bind(_this, node, level, index)}>X</i>
       </div>
     );

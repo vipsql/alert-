@@ -2,7 +2,26 @@ import {parse} from 'qs'
 import { message } from 'antd'
 import pathToRegexp from 'path-to-regexp';
 import { routerRedux } from 'dva/router';
-import { queryRulesList, changeRuleStatus, deleteRule, viewRule, createRule, getUsers } from '../services/alertAssociationRules';
+import {
+  queryRulesList,
+  changeRuleStatus,
+  deleteRule,
+  viewRule,
+  createRule,
+  getUsers,
+  getWos,
+  queryAttributes,
+  getshowITSMParam,
+} from '../services/alertAssociationRules';
+import {
+  querySource
+} from '../services/alertQuery';
+import {
+  getField
+} from '../services/alertConfig';
+import {
+  getChatOpsOptions
+} from '../services/alertOperation';
 import { groupSort } from '../utils'
 
 const initalState = {
@@ -31,6 +50,12 @@ const initalState = {
   orderBy: undefined, // 排序字段
   orderType: undefined, // 1 --> 升序
   users: [], // 用户列表
+  source: [], // 来源列表
+  attributes: {}, // 维度列表
+  field: [], // 映射字段
+  rooms: {}, // chatOps 群组
+  wos: [], // 工单类型
+  ITSMParam: '', // 映射配置
 }
 
 export default {
@@ -181,6 +206,61 @@ export default {
       }
     },
 
+    // 获取 chatops 群组
+    *getRooms({payload}, {select, put, call}) {
+      const params = {
+        ...payload
+      };
+      const result = yield call(getChatOpsOptions ,params);
+      if (result.result) {
+        // message.success('保存成功');
+        yield put({
+          type: 'updateRooms',
+          payload: {
+            data: result.data
+          }
+        });
+      } else {
+        message.error(result.message);
+      }
+    },
+
+    // 获取 工单类型
+    *getWos({payload}, {select, put, call}) {
+      const params = {
+        ...payload
+      };
+      const result = yield call(getWos ,params);
+      if (result.result) {
+        yield put({
+          type: 'updateWos',
+          payload: {
+            data: result.data
+          }
+        });
+      } else {
+        message.error(result.message);
+      }
+    },
+
+    // 获取 工单类型
+    *getshowITSMParam({payload}, {select, put, call}) {
+      const params = {
+        ...payload
+      };
+      const result = yield call(getshowITSMParam ,params);
+      if (result.result) {
+        yield put({
+          type: 'updateITSMParam',
+          payload: {
+            data: result.data
+          }
+        });
+      } else {
+        message.error(result.message);
+      }
+    },
+
     // 获取用户
     *getUsers({payload}, {select, put, call}) {
       const params = {
@@ -191,6 +271,60 @@ export default {
         // message.success('保存成功');
         yield put({
           type: 'updateUsers',
+          payload: {
+            data: result.data
+          }
+        });
+      } else {
+        message.error(result.message);
+      }
+    },
+
+    // 获取映射字段
+    *getField({payload}, {select, put, call}) {
+      const params = {
+        ...payload
+      };
+      const result = yield call(getField ,params);
+      if (result.result) {
+        yield put({
+          type: 'updateField',
+          payload: {
+            data: result.data
+          }
+        });
+      } else {
+        message.error(result.message);
+      }
+    },
+
+    // 获取维度
+    *queryAttributes({payload}, {select, put, call}) {
+      const params = {
+        ...payload
+      };
+      const result = yield call(queryAttributes ,params);
+      if (result.result) {
+        yield put({
+          type: 'updateAttributes',
+          payload: {
+            data: result.data
+          }
+        });
+      } else {
+        message.error(result.message);
+      }
+    },
+
+    // 获取来源
+    *querySource({payload}, {select, put, call}) {
+      const params = {
+        ...payload
+      };
+      const result = yield call(querySource ,params);
+      if (result.result) {
+        yield put({
+          type: 'updateSource',
           payload: {
             data: result.data
           }
@@ -286,6 +420,24 @@ export default {
     },
     setCurrent(state, { payload }) {
       return { ...state, currentEditRule: payload }
+    },
+    updateSource(state, {payload}) {
+      return { ...state, source: payload.data }
+    },
+    updateAttributes(state, {payload}) {
+      return { ...state, attributes: payload.data }
+    },
+    updateField(state, {payload}) {
+      return { ...state, field: payload.data }
+    },
+    updateRooms(state, {payload}) {
+      return { ...state, rooms: payload.data }
+    },
+    updateWos(state, {payload}) {
+      return { ...state, wos: payload.data }
+    },
+    updateITSMParam(state, {payload}) {
+      return { ...state, ITSMParam: payload.data }
     },
     clear(state, {payload}) {
       return { ...state, currentEditRule: {} }
