@@ -577,12 +577,15 @@ class ruleModal extends Component{
                                                     this.haveOIDChildrenList ?
                                                     <Select mode='combobox' value={text} onChange={ (value) => {
                                                         //TODO
-                                                        let data = this.replaceFunc(this.state.matchFields, index, 'OID', value)
-                                                        this.setState({ matchFields: [ ...data ] })
+                                                        var temp = value.split('_')
+                                                        if (temp[0] !== undefined) {
+                                                            let data = this.replaceFunc(this.state.matchFields, index, 'OID', temp[0])
+                                                            this.setState({ matchFields: [ ...data ] })
+                                                        }
                                                     }}>
                                                         {
                                                             oidChildrenList.length > 0 ? oidChildrenList.map( (oid, oidIndex) => {
-                                                                return <Option key={oidIndex} value={oid.name}><span title={oid.description}>{oid.description}</span></Option>
+                                                                return <Option key={oidIndex} value={`${oid.name}_${Math.random()}`}><span title={oid.description}>{oid.description}</span></Option>
                                                             }) : []
                                                         }
                                                     </Select>
@@ -696,12 +699,15 @@ class ruleModal extends Component{
                                                     this.haveOIDChildrenList ?
                                                     <Select mode='combobox' value={text} onChange={ (value) => {
                                                         //TODO
-                                                        let data = this.replaceFunc(this.state.properties, index, 'oid', value)
-                                                        this.setState({ properties: [ ...data ] })
+                                                        var temp = value.split('_')
+                                                        if (temp[0] !== undefined) {
+                                                            let data = this.replaceFunc(this.state.properties, index, 'oid', temp[0])
+                                                            this.setState({ properties: [ ...data ] })
+                                                        }
                                                     }}>
                                                         {
                                                             oidChildrenList.length > 0 ? oidChildrenList.map( (oid, oidIndex) => {
-                                                                return <Option key={oidIndex} value={oid.name}><span title={oid.description}>{oid.description}</span></Option>
+                                                                return <Option key={oidIndex} value={`${oid.name}_${Math.random()}`}><span title={oid.description}>{oid.description}</span></Option>
                                                             }) : []
                                                         }
                                                     </Select>

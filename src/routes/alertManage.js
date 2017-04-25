@@ -77,7 +77,7 @@ function AlertManage({dispatch, alertManage}){
 
   return (
 
-    <div style={{position: 'relative'}}>
+    <div>
       <AlertTagsSet  />
       <AlertManageHead {...alertManageHeadProps} />
       {isSetAlert ?
