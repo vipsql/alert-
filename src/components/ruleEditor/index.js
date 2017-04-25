@@ -186,22 +186,18 @@ class RuleEditor extends Component {
       condition: makeCondition(_.cloneDeep(props.condition)),
       /* 动作 */
       action: props.action,
-      insertVars: props.insertVars
+      insertVars: props.insertVars,
+      email: false,
+      sms: false,
+      chatops: false,
+      recipients: [],
     };
-
-    this.email = false;
-    this.sms = false;
-    this.chatops = false;
-    this.recipients = [];
-    this.isChecked();
   }
   componentWillMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'alertAssociationRules/getUsers'
     });
-
-
   }
   componentDidMount() {
   }
@@ -214,7 +210,9 @@ class RuleEditor extends Component {
       condition: makeCondition(_.cloneDeep(nextProps.condition)),
       action: nextProps.action
     });
+    this.isChecked();
   }
+
   render() {
     conditionsDom = []; // 重置，防止重复 render
     const { time, timeStart, timeEnd, source, condition, action } = this.state;
@@ -265,7 +263,7 @@ class RuleEditor extends Component {
 
     this.emailVarContent = this.vars('emailMessage');
     this.smsVarContent = this.vars('smsMessage');
-
+    console.log('sss', this.state.recipients)
     return (
       <Form id="RuleEditor" onSubmit={this.submit} hideRequiredMark={false}>
 
@@ -430,7 +428,7 @@ class RuleEditor extends Component {
                       placeholder="请选择通知对象"
                       onChange={this.changeAction.bind(this, 3)}
                       className={styles.recipients}
-                      defaultValue={this.recipients}
+                      value={this.state.recipients}
                     >
                       {
                         this.props.alertAssociationRules.users.map((item, index) => <Option key={item.userId} value={item.userId}>{item.realName}</Option>)
@@ -438,7 +436,7 @@ class RuleEditor extends Component {
                     </Select>
                 </FormItem>
                 <Tabs animated={false} className={styles.notificationTabs}>
-                  <TabPane tab={<div><Checkbox defaultChecked={this.email} value={1} onChange={this.changeAction.bind(this, 3)} /><span>电子邮件</span></div>} key="1">
+                  <TabPane tab={<div><Checkbox id="email" checked={this.state.email} value={1} onChange={this.changeAction.bind(this, 3)} /><span>电子邮件</span></div>} key="1">
 
                     <div>
                       <FormItem
@@ -465,7 +463,7 @@ class RuleEditor extends Component {
 
                     </div>
                   </TabPane>
-                  <TabPane tab={<div><Checkbox defaultChecked={this.sms} value={2} onChange={this.changeAction.bind(this, 3)} /><span>短信息</span></div>} key="2">
+                  <TabPane tab={<div><Checkbox id="sms" checked={this.state.sms} value={2} onChange={this.changeAction.bind(this, 3)} /><span>短信息</span></div>} key="2">
                     <div>
                       <FormItem
                         label="信息内容"
@@ -481,7 +479,7 @@ class RuleEditor extends Component {
                       </FormItem>
                     </div>
                   </TabPane>
-                  <TabPane tab={<div><Checkbox defaultChecked={this.chatops} value={3} onChange={this.changeAction.bind(this, 3)} /><span>分享到ChatOps私聊窗口</span></div>} key="3" />
+                  <TabPane tab={<div><Checkbox id="chatops" checked={this.state.chatops} value={3} onChange={this.changeAction.bind(this, 3)} /><span>分享到ChatOps私聊窗口</span></div>} key="3" />
                 </Tabs>
               </div>
             </TabPane>
@@ -529,6 +527,10 @@ class RuleEditor extends Component {
 
   isChecked() {
     const _action = _.cloneDeep(this.state.action);
+    let email = false;
+    let sms = false;
+    let chatops = false;
+    let recipients = [];
     if (!_action.actionNotification) {
       _action.actionNotification = {
         recipients: [],
@@ -543,17 +545,25 @@ class RuleEditor extends Component {
     const mode = _action.actionNotification.notificationMode.notificationMode;
     for (let i = mode.length - 1; i >= 0; i -= 1) {
       if (mode[i] === 1) {
-        this.email = true;
+        email = true;
       }
       if (mode[i] === 2) {
-        this.sms = true;
+        sms = true;
       }
       if (mode[i] === 3) {
-        this.chatops = true;
+        chatops = true;
       }
     }
 
-    this.recipients = _action.actionNotification.recipients.map(item => item.userId);
+    recipients = _action.actionNotification.recipients.map(item => item.userId);
+    console.log('isChecked运行了')
+
+    this.setState({
+      email: email,
+      sms: sms,
+      chatops: chatops,
+      recipients: recipients
+    });
   }
 
   // 插入变量的内容
@@ -628,12 +638,21 @@ class RuleEditor extends Component {
             }
           });
           _action.actionNotification.recipients = arr;
+          this.setState({
+            recipients: arr.map(item => item.userId)
+          });
         } else if (value.target.type === 'checkbox') { // 通知方式
           if (value.target.checked) { // 选中此通知方式
             mode.notificationMode.push(value.target.value);
             mode.notificationMode = _.uniq(mode.notificationMode);
+            this.setState({
+              [value.target.id]: true
+            });
           } else { // 移除此通知方式
             mode.notificationMode = mode.notificationMode.filter(item => item !== value.target.value);
+            this.setState({
+              [value.target.id]: false
+            });
           }
         } else { // 文本
           mode[value.target.id] = value.target.value;
@@ -923,7 +942,7 @@ class RuleEditor extends Component {
   }
 
   handleSubmit(event) {
-    const { dispatch, form, routeParams } = this.props;
+    const { dispatch, form, alertAssociationRules } = this.props;
     const { name, description, type, source, condition, time, timeStart, timeEnd, action } = this.state;
 
     event.preventDefault();
@@ -979,10 +998,9 @@ class RuleEditor extends Component {
       default:
         break;
     }
-
     const params = {
-      ruleId: routeParams.ruleId ? undefined : routeParams.ruleId,
       rule: {
+        id: _.isEmpty(alertAssociationRules.currentEditRule) ? undefined : alertAssociationRules.currentEditRule.rule.id,
         name,
         description,
         type,
@@ -991,6 +1009,7 @@ class RuleEditor extends Component {
         condition,
       },
       action: {
+        id: _.isEmpty(alertAssociationRules.currentEditRule) ? undefined : alertAssociationRules.currentEditRule.action.id,
         tenant: undefined,
         type: action.type,
         actionDelOrClose: _actionDelOrClose,
