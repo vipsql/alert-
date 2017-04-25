@@ -9,9 +9,9 @@ import {
   viewRule,
   createRule,
   getUsers,
-  getRooms,
   getWos,
   queryAttributes,
+  getshowITSMParam,
 } from '../services/alertAssociationRules';
 import {
   querySource
@@ -19,6 +19,9 @@ import {
 import {
   getField
 } from '../services/alertConfig';
+import {
+  getChatOpsOptions
+} from '../services/alertOperation';
 import { groupSort } from '../utils'
 
 const initalState = {
@@ -50,6 +53,9 @@ const initalState = {
   source: [], // 来源列表
   attributes: {}, // 维度列表
   field: [], // 映射字段
+  rooms: {}, // chatOps 群组
+  wos: [], // 工单类型
+  ITSMParam: '', // 映射配置
 }
 
 export default {
@@ -197,6 +203,61 @@ export default {
         yield put({ type: 'queryAssociationRules' })
       } else {
         console.error('orderBy error')
+      }
+    },
+
+    // 获取 chatops 群组
+    *getRooms({payload}, {select, put, call}) {
+      const params = {
+        ...payload
+      };
+      const result = yield call(getChatOpsOptions ,params);
+      if (result.result) {
+        // message.success('保存成功');
+        yield put({
+          type: 'updateRooms',
+          payload: {
+            data: result.data
+          }
+        });
+      } else {
+        message.error(result.message);
+      }
+    },
+
+    // 获取 工单类型
+    *getWos({payload}, {select, put, call}) {
+      const params = {
+        ...payload
+      };
+      const result = yield call(getWos ,params);
+      if (result.result) {
+        yield put({
+          type: 'updateWos',
+          payload: {
+            data: result.data
+          }
+        });
+      } else {
+        message.error(result.message);
+      }
+    },
+
+    // 获取 工单类型
+    *getshowITSMParam({payload}, {select, put, call}) {
+      const params = {
+        ...payload
+      };
+      const result = yield call(getshowITSMParam ,params);
+      if (result.result) {
+        yield put({
+          type: 'updateITSMParam',
+          payload: {
+            data: result.data
+          }
+        });
+      } else {
+        message.error(result.message);
       }
     },
 
@@ -368,6 +429,15 @@ export default {
     },
     updateField(state, {payload}) {
       return { ...state, field: payload.data }
+    },
+    updateRooms(state, {payload}) {
+      return { ...state, rooms: payload.data }
+    },
+    updateWos(state, {payload}) {
+      return { ...state, wos: payload.data }
+    },
+    updateITSMParam(state, {payload}) {
+      return { ...state, ITSMParam: payload.data }
     },
     clear(state, {payload}) {
       return { ...state, currentEditRule: {} }

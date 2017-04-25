@@ -190,6 +190,7 @@ class RuleEditor extends Component {
       sms: false,
       chatops: false,
       recipients: [],
+      // isShowITSMparam: false,
     };
   }
   componentWillMount() {
@@ -205,6 +206,12 @@ class RuleEditor extends Component {
     });
     dispatch({
       type: 'alertAssociationRules/getField'
+    });
+    dispatch({
+      type: 'alertAssociationRules/getRooms'
+    });
+    dispatch({
+      type: 'alertAssociationRules/getWos'
     });
   }
   componentDidMount() {
@@ -500,12 +507,15 @@ class RuleEditor extends Component {
                   value={action.actionITSM ? action.actionITSM.itsmModelId : undefined}
                   onChange={this.changeAction.bind(this, 4)}
                 >
-                  <Option value="group1">组1</Option>
-                  <Option value="group2">组2</Option>
+                  {
+                    this.props.alertAssociationRules.wos.map(item => <Option key={item.id}>{item.name}</Option>)
+                  }
                 </Select>
                 <em>选择工单类型，派发到ITSM</em>
-                <Input className={styles.text} onBlur={this.changeAction.bind(this, 4)}
-                  defaultValue={action.actionITSM ? action.actionITSM.param.cesjo : undefined}
+                <Input className={cls(styles.text, {
+                  'hidden': !(action.actionITSM && action.actionITSM.itsmModelId)
+                })} onBlur={this.changeAction.bind(this, 4)}
+                  defaultValue={this.props.alertAssociationRules.ITSMParam}
                   type="textarea" placeholder="映射配置" />
               </div>
             </TabPane>
@@ -521,8 +531,9 @@ class RuleEditor extends Component {
                   placeholder="请选择群组"
                   onChange={this.changeAction.bind(this, 6)}
                 >
-                  <Option value="group1">组1</Option>
-                  <Option value="group2">组2</Option>
+                  {
+                    // this.props.alertAssociationRules.rooms.map(item => <Option key={item.id}>{item.name}</Option>)
+                  }
                 </Select>
               </div>
             </TabPane>
@@ -607,6 +618,7 @@ class RuleEditor extends Component {
   }
 
   changeAction(type, value) {
+    const { dispatch } = this.props;
     const _action = _.cloneDeep(this.state.action);
     switch(type) {
       case 1: // 关闭/删除告警
@@ -677,9 +689,20 @@ class RuleEditor extends Component {
           };
         }
         if (value.target) {
-          _action.actionITSM.param.cesjo = value.target.value;
+          _action.actionITSM.param.cesjo = value.target.value.replace(/\s|\n/g, "").replace(/\"/g, "\\\"");
+          console.log(value.target.value.replace(/\s|\n/g, "").replace(/\"/g, "\\\""))
+          // debugger
         } else {
           _action.actionITSM.itsmModelId = value;
+          dispatch({
+            type: 'alertAssociationRules/getshowITSMParam',
+            payload: {
+              id: value
+            }
+          });
+          // this.setState({
+          //   isShowITSMparam: true
+          // });
         }
         break;
       case 5: // 抑制告警
