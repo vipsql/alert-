@@ -1,25 +1,11 @@
 import React, {PropTypes, Component} from 'react';
 import {default as cls} from 'classnames';
-import {Select} from 'antd';
+import {Select, Input} from 'antd';
 
 import styles from './condition.less';
 
 const Option = Select.Option;
-const keyList = [
-  {
-    name: '告警级别',
-    value: 'level'
-  }, {
-    name: '告警来源',
-    value: 'source'
-  }, {
-    name: '告警状态',
-    value: 'status'
-  }, {
-    name: '持续时间',
-    value: 'duration'
-  }
-];
+
 const optList = [
   {
     name: '等于',
@@ -42,7 +28,7 @@ const optList = [
   }
 ];
 const valueList = {
-  level: [
+  severity: [
     {
       name: '恢复',
       value: '0'
@@ -99,10 +85,17 @@ class Condition extends Component {
   // }
   // 创建条件
   createConditionItem() {
-    const {node, source, _key, opt, value, level, index, deleteLine, changeConditionContent, _this} = this.props;
+    const keyList = [];
+    const {node, source, attributes, _key, opt, value, level, index, deleteLine, changeConditionContent, _this} = this.props;
     valueList.source = source.map(item => {
       return { name: item.value, value: item.key };
     });
+    for (let i in attributes) {
+      keyList.push({
+        name: attributes[i],
+        value: i
+      });
+    };
     return (
       <div key={new Date().getTime() + 'level' + level} className={cls(
         styles.conditionItem,
@@ -111,25 +104,33 @@ class Condition extends Component {
         <Select onChange={changeConditionContent.bind(_this, node, index, 'key')} className={styles.key} style={{ width: 100 }} value={_key} placeholder="请选择维度">
           {
             keyList.map(item => (
-              <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
+              <Option value={item.value}>{item.name}</Option>
             ))
           }
         </Select>
         <Select onChange={changeConditionContent.bind(_this, node, index, 'opt')} className={styles.opt} style={{ width: 100 }} value={opt} placeholder="请选择条件">
           {
             optList.map(item => (
-              <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
+              <Option value={item.value}>{item.name}</Option>
             ))
           }
         </Select>
-        <Select onChange={changeConditionContent.bind(_this, node, index, 'value')} className={styles.value} style={{ width: 130 }} value={value} placeholder="请选择对应标签">
-          {
-            valueList[_key] &&
-            valueList[_key].map(item => (
-              <Option key={item.name + item.value} value={item.value}>{item.name}</Option>
-            ))
-          }
-        </Select>
+        {
+          /severity|status|duration|source/.test(_key) &&
+          <Select onChange={changeConditionContent.bind(_this, node, index, 'value')} className={styles.value} style={{ width: 130 }} value={value} placeholder="请选择对应标签">
+            {
+              valueList[_key] &&
+              valueList[_key].map(item => (
+                <Option value={item.value}>{item.name}</Option>
+              ))
+            }
+          </Select>
+        }
+        {
+          !/severity|status|duration|source/.test(_key) &&
+          <Input placeholder="请输入对应条件" style={{ width: 130 }} onBlur={changeConditionContent.bind(_this, node, index, 'value')} defaultValue={value} />
+        }
+
         <i className={styles.delete} onClick={deleteLine.bind(_this, node, level, index)}>X</i>
       </div>
     );

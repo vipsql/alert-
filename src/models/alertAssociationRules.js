@@ -10,7 +10,8 @@ import {
   createRule,
   getUsers,
   getRooms,
-  getWos
+  getWos,
+  queryAttributes,
 } from '../services/alertAssociationRules';
 import {
   querySource
@@ -44,6 +45,7 @@ const initalState = {
   orderType: undefined, // 1 --> 升序
   users: [], // 用户列表
   source: [], // 来源列表
+  attributes: {}, // 维度列表
 }
 
 export default {
@@ -213,6 +215,24 @@ export default {
       }
     },
 
+    // 获取维度
+    *queryAttributes({payload}, {select, put, call}) {
+      const params = {
+        ...payload
+      };
+      const result = yield call(queryAttributes ,params);
+      if (result.result) {
+        yield put({
+          type: 'updateAttributes',
+          payload: {
+            data: result.data
+          }
+        });
+      } else {
+        message.error(result.message);
+      }
+    },
+
     // 获取来源
     *querySource({payload}, {select, put, call}) {
       const params = {
@@ -320,6 +340,9 @@ export default {
     },
     updateSource(state, {payload}) {
       return { ...state, source: payload.data }
+    },
+    updateAttributes(state, {payload}) {
+      return { ...state, attributes: payload.data }
     },
     clear(state, {payload}) {
       return { ...state, currentEditRule: {} }

@@ -82,3 +82,12 @@ export async function getWos(params) {
   })
 }
 
+// 获取维度
+export async function queryAttributes(params) {
+  return request(`/rule/queryAttributes`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}

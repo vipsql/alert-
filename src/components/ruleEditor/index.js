@@ -201,6 +201,9 @@ class RuleEditor extends Component {
     dispatch({
       type: 'alertAssociationRules/querySource'
     });
+    dispatch({
+      type: 'alertAssociationRules/queryAttributes'
+    });
   }
   componentDidMount() {
   }
@@ -756,6 +759,7 @@ class RuleEditor extends Component {
         value,
         level,
         source: this.props.alertAssociationRules.source || [],
+        attributes: this.props.alertAssociationRules.attributes || {},
         _key: key,
         _this: this,
         index: _index,
@@ -819,7 +823,12 @@ class RuleEditor extends Component {
         if (type === 'key') {
           content[conditionIndex]['value'] = undefined;
         }
-        content[conditionIndex][type] = x;
+        if (x.target) {
+          content[conditionIndex][type] = x.target.value;
+        } else {
+          content[conditionIndex][type] = x;
+        }
+
       }
 
     } else { // 二、三级嵌套（增、删）二、三级条件（增、删）
@@ -836,7 +845,11 @@ class RuleEditor extends Component {
             if (type === 'key') {
               complex[i].content[conditionIndex]['value'] = undefined;
             }
-            complex[i].content[conditionIndex][type] = x;
+            if (x.target) {
+              content[conditionIndex][type] = x.target.value;
+            } else {
+              content[conditionIndex][type] = x;
+            }
           }
         } else {
           this.treeControl(type, complex[i], item, x, conditionIndex);
