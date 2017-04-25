@@ -145,25 +145,24 @@ class commonList extends Component {
 
         let groupTr = null
         let commonTrs = []
-        
-        groupTr = item.isGroupSpread === false ?
-        (<tr className={styles.trGroup} key={index}>
-          <td colSpan={6}>
-            <span className={styles.expandIcon} data-classify={item.classify} onClick={spreadGroup}>+</span>
-              {item.classify !== undefined ? formatMessage({...formatMessages[`ruleTypeNum_${item.classify}`]}) : formatMessage({...formatMessages['Unknown']})}
-          </td>
-        </tr>)
-        :
-        (<tr className={styles.trGroup} key={index}>
-          <td colSpan={6}>
-            <span className={styles.expandIcon} data-classify={item.classify} onClick={noSpreadGroup}>-</span>
-              {item.classify !== undefined ? formatMessage({...formatMessages[`ruleTypeNum_${item.classify}`]}) : formatMessage({...formatMessages['Unknown']})}
-          </td>
-        </tr>)
+        if (item.children !== undefined && item.children.length > 0) {
+          
+          groupTr = item.isGroupSpread === false ?
+          (<tr className={styles.trGroup} key={index}>
+            <td colSpan={6}>
+              <span className={styles.expandIcon} data-classify={item.classify} onClick={spreadGroup}>+</span>
+                {item.classify !== undefined ? formatMessage({...formatMessages[`ruleTypeNum_${item.classify}`]}) : formatMessage({...formatMessages['Unknown']})}
+            </td>
+          </tr>)
+          :
+          (<tr className={styles.trGroup} key={index}>
+            <td colSpan={6}>
+              <span className={styles.expandIcon} data-classify={item.classify} onClick={noSpreadGroup}>-</span>
+                {item.classify !== undefined ? formatMessage({...formatMessages[`ruleTypeNum_${item.classify}`]}) : formatMessage({...formatMessages['Unknown']})}
+            </td>
+          </tr>)
 
-        if (item.children !== undefined) {
-
-          item.children.forEach( (childItem, index) => {
+          item.children.length > 0 && item.children.forEach( (childItem, index) => {
             const tds = getRuleTds(childItem, keys)
             commonTrs.push(
               <tr key={index} className={item.isGroupSpread !== undefined && !item.isGroupSpread ? styles.hiddenChild : styles.groupSpread}>
@@ -171,7 +170,7 @@ class commonList extends Component {
               </tr>
             )
           })
-    
+
         }
 
         tbodyCon.push(
