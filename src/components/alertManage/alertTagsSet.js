@@ -33,6 +33,7 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
   } = alertTagsSet
 
     const itemSelect = (e) => {
+      e.stopPropagation();
       let tagId = e.target.getAttribute('data-id');
       dispatch({
         type: 'alertTagsSet/changSelectTag',

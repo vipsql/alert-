@@ -5,7 +5,7 @@ import {parse} from 'qs'
 
 const initialState = {
     isSetAlert: false, // 是否设置过告警标签
-    hideAlertSetTip: false, // 设置提示false有提示
+    hideAlertSetTip: true, // 设置提示false有提示
     modalVisible: false,
     currentDashbordData: undefined,
     isLoading: true, //加载

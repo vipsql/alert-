@@ -4,50 +4,56 @@ import { classnames } from '../../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 
-const checkList = ({itemList, checkedNum, isSpreadTags, checkHandler, origin}) => {
+class checkList extends Component {
 
-    const formatMessages = defineMessages({
-        text:{
-          id: 'alertManage.dashbord.selectedText',
-          defaultMessage: '已选择 {num} 个关注',
-          values: {
-            num: <span className={styles.textNum} >{checkedNum}</span>
+
+    render() {
+
+      const {itemList, checkedNum, isSpreadTags, checkHandler, origin} = this.props;
+      const formatMessages = defineMessages({
+          text:{
+            id: 'alertManage.dashbord.selectedText',
+            defaultMessage: '已选择 {num} 个关注',
+            values: {
+              num: <span className={styles.textNum} >{checkedNum}</span>
+            }
           }
-        }
-    })
+      })
 
-    const setClass = classnames(
-      'iconfont',
-      'icon-wancheng'
-    )
-    
-    const tags = itemList.map((item, index) => {
-      const tagsDetail = item.values.map((tag, index) => {
+      const setClass = classnames(
+        'iconfont',
+        'icon-wancheng'
+      )
+      
+      const tags = itemList.map((item, index) => {
+        const tagsDetail = item.values.map((tag, index) => {
+          let data_id = origin === 'main' ? tag.id : JSON.stringify({field: item.name, name: tag.name});
+          return (
+            <span className={tag.selected ? classnames(styles.wapper, styles.tagsSelected) : styles.wapper} key={ index } data-id={data_id} onClick={ (e) => {checkHandler(e)} }>
+              <span title={tag.name} className={styles.content} data-id={data_id}>{tag.name}</span>
+              <i className={tag.selected && setClass}></i>
+            </span>
+          )
+        })
         return (
-          <span className={tag.selected && styles.tagsSelected} key={ index } data-id={origin === 'main' ? tag.id : JSON.stringify({field: item.name, name: tag.name})} onClick={ (e) => {checkHandler(e)} }>
-            {tag.name}
-            <i className={tag.selected && setClass}></i>
-          </span>
+          <li key={index}>
+            <div className={styles.tagsName}>{item.name}:</div>
+            {tagsDetail}
+          </li>
         )
       })
-      return (
-        <li key={index}>
-          <div className={styles.tagsName}>{item.name}:</div>
-          {tagsDetail}
-        </li>
-      )
-    })
 
-    return (
-        <div className={styles.ckeckModalMain}>
-            { typeof checkedNum !== 'undefined' 
-                ? <p className={styles.checkedText}><FormattedMessage {...formatMessages['text']} /></p>
-                : undefined }
-            <ul>
-                {tags}
-            </ul>
-        </div>
-    )
+      return (
+          <div className={styles.ckeckModalMain}>
+              { typeof checkedNum !== 'undefined' 
+                  ? <p className={styles.checkedText}><FormattedMessage {...formatMessages['text']} /></p>
+                  : undefined }
+              <ul>
+                  {tags}
+              </ul>
+          </div>
+      )
+    }
 }
 
 checkList.defaultProps = {
