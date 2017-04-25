@@ -188,12 +188,20 @@ class RuleEditor extends Component {
       action: props.action,
       insertVars: props.insertVars
     };
+
+    this.email = false;
+    this.sms = false;
+    this.chatops = false;
+    this.recipients = [];
+    this.isChecked();
   }
   componentWillMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'alertAssociationRules/getUsers'
     });
+
+
   }
   componentDidMount() {
   }
@@ -201,6 +209,10 @@ class RuleEditor extends Component {
     this.setState({
       name: nextProps.name,
       description: nextProps.description,
+      type: nextProps.type,
+      source: nextProps.source,
+      condition: makeCondition(_.cloneDeep(nextProps.condition)),
+      action: nextProps.action
     });
   }
   render() {
@@ -263,7 +275,7 @@ class RuleEditor extends Component {
             {...itemLayout}
             label="规则名称"
           >
-              <Input value={this.state.name} placeholder="请输入规则名称" />
+              <Input value={this.state.name} onChange={this.changeField.bind(this, 'name')} placeholder="请输入规则名称" />
 
           </FormItem>
           <FormItem
@@ -271,24 +283,21 @@ class RuleEditor extends Component {
             label="规则描述"
           >
 
-              <Input value={this.state.description} type="textarea" placeholder="请为规则添加描述" />
+              <Input value={this.state.description} onChange={this.changeField.bind(this, 'description')} type="textarea" placeholder="请为规则添加描述" />
 
           </FormItem>
           <FormItem
             {...desLayout}
             label="执行安排"
           >
-
-              <RadioGroup
-                onChange={this.changeType.bind(this)}
-                value={this.state.type}
-              >
-                <Radio value={0}>任意时间均执行</Radio>
-                <Radio value={1}>周期性执行</Radio>
-                <Radio value={2}>固定时间段执行</Radio>
-              </RadioGroup>
-
-
+            <RadioGroup
+              onChange={this.changeType.bind(this)}
+              value={this.state.type}
+            >
+              <Radio value={0}>任意时间均执行</Radio>
+              <Radio value={1}>周期性执行</Radio>
+              <Radio value={2}>固定时间段执行</Radio>
+            </RadioGroup>
             {
               this.state.type === 1 &&
               <div className={styles.pickTimeWrap}>
@@ -366,15 +375,16 @@ class RuleEditor extends Component {
             {...itemLayout}
             label="告警来源"
           >
-              <Select
-                style={{ width: 200 }}
-                placeholder="请选择告警来源"
-                onChange={this.changeSource.bind(this)}
-              >
-                <Option value="CMDB">CMDB</Option>
-                <Option value="Monitor">Monitor</Option>
-                <Option value="APM">APM</Option>
-              </Select>
+            <Select
+              style={{ width: 200 }}
+              placeholder="请选择告警来源"
+              value={this.state.source === '' ? undefined : this.state.source}
+              onChange={this.changeSource.bind(this)}
+            >
+              <Option value="CMDB">CMDB</Option>
+              <Option value="Monitor">Monitor</Option>
+              <Option value="APM">APM</Option>
+            </Select>
           </FormItem>
         </div>
 
@@ -388,12 +398,13 @@ class RuleEditor extends Component {
         <h2>设置动作</h2>
         <div className={styles.setActions}>
           <Tabs className={styles.setActions} animated={false} activeKey={action.type[0].toString()} onChange={this.changeActionType.bind(this)}>
+
             <TabPane tab="关闭/删除告警" key="1" className={styles.actionDelOrClose}>
               <div>
                 <span className={styles.label}>针对符合条件的告警，执行</span>
                 <Select
                   style={{ width: 100 }}
-                  value={action.actionDelOrClose.operation ? action.actionDelOrClose.operation.toString() : undefined}
+                  value={action.actionDelOrClose ? action.actionDelOrClose.operation : undefined}
                   placeholder="请选择操作"
                   onChange={this.changeAction.bind(this, 1)}
                 >
@@ -419,6 +430,7 @@ class RuleEditor extends Component {
                       placeholder="请选择通知对象"
                       onChange={this.changeAction.bind(this, 3)}
                       className={styles.recipients}
+                      defaultValue={this.recipients}
                     >
                       {
                         this.props.alertAssociationRules.users.map((item, index) => <Option key={item.userId} value={item.userId}>{item.realName}</Option>)
@@ -426,14 +438,16 @@ class RuleEditor extends Component {
                     </Select>
                 </FormItem>
                 <Tabs animated={false} className={styles.notificationTabs}>
-                  <TabPane tab={<div><Checkbox value={1} onChange={this.changeAction.bind(this, 3)} /><span>电子邮件</span></div>} key="1">
+                  <TabPane tab={<div><Checkbox defaultChecked={this.email} value={1} onChange={this.changeAction.bind(this, 3)} /><span>电子邮件</span></div>} key="1">
 
                     <div>
                       <FormItem
                         label="邮件标题"
                         className={styles.mailTitle}
                       >
-                          <Input id="emailTitle" onBlur={this.changeAction.bind(this, 3)} placeholder="来自告警$(Alert_name)的通知" />
+                          <Input id="emailTitle"
+                            value={action.actionNotification ? action.actionNotification.notificationMode.emailTitle : undefined}
+                            onChange={this.changeAction.bind(this, 3)} placeholder="来自告警$(Alert_name)的通知" />
 
                       </FormItem>
                       <FormItem
@@ -441,7 +455,7 @@ class RuleEditor extends Component {
                         className={styles.msgContent}
                       >
                           <Input id="emailMessage"
-                            // value={action.actionNotification.notificationMode.emailMessage}
+                            value={action.actionNotification ? action.actionNotification.notificationMode.emailMessage : undefined}
                             onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder="${serverity}，${entity_name}于{occurtime}发生，具体信息为${description}" />
 
                         <Popover overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={this.emailVarContent}>
@@ -451,24 +465,23 @@ class RuleEditor extends Component {
 
                     </div>
                   </TabPane>
-                  <TabPane tab={<div><Checkbox value={2} onChange={this.changeAction.bind(this, 3)} /><span>短信息</span></div>} key="2">
+                  <TabPane tab={<div><Checkbox defaultChecked={this.sms} value={2} onChange={this.changeAction.bind(this, 3)} /><span>短信息</span></div>} key="2">
                     <div>
                       <FormItem
                         label="信息内容"
                         className={styles.msgContent}
                       >
                           <Input id="smsMessage"
-                            // value={action.actionNotification.notificationMode.smsMessage}
+                            value={action.actionNotification ? action.actionNotification.notificationMode.smsMessage : undefined}
                             onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder="${serverity}，${entity_name}于{occurtime}发生，具体信息为${description}" />
 
                           <Popover overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={this.smsVarContent}>
                             <div className={styles.insertVar}>插入变量</div>
                           </Popover>
                       </FormItem>
-
                     </div>
                   </TabPane>
-                  <TabPane tab={<div><Checkbox value={3} onChange={this.changeAction.bind(this, 3)} /><span>分享到ChatOps私聊窗口</span></div>} key="3" />
+                  <TabPane tab={<div><Checkbox defaultChecked={this.chatops} value={3} onChange={this.changeAction.bind(this, 3)} /><span>分享到ChatOps私聊窗口</span></div>} key="3" />
                 </Tabs>
               </div>
             </TabPane>
@@ -478,7 +491,7 @@ class RuleEditor extends Component {
                 <Select
                   style={{ width: 100 }}
                   placeholder="请选择类别"
-                  // value={action.actionITSM.itsmModelId}
+                  value={action.actionITSM ? action.actionITSM.itsmModelId : undefined}
                   onChange={this.changeAction.bind(this, 4)}
                 >
                   <Option value="group1">组1</Option>
@@ -486,7 +499,7 @@ class RuleEditor extends Component {
                 </Select>
                 <em>选择工单类型，派发到ITSM</em>
                 <Input className={styles.text} onBlur={this.changeAction.bind(this, 4)}
-                  // defaultValue={action.actionITSM.param.cesjo}
+                  defaultValue={action.actionITSM ? action.actionITSM.param.cesjo : undefined}
                   type="textarea" placeholder="映射配置" />
               </div>
             </TabPane>
@@ -498,7 +511,7 @@ class RuleEditor extends Component {
                 <span>ChatOps群组：</span>
                 <Select
                   style={{ width: 100 }}
-                  // value={action.actionChatOps.chatOpsRoomId}
+                  value={action.actionChatOps ? action.actionChatOps.chatOpsRoomId : undefined }
                   placeholder="请选择群组"
                   onChange={this.changeAction.bind(this, 6)}
                 >
@@ -514,6 +527,35 @@ class RuleEditor extends Component {
     );
   }
 
+  isChecked() {
+    const _action = _.cloneDeep(this.state.action);
+    if (!_action.actionNotification) {
+      _action.actionNotification = {
+        recipients: [],
+        notificationMode: {
+          notificationMode: [],
+          emailTitle: '',
+          emailMessage: '',
+          smsMessage: ''
+        }
+      };
+    }
+    const mode = _action.actionNotification.notificationMode.notificationMode;
+    for (let i = mode.length - 1; i >= 0; i -= 1) {
+      if (mode[i] === 1) {
+        this.email = true;
+      }
+      if (mode[i] === 2) {
+        this.sms = true;
+      }
+      if (mode[i] === 3) {
+        this.chatops = true;
+      }
+    }
+
+    this.recipients = _action.actionNotification.recipients.map(item => item.userId);
+  }
+
   // 插入变量的内容
   vars(type) {
     const { insertVars } = this.state;
@@ -527,6 +569,17 @@ class RuleEditor extends Component {
   // 插入变量
   insertVar(type, item, event) {
     const _action = _.cloneDeep(this.state.action);
+    if (!_action.actionNotification) {
+      _action.actionNotification = {
+        recipients: [],
+        notificationMode: {
+          notificationMode: [],
+          emailTitle: '',
+          emailMessage: '',
+          smsMessage: ''
+        }
+      };
+    }
     let mode = _action.actionNotification.notificationMode;
     mode[type] += '${' + item + '}';
     _action.actionNotification.notificationMode.notificationMode = mode.notificationMode;
@@ -539,11 +592,25 @@ class RuleEditor extends Component {
     const _action = _.cloneDeep(this.state.action);
     switch(type) {
       case 1: // 关闭/删除告警
+        _action.actionDelOrClose = {
+          operation: ''
+        };
         _action.actionDelOrClose.operation = parseInt(value, 10);
         break;
       case 2: // 升级/降级告警
         break;
       case 3: // 告警通知
+        if (!_action.actionNotification) {
+          _action.actionNotification = {
+            recipients: [],
+            notificationMode: {
+              notificationMode: [],
+              emailTitle: '',
+              emailMessage: '',
+              smsMessage: ''
+            }
+          };
+        }
         let mode = _action.actionNotification.notificationMode;
         if (_.isArray(value)) { // 通知对象
           const { users } = this.props.alertAssociationRules;
@@ -574,6 +641,14 @@ class RuleEditor extends Component {
         _action.actionNotification.notificationMode.notificationMode = mode.notificationMode;
         break;
       case 4: // 告警派单
+        if (!_action.actionITSM) {
+          _action.actionITSM = {
+            itsmModelId: undefined,
+            param: {
+              cesjo: undefined
+            }
+          };
+        }
         if (value.target) {
           _action.actionITSM.param.cesjo = value.target.value;
         } else {
@@ -583,6 +658,9 @@ class RuleEditor extends Component {
       case 5: // 抑制告警
         break;
       case 6: // 分享到Chatops
+        _action.actionChatOps = {
+          chatOpsRoomId: ''
+        };
         _action.actionChatOps.chatOpsRoomId = value;
         break;
       default:
@@ -599,13 +677,6 @@ class RuleEditor extends Component {
     _action.type = [parseInt(value, 10)];
     this.setState({
       action: _action
-    });
-  }
-
-  // 更改来源
-  changeSource(value) {
-    this.setState({
-      source: value
     });
   }
 
@@ -637,6 +708,18 @@ class RuleEditor extends Component {
         }
       </div>
     );
+  }
+
+  changeField(type, event) {
+    this.setState({
+      [type]: event.target.value
+    });
+  }
+
+  changeSource(value) {
+    this.setState({
+      source: value
+    });
   }
 
   // 创建条件内容
@@ -840,94 +923,90 @@ class RuleEditor extends Component {
   }
 
   handleSubmit(event) {
-    const { dispatch, form } = this.props;
-    const { type, source, condition, time, timeStart, timeEnd, action } = this.state;
-    const { getFieldValue } = form;
+    const { dispatch, form, routeParams } = this.props;
+    const { name, description, type, source, condition, time, timeStart, timeEnd, action } = this.state;
+
     event.preventDefault();
-    this.props.form.validateFields((errors, values) => {
-      if (errors) {
-        // console.warn('[表单错误]', errors);
-        return false;
-      } else {
-        let _time = {};
-        let hmStart = `${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")}:00`;
-        let hmEnd = `${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}:00`;
-        let local = moment().format().substr(19, 6);
-        /* 动作 */
-        let _actionDelOrClose = undefined;
-        let _actionNotification = undefined;
-        let _actionITSM = undefined;
-        let _actionSuppress = undefined;
-        let _actionChatOps = undefined;
 
-        switch(type) {
-          case 1: // 周期
-            if (_time.timeCycle === 1) { // 每周
-              _time.timeCycle = time.timeCycle;
-              _time.timeCycleWeek = time.timeCycleWeek;
-            }
-            if (_time.timeCycle === 2) { // 每月
-              _time.timeCycle = time.timeCycle;
-              _time.timeCycleMonth = time.timeCycleMonth;
-            }
-            _time.timeStart = `${hmStart}.000${local}`;
-            _time.timeEnd = `${hmEnd}.000${local}`;
-            break;
-          case 2: // 固定
-            _time.dayStart = time.dayStart.replace(time.dayStart.substr(11, 8), hmStart).replace('+', '.000+');
-            _time.dayEnd = time.dayEnd.replace(time.dayStart.substr(11, 8), hmEnd).replace('+', '.000+');
-            break;
-          default:
-            break;
+    let _time = {};
+    let hmStart = `${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")}:00`;
+    let hmEnd = `${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}:00`;
+    let local = moment().format().substr(19, 6);
+    /* 动作 */
+    let _actionDelOrClose = undefined;
+    let _actionNotification = undefined;
+    let _actionITSM = undefined;
+    let _actionSuppress = undefined;
+    let _actionChatOps = undefined;
+
+    switch(type) {
+      case 1: // 周期
+        if (_time.timeCycle === 1) { // 每周
+          _time.timeCycle = time.timeCycle;
+          _time.timeCycleWeek = time.timeCycleWeek;
         }
-
-        switch(action.type[0]) {
-          case 1:
-            _actionDelOrClose = action.actionDelOrClose;
-            break;
-          case 3:
-            _actionNotification = action.actionNotification;
-            break;
-          case 4:
-            _actionITSM = action.actionITSM;
-            break;
-          case 5:
-            _actionSuppress = action.actionSuppress;
-            break;
-          case 6:
-            _actionChatOps = action.actionChatOps;
-            break;
-          default:
-            break;
+        if (_time.timeCycle === 2) { // 每月
+          _time.timeCycle = time.timeCycle;
+          _time.timeCycleMonth = time.timeCycleMonth;
         }
+        _time.timeStart = `${hmStart}.000${local}`;
+        _time.timeEnd = `${hmEnd}.000${local}`;
+        break;
+      case 2: // 固定
+        _time.dayStart = time.dayStart.replace(time.dayStart.substr(11, 8), hmStart).replace('+', '.000+');
+        _time.dayEnd = time.dayEnd.replace(time.dayStart.substr(11, 8), hmEnd).replace('+', '.000+');
+        break;
+      default:
+        break;
+    }
 
-        const params = {
-          rule: {
-            name: getFieldValue('name'),
-            description: getFieldValue('description'),
-            type,
-            time: type === 0 ? undefined : _time,
-            source,
-            condition,
-          },
-          action: {
-            tenant: undefined,
-            type: action.type,
-            actionDelOrClose: _actionDelOrClose,
-            actionNotification: _actionNotification,
-            actionITSM: _actionITSM,
-            actionSuppress: _actionSuppress,
-            actionChatOps: _actionChatOps
-          }
-        };
-        dispatch({
-          type: 'alertAssociationRules/createRule',
-          payload: {
-            ...params
-          }
-        });
+    switch(action.type[0]) {
+      case 1:
+        _actionDelOrClose = action.actionDelOrClose;
+        break;
+      case 3:
+        _actionNotification = action.actionNotification;
+        break;
+      case 4:
+        _actionITSM = action.actionITSM;
+        break;
+      case 5:
+        _actionSuppress = action.actionSuppress;
+        break;
+      case 6:
+        _actionChatOps = action.actionChatOps;
+        break;
+      default:
+        break;
+    }
+
+    const params = {
+      ruleId: routeParams.ruleId ? undefined : routeParams.ruleId,
+      rule: {
+        name,
+        description,
+        type,
+        time: type === 0 ? undefined : _time,
+        source,
+        condition,
+      },
+      action: {
+        tenant: undefined,
+        type: action.type,
+        actionDelOrClose: _actionDelOrClose,
+        actionNotification: _actionNotification,
+        actionITSM: _actionITSM,
+        actionSuppress: _actionSuppress,
+        actionChatOps: _actionChatOps
+      }
+    };
+    dispatch({
+      type: 'alertAssociationRules/createRule',
+      payload: {
+        ...params
       }
     });
+
   }
 }
 
@@ -1004,8 +1083,8 @@ RuleEditor.propTypes = {
     timeCycleWeek: PropTypes.string,
     // 时间周期为每月必填（0～30:1号～31号）
     timeCycleMonth: PropTypes.string,
-    timeStart: PropTypes.string.isRequired,
-    timeEnd: PropTypes.string.isRequired
+    timeStart: PropTypes.string,
+    timeEnd: PropTypes.string
   }),
 
   /* 告警来源 */
