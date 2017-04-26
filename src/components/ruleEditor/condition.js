@@ -6,27 +6,63 @@ import styles from './condition.less';
 
 const Option = Select.Option;
 
-const optList = [
-  {
-    name: '等于',
-    value: '='
-  }, {
-    name: '不等于',
-    value: '!='
-  }, {
-    name: '包含',
-    value: '>='
-  }, {
-    name: '不包含',
-    value: '><'
-  }, {
-    name: '大于',
-    value: '>'
-  }, {
-    name: '小于',
-    value: '<'
-  }
-];
+const optList = {
+  num: [
+    {
+      name: '等于',
+      value: '='
+    }, {
+      name: '不等于',
+      value: '!='
+    }, {
+      name: '大于',
+      value: '>'
+    }, {
+      name: '小于',
+      value: '<'
+    }, {
+      name: '大于等于',
+      value: '>='
+    }, {
+      name: '小于等于',
+      value: '=<'
+    }
+  ],
+  'str': [
+    {
+      name: '包含',
+      value: 'contain'
+    },
+    {
+      name: '相等',
+      value: 'equal'
+    },
+    {
+      name: '以某字符串开始',
+      value: 'startwith'
+    },
+    {
+      name: '以某字符串结束',
+      value: 'endwith'
+    },
+    {
+      name: '大于',
+      value: 'gt'
+    },
+    {
+      name: '大于等于',
+      value: 'ge'
+    },
+    {
+      name: '小于',
+      value: 'lt'
+    },
+    {
+      name: '小于等于',
+      value: 'le'
+    }
+  ]
+};
 const valueList = {
   severity: [
     {
@@ -85,17 +121,24 @@ class Condition extends Component {
   // }
   // 创建条件
   createConditionItem() {
-    const keyList = [];
+    let keyList = [];
     const {node, source, attributes, _key, opt, value, level, index, deleteLine, changeConditionContent, _this} = this.props;
     valueList.source = source.map(item => {
       return { name: item.value, value: item.key };
     });
-    for (let i in attributes) {
-      keyList.push({
-        name: attributes[i],
-        value: i
-      });
-    };
+    keyList = attributes.map(item => {
+      return {
+        name: item['nameZh'],
+        value: item['nameUs'],
+        type: item['type']
+      };
+    });
+    let _optList = [];
+    keyList.forEach(item => {
+      if (item.value === _key) {
+        _optList = optList[item.type]
+      }
+    });
     return (
       <div key={new Date().getTime() + 'level' + level} className={cls(
         styles.conditionItem,
@@ -104,14 +147,14 @@ class Condition extends Component {
         <Select onChange={changeConditionContent.bind(_this, node, index, 'key')} className={styles.key} value={_key} placeholder="请选择维度">
           {
             keyList.map(item => (
-              <Option value={item.value}>{item.name}</Option>
+              <Option key={item.value}>{item.name}</Option>
             ))
           }
         </Select>
-        <Select onChange={changeConditionContent.bind(_this, node, index, 'opt')} className={styles.opt} style={{ width: 100 }} value={opt} placeholder="请选择条件">
+        <Select onChange={changeConditionContent.bind(_this, node, index, 'opt')} className={styles.opt} value={opt} placeholder="请选择条件">
           {
-            optList.map(item => (
-              <Option value={item.value}>{item.name}</Option>
+            _optList.map(item => (
+              <Option key={item.value}>{item.name}</Option>
             ))
           }
         </Select>
@@ -121,7 +164,7 @@ class Condition extends Component {
             {
               valueList[_key] &&
               valueList[_key].map(item => (
-                <Option value={item.value}>{item.name}</Option>
+                <Option key={item.value}>{item.name}</Option>
               ))
             }
           </Select>
