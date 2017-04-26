@@ -15,6 +15,7 @@ import {
   Popover,
   Checkbox
 } from 'antd';
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
 import Condition from './condition';
 import TimeSlider from './timeSlider';
@@ -169,6 +170,8 @@ class RuleEditor extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      // name: props.name,
+      // description: props.description,
       /* 时间 */
       type: props.type,
       time: props.time,
@@ -215,6 +218,7 @@ class RuleEditor extends Component {
     });
   }
   componentDidMount() {
+
   }
   componentWillReceiveProps(nextProps, nextState) {
     if (this.props.name !== nextProps.name) {
@@ -435,7 +439,7 @@ class RuleEditor extends Component {
                 <span className={styles.label}>针对符合条件的告警，执行</span>
                 <Select
                   style={{ width: 100 }}
-                  value={action.actionDelOrClose ? action.actionDelOrClose.operation : undefined}
+                  value={action.actionDelOrClose ? action.actionDelOrClose.operation.toString() : undefined}
                   placeholder="请选择操作"
                   onChange={this.changeAction.bind(this, 1)}
                 >
