@@ -224,7 +224,10 @@ class RuleEditor extends Component {
         type: nextProps.type,
         source: nextProps.source,
         condition: makeCondition(_.cloneDeep(nextProps.condition)),
-        action: nextProps.action
+        action: nextProps.action,
+        ITSMParam: nextProps.action.actionITSM.param
+          ? JSON.stringify(JSON.parse(nextProps.action.actionITSM.param), null, 2)
+          : ''
       });
 
     }
@@ -236,7 +239,6 @@ class RuleEditor extends Component {
           value: _ITSMParam
         }
       });
-      // debugger
       this.setState({
         ITSMParam: JSON.stringify(JSON.parse(_ITSMParam), null, 2)
       })
@@ -698,15 +700,13 @@ class RuleEditor extends Component {
         if (!_action.actionITSM) {
           _action.actionITSM = {
             itsmModelId: undefined,
-            param: {
-              cesjo: undefined
-            }
+            param: undefined
           };
         }
         if (value.target) {
-          _action.actionITSM.param.cesjo = value.target.value.replace(/\s|\n/g, "").replace(/\"/g, "\\\"");
+          _action.actionITSM.param = value.target.value.replace(/\s|\n/g, "");
           let _ITSMParam = value.target.value;
-          console.log(_action.actionITSM.param.cesjo)
+          console.log(_action.actionITSM.param)
 
           this.setState({
             ITSMParam: _ITSMParam
@@ -1135,9 +1135,7 @@ RuleEditor.defaultProps = {
     },
     actionITSM: {
       itsmModelId: undefined,
-      param: {
-        cesjo: ''
-      }
+      param: ''
     },
     actionChatOps: {
       chatOpsRoomId: undefined
@@ -1209,9 +1207,7 @@ RuleEditor.propTypes = {
     }),
     actionITSM: PropTypes.shape({
       itsmModelId: PropTypes.string,
-      param: PropTypes.shape({
-        cesjo: PropTypes.string
-      })
+      param: PropTypes.string
     }),
     actionChatOps: PropTypes.shape({
       chatOpsRoomId: PropTypes.string
