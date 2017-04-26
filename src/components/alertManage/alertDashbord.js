@@ -66,6 +66,15 @@ class Chart extends Component{
         }, 60000)
     }
     componentDidUpdate(){
+        if (this.props.isFold) {
+            this.chartWidth = document.documentElement.clientWidth - 180;
+        } else {
+            this.chartWidth = document.documentElement.clientWidth - 160 - 90;
+        }
+
+        this.chart = d3.select("#treemap")
+            .select('svg')
+            .attr("width", this.chartWidth)
         
         this.treemap = d3.layout.treemap()
           .round(false)

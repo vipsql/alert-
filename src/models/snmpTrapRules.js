@@ -11,9 +11,10 @@ const initalState = {
   OIDList: [], // 精确匹配时的oid类
   operateType: undefined, // 操作类型
   operateAppRules: {}, // 操作的对象
-  __matchProps: [], //['description', 'source', 'tags'], // 查询得到的映射字段
-  __groupComposeProps: [], //['enity_name', 'name'], // 字段组合_组合（已选择映射字段）
-  __mergeProps: [], //['enity_name', 'name', 'description', 'source', 'tags', 'abc'], // 合并字段（映射字段 + 新字段）
+  __matchProps: [], // 全量，不可重复
+  __groupFieldProps: [], // 全量，不可重复
+  __groupComposeProps: [], // 已映射字段 + 新字段名
+  __mergeProps: [], // 如果选择entityName或者name + 新字段名
 
 }
 
@@ -151,6 +152,7 @@ export default {
         ...state,
         filterSource: source,
         __matchProps: fields,
+        __groupFieldProps: fields,
         __groupComposeProps: [],
         __mergeProps: [],
         operateAppRules: initalState.operateAppRules,
@@ -165,7 +167,9 @@ export default {
       let operateAppRules = {};
       let selectedMatchFields = [];
       let selectedGroupFields = [];
+      let codeProperties = [];
       let __matchProps = [].concat(fields);
+      let __groupFieldProps = [].concat(fields);
       let __groupComposeProps = [];
       let __mergeProps = [];
       appRules.forEach( (rule, index) => {
@@ -173,24 +177,36 @@ export default {
           operateAppRules = rule;
           selectedMatchFields = Object.keys(operateAppRules.matchFields);
           selectedGroupFields = Object.keys(operateAppRules.groupFields);
+          codeProperties = operateAppRules.properties;
         }
       })
       selectedMatchFields.length > 0 && selectedMatchFields.forEach( (field, index) => {
+         if (field === 'name' || field === 'entityName') {
+           __mergeProps.push(field)
+         }
          __groupComposeProps.push(field);
          if (__matchProps.includes(field)) {
            __matchProps = __matchProps.filter( match => match !== field )
          }
       })
       selectedGroupFields.length > 0 && selectedGroupFields.forEach( (field, index) => {
-         if (__matchProps.includes(field)) {
-           __matchProps = __matchProps.filter( match => match !== field )
+         if ((field === 'name' || field === 'entityName') && !__mergeProps.includes(field)) {
+           __mergeProps.push(field);
          }
+         if (__groupFieldProps.includes(field)) {
+           __groupFieldProps = __groupFieldProps.filter( match => match !== field )
+         }
+      })
+      codeProperties.length > 0 && codeProperties.forEach( (property, index) => {
+         __groupComposeProps.push(property.code);
+         __mergeProps.push(property.code);
       })
 
       return {
         ...state,
         filterSource: source,
         __matchProps,
+        __groupFieldProps,
         __groupComposeProps,
         __mergeProps,
         operateAppRules,

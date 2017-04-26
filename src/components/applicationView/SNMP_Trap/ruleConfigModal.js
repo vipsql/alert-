@@ -22,6 +22,7 @@ class ruleModal extends Component{
             levelList: [{'trap': undefined, 'severity': undefined, 'enitable': true}],
             mergeKey: '', 
             __matchProps: [],
+            __groupFieldProps: [],
             __groupComposeProps: [],
             __mergeProps: [],
         }
@@ -36,6 +37,7 @@ class ruleModal extends Component{
         this.editComposeField = this.editComposeField.bind(this)
         this.deleComposeField = this.deleComposeField.bind(this)
         this.clickCompose = this.clickCompose.bind(this)
+        this.clickComposeByField = this.clickComposeByField.bind(this)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -50,6 +52,7 @@ class ruleModal extends Component{
                 levelList: nextProps.snmpTrapRules.levelList.length !== 0 ? nextProps.snmpTrapRules.levelList : [{'trap': undefined, 'severity': undefined, 'enitable': true}],
                 mergeKey: nextProps.snmpTrapRules.operateAppRules.mergeKey || '',
                 __matchProps: nextProps.snmpTrapRules.__matchProps,
+                __groupFieldProps: nextProps.snmpTrapRules.__groupFieldProps,
                 __groupComposeProps: nextProps.snmpTrapRules.__groupComposeProps,
                 __mergeProps: nextProps.snmpTrapRules.__mergeProps,
             })
@@ -70,7 +73,7 @@ class ruleModal extends Component{
     clickCompose() {
         let __newMergeProps = [];
         this.state.matchFields.forEach( (field) => {
-            if (field['enitable'] === undefined && field['mapper'] !== undefined)
+            if (field['enitable'] === undefined && (field['mapper'] === 'name' || field['mapper'] === 'entityName') && field['mapper'] !== undefined)
                 !__newMergeProps.includes(field['mapper']) && __newMergeProps.push(field['mapper'])
         })
         this.state.properties.forEach( (field) => {
@@ -78,10 +81,24 @@ class ruleModal extends Component{
                 !__newMergeProps.includes(field['code']) && __newMergeProps.push(field['code'])
         })
         this.state.groupFieldsList.forEach( (field) => {
-            if (field['enitable'] === undefined  && field['field'] !== undefined)
+            if (field['enitable'] === undefined && (field['field'] === 'name' || field['field'] === 'entityName') && field['field'] !== undefined)
                 !__newMergeProps.includes(field['field']) && __newMergeProps.push(field['field'])
         })
         this.setState({ __mergeProps: [...__newMergeProps]})
+    }
+
+    // 点击组合时触发
+    clickComposeByField() {
+        let __newGroupComposeProps = [];
+        this.state.matchFields.forEach( (field) => {
+            if (field['enitable'] === undefined && field['mapper'] !== undefined)
+                !__newGroupComposeProps.includes(field['mapper']) && __newGroupComposeProps.push(field['mapper'])
+        })
+        this.state.properties.forEach( (field) => {
+            if (field['enitable'] === undefined && field['code'] !== undefined && field['code'] !== '')
+                !__newGroupComposeProps.includes(field['code']) && __newGroupComposeProps.push(field['code'])
+        })
+        this.setState({ __groupComposeProps: [...__newGroupComposeProps]})
     }
 
     // 在增加映射字段时 --> 减少字段组合中的可选字段，增加组合的可选项目
@@ -89,13 +106,11 @@ class ruleModal extends Component{
         //TODO
         let newMatchFields = []
         let __newMatchProps = []
-        let __newGroupComposeProps = []
-        
+
         data.forEach( (item, itemIndex) => {
             if (targetIndex === itemIndex) {
                 item[key] = targetValue 
             }
-            !__newGroupComposeProps.includes(item['mapper']) && __newGroupComposeProps.push(item['mapper'])
 
             // 重复的置为undefined
             if (item['enitable'] && item['mapper'] === data[targetIndex]['mapper']) {
@@ -103,11 +118,10 @@ class ruleModal extends Component{
             }
             newMatchFields.push(item)
         })
-        
         this.state.__matchProps.forEach( (child) => {
             if (data[targetIndex]['mapper'] !== child) { __newMatchProps.push(child) }
         })
-        this.setState({ matchFields: [ ...newMatchFields ], __matchProps: __newMatchProps, __groupComposeProps: __newGroupComposeProps })
+        this.setState({ matchFields: [ ...newMatchFields ], __matchProps: __newMatchProps})
     }
 
     // 在编辑映射字段时 --> 将内容补到__matchProps中
@@ -132,43 +146,39 @@ class ruleModal extends Component{
     // 在删除映射字段时 --> 增加字段组合中的可选字段，减少组合的可选项目
     deleFieldMapper(data, targetIndex) {
         let __newMatchProps = [].concat(this.state.__matchProps)
-        let __newGroupComposeProps = []
         
         let newMatchFields = data.filter( (item, itemIndex) => {
-            if (itemIndex !== targetIndex) {
-                !__newGroupComposeProps.includes(item['mapper']) && __newGroupComposeProps.push(item['mapper']);
-            }
             if (itemIndex === targetIndex && item['enitable'] === undefined) {
                 if ( item['mapper'] !== undefined) { __newMatchProps.unshift(item['mapper'])}
             }
             return itemIndex !== targetIndex 
         })
 
-        this.setState({ matchFields: [ ...newMatchFields ], __matchProps: __newMatchProps, __groupComposeProps: __newGroupComposeProps })
+        this.setState({ matchFields: [ ...newMatchFields ], __matchProps: __newMatchProps })
     }
 
     // 在编辑字段组合时 --> 将内容补到__matchProps中
     editComposeField(data, targetIndex, key, targetValue) {
         //TODO
         let newGroupFieldsList = []
-        let __newMatchProps = [].concat(this.state.__matchProps)
+        let __newGroupFieldProps = [].concat(this.state.__groupFieldProps)
         data.forEach( (item, itemIndex) => {
             if (targetIndex === itemIndex) {
                 item[key] = targetValue 
             }
             newGroupFieldsList.push(item)
         })
-        if (data[targetIndex]['field'] !== undefined && !__newMatchProps.includes(data[targetIndex]['field'])) { 
-            __newMatchProps.push(data[targetIndex]['field']) 
+        if (data[targetIndex]['field'] !== undefined && !__newGroupFieldProps.includes(data[targetIndex]['field'])) { 
+            __newGroupFieldProps.push(data[targetIndex]['field']) 
         }
 
-        this.setState({ groupFieldsList: [ ...newGroupFieldsList ], __matchProps: __newMatchProps })
+        this.setState({ groupFieldsList: [ ...newGroupFieldsList ], __groupFieldProps: __newGroupFieldProps })
     }
 
     // 在新增字段组合时 --> 除掉已经选择的
     addComposeField(data, targetIndex, key, targetValue) {
         //TODO
-        let __newMatchProps = []
+        let __newGroupFieldProps = []
         let newGroupFieldsList = []
         data.forEach( (item, itemIndex) => {
             if (targetIndex === itemIndex) {
@@ -181,23 +191,23 @@ class ruleModal extends Component{
             newGroupFieldsList.push(item)
         })
         
-        this.state.__matchProps.forEach( (child) => {
-            if (data[targetIndex]['field'] !== child) { __newMatchProps.push(child) }
+        this.state.__groupFieldProps.forEach( (child) => {
+            if (data[targetIndex]['field'] !== child) { __newGroupFieldProps.push(child) }
         })
-        this.setState({ groupFieldsList: [ ...newGroupFieldsList ], __matchProps: __newMatchProps })
+        this.setState({ groupFieldsList: [ ...newGroupFieldsList ], __groupFieldProps: __newGroupFieldProps })
     }
 
     // 在删除字段组合时 --> 补全删除的
     deleComposeField(data, targetIndex) {
-        let __newMatchProps = [].concat(this.state.__matchProps)
+        let __newGroupFieldProps = [].concat(this.state.__groupFieldProps)
         let newGroupFieldsList = data.filter( (item, itemIndex) => {
             if (itemIndex === targetIndex && item['enitable'] === undefined) {
-                if ( item['field'] !== undefined) { __newMatchProps.unshift(item['field'])}
+                if ( item['field'] !== undefined) { __newGroupFieldProps.unshift(item['field'])}
             }
             return itemIndex !== targetIndex 
         })
 
-        this.setState({ groupFieldsList: [ ...newGroupFieldsList ], __matchProps: __newMatchProps })
+        this.setState({ groupFieldsList: [ ...newGroupFieldsList ], __groupFieldProps: __newGroupFieldProps })
     }
 
     render() {
@@ -844,7 +854,7 @@ class ruleModal extends Component{
                                                     this.setState({ groupFieldsList: [ ...data ] })
                                                 }}>
                                                     {
-                                                        this.state.__matchProps.length > 0 ? this.state.__matchProps.map( (field, index) => {
+                                                        this.state.__groupFieldProps.length > 0 ? this.state.__groupFieldProps.map( (field, index) => {
                                                             return <Option key={index} value={field}>{field}</Option>
                                                         }) : []
                                                     }
@@ -868,24 +878,25 @@ class ruleModal extends Component{
                                                         let data = this.replaceFunc(this.state.groupFieldsList, index, 'compose', e.target.value)
                                                         this.setState({ groupFieldsList: [ ...data ] })
                                                     }} />
-                                                    <Popover placement='bottomRight' overlayClassName={styles.popover} trigger="click" content={
+                                                    <Popover placement='bottomRight' overlayClassName={styles.popover} onClick={this.clickComposeByField} trigger="click" content={
                                                         <div className={styles.popoverMain}>
                                                             {
                                                                 this.state.__groupComposeProps.length > 0 ? this.state.__groupComposeProps.map( (field, itemIndex) => {
-                                                                    if (this.state.groupFieldsList[index]['compose'] !== undefined && this.state.groupFieldsList[index]['compose'].split('$').includes(field)) {
-                                                                        return <span className={styles.selected} key={itemIndex} data-content={field} onClick={ (e) => {
-                                                                            e.stopPropagation();
-                                                                            let value = this.state.groupFieldsList[index]['compose'].replace(`$${e.target.getAttribute('data-content')}`, '');
-                                                                            //TODO
-                                                                            let data = this.replaceFunc(this.state.groupFieldsList, index, 'compose', value)
-                                                                            this.setState({ groupFieldsList: [ ...data ] })
-                                                                        }}>{field}</span>
+                                                                    if (this.state.groupFieldsList[index]['compose'] !== undefined && this.state.groupFieldsList[index]['compose'].match(/\$\{\w*\}/g) !== null 
+                                                                        && this.state.groupFieldsList[index]['compose'].match(/\$\{\w*\}/g).includes(`$\{${field}\}`)) {
+                                                                            return <span className={styles.selected} key={itemIndex} data-content={field} onClick={ (e) => {
+                                                                                e.stopPropagation();
+                                                                                let value = this.state.groupFieldsList[index]['compose'].replace(`$\{${e.target.getAttribute('data-content')}\}`, '');
+                                                                                //TODO
+                                                                                let data = this.replaceFunc(this.state.groupFieldsList, index, 'compose', value)
+                                                                                this.setState({ groupFieldsList: [ ...data ] })
+                                                                            }}>{field}</span>
                                                                     }
                                                                     return <span key={itemIndex} data-content={field} onClick={ (e) => {
                                                                         e.stopPropagation();
-                                                                        let value = `$${e.target.getAttribute('data-content')}`;
+                                                                        let value = `$\{${e.target.getAttribute('data-content')}\}`;
                                                                         if (this.state.groupFieldsList[index]['compose'] !== undefined )
-                                                                            value = this.state.groupFieldsList[index]['compose'] + `$${e.target.getAttribute('data-content')}`;
+                                                                            value = this.state.groupFieldsList[index]['compose'] + `$\{${e.target.getAttribute('data-content')}\}`;
                                                                         //TODO
                                                                         let data = this.replaceFunc(this.state.groupFieldsList, index, 'compose', value)
                                                                         this.setState({ groupFieldsList: [ ...data ] })
@@ -963,20 +974,20 @@ class ruleModal extends Component{
                                             <div className={styles.popoverMain}>
                                                 {
                                                     this.state.__mergeProps.length > 0 ? this.state.__mergeProps.map( (field, itemIndex) => {
-                                                        if (this.state.mergeKey !== '' && this.state.mergeKey.split('$').includes(field)) {
+                                                        if (this.state.mergeKey !== '' && this.state.mergeKey.match(/\$\{\w*\}/g) !== null && this.state.mergeKey.match(/\$\{\w*\}/g).includes(`$\{${field}\}`)) {
                                                             return <span className={styles.selected} key={itemIndex} data-content={field} onClick={ (e) => {
                                                                 //TODO
                                                                 e.stopPropagation();
-                                                                let value = this.state.mergeKey.replace(`$${e.target.getAttribute('data-content')}`, '');
+                                                                let value = this.state.mergeKey.replace(`$\{${e.target.getAttribute('data-content')}\}`, '');
                                                                 this.setState({ mergeKey: value })
                                                             }}>{field}</span>
                                                         }
                                                         return <span key={itemIndex} data-content={field} onClick={ (e) => {
                                                             //TODO
                                                             e.stopPropagation();
-                                                            let value = `$${e.target.getAttribute('data-content')}`;
+                                                            let value = `$\{${e.target.getAttribute('data-content')}\}`;
                                                             if (this.state.mergeKey !== '' )
-                                                                value = this.state.mergeKey + `$${e.target.getAttribute('data-content')}`;
+                                                                value = this.state.mergeKey + `$\{${e.target.getAttribute('data-content')}\}`;
                                                             this.setState({ mergeKey: value })
                                                         }}>{field}</span>
                                                     }) : <span className={styles.noData}>{formatMessage({...localeMessage['rule_noSelectField']})}</span>
