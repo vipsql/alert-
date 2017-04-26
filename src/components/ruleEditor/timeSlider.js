@@ -13,12 +13,12 @@ class TimeSlider extends Component {
     return (
       <div className={styles.timeWrap}>
         <div className={styles.timeStart}>
-          <p className={styles.title}>起始执行时间：</p>
+          <p className={styles.title}>{window.__alert_appLocaleData.messages['ruleEditor.startTime']}：</p>
           <Slider onChange={changeTime.bind(this, 'timeStart', 'hours')} value={timeStart.hours} className={cls(styles.hours, `timeMarks${timeStart.hours}`)} tipFormatter={null} max={23} />
           <Slider onChange={changeTime.bind(this, 'timeStart', 'mins')} value={timeStart.mins} className={cls(styles.mins, `timeMarks${timeStart.mins}`)} tipFormatter={null} max={59} />
         </div>
         <div className={styles.timeEnd}>
-          <p className={styles.title}>结束执行时间：</p>
+          <p className={styles.title}>{window.__alert_appLocaleData.messages['ruleEditor.endTime']}：</p>
           <Slider onChange={changeTime.bind(this, 'timeEnd', 'hours')} value={timeEnd.hours} className={cls(styles.hours, `timeMarks${timeEnd.hours}`)} tipFormatter={null} max={23} />
           <Slider onChange={changeTime.bind(this, 'timeEnd', 'mins')} value={timeEnd.mins} className={cls(styles.mins, `timeMarks${timeEnd.mins}`)} tipFormatter={null} max={59} />
         </div>

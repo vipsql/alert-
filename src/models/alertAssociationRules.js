@@ -51,7 +51,7 @@ const initalState = {
   orderType: undefined, // 1 --> 升序
   users: [], // 用户列表
   source: [], // 来源列表
-  attributes: {}, // 维度列表
+  attributes: [], // 维度列表
   field: [], // 映射字段
   rooms: [], // chatOps 群组
   wos: [], // 工单类型
