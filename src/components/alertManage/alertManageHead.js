@@ -43,6 +43,10 @@ const formatMessages = defineMessages({
     assignedIncident: {
       id: 'alertManage.assignedIncident',
       defaultMessage: '处理中告警'
+    },
+    resolvedIncident: {
+      id: 'alertManage.resolvedIncident',
+      defaultMessage: '已解决告警'
     }
 })
 
@@ -80,6 +84,7 @@ const AlertManageHead = ({
             }}>
               <Radio value='NEW'><FormattedMessage {...formatMessages['newIncident']}/></Radio>
               <Radio value='PROGRESSING'><FormattedMessage {...formatMessages['assignedIncident']}/></Radio>
+              <Radio value='RESOLVED'><FormattedMessage {...formatMessages['resolvedIncident']}/></Radio>
             </RadioGroup>
           </div>
         }

@@ -29,11 +29,11 @@ const initalState = {
                 {id: 'entityName', checked: true,},
                 {id: 'name', checked: false,},
                 {id: 'source', checked: false,},
-                {id: 'status', checked: true,},
                 {id: 'description', checked: false,},
                 {id: 'count', checked: false,},
                 {id: 'lastTime', checked: false,},
-                {id: 'lastOccurTime', checked: false,}
+                {id: 'lastOccurTime', checked: false,},
+                {id: 'status', checked: true,}
             ]
         },
     ],

@@ -44,8 +44,6 @@ const initvalState = {
       key: 'source',
       order: true
     }, {
-      key: 'status',
-    }, {
       key: 'description',
     }, {
       key: 'count',
@@ -56,7 +54,9 @@ const initvalState = {
     }, {
       key: 'lastOccurTime',
       order: true
-    }],
+    },{
+      key: 'status',
+    }, ],
 }
 
 export default {
