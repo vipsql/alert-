@@ -166,6 +166,60 @@ const makeCondition = node => {
   return node;
 };
 
+const formatMessages = defineMessages({
+    baseInfo: {
+      id: 'ruleEditor.baseInfo',
+      defaultMessage: '基本信息'
+    },
+    anyTime: {
+      id: 'ruleEditor.anyTime',
+      defaultMessage: '任意时间均执行'
+    },
+    peroid: {
+      id: 'ruleEditor.peroid',
+      defaultMessage: '周期性执行'
+    },
+    fixedTime: {
+      id: 'ruleEditor.fixedTime',
+      defaultMessage: '固定时间段执行'
+    },
+    schedule: {
+      id: 'ruleEditor.schedule',
+      defaultMessage: '请选择定时规则'
+    },
+    daily: {
+      id: 'ruleEditor.daily',
+      defaultMessage: '每日'
+    },
+    weekly: {
+      id: 'ruleEditor.weekly',
+      defaultMessage: '每周'
+    },
+    monthly: {
+      id: 'ruleEditor.monthly',
+      defaultMessage: '每月'
+    },
+    ruleName: {
+      id: 'ruleEditor.ruleName',
+      defaultMessage: '规则名称',
+    },
+    description: {
+      id: 'ruleEditor.description',
+      defaultMessage: '规则描述'
+    },
+    excuteTime: {
+      id: 'ruleEditor.excuteTime',
+      defaultMessage: '执行安排'
+    },
+    source: {
+      id: 'ruleEditor.source',
+      defaultMessage: '告警来源'
+    },
+
+
+})
+
+
 class RuleEditor extends Component {
   constructor(props) {
     super(props);
@@ -304,34 +358,34 @@ class RuleEditor extends Component {
     return (
       <Form id="RuleEditor" onSubmit={this.submit} hideRequiredMark={false}>
 
-        <h2>基本信息</h2>
+        <h2>{window.__alert_appLocaleData.messages['ruleEditor.baseInfo']}</h2>
         <div className={styles.baseInfo}>
           <FormItem
             {...itemLayout}
-            label="规则名称"
+            label={window.__alert_appLocaleData.messages['ruleEditor.phRuleName']}
           >
-              <Input value={this.state.name} onChange={this.changeField.bind(this, 'name')} placeholder="请输入规则名称" />
+              <Input value={this.state.name} onChange={this.changeField.bind(this, 'name')} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phRuleName']} />
 
           </FormItem>
           <FormItem
             {...desLayout}
-            label="规则描述"
+            label={window.__alert_appLocaleData.messages['ruleEditor.description']}
           >
 
-              <Input value={this.state.description} onChange={this.changeField.bind(this, 'description')} type="textarea" placeholder="请为规则添加描述" />
+              <Input value={this.state.description} onChange={this.changeField.bind(this, 'description')} type="textarea" placeholder={window.__alert_appLocaleData.messages['ruleEditor.phDescription']} />
 
           </FormItem>
           <FormItem
             {...desLayout}
-            label="执行安排"
+            label={window.__alert_appLocaleData.messages['ruleEditor.excuteTime']}
           >
             <RadioGroup
               onChange={this.changeType.bind(this)}
               value={this.state.type}
             >
-              <Radio value={0}>任意时间均执行</Radio>
-              <Radio value={1}>周期性执行</Radio>
-              <Radio value={2}>固定时间段执行</Radio>
+              <Radio value={0}><FormattedMessage {...formatMessages['anyTime']} /></Radio>
+              <Radio value={1}><FormattedMessage {...formatMessages['peroid']} /></Radio>
+              <Radio value={2}><FormattedMessage {...formatMessages['fixedTime']} /></Radio>
             </RadioGroup>
             {
               this.state.type === 1 &&
@@ -345,13 +399,13 @@ class RuleEditor extends Component {
                       <div className={styles.timeCycleHd}>
                         <span className={cls({
                           'active': time.timeCycle === 0
-                        })} onClick={this.changeTimeCycleType.bind(this, 0)}>每日</span>
+                        })} onClick={this.changeTimeCycleType.bind(this, 0)}>{window.__alert_appLocaleData.messages['ruleEditor.daily']}</span>
                         <span className={cls({
                           'active': time.timeCycle === 1
-                        })} onClick={this.changeTimeCycleType.bind(this, 1)}>每周</span>
+                        })} onClick={this.changeTimeCycleType.bind(this, 1)}>{window.__alert_appLocaleData.messages['ruleEditor.weekly']}</span>
                         <span className={cls({
                           'active': time.timeCycle === 2
-                        })} onClick={this.changeTimeCycleType.bind(this, 2)}>每月</span>
+                        })} onClick={this.changeTimeCycleType.bind(this, 2)}>{window.__alert_appLocaleData.messages['ruleEditor.monthly']}</span>
                       </div>
                       <div className={cls(styles.timeCycleBd, `${time.timeCycle.length === 0 ? styles.hidden : ''}`)}>
                         {
@@ -404,11 +458,11 @@ class RuleEditor extends Component {
           </FormItem>
         </div>
 
-        <h2>告警来源</h2>
+        <h2>{window.__alert_appLocaleData.messages['ruleEditor.source']}</h2>
         <div className={styles.alertSource}>
           <FormItem
             {...itemLayout}
-            label="告警来源"
+            label={window.__alert_appLocaleData.messages['ruleEditor.source']}
           >
             <Select
               style={{ width: 200 }}
@@ -417,7 +471,7 @@ class RuleEditor extends Component {
               onChange={this.changeSource.bind(this)}
             >
               {
-                this.props.alertAssociationRules.source.map(item => <Option key={item.key} value={item.key}>{item.value}</Option>)
+                this.props.alertAssociationRules.source.map(item => <Option key={item.key}>{item.value}</Option>)
               }
             </Select>
           </FormItem>
@@ -439,12 +493,12 @@ class RuleEditor extends Component {
                 <span className={styles.label}>针对符合条件的告警，执行</span>
                 <Select
                   style={{ width: 100 }}
-                  value={action.actionDelOrClose ? action.actionDelOrClose.operation.toString() : undefined}
+                  value={action.actionDelOrClose ? action.actionDelOrClose.operation : undefined}
                   placeholder="请选择操作"
                   onChange={this.changeAction.bind(this, 1)}
                 >
-                  <Option value="1">删除</Option>
-                  <Option value="2">关闭</Option>
+                  <Option value={1}>删除</Option>
+                  <Option value={2}>关闭</Option>
                 </Select>
                 <em>关闭将状态改为已解决，删除从数据库物理删除</em>
               </div>

@@ -214,7 +214,7 @@
   "modal.trap.severityMapper.trap": "Trap级别",
   "modal.trap.severityMapper.alert": "Alert级别",
   "modal.trap.severityMapper.message": "Alert级别定义：紧急 - 3，警告 - 2，提醒 - 1，恢复 - 0",
-  
+
   "alertApplication.videoMon.headerTitle": "使用Web Hook接入快速优云VideoMon告警",
   "alertApplication.videoMon.step2": "向接口发送数据",
   "alertApplication.videoMon.step2Message": "请复制以下URL至您的应用中",
@@ -266,9 +266,22 @@
 
   "error.serverError": "服务端错误",
   "treemap.tagsGroup": "标签分组名",
-  "treemap.activeAlerts": "活跃告警数"
+  "treemap.activeAlerts": "活跃告警数",
 
-  
+  "ruleEditor.baseInfo": "基本信息",
+  "ruleEditor.anyTime": "任意时间均执行",
+  "ruleEditor.peroid": "周期性执行",
+  "ruleEditor.fixedTime": "固定时间段执行",
+  "ruleEditor.schedule": "请选择定时规则",
+  "ruleEditor.daily": "每日",
+  "ruleEditor.weekly": "每周",
+  "ruleEditor.monthly": "每月",
+  "ruleEditor.ruleName": "规则名称",
+  "ruleEditor.description": "规则描述",
+  "ruleEditor.excuteTime": "执行安排",
+  "ruleEditor.source": "告警来源",
+  "ruleEditor.phRuleName": "请输入规则名称",
+  "ruleEditor.phDescription": "请为规则添加描述"
 
 
 }

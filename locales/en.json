@@ -27,7 +27,7 @@
   "alertManage.assignedIncident": "Assigned",
   "alertManage.noData": "No data in dashboard",
   "alertManage.dashbord.selectedText": "{num} Tags selected",
-  
+
   "alertManage.setModal.ok": "Ok",
   "alertManage.setModal.reset": "Reset",
 
@@ -267,8 +267,22 @@
   "error.serverError": "Server Error",
 
   "treemap.tagsGroup": "Tags Group",
-  "treemap.activeAlerts": "Active Alerts"
+  "treemap.activeAlerts": "Active Alerts",
 
-  
-  
+  "ruleEditor.baseInfo": "Basic Information",
+  "ruleEditor.anyTime": "Any Time",
+  "ruleEditor.peroid": "Peroid",
+  "ruleEditor.fixedTime": "Fixed Time Window",
+  "ruleEditor.schedule": "Create Time Schedule",
+  "ruleEditor.daily": "Daily",
+  "ruleEditor.weekly": "Weekly",
+  "ruleEditor.monthly": "Monthly",
+  "ruleEditor.ruleName": "Rule Name",
+  "ruleEditor.description": "Description",
+  "ruleEditor.excuteTime": "Excute Time",
+  "ruleEditor.source": "Source",
+  "ruleEditor.phRuleName": "Rule Name",
+  "ruleEditor.phDescription": "Rule description"
+
+
 }
