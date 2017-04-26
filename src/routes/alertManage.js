@@ -8,7 +8,7 @@ import AlertTagsSet from '../components/alertManage/alertTagsSet'
 
 
 
-function AlertManage({dispatch, alertManage}){
+function AlertManage({dispatch, alertManage, isFold}){
 
   const {
     isSetAlert,
@@ -66,6 +66,7 @@ function AlertManage({dispatch, alertManage}){
   }
 
   const chartProps = {
+    isFold,
     currentDashbordData,
     isLoading,
     requestFresh(){
@@ -93,4 +94,9 @@ AlertManage.propTypes = {
 // function mapStateToProps ({ alertManage }) {
 //   return { alertManage }
 // }
-export default connect(({alertManage}) => ({alertManage}))(AlertManage)
+export default connect((state) => {
+  return {
+    alertManage: state.alertManage,
+    isFold: state.app.isFold
+  }
+})(AlertManage)
