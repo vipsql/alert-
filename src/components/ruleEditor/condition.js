@@ -101,7 +101,7 @@ class Condition extends Component {
         styles.conditionItem,
         `treeTag${level}`
       )}>
-        <Select onChange={changeConditionContent.bind(_this, node, index, 'key')} className={styles.key} style={{ width: 100 }} value={_key} placeholder="请选择维度">
+        <Select onChange={changeConditionContent.bind(_this, node, index, 'key')} className={styles.key} value={_key} placeholder="请选择维度">
           {
             keyList.map(item => (
               <Option value={item.value}>{item.name}</Option>
