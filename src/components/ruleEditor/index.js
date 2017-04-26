@@ -226,7 +226,7 @@ class RuleEditor extends Component {
         condition: makeCondition(_.cloneDeep(nextProps.condition)),
         action: nextProps.action
       });
-      this.isChecked();
+
     }
 
     if (nextProps.alertAssociationRules.ITSMParam) {
@@ -237,7 +237,7 @@ class RuleEditor extends Component {
         ITSMParam: JSON.stringify(JSON.parse(nextProps.alertAssociationRules.ITSMParam), null, 2)
       })
     }
-
+    this.isChecked();
   }
 
   render() {
@@ -422,7 +422,7 @@ class RuleEditor extends Component {
 
         <h2>设置动作</h2>
         <div className={styles.setActions}>
-          <Tabs className={styles.setActions} animated={false} defaultActiveKey={action.type[0].toString()} onChange={this.changeActionType.bind(this)}>
+          <Tabs className={styles.setActions} animated={false} activeKey={action.type[0].toString()} onChange={this.changeActionType.bind(this)}>
 
             <TabPane tab="关闭/删除告警" key="1" className={styles.actionDelOrClose}>
               <div>
@@ -587,7 +587,7 @@ class RuleEditor extends Component {
     }
 
     recipients = _action.actionNotification.recipients.map(item => item.userId);
-
+    // debugger
     this.setState({
       email: email,
       sms: sms,
