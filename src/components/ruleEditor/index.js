@@ -230,11 +230,15 @@ class RuleEditor extends Component {
     }
 
     if (nextProps.alertAssociationRules.ITSMParam) {
-      // let a = nextProps.alertAssociationRules.ITSMParam;
-      // console.log(a)
+      let _ITSMParam = nextProps.alertAssociationRules.ITSMParam;
+      this.changeAction(4, {
+        target: {
+          value: _ITSMParam
+        }
+      });
       // debugger
       this.setState({
-        ITSMParam: JSON.stringify(JSON.parse(nextProps.alertAssociationRules.ITSMParam), null, 2)
+        ITSMParam: JSON.stringify(JSON.parse(_ITSMParam), null, 2)
       })
     }
     this.isChecked();
@@ -701,9 +705,11 @@ class RuleEditor extends Component {
         }
         if (value.target) {
           _action.actionITSM.param.cesjo = value.target.value.replace(/\s|\n/g, "").replace(/\"/g, "\\\"");
-          console.log(value.target.value.replace(/\s|\n/g, "").replace(/\"/g, "\\\""))
+          let _ITSMParam = value.target.value;
+          console.log(_action.actionITSM.param.cesjo)
+
           this.setState({
-            ITSMParam: _action.actionITSM.param.cesjo
+            ITSMParam: _ITSMParam
           });
         } else {
           _action.actionITSM.itsmModelId = value;
