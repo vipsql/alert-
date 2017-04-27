@@ -175,6 +175,10 @@ export default {
       appRules.forEach( (rule, index) => {
         if (rule.id == id) {
           operateAppRules = rule;
+          if (rule.dataSource === 2) {
+            __matchProps.push('severity');
+            __groupFieldProps.push('severity');
+          }
           selectedMatchFields = Object.keys(operateAppRules.matchFields);
           selectedGroupFields = Object.keys(operateAppRules.groupFields);
           codeProperties = operateAppRules.properties;
