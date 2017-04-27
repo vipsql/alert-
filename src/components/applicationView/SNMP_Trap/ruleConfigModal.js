@@ -627,7 +627,7 @@ class ruleModal extends Component{
                                                     }} />
                                                 )
                                                 :
-                                                text
+                                                <span title={text}>{text}</span>
                                             )
                                         }
                                     },
@@ -749,7 +749,7 @@ class ruleModal extends Component{
                                                     }} />
                                                 )
                                                 :
-                                                text
+                                                <span title={text}>{text}</span>
                                             )
                                         }
                                     },
@@ -775,7 +775,7 @@ class ruleModal extends Component{
                                                     this.setState({ properties: [ ...data ] })
                                                 }} />
                                                 :
-                                                text
+                                                <span title={text}>{text}</span>
                                             )
                                         }
                                     },
@@ -793,7 +793,7 @@ class ruleModal extends Component{
                                                     this.setState({ properties: [ ...data ] })
                                                 }} />
                                                 :
-                                                text
+                                                <span title={text}>{text}</span>
                                             )
                                         }
                                     },
@@ -925,7 +925,7 @@ class ruleModal extends Component{
                                                     </Popover>
                                                 </div>
                                                 :
-                                                text
+                                                <span title={text}>{text}</span>
                                             )
                                         }
                                     },
@@ -1081,7 +1081,7 @@ class ruleModal extends Component{
                                                         this.setState({ levelList: [ ...data ] })
                                                     }} />
                                                     :
-                                                    text
+                                                    <span title={text}>{text}</span>
                                                 )
                                             }
                                         },
