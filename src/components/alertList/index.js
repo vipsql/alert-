@@ -342,6 +342,26 @@ class AlertListManage extends Component{
       'iconfont',
       'icon-shanchux'
     )
+    // 转数字匹配等级，并作排序
+    let levels_wapper = {};
+    Object.keys(levels).length !== 0 && Object.keys(levels).forEach( (severity) => {
+      switch (severity) {
+        case 'Critical':
+          levels_wapper['3'] = levels['Critical']
+          break;
+        case 'Warning':
+          levels_wapper['2'] = levels['Warning']
+          break;
+        case 'Information':
+          levels_wapper['1'] = levels['Information']
+          break;
+        case 'OK':
+          levels_wapper['0'] = levels['OK']
+          break;
+        default:
+          break;
+      }
+    })
 
     return (
       <div style={{ position: 'relative'}}>
@@ -361,13 +381,10 @@ class AlertListManage extends Component{
           </Tabs>
           <ul className={styles.levelBar}>
             {
-              Object.keys(levels).length !== 0 && Object.keys(levels).map( (key, index) => {
-                let levelName = key == 'Critical' ? window['_severity']['3'] :
-                                    key == 'Warning' ? window['_severity']['2'] :
-                                      key == 'Information' ? window['_severity']['1'] :
-                                        key == 'OK' ? window['_severity']['0'] : undefined
-
-                return (<li key={index}><LevelIcon extraStyle={styles.extraStyle} iconType={key} /><p>{`${levelName}（${levels[key]}）`}</p></li>)
+              Object.keys(levels_wapper).length !== 0 && Object.keys(levels_wapper).sort((prev, next) => {
+                return Number(next) - Number(prev);
+              }).map( (key, index) => {
+                return (<li key={index}><LevelIcon extraStyle={styles.extraStyle} iconType={key} /><p>{`${window['_severity'][key]}（${levels_wapper[key]}）`}</p></li>)
               })
             }
           </ul>
