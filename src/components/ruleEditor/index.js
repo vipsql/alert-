@@ -161,9 +161,13 @@ let treeTag = 0; // 当前数据的层级标识
 let leafTag = 0; // 叶子 id
 
 // 处理条件数据，给每一条数据加上唯一 id
-const makeCondition = node => {
+const makeCondition = (node, type = true) => {
   const { complex = [] } = node;
-  node.id = leafTag;
+  if (type) {
+    node.id = leafTag;
+  } else {
+    delete node.id;
+  }
   leafTag += 1;
   for (let i = complex.length - 1; i >= 0; i -= 1) {
     makeCondition(complex[i]);
@@ -556,7 +560,7 @@ class RuleEditor extends Component {
                             value={action.actionNotification ? action.actionNotification.notificationMode.emailMessage : undefined}
                             onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder={window.__alert_appLocaleData.messages['ruleEditor.phBody']} />
 
-                        <Popover overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={this.emailVarContent}>
+                        <Popover overlayStyle={{ width: '45%' }} overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={this.emailVarContent}>
                           <div className={styles.insertVar}>{window.__alert_appLocaleData.messages['ruleEditor.vars']}</div>
                         </Popover>
                       </FormItem>
@@ -656,9 +660,9 @@ class RuleEditor extends Component {
         recipients: [],
         notificationMode: {
           notificationMode: [],
-          emailTitle: '',
-          emailMessage: '',
-          smsMessage: ''
+          emailTitle: '${entity_name}:${name}',
+          emailMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}',
+          smsMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}'
         }
       };
     }
@@ -703,9 +707,9 @@ class RuleEditor extends Component {
         recipients: [],
         notificationMode: {
           notificationMode: [],
-          emailTitle: '',
-          emailMessage: '',
-          smsMessage: ''
+          emailTitle: '${entity_name}:${name}',
+          emailMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}',
+          smsMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}'
         }
       };
     }
@@ -735,9 +739,9 @@ class RuleEditor extends Component {
             recipients: [],
             notificationMode: {
               notificationMode: [],
-              emailTitle: '',
-              emailMessage: '',
-              smsMessage: ''
+              emailTitle: '${entity_name}:${name}',
+              emailMessage: '${severity}, ${entity_name}, ${occurtime}, <1>description</1>',
+              smsMessage: '${severity}, ${entity_name}, ${occurtime}, <1>description</1>'
             }
           };
         }
@@ -1142,6 +1146,8 @@ class RuleEditor extends Component {
       default:
         break;
     }
+
+    let __condition = makeCondition(condition, false);
     const params = {
       rule: {
         id: _.isEmpty(alertAssociationRules.currentEditRule) ? undefined : alertAssociationRules.currentEditRule.rule.id,
@@ -1150,7 +1156,7 @@ class RuleEditor extends Component {
         type,
         time: type === 0 ? undefined : _time,
         source,
-        condition,
+        condition: __condition,
       },
       action: {
         id: _.isEmpty(alertAssociationRules.currentEditRule) ? undefined : alertAssociationRules.currentEditRule.action.id,
@@ -1209,9 +1215,9 @@ RuleEditor.defaultProps = {
       recipients: [],
       notificationMode: {
         notificationMode: [],
-        emailTitle: '',
-        emailMessage: '',
-        smsMessage: ''
+        emailTitle: '${entity_name}:${name}',
+        emailMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}',
+        smsMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}'
       }
     },
     actionITSM: {
