@@ -10,7 +10,7 @@ const optList = {
   num: [
     {
       name: window.__alert_appLocaleData.messages['ruleEditor.eq'],
-      value: '='
+      value: '=='
     }, {
       name: window.__alert_appLocaleData.messages['ruleEditor.noeq'],
       value: '!='
