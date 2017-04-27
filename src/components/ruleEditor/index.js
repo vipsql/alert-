@@ -579,7 +579,10 @@ class RuleEditor extends Component {
                       </FormItem>
                     </div>
                   </TabPane>
-                  <TabPane tab={<div><Checkbox id="chatops" checked={this.state.chatops} value={3} onChange={this.changeAction.bind(this, 3)} /><span>{window.__alert_appLocaleData.messages['ruleEditor.chatops']}</span></div>} key="3" />
+                  {
+                    window.__alert_appLocaleData.locale === 'zh-cn' &&
+                    <TabPane tab={<div><Checkbox id="chatops" checked={this.state.chatops} value={3} onChange={this.changeAction.bind(this, 3)} /><span>{window.__alert_appLocaleData.messages['ruleEditor.chatops']}</span></div>} key="3" />
+                  }
                 </Tabs>
               </div>
             </TabPane>
@@ -617,21 +620,24 @@ class RuleEditor extends Component {
             <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.suppress']} key="5" className={styles.actionSuppress}>
 
             </TabPane>
-            <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.shareChatOps']} key="6">
-              <div>
-                <span>{window.__alert_appLocaleData.messages['ruleEditor.chatopsGroup']}：</span>
-                <Select
-                  style={{ width: 200 }}
-                  value={action.actionChatOps ? action.actionChatOps.chatOpsRoomId : undefined }
-                  placeholder={window.__alert_appLocaleData.messages['ruleEditor.phChatopsGroup']}
-                  onChange={this.changeAction.bind(this, 6)}
-                >
-                  {
-                    this.props.alertAssociationRules.rooms.map(item => <Option key={item.id}>{item.topic}</Option>)
-                  }
-                </Select>
-              </div>
-            </TabPane>
+            {
+              window.__alert_appLocaleData.locale === 'zh-cn' &&
+              <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.shareChatOps']} key="6">
+                <div>
+                  <span>{window.__alert_appLocaleData.messages['ruleEditor.chatopsGroup']}：</span>
+                  <Select
+                    style={{ width: 200 }}
+                    value={action.actionChatOps ? action.actionChatOps.chatOpsRoomId : undefined }
+                    placeholder={window.__alert_appLocaleData.messages['ruleEditor.phChatopsGroup']}
+                    onChange={this.changeAction.bind(this, 6)}
+                  >
+                    {
+                      this.props.alertAssociationRules.rooms.map(item => <Option key={item.id}>{item.topic}</Option>)
+                    }
+                  </Select>
+                </div>
+              </TabPane>
+            }
           </Tabs>
         </div>
         <span onClick={this.handleSubmit.bind(this)} className={styles.submit}>{window.__alert_appLocaleData.messages['ruleEditor.submit']}</span>
