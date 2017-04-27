@@ -71,6 +71,7 @@ class Chart extends Component{
         } else {
             this.chartWidth = document.documentElement.clientWidth - 160 - 90;
         }
+        this.xscale = d3.scale.linear().range([0, this.chartWidth]);
 
         d3.select("#treemap")
             .select('svg')

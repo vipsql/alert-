@@ -38,6 +38,7 @@ class ruleModal extends Component{
         this.deleComposeField = this.deleComposeField.bind(this)
         this.clickCompose = this.clickCompose.bind(this)
         this.clickComposeByField = this.clickComposeByField.bind(this)
+        this.addOrRemoveSeverity = this.addOrRemoveSeverity.bind(this)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -208,6 +209,21 @@ class ruleModal extends Component{
         })
 
         this.setState({ groupFieldsList: [ ...newGroupFieldsList ], __groupFieldProps: __newGroupFieldProps })
+    }
+
+    // 网络设备时，去掉severity - 第三方网络监控时，加上severity可选字段
+    addOrRemoveSeverity(state) {
+        let __newMatchProps = [].concat(this.state.__matchProps)
+        let __newGroupFieldProps = [].concat(this.state.__groupFieldProps)
+        if (state === 1 && (__newMatchProps.includes('severity') || __newGroupFieldProps.includes('severity'))) {
+            __newMatchProps = __newMatchProps.filter((field) => field !== 'severity')
+            __newGroupFieldProps = __newGroupFieldProps.filter((field) => field !== 'severity')
+        } else if (state === 2){
+            !__newMatchProps.includes('severity') && __newMatchProps.push('severity')
+            !__newGroupFieldProps.includes('severity') && __newGroupFieldProps.push('severity')
+        }
+
+        this.setState({dataSource: state, __matchProps: __newMatchProps, __groupFieldProps: __newGroupFieldProps})
     }
 
     render() {
@@ -544,7 +560,7 @@ class ruleModal extends Component{
                             label={formatMessage({...localeMessage['rule_dataSource']})}
                         >
                             <RadioGroup onChange={(e) => {
-                                this.setState({ dataSource: e.target.value })
+                                this.addOrRemoveSeverity(e.target.value)
                             }} value={this.state.dataSource}>
                                 <Radio value={1}>{formatMessage({...localeMessage['rule_dataSource_netWork']})}</Radio>
                                 <Radio value={2}>{formatMessage({...localeMessage['rule_dataSource_thirdParty']})}</Radio>

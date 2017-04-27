@@ -320,6 +320,10 @@ class RuleEditor extends Component {
       labelCol: { span: 2 },
       wrapperCol: { span: 10 }
     };
+    const itsmLayout = {
+      labelCol: { span: 5 },
+      wrapperCol: { span: 19 }
+    }
 
     // 时间选择器选择之后的文字信息反馈，用'、'号隔开，同类信息用','隔开
     let cycleDay = '';
@@ -430,7 +434,7 @@ class RuleEditor extends Component {
                     </div>
                   )}
                 >
-                  <Input placeholder="请选择定时规则" readOnly value={cycleTimeString} className={styles.selectTime} />
+                  <Input placeholder={window.__alert_appLocaleData.messages['ruleEditor.schedule']} readOnly value={cycleTimeString} className={styles.selectTime} />
                 </Popover>
               </div>
             }
@@ -445,7 +449,7 @@ class RuleEditor extends Component {
                     <div className={styles.timeCycle}>
                       <RangeCalendar
                         // defaultSelectedValue={[moment(time.dayStart), moment(time.dayEnd)]}
-                        onChange={this.changeDate.bind(this)} dateInputPlaceholder={['请选择起始日期', '请选择结束日期']} className={styles.calendar} renderFooter={() => {
+                        onChange={this.changeDate.bind(this)} dateInputPlaceholder={[window.__alert_appLocaleData.messages['ruleEditor.startDate'], window.__alert_appLocaleData.messages['ruleEditor.endDate']]} className={styles.calendar} renderFooter={() => {
                         return (
                           <div className={styles.timeCycleBd}>
                             <TimeSlider timeStart={timeStart} timeEnd={timeEnd} changeTime={this.changeTime.bind(this)} />
@@ -456,7 +460,7 @@ class RuleEditor extends Component {
                     </div>
                   )}
                 >
-                  <Input placeholder="请选择定时规则" readOnly value={dayTimeString} className={styles.selectTime} />
+                  <Input placeholder={window.__alert_appLocaleData.messages['ruleEditor.schedule']} readOnly value={dayTimeString} className={styles.selectTime} />
                 </Popover>
               </div>
             }
@@ -497,13 +501,13 @@ class RuleEditor extends Component {
               <div>
                 <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word1']}</span>
                 <Select
-                  style={{ width: 100 }}
+                  style={{ width: 150 }}
                   value={action.actionDelOrClose ? action.actionDelOrClose.operation : undefined}
-                  placeholder="请选择操作"
+                  placeholder={window.__alert_appLocaleData.messages['ruleEditor.phCloseOrDel']}
                   onChange={this.changeAction.bind(this, 1)}
                 >
-                  <Option value={1}>删除</Option>
-                  <Option value={2}>关闭</Option>
+                  <Option value={1}>{window.__alert_appLocaleData.messages['ruleEditor.del']}</Option>
+                  <Option value={2}>{window.__alert_appLocaleData.messages['ruleEditor.close']}</Option>
                 </Select>
                 <em>{window.__alert_appLocaleData.messages['ruleEditor.word2']}</em>
               </div>
@@ -513,7 +517,7 @@ class RuleEditor extends Component {
             }
             <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.notify']} key="3" className={styles.actionNotification}>
               <div>
-                <span className={styles.notificationTabsLabel}>通知方式</span>
+                <span className={styles.notificationTabsLabel}>{window.__alert_appLocaleData.messages['ruleEditor.notifyMode']}</span>
                 <FormItem
                   {...desLayout}
                   label={window.__alert_appLocaleData.messages['ruleEditor.notifyObj']}
@@ -541,7 +545,7 @@ class RuleEditor extends Component {
                       >
                           <Input id="emailTitle"
                             value={action.actionNotification ? action.actionNotification.notificationMode.emailTitle : undefined}
-                            onChange={this.changeAction.bind(this, 3)} placeholder="来自告警$(Alert_name)的通知" />
+                            onChange={this.changeAction.bind(this, 3)} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phTitle']} />
 
                       </FormItem>
                       <FormItem
@@ -550,7 +554,7 @@ class RuleEditor extends Component {
                       >
                           <Input id="emailMessage"
                             value={action.actionNotification ? action.actionNotification.notificationMode.emailMessage : undefined}
-                            onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder="${serverity}，${entity_name}于{occurtime}发生，具体信息为${description}" />
+                            onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder={window.__alert_appLocaleData.messages['ruleEditor.phBody']} />
 
                         <Popover overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={this.emailVarContent}>
                           <div className={styles.insertVar}>{window.__alert_appLocaleData.messages['ruleEditor.vars']}</div>
@@ -567,7 +571,7 @@ class RuleEditor extends Component {
                       >
                           <Input id="smsMessage"
                             value={action.actionNotification ? action.actionNotification.notificationMode.smsMessage : undefined}
-                            onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder="${serverity}，${entity_name}于{occurtime}发生，具体信息为${description}" />
+                            onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder={window.__alert_appLocaleData.messages['ruleEditor.phBody']} />
 
                           <Popover overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={this.smsVarContent}>
                             <div className={styles.insertVar}>{window.__alert_appLocaleData.messages['ruleEditor.vars']}</div>
@@ -575,29 +579,39 @@ class RuleEditor extends Component {
                       </FormItem>
                     </div>
                   </TabPane>
-                  <TabPane tab={<div><Checkbox id="chatops" checked={this.state.chatops} value={3} onChange={this.changeAction.bind(this, 3)} /><span>{window.__alert_appLocaleData.messages['ruleEditor.shareChatOps']}</span></div>} key="3" />
+                  <TabPane tab={<div><Checkbox id="chatops" checked={this.state.chatops} value={3} onChange={this.changeAction.bind(this, 3)} /><span>{window.__alert_appLocaleData.messages['ruleEditor.chatops']}</span></div>} key="3" />
                 </Tabs>
               </div>
             </TabPane>
             <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.ticket']} key="4" className={styles.actionITSM}>
               <div>
-                <span>工单类别：</span>
-                <Select
-                  style={{ width: 100 }}
-                  placeholder="请选择类别"
-                  value={action.actionITSM ? action.actionITSM.itsmModelId : undefined}
-                  onChange={this.changeAction.bind(this, 4)}
+                <FormItem
+                  {...itsmLayout}
+                  label={window.__alert_appLocaleData.messages['ruleEditor.itsmType']}
                 >
-                  {
-                    this.props.alertAssociationRules.wos.map(item => <Option key={item.id}>{item.name}</Option>)
-                  }
-                </Select>
-                <em>选择工单类型，派发到ITSM</em>
-                <Input className={cls(styles.text, {
-                  // 'hidden': !(action.actionITSM && action.actionITSM.itsmModelId)
-                })} onChange={this.changeAction.bind(this, 4)}
-                  value={this.state.ITSMParam}
-                  type="textarea" placeholder="映射配置" />
+                  <Select
+                    style={{ width: 100 }}
+                    placeholder={window.__alert_appLocaleData.messages['ruleEditor.phItsmType']}
+                    value={action.actionITSM ? action.actionITSM.itsmModelId : undefined}
+                    onChange={this.changeAction.bind(this, 4)}
+                  >
+                    {
+                      this.props.alertAssociationRules.wos.map(item => <Option key={item.id}>{item.name}</Option>)
+                    }
+                  </Select>
+                  <em>{window.__alert_appLocaleData.messages['ruleEditor.word3']}</em>
+                </FormItem>
+                <FormItem
+                  {...itsmLayout}
+                  label={window.__alert_appLocaleData.messages['ruleEditor.fm']}
+                >
+                  <Input className={cls(styles.text, {
+                    // 'hidden': !(action.actionITSM && action.actionITSM.itsmModelId)
+                  })} onChange={this.changeAction.bind(this, 4)}
+                    value={this.state.ITSMParam}
+                    type="textarea" placeholder={window.__alert_appLocaleData.messages['ruleEditor.fm']} />
+                </FormItem>
+
               </div>
             </TabPane>
             <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.suppress']} key="5" className={styles.actionSuppress}>
@@ -605,11 +619,11 @@ class RuleEditor extends Component {
             </TabPane>
             <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.shareChatOps']} key="6">
               <div>
-                <span>ChatOps群组：</span>
+                <span>{window.__alert_appLocaleData.messages['ruleEditor.chatopsGroup']}：</span>
                 <Select
-                  style={{ width: 100 }}
+                  style={{ width: 200 }}
                   value={action.actionChatOps ? action.actionChatOps.chatOpsRoomId : undefined }
-                  placeholder="请选择群组"
+                  placeholder={window.__alert_appLocaleData.messages['ruleEditor.phChatopsGroup']}
                   onChange={this.changeAction.bind(this, 6)}
                 >
                   {
