@@ -71,8 +71,9 @@ class Chart extends Component{
         } else {
             this.chartWidth = document.documentElement.clientWidth - 160 - 90;
         }
+        this.xscale = d3.scale.linear().range([0, this.chartWidth]);
 
-        this.chart = d3.select("#treemap")
+        d3.select("#treemap")
             .select('svg')
             .attr("width", this.chartWidth)
         
@@ -82,7 +83,7 @@ class Chart extends Component{
           .sticky(true)
           .value(function(d) {
               return d.value;
-        });
+          });
         var headerHeight = 40;
         var headerColor = "#0d3158";
         var transitionDuration = 500;
@@ -121,7 +122,7 @@ class Chart extends Component{
             };
 
             var nodes = this.treemap.nodes(root);
-
+            
             var children = nodes.filter(function(d) {
                 return !d.children;
             });
@@ -365,7 +366,7 @@ class Chart extends Component{
 
 
         function zoom(d) {
-            
+
             this.treemap
                 .padding([headerHeight / (this.chartHeight / d.dy), 0, 0, 0])
                 .nodes(d);

@@ -38,11 +38,11 @@ const initalState = {
                 {id: 'entityName', checked: false,},
                 {id: 'name', checked: false,},
                 {id: 'source', checked: false,},
-                {id: 'status', checked: false,},
                 {id: 'description', checked: false,},
                 {id: 'count', checked: false,},
                 {id: 'lastTime', checked: false,},
-                {id: 'lastOccurTime', checked: false,}
+                {id: 'lastOccurTime', checked: false,},
+                {id: 'status', checked: false,},
             ]
         }
     ],

@@ -238,7 +238,7 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                             :
                             <li><span>{formatMessage({...localeMessage['tags']})}:</span><span>{formatMessage({...localeMessage['unknown']})}</span></li>
                         }
-                        <li><span>{formatMessage({...localeMessage['description']})}:</span><span>{currentAlertDetail.description}</span></li>
+                        <li><span>{formatMessage({...localeMessage['description']})}:</span><span>{currentAlertDetail.description ? currentAlertDetail.description : formatMessage({...localeMessage['unknown']})}</span></li>
                         <li><span>{formatMessage({...localeMessage['firstOccurred']})}:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).begin}</span></li>
                         <li><span>{formatMessage({...localeMessage['lastOccurTime']})}:</span><span>{dateTransfer(currentAlertDetail.firstOccurTime, currentAlertDetail.lastOccurTime).end}</span></li>
                         <li><span>{formatMessage({...localeMessage['duration']})}:</span><span>{durationFunc(currentAlertDetail.lastTime)}&nbsp;{currentAlertDetail.lastTime  > 3600000 ? formatMessage({...localeMessage['hour']}) : formatMessage({...localeMessage['min']})}</span></li>

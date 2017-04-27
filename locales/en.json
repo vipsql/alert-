@@ -24,6 +24,7 @@
   "alertManage.fifteenDays": "last 15 days",
   "alertManage.thirtyDays": "last 30 days",
   "alertManage.newIncident": "New",
+  "alertManage.resolvedIncident": "Resolved",
   "alertManage.assignedIncident": "Assigned",
   "alertManage.noData": "No data in dashboard",
   "alertManage.dashbord.selectedText": "{num} Tags selected",
