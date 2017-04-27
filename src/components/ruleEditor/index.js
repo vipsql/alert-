@@ -371,7 +371,7 @@ class RuleEditor extends Component {
         <div className={styles.baseInfo}>
           <FormItem
             {...itemLayout}
-            label={window.__alert_appLocaleData.messages['ruleEditor.phRuleName']}
+            label={window.__alert_appLocaleData.messages['ruleEditor.ruleName']}
           >
               <Input value={this.state.name} onChange={this.changeField.bind(this, 'name')} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phRuleName']} />
 
