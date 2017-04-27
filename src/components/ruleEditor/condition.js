@@ -9,56 +9,56 @@ const Option = Select.Option;
 const optList = {
   num: [
     {
-      name: '等于',
+      name: window.__alert_appLocaleData.messages['ruleEditor.eq'],
       value: '='
     }, {
-      name: '不等于',
+      name: window.__alert_appLocaleData.messages['ruleEditor.noeq'],
       value: '!='
     }, {
-      name: '大于',
+      name: window.__alert_appLocaleData.messages['ruleEditor.gt'],
       value: '>'
     }, {
-      name: '小于',
+      name: window.__alert_appLocaleData.messages['ruleEditor.lt'],
       value: '<'
     }, {
-      name: '大于等于',
+      name: window.__alert_appLocaleData.messages['ruleEditor.ge'],
       value: '>='
     }, {
-      name: '小于等于',
+      name: window.__alert_appLocaleData.messages['ruleEditor.le'],
       value: '=<'
     }
   ],
   'str': [
     {
-      name: '包含',
+      name: window.__alert_appLocaleData.messages['ruleEditor.ct'],
       value: 'contain'
     },
     {
-      name: '相等',
+      name: window.__alert_appLocaleData.messages['ruleEditor.eq'],
       value: 'equal'
     },
     {
-      name: '以某字符串开始',
+      name: window.__alert_appLocaleData.messages['ruleEditor.startWith'],
       value: 'startwith'
     },
     {
-      name: '以某字符串结束',
+      name: window.__alert_appLocaleData.messages['ruleEditor.endWith'],
       value: 'endwith'
     },
     {
-      name: '大于',
+      name: window.__alert_appLocaleData.messages['ruleEditor.gt'],
       value: 'gt'
     },
     {
-      name: '大于等于',
+      name: window.__alert_appLocaleData.messages['ruleEditor.ge'],
       value: 'ge'
     },
     {
-      name: '小于',
+      name: window.__alert_appLocaleData.messages['ruleEditor.lt'],
       value: 'lt'
     },
     {
-      name: '小于等于',
+      name: window.__alert_appLocaleData.messages['ruleEditor.le'],
       value: 'le'
     }
   ]
@@ -66,32 +66,37 @@ const optList = {
 const valueList = {
   severity: [
     {
-      name: '恢复',
+      name: window.__alert_appLocaleData.messages['ruleEditor.v1'],
       value: '0'
     }, {
-      name: '提醒',
+      name: window.__alert_appLocaleData.messages['ruleEditor.v2'],
       value: '1'
     }, {
-      name: '警告',
+      name: window.__alert_appLocaleData.messages['ruleEditor.v3'],
       value: '2'
     }, {
-      name: '紧急',
+      name: window.__alert_appLocaleData.messages['ruleEditor.v4'],
       value: '3'
     }
   ],
   status: [
     {
-      name: '新告警',
+      name: window.__alert_appLocaleData.messages['ruleEditor.s1'],
       value: '0',
-    },{
-      name: '处理中',
-      value: '1',
-    },{
-      name: '已解决',
+    },
+    // {
+    //   name: window.__alert_appLocaleData.messages['ruleEditor.s2'],
+    //   value: '1',
+    // },
+    {
+      name: window.__alert_appLocaleData.messages['ruleEditor.s3'],
       value: '2',
     },{
-      name: '已关闭',
+      name: window.__alert_appLocaleData.messages['ruleEditor.s4'],
       value: '3',
+    },{
+      name: window.__alert_appLocaleData.messages['ruleEditor.s5'],
+      value: '4',
     }
   ],
   duration: [
@@ -122,13 +127,17 @@ class Condition extends Component {
   // 创建条件
   createConditionItem() {
     let keyList = [];
+    let local = 'Zh';
     const {node, source, attributes, _key, opt, value, level, index, deleteLine, changeConditionContent, _this} = this.props;
     valueList.source = source.map(item => {
       return { name: item.value, value: item.key };
     });
+    if (window.__alert_appLocaleData.locale === 'en-us') {
+      local = 'Us'
+    };
     keyList = attributes.map(item => {
       return {
-        name: item['nameZh'],
+        name: item[`name${local}`],
         value: item['nameUs'],
         type: item['type']
       };
@@ -144,14 +153,14 @@ class Condition extends Component {
         styles.conditionItem,
         `treeTag${level}`
       )}>
-        <Select onChange={changeConditionContent.bind(_this, node, index, 'key')} className={styles.key} value={_key} placeholder="请选择维度">
+        <Select  onChange={changeConditionContent.bind(_this, node, index, 'key')} className={styles.key} value={_key} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phField']}>
           {
             keyList.map(item => (
               <Option key={item.value}>{item.name}</Option>
             ))
           }
         </Select>
-        <Select onChange={changeConditionContent.bind(_this, node, index, 'opt')} className={styles.opt} value={opt} placeholder="请选择条件">
+        <Select style={{ width: 150 }} onChange={changeConditionContent.bind(_this, node, index, 'opt')} className={styles.opt} value={opt} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phOpt']}>
           {
             _optList.map(item => (
               <Option key={item.value}>{item.name}</Option>
@@ -160,7 +169,7 @@ class Condition extends Component {
         </Select>
         {
           /severity|status|duration|source/.test(_key) &&
-          <Select onChange={changeConditionContent.bind(_this, node, index, 'value')} className={styles.value} style={{ width: 130 }} value={value} placeholder="请选择对应标签">
+          <Select onChange={changeConditionContent.bind(_this, node, index, 'value')} className={styles.value} style={{ width: 150 }} value={value} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phTag']}>
             {
               valueList[_key] &&
               valueList[_key].map(item => (
@@ -171,7 +180,7 @@ class Condition extends Component {
         }
         {
           !/severity|status|duration|source/.test(_key) &&
-          <Input placeholder="请输入对应条件" style={{ width: 130 }} onBlur={changeConditionContent.bind(_this, node, index, 'value')} defaultValue={value} />
+          <Input placeholder={window.__alert_appLocaleData.messages['ruleEditor.phIpt']} style={{ width: 130 }} onBlur={changeConditionContent.bind(_this, node, index, 'value')} defaultValue={value} />
         }
 
         <i className={styles.delete} onClick={deleteLine.bind(_this, node, level, index)}>X</i>
