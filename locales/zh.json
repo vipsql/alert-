@@ -270,7 +270,9 @@
 
   "error.serverError": "服务端错误",
   "treemap.tagsGroup": "标签分组名",
-  "treemap.activeAlerts": "活跃告警数",
+  "treemap.activeAlerts": "未接手告警",
+  "treemap.assignedAlerts": "处理中告警",
+  "treemap.resolvedAlerts": "已解决告警",
 
   "ruleEditor.baseInfo": "基本信息",
   "ruleEditor.anyTime": "任意时间均执行",
@@ -353,7 +355,7 @@
   "ruleEditor.v2": "提醒",
   "ruleEditor.v3": "警告",
   "ruleEditor.v4": "紧急",
-  "ruleEditor.s1": "新告警",
+  "ruleEditor.s1": "未接手",
   "ruleEditor.s2": "忆确认",
   "ruleEditor.s3": "处理中",
   "ruleEditor.s4": "已解决",

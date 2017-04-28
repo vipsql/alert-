@@ -271,7 +271,9 @@
   "error.serverError": "Server Error",
 
   "treemap.tagsGroup": "Tags Group",
-  "treemap.activeAlerts": "Active Alerts",
+  "treemap.activeAlerts": "New Alerts",
+  "treemap.assignedAlerts": "Assigned Alerts",
+  "treemap.resolvedAlerts": "Resolved Alerts",
 
   "ruleEditor.baseInfo": "Basic Information",
   "ruleEditor.anyTime": "Any Time",
