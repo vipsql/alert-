@@ -10,15 +10,13 @@ import {
   createRule,
   getUsers,
   getWos,
+  getField,
   queryAttributes,
   getshowITSMParam,
 } from '../services/alertAssociationRules';
 import {
   querySource
 } from '../services/alertQuery';
-import {
-  getField
-} from '../services/alertConfig';
 import {
   getChatOpsOptions
 } from '../services/alertOperation';
@@ -245,7 +243,7 @@ export default {
       }
     },
 
-    // 获取 工单类型
+    // 获取 工单映射配置
     *getshowITSMParam({payload}, {select, put, call}) {
       const params = {
         ...payload
@@ -289,6 +287,7 @@ export default {
       };
       const result = yield call(getField ,params);
       if (result.result) {
+        // debugger
         yield put({
           type: 'updateField',
           payload: {
@@ -433,7 +432,7 @@ export default {
       return { ...state, field: payload.data }
     },
     updateRooms(state, {payload}) {
-      debugger
+      // debugger
       return { ...state, rooms: payload.data }
     },
     updateWos(state, {payload}) {

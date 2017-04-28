@@ -31,8 +31,19 @@ export async function deleteRule(params) {
   })
 }
 
+// 获取用户列表
 export async function getUsers(params) {
   return request(`/rule/getUsers`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
+
+// 获取用户列表
+export async function getField(params) {
+  return request(`/rule/filterValue`, {
       method: 'GET',
       headers: {
           'Content-Type': 'application/json',
