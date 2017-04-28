@@ -307,6 +307,7 @@ class RuleEditor extends Component {
         }
       });
       this.setState({
+        action: nextProps.action,
         ITSMParam: JSON.stringify(JSON.parse(_ITSMParam), null, 2)
       })
     }
