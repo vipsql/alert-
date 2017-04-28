@@ -91,6 +91,12 @@ export default {
       let originTagsList = Object.keys(originTags) || [];
       let serverityList = originTags['severity'].split(',');
       const newList = tagsList.map( (group) => {
+        // serverity预先做排序
+        if (group.field === 'severity') {
+          group.values.sort( (prev, next) => {
+            return Number(next) - Number(prev)
+          })
+        }
         group.values = group.values.map( (item) => {
           if (originTagsList.length !== 0
             && ((originTagsList[0] == group.field && originTags[`${originTagsList[0]}`] == item)

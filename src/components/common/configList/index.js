@@ -56,7 +56,7 @@ class commonList extends Component {
 
       let year = d.getFullYear();
       let month = d.getMonth() + 1;
-      let day = d.getDay();
+      let day = d.getDate();
       let hours = d.getHours();
       let mins = d.getMinutes();
 

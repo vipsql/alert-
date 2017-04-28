@@ -31,7 +31,7 @@ export default class Tip {
    * Show tip with the given data.
    */
 
-  show = d => {
+  show = (d, stateMessage) => {
     const t = currentEvent.target
     const tb = t.getBoundingClientRect()
     const o = offset(t)
@@ -40,7 +40,7 @@ export default class Tip {
       temp = window[`_${d.parent.path}`][d.name]
     }
     const val = d.noData ? 0 : d.value
-    el.innerHTML = `${__alert_appLocaleData.messages['treemap.tagsGroup']}: ` + temp + '<br/>' + `${__alert_appLocaleData.messages['treemap.activeAlerts']}: ` + val 
+    el.innerHTML = `${__alert_appLocaleData.messages['treemap.tagsGroup']}: ` + temp + '<br/>' + `${stateMessage}: ` + val 
     el.style.display = 'block'
     el.style.top = o.top - 55 + 'px'
     el.style.left = o.left + 'px'

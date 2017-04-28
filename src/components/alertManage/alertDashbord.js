@@ -11,7 +11,19 @@ const formatMessages = defineMessages({
     noData:{
       id: 'alertManage.noData',
       defaultMessage: '告警看板暂无数据，请先设置关注数据',
-    }
+    },
+    NEW: {
+        id: 'treemap.activeAlerts',
+        defaultMessage: '未接手告警',
+    },
+    PROGRESSING: {
+        id: 'treemap.assignedAlerts',
+        defaultMessage: '处理中告警',
+    },
+    RESOLVED: {
+        id: 'treemap.resolvedAlerts',
+        defaultMessage: '已解决告警',
+    },
 })
 
 class Chart extends Component{
@@ -66,6 +78,8 @@ class Chart extends Component{
         }, 60000)
     }
     componentDidUpdate(){
+        let { intl: {formatMessage}, selectedStatus } = this.props;
+
         if (this.props.isFold) {
             this.chartWidth = document.documentElement.clientWidth - 180;
         } else {
@@ -254,11 +268,11 @@ class Chart extends Component{
                 .attr('stroke','#163c67')
                 .attr('stroke-width','2')
                 .attr("style", "cursor:pointer")
-                .style("fill", function(d) {
+                .style("fill", (d) => {
                     // return color(d.maxSeverity);
                 })
-                .on('mouseenter', function(d){
-                    d3Tip.show(d)
+                .on('mouseenter', (d) => {
+                    d3Tip.show(d, formatMessage({...formatMessages[this.props.selectedStatus]}))
                 })
                 .on('mouseleave', function(){
                     d3Tip.hide()
@@ -280,13 +294,13 @@ class Chart extends Component{
                     return d.name
                 })
                 .style("opacity", function(d) { d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; })
-                .on('mouseover', function(d){  
+                .on('mouseover', function(d){
                     return false
-                    d3Tip.show(d)
+                    d3Tip.show(d, formatMessage({...formatMessages[selectedStatus]}))
                 })
                 .on('mouseout', function(d){
                     return false
-                    d3Tip.show(d)
+                    d3Tip.show(d, formatMessage({...formatMessages[selectedStatus]}))
                 })
             // update transition
             var childUpdateTransition = childrenCells.transition().duration(transitionDuration);
@@ -487,4 +501,4 @@ class Chart extends Component{
     }
 
 }
-export default Chart
+export default injectIntl(Chart)

@@ -113,6 +113,12 @@ export default {
         delete group.keyName;
         group.values = group.tags;
         delete group.tags;
+        // serverity预先做排序
+        if (group.key === 'severity') {
+          group.values.sort( (prev, next) => {
+            return Number(next.value) - Number(prev.value)
+          })
+        }
         group.values.map( (tag) => {
           if (tag.key == 'severity' || tag.key == 'status') {
             tag.name = window[`_${tag.key}`][tag.value]
