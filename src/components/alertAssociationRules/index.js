@@ -56,11 +56,11 @@ const alertAssociationRules = ({dispatch, alertAssociationRules, intl: {formatMe
             },
             ruleTypeNum_0: {
                 id: 'alertAssociationRules.ruleTypeNum.0',
-                defaultMessage: '周期性',
+                defaultMessage: '非周期性',
             },
             ruleTypeNum_1: {
                 id: 'alertAssociationRules.ruleTypeNum.1',
-                defaultMessage: '非周期性',
+                defaultMessage: '周期性',
             },
             ruleTypeNum_2: {
                 id: 'alertAssociationRules.ruleTypeNum.2',

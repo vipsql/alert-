@@ -5,7 +5,7 @@ import Chart from '../components/alertManage/alertDashbord'
 import AlertSet from '../components/alertManage/alertSet'
 import AlertManageHead from '../components/alertManage/alertManageHead'
 import AlertTagsSet from '../components/alertManage/alertTagsSet'
-
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 
 function AlertManage({dispatch, alertManage, isFold}){
@@ -19,6 +19,7 @@ function AlertManage({dispatch, alertManage, isFold}){
     tagsList,
     isLoading,
     currentDashbordData,
+    selectedStatus
   } = alertManage
 
   const alertSetProps = {
@@ -66,6 +67,7 @@ function AlertManage({dispatch, alertManage, isFold}){
   }
 
   const chartProps = {
+    selectedStatus,
     isFold,
     currentDashbordData,
     isLoading,

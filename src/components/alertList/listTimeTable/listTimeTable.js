@@ -258,7 +258,6 @@ class ListTimeTable extends Component {
               <div>
                 <p><FormattedMessage {...formatMessages['severity']} />{`：${window['_severity'][itemDot['severity']]}`}</p>
                 <p><FormattedMessage {...formatMessages['name']} />{`：${itemDot['name']}`}</p>
-                <p><FormattedMessage {...formatMessages['incidentId']} />{`：${itemDot['incidentId']}`}</p>
                 <p><FormattedMessage {...formatMessages['occurTime']} />{`：${newDate.getFullYear() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getDate() + ' ' + newDate.getHours() + ':' + newDate.getMinutes()}`}</p>
                 <p><FormattedMessage {...formatMessages['description']} />{`：${itemDot['description']}`}</p>
                 <p><FormattedMessage {...formatMessages['source']} />{`：${itemDot['source']}`}</p>
