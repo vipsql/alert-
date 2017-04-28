@@ -503,6 +503,7 @@ class RuleEditor extends Component {
 
             <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.closeOrDel']} key="1" className={styles.actionDelOrClose}>
               <div>
+                <em>{window.__alert_appLocaleData.messages['ruleEditor.word2']}</em>
                 <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word1']}</span>
                 <Select
                   style={{ width: 150 }}
@@ -513,7 +514,7 @@ class RuleEditor extends Component {
                   <Option value={1}>{window.__alert_appLocaleData.messages['ruleEditor.del']}</Option>
                   <Option value={2}>{window.__alert_appLocaleData.messages['ruleEditor.close']}</Option>
                 </Select>
-                <em>{window.__alert_appLocaleData.messages['ruleEditor.word2']}</em>
+                <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word4']}</span>
               </div>
             </TabPane>
             {

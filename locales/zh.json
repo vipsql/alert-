@@ -317,6 +317,7 @@
   "ruleEditor.shareChatOps": "分享到ChatOps",
   "ruleEditor.submit": "提交",
   "ruleEditor.word1": "针对符合条件的告警，执行",
+  "ruleEditor.word4": " 动作",
   "ruleEditor.word2": "关闭将状态改为已解决，删除从数据库物理删除",
   "ruleEditor.notifyObj": "通知对象",
   "ruleEditor.notifySelectObj": "请选择通知对象",
