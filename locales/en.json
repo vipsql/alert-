@@ -361,7 +361,8 @@
   "ruleEditor.s2": "Acknowledged",
   "ruleEditor.s3": "Assigned",
   "ruleEditor.s4": "Resolved",
-  "ruleEditor.s5": "Closed"
+  "ruleEditor.s5": "Closed",
+  "ruleEditor.word5": "For the matching alerts, excute the suppression action."
 
 
 }

@@ -624,7 +624,9 @@ class RuleEditor extends Component {
               </div>
             </TabPane>
             <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.suppress']} key="5" className={styles.actionSuppress}>
-
+              <div>
+                <span>{window.__alert_appLocaleData.messages['ruleEditor.word5']}</span>
+              </div>
             </TabPane>
             {
               window.__alert_appLocaleData.locale === 'zh-cn' &&
