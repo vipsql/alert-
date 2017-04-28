@@ -296,7 +296,7 @@
   "ruleEditor.phCloseOrDel": "请选择操作",
   "ruleEditor.defineRule": "定义条件",
   "ruleEditor.setAct": "设置动作",
-  "ruleEditor.phSource": "请选择告警来源",
+  "ruleEditor.phSource": "任意来源",
   "ruleEditor.mon": "周一",
   "ruleEditor.tue": "周二",
   "ruleEditor.wed": "周三",

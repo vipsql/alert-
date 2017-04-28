@@ -479,10 +479,10 @@ class RuleEditor extends Component {
           >
             <Select
               style={{ width: 200 }}
-              placeholder={window.__alert_appLocaleData.messages['ruleEditor.phSource']}
-              value={this.state.source === '' ? undefined : this.state.source}
+              value={this.state.source === '' ? '' : this.state.source}
               onChange={this.changeSource.bind(this)}
             >
+              <Option value="">{window.__alert_appLocaleData.messages['ruleEditor.phSource']}</Option>
               {
                 this.props.alertAssociationRules.source.map(item => <Option key={item.key}>{item.value}</Option>)
               }
