@@ -28,13 +28,11 @@ class AlertListManage extends Component{
   }
 
   componentDidMount() {
+    const {dispatch} = this.props;
     window.addEventListener('message', (e) => {
 		  if(e.data.createTicket !== undefined && e.data.createTicket === 'success') {
         dispatch({
-          type: 'alertDetail/toggleTicketModal', 
-          payload: {
-              isShowTicketModal: false,
-          }
+          type: 'alertDetail/closeTicketModal'
         })
       }
     }, false)

@@ -216,6 +216,9 @@
   "modal.trap.severityMapper.alert": "Alert",
   "modal.trap.severityMapper.message": "Uyun Alert Severity Difination：Critical - 3，Warning - 2，Information - 1，OK - 0",
 
+  "modal.trap.deleteTitle": "Delete Rule",
+  "modal.trap.deleteMessage": "Are you sure Delete {message} Rule",
+
   "alertApplication.videoMon.headerTitle": "Use Web Hook to build a integration between Uyun Alert and Uyun VideoMon.",
   "alertApplication.videoMon.step2": "Send data to the Monitor",
   "alertApplication.videoMon.step2Message": "Please copy the URL below to your application.",

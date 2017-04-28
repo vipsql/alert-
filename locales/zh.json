@@ -216,6 +216,9 @@
   "modal.trap.severityMapper.alert": "Alert级别",
   "modal.trap.severityMapper.message": "Alert级别定义：紧急 - 3，警告 - 2，提醒 - 1，恢复 - 0",
 
+  "modal.trap.deleteTitle": "删除规则",
+  "modal.trap.deleteMessage": "您确定要删除{message}规则吗",
+
   "alertApplication.videoMon.headerTitle": "使用Web Hook接入快速优云VideoMon告警",
   "alertApplication.videoMon.step2": "向接口发送数据",
   "alertApplication.videoMon.step2Message": "请复制以下URL至您的应用中",
