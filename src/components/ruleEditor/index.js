@@ -273,9 +273,9 @@ class RuleEditor extends Component {
     dispatch({
       type: 'alertAssociationRules/getField'
     });
-    // dispatch({
-    //   type: 'alertAssociationRules/getRooms'
-    // });
+    dispatch({
+      type: 'alertAssociationRules/getRooms'
+    });
     dispatch({
       type: 'alertAssociationRules/getWos'
     });
