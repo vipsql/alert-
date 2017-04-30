@@ -289,7 +289,7 @@
   "ruleEditor.monthly": "Monthly",
   "ruleEditor.ruleName": "Rule Name",
   "ruleEditor.description": "Description",
-  "ruleEditor.excuteTime": "Excute Time",
+  "ruleEditor.excuteTime": "Execute Time",
   "ruleEditor.source": "Source",
   "ruleEditor.phRuleName": "Rule Name",
   "ruleEditor.phDescription": "Rule description",
@@ -301,7 +301,7 @@
   "ruleEditor.phCloseOrDel": "Select Action",
   "ruleEditor.defineRule": "Conditions",
   "ruleEditor.setAct": "Actions",
-  "ruleEditor.phSource": "Alert Source",
+  "ruleEditor.phSource": "Any Sources",
   "ruleEditor.mon": "Mon",
   "ruleEditor.tue": "Tue",
   "ruleEditor.wed": "Wed",
@@ -311,7 +311,7 @@
   "ruleEditor.sun": "Sun",
   "ruleEditor.addRow": "Add Row",
   "ruleEditor.addCon": "Add Condition",
-  "ruleEditor.selectLogic": "Metch",
+  "ruleEditor.selectLogic": "",
   "ruleEditor.and": "Match  All",
   "ruleEditor.or": "Match Any",
   "ruleEditor.not": "Not Match",
@@ -321,7 +321,8 @@
   "ruleEditor.suppress": "Suppress",
   "ruleEditor.shareChatOps": "Share To ChatOps",
   "ruleEditor.submit": "Submit",
-  "ruleEditor.word1": "For the matching alerts, excute the following action.",
+  "ruleEditor.word1": "For the matched alerts, execute the ",
+  "ruleEditor.word4": " action.",
   "ruleEditor.word2": "Change the state of matched alerts to Closed or delete the matched records.",
   "ruleEditor.notifyObj": "To",
   "ruleEditor.notifySelectObj": "",
@@ -345,7 +346,7 @@
   "ruleEditor.phBody": "",
   "ruleEditor.phTag": "Select relational Tag",
   "ruleEditor.phIpt": "",
-  "ruleEditor.phOpt": "Select Operate",
+  "ruleEditor.phOpt": "Operator",
   "ruleEditor.phField": "Select Field",
   "ruleEditor.eq": "equal",
   "ruleEditor.noeq": "unequal",
@@ -364,7 +365,8 @@
   "ruleEditor.s2": "Acknowledged",
   "ruleEditor.s3": "Assigned",
   "ruleEditor.s4": "Resolved",
-  "ruleEditor.s5": "Closed"
+  "ruleEditor.s5": "Closed",
+  "ruleEditor.word5": "For the matching alerts, excute the suppression action."
 
 
 }

@@ -307,6 +307,7 @@ class RuleEditor extends Component {
         }
       });
       this.setState({
+        action: nextProps.action,
         ITSMParam: JSON.stringify(JSON.parse(_ITSMParam), null, 2)
       })
     }
@@ -479,10 +480,10 @@ class RuleEditor extends Component {
           >
             <Select
               style={{ width: 200 }}
-              placeholder={window.__alert_appLocaleData.messages['ruleEditor.phSource']}
-              value={this.state.source === '' ? undefined : this.state.source}
+              value={this.state.source === '' ? '' : this.state.source}
               onChange={this.changeSource.bind(this)}
             >
+              <Option value="">{window.__alert_appLocaleData.messages['ruleEditor.phSource']}</Option>
               {
                 this.props.alertAssociationRules.source.map(item => <Option key={item.key}>{item.value}</Option>)
               }
@@ -503,6 +504,7 @@ class RuleEditor extends Component {
 
             <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.closeOrDel']} key="1" className={styles.actionDelOrClose}>
               <div>
+                <em>{window.__alert_appLocaleData.messages['ruleEditor.word2']}</em>
                 <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word1']}</span>
                 <Select
                   style={{ width: 150 }}
@@ -513,7 +515,7 @@ class RuleEditor extends Component {
                   <Option value={1}>{window.__alert_appLocaleData.messages['ruleEditor.del']}</Option>
                   <Option value={2}>{window.__alert_appLocaleData.messages['ruleEditor.close']}</Option>
                 </Select>
-                <em>{window.__alert_appLocaleData.messages['ruleEditor.word2']}</em>
+                <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word4']}</span>
               </div>
             </TabPane>
             {
@@ -622,7 +624,9 @@ class RuleEditor extends Component {
               </div>
             </TabPane>
             <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.suppress']} key="5" className={styles.actionSuppress}>
-
+              <div>
+                <span>{window.__alert_appLocaleData.messages['ruleEditor.word5']}</span>
+              </div>
             </TabPane>
             {
               window.__alert_appLocaleData.locale === 'zh-cn' &&
