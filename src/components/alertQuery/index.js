@@ -23,11 +23,10 @@ class alertQueryManage extends Component{
 
     componentDidMount() {
       const {dispatch} = this.props;
-      
       window.addEventListener('message', (e) => {
-        if(e.data.createTicket !== undefined && e.data.createTicket === 'success') {
+        if(e.data.creatTicket !== undefined && e.data.creatTicket === 'success') {
           dispatch({
-            type: 'alertQueryDetail/isShowTicketModal', 
+            type: 'alertQueryDetail/closeTicketModal', 
           })
         }
       }, false)
@@ -92,7 +91,7 @@ class alertQueryManage extends Component{
       const alertDeatilProps = {
         extraProps: {
           currentAlertDetail: alertQueryDetail.currentAlertDetail, 
-          isSowOperateForm: alertQueryDetail.isSowOperateForm, 
+          isShowOperateForm: alertQueryDetail.isShowOperateForm, 
           operateForm: alertQueryDetail.operateForm, 
           isShowRemark: alertQueryDetail.isShowRemark, 
           operateRemark: alertQueryDetail.operateRemark,
@@ -111,6 +110,14 @@ class alertQueryManage extends Component{
               payload: false
           })
         },
+        clickTicketFlow: (operateForm) => {
+          if (operateForm !== undefined && operateForm !== '') {
+            dispatch({
+                type: 'alertQueryDetail/viewTicketDetail',
+                payload: operateForm
+            })
+          }
+        },
         openForm: () => {
           dispatch({
               type: 'alertQueryDetail/toggleFormModal',
@@ -119,7 +126,7 @@ class alertQueryManage extends Component{
         },
         editForm: (formData) => {
           dispatch({
-              type: 'alertQueryDetail/setFormData',
+              type: 'alertQueryDetail/changeTicketFlow',
               payload: formData.formContent
           })
           dispatch({

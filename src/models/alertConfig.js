@@ -1,4 +1,4 @@
-import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery, add, update, view} from '../services/alertConfig'
+import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery, add, update, view, getTrapUrl} from '../services/alertConfig'
 import {parse} from 'qs'
 import { message } from 'antd'
 import pathToRegexp from 'path-to-regexp';
@@ -105,7 +105,12 @@ export default {
         // 如果是SNMP Trap
         switch(currentOperateAppType.name) {
           case 'SNMPTrap':
-              yield put({ type: 'snmpTrapRules/setAppRules', payload: []})
+              const trapUrl = yield call(getTrapUrl)
+              if (trapUrl.result) {
+                yield put({ type: 'snmpTrapRules/setAppRules', payload: {trapUrl: trapUrl.data.url, appRules: []}})
+              } else {
+                yield message.error(window.__alert_appLocaleData.messages[trapUrl.message], 3)
+              }
             break;
           default:
             break;
@@ -133,7 +138,12 @@ export default {
           if (viewResult.data.applyType !== undefined) {
             switch(viewResult.data.applyType.name) {
               case 'SNMPTrap':
-                  yield put({ type: 'snmpTrapRules/setAppRules', payload: viewResult.data.appRules || []})
+                  const trapUrl = yield call(getTrapUrl)
+                  if (trapUrl.result) {
+                    yield put({ type: 'snmpTrapRules/setAppRules', payload: {trapUrl: trapUrl.data.url, appRules: viewResult.data.appRules || []}})
+                  } else {
+                    yield message.error(window.__alert_appLocaleData.messages[trapUrl.message], 3)
+                  }
                 break;
               default:
                 break;

@@ -129,3 +129,24 @@ export async function relieve(param) {
         body: JSON.stringify(param)
     })
 }
+
+// 修改工单流水号
+export async function changeTicket(params) {
+    return request(`/incident/updateFlowNo`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(params)
+    })
+}
+
+// 工单详情URL
+export async function viewTicket(code) {
+    return request(`/incident/getITSMDetailUrl?orderFlowNum=${code}`,  {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+}

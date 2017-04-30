@@ -19,7 +19,8 @@ function AlertManage({dispatch, alertManage, isFold}){
     tagsList,
     isLoading,
     currentDashbordData,
-    selectedStatus
+    selectedStatus,
+    selectedTime
   } = alertManage
 
   const alertSetProps = {
@@ -68,6 +69,7 @@ function AlertManage({dispatch, alertManage, isFold}){
 
   const chartProps = {
     selectedStatus,
+    selectedTime,
     isFold,
     currentDashbordData,
     isLoading,

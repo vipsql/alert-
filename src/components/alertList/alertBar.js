@@ -96,15 +96,15 @@ class AlertBar extends Component{
   shouldComponentUpdate(nextProps, nextState){   
     return this.props.alertList.barData !== nextProps.alertList.barData || this.props.alertList.isResize !== nextProps.alertList.isResize
   }
-  renderBar(barData){
+  renderBar(barData, begin){
     const { dispatch } = this.props
     let timer = null
-
+    
     const startTime = barData[0]['time']
     const endtTime = barData[barData.length - 1]['time']
     const start = new Date(startTime)
     const end = new Date(endtTime)
-    const latestHour = new Date(endtTime - 3600000)
+    const latestHour = new Date(begin)
 
     // Create the crossfilter for the relevant dimensions and groups.
     const min5 = n_minutes_interval(2);
@@ -154,13 +154,13 @@ class AlertBar extends Component{
   }
   componentDidMount(){
     // this.chart = dc.barChart(".dc-chart")
-    const { barData } = this.props.alertList
+    const { barData, begin} = this.props.alertList
     const { dispatch }  = this.props
 
     const len = barData.length
 
     if(len > 0) {
-        this.renderBar(barData)
+        this.renderBar(barData, begin)
     }
 
     
@@ -172,8 +172,8 @@ class AlertBar extends Component{
     
   }
   componentDidUpdate(){
-    
-    this.renderBar(this.props.alertList.barData)
+    const { barData, begin} = this.props.alertList
+    this.renderBar(barData, begin)
     
   }
   render(){

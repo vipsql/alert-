@@ -35,19 +35,19 @@ export default {
   effects: {
     // 查询柱状图
     *queryAlertBar({payload}, {call, put, select}) {
-      
-      // 触发这个effect的时机是在刷新/tag转变的时候（不保存状态--所以需要初始化commonList）
-      // yield put({ type: 'alertListTable/clear' })
 
       yield put({ type: 'toggleAlertBarLoading', payload: true })
 
       const data = yield call(queryAlertBar, payload)
 
       if(data.result){
-        const barData = data.data
-        const endtTime = barData[barData.length - 1]['time']
-        const startTime = endtTime - 3600000
-
+        let barData = data.data
+        let endtTime = barData[barData.length - 1]['time']
+        let startTime = endtTime - 3600000
+        if (payload !== undefined && payload.selectedTime !== undefined && payload.selectedTime === 'lastFourHour') {
+          startTime = barData[0]['time'] 
+        }
+        delete payload.selectedTime
         // 将公用数据放入commonList
         yield put({
           type: 'alertListTable/setInitvalScope',
