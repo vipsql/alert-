@@ -7,6 +7,7 @@ const initalState = {
   isShowTrapDeleteModal: false,
   operateDeleteRule: {},
   isShowTrapModal: false,
+  trapUrl: 'alert.uyun.cn',
   appRules: [], // 规则
   filterSource: [], // fiter选项
   CMDBClass: [], // 绑定CMDB类
@@ -161,8 +162,8 @@ export default {
       return { ...state, isShowTrapModal }
     },
     // 配置页面的规则列表
-    setAppRules(state, {payload: appRules}) {
-      return { ...state, appRules }
+    setAppRules(state, {payload: {appRules, trapUrl}}) {
+      return { ...state, appRules, trapUrl }
     },
     // 新增打开modal时预处理数据
     addOperate(state, {payload: {fields, source, CMDBClass, OIDList, operateType}}) {

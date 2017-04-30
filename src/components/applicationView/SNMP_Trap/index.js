@@ -37,7 +37,7 @@ const SNMP_Trap = (props) => {
             id: 'alertApplication.trap.step2Info',
             defaultMessage: '在配置SNMPTrap规则之前，建议在您的监控系统中开启SNMPTrap并发送到{url}，端口号为{port}',
             values: {
-                url: 'alert.uyun.cn',
+                url: snmpTrapRules.trapUrl,
                 port: '8162'
             }
         },

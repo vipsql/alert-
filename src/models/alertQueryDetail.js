@@ -1,7 +1,7 @@
 import {parse} from 'qs'
 import { queryDetail } from '../services/alertDetail'
 import { queryCloumns } from '../services/alertQuery'
-import { getFormOptions, dispatchForm, close, resolve, merge, relieve, getChatOpsOptions, shareRoom } from '../services/alertOperation'
+import { getFormOptions, dispatchForm, close, resolve, merge, relieve, getChatOpsOptions, shareRoom, changeTicket, viewTicket} from '../services/alertOperation'
 import { message } from 'antd'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -41,7 +41,7 @@ const initalState = {
     currentAlertDetail: {},
 
     operateForm: undefined, // 操作工单（当前）
-    isSowOperateForm: false, // 是否显示操作工单文本
+    isShowOperateForm: false, // 是否显示操作工单文本
 
     operateRemark: undefined, // 备注信息
     isShowRemark: false, // 是否显示备注框
@@ -144,6 +144,46 @@ export default {
       } else {
         console.error('viewDetailAlertId type error')
       }
+    },
+    // 编辑工单流水号
+    *changeTicketFlow({payload}, {select, put, call}) {
+        const { currentAlertDetail } = yield select( state => {
+            return {
+                'currentAlertDetail': state.alertQueryDetail.currentAlertDetail
+            }
+        })
+        if (payload !== undefined) {
+            const changeResult = yield call(changeTicket, {
+                id: currentAlertDetail.id,
+                orderFlowNum: payload
+            })
+            if (changeResult.result) {
+                yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                yield put({
+                    type: 'setFormData',
+                    payload: payload
+                })
+            } else {
+                yield message.error(window.__alert_appLocaleData.messages[changeResult.message], 3);
+            }
+        } else {
+            console.error('ticket flow is null')
+        }
+    },
+    // 工单详情
+    *viewTicketDetail({payload}, {select, put, call}) {
+        if (payload !== undefined) {
+            const viewResult = yield call(viewTicket, payload)
+            if (viewResult.result) {
+                if (viewResult.data !== undefined && viewResult.data.url !== '') {
+                window.open(viewResult.data.url)
+                }
+            } else {
+                yield message.error(window.__alert_appLocaleData.messages[viewResult.message], 3);
+            }
+        } else {
+            console.error('Ticket Flow is null')
+        }
     },
     // 关闭时
     *closeDetailModal({payload}, {select, put, call}) {
@@ -390,7 +430,7 @@ export default {
     },
     // 储存detail信息
     setDetail(state, {payload: currentAlertDetail}) {
-      return { ...state, currentAlertDetail }
+      return { ...state, currentAlertDetail, isShowOperateForm: false}
     },
     // 设置chatOps群组
     setChatOpsRoom(state, { payload }) {
@@ -419,8 +459,8 @@ export default {
         return { ...state, isShowResolveModal }
     },
     // 切换工单的状态
-    toggleFormModal(state, {payload: isSowOperateForm}) {
-      return { ...state, isSowOperateForm }
+    toggleFormModal(state, {payload: isShowOperateForm}) {
+      return { ...state, isShowOperateForm }
     },
     // 切换备注的状态
     toggleRemarkModal(state, {payload: isShowRemark}) {

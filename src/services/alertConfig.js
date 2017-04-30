@@ -122,3 +122,13 @@ export async function getOID() {
       }
   })
 }
+
+// getTrapUrl
+export async function getTrapUrl() {
+  return request(`/dataService/ip`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}

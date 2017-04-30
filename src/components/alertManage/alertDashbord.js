@@ -253,6 +253,11 @@ class Chart extends Component{
                                                     ? '1,0' : d.maxSeverity == 2
                                                         ? '2,1,0' : d.maxSeverity == 3
                                                             ? '3,2,1,0' : '3,2,1,0'
+                    alertListPath.status = this.props.selectedStatus === 'NEW' 
+                                                ? '0' : this.props.selectedStatus === 'PROGRESSING'
+                                                    ? '150' : this.props.selectedStatus === 'RESOLVED'
+                                                        ? '190' : undefined;
+                    alertListPath.selectedTime = this.props.selectedTime;
                     localStorage.setItem('alertListPath', JSON.stringify(alertListPath));
                     window.location.hash = "#/alertManage/" + d.path;
                 })
