@@ -18,7 +18,7 @@ class checkList extends Component {
     componentWillReceiveProps(nextProps, nextState)  {
       if (nextProps.itemList.length > 0 && nextProps.itemList.length !== this.props.itemList.length) {
         this.setState({
-          tagGroupState: props.itemList.map( (item) => { return {height: '35px', isSpresd: false} })
+          tagGroupState: nextProps.itemList.map( (item) => { return {height: '35px', isSpresd: false} })
         })
       }
     }
@@ -53,7 +53,7 @@ class checkList extends Component {
         'iconfont',
         'icon-wancheng'
       )
-      
+
       const tags = itemList.length > 0 ? itemList.map((item, index) => {
         const muenClass = this.state.tagGroupState[index]['isSpresd'] ? 'icon-xialasanjiao-copy' : 'icon-xialasanjiao';
         const arrClass = classnames(
@@ -100,7 +100,7 @@ class checkList extends Component {
 
       return (
           <div className={styles.ckeckModalMain}>
-              { typeof checkedNum !== 'undefined' 
+              { typeof checkedNum !== 'undefined'
                   ? <p className={styles.checkedText}><FormattedMessage {...formatMessages['text']} /></p>
                   : undefined }
               <ul>
