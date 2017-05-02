@@ -1,9 +1,9 @@
 import React, { PropTypes, Component } from 'react'
 
-import { Tabs, Select, Switch } from 'antd';
+import { Tabs, Select, Switch, Checkbox } from 'antd'
 import ListTableWrap from './listTable'
 import ListTimeTableWrap from './listTimeTable'
-
+import VisualAnalyzeWrap from './visualAnalyze'
 import AlertBar from './alertBar'
 import AlertTagsFilter from './alertTagsFilter'
 import AlertOperation from '../common/alertOperation/index.js'
@@ -54,6 +54,10 @@ class AlertListManage extends Component{
       tab_time: {
         id: 'alertList.tabs.timeList',
         defaultMessage: '时间线'
+      },
+      tab_visual: {
+        id: 'alertList.tabs.visual',
+        defaultMessage: '可视化分析'
       },
       auto_refresh: {
         id: 'alertList.autoRefresh',
@@ -344,6 +348,11 @@ class AlertListManage extends Component{
       'icon-shijian',
       'timeTab'
     )
+    const tabVisual = classnames(
+      'iconfont',
+      'icon-yunweichangjing',
+      'visualTab'
+    )
     const shanchuClass = classnames(
       'iconfont',
       'icon-shanchux'
@@ -375,7 +384,7 @@ class AlertListManage extends Component{
         <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch {...refreshProps}/></div>
         <AlertBar />
         <div className={styles.alertListPage}>
-          <Tabs>
+          <Tabs  activeKey="3">
             <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key={1}>
               <AlertOperation position='list' {...operateProps}/>
               <ListTableWrap />
@@ -383,6 +392,9 @@ class AlertListManage extends Component{
             <TabPane tab={<span className={tabLine} ><FormattedMessage {...localeMessage['tab_time']} /></span>}  key={2}>
               <AlertOperation position='timeAxis' {...operateProps}/>
               <ListTimeTableWrap />
+            </TabPane>
+            <TabPane tab={<span  className={tabVisual}><FormattedMessage {...localeMessage['tab_visual']} /></span>}  key={3}>
+                <VisualAnalyzeWrap />
             </TabPane>
           </Tabs>
           <ul className={styles.levelBar}>
