@@ -86,7 +86,7 @@
   "modal.operate.infoTip1": "请先选择一条告警",
   "modal.operate.infoTip2": "只允许操作一条告警",
   "modal.operate.infoTip3": "请先选择至少二条告警",
-  "modal.operate.infoTip4": "请先将多条告警合并为一条原告警",
+  "modal.operate.infoTip4": "请先将多条告警合并为一条源告警",
   "modal.operate.allowRollUp": "只允许新告警才能派发工单",
 
   "modal.shareChatOps": "分享到ChatOps",
@@ -135,6 +135,7 @@
   "alertDetail.text": "文本",
   "alertDetail.ticket.assgin": "派发工单",
   "alertDetail.link": "链接",
+  "alertDetail.link.ciDetail": "查看CI详情",
 
   "alertConfig.integrations": "第三方应用集成",
   "alertConfig.integrations.message": "接入第三方应用，如网络、服务器和应用监控工具、帮助台和客户支持、聊天协同等应用",
@@ -215,6 +216,9 @@
   "modal.trap.severityMapper.trap": "Trap级别",
   "modal.trap.severityMapper.alert": "Alert级别",
   "modal.trap.severityMapper.message": "Alert级别定义：紧急 - 3，警告 - 2，提醒 - 1，恢复 - 0",
+
+  "modal.trap.deleteTitle": "删除规则",
+  "modal.trap.deleteMessage": "您确定要删除{message}规则吗",
 
   "alertApplication.videoMon.headerTitle": "使用Web Hook接入快速优云VideoMon告警",
   "alertApplication.videoMon.step2": "向接口发送数据",

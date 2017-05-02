@@ -1,5 +1,6 @@
 import {parse} from 'qs'
 import { queryDetail } from '../services/alertDetail'
+import { changeTicket, viewTicket } from '../services/alertOperation'
 import { message } from 'antd'
 
 const initalState = {
@@ -10,7 +11,7 @@ const initalState = {
   },
 
   operateForm: undefined, // 操作工单（当前）
-  isSowOperateForm: false, // 是否显示操作工单文本
+  isShowOperateForm: false, // 是否显示操作工单文本
 
   isShowTicketModal: false, //派发工单框
   ticketUrl: '', //工单链接
@@ -72,6 +73,46 @@ export default {
         console.error('viewDetailAlertId type error')
       }
     },
+    // 编辑工单流水号
+    *changeTicketFlow({payload}, {select, put, call}) {
+        const { currentAlertDetail } = yield select( state => {
+            return {
+                'currentAlertDetail': state.alertDetail.currentAlertDetail
+            }
+        })
+        if (payload !== undefined) {
+            const changeResult = yield call(changeTicket, {
+                id: currentAlertDetail.id,
+                orderFlowNum: payload
+            })
+            if (changeResult.result) {
+                yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                yield put({
+                    type: 'setFormData',
+                    payload: payload
+                })
+            } else {
+                yield message.error(window.__alert_appLocaleData.messages[changeResult.message], 3);
+            }
+        } else {
+            console.error('ticket flow is null')
+        }
+    },
+    // 工单详情
+    *viewTicketDetail({payload}, {select, put, call}) {
+      if (payload !== undefined) {
+        const viewResult = yield call(viewTicket, payload)
+        if (viewResult.result) {
+            if (viewResult.data !== undefined && viewResult.data.url !== '') {
+              window.open(viewResult.data.url)
+            }
+        } else {
+            yield message.error(window.__alert_appLocaleData.messages[viewResult.message], 3);
+        }
+      } else {
+        console.error('Ticket Flow is null')
+      }
+    },
     // 关闭时
     *closeDetailModal({payload}, {select, put, call}) {
       yield put({
@@ -96,15 +137,15 @@ export default {
     },
     // 储存detail信息
     setDetail(state, {payload: currentAlertDetail}) {
-      return { ...state, currentAlertDetail }
+      return { ...state, currentAlertDetail, isShowOperateForm: false }
     },
     // 切换侧滑框的状态
     toggleDetailModal(state, {payload: isShowDetail}) {
       return { ...state, isShowDetail }
     },
     // 切换工单的状态
-    toggleFormModal(state, {payload: isSowOperateForm}) {
-      return { ...state, isSowOperateForm }
+    toggleFormModal(state, {payload: isShowOperateForm}) {
+      return { ...state, isShowOperateForm }
     },
     // 切换备注的状态
     toggleRemarkModal(state, {payload: isShowRemark}) {

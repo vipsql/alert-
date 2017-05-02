@@ -28,13 +28,12 @@ class AlertListManage extends Component{
   }
 
   componentDidMount() {
+    const {dispatch} = this.props;
+    
     window.addEventListener('message', (e) => {
-		  if(e.data.createTicket !== undefined && e.data.createTicket === 'success') {
+		  if(e.data.creatTicket !== undefined && e.data.creatTicket === 'success') {
         dispatch({
-          type: 'alertDetail/toggleTicketModal', 
-          payload: {
-              isShowTicketModal: false,
-          }
+          type: 'alertDetail/closeTicketModal'
         })
       }
     }, false)
@@ -132,7 +131,7 @@ class AlertListManage extends Component{
     const alertDeatilProps = {
       extraProps: {
         currentAlertDetail: alertDetail.currentAlertDetail, 
-        isSowOperateForm: alertDetail.isSowOperateForm, 
+        isShowOperateForm: alertDetail.isShowOperateForm, 
         operateForm: alertDetail.operateForm, 
         isShowRemark: alertDetail.isShowRemark, 
         operateRemark: alertDetail.operateRemark,
@@ -144,7 +143,14 @@ class AlertListManage extends Component{
         closeDisabled: alertDetail['currentAlertDetail']['status'] == 255 || alertDetail['currentAlertDetail']['status'] == 40,
         resolveDisabled: alertDetail['currentAlertDetail']['status'] == 255 || alertDetail['currentAlertDetail']['status'] == 190,
       },
-
+      clickTicketFlow: (operateForm) => {
+        if (operateForm !== undefined && operateForm !== '') {
+          dispatch({
+              type: 'alertDetail/viewTicketDetail',
+              payload: operateForm
+          })
+        }
+      },
       closeDeatilModal: () => {
         dispatch({
             type: 'alertDetail/closeDetailModal',
@@ -159,7 +165,7 @@ class AlertListManage extends Component{
       },
       editForm: (formData) => {
         dispatch({
-            type: 'alertDetail/setFormData',
+            type: 'alertDetail/changeTicketFlow',
             payload: formData.formContent
         })
         dispatch({

@@ -88,6 +88,7 @@ export default {
     // 将数据转换成需要的格式
     initalTagsList(state, { payload: tagsList }) {
       const { originTags } = state;
+      originTags.selectedTime !== undefined && delete originTags.selectedTime;
       let originTagsList = Object.keys(originTags) || [];
       let serverityList = originTags['severity'].split(',');
       const newList = tagsList.map( (group) => {
@@ -98,35 +99,40 @@ export default {
           })
         }
         group.values = group.values.map( (item) => {
-          if (originTagsList.length !== 0
-            && ((originTagsList[0] == group.field && originTags[`${originTagsList[0]}`] == item)
-              || (originTagsList[originTagsList.length - 1] == group.field && serverityList.includes(item)))) {
-                if (group.field == 'severity' || group.field == 'status') {
-                  return {
+          let temp = {};
+          originTagsList.length > 0 && originTagsList.forEach( (tag, index) => {
+            if ((tag == group.field && originTags[tag] == item) || (group.field == 'severity' && serverityList.includes(item))) {
+              if (group.field == 'severity' || group.field == 'status') {
+                  temp = {
                     name: window[`_${group.field}`][item],
                     value: item,
                     selected: true
                   }
                 } else {
-                  return {
+                  temp = {
                     name: item,
                     selected: true
                   }
                 }
-          }
-          if (group.field == 'severity' || group.field == 'status') {
-            return {
-              name: window[`_${group.field}`][item],
-              value: item,
-              selected: false
             }
-          } else {
-            return {
-              name: item,
-              selected: false
+          })
+          if (Object.keys(temp).length === 0) {
+            if (group.field == 'severity' || group.field == 'status') {
+              temp = {
+                name: window[`_${group.field}`][item],
+                value: item,
+                selected: false
+              }
+            } else {
+              temp = {
+                name: item,
+                selected: false
+              }
             }
           }
+          return temp;
         })
+
         return group
       })
       return { ...state, tagsList: newList }

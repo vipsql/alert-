@@ -5,6 +5,7 @@ import { Row, Col, Button, Input, Form, Table} from 'antd'
 import { classnames, getUUID } from '../../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import RuleModal from './ruleConfigModal'
+import TrapDeleteModal from './trapDeleteModal'
 
 const Item = Form.Item;
 const SNMP_Trap = (props) => {
@@ -36,7 +37,7 @@ const SNMP_Trap = (props) => {
             id: 'alertApplication.trap.step2Info',
             defaultMessage: '在配置SNMPTrap规则之前，建议在您的监控系统中开启SNMPTrap并发送到{url}，端口号为{port}',
             values: {
-                url: 'alert.uyun.cn',
+                url: snmpTrapRules.trapUrl,
                 port: '8162'
             }
         },
@@ -180,6 +181,23 @@ const SNMP_Trap = (props) => {
         }
     }
 
+    const deleteProps = {
+        snmpTrapRules,
+        onOk: () => {
+            dispatch({
+                type: 'snmpTrapRules/deleteRule'
+            })
+        },
+        onCancel: () => {
+            dispatch({
+                type: 'snmpTrapRules/toggleTrapDeleteModal',
+                payload: {
+                    status: false,
+                }
+            })
+        }
+    }
+
     return (
         <div className={styles.detailView}>
             <div className={styles.viewHeader}>
@@ -255,8 +273,11 @@ const SNMP_Trap = (props) => {
                                                 <Button size='small' className={styles.delBtn} onClick={ () => {
                                                     // Delete TODO
                                                     dispatch({
-                                                        type: 'snmpTrapRules/deleteRule',
-                                                        payload: record.id
+                                                        type: 'snmpTrapRules/toggleTrapDeleteModal',
+                                                        payload: {
+                                                            rule: record,
+                                                            status: true
+                                                        }
                                                     })
                                                 }}>{formatMessage({...localeMessage['action_delete']})}</Button>
                                             </span>
@@ -275,6 +296,7 @@ const SNMP_Trap = (props) => {
                 <Button type="primary" htmlType='submit' onClick={(e) => {onOk(e, form)}}>{formatMessage({...localeMessage['save']})}</Button>
             </div>
             <RuleModal {...ruleModalProps}/>
+            <TrapDeleteModal {...deleteProps}/>
         </div>
     )
 }

@@ -6,9 +6,9 @@ import { classnames } from '../../../utils'
 import AlertOperation from '../alertOperation/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
-const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm, openForm, closeForm, openRemark, editRemark, closeRemark, intl: {formatMessage}}) => {
+const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTicketFlow, editForm, openForm, closeForm, openRemark, editRemark, closeRemark, intl: {formatMessage}}) => {
 
-    const { currentAlertDetail, isSowOperateForm, operateForm, isShowRemark, operateRemark, ciUrl } = extraProps;
+    const { currentAlertDetail, isShowOperateForm, operateForm, isShowRemark, operateRemark, ciUrl } = extraProps;
     const { getFieldDecorator, getFieldsValue } = form;
 
     // <div className={styles.infoBody}>
@@ -42,30 +42,6 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
     // </div>
 
     // <i className={classnames(setClass, styles.stateClass)}></i>
-
-    // !isSowOperateForm ?
-    // <div className={styles.formMain}>
-    //     <span className={operateForm !== undefined && operateForm != '' && styles.content}>{operateForm}</span>
-    //     <span className={styles.editForm} onClick={openForm}>{formatMessage({...localeMessage['edit']})}</span>
-    // </div>
-    // :
-    // <Form>
-    //     <Form.Item>
-    //         {getFieldDecorator('formContent', {
-    //             initialValue: operateForm
-    //         })(
-    //             <Input placeholder={formatMessage({...localeMessage['text']})}/>
-    //         )}
-    //     </Form.Item>
-    //     <div className={styles.formMain}>
-    //         <Button type="primary" onClick={ () => {
-    //             const formData = form.getFieldsValue();
-    //             editForm(formData)
-    //         }}>{formatMessage({...localeMessage['save']})}</Button>
-    //         &nbsp;
-    //         <Button type="ghost" onClick={closeForm}>{formatMessage({...localeMessage['cancel']})}</Button>
-    //     </div>
-    // </Form>
 
     // <li><span>{formatMessage({...localeMessage['owner']})}:</span><span>{currentAlertDetail.responsiblePerson ? currentAlertDetail.responsiblePerson : formatMessage({...localeMessage['unknown']})}</span></li>
     // <li><span>{formatMessage({...localeMessage['department']})}:</span><span>{currentAlertDetail.responsibleDepartment ? currentAlertDetail.responsibleDepartment : formatMessage({...localeMessage['unknown']})}</span></li>
@@ -202,6 +178,10 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
         link:{
             id: 'alertDetail.link',
             defaultMessage: '链接',
+        },
+        ciDetail: {
+            id: 'alertDetail.link.ciDetail',
+            defaultMessage: '查看CI详情',
         }
     })
 
@@ -245,9 +225,31 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                         <li><span>{formatMessage({...localeMessage['count']})}:</span><span>{currentAlertDetail.count}</span></li>
                         <li className={styles.gongDan}>
                             <span>{formatMessage({...localeMessage['ticket']})}:</span>
-                            <div className={styles.formMain}>
-                                <span className={operateForm !== undefined && operateForm != '' && styles.content}>{operateForm ? operateForm : formatMessage({...localeMessage['unknown']})}</span>
-                            </div>
+                            {
+                                !isShowOperateForm ?
+                                <div className={styles.formMain}>
+                                    <span className={operateForm !== undefined && operateForm != '' && classnames(styles.content, styles.ticketFlow)} onClick={ () => {clickTicketFlow(operateForm)} }>{operateForm}</span>
+                                    <span className={styles.editForm} onClick={openForm}>{formatMessage({...localeMessage['edit']})}</span>
+                                </div>
+                                :
+                                <Form>
+                                    <Form.Item>
+                                        {getFieldDecorator('formContent', {
+                                            initialValue: operateForm
+                                        })(
+                                            <Input placeholder={formatMessage({...localeMessage['text']})}/>
+                                        )}
+                                    </Form.Item>
+                                    <div className={styles.formMain}>
+                                        <Button type="primary" onClick={ () => {
+                                            const formData = form.getFieldsValue();
+                                            editForm(formData)
+                                        }}>{formatMessage({...localeMessage['save']})}</Button>
+                                        &nbsp;
+                                        <Button type="ghost" onClick={closeForm}>{formatMessage({...localeMessage['cancel']})}</Button>
+                                    </div>
+                                </Form>
+                            }
                         </li>
                     </ul>
                 </div>
@@ -271,7 +273,7 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
                     <div className={classnames(styles.infoBody)}>
                         <p>{formatMessage({...localeMessage['ci']})}</p>
                         <ul>
-                            <li className={styles.cilink}><span>{formatMessage({...localeMessage['link']})}:</span><span><a href={ciUrl} target={'_blank'}>{ciUrl}</a></span></li>
+                            <li><span>{formatMessage({...localeMessage['link']})}:</span><span><a href={ciUrl} target={'_blank'}>{formatMessage({...localeMessage['ciDetail']})}</a></span></li>
                         </ul>
                     </div>
                     :
@@ -284,7 +286,8 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, editForm
 
 alertDetail.defaultProps = {
     extraProps: {}, 
-    closeDeatilModal: () => {}, 
+    closeDeatilModal: () => {},
+    clickTicketFlow: () => {},
     editForm: () => {}, 
     openForm: () => {}, 
     closeForm: () => {}, 

@@ -4,7 +4,10 @@ import { message } from 'antd';
 import { getUUID } from '../utils'
 
 const initalState = {
+  isShowTrapDeleteModal: false,
+  operateDeleteRule: {},
   isShowTrapModal: false,
+  trapUrl: 'alert.uyun.cn',
   appRules: [], // 规则
   filterSource: [], // fiter选项
   CMDBClass: [], // 绑定CMDB类
@@ -93,14 +96,26 @@ export default {
     },
     // 删除规则 --> 点击删除
     *deleteRule({payload}, {select, put, call}) {
-      if (payload !== undefined) {
+      const { operateDeleteRule } = yield select( state => {
+        return {
+          'operateDeleteRule': state.snmpTrapRules.operateDeleteRule,
+        }
+      })
+      if (operateDeleteRule.id !== undefined) {
         yield put({
           type: 'deleteOperate',
           payload: {
-            id: payload
+            id: operateDeleteRule.id
           }
         })
       }
+      yield put({
+        type: 'toggleTrapDeleteModal',
+        payload: {
+            status: false,
+        }
+      })
+
     },
     // 保存规则 --> 点击保存
     *saveRule({payload: appRule }, {select, put, call}) {
@@ -138,13 +153,17 @@ export default {
   },
 
   reducers: {
+    // 转换关闭弹窗状态，以及注入删除对象
+    toggleTrapDeleteModal(state, {payload: {status, rule ={} }}) {
+      return { ...state, isShowTrapDeleteModal: status, operateDeleteRule: rule }
+    },
     // 转换modal状态
     toggleTrapModal(state, {payload: isShowTrapModal}) {
       return { ...state, isShowTrapModal }
     },
     // 配置页面的规则列表
-    setAppRules(state, {payload: appRules}) {
-      return { ...state, appRules }
+    setAppRules(state, {payload: {appRules, trapUrl}}) {
+      return { ...state, appRules, trapUrl }
     },
     // 新增打开modal时预处理数据
     addOperate(state, {payload: {fields, source, CMDBClass, OIDList, operateType}}) {
