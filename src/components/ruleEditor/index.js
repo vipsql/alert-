@@ -308,7 +308,7 @@ class RuleEditor extends Component {
         }
       });
       this.setState({
-        action: nextProps.action,
+        // action: nextProps.action,
         ITSMParam: JSON.stringify(JSON.parse(_ITSMParam), null, 2)
       })
     }
@@ -403,7 +403,7 @@ class RuleEditor extends Component {
               <Radio value={1}><FormattedMessage {...formatMessages['fixedTime']} /></Radio>
             </RadioGroup>
             {
-              this.state.type === 1 &&
+              this.state.type === 2 &&
               <div className={styles.pickTimeWrap}>
                 <Popover
                   trigger="click"
@@ -445,7 +445,7 @@ class RuleEditor extends Component {
               </div>
             }
             {
-              this.state.type === 2 &&
+              this.state.type === 1 &&
               <div className={styles.pickTimeWrap}>
                 <Popover
                   trigger="click"
@@ -609,7 +609,7 @@ class RuleEditor extends Component {
                       this.props.alertAssociationRules.wos.map(item => <Option key={item.id}>{item.name}</Option>)
                     }
                   </Select>
-                  <em>{window.__alert_appLocaleData.messages['ruleEditor.word3']}</em>
+                  <em className={styles.tip}>{window.__alert_appLocaleData.messages['ruleEditor.word3']}</em>
                 </FormItem>
                 <FormItem
                   {...itsmLayout}
@@ -1114,7 +1114,8 @@ class RuleEditor extends Component {
     let _actionChatOps = undefined;
 
     switch(type) {
-      case 1: // 周期
+
+      case 2: // 周期
         if (_time.timeCycle === 1) { // 每周
           _time.timeCycle = time.timeCycle;
           _time.timeCycleWeek = time.timeCycleWeek;
@@ -1126,14 +1127,13 @@ class RuleEditor extends Component {
         _time.timeStart = `${hmStart}${local}`;
         _time.timeEnd = `${hmEnd}${local}`;
         break;
-      case 2: // 固定
+      case 1: // 固定
         _time.dayStart = time.dayStart.replace(time.dayStart.substr(11, 8), hmStart).replace('+', '+');
         _time.dayEnd = time.dayEnd.replace(time.dayStart.substr(11, 8), hmEnd).replace('+', '+');
         break;
       default:
         break;
     }
-
     switch(action.type[0]) {
       case 1:
         _actionDelOrClose = action.actionDelOrClose;
@@ -1191,8 +1191,10 @@ RuleEditor.defaultProps = {
   description: '',
   type: 0,
   time: {
-    dayStart: moment().format(),
-    dayEnd: moment().format(),
+    // dayStart: moment().format(),
+    // dayEnd: moment().format(),
+    dayStart: '',
+    dayEnd: '',
     timeCycle: 0,
     timeCycleWeek: '',
     timeCycleMonth: '',
