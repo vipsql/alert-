@@ -399,8 +399,8 @@ class RuleEditor extends Component {
               value={this.state.type}
             >
               <Radio value={0}><FormattedMessage {...formatMessages['anyTime']} /></Radio>
-              <Radio value={1}><FormattedMessage {...formatMessages['peroid']} /></Radio>
-              <Radio value={2}><FormattedMessage {...formatMessages['fixedTime']} /></Radio>
+              <Radio value={2}><FormattedMessage {...formatMessages['peroid']} /></Radio>
+              <Radio value={1}><FormattedMessage {...formatMessages['fixedTime']} /></Radio>
             </RadioGroup>
             {
               this.state.type === 1 &&
@@ -665,9 +665,9 @@ class RuleEditor extends Component {
         recipients: [],
         notificationMode: {
           notificationMode: [],
-          emailTitle: '${entity_name}:${name}',
-          emailMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}',
-          smsMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}'
+          emailTitle: '${entityName}:${name}',
+          emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
+          smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
         }
       };
     }
@@ -712,9 +712,9 @@ class RuleEditor extends Component {
         recipients: [],
         notificationMode: {
           notificationMode: [],
-          emailTitle: '${entity_name}:${name}',
-          emailMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}',
-          smsMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}'
+          emailTitle: '${entityName}:${name}',
+          emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
+          smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
         }
       };
     }
@@ -744,9 +744,9 @@ class RuleEditor extends Component {
             recipients: [],
             notificationMode: {
               notificationMode: [],
-              emailTitle: '${entity_name}:${name}',
-              emailMessage: '${severity}, ${entity_name}, ${occurtime}, <1>description</1>',
-              smsMessage: '${severity}, ${entity_name}, ${occurtime}, <1>description</1>'
+              emailTitle: '${entityName}:${name}',
+              emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, <1>description</1>',
+              smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, <1>description</1>'
             }
           };
         }
@@ -1222,9 +1222,9 @@ RuleEditor.defaultProps = {
       recipients: [],
       notificationMode: {
         notificationMode: [],
-        emailTitle: '${entity_name}:${name}',
-        emailMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}',
-        smsMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}'
+        emailTitle: '${entityName}:${name}',
+        emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
+        smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
       }
     },
     actionITSM: {
