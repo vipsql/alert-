@@ -34,6 +34,7 @@
 
   "alertList.tabs.list": "列表",
   "alertList.tabs.timeList": "时间线",
+  "alertList.tabs.visual": "可视化分析",
   "alertList.autoRefresh": "自动刷新",
 
   "alertList.title.id": "告警ID",
