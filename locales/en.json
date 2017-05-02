@@ -7,7 +7,7 @@
   "bread.association.add": "Add Rule",
   "bread.association.edit": "Edit Rule",
   "bread.alertList": "AlertList",
-  "bread.association": "Correlation Configuration",
+  "bread.association": "Correlations",
 
   "leftMenu.alertManage": "Alerts",
   "leftMenu.alertQuery": "Search",
@@ -140,8 +140,8 @@
 
   "alertConfig.integrations": "Integrations",
   "alertConfig.integrations.message": "Integrate with third-party applications, such as network and system monitoring tools, apm tools, collabration tools , customer supporting tools.",
-  "alertConfig.correlation": "Correlation Configuration",
-  "alertConfig.correlation.message": "Correlation Rule",
+  "alertConfig.correlation": "Correlations",
+  "alertConfig.correlation.message": "Use the graphical rule builder  to create Correlation rules.",
 
   "alertApplication.newApplication": "New Application",
   "alertApplication.incoming": "Incoming",
