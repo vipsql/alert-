@@ -287,6 +287,7 @@ class RuleEditor extends Component {
     if (this.props.name !== nextProps.name) {
       this.setState({
         name: nextProps.name,
+        time: nextProps.time,
         description: nextProps.description,
         type: nextProps.type,
         source: nextProps.source,
@@ -1081,16 +1082,18 @@ class RuleEditor extends Component {
 
   // 更改固定时间段, momentArray 为一个数组，包含起始时间和结束时间
   changeDate(momentArray) {
-    const _time = _.cloneDeep(this.state.time);
-    for (let i = 0, len = momentArray.length; i < len; i += 1) {
-      let _day = moment(momentArray[i]).format().toString(); // 当前日历组件选择的时间
-      i === 0
-        ? _time['dayStart'] = _day
-        : _time['dayEnd'] = _day;
+    if (momentArray.length >= 2) {
+      const _time = _.cloneDeep(this.state.time);
+      for (let i = 0, len = momentArray.length; i < len; i += 1) {
+        let _day = moment(momentArray[i]).format().toString(); // 当前日历组件选择的时间
+        i === 0
+          ? _time['dayStart'] = _day
+          : _time['dayEnd'] = _day;
+      }
+      this.setState({
+        time: _time
+      });
     }
-    this.setState({
-      time: _time
-    });
   }
 
   handleSubmit(event) {
