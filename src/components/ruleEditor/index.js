@@ -279,7 +279,7 @@ class RuleEditor extends Component {
 
   }
   componentWillReceiveProps(nextProps, nextState) {
-    this.isChecked();
+    this.isChecked(nextProps);
     const {
       dayStart = '',
       dayEnd = '',
@@ -693,8 +693,9 @@ class RuleEditor extends Component {
     );
   }
 
-  isChecked() {
-    const _action = _.cloneDeep(this.state.action);
+  isChecked(props) {
+    const _action = _.cloneDeep(props.action);
+    // debugger
     let email = false;
     let sms = false;
     let chatops = false;
