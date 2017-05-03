@@ -287,6 +287,7 @@ class RuleEditor extends Component {
     if (this.props.name !== nextProps.name) {
       this.setState({
         name: nextProps.name,
+        time: nextProps.time,
         description: nextProps.description,
         type: nextProps.type,
         source: nextProps.source,
@@ -307,7 +308,7 @@ class RuleEditor extends Component {
         }
       });
       this.setState({
-        action: nextProps.action,
+        // action: nextProps.action,
         ITSMParam: JSON.stringify(JSON.parse(_ITSMParam), null, 2)
       })
     }
@@ -398,11 +399,11 @@ class RuleEditor extends Component {
               value={this.state.type}
             >
               <Radio value={0}><FormattedMessage {...formatMessages['anyTime']} /></Radio>
-              <Radio value={1}><FormattedMessage {...formatMessages['peroid']} /></Radio>
-              <Radio value={2}><FormattedMessage {...formatMessages['fixedTime']} /></Radio>
+              <Radio value={2}><FormattedMessage {...formatMessages['peroid']} /></Radio>
+              <Radio value={1}><FormattedMessage {...formatMessages['fixedTime']} /></Radio>
             </RadioGroup>
             {
-              this.state.type === 1 &&
+              this.state.type === 2 &&
               <div className={styles.pickTimeWrap}>
                 <Popover
                   trigger="click"
@@ -444,7 +445,7 @@ class RuleEditor extends Component {
               </div>
             }
             {
-              this.state.type === 2 &&
+              this.state.type === 1 &&
               <div className={styles.pickTimeWrap}>
                 <Popover
                   trigger="click"
@@ -608,7 +609,7 @@ class RuleEditor extends Component {
                       this.props.alertAssociationRules.wos.map(item => <Option key={item.id}>{item.name}</Option>)
                     }
                   </Select>
-                  <em>{window.__alert_appLocaleData.messages['ruleEditor.word3']}</em>
+                  <em className={styles.tip}>{window.__alert_appLocaleData.messages['ruleEditor.word3']}</em>
                 </FormItem>
                 <FormItem
                   {...itsmLayout}
@@ -664,9 +665,9 @@ class RuleEditor extends Component {
         recipients: [],
         notificationMode: {
           notificationMode: [],
-          emailTitle: '${entity_name}:${name}',
-          emailMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}',
-          smsMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}'
+          emailTitle: '${entityName}:${name}',
+          emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
+          smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
         }
       };
     }
@@ -711,9 +712,9 @@ class RuleEditor extends Component {
         recipients: [],
         notificationMode: {
           notificationMode: [],
-          emailTitle: '${entity_name}:${name}',
-          emailMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}',
-          smsMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}'
+          emailTitle: '${entityName}:${name}',
+          emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
+          smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
         }
       };
     }
@@ -743,9 +744,9 @@ class RuleEditor extends Component {
             recipients: [],
             notificationMode: {
               notificationMode: [],
-              emailTitle: '${entity_name}:${name}',
-              emailMessage: '${severity}, ${entity_name}, ${occurtime}, <1>description</1>',
-              smsMessage: '${severity}, ${entity_name}, ${occurtime}, <1>description</1>'
+              emailTitle: '${entityName}:${name}',
+              emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, <1>description</1>',
+              smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, <1>description</1>'
             }
           };
         }
@@ -1081,16 +1082,18 @@ class RuleEditor extends Component {
 
   // 更改固定时间段, momentArray 为一个数组，包含起始时间和结束时间
   changeDate(momentArray) {
-    const _time = _.cloneDeep(this.state.time);
-    for (let i = 0, len = momentArray.length; i < len; i += 1) {
-      let _day = moment(momentArray[i]).format().toString(); // 当前日历组件选择的时间
-      i === 0
-        ? _time['dayStart'] = _day
-        : _time['dayEnd'] = _day;
+    if (momentArray.length >= 2) {
+      const _time = _.cloneDeep(this.state.time);
+      for (let i = 0, len = momentArray.length; i < len; i += 1) {
+        let _day = moment(momentArray[i]).format().toString(); // 当前日历组件选择的时间
+        i === 0
+          ? _time['dayStart'] = _day
+          : _time['dayEnd'] = _day;
+      }
+      this.setState({
+        time: _time
+      });
     }
-    this.setState({
-      time: _time
-    });
   }
 
   handleSubmit(event) {
@@ -1111,7 +1114,8 @@ class RuleEditor extends Component {
     let _actionChatOps = undefined;
 
     switch(type) {
-      case 1: // 周期
+
+      case 2: // 周期
         if (_time.timeCycle === 1) { // 每周
           _time.timeCycle = time.timeCycle;
           _time.timeCycleWeek = time.timeCycleWeek;
@@ -1123,14 +1127,13 @@ class RuleEditor extends Component {
         _time.timeStart = `${hmStart}${local}`;
         _time.timeEnd = `${hmEnd}${local}`;
         break;
-      case 2: // 固定
+      case 1: // 固定
         _time.dayStart = time.dayStart.replace(time.dayStart.substr(11, 8), hmStart).replace('+', '+');
         _time.dayEnd = time.dayEnd.replace(time.dayStart.substr(11, 8), hmEnd).replace('+', '+');
         break;
       default:
         break;
     }
-
     switch(action.type[0]) {
       case 1:
         _actionDelOrClose = action.actionDelOrClose;
@@ -1188,8 +1191,10 @@ RuleEditor.defaultProps = {
   description: '',
   type: 0,
   time: {
-    dayStart: moment().format(),
-    dayEnd: moment().format(),
+    // dayStart: moment().format(),
+    // dayEnd: moment().format(),
+    dayStart: '',
+    dayEnd: '',
     timeCycle: 0,
     timeCycleWeek: '',
     timeCycleMonth: '',
@@ -1219,9 +1224,9 @@ RuleEditor.defaultProps = {
       recipients: [],
       notificationMode: {
         notificationMode: [],
-        emailTitle: '${entity_name}:${name}',
-        emailMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}',
-        smsMessage: '${severity}, ${entity_name}, ${occurtime}, ${description}'
+        emailTitle: '${entityName}:${name}',
+        emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
+        smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
       }
     },
     actionITSM: {

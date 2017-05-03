@@ -7,7 +7,7 @@
   "bread.association.add": "Add Rule",
   "bread.association.edit": "Edit Rule",
   "bread.alertList": "AlertList",
-  "bread.association": "Correlation Configuration",
+  "bread.association": "Correlations",
 
   "leftMenu.alertManage": "Alerts",
   "leftMenu.alertQuery": "Search",
@@ -34,6 +34,7 @@
 
   "alertList.tabs.list": "List View",
   "alertList.tabs.timeList": "Timeline",
+  "alertList.tabs.visual": "Visual Analyze",
   "alertList.autoRefresh": "Auto Refresh",
 
   "alertList.title.id": "ID",
@@ -139,8 +140,8 @@
 
   "alertConfig.integrations": "Integrations",
   "alertConfig.integrations.message": "Integrate with third-party applications, such as network and system monitoring tools, apm tools, collabration tools , customer supporting tools.",
-  "alertConfig.correlation": "Correlation Configuration",
-  "alertConfig.correlation.message": "Correlation Rule",
+  "alertConfig.correlation": "Correlations",
+  "alertConfig.correlation.message": "Use the graphical rule builder  to create Correlation rules.",
 
   "alertApplication.newApplication": "New Application",
   "alertApplication.incoming": "Incoming",
@@ -266,11 +267,15 @@
   "incident.closed.not.close": "The closed incident is not allowed to close",
   "incident.resolve.or.close": "The incident which was resolved or closed is not allowed to resolved",
   "incident.child.not.operate": "child incident can not operate",
+  "incident.flow.no.error": "Ticket No is wrong",
   "user.not.exist": "The user does not exist",
   "tenant.not.exist": "The tenant does not exist",
   "tenant.no.apikey": "The tenant has not the corresponding api key",
   "action.itsm.param.parse.error": "the param of ITSM ticket parse",
   "action.need.complete": "Please complete the action information",
+  "rule.parse.exp": "rule parse exp",
+  "rule.not.conform": "rule not conform",
+  "rule.not.exist": "rule not exist",
 
   "error.serverError": "Server Error",
 
@@ -366,7 +371,7 @@
   "ruleEditor.s3": "Assigned",
   "ruleEditor.s4": "Resolved",
   "ruleEditor.s5": "Closed",
-  "ruleEditor.word5": "For the matching alerts, excute the suppression action."
+  "ruleEditor.word5": "For the matched alerts, excute the suppression action."
 
 
 }

@@ -113,6 +113,8 @@ app.model(require('./models/snmpTrapRules'))
 app.model(require('./models/alertAssociationRules'))
 // 值班管理
 app.model(require('./models/watchManage'))
+// 可视化分析
+app.model(require('./models/visualAnalyze'))
 // 3. Router
 app.router(require('./router'))
 

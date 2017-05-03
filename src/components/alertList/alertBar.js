@@ -129,9 +129,11 @@ class AlertBar extends Component{
                   .x(d3.time.scale().domain([start, end]))
                   .xUnits(min5.range)
                   .filter([latestHour, end])
+                  
 
     this.chart.xAxis().tickSize(0).tickPadding(10).tickFormat(d3.time.format('%H:%M'))
     this.chart.render()
+      // brush拖动选择过滤 
      this.chart.on('filtered', function(d, f){
           
       clearTimeout(timer)
@@ -146,6 +148,8 @@ class AlertBar extends Component{
         })
       }, 1000)
     })
+    
+    
   }
   componentWillUnmount(){
     window.__alert_refresh_timer  && clearInterval(window.__alert_refresh_timer)

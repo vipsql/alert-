@@ -34,7 +34,6 @@ export default {
         })
         // search selected tags
         const selectedTags = yield getTagsByUser();
-
         if (selectedTags.result) {
           yield put({
             type: 'setCurrentSelectTags',
