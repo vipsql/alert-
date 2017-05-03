@@ -277,18 +277,46 @@ class RuleEditor extends Component {
 
   }
   componentWillReceiveProps(nextProps, nextState) {
-    // debugger
+    const {
+      dayStart = '',
+      dayEnd = '',
+      timeCycle = 0,
+      timeCycleWeek = '',
+      timeCycleMonth = '',
+      timeStart = '',
+      timeEnd = ''
+    } = nextProps.time;
+
+    let _timeStart = {
+          hours: 0,
+          mins: 0
+        },
+        _timeEnd = {
+          hours: 23,
+          mins: 59
+        };
+    if (nextProps.time.dayStart && nextProps.time.dayEnd) {
+      _timeStart.hours = nextProps.time.dayStart.substr(11,2);
+      _timeStart.mins = nextProps.time.dayStart.substr(14,2);
+      _timeEnd.hours = nextProps.time.dayEnd.substr(11,2);
+      _timeEnd.mins = nextProps.time.dayEnd.substr(14,2);
+    } else if (nextProps.time.timeStart && nextProps.time.timeEnd) {
+      _timeStart.hours = nextProps.time.timeStart.substr(0,2);
+      _timeStart.mins = nextProps.time.timeStart.substr(3,2);
+      _timeEnd.hours = nextProps.time.timeEnd.substr(0,2);
+      _timeEnd.mins = nextProps.time.timeEnd.substr(3,2);
+    }
     if (this.props.name !== nextProps.name) {
       this.setState({
         name: nextProps.name,
         time: {
-          dayStart: nextProps.time.dayStart || '',
-          dayEnd: nextProps.time.dayEnd || '',
-          timeCycle: nextProps.time.timecycle || 0,
-          timeCycleWeek: nextProps.time.timeCycleWeek || '',
-          timeCycleMonth: nextProps.time.timeCycleMonth || '',
-          timeStart: nextProps.time.timeStart || '',
-          timeEnd: nextProps.time.timeEnd || ''
+          dayStart,
+          dayEnd,
+          timeCycle,
+          timeCycleWeek,
+          timeCycleMonth,
+          timeStart,
+          timeEnd
         },
         description: nextProps.description,
         type: nextProps.type,
@@ -298,14 +326,8 @@ class RuleEditor extends Component {
         ITSMParam: nextProps.action.actionITSM
           ? JSON.stringify(JSON.parse(nextProps.action.actionITSM.param), null, 2)
           : '',
-        timeStart: {
-          hours: nextProps.time.timeStart ? parseInt(nextProps.time.timeStart.substr(0, 2)) : parseInt(nextProps.time.dayStart.substr(11, 2)),
-          mins: nextProps.time.timeStart ? parseInt(nextProps.time.timeStart.substr(3, 2)) : parseInt(nextProps.time.dayStart.substr(14, 2))
-        },
-        timeEnd: {
-          hours: nextProps.time.timeEnd ? parseInt(nextProps.time.timeEnd.substr(0, 2)) : parseInt(nextProps.time.dayEnd.substr(11, 2)),
-          mins: nextProps.time.timeEnd ? parseInt(nextProps.time.timeEnd.substr(3, 2)) : parseInt(nextProps.time.dayEnd.substr(14, 2))
-        }
+        timeStart: _timeStart,
+        timeEnd: _timeEnd
       });
 
     }
@@ -561,8 +583,10 @@ class RuleEditor extends Component {
                         className={styles.mailTitle}
                       >
                           <Input id="emailTitle"
-                            value={action.actionNotification ? action.actionNotification.notificationMode.emailTitle : undefined}
-                            onChange={this.changeAction.bind(this, 3)} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phTitle']} />
+                            value={action.actionNotification ? action.actionNotification.notificationMode.emailTitle : '${entityName}:${name}'}
+                            onChange={this.changeAction.bind(this, 3)}
+                            // placeholder={window.__alert_appLocaleData.messages['ruleEditor.phTitle']}
+                            />
 
                       </FormItem>
                       <FormItem
@@ -570,8 +594,10 @@ class RuleEditor extends Component {
                         className={styles.msgContent}
                       >
                           <Input id="emailMessage"
-                            value={action.actionNotification ? action.actionNotification.notificationMode.emailMessage : undefined}
-                            onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder={window.__alert_appLocaleData.messages['ruleEditor.phBody']} />
+                            value={action.actionNotification ? action.actionNotification.notificationMode.emailMessage : '${severity}, ${entityName}, ${firstOccurTime}, ${description}'}
+                            onChange={this.changeAction.bind(this, 3)} type="textarea"
+                            // placeholder={window.__alert_appLocaleData.messages['ruleEditor.phBody']}
+                            />
 
                         <Popover overlayStyle={{ width: '45%' }} overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={this.emailVarContent}>
                           <div className={styles.insertVar}>{window.__alert_appLocaleData.messages['ruleEditor.vars']}</div>
