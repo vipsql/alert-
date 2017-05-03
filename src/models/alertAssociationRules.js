@@ -210,11 +210,11 @@ export default {
       const params = {
         ...payload
       };
-      const result = yield call(getChatOpsOptions ,params);
-      // const result = {
-      //   result: true,
-      //   data: []
-      // }
+      // const result = yield call(getChatOpsOptions ,params);
+      const result = {
+        result: true,
+        data: []
+      }
       if (result.result) {
         // debugger
         // message.success('保存成功');

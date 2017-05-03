@@ -306,7 +306,8 @@ class RuleEditor extends Component {
       _timeEnd.hours = nextProps.time.timeEnd.substr(0,2);
       _timeEnd.mins = nextProps.time.timeEnd.substr(3,2);
     }
-    if (this.props.name !== nextProps.name) {
+    // debugger
+    if (nextProps.name) {
       this.setState({
         name: nextProps.name,
         time: {
@@ -1152,11 +1153,11 @@ class RuleEditor extends Component {
     switch(type) {
 
       case 2: // 周期
-        if (_time.timeCycle === 1) { // 每周
+        if (time.timeCycle === 1) { // 每周
           _time.timeCycle = time.timeCycle;
           _time.timeCycleWeek = time.timeCycleWeek;
         }
-        if (_time.timeCycle === 2) { // 每月
+        if (time.timeCycle === 2) { // 每月
           _time.timeCycle = time.timeCycle;
           _time.timeCycleMonth = time.timeCycleMonth;
         }
