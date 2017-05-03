@@ -24,7 +24,7 @@ export default function({history, app}) {
                 if(ele.namespace == 'alertManage'){
                   isLoadModal = true
                 }
-               
+
               });
               if(!isLoadModal){
                app.model(require('./models/alertManage'))
@@ -57,7 +57,7 @@ export default function({history, app}) {
               cb(null, require('./routes/alertConfig'))
             }, 'alertConfig')
           }
-        }, 
+        },
         {
           path: 'alertConfig/alertAssociationRules',
           name: 'alertAssociationRules',

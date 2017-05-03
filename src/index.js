@@ -70,7 +70,7 @@ const setLang = function(lang){
 			  "255": "已关闭"
 			}
 			window._groupBy = '分组显示'
-			
+
 			break
 
 	}

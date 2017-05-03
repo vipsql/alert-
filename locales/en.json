@@ -354,7 +354,7 @@
   "ruleEditor.phTitle": "",
   "ruleEditor.phBody": "",
   "ruleEditor.phTag": "Select relational Tag",
-  "ruleEditor.phIpt": "",
+  "ruleEditor.phIpt": "Value",
   "ruleEditor.phOpt": "Operator",
   "ruleEditor.phField": "Select Field",
   "ruleEditor.eq": "equal",
