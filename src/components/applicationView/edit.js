@@ -7,6 +7,7 @@ import Itsm from './UYUN_Itsm'
 import ChatOps from './UYUN_ChatOps'
 import VideoMON from './UYUN_VideoMon'
 import Trap from './SNMP_Trap'
+import NetWork from './UYUN_NetWork'
 
 function Edit(props){
     const { currentEditApp } = props.alertConfig;
@@ -53,6 +54,29 @@ function Edit(props){
             case 'UYUN Monitor':
                 targetApplication = 
                     <Monitor 
+                        appkey={currentEditApp.appKey}
+                        displayName={currentEditApp.displayName}
+                        builtIn={currentEditApp.builtIn}
+                        url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
+                        onOk={(e, form) => {
+                            e.preventDefault();
+                            
+                            form.validateFieldsAndScroll( (errors, values) => {
+                                if (!!errors) {
+                                    return;
+                                }
+                                const formData = form.getFieldsValue()
+                                dispatch({
+                                    type: 'alertConfig/editApplication',
+                                    payload: formData
+                                })
+                            })
+                        }}
+                    />
+                break;
+            case 'UYUN NetWork':
+                targetApplication = 
+                    <NetWork 
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}

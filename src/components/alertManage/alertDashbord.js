@@ -81,7 +81,7 @@ class Chart extends Component{
         let { intl: {formatMessage}, selectedStatus } = this.props;
 
         if (this.props.isFold) {
-            this.chartWidth = document.documentElement.clientWidth - 180;
+            this.chartWidth = document.documentElement.clientWidth - 140;
         } else {
             this.chartWidth = document.documentElement.clientWidth - 160 - 90;
         }

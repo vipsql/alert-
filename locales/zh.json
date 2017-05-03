@@ -167,6 +167,10 @@
   "alertApplication.monitor.step2": "向接口发送数据",
   "alertApplication.monitor.step2Message": "请复制以下URL至您的应用中",
 
+  "alertApplication.network.headerTitle": "使用Web Hook接入快速优云NetWork告警",
+  "alertApplication.network.step2": "向接口发送数据",
+  "alertApplication.network.step2Message": "请复制以下URL至您的应用中",
+
   "alertApplication.trap.headerTitle": "接入第三方监控系统发出的SNMP Trap告警",
   "alertApplication.trap.step2": "配置SNMP Trap",
   "alertApplication.trap.step2Message": "本步骤主要完成配置SMNPTrap解析规则的定义",
@@ -245,8 +249,8 @@
   "alertAssociationRules.List.edit": "编辑",
   "alertAssociationRules.List.delete": "删除",
   "alertAssociationRules.ruleTypeNum.0": "非周期性",
-  "alertAssociationRules.ruleTypeNum.1": "周期性",
-  "alertAssociationRules.ruleTypeNum.2": "固定时间段",
+  "alertAssociationRules.ruleTypeNum.1": "固定时间段",
+  "alertAssociationRules.ruleTypeNum.2": "周期性",
 
   "param.exp": "请求参数存在异常",
   "auth.noexecute": "没有权限执行",

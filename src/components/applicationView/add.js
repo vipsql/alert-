@@ -7,6 +7,7 @@ import Itsm from './UYUN_Itsm'
 import ChatOps from './UYUN_ChatOps'
 import VideoMON from './UYUN_VideoMon'
 import Trap from './SNMP_Trap'
+import NetWork from './UYUN_NetWork'
 
 function Add(props){
 
@@ -64,6 +65,39 @@ function Add(props){
             case 'UYUN Monitor':
                 targetApplication = 
                     <Monitor 
+                        appkey={UUID}
+                        displayName={currentDisplayName}
+                        builtIn={1}
+                        url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
+                        onOk={(e, form) => {
+                            e.preventDefault();
+                            
+                            form.validateFieldsAndScroll( (errors, values) => {
+                                if (!!errors) {
+                                    return;
+                                }
+                                const formData = form.getFieldsValue()
+                                dispatch({
+                                    type: 'alertConfig/addApplication',
+                                    payload: formData
+                                })
+                            })
+                        }}
+                        keyCreate={(form) => {
+                            let _UUID = getUUID(32);
+                            dispatch({
+                                type: 'alertConfig/setUUID',
+                                payload: {
+                                    UUID: _UUID,
+                                    currentDisplayName: form.getFieldsValue().displayName
+                                }
+                            })
+                        }}
+                    />
+                break;
+            case 'UYUN NetWork':
+                targetApplication = 
+                    <NetWork 
                         appkey={UUID}
                         displayName={currentDisplayName}
                         builtIn={1}

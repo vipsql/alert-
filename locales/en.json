@@ -167,6 +167,10 @@
   "alertApplication.monitor.step2": "Send data to the Monitor",
   "alertApplication.monitor.step2Message": "Please copy the URL below to your application.",
 
+  "alertApplication.network.headerTitle": "Use Web Hook to build a integration between Uyun Alert and Uyun NetWork.",
+  "alertApplication.network.step2": "Send data to the NetWork",
+  "alertApplication.network.step2Message": "Please copy the URL below to your application.",
+
   "alertApplication.trap.headerTitle": "Easily collect alerts from network devices and third-party monitoring systems.",
   "alertApplication.trap.step2": "Config SNMPtrap",
   "alertApplication.trap.step2Message": "First define rules for parsing SNMPTraps.",
@@ -245,8 +249,8 @@
   "alertAssociationRules.List.edit": "Edit",
   "alertAssociationRules.List.delete": "Delete",
   "alertAssociationRules.ruleTypeNum.0": "Any Time",
-  "alertAssociationRules.ruleTypeNum.1": "Period",
-  "alertAssociationRules.ruleTypeNum.2": "Fixed Time Window",
+  "alertAssociationRules.ruleTypeNum.1": "Fixed Time Window",
+  "alertAssociationRules.ruleTypeNum.2": "Period",
 
   "param.exp": "parse request param Error",
   "auth.noexecute": "no permission to execute",
