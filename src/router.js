@@ -24,7 +24,7 @@ export default function({history, app}) {
                 if(ele.namespace == 'alertManage'){
                   isLoadModal = true
                 }
-               
+
               });
               if(!isLoadModal){
                app.model(require('./models/alertManage'))
@@ -57,7 +57,7 @@ export default function({history, app}) {
               cb(null, require('./routes/alertConfig'))
             }, 'alertConfig')
           }
-        }, 
+        },
         {
           path: 'alertConfig/alertAssociationRules',
           name: 'alertAssociationRules',
@@ -75,9 +75,24 @@ export default function({history, app}) {
               path: 'add',
               name: 'addRuleEditor',
               getComponent(nextState, cb) {
+                cb(null, require('./routes/ruleEditor'))
                 require.ensure([], require => {
-                  cb(null, require('./routes/ruleEditor'))
-                }, 'ruleEditor')
+                  let isLoadModal = false
+                  app._models.forEach(function(ele) {
+                    if(ele.namespace == 'ruleEditor'){
+                      isLoadModal = true
+                    }
+
+                  });
+                  if(!isLoadModal){
+                   app.model(require('./routes/ruleEditor'))
+                  }
+                },'ruleEditor')
+
+
+                // require.ensure([], require => {
+                //   cb(null, require('./routes/ruleEditor'))
+                // }, 'ruleEditor')
               }
             },
             {
