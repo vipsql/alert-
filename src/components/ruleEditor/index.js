@@ -37,7 +37,6 @@ if (window.__alert_appLocaleData.locale === 'en-us') { // 设定时间国际化
   moment.locale('zh-cn');
 }
 
-
 const conditionData = { // 模拟数据
   // 一级条件
   logic: 'or',
@@ -238,14 +237,8 @@ class RuleEditor extends Component {
       /* 时间 */
       type: props.type,
       time: props.time,
-      timeStart: {
-        hours: 0,
-        mins: 0
-      },
-      timeEnd: {
-        hours: 23,
-        mins: 59
-      },
+      timeStart: props.timeStart,
+      timeEnd: props.timeEnd,
       /* 来源 */
       source: props.source,
       /* 条件 */
@@ -284,10 +277,19 @@ class RuleEditor extends Component {
 
   }
   componentWillReceiveProps(nextProps, nextState) {
+    // debugger
     if (this.props.name !== nextProps.name) {
       this.setState({
         name: nextProps.name,
-        time: nextProps.time,
+        time: {
+          dayStart: nextProps.time.dayStart || '',
+          dayEnd: nextProps.time.dayEnd || '',
+          timeCycle: nextProps.time.timecycle || 0,
+          timeCycleWeek: nextProps.time.timeCycleWeek || '',
+          timeCycleMonth: nextProps.time.timeCycleMonth || '',
+          timeStart: nextProps.time.timeStart || '',
+          timeEnd: nextProps.time.timeEnd || ''
+        },
         description: nextProps.description,
         type: nextProps.type,
         source: nextProps.source,
@@ -295,7 +297,15 @@ class RuleEditor extends Component {
         action: nextProps.action,
         ITSMParam: nextProps.action.actionITSM
           ? JSON.stringify(JSON.parse(nextProps.action.actionITSM.param), null, 2)
-          : ''
+          : '',
+        timeStart: {
+          hours: nextProps.time.timeStart ? parseInt(nextProps.time.timeStart.substr(0, 2)) : parseInt(nextProps.time.dayStart.substr(11, 2)),
+          mins: nextProps.time.timeStart ? parseInt(nextProps.time.timeStart.substr(3, 2)) : parseInt(nextProps.time.dayStart.substr(14, 2))
+        },
+        timeEnd: {
+          hours: nextProps.time.timeEnd ? parseInt(nextProps.time.timeEnd.substr(0, 2)) : parseInt(nextProps.time.dayEnd.substr(11, 2)),
+          mins: nextProps.time.timeEnd ? parseInt(nextProps.time.timeEnd.substr(3, 2)) : parseInt(nextProps.time.dayEnd.substr(14, 2))
+        }
       });
 
     }
@@ -1200,6 +1210,14 @@ RuleEditor.defaultProps = {
     timeCycleMonth: '',
     timeStart: '',
     timeEnd: ''
+  },
+  timeStart: {
+    hours: 0,
+    mins: 0
+  },
+  timeEnd: {
+    hours: 23,
+    mins: 59
   },
   source: '',
   condition: {

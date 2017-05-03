@@ -31,7 +31,6 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
     currentTagsList,
     changSelectTag
   } = alertTagsSet
-
     const itemSelect = (e) => {
       e.stopPropagation();
       let tagId = e.target.getAttribute('data-id');
@@ -71,7 +70,7 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
           visible={modalVisible}
           footer={modalFooter}
         >
-          <CheckList 
+          <CheckList
             origin={'main'}
             itemList={ currentTagsList }
             checkedNum={ selectedTagsNum }
