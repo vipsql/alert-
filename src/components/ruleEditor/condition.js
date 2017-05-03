@@ -7,6 +7,40 @@ import styles from './condition.less';
 const Option = Select.Option;
 
 const optList = {
+  addr: [
+    {
+      name: window.__alert_appLocaleData.messages['ruleEditor.ct'],
+      value: 'contain'
+    },
+    {
+      name: window.__alert_appLocaleData.messages['ruleEditor.eq'],
+      value: 'equal'
+    },
+    {
+      name: window.__alert_appLocaleData.messages['ruleEditor.startWith'],
+      value: 'startwith'
+    },
+    {
+      name: window.__alert_appLocaleData.messages['ruleEditor.endWith'],
+      value: 'endwith'
+    },
+    {
+      name: window.__alert_appLocaleData.messages['ruleEditor.gt'],
+      value: 'gt'
+    },
+    {
+      name: window.__alert_appLocaleData.messages['ruleEditor.ge'],
+      value: 'ge'
+    },
+    {
+      name: window.__alert_appLocaleData.messages['ruleEditor.lt'],
+      value: 'lt'
+    },
+    {
+      name: window.__alert_appLocaleData.messages['ruleEditor.le'],
+      value: 'le'
+    }
+  ],
   num: [
     {
       name: window.__alert_appLocaleData.messages['ruleEditor.eq'],
@@ -44,22 +78,6 @@ const optList = {
     {
       name: window.__alert_appLocaleData.messages['ruleEditor.endWith'],
       value: 'endwith'
-    },
-    {
-      name: window.__alert_appLocaleData.messages['ruleEditor.gt'],
-      value: 'gt'
-    },
-    {
-      name: window.__alert_appLocaleData.messages['ruleEditor.ge'],
-      value: 'ge'
-    },
-    {
-      name: window.__alert_appLocaleData.messages['ruleEditor.lt'],
-      value: 'lt'
-    },
-    {
-      name: window.__alert_appLocaleData.messages['ruleEditor.le'],
-      value: 'le'
     }
   ]
 };
@@ -146,6 +164,9 @@ class Condition extends Component {
     keyList.forEach(item => {
       if (item.value === _key) {
         _optList = optList[item.type]
+      }
+      if (_key === 'entityAddr') {
+        _optList = optList['addr']
       }
     });
     return (

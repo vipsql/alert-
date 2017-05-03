@@ -272,11 +272,14 @@ class RuleEditor extends Component {
     dispatch({
       type: 'alertAssociationRules/getWos'
     });
+
+
   }
   componentDidMount() {
 
   }
   componentWillReceiveProps(nextProps, nextState) {
+    this.isChecked();
     const {
       dayStart = '',
       dayEnd = '',
@@ -345,7 +348,6 @@ class RuleEditor extends Component {
         ITSMParam: JSON.stringify(JSON.parse(_ITSMParam), null, 2)
       })
     }
-    this.isChecked();
   }
 
   render() {
