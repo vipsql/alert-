@@ -377,14 +377,16 @@ class AlertListManage extends Component{
           break;
       }
     })
-
+    const groupName = localStorage.getItem('__visual_group'),
+          isShowVisualTab = !(groupName == 'source' || groupName == 'status'  || groupName == 'severity' )
+          
     return (
       <div style={{ position: 'relative'}}>
         <AlertTagsFilter />
         <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch {...refreshProps}/></div>
         <AlertBar />
         <div className={styles.alertListPage}>
-          <Tabs  activeKey="3">
+          <Tabs>
             <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key={1}>
               <AlertOperation position='list' {...operateProps}/>
               <ListTableWrap />
@@ -393,9 +395,7 @@ class AlertListManage extends Component{
               <AlertOperation position='timeAxis' {...operateProps}/>
               <ListTimeTableWrap />
             </TabPane>
-            <TabPane tab={<span  className={tabVisual}><FormattedMessage {...localeMessage['tab_visual']} /></span>}  key={3}>
-                <VisualAnalyzeWrap />
-            </TabPane>
+           
           </Tabs>
           <ul className={styles.levelBar}>
             {

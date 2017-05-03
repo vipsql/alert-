@@ -258,7 +258,9 @@ class Chart extends Component{
                                                     ? '150' : this.props.selectedStatus === 'RESOLVED'
                                                         ? '190' : undefined;
                     alertListPath.selectedTime = this.props.selectedTime;
-                    localStorage.setItem('alertListPath', JSON.stringify(alertListPath));
+                    localStorage.setItem('alertListPath', JSON.stringify(alertListPath))
+                    localStorage.setItem('__visual_group', d.parent.path)
+                    
                     window.location.hash = "#/alertManage/" + d.path;
                 })
                 

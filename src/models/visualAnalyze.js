@@ -189,7 +189,6 @@ export default {
 
   reducers: {
     expandList(state, { payload: {index, isExpand}}) {
-      debugger
       let newGroupList = state.groupList.slice(0)
       newGroupList[index]['isExpand'] = isExpand
       return { ...state, newGroupList }
