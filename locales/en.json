@@ -267,11 +267,15 @@
   "incident.closed.not.close": "The closed incident is not allowed to close",
   "incident.resolve.or.close": "The incident which was resolved or closed is not allowed to resolved",
   "incident.child.not.operate": "child incident can not operate",
+  "incident.flow.no.error": "Ticket No is wrong",
   "user.not.exist": "The user does not exist",
   "tenant.not.exist": "The tenant does not exist",
   "tenant.no.apikey": "The tenant has not the corresponding api key",
   "action.itsm.param.parse.error": "the param of ITSM ticket parse",
   "action.need.complete": "Please complete the action information",
+  "rule.parse.exp": "rule parse exp",
+  "rule.not.conform": "rule not conform",
+  "rule.not.exist": "rule not exist",
 
   "error.serverError": "Server Error",
 
