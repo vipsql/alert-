@@ -37,7 +37,6 @@ if (window.__alert_appLocaleData.locale === 'en-us') { // 设定时间国际化
   moment.locale('zh-cn');
 }
 
-
 const conditionData = { // 模拟数据
   // 一级条件
   logic: 'or',
@@ -238,14 +237,8 @@ class RuleEditor extends Component {
       /* 时间 */
       type: props.type,
       time: props.time,
-      timeStart: {
-        hours: 0,
-        mins: 0
-      },
-      timeEnd: {
-        hours: 23,
-        mins: 59
-      },
+      timeStart: props.timeStart,
+      timeEnd: props.timeEnd,
       /* 来源 */
       source: props.source,
       /* 条件 */
@@ -284,10 +277,48 @@ class RuleEditor extends Component {
 
   }
   componentWillReceiveProps(nextProps, nextState) {
-    if (this.props.name !== nextProps.name) {
+    const {
+      dayStart = '',
+      dayEnd = '',
+      timeCycle = 0,
+      timeCycleWeek = '',
+      timeCycleMonth = '',
+      timeStart = '',
+      timeEnd = ''
+    } = nextProps.time;
+
+    let _timeStart = {
+          hours: 0,
+          mins: 0
+        },
+        _timeEnd = {
+          hours: 23,
+          mins: 59
+        };
+    if (nextProps.time.dayStart && nextProps.time.dayEnd) {
+      _timeStart.hours = nextProps.time.dayStart.substr(11,2);
+      _timeStart.mins = nextProps.time.dayStart.substr(14,2);
+      _timeEnd.hours = nextProps.time.dayEnd.substr(11,2);
+      _timeEnd.mins = nextProps.time.dayEnd.substr(14,2);
+    } else if (nextProps.time.timeStart && nextProps.time.timeEnd) {
+      _timeStart.hours = nextProps.time.timeStart.substr(0,2);
+      _timeStart.mins = nextProps.time.timeStart.substr(3,2);
+      _timeEnd.hours = nextProps.time.timeEnd.substr(0,2);
+      _timeEnd.mins = nextProps.time.timeEnd.substr(3,2);
+    }
+    // debugger
+    if (nextProps.name) {
       this.setState({
         name: nextProps.name,
-        time: nextProps.time,
+        time: {
+          dayStart,
+          dayEnd,
+          timeCycle,
+          timeCycleWeek,
+          timeCycleMonth,
+          timeStart,
+          timeEnd
+        },
         description: nextProps.description,
         type: nextProps.type,
         source: nextProps.source,
@@ -295,7 +326,9 @@ class RuleEditor extends Component {
         action: nextProps.action,
         ITSMParam: nextProps.action.actionITSM
           ? JSON.stringify(JSON.parse(nextProps.action.actionITSM.param), null, 2)
-          : ''
+          : '',
+        timeStart: _timeStart,
+        timeEnd: _timeEnd
       });
 
     }
@@ -551,8 +584,10 @@ class RuleEditor extends Component {
                         className={styles.mailTitle}
                       >
                           <Input id="emailTitle"
-                            value={action.actionNotification ? action.actionNotification.notificationMode.emailTitle : undefined}
-                            onChange={this.changeAction.bind(this, 3)} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phTitle']} />
+                            value={action.actionNotification ? action.actionNotification.notificationMode.emailTitle : '${entityName}:${name}'}
+                            onChange={this.changeAction.bind(this, 3)}
+                            // placeholder={window.__alert_appLocaleData.messages['ruleEditor.phTitle']}
+                            />
 
                       </FormItem>
                       <FormItem
@@ -560,8 +595,10 @@ class RuleEditor extends Component {
                         className={styles.msgContent}
                       >
                           <Input id="emailMessage"
-                            value={action.actionNotification ? action.actionNotification.notificationMode.emailMessage : undefined}
-                            onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder={window.__alert_appLocaleData.messages['ruleEditor.phBody']} />
+                            value={action.actionNotification ? action.actionNotification.notificationMode.emailMessage : '${severity}, ${entityName}, ${firstOccurTime}, ${description}'}
+                            onChange={this.changeAction.bind(this, 3)} type="textarea"
+                            // placeholder={window.__alert_appLocaleData.messages['ruleEditor.phBody']}
+                            />
 
                         <Popover overlayStyle={{ width: '45%' }} overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={this.emailVarContent}>
                           <div className={styles.insertVar}>{window.__alert_appLocaleData.messages['ruleEditor.vars']}</div>
@@ -1116,11 +1153,11 @@ class RuleEditor extends Component {
     switch(type) {
 
       case 2: // 周期
-        if (_time.timeCycle === 1) { // 每周
+        if (time.timeCycle === 1) { // 每周
           _time.timeCycle = time.timeCycle;
           _time.timeCycleWeek = time.timeCycleWeek;
         }
-        if (_time.timeCycle === 2) { // 每月
+        if (time.timeCycle === 2) { // 每月
           _time.timeCycle = time.timeCycle;
           _time.timeCycleMonth = time.timeCycleMonth;
         }
@@ -1200,6 +1237,14 @@ RuleEditor.defaultProps = {
     timeCycleMonth: '',
     timeStart: '',
     timeEnd: ''
+  },
+  timeStart: {
+    hours: 0,
+    mins: 0
+  },
+  timeEnd: {
+    hours: 23,
+    mins: 59
   },
   source: '',
   condition: {
