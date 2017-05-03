@@ -75,24 +75,9 @@ export default function({history, app}) {
               path: 'add',
               name: 'addRuleEditor',
               getComponent(nextState, cb) {
-                cb(null, require('./routes/ruleEditor'))
                 require.ensure([], require => {
-                  let isLoadModal = false
-                  app._models.forEach(function(ele) {
-                    if(ele.namespace == 'ruleEditor'){
-                      isLoadModal = true
-                    }
-
-                  });
-                  if(!isLoadModal){
-                   app.model(require('./routes/ruleEditor'))
-                  }
-                },'ruleEditor')
-
-
-                // require.ensure([], require => {
-                //   cb(null, require('./routes/ruleEditor'))
-                // }, 'ruleEditor')
+                  cb(null, require('./routes/ruleEditor'))
+                }, 'ruleEditor')
               }
             },
             {
