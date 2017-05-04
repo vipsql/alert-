@@ -272,11 +272,14 @@ class RuleEditor extends Component {
     dispatch({
       type: 'alertAssociationRules/getWos'
     });
+
+
   }
   componentDidMount() {
 
   }
   componentWillReceiveProps(nextProps, nextState) {
+    this.isChecked(nextProps);
     const {
       dayStart = '',
       dayEnd = '',
@@ -345,7 +348,6 @@ class RuleEditor extends Component {
         ITSMParam: JSON.stringify(JSON.parse(_ITSMParam), null, 2)
       })
     }
-    this.isChecked();
   }
 
   render() {
@@ -691,8 +693,9 @@ class RuleEditor extends Component {
     );
   }
 
-  isChecked() {
-    const _action = _.cloneDeep(this.state.action);
+  isChecked(props) {
+    const _action = _.cloneDeep(props.action);
+    // debugger
     let email = false;
     let sms = false;
     let chatops = false;

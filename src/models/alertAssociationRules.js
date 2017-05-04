@@ -225,7 +225,7 @@ export default {
           }
         });
       } else {
-        message.error(result.message);
+        message.error(window.__alert_appLocaleData.messages[result.message], 3);
       }
     },
 
@@ -243,7 +243,7 @@ export default {
           }
         });
       } else {
-        message.error(result.message);
+        message.error(window.__alert_appLocaleData.messages[result.message], 3);
       }
     },
 
@@ -261,7 +261,7 @@ export default {
           }
         });
       } else {
-        message.error(result.message);
+        message.error(window.__alert_appLocaleData.messages[result.message], 3);
       }
     },
 
@@ -280,7 +280,7 @@ export default {
           }
         });
       } else {
-        message.error(result.message);
+        message.error(window.__alert_appLocaleData.messages[result.message], 3);
       }
     },
 
@@ -299,7 +299,7 @@ export default {
           }
         });
       } else {
-        message.error(result.message);
+        message.error(window.__alert_appLocaleData.messages[result.message], 3);
       }
     },
 
@@ -317,7 +317,7 @@ export default {
           }
         });
       } else {
-        message.error(result.message);
+        message.error(window.__alert_appLocaleData.messages[result.message], 3);
       }
     },
 
@@ -335,7 +335,7 @@ export default {
           }
         });
       } else {
-        message.error(result.message);
+        message.error(window.__alert_appLocaleData.messages[result.message], 3);
       }
     },
 
@@ -350,7 +350,7 @@ export default {
         yield put(routerRedux.goBack());
         // yield put({type: 'clear'});
       } else {
-        message.error(result.message);
+        message.error(window.__alert_appLocaleData.messages[result.message], 3);
       }
     },
   },

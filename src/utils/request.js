@@ -55,7 +55,10 @@ function ajax(url, options){
         if(textStatus == 401){
           location.href = location.origin + '/tenant/#/login_admin/'
         }else{
-          resolve(xhr.responseJSON)
+          resolve({
+            result: false,
+            message: xhr.responseJSON !== undefined && xhr.responseJSON.message !== undefined ? xhr.responseJSON.message : 'Unknown Error'
+          })
         }
       })
   })
