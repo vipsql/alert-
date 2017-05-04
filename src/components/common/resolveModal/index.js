@@ -61,7 +61,6 @@ const resolveModal = ({currentData, onOk, onCancal, form, intl: {formatMessage}}
                 <Form>
                     <Item
                         label={<FormattedMessage {...localeMessage['modal_resolveReason']} />}
-                        hasFeedback
                         help={isFieldValidating('resolveMessage') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('resolveMessage') || []).join(', ')}
                     >
                         {getFieldDecorator('resolveMessage', {

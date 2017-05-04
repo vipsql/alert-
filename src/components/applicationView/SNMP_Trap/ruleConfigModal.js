@@ -528,7 +528,6 @@ class ruleModal extends Component{
                         <Item
                             {...itemLayout}
                             label={formatMessage({...localeMessage['ruleName']})}
-                            hasFeedback
                             help={isFieldValidating('ruleName') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('ruleName') || []).join(', ')}
                         >
                             {getFieldDecorator('ruleName', {
@@ -543,7 +542,6 @@ class ruleModal extends Component{
                             {...itemLayout}
                             wrapperCol={{span: 20}}
                             label={formatMessage({...localeMessage['ruleDescription']})}
-                            hasFeedback
                             help={isFieldValidating('description') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('description') || []).join(', ')}
                         >
                             {getFieldDecorator('description', {
@@ -1020,7 +1018,6 @@ class ruleModal extends Component{
                         <Item
                             {...itemLayout}
                             label={formatMessage({...localeMessage['rule_bindCMDB']})}
-                            hasFeedback
                             help={isFieldValidating('classCode') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('classCode') || []).join(', ')}
                         >
                             {getFieldDecorator('classCode', {
@@ -1042,7 +1039,6 @@ class ruleModal extends Component{
                             <Item
                                 {...itemLayout}
                                 label={formatMessage({...localeMessage['rule_severityMapper_severity']})}
-                                hasFeedback
                                 help={isFieldValidating('severity') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('severity') || []).join(', ')}
                             >
                                 {getFieldDecorator('severity', {
