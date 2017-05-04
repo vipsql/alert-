@@ -35,6 +35,9 @@ export default {
   effects: {
     // 查询柱状图
     *queryAlertBar({payload}, {call, put, select}) {
+      
+      let selectedTime = payload.selectedTime;
+      delete payload.selectedTime;
 
       yield put({ type: 'toggleAlertBarLoading', payload: true })
 
@@ -44,10 +47,9 @@ export default {
         let barData = data.data
         let endtTime = barData[barData.length - 1]['time']
         let startTime = endtTime - 3600000
-        if (payload !== undefined && payload.selectedTime !== undefined && payload.selectedTime === 'lastFourHour') {
+        if (payload !== undefined && selectedTime !== undefined && selectedTime === 'lastFourHour') {
           startTime = barData[0]['time'] 
         }
-        delete payload.selectedTime
         // 将公用数据放入commonList
         yield put({
           type: 'alertListTable/setInitvalScope',
