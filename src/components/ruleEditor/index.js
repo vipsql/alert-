@@ -279,7 +279,7 @@ class RuleEditor extends Component {
 
   }
   componentWillReceiveProps(nextProps, nextState) {
-    this.isChecked(nextProps);
+
     const {
       dayStart = '',
       dayEnd = '',
@@ -348,6 +348,7 @@ class RuleEditor extends Component {
         ITSMParam: JSON.stringify(JSON.parse(_ITSMParam), null, 2)
       })
     }
+    this.isChecked(nextProps);
   }
 
   render() {
