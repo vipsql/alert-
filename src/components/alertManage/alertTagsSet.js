@@ -4,6 +4,7 @@ import { Modal, Button } from 'antd'
 import styles from './index.less'
 import { classnames } from '../../utils'
 import CheckList from '../common/checkList/index.js'
+import TagsQuery from '../common/tagsQuery/index.js'
 import checkStyles from '../common/checkList/index.less'
 import dva from 'dva'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
@@ -24,13 +25,15 @@ const formatMessages = defineMessages({
 })
 
 const AlertSetModal = ({dispatch, alertTagsSet}) => {
-  const {
-    modalVisible,
-    selectedTagsNum,
-    tagsNum,
-    currentTagsList,
-    changSelectTag
-  } = alertTagsSet
+    const {
+      modalVisible,
+      selectedTagsNum,
+      tagsNum,
+      currentTagsList,
+      changSelectTag,
+      tagsKeyList,
+    } = alertTagsSet;
+
     const itemSelect = (e) => {
       e.stopPropagation();
       let tagId = e.target.getAttribute('data-id');
@@ -45,6 +48,10 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
         type: 'alertTagsSet/closeModal',
         payload: false
       })
+    }
+
+    const tagsQueryProps = {
+      tagsKeyList
     }
 
     const modalFooter = []
@@ -70,12 +77,8 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
           visible={modalVisible}
           footer={modalFooter}
         >
-          <CheckList
-            origin={'main'}
-            itemList={ currentTagsList }
-            checkedNum={ selectedTagsNum }
-            isSpreadTags={ true }
-            checkHandler={ itemSelect }
+          <TagsQuery
+            {...tagsQueryProps}
           />
         </Modal>
 
@@ -83,3 +86,11 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
   )
 }
 export default connect(({alertTagsSet}) => ({alertTagsSet}))(AlertSetModal)
+
+// <CheckList
+//   origin={'main'}
+//   itemList={ currentTagsList }
+//   checkedNum={ selectedTagsNum }
+//   isSpreadTags={ true }
+//   checkHandler={ itemSelect }
+// />

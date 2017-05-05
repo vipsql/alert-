@@ -1,15 +1,19 @@
 import {parse} from 'qs'
 import { tagsView } from '../services/alertManage.js'
-import { getTagsByUser, getAllTags, setUserTags } from '../services/alertTags.js'
+import { getTagsByUser, getAllTags, setUserTags, getAllTagsKey} from '../services/alertTags.js'
 import { message } from 'antd';
 
 const initialState = {
-  tagNum: 0,
   selectedTagsNum: 0,
   currentTagsList: [],
-  currentSelectTags: [],
   commitTagIds: [],
-  modalVisible: false
+  modalVisible: false,
+  // --------------------------------
+  tagsKeyList: [
+    {key: 'severity', keyName: '告警等级', tagSpread: true, selectedChildren: ['紧急']}, 
+    {key: 'status', keyName: '告警状态', tagSpread: false, selectedChildren: ['已解决']}, 
+    {key: 'source', keyName: '来源', tagSpread: false, selectedChildren: ['青山湖']}], // 打开Modal时查询所有的key
+  currentSelectTags: [{key: 'severity', value: '3'}, {key: 'status', value: '2'}, {key: 'source', value: '青山湖'}], // 已经选择的标签
 }
 
 export default {
@@ -22,6 +26,38 @@ export default {
   },
 
   effects: {
+    /**
+     *  查询所有标签的key
+     *  查询所有已经关注的标签
+     *  初始化填充操作
+     *  打开Modal
+     */
+    *openSetModal({payload}, {select, put, call}) {
+      // tags keys
+      const allTagsKeys = yield call(getAllTagsKey)
+
+      if (allTagsKeys.result) {
+        // selected tags
+        const selectedTags = yield getTagsByUser();
+        if (selectedTags.result) {
+          // filter tags
+          yield put({
+            type: 'initalSelectTags',
+            payload: {
+              tagskey: allTagsKeys.data || [],
+              selectedTags: selectedTags.data || [],
+            }
+          })
+          yield put({type: 'toggleTagsModal', payload: true})
+        } else {
+          yield message.error(window.__alert_appLocaleData.messages[selectedTags.message], 2);
+        }
+      } else {
+        yield message.error(window.__alert_appLocaleData.messages[allTagsKeys.message], 2);
+      }
+
+    },
+    // ------------------------------------------------------------------
     *openFocusModal({payload}, {select, put, call}) {
       // search all tags
       //const { userId } = yield select( state => ({'userId': state.app.userId}))
@@ -100,7 +136,23 @@ export default {
   },
 
   reducers: {
-
+    initalSelectTags(state, {payload: tagskey, selectedTags}) {
+      tagskey.length > 0 && tagskey.forEach( (tagkey, index) => {
+        tagkey.tagSpread = false
+        tagkey.selectedChildren = []
+        selectedTags.length > 0 && selectedTags.forEach( (tag, itemIndex) => {
+          if (tagkey.key === tag.key) {
+            if (tag.key == 'severity' || tag.key == 'status') {
+              tagkey.selectedChildren.push(window[`_${tag.key}`][tag.value])
+            } else {
+              tagkey.selectedChildren.push(tag.value)
+            }
+          }
+        }) 
+      })
+      return { ...state, tagsKeyList: tagskey, currentSelectTags: selectedTags}
+    },
+    // -------------------------------------------------
     // 切换标签设置框显示状态
     toggleTagsModal(state, { payload: modalVisible }){
       return { ...state, modalVisible }
@@ -159,17 +211,6 @@ export default {
         return { ...state }
       }
     },
-    // 过滤commitTagIds的数据
-    // filterCommitTags(state, { payload }) {
-    //   if (typeof payload !== 'undefined' && payload.length !== 0) {
-    //     const newCommitTagIds = payload.map( item => {
-    //       return item.id
-    //     } )
-    //     return { ...state, commitTagIds: newCommitTagIds }
-    //   } else {
-    //     return { ...state }
-    //   }
-    // },
     // 过滤commitTagIds的数据(关注设置时)
     filterCommitTagsByTagList(state, { payload }) {
       let newCommitTagIds = [];

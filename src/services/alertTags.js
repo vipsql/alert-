@@ -37,3 +37,13 @@ export async function setUserTags(tagObject) {
         body: JSON.stringify(tagObject)
     })
 }
+
+// 查询所有的Tags的Key
+export async function getAllTagsKey() {
+    return request(`/incident/tags/all`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+}
