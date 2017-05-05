@@ -19,7 +19,8 @@
             border-color: #2bb4f4;
         }
         ul.tags_data_content{
-            padding: 0px 2px;
+            position: relative;
+            padding: 0px 25px 0px 2px;
             li{
                 display: inline-block;
                 line-height: 30px;
@@ -60,6 +61,21 @@
                     margin-left: 4px;
                     cursor: pointer;
                 }
+            }
+            &:hover{
+                .tags_removeAll{
+                    visibility: visible;
+                }
+            }
+            .tags_removeAll{
+                position: absolute;
+                visibility: hidden;
+                cursor: pointer;
+                bottom: 5px;
+                right: 5px;
+                color: #03426f;
+                font-size: 24px;
+                line-height: 24px
             }
         }
         ul.tags_query_content{

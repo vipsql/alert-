@@ -3,7 +3,7 @@ import { connect } from 'dva'
 import { Modal, Button } from 'antd'
 import styles from './index.less'
 import { classnames } from '../../utils'
-import CheckList from '../common/checkList/index.js'
+//import CheckList from '../common/checkList/index.js'
 import TagsQuery from '../common/tagsQuery/index.js'
 import checkStyles from '../common/checkList/index.less'
 import dva from 'dva'
@@ -51,7 +51,21 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
     }
 
     const tagsQueryProps = {
-      tagsKeyList
+      tagsKeyList,
+      closeOneItem: (e) => {
+        e.stopPropagation();
+        let tagrget = JSON.parse(e.target.getAttribute('data-id'));
+        console.log(tagrget)
+        // dispatch({
+        //   type: 'alertTagsSet/changSelectTag',
+        //   payload: tagId
+        // })
+      },
+      closeAllItem: (e) => {
+        e.stopPropagation();
+        let tagrget = JSON.parse(e.target.getAttribute('data-id'));
+        console.log(tagrget)
+      }
     }
 
     const modalFooter = []

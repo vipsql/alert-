@@ -11,7 +11,7 @@ class TagsQuery extends Component{
     }
 
     render() {
-        const { form, tagsKeyList } = this.props;
+        const { form, tagsKeyList, closeOneItem, closeAllItem } = this.props;
 
         const removeClass = classnames(
             'icon',
@@ -42,7 +42,11 @@ class TagsQuery extends Component{
                                                         <li key={itemIndex}>
                                                             <span className={styles.tags_tag}>
                                                                 {child}
-                                                                <i className={classnames(removeClass, styles.tags_remove)} data-id={JSON.stringify({field: tagGroup.key, name: child})} onClick={() => {}}></i>
+                                                                <i 
+                                                                    className={classnames(removeClass, styles.tags_remove)} 
+                                                                    data-id={JSON.stringify({field: tagGroup.key, name: child})} 
+                                                                    onClick={(e) => { closeOneItem(e) }}>
+                                                                </i>
                                                             </span>
                                                         </li>
                                                     )
@@ -53,6 +57,15 @@ class TagsQuery extends Component{
                                                     <input placeholder={`请选择${tagGroup.keyName}`}/>
                                                 </div>
                                             </li>
+                                            {
+                                                tagGroup.selectedChildren.length > 0 ?
+                                                <i 
+                                                    className={classnames(removeClass, styles.tags_removeAll)} 
+                                                    data-id={JSON.stringify({field: tagGroup.key})} 
+                                                    onClick={(e) => { closeAllItem(e) }}></i>
+                                                :
+                                                undefined
+                                            }
                                         </ul>
                                         {
                                             tagGroup.tagSpread ?
@@ -69,7 +82,7 @@ class TagsQuery extends Component{
                                             </ul>
                                             :
                                             undefined
-                                        }
+                                        }    
                                     </div>
                                 </Item>
                             )
