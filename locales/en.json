@@ -375,7 +375,9 @@
   "ruleEditor.s3": "Assigned",
   "ruleEditor.s4": "Resolved",
   "ruleEditor.s5": "Closed",
-  "ruleEditor.word5": "For the matched alerts, excute the suppression action."
+  "ruleEditor.word5": "For the matched alerts, excute the suppression action.",
 
+
+  "server.notStarted": " service not found"
 
 }
