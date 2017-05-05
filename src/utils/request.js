@@ -52,9 +52,24 @@ function ajax(url, options){
           data: data
         })
       }).fail((xhr, textStatus, error) => {
+        const serverName = url.split('/')[3];
+        const serverNameList = [ // 若增加产品，在此数组里增加相应名称
+          'ChatOps',
+          'ITSM'
+        ];
         if(textStatus == 401){
           location.href = location.origin + '/tenant/#/login_admin/'
-        }else{
+        }else if(textStatus == 502){
+          for (let i = serverNameList.length - 1; i >= 0; i -= 1) {
+            if (serverNameList[i].toLowerCase() === serverName) {
+              resolve({
+                result: false,
+                message: serverNameList[i] + window.__alert_appLocaleData.messages['server.notStarted']
+              })
+              break;
+            }
+          }
+        } else {
           resolve({
             result: false,
             message: xhr.responseJSON !== undefined && xhr.responseJSON.message !== undefined ? xhr.responseJSON.message : 'Unknown Error'
@@ -64,7 +79,7 @@ function ajax(url, options){
   })
 }
 export default async function request(url, options) {
-  
+
       //options.credentials =  'include'
       const response = await ajax(isApiUrl(url), options)
       return response
@@ -81,5 +96,5 @@ export default async function request(url, options) {
       // }else{
       //   return data
       // }
-    
+
 }

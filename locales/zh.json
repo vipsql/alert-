@@ -374,7 +374,8 @@
   "ruleEditor.s3": "处理中",
   "ruleEditor.s4": "已解决",
   "ruleEditor.s5": "已关闭",
-  "ruleEditor.word5": "对符合条件的告警进行抑制动作，被抑制的告警将不会被保存。"
+  "ruleEditor.word5": "对符合条件的告警进行抑制动作，被抑制的告警将不会被保存。",
 
 
+  "server.notStarted": "服务未启动"
 }

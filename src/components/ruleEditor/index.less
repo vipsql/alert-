@@ -55,6 +55,19 @@
         border-radius: 2px;
         margin-right: 10px;
       }
+
+      .ant-tabs-tab-disabled {
+        background-color: #0d5990;
+        color: #5994d6;
+        border-color: #297ebb;
+        pointer-events: auto;
+        transition: .3s;
+        opacity: .5;
+        cursor: not-allowed;
+        &:hover {
+          border-color: #2bb4f4;
+        }
+      }
       .ant-tabs-nav-scroll, .ant-tabs-nav-wrap {
         overflow: visible;
       }
