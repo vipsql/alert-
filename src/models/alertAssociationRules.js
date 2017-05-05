@@ -244,7 +244,7 @@ export default {
           }
         });
       } else {
-        message.error(result.message);
+        message.error(window.__alert_appLocaleData.messages[result.message], 3);
       }
     },
 

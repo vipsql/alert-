@@ -54,12 +54,11 @@ function ajax(url, options){
       }).fail((xhr, textStatus, error) => {
         const serverName = url.split('/')[3];
         const serverNameList = [ // 若增加产品，在此数组里增加相应名称
-          'ChatOps',
-          'ITSM'
+          'ChatOps'
         ];
-        if(textStatus == 401){
+        if(xhr.status == 401){
           location.href = location.origin + '/tenant/#/login_admin/'
-        }else if(textStatus == 502){
+        }else if(xhr.status == 502){
           for (let i = serverNameList.length - 1; i >= 0; i -= 1) {
             if (serverNameList[i].toLowerCase() === serverName) {
               resolve({

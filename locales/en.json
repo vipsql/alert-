@@ -378,6 +378,7 @@
   "ruleEditor.word5": "For the matched alerts, excute the suppression action.",
 
 
-  "server.notStarted": " service not found"
+  "server.notStarted": " Service Unavailable",
+  "itsm.not.found": "ITSM Service Unavailable"
 
 }
