@@ -57,13 +57,11 @@ function ajax(url, options){
           'ChatOps',
           'ITSM'
         ];
-        let tag = false;
         if(textStatus == 401){
           location.href = location.origin + '/tenant/#/login_admin/'
-        }else{
+        }else if(textStatus == 502){
           for (let i = serverNameList.length - 1; i >= 0; i -= 1) {
             if (serverNameList[i].toLowerCase() === serverName) {
-              tag = true;
               resolve({
                 result: false,
                 message: serverNameList[i] + window.__alert_appLocaleData.messages['server.notStarted']
@@ -71,12 +69,11 @@ function ajax(url, options){
               break;
             }
           }
-          if (tag === false) {
-            resolve({
-              result: false,
-              message: xhr.responseJSON !== undefined && xhr.responseJSON.message !== undefined ? xhr.responseJSON.message : 'Unknown Error'
-            })
-          }
+        } else {
+          resolve({
+            result: false,
+            message: xhr.responseJSON !== undefined && xhr.responseJSON.message !== undefined ? xhr.responseJSON.message : 'Unknown Error'
+          })
         }
       })
   })
