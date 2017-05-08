@@ -55,6 +55,19 @@
         border-radius: 2px;
         margin-right: 10px;
       }
+
+      .ant-tabs-tab-disabled {
+        background-color: #0d5990;
+        color: #5994d6;
+        border-color: #297ebb;
+        pointer-events: auto;
+        transition: .3s;
+        opacity: .5;
+        cursor: not-allowed;
+        &:hover {
+          border-color: #2bb4f4;
+        }
+      }
       .ant-tabs-nav-scroll, .ant-tabs-nav-wrap {
         overflow: visible;
       }
@@ -64,6 +77,16 @@
         color: #fff;
         border-color: #158ad4;
         margin-bottom: 0;
+        // &:before {
+        //   content: '';
+        //   display: block;
+        //   position: absolute;
+        //   top: 0;
+        //   right: 0;
+        //   width: 5px;
+        //   height: 5px;
+        //   background-color: #fff;
+        // }
         &:after {
           content: '';
           display: block;
@@ -441,6 +464,7 @@
   }
 }
 .actionDelOrClose{
+  position: relative;
   .label {
     margin-right: 5px;
   }
@@ -578,3 +602,24 @@
     cursor: pointer;
   }
 }
+
+.setActions {
+  position: relative;
+  > :global(.ant-tabs-bar)
+  > :global(.ant-tabs-nav-container)
+  > :global(.ant-tabs-nav-wrap)
+  > :global(.ant-tabs-nav-scroll)
+  > :global(.ant-tabs-nav)
+  > :global(.ant-tabs-tab-active){
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;right: 0;
+      width: 18px;
+      height: 14px;
+      background: transparent url('../../../images/ruleEditor-action-current.png') no-repeat center;
+    }
+  }
+}
+

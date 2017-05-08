@@ -225,7 +225,8 @@ export default {
           }
         });
       } else {
-        message.error(window.__alert_appLocaleData.messages[result.message], 3);
+        // message.error(window.__alert_appLocaleData.messages[result.message], 3);
+        message.error(result.message);
       }
     },
 

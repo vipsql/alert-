@@ -401,7 +401,8 @@ class RuleEditor extends Component {
     const cycleTimeString = time.timeCycle >= 0 ? `${cycleDay}${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}` : '';
     const dayTimeString = time.dayStart && time.dayEnd ? `${moment(time.dayStart).format('YYYY-MM-DD')} ~ ${moment(time.dayEnd).format('YYYY-MM-DD')}、${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}` : '';
 
-    console.info('[state]', this.state);
+    // console.info('[state]', this.state);
+    console.info('[xx]', this.props.alertAssociationRules);
 
     this.emailVarContent = this.vars('emailMessage');
     this.smsVarContent = this.vars('smsMessage');
@@ -536,7 +537,7 @@ class RuleEditor extends Component {
         </div>
 
         <h2>{window.__alert_appLocaleData.messages['ruleEditor.setAct']}</h2>
-        <div className={styles.setActions}>
+        <div>
           <Tabs className={styles.setActions} animated={false} activeKey={action.type[0].toString()} onChange={this.changeActionType.bind(this)}>
 
             <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.closeOrDel']} key="1" className={styles.actionDelOrClose}>
@@ -628,12 +629,12 @@ class RuleEditor extends Component {
                   </TabPane>
                   {
                     window.__alert_appLocaleData.locale === 'zh-cn' &&
-                    <TabPane tab={<div><Checkbox id="chatops" checked={this.state.chatops} value={3} onChange={this.changeAction.bind(this, 3)} /><span>{window.__alert_appLocaleData.messages['ruleEditor.chatops']}</span></div>} key="3" />
+                    <TabPane disabled={this.props.alertAssociationRules.rooms.length === 0 ? true : false} tab={<div><Checkbox disabled={this.props.alertAssociationRules.rooms.length === 0 ? true : false} id="chatops" checked={this.state.chatops} value={3} onChange={this.changeAction.bind(this, 3)} /><span>{window.__alert_appLocaleData.messages['ruleEditor.chatops']}</span></div>} key="3" />
                   }
                 </Tabs>
               </div>
             </TabPane>
-            <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.ticket']} key="4" className={styles.actionITSM}>
+            <TabPane disabled={this.props.alertAssociationRules.wos.length === 0 ? true : false} tab={window.__alert_appLocaleData.messages['ruleEditor.ticket']} key="4" className={styles.actionITSM}>
               <div>
                 <FormItem
                   {...itsmLayout}
@@ -671,7 +672,7 @@ class RuleEditor extends Component {
             </TabPane>
             {
               window.__alert_appLocaleData.locale === 'zh-cn' &&
-              <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.shareChatOps']} key="6">
+              <TabPane disabled={this.props.alertAssociationRules.rooms.length === 0 ? true : false} tab={window.__alert_appLocaleData.messages['ruleEditor.shareChatOps']} key="6">
                 <div>
                   <span>{window.__alert_appLocaleData.messages['ruleEditor.chatopsGroup']}：</span>
                   <Select
