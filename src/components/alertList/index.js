@@ -338,6 +338,8 @@ class AlertListManage extends Component{
         })
       }
     }
+
+    
     const tabList = classnames(
       'iconfont',
       'icon-liebiao',
@@ -386,7 +388,7 @@ class AlertListManage extends Component{
         <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch {...refreshProps}/></div>
         <AlertBar />
         <div className={styles.alertListPage}>
-          <Tabs>
+          <Tabs defaultActiveKey="3">
             <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key={1}>
               <AlertOperation position='list' {...operateProps}/>
               <ListTableWrap />
@@ -395,7 +397,9 @@ class AlertListManage extends Component{
               <AlertOperation position='timeAxis' {...operateProps}/>
               <ListTimeTableWrap />
             </TabPane>
-           
+           <TabPane tab={<span  className={tabVisual}><FormattedMessage {...localeMessage['tab_visual']} /></span>}  key={3}>
+                <VisualAnalyzeWrap />
+            </TabPane>
           </Tabs>
           <ul className={styles.levelBar}>
             {

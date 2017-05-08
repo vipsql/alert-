@@ -1,4 +1,4 @@
-import { queryTags, queryVisual, queryVisualRes, queryResInfo } from '../services/visualAnalyze'
+import { queryTags, queryVisual, queryVisualRes, queryResInfo, queryAlertList } from '../services/visualAnalyze'
 
 import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery, add, update, view} from '../services/alertConfig'
 import {parse} from 'qs'
@@ -7,42 +7,13 @@ import pathToRegexp from 'path-to-regexp';
 import { routerRedux } from 'dva/router';
 
 const initalState = {
-   groupList: [
-        {
-            "tagValue":"文一路古翠路口2222",
-            "severity":3,
-            "values":[
-                {
-                    "value":"站点1",
-                    "severity":2
-                },
-                {
-                    "value":"站点2",
-                    "severity":3
-                }
-            ]
-        },
-        {
-            "tagValue":"文二路古翠路口",
-            "severity":1,
-            "values":[
-                {
-                    "value":"站点1",
-                    "severity":2
-                },
-                {
-                    "value":"站点2",
-                    "severity":3
-                }
-            ]
-        }
-    ], 
+   groupList: [], 
    tags: [
      '层级',
      '站点',
      '供网店'
    ],
-   isFirst: true, //是否首次进入
+  //  isFirst: false, //是否从其他页面进入
    resList: [
         {
             "tagValue":"Web-DB-01",
@@ -77,7 +48,11 @@ const initalState = {
     ],
    isShowFouth: false,
    incidentGroup: true, 
-   tagsLevel: 4
+   tagsLevel: 4,
+   tasgFitler: '',
+   resInfo: [],
+   alertList: []
+
 }
 
 // 保存标签分组选择
@@ -98,6 +73,7 @@ export default {
         if (pathToRegexp('/alertManage/:alertClassify/:alertList').test(location.pathname)) {
           dispatch({
             type: 'queryVisualList',
+            payload: {isFirst: true}
           });
         }
       });
@@ -106,64 +82,86 @@ export default {
 
   effects: {
     *queryVisualList({payload}, {select, put, call}) {
+      
       // {"key":"source", "value": "古荡派出所"}
       let level
       let tags
-      let gr1 //分组1
-      let gr2 //分组2
+      let gr2 //分组1
+      let gr3 //分组2
       
-      const isFirst = yield select(state => {
-        return state.visualAnalyze.isFirst
-      })
-
+      // const isFirst = yield select(state => {
+      //   return state.visualAnalyze.isFirst
+      // })
+      const {isFirst} = payload
+      const visualSelect = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1"))
+      
+      // isFirst表示从告警管理页面跳过来 否则为select切换选择
       if(isFirst){
-        const visualSelect = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1"))
-        tags = yield call(queryTags, {
+        
+        const tagsData = yield call(queryTags, {
             key: visualSelect.key,
             value: visualSelect.value
         })
-        level = tags.level
-        gr1 = tags.keys[0]
-        gr2 = tags.keys[1]
-        // 默认选择标签
-        setGroups(tags.keys[0], tags.keys[1]) 
+        
+        if(tagsData.result){
+          
+          const data = tagsData.data 
+          level = data.level
+          tags = data.keys
+          gr2 = tags[0]
+          gr3 = tags[1]
+          // 默认选择标签
+          setGroups(gr2, gr3) 
+          yield put({
+            type: 'updateSelect',
+            payload: {
+              tags,
+              level
+            }
+          })
+        }
+
       }else{
-        level = yield select(state => {
+        const {l,t} = yield select(state => {
           const visualAnalyze = state.visualAnalyze
 
           return {
-            level: visualAnalyze.level,
+            level: visualAnalyze.tagsLevel,
             tags: visualAnalyze.tags
           }
         })
+        level = l
+        tags = t
       }
-
+      
+      let groupList
       // 如果标签层级小于4 
       if(level < 4){
 
       }else{
-        let groupList = yield call(queryVisual, {
-          "isIncidentGroup": true,
+        let groupListData = yield call(queryVisual, {
+          "incidentGroup": true,
             tags: [
               visualSelect,
-              {key: gr1,value: ""},
-              {key: gr2,value: ""}
+              {key: localStorage.getItem('__alert_visualAnalyze_gr2'), value: ""},
+              {key: localStorage.getItem('__alert_visualAnalyze_gr3'), value: ""}
             ]
         })
-        // 一级分组列表
-        groupList = groupList.map( item => {
-          item.isExpand = true
-        })
+        if(groupListData.result){
+          // 一级分组列表
+          groupList = groupListData.data.map( item => {
+             item.isExpand = true
+             return item
+          })
+        }
        
       }
       
-
+      
       // 更新分组数据
       yield put({
         type: 'updateGroupList',
         payload: {
-          tags: tags.keys,
-          level: tags.level,
           groupList
         }
       })
@@ -173,16 +171,60 @@ export default {
 
     },
     *queryVisualRes({payload: {gr2Val, gr3Val}}, {select, put, call}) {
-      
-      const result = yield call(queryVisualRes, {
+      const gr4key = localStorage.getItem('__alert_visualAnalyze_gr4')
+      const res = yield call(queryVisualRes, {
           tags: [
             JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")),
             {key: localStorage.getItem("__alert_visualAnalyze_gr2"), value: gr2Val},
-            {key: localStorage.getItem("__alert_visualAnalyze_gr3"), value: gr3Val}
+            {key: localStorage.getItem("__alert_visualAnalyze_gr3"), value: gr3Val},
+            {key: gr4key ? gr4key : '', value: ''},
           ]
       })
+      
+      
+
+      const resList = res.data
+      if(res.result && resList.length > 0){
+        yield put({
+          type: 'updateResList',
+          payload: {
+            isShowFouth: true,
+            tasgFitler: gr3Val,
+            resList
+          }
+        })
+      }
 
 
+    },
+    *queryResInfo({payload:{res}}, {select, put, call}){
+      
+       const resInfo = yield call(queryResInfo, {
+          resName: res
+      })
+      if(resInfo.result){
+        yield put({
+          type: 'updateResInfo',
+          payload: resInfo.data
+        })
+      }
+    },
+    *showAlertList({payload}, {select, put, call}){
+      
+      const alertList = yield call(queryAlertList, {
+        resId: payload
+      })
+    //  const sa = [
+    //         {id:'ssss',name:'ssssss',severity: '1'},
+    //         {id:'ssss2',name:'ssssss2',severity: '0'}
+    //       ]
+      if(alertList.result){
+        yield put({
+          type: 'updateAlertList',
+          payload: alertList.data
+        })
+      }
+      
     }
     
   },
@@ -193,18 +235,45 @@ export default {
       newGroupList[index]['isExpand'] = isExpand
       return { ...state, newGroupList }
     },
-    updateGroupList(state, {payload: {tags, level, groupList}}){
+    updateAlertList(state,{payload: alertList }){
+      return{
+        ...state,
+        alertList
+      }
+    },
+    updateGroupList(state, {payload: { groupList}}){
       return {
         ...state,
-        tags,
-        level,
         groupList
       }
     },
-    updateResList(state, {payload: {isShowFouth, resList}}){
+    updateSelect(state,{payload: {tags,level}}){
+      return {
+        ...state,
+        tags,
+        level
+      }
+    },
+    updateResInfo(state, {payload}){
+      return {
+        ...state,
+        resInfo: payload
+      }
+    },
+    // 显示tags列表
+    redirectTagsList(state){
+      return {
+        ...state,
+        isShowFouth: false
+      }
+    },
+    // 显示资源列表
+    updateResList(state, {payload: {isShowFouth,tasgFitler, resList}}){
+      
       return {
         ...state,
         isShowFouth,
+        tasgFitler,
         resList
       }
     }

@@ -236,6 +236,7 @@ class Chart extends Component{
                     currentEvent.preventDefault()
                   })
                 .on("click", (d) => {
+                    
                     d3Tip.hide()
                     let alertListPath = {};
                     let keyValue = d.name;
@@ -260,6 +261,8 @@ class Chart extends Component{
                     alertListPath.selectedTime = this.props.selectedTime;
                     localStorage.setItem('alertListPath', JSON.stringify(alertListPath))
                     localStorage.setItem('__visual_group', d.parent.path)
+                    const gr1 = {key:d.parent.path, value: d.name}
+                    localStorage.setItem('__alert_visualAnalyze_gr1', JSON.stringify(gr1))
                     
                     window.location.hash = "#/alertManage/" + d.path;
                 })
