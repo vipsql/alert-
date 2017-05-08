@@ -537,7 +537,7 @@ class RuleEditor extends Component {
         </div>
 
         <h2>{window.__alert_appLocaleData.messages['ruleEditor.setAct']}</h2>
-        <div className={styles.setActions}>
+        <div>
           <Tabs className={styles.setActions} animated={false} activeKey={action.type[0].toString()} onChange={this.changeActionType.bind(this)}>
 
             <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.closeOrDel']} key="1" className={styles.actionDelOrClose}>
