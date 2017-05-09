@@ -1,4 +1,6 @@
 {
+  "constants.severity": "等级",
+  "constants.state": "状态",
   "constants.success": "成功",
   "constants.error": "失败",
 
@@ -36,6 +38,7 @@
   "alertList.tabs.timeList": "时间线",
   "alertList.tabs.visual": "可视化分析",
   "alertList.autoRefresh": "自动刷新",
+  "alertList.selectTags": "选择标签过滤",
 
   "alertList.title.id": "告警ID",
   "alertList.title.severity": "告警级别",
@@ -43,6 +46,7 @@
   "alertList.title.name": "告警名称",
   "alertList.title.source": "告警来源",
   "alertList.title.status": "处理状态",
+  "alertList.title.ip_address": "IP地址",
   "alertList.title.description": "告警描述",
   "alertList.title.count": "次数",
   "alertList.title.lastTime": "持续时间",
@@ -211,7 +215,7 @@
   "modal.trap.fieldsComposition.field": "字段",
   "modal.trap.fieldsComposition.composition": "组合",
   "modal.trap.noSelectField": "没有可选字段",
-  "modal.trap.mergeKeys": "合并原则",
+  "modal.trap.mergeKeys": "归并原则",
   "modal.trap.mergeKeys.message": "指定合并告警的关键字段",
   "modal.trap.bindCMDB": "绑定CMDB类",
   "modal.trap.bindCMDB.placeholder": "请选择需要绑定的CMDB类",

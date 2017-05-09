@@ -1,4 +1,6 @@
 {
+  "constants.severity": "Severity",
+  "constants.state": "State",
   "constants.success": "Success",
   "constants.error": "Error",
 
@@ -36,6 +38,7 @@
   "alertList.tabs.timeList": "Timeline",
   "alertList.tabs.visual": "Visual Analyze",
   "alertList.autoRefresh": "Auto Refresh",
+  "alertList.selectTags": "Select Tags",
 
   "alertList.title.id": "ID",
   "alertList.title.severity": "Severity",
@@ -43,6 +46,7 @@
   "alertList.title.name": "Name",
   "alertList.title.source": "Source",
   "alertList.title.status": "State",
+  "alertList.title.ip_address": "IP Address",
   "alertList.title.description": "Description",
   "alertList.title.count": "Count",
   "alertList.title.lastTime": "Duration",
