@@ -1,6 +1,6 @@
 import {parse} from 'qs'
 import { tagsView } from '../services/alertManage.js'
-import { getTagsByUser, getAllTags, setUserTags, getAllTagsKey, getTagValues} from '../services/alertTags.js'
+import { getTagsByUser, setUserTags, getAllTagsKey, getTagValues} from '../services/alertTags.js'
 import { message } from 'antd';
 
 const initialState = {
