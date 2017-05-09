@@ -1,6 +1,7 @@
 @import "../vars.less";
 // @import "~slick-carousel/slick/slick.less";
 // @import "~slick-carousel/slick/slick-theme.less";
+@import "./slider.less";
 
 // switch
 .alertSwitch{
@@ -26,6 +27,11 @@
     background: #143b67;
     border: 1px solid #143b67;
     border-radius: 3px;
+    .listTab, .timeTab, .visualTab{
+        span{
+            margin-left: 5px;
+        }
+    }
     .levelBar{
         position: absolute;
         right: 0px;
@@ -84,6 +90,26 @@
                 }
             }
         }
+    }
+    .visualNoData{
+        color: white;
+        text-align: center;
+        padding: 20px;
+        &:before{
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 10px; 
+            border-radius: 20px;
+            //background: #4082e6;
+            background: #daab1c;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            content: '!';
+        }
+        
+        
     }
     .visualList{
         padding: 20px;
@@ -158,8 +184,23 @@
     }
     .visualAlert{
         padding: 20px;
+        transition: all 0.3s ease-out;
+        overflow: hidden;
         .visualAlertGroup{
             margin-right: 276px;
+            .alertShowGroupName{
+                float: left;
+                position: relative;
+                right: -40px;
+                width: 30px;
+                height: 100%;
+                padding: 25px;
+                min-height: 110px;
+                font-size: 13px;
+                color: #6ac5fe;
+                text-align: center;
+                z-index: 2;
+            }
             .visualAlertGroupLi{ 
                 position: relative;
                 min-height: 110px;
@@ -167,16 +208,19 @@
                 background: #163e6b;
                 margin-bottom: 10px;
                 overflow: hidden;
+                border-left: 50px solid #12325a;
                 .alertGroupName{
                     box-sizing: border-box;
-                    position: absolute;
+                    margin-left: -50px;
+                    float: left;
+                    // position: absolute;
                     width: 30px;
                     height: 100%;
                     padding: 25px;
                     min-height: 110px;
                     font-size: 13px;
                     color: #6ac5fe;
-                    background: #12325a;
+                    // background: #12325a;
                     text-align: center;
                     span{
                         top: 50%;
@@ -187,7 +231,7 @@
 
                 }
                 .alertList{
-                    padding-left: 60px;
+                    // padding-left: 60px;
                     li{
                         position: relative;
                         float: left;
@@ -197,6 +241,8 @@
                         padding-top: 20px;
                         text-align: center;
                         color: white;
+                        cursor: pointer;
+                        
                         .tagsRingTwo{
                             position: absolute;
                             border-radius: 50px;
@@ -231,17 +277,80 @@
             padding: 10px;
             border-radius: 2px;
             background: #153a66;
+            .visualImg{
+                width: 180px;
+                height: 100px;
+                position: relative;
+                margin: 0 auto;
+                .imgInfo{
+                    float: left;
+                       width: 180px;
+                    height: 100px;
+                }
+                img{
+                    width: 180px;
+                    height: 100px;
+                }
+                .prev, .next{
+                    position: absolute;
+                    top: 50%;
+                    left: -30px;
+                    width: 16px;
+                    height: 24px;
+                    margin-top: -12px;
+                    font-size: 20px;
+                    color: white;
+                    cursor: pointer;
+
+                }
+                .next{
+                    left: 190px;
+                }
+                dl{
+                    overflow: hidden;
+	                position: absolute;
+                    // left: 15px;
+                    width: 100%;
+                    height: 100%;
+                    dd{
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        list-style: none;
+                        // opacity: 0;
+                        transition: all 0.3s ease-out;
+                        img{
+                            width: 150px;
+                            height: 100px;
+                        }
+                        
+
+
+
+                        
+                    }
+                }
+            }
             .visualMsg{
+                padding: 10px;
                 li{
                     margin-bottom: 5px;
                     color: white;
                     span{
+                        display: inline-block;
+                        vertical-align: middle;
+                    }
+                    span:first-child{
                         color: #9dd6ff;
                         &:after{
                             content: '：';
                             display: inline-block;
                             
                         }
+                    }
+                    span:last-child{
+                        width: 100px;
+                        .text-overflow();
                     }
                 }
             }
@@ -639,11 +748,19 @@
     }
 }
 
+.myModal{
+  :global{
+    .ant-modal-body{
+      max-height: 400px;
+      overflow: scroll;
+    }
+  }
+}
 // common modal footer
 .modalFooter{
     height: 60px;
     line-height: 60px;
-    margin: -10px -18px -10px -10px;
+    margin: -10px -16px -10px -10px;
     //background: #f2f7fc;
     background: #145e99;
     text-align: center;
@@ -1045,12 +1162,13 @@
     }
 }
 :global{
+  
   .ant-tabs-nav-container{
     margin-bottom: 0;
     overflow: inherit;
   }
   .ant-tabs-nav .ant-tabs-tab{
-    width: 130px;
+    // width: 130px;
     margin-right: 0;
     background: #f6f9fb;
     border-bottom: 1px solid #e4e7eb;
@@ -1072,316 +1190,13 @@
   }
 }
 
-// slider 
 :global{
-    .slick-slider
-    {
-        position: relative;
-
-        display: block;
-        box-sizing: border-box;
-
-        -webkit-user-select: none;
-        -moz-user-select: none;
-            -ms-user-select: none;
-                user-select: none;
-
-        -webkit-touch-callout: none;
-        -khtml-user-select: none;
-        -ms-touch-action: pan-y;
-            touch-action: pan-y;
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    .slick-list
-    {
-        position: relative;
-
-        display: block;
-        overflow: hidden;
-
-        margin: 0;
-        padding: 0;
-    }
-    .slick-list:focus
-    {
-        outline: none;
-    }
-    .slick-list.dragging
-    {
-        cursor: pointer;
-        cursor: hand;
-    }
-
-    .slick-slider .slick-track,
-    .slick-slider .slick-list
-    {
-        -webkit-transform: translate3d(0, 0, 0);
-        -moz-transform: translate3d(0, 0, 0);
-            -ms-transform: translate3d(0, 0, 0);
-            -o-transform: translate3d(0, 0, 0);
-                transform: translate3d(0, 0, 0);
-    }
-
-    .slick-track
-    {
-        position: relative;
-        top: 0;
-        left: 0;
-
-        display: block;
-    }
-    .slick-track:before,
-    .slick-track:after
-    {
-        display: table;
-
-        content: '';
-    }
-    .slick-track:after
-    {
-        clear: both;
-    }
-    .slick-loading .slick-track
-    {
-        visibility: hidden;
-    }
-
-    .slick-slide
-    {
-        display: none;
-        float: left;
-
-        height: 100%;
-        min-height: 1px;
-    }
-    [dir='rtl'] .slick-slide
-    {
-        float: right;
-    }
-    .slick-slide img
-    {
-        display: block;
-    }
-    .slick-slide.slick-loading img
-    {
-        display: none;
-    }
-    .slick-slide.dragging img
-    {
-        pointer-events: none;
-    }
-    .slick-initialized .slick-slide
-    {
-        display: block;
-    }
-    .slick-loading .slick-slide
-    {
-        visibility: hidden;
-    }
-    .slick-vertical .slick-slide
-    {
-        display: block;
-
-        height: auto;
-
-        border: 1px solid transparent;
-    }
-    .slick-arrow.slick-hidden {
-        display: none;
-    }
-    .slick-loading .slick-list
-    {
-        // background: #fff url('./ajax-loader.gif') center center no-repeat;
-    }
-
-  
- 
-    /* Arrows */
-    .slick-prev,
-    .slick-next
-    {
-        font-size: 0;
-        line-height: 0;
-
-        position: absolute;
-        top: 50%;
-
-        display: block;
-
-        width: 20px;
-        height: 20px;
-        padding: 0;
-        -webkit-transform: translate(0, -50%);
-        -ms-transform: translate(0, -50%);
-        transform: translate(0, -50%);
-
-        cursor: pointer;
-
-        color: transparent;
-        border: none;
-        outline: none;
-        background: transparent;
-    }
-    .slick-prev:hover,
-    .slick-prev:focus,
-    .slick-next:hover,
-    .slick-next:focus
-    {
-        color: transparent;
-        outline: none;
-        background: transparent;
-    }
-    .slick-prev:hover:before,
-    .slick-prev:focus:before,
-    .slick-next:hover:before,
-    .slick-next:focus:before
-    {
-        opacity: 1;
-    }
-    .slick-prev.slick-disabled:before,
-    .slick-next.slick-disabled:before
-    {
-        opacity: .25;
-    }
-
-    .slick-prev:before,
-    .slick-next:before
-    {
-        font-family: 'slick';
-        font-size: 20px;
-        line-height: 1;
-
-        opacity: .75;
-        color: white;
-
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-
-    .slick-prev
-    {
-        left: -25px;
-    }
-    [dir='rtl'] .slick-prev
-    {
-        right: -25px;
-        left: auto;
-    }
-    .slick-prev:before
-    {
-        content: '←';
-    }
-    [dir='rtl'] .slick-prev:before
-    {
-        content: '→';
-    }
-
-    .slick-next
-    {
-        right: -25px;
-    }
-    [dir='rtl'] .slick-next
-    {
-        right: auto;
-        left: -25px;
-    }
-    .slick-next:before
-    {
-        content: '→';
-    }
-    [dir='rtl'] .slick-next:before
-    {
-        content: '←';
-    }
-
-    /* Dots */
-    .slick-dotted.slick-slider
-    {
-        margin-bottom: 30px;
-    }
-
-    .slick-dots
-    {
-        position: absolute;
-        bottom: -25px;
-
-        display: block;
-
-        width: 100%;
-        padding: 0;
-        margin: 0;
-
-        list-style: none;
-
-        text-align: center;
-    }
-    .slick-dots li
-    {
-        position: relative;
-
+    .visualAlert{
         display: inline-block;
-
-        width: 20px;
-        height: 20px;
-        margin: 0 5px;
-        padding: 0;
-
-        cursor: pointer;
-    }
-    .slick-dots li button
-    {
-        font-size: 0;
-        line-height: 0;
-
-        display: block;
-
-        width: 20px;
-        height: 20px;
-        padding: 5px;
-
-        cursor: pointer;
-
-        color: transparent;
-        border: 0;
-        outline: none;
-        background: transparent;
-    }
-    .slick-dots li button:hover,
-    .slick-dots li button:focus
-    {
-        outline: none;
-    }
-    .slick-dots li button:hover:before,
-    .slick-dots li button:focus:before
-    {
-        opacity: 1;
-    }
-    .slick-dots li button:before
-    {
-        font-family: 'slick';
-        font-size: 6px;
-        line-height: 20px;
-
-        position: absolute;
-        top: 0;
-        left: 0;
-
-        width: 20px;
-        height: 20px;
-
-        content: '•';
-        text-align: center;
-
-        opacity: .25;
-        color: black;
-
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-    .slick-dots li.slick-active button:before
-    {
-        opacity: .75;
-        color: black;
+        width: 10px;
+        height: 10px;
+        border-radius: 10px;
+        vertical-align: middle;
+        margin-right: 5px;
     }
 }

@@ -236,6 +236,7 @@ class Chart extends Component{
                     currentEvent.preventDefault()
                   })
                 .on("click", (d) => {
+                    
                     d3Tip.hide()
                     let alertListPath = {};
                     let keyValue = d.name;
@@ -243,23 +244,26 @@ class Chart extends Component{
                     if ( pathArr !== undefined && pathArr[0] !== undefined && pathArr[1] !== undefined ) {
                         let temp = pathArr[0];
                         if ( pathArr[0] == 'severity' || pathArr[0] == 'status') {
-                            alertListPath[temp] = pathArr[1];
+                            alertListPath[temp] = {key: pathArr[0], keyName: d.parent.name, values: pathArr[1]};
                         } else {
-                            alertListPath[temp] = keyValue;
+                            alertListPath[temp] = {key: pathArr[0], keyName: d.parent.name, values: keyValue};
                         }
                     }
                     alertListPath.severity = d.maxSeverity == 0
-                                                ? '0' : d.maxSeverity == 1
-                                                    ? '1,0' : d.maxSeverity == 2
-                                                        ? '2,1,0' : d.maxSeverity == 3
-                                                            ? '3,2,1,0' : '3,2,1,0'
+                                                ? {key: 'severity', keyName: window.__alert_appLocaleData.messages['constants.severity'], values: '0'} : d.maxSeverity == 1
+                                                    ? {key: 'severity', keyName: window.__alert_appLocaleData.messages['constants.severity'], values: '1,0'} : d.maxSeverity == 2
+                                                        ? {key: 'severity', keyName: window.__alert_appLocaleData.messages['constants.severity'], values: '2,1,0'} : d.maxSeverity == 3
+                                                            ? {key: 'severity', keyName: window.__alert_appLocaleData.messages['constants.severity'], values: '3,2,1,0'}
+                                                            : {key: 'severity', keyName: window.__alert_appLocaleData.messages['constants.severity'], values: '3,2,1,0'}
                     alertListPath.status = this.props.selectedStatus === 'NEW' 
-                                                ? '0' : this.props.selectedStatus === 'PROGRESSING'
-                                                    ? '150' : this.props.selectedStatus === 'RESOLVED'
-                                                        ? '190' : undefined;
+                                                ? {key: 'status', keyName: window.__alert_appLocaleData.messages['constants.state'], values: '0'} : this.props.selectedStatus === 'PROGRESSING'
+                                                    ? {key: 'status', keyName: window.__alert_appLocaleData.messages['constants.state'], values: '150'} : this.props.selectedStatus === 'RESOLVED'
+                                                        ? {key: 'status', keyName: window.__alert_appLocaleData.messages['constants.state'], values: '190'} : undefined;
                     alertListPath.selectedTime = this.props.selectedTime;
                     localStorage.setItem('alertListPath', JSON.stringify(alertListPath))
                     localStorage.setItem('__visual_group', d.parent.path)
+                    const gr1 = {key:d.parent.path, value: d.name}
+                    localStorage.setItem('__alert_visualAnalyze_gr1', JSON.stringify(gr1))
                     
                     window.location.hash = "#/alertManage/" + d.path;
                 })

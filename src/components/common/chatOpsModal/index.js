@@ -71,7 +71,6 @@ const chatOpsModal = ({currentData, closeChatOpsModal, onOk, onCancal, form, int
                 <Form>
                     <Item
                         label={<FormattedMessage {...localeMessage['modal_roomName']} />}
-                        hasFeedback
                         help={isFieldValidating('roomOption') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('roomOption') || []).join(', ')}
                     >
                         {getFieldDecorator('roomOption', {

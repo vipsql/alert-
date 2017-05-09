@@ -13,7 +13,7 @@ module.exports = function (webpackConfig, env) {
 
   // Support hmr
   if (env === 'development') {
-    webpackConfig.devtool = '#eval'
+    webpackConfig.devtool = '#source-map'
     webpackConfig.babel.plugins.push(['dva-hmr', {
       entries: [
         './src/index.js'

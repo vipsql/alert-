@@ -1,5 +1,4 @@
 import React, { PropTypes,Component } from 'react'
-import { connect } from 'dva'
 import { Modal, Button } from 'antd'
 import styles from './index.less'
 import { classnames } from '../../utils'
@@ -8,36 +7,36 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const formatMessages = defineMessages({
     set:{
-      id: 'alertManage.addTags',
-      defaultMessage: '关注设置',
+      id: 'alertList.selectTags',
+      defaultMessage: '选择标签过滤',
     },
     ok: {
-      id: 'alertManage.setModal.ok',
-      defaultMessage: '确认',
+      id: 'modal.ok',
+      defaultMessage: '确定',
     },
-    reset: {
-      id: 'alertManage.setModal.reset',
-      defaultMessage: '重置',
+    cancel: {
+      id: 'modal.cancel',
+      defaultMessage: '取消',
     }
 })
 
-const AlertSetModal = ({dispatch, alertTagsSet}) => {
+const tagsSelectModal = ({dispatch, tagListFilter}) => {
     const {
-      modalVisible,
+      isShowSelectModal,
       tagsKeyList,
       selectList
-    } = alertTagsSet;
+    } = tagListFilter;
 
 
     const closeTagsModal = () => {
       dispatch({
-        type: 'alertTagsSet/closeModal',
+        type: 'tagListFilter/toggleTagsSelect',
         payload: false
       })
     }
 
     const tagsQueryProps = {
-      origin: 'set',
+      origin: 'filter',
       tagsKeyList,
       selectList,
       closeOneItem: (e) => {
@@ -45,7 +44,7 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
 
         let tagrget = JSON.parse(e.target.getAttribute('data-id'));
         dispatch({
-          type: 'alertTagsSet/closeOneItem',
+          type: 'tagListFilter/closeOneItem',
           payload: tagrget
         })
       },
@@ -54,25 +53,25 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
 
         let tagrget = JSON.parse(e.target.getAttribute('data-id'));
         dispatch({
-          type: 'alertTagsSet/closeAllItem',
+          type: 'tagListFilter/closeAllItem',
           payload: tagrget
         })
       },
       mouseLeave: (target) => {
         dispatch({
-          type: 'alertTagsSet/mouseLeave',
+          type: 'tagListFilter/mouseLeave',
           payload: JSON.parse(target)
         })
       },
       deleteItemByKeyboard: (target) => {
         dispatch({
-          type: 'alertTagsSet/deleteItemByKeyboard',
+          type: 'tagListFilter/deleteItemByKeyboard',
           payload: JSON.parse(target)
         })
       },
       queryTagValues: (key, message) => {
         dispatch({
-          type: 'alertTagsSet/queryTagValues',
+          type: 'tagListFilter/queryTagValues',
           payload: {
             key: key,
             value: message
@@ -84,7 +83,7 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
 
         let tagrget = JSON.parse(e.target.getAttribute('data-id'));
         dispatch({
-          type: 'alertTagsSet/addSelectedItem',
+          type: 'tagListFilter/addSelectedItem',
           payload: tagrget
         })
       }
@@ -94,14 +93,12 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
     modalFooter.push(<div key={'0'} className={styles.modalFooter}>
       <Button type="primary" onClick={ () => {
         dispatch({
-          type: 'alertTagsSet/addAlertTags'
+          type: 'tagListFilter/saveFilterTags'
         })
       }} ><FormattedMessage {...formatMessages['ok']} /></Button>
-      <Button type="ghost" className={styles.ghostBtn} onClick={ () => {
-        dispatch({
-          type: 'alertTagsSet/resetItems',
-        })
-      }}><FormattedMessage {...formatMessages['reset']} /></Button>
+      <Button type="ghost" className={styles.ghostBtn} onClick={
+        closeTagsModal
+      }><FormattedMessage {...formatMessages['cancel']} /></Button>
       </div>
     )
 
@@ -111,7 +108,7 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
           title={<FormattedMessage {...formatMessages['set']} />}
           maskClosable="true"
           onCancel={closeTagsModal}
-          visible={modalVisible}
+          visible={isShowSelectModal}
           footer={modalFooter}
         >
           <TagsQuery
@@ -122,4 +119,4 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
 
   )
 }
-export default connect(({alertTagsSet}) => ({alertTagsSet}))(AlertSetModal)
+export default tagsSelectModal
