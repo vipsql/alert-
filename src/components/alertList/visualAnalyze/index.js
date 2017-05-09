@@ -35,8 +35,7 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
     //     })
     // },
     detailClick(e) {
-      const alertId = e.target.getAttribute('data-id');
-      console.log(alertId)
+      const alertId = e.target.getAttribute('data-id')
       dispatch({
         type: 'alertListTable/clickDetail',
         payload: alertId

@@ -126,11 +126,16 @@ class VisualAnalyze extends Component {
                 )
             })
           return (
-               <li key={index} className={styles.visualAlertGroupLi}>
-                    <div className={styles.alertGroupName}><span>{item.tagValue}</span></div>
-                    <ul  className={styles.alertList}>
-                        {resList}
-                    </ul>
+               <li key={index} style={{marginLeft:'-50px'}}>
+                     {/*这里用来显示元素*/}
+                    <div className={styles.alertShowGroupName}>{item.tagValue}</div>
+                    <div className={styles.visualAlertGroupLi}>
+                        {/*这里用来撑开父元素*/}
+                        <div className={styles.alertGroupName}>{item.tagValue}</div>
+                        <ul  className={styles.alertList}>
+                            {resList}
+                        </ul>
+                    </div>
                </li>
                         
           )

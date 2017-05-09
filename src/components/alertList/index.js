@@ -343,17 +343,17 @@ class AlertListManage extends Component{
     const tabList = classnames(
       'iconfont',
       'icon-liebiao',
-      'listTab'
+      styles['listTab']
     )
     const tabLine = classnames(
       'iconfont',
       'icon-shijian',
-      'timeTab'
+      styles['timeTab']
     )
     const tabVisual = classnames(
       'iconfont',
       'icon-yunweichangjing',
-      'visualTab'
+      styles['visualTab']
     )
     const shanchuClass = classnames(
       'iconfont',
