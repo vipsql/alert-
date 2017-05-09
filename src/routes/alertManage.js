@@ -44,7 +44,7 @@ function AlertManage({dispatch, alertManage, isFold}){
 
     showTagsModal(){
       dispatch({
-        type: 'alertTagsSet/openFocusModal',
+        type: 'alertTagsSet/openSetModal',
       })
     },
 

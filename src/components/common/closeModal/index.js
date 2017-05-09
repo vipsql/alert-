@@ -74,7 +74,6 @@ const closeModal = ({currentData, onOk, onCancal, form, intl: {formatMessage}}) 
                 <Form>
                     <Item
                         label={<FormattedMessage {...localeMessage['modal_closeReason']} />}
-                        hasFeedback
                         help={isFieldValidating('closeMessage') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('closeMessage') || []).join(', ')}
                     >
                         {getFieldDecorator('closeMessage', {

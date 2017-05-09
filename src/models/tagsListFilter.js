@@ -1,29 +1,21 @@
 import {parse} from 'qs'
 import pathToRegexp from 'path-to-regexp';
-import { getAllListTags } from '../services/alertListTags.js'
+import { getAllTagsKey, getTagValues} from '../services/alertListTags.js'
 import { message } from 'antd'
 
 const initalState = {
-    isSpread: false, // spread modal to select tags
-    selectTagName: undefined,
-    tagsList: [
-      // { name: '告警来源', field: 1, type: 0, values: [ {name: "紧急", selected: true}, {key: 2, name: "主要", selected: false}, {key: 3, name: "次要", selected: false} ] },
-      // { name: '告警状态', field: 2, tags: [
-      //         {key: 4, name: "新告警", selected: false},
-      //         {key: 5, name: "抑制中", selected: false},
-      //         {key: 6, name: "确认中", selected: false},
-      //         {key: 7, name: "已确认", selected: false},
-      //         {key: 8, name: "新告警", selected: false},
-      //         {key: 9, name: "抑制中", selected: false},
-      //         {key: 10, name: "确认中", selected: false},
-      //         {key: 11, name: "新告警", selected: false},
-      //         {key: 12, name: "抑制中", selected: false}
-      // ] },
-      // { name: '抑制时间', field: 3, tags: [ {key: 13, name: "0-30分钟", selected: true}, {key: 14, name: "0.2-1小时", selected: false}, {key: 15, name: "1小时以上", selected: false} ] },
-    ], // 暂时先静态数据代替(数据结构也还不确定)，后期有两种初始可能。1.alertTagsSet传过来 2.重新发一次请求取得
-    // ------
+    isShowSelectModal: false, // 展开选择框
+    filteredTags: {},
     originTags: {},
-    filteredTags: {}
+    tagsKeyList: [
+      // {key: 'severity', keyName: '告警等级', tagSpread: true, selectedChildren: [{ name: '3'}]}, 
+      // {key: 'status', keyName: '告警状态', tagSpread: false, selectedChildren: [{ name: '150'}]}, 
+      // {key: 'source', keyName: '来源', tagSpread: false, selectedChildren: [{name: '青山湖'}]}
+    ], // modal中的数据集合
+    selectList: [/*{id: '11', key: 'aa', value: '标签1'}, {id: '21', key: 'aa', value: '标签2'}, {id: '31', key: 'aa', value: '标签3'}*/], // 模糊查询所匹配的内容
+    shareSelectTags: [
+      //{key: 'severity', keyName: '告警等级', values: [3,2,1,0]}
+    ]
 }
 
 export default {
@@ -44,31 +36,93 @@ export default {
   },
 
   effects: {
+    /**
+     *  初始化面板的数据
+     */
     *initTagsList({payload}, {select, put, call}) {
-      const originTags = yield localStorage.getItem('alertListPath');
+
+      const filterTags = yield JSON.parse(localStorage.getItem('alertListPath'));
+
       yield put({
-        type: 'setOriginTags',
-        payload: JSON.parse(originTags) || {}
+        type: 'initalshareSelectTags',
+        payload: {
+          originTags: filterTags
+        }
       })
+      const originTags = yield select( state => state.tagListFilter.originTags )
       yield put({
         type: 'alertList/queryAlertBar',
-        payload: JSON.parse(originTags) || {}
+        payload: originTags || {}
       })
+    },
+    *openSelectModal({payload: {isShowSelectModal}}, {select, put, call}) {
+      const tagKeysList = yield getAllTagsKey();
 
-      const tagsList = yield getAllListTags();
-
-      if (tagsList.result && tagsList.data.length !== 0) {
+      if (tagKeysList.result && tagKeysList.data.length !== 0) {
         yield put({
-          type: 'initalTagsList',
-          payload: tagsList.data || []
+          type: 'setTagsKeyList',
+          payload: {
+            tagsKeyList: tagKeysList.data || [],
+            isShowSelectModal
+          }
         })
       } else {
-        yield message.success(window.__alert_appLocaleData.messages[tagsList.message], 3);
+        yield message.error(window.__alert_appLocaleData.messages[tagKeysList.message], 3);
       }
     },
-    *changeTags({payload}, {select, put, call}) {
-      yield put({ type: 'changeSelectTag', payload: payload })
+    /**
+     *  查询标签对应的values
+     */
+    *queryTagValues({payload}, {select, put, call}) {
+      if (payload !== undefined && payload.key !== undefined && payload.value !== undefined) {
+        const tagValues = yield call(getTagValues, payload);
+        if (!tagValues.result) {
+          yield message.error(window.__alert_appLocaleData.messages[tagValues.message], 2);
+        }
+        yield put({
+          type: 'setSelectList',
+          payload: {
+            selectList: tagValues.result ? tagValues.data : [],
+            targetKey: payload.key
+          }
+        })
+      } else {
+        console.error('query params type error')
+      }
+    },
+    *addSelectedItem({payload}, {select, put, call}) {
+      const { tagsKeyList } = yield select( state => {
+        return {
+          'tagsKeyList': state.tagListFilter.tagsKeyList
+        }
+      })
+      let newList = tagsKeyList.map( (group, index) => {
+        if (group.key === payload.field) {
+          let status = true;
+          group.selectedChildren.forEach( (child, itemIndex) => {
+            if (child.name === payload.item.value) {
+              message.error('已经选择了该标签', 3)
+              status = false;
+            }
+          })
+          if (status) {
+            group.selectedChildren.push({id: payload.item.id, name: payload.item.value});
+          }
+        }
+        return group
+      })
+      yield put({
+        type: 'addItem',
+        payload: newList
+      })
+    },
+    /**
+     *  查询时间线和列表 + 将shareSelectTags更改
+     */
+    *saveFilterTags({payload}, {select, put, call}) {
+      yield put({ type: 'saveSelectTag' })
       yield put({ type: 'filterTags'})
+      yield put({ type: 'toggleTagsSelect', payload: false})
       const filteredTags = yield select( state => state.tagListFilter.filteredTags )
       yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
     },
@@ -81,124 +135,148 @@ export default {
   },
 
   reducers: {
-    // 设置初始化的tags
-    setOriginTags(state, { payload: originTags }) {
-      return { ...state, originTags }
+    // toggle select modal
+    toggleTagsSelect(state, { payload: isShowSelectModal }) {
+      return { ...state, isShowSelectModal }
     },
-    // 将数据转换成需要的格式
-    initalTagsList(state, { payload: tagsList }) {
-      const { originTags } = state;
-      originTags.selectedTime !== undefined && delete originTags.selectedTime;
-      let originTagsList = Object.keys(originTags) || [];
-      let serverityList = originTags['severity'].split(',');
-      const newList = tagsList.map( (group) => {
-        // serverity预先做排序
-        if (group.field === 'severity') {
-          group.values.sort( (prev, next) => {
-            return Number(next) - Number(prev)
-          })
-        }
-        group.values = group.values.map( (item) => {
-          let temp = {};
-          originTagsList.length > 0 && originTagsList.forEach( (tag, index) => {
-            if ((tag == group.field && originTags[tag] == item) || (group.field == 'severity' && serverityList.includes(item))) {
-              if (group.field == 'severity' || group.field == 'status') {
-                  temp = {
-                    name: window[`_${group.field}`][item],
-                    value: item,
-                    selected: true
-                  }
-                } else {
-                  temp = {
-                    name: item,
-                    selected: true
-                  }
-                }
-            }
-          })
-          if (Object.keys(temp).length === 0) {
-            if (group.field == 'severity' || group.field == 'status') {
-              temp = {
-                name: window[`_${group.field}`][item],
-                value: item,
-                selected: false
-              }
-            } else {
-              temp = {
-                name: item,
-                selected: false
-              }
-            }
+    // 初始化数据
+    initalshareSelectTags(state, { payload: {originTags}}) {
+      let filter = {};
+      let shareSelectTags = [];
+      let keys = Object.keys(originTags);
+      keys.length > 0 && keys.forEach( (key, index) => {
+        if (key === 'selectedTime') {
+          filter[key] = originTags[key]
+        } else {
+          filter[key] = originTags[key]['values']
+          if (key === 'severity') {
+            shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: originTags[key]['values'].split(',') })
+          } else {
+            shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: [originTags[key]['values']] })
           }
-          return temp;
+        }
+      })
+      
+      return { ...state, shareSelectTags, originTags: filter}
+    },
+    // 存储tagsKeyList
+    setTagsKeyList(state, {payload: {tagsKeyList, isShowSelectModal}}) {
+      const { shareSelectTags } = state;
+      tagsKeyList.length > 0 && tagsKeyList.forEach( (tagkey, index) => {
+        tagkey.tagSpread = false
+        tagkey.selectedChildren = []
+        shareSelectTags.length > 0 && shareSelectTags.forEach( (tag, itemIndex) => {
+          if (tagkey.key === tag.key) {
+              tag.values.forEach( (val, childIndex) => {
+                tagkey.selectedChildren.push({name: val})
+              })
+          }
         })
-
+      })
+      return { ...state, tagsKeyList, isShowSelectModal }
+    },
+    closeOneItem(state, {payload: target}) {
+      const { tagsKeyList } = state;
+      let newList = tagsKeyList.map( (group, index) => {
+        if (group.key === target.field) {
+          let children = group.selectedChildren.filter( (child, itemIndex) => {
+            return target.name != child.name
+          })
+          group.selectedChildren = children;
+          //group.tagSpread = false;
+        }
         return group
       })
-      return { ...state, tagsList: newList }
+      return { ...state, tagsKeyList: newList }
     },
-    // toggle select button state
-    toggleTagsSelect(state, { payload: isSpread }) {
-      return { ...state, isSpread }
-    },
-    // select tag
-    changeSelectTag(state, { payload: selectTagName }) {
-
-      const { tagsList } = state;
-
-      const newList = tagsList.map( (item) => {
-        item.values.map( (tag) => {
-          if (typeof selectTagName !== 'undefined' && item.name == selectTagName.field && tag.name == selectTagName.name) {
-            tag.selected = !tag.selected;
-          }
-          return tag;
-        })
-        return item;
+    closeAllItem(state, {payload: target}) {
+      const { tagsKeyList } = state;
+      let newList = tagsKeyList.map( (group, index) => {
+        if (group.key === target.field) {
+          group.selectedChildren = [];
+          //group.tagSpread = false;
+        }
+        return group
       })
-
-      return { ...state, tagsList: newList }
+      return { ...state, tagsKeyList: newList }
     },
-    // remove select tag
-    removeSelectTag(state, { payload: selectTagName }) {
-      const { tagsList } = state;
-
-      const newList = tagsList.map( (item) => {
-        item.values.map( (tag) => {
-          if (typeof selectTagName !== 'undefined' && item.name == selectTagName.field && tag.name == selectTagName.name && tag.selected) {
-            tag.selected = !tag.selected;
-          }
-          return tag;
-        })
-        return item;
+    mouseLeave(state, {payload: target}) {
+      const { tagsKeyList } = state;
+      let newList = tagsKeyList.map( (group, index) => {
+        if (group.key === target.field) {
+          group.tagSpread = false;
+        }
+        return group
       })
-
-      return { ...state, tagsList: newList }
+      return { ...state, tagsKeyList: newList }
+    },
+    deleteItemByKeyboard(state, {payload: target}) {
+      const { tagsKeyList } = state;
+      let newList = tagsKeyList.map( (group, index) => {
+        if (group.key === target.field) {
+          group.selectedChildren = group.selectedChildren.slice(0, group.selectedChildren.length - 1)
+        }
+        return group
+      })
+      return { ...state, tagsKeyList: newList }
+    },
+    addItem(state, {payload: newList}) {
+      return { ...state, tagsKeyList: newList }
+    },
+    saveSelectTag(state) {
+      const { tagsKeyList } = state;
+      let shareSelectTags = []
+      tagsKeyList.length > 0 && tagsKeyList.filter( item => item.selectedChildren.length > 0 ).forEach( (tagkey, index) => {
+        shareSelectTags.push({key: tagkey['key'], keyName: tagkey['keyName']})
+        tagkey.selectedChildren.forEach( (tag, itemIndex) => {
+          if (shareSelectTags[index]['values']) {
+            shareSelectTags[index]['values'].push(tag.name)
+          } else {
+            shareSelectTags[index]['values'] = [tag.name]
+          }
+        })
+      })
+      return { ...state, shareSelectTags }
     },
     // filter tags
     filterTags(state) {
-      const { tagsList } = state;
+      const { shareSelectTags } = state;
       let source = {};
-      tagsList.forEach( (item) => {
-        item.values.forEach( (tag) => {
-          if (tag.selected) {
-            if ( source[item.field] ) {
-              if (item.field == 'severity' || item.field == 'status') {
-                source[item.field] = source[item.field] + ',' + tag.value;
-              } else {
-                source[item.field] = source[item.field] + ',' + tag.name;
-              }
+      shareSelectTags.forEach( (item) => {
+        item.values !== undefined && item.values.forEach( (tag) => {
+            if ( source[item.key] ) {
+              source[item.key] = source[item.key] + ',' + tag;
             } else {
-              if (item.field == 'severity' || item.field == 'status') {
-                source[item.field] = tag.value;
-              } else {
-                source[item.field] = tag.name;
-              }
+              source[item.key] = tag;
             }
-          }
         })
       })
       return { ...state, filteredTags: source }
-    }
-  },
-
+    },
+    // remove select tag
+    removeSelectTag(state, { payload: target }) {
+      let { shareSelectTags } = state;
+      const newList = shareSelectTags.map( (item) => {
+        if (target.field == item.key) {
+          let newValues = item.values.filter( (child) => {
+            return target.name != child
+          })
+          item.values = newValues;
+        }
+        return item;
+      })
+      return { ...state, shareSelectTags: newList }
+    },
+    setSelectList(state, {payload: {selectList, targetKey}}) {
+      const { tagsKeyList } = state;
+      let newList = tagsKeyList.map( (group, index) => {
+        group.tagSpread = false; // 其他key-value的可选标签都隐藏掉
+        if (group.key === targetKey) {
+          group.tagSpread = true;
+        }
+        return group
+      })
+      return { ...state, tagsKeyList: newList, selectList }
+    },
+  }
 }
