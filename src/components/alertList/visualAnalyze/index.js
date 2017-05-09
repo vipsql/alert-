@@ -27,9 +27,15 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
         })
         
     },
+    // toggleIncidentGroup(){
+    //     dispatch({
+    //         type: 'visualAnalyze/toggleIncidentGroup',
+    //         payload: 
+    //     })
+    // },
     detailClick(e) {
       const alertId = e.target.getAttribute('data-id');
-
+      
       dispatch({
         type: 'alertListTable/clickDetail',
         payload: alertId
@@ -105,9 +111,13 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
     },
 
     showIncidentGroup(e){
+        
         dispatch({
             type: 'visualAnalyze/queryVisualList',
-            payload: e.target.checked
+            payload: {
+                isFirst: false,
+                showIncidentGroup: e.target.checked
+            }
         })
     }
     

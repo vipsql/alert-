@@ -72,8 +72,8 @@ class VisualAnalyze extends Component {
       const content = alertList.length > 0 ?
       alertList.map((item, index) => {
         return (
-            <div key={index} data-id={item.id} onClick={(e) => {detailClick(e)}}>
-                <a><span className="visualAlert" style={{background: severityToColor[item['severity']]}}></span>{item.name}</a>
+            <div key={index}>
+                <a  data-id={item.id} onClick={(e) => {detailClick(e)}}><span className="visualAlert" style={{background: severityToColor[item['severity']]}}></span>{item.name}</a>
             </div>
         )
       }) :
@@ -146,9 +146,9 @@ class VisualAnalyze extends Component {
             conitue
         }
         return (
-            <li key={index}>
+            <div key={index}>
                 <span>{item.name}</span><Tooltip title={item.values[0]}><span>{item.values[0]}</span></Tooltip>
-            </li>
+            </div>
         )
         
       })
@@ -210,11 +210,15 @@ class VisualAnalyze extends Component {
                                 <a href="javascript:;" className={leftArr}  onClick={nextimg}></a>
                             
                         </div>
-                        }
+                    }
+
                         <ul className={styles.visualMsg}>
                            {resInfoListComponent}
-                        </ul>
-                    </div>
+                        </ul>*
+                        {/* <Slider  {...slideSettings2}>
+                            {resInfoListComponent}
+                        </Slider>*/}
+                    </div> 
                     <ul className={styles.visualAlertGroup}>
                         {resComponent}
                     </ul>
