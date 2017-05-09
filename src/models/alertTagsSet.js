@@ -1,19 +1,19 @@
 import {parse} from 'qs'
 import { tagsView } from '../services/alertManage.js'
-import { getTagsByUser, getAllTags, setUserTags, getAllTagsKey} from '../services/alertTags.js'
+import { getTagsByUser, getAllTags, setUserTags, getAllTagsKey, getTagValues} from '../services/alertTags.js'
 import { message } from 'antd';
 
 const initialState = {
-  selectedTagsNum: 0,
-  currentTagsList: [],
-  commitTagIds: [],
-  modalVisible: false,
   // --------------------------------
+  modalVisible: false,
+  commitTagIds: [], // 保存时的Ids
   tagsKeyList: [
-    {key: 'severity', keyName: '告警等级', tagSpread: true, selectedChildren: ['紧急']}, 
-    {key: 'status', keyName: '告警状态', tagSpread: false, selectedChildren: ['已解决']}, 
-    {key: 'source', keyName: '来源', tagSpread: false, selectedChildren: ['青山湖']}], // 打开Modal时查询所有的key
-  currentSelectTags: [{key: 'severity', value: '3'}, {key: 'status', value: '2'}, {key: 'source', value: '青山湖'}], // 已经选择的标签
+    // {key: 'severity', keyName: '告警等级', tagSpread: true, selectedChildren: [{id: '1', name: '3'}]}, 
+    // {key: 'status', keyName: '告警状态', tagSpread: false, selectedChildren: [{id: '2', name: '150'}]}, 
+    // {key: 'source', keyName: '来源', tagSpread: false, selectedChildren: [{id: '3', name: '青山湖'}]}
+  ], // 打开Modal时查询所有的key
+  currentSelectTags: [/*{key: 'severity', value: '3'}, {key: 'status', value: '2'}, {key: 'source', value: '青山湖'}*/], // 已经选择的标签
+  selectList: [/*{id: '11', key: 'aa', value: '标签1'}, {id: '21', key: 'aa', value: '标签2'}, {id: '31', key: 'aa', value: '标签3'}*/] // 模糊查询所匹配的内容
 }
 
 export default {
@@ -27,10 +27,7 @@ export default {
 
   effects: {
     /**
-     *  查询所有标签的key
-     *  查询所有已经关注的标签
-     *  初始化填充操作
-     *  打开Modal
+     *  查询所有标签的key + 填充已选择标签
      */
     *openSetModal({payload}, {select, put, call}) {
       // tags keys
@@ -57,51 +54,59 @@ export default {
       }
 
     },
-    // ------------------------------------------------------------------
-    *openFocusModal({payload}, {select, put, call}) {
-      // search all tags
-      //const { userId } = yield select( state => ({'userId': state.app.userId}))
-      const allTags = yield getAllTags();
-
-      if (allTags.result && allTags.data.length !== 0) {
-        yield put({
-          type: 'setCurrentTags',
-          payload: allTags.data || []
-        })
-        // search selected tags
-        const selectedTags = yield getTagsByUser();
-        if (selectedTags.result) {
-          yield put({
-            type: 'setCurrentSelectTags',
-            payload: selectedTags.data
-          })
-          // filter tags
-          yield put({type: 'filterInitalTags'})
-          yield put({type: 'toggleTagsModal', payload: true})
-        } else {
-          yield message.error(window.__alert_appLocaleData.messages[selectedTags.message], 2);
+    /**
+     *  查询标签对应的values
+     */
+    *queryTagValues({payload}, {select, put, call}) {
+      if (payload !== undefined && payload.key !== undefined && payload.value !== undefined) {
+        const tagValues = yield call(getTagValues, payload);
+        if (!tagValues.result) {
+          yield message.error(window.__alert_appLocaleData.messages[tagValues.message], 2);
         }
-      } else {
-        yield message.error(window.__alert_appLocaleData.messages[allTags.message], 2);
-      }
-    },
-    // inital dashbord when isSet is true
-    *queryDashbordBySetted({payload}, {select, put, call}) {
-
         yield put({
-          type: 'alertManage/queryAlertDashbord',
+          type: 'setSelectList',
           payload: {
-            selectedTime: 'lastOneHour',
-            selectedStatus: 'NEW'
+            selectList: tagValues.result ? tagValues.data : [],
+            targetKey: payload.key
           }
         })
-
-        yield put({ type: 'alertManage/toggleAlertSet', payload: true })
-
+      } else {
+        console.error('query params type error')
+      }
     },
-    // commit tagIds by set modal
+    /**
+     *  选择标签时触发
+     */
+    *addSelectedItem({payload}, {select, put, call}) {
+      const { tagsKeyList } = yield select( state => {
+        return {
+          'tagsKeyList': state.alertTagsSet.tagsKeyList
+        }
+      })
+      let newList = tagsKeyList.map( (group, index) => {
+        if (group.key === payload.field) {
+          let status = true;
+          group.selectedChildren.forEach( (child, itemIndex) => {
+            if (child.id === payload.item.id) {
+              message.error('已经选择了该标签', 3)
+              status = false;
+            }
+          })
+          if (status) {
+            group.selectedChildren.push({id: payload.item.id, name: payload.item.value});
+          }
+        }
+        return group
+      })
+      yield put({
+        type: 'addItem',
+        payload: newList
+      })
+    },
+    /**
+     *  保存标签 + 查询面板
+     */
     *addAlertTags ({payload}, {select, put, call}) {
-      //const { userId } = yield select( state => ({'userId': state.app.userId}))
       yield put({
         type: 'filterCommitTagsByTagList'
       })
@@ -136,128 +141,106 @@ export default {
   },
 
   reducers: {
-    initalSelectTags(state, {payload: tagskey, selectedTags}) {
-      tagskey.length > 0 && tagskey.forEach( (tagkey, index) => {
+    // 初始化数据
+    initalSelectTags(state, {payload: {tagskey, selectedTags}}) {
+      let newList = tagskey.filter( item => item.key !== 'status' ).map( (tagkey, index) => {
         tagkey.tagSpread = false
         tagkey.selectedChildren = []
         selectedTags.length > 0 && selectedTags.forEach( (tag, itemIndex) => {
           if (tagkey.key === tag.key) {
-            if (tag.key == 'severity' || tag.key == 'status') {
-              tagkey.selectedChildren.push(window[`_${tag.key}`][tag.value])
-            } else {
-              tagkey.selectedChildren.push(tag.value)
-            }
+              tagkey.selectedChildren.push({id: tag.id, name: tag.value})
           }
-        }) 
-      })
-      return { ...state, tagsKeyList: tagskey, currentSelectTags: selectedTags}
-    },
-    // -------------------------------------------------
-    // 切换标签设置框显示状态
-    toggleTagsModal(state, { payload: modalVisible }){
-      return { ...state, modalVisible }
-    },
-    // 保存当前标签列表并做格式处理
-    setCurrentTags(state, { payload }) {
-      const arr = payload.map( (group) => {
-        group.name = group.keyName;
-        delete group.keyName;
-        group.values = group.tags;
-        delete group.tags;
-        // serverity预先做排序
-        if (group.key === 'severity') {
-          group.values.sort( (prev, next) => {
-            return Number(next.value) - Number(prev.value)
-          })
-        }
-        group.values.map( (tag) => {
-          if (tag.key == 'severity' || tag.key == 'status') {
-            tag.name = window[`_${tag.key}`][tag.value]
-          } else {
-            tag.name = tag.value;
-          }
-          delete tag.value;
-          return tag
         })
+        return tagkey
+      })
+      return { ...state, tagsKeyList: newList, currentSelectTags: selectedTags}
+    },
+    // 单个删除标签
+    closeOneItem(state, {payload: target}) {
+      const { tagsKeyList } = state;
+      let newList = tagsKeyList.map( (group, index) => {
+        if (group.key === target.field) {
+          let children = group.selectedChildren.filter( (child, itemIndex) => {
+            return target.id !== child.id
+          })
+          group.selectedChildren = children;
+          //group.tagSpread = false;
+        }
         return group
       })
-      let filter = arr.filter( item => item['key'] != 'status' )
-
-      return { ...state, currentTagsList: filter }
+      return { ...state, tagsKeyList: newList }
     },
-    // 保存当前选择的标签列表(注意这里仅仅是保存，没有像setCurrentTags作数据过滤)
-    setCurrentSelectTags(state, { payload: currentSelectTags }) {
-      return { ...state, currentSelectTags }
+    // 删除一组标签
+    closeAllItem(state, {payload: target}) {
+      const { tagsKeyList } = state;
+      let newList = tagsKeyList.map( (group, index) => {
+        if (group.key === target.field) {
+          group.selectedChildren = [];
+          //group.tagSpread = false;
+        }
+        return group
+      })
+      return { ...state, tagsKeyList: newList }
     },
-    // 过滤初始化数据
-    filterInitalTags(state, { payload }) {
-      const { currentSelectTags, currentTagsList } = state;
-      let num = 0;
-      if (typeof currentSelectTags !== 'undefined' && currentSelectTags.length !== 0) {
-        currentTagsList.forEach( (tagGroup) => {
-          currentSelectTags.forEach( (tag, index) => {
-            if (tagGroup.key === tag.key) {
-              tagGroup.values.forEach( (item) => {
-                if (item.id === tag.id) {
-                  item.selected = true;
-                }
-              })
-            }
-            num = index + 1;
-          })
-        })
-        return { ...state, currentTagsList, selectedTagsNum: num }
-      } else {
-        return { ...state }
-      }
+    // 重置
+    resetItems(state, {payload: target}) {
+      const { tagsKeyList } = state;
+      let newList = tagsKeyList.map( (group, index) => {
+        group.selectedChildren = [];
+        group.tagSpread = false;
+        return group
+      })
+      return { ...state, tagsKeyList: newList }
+    },
+    // 鼠标移开时触发
+    mouseLeave(state, {payload: target}) {
+      const { tagsKeyList } = state;
+      let newList = tagsKeyList.map( (group, index) => {
+        if (group.key === target.field) {
+          group.tagSpread = false;
+        }
+        return group
+      })
+      return { ...state, tagsKeyList: newList }
+    },
+    // 键盘删除动作
+    deleteItemByKeyboard(state, {payload: target}) {
+      const { tagsKeyList } = state;
+      let newList = tagsKeyList.map( (group, index) => {
+        if (group.key === target.field) {
+          group.selectedChildren = group.selectedChildren.slice(0, group.selectedChildren.length - 1)
+        }
+        return group
+      })
+      return { ...state, tagsKeyList: newList }
+    },
+    addItem(state, {payload: newList}) {
+      return { ...state, tagsKeyList: newList }
+    },
+    setSelectList(state, {payload: {selectList, targetKey}}) {
+      const { tagsKeyList } = state;
+      let newList = tagsKeyList.map( (group, index) => {
+        group.tagSpread = false; // 其他key-value的可选标签都隐藏掉
+        if (group.key === targetKey) {
+          group.tagSpread = true;
+        }
+        return group
+      })
+      return { ...state, tagsKeyList: newList, selectList }
+    },
+    toggleTagsModal(state, { payload: modalVisible }){
+      return { ...state, modalVisible }
     },
     // 过滤commitTagIds的数据(关注设置时)
     filterCommitTagsByTagList(state, { payload }) {
       let newCommitTagIds = [];
-      const { currentTagsList } = state;
-      currentTagsList.forEach( (tagsGroup) => {
-        tagsGroup.values.forEach( (tag) => {
-          if (tag.selected) {
+      const { tagsKeyList } = state;
+      tagsKeyList.forEach( (tagsGroup) => {
+        tagsGroup.selectedChildren.forEach( (tag) => {
             newCommitTagIds.push(tag.id);
-          }
         })
       })
       return { ...state, commitTagIds: newCommitTagIds }
-    },
-    // 标签选择
-    changSelectTag(state, { payload: currentSelectId }){
-      const { currentTagsList, selectedTagsNum } = state;
-      let newTagsNum = selectedTagsNum;
-      const newList = currentTagsList.map( (item) => {
-        item.values.map( (tag) => {
-          if (typeof currentSelectId !== 'undefined' && tag.id == currentSelectId) {
-            if (!tag.selected && typeof selectedTagsNum === 'number') {
-              newTagsNum = selectedTagsNum + 1;
-            } else {
-              newTagsNum = selectedTagsNum - 1;
-            }
-            tag.selected = !tag.selected;
-          }
-          return tag;
-        })
-        return item;
-      })
-
-      return { ...state, currentTagsList: newList, selectedTagsNum: newTagsNum }
-    },
-    // 重置选择
-    resetSelected(state) {
-      const { currentTagsList } = state;
-      const newList = currentTagsList.map( (item) => {
-        item.values.map( (tag) => {
-          if (tag.selected) {
-            tag.selected = !tag.selected;
-          }
-          return tag;
-        })
-        return item;
-      })
-      return { ...state, currentTagsList: newList, selectedTagsNum: 0 }
     },
     // 清除
     clear(state) {

@@ -11,8 +11,21 @@ class TagsQuery extends Component{
     }
 
     render() {
-        const { form, tagsKeyList, closeOneItem, closeAllItem } = this.props;
 
+        const { 
+            form, 
+            origin, 
+            tagsKeyList, 
+            selectList, 
+            closeOneItem, 
+            closeAllItem, 
+            mouseLeave, 
+            deleteItemByKeyboard, 
+            queryTagValues, 
+            addItem
+        } = this.props;
+
+        let timer = null;
         const removeClass = classnames(
             'icon',
             'iconfont',
@@ -23,6 +36,15 @@ class TagsQuery extends Component{
             labelCol: { span: 4 },
             wrapperCol: { span: 20 }
         }
+
+        const renderName = (key, name) => {
+            if (key == 'severity' || key == 'status') {
+                return window[`_${key}`][name]
+            } else {
+                return name
+            }
+        }
+        
         return (
             <div className={styles.tags_container}>
                 <Form>
@@ -41,10 +63,10 @@ class TagsQuery extends Component{
                                                     return (
                                                         <li key={itemIndex}>
                                                             <span className={styles.tags_tag}>
-                                                                {child}
+                                                                {renderName(tagGroup.key, child.name)}
                                                                 <i 
                                                                     className={classnames(removeClass, styles.tags_remove)} 
-                                                                    data-id={JSON.stringify({field: tagGroup.key, name: child})} 
+                                                                    data-id={origin === 'set' ? JSON.stringify({field: tagGroup.key, id: child.id}) : JSON.stringify({field: tagGroup.key, name: child.name})} 
                                                                     onClick={(e) => { closeOneItem(e) }}>
                                                                 </i>
                                                             </span>
@@ -54,7 +76,19 @@ class TagsQuery extends Component{
                                             }
                                             <li>
                                                 <div className={styles.tags_input}>
-                                                    <input placeholder={`请选择${tagGroup.keyName}`}/>
+                                                    <input type={'text'} placeholder={`请选择${tagGroup.keyName}`} onChange={ (e) => {
+                                                        e.persist();
+                                                        clearTimeout(timer)
+                                                        
+                                                        timer = setTimeout( () => {
+                                                            queryTagValues(tagGroup.key, e.target.value)
+                                                        }, 500)
+                                                    }} onKeyDown={ (e) => {
+                                                        if (e.keyCode === 8 && e.target.value == '') {
+                                                            deleteItemByKeyboard(JSON.stringify({field: tagGroup.key}))
+                                                        }
+                                                    }} onFocus={ () => { queryTagValues(tagGroup.key, '') }}/>
+                                                    
                                                 </div>
                                             </li>
                                             {
@@ -69,16 +103,18 @@ class TagsQuery extends Component{
                                         </ul>
                                         {
                                             tagGroup.tagSpread ?
-                                            <ul className={styles.tags_query_content}>
-                                                <li className={styles.tags_query_item}>
-                                                    站点1
-                                                </li>
-                                                <li className={styles.tags_query_item}>
-                                                    站点2
-                                                </li>
-                                                <li className={styles.tags_query_item}>
-                                                    站点3
-                                                </li>
+                                            <ul className={styles.tags_query_content} onMouseLeave={ () => {mouseLeave(JSON.stringify({field: tagGroup.key}))}}>
+                                                {
+                                                    selectList.length > 0 ? selectList.map( (item, itemIndex) => {
+                                                        return (
+                                                            <li key={itemIndex} className={styles.tags_query_item} data-id={JSON.stringify({field: tagGroup.key, item: item})} onClick={ (e) => {
+                                                                addItem(e)
+                                                            }}>
+                                                                {renderName(item.key, item.value)}
+                                                            </li>
+                                                        )
+                                                    }): <li className={styles.tags_query_item}>Not Found</li>
+                                                }
                                             </ul>
                                             :
                                             undefined

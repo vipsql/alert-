@@ -231,6 +231,24 @@ class ruleModal extends Component{
         const { isShowTrapModal } = snmpTrapRules
         const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
 
+        const duiClass = classnames(
+            'icon',
+            'iconfont',
+            'icon-dui'
+        )
+
+        const editClass = classnames(
+            'icon',
+            'iconfont',
+            'icon-bianji'
+        )
+
+        const tableShanchu = classnames(
+            'icon',
+            'iconfont',
+            "icon-shanchux"
+        )
+
         const shanchuClass = classnames(
             'icon',
             'iconfont',
