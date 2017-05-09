@@ -16,7 +16,7 @@ const initalState = {
   //  isFirst: false, //是否从其他页面进入
    resList: [],
    isShowFouth: false,
-  //  incidentGroup: true, 
+   incidentGroup: true, 
    tagsLevel: 4,
    tasgFitler: '',
    resInfo: [],
@@ -140,17 +140,18 @@ export default {
       
 
     },
-    *queryVisualRes({payload: {gr2Val, gr3Val}}, {select, put, call}) {
+    *queryVisualRes({}, {select, put, call}) {
       const gr4key = localStorage.getItem('__alert_visualAnalyze_gr4')
       const tags = yield select(state => {
           const visualAnalyze = state.visualAnalyze
 
           return visualAnalyze.tags
         })
+      const gr3Val = localStorage.getItem('__alert_visualAnalyze_gr3Val')
       const res = yield call(queryVisualRes, {
           tags: [
             JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")),
-            {key: localStorage.getItem("__alert_visualAnalyze_gr2"), value: gr2Val},
+            {key: localStorage.getItem("__alert_visualAnalyze_gr2"), value: localStorage.getItem('__alert_visualAnalyze_gr2Val')},
             {key: localStorage.getItem("__alert_visualAnalyze_gr3"), value: gr3Val},
             {key: gr4key ? gr4key : tags[0], value: ''}
           ]
@@ -213,6 +214,13 @@ export default {
         ...state,
         alertList
       }
+    },
+    updateIncidentGroup(state,{payload: isChecked}){
+
+        return {
+          ...state,
+          incidentGroup: isChecked
+        }
     },
     updateGroupList(state, {payload: { groupList}}){
       return {

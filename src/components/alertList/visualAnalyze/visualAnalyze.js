@@ -54,6 +54,7 @@ class VisualAnalyze extends Component {
           handleExpand,
           gr2Change,
           gr3Change,
+          gr4Change,
           showResList,
           groupList,
           showIncidentGroup,
@@ -66,6 +67,7 @@ class VisualAnalyze extends Component {
           alertList,
           tasgFitler,
           detailClick,
+          incidentGroup,
           resList
       } = this.props
 
@@ -87,7 +89,7 @@ class VisualAnalyze extends Component {
                         <div className={styles.tagsGroup} key={childIndex} data-gr2Val={item.tagValue} data-gr3Val={childItem.value}  onClick={(e)=>{showResList(e)}}>
                             
                                 <div className={styles.tagsRingTwo} style={{background: severityToColor[childItem['severity']]}}></div>
-                                <div className={styles.tagsRingOne} style={{background: severityToColor[childItem['severity']]}}></div>
+                                {childItem['severity'] > 0 && <div className={styles.tagsRingOne} style={{background: severityToColor[childItem['severity']]}}></div>}
                                 <div className={styles.tagsName}>{childItem.value}</div>
                             
                         </div>
@@ -117,7 +119,7 @@ class VisualAnalyze extends Component {
                     <li key={childIndex} data-id={childItem.resId}  onClick={(e)=>{showAlertList(e)}}>
                         <Popover   content={content} trigger="click">
                             <div className={styles.tagsRingTwo} style={{background: severityToColor[childItem['severity']]}}></div>
-                            <div className={styles.tagsRingOne} style={{background: severityToColor[childItem['severity']]}}></div>
+                            {childItem['severity'] > 0 && <div className={styles.tagsRingOne} style={{background: severityToColor[childItem['severity']]}}></div>}
                             <div className={styles.tagsName}>{childItem.resName}</div>
                         </Popover>
                     </li>
@@ -140,33 +142,33 @@ class VisualAnalyze extends Component {
         )
       })
 
+      let ImgEle 
       const resInfoListComponent = resInfo.length > 0 && resInfo.map( (item,index) =>{
-        if(item.type == 'image') {
+        if(item.type != 'image') {
+            return (
+                <li key={index}>
+                    <span>{item.name}</span><Tooltip title={item.values[0]}><span>{item.values[0]}</span></Tooltip>
+                </li>
+            )    
+            
+        }else{
             isShowImg = true
-            conitue
+            ImgEle = item
+            return 
         }
-        return (
-            <div key={index}>
-                <span>{item.name}</span><Tooltip title={item.values[0]}><span>{item.values[0]}</span></Tooltip>
-            </div>
-        )
+        
         
       })
-      const resInfoImgComponent = resInfo.length > 0 && resInfo.map( (item,index) =>{
-        if(item.type == 'image'){
-             item.values.map( (childItem, cindex) => {
-                return (
-                    <div key={cindex}><img src={childItem} alt="" /></div>
-                )
-             })
-            
-            
-        }
+      const resInfoImgComponent = ImgEle && ImgEle.values.length > 0 && ImgEle.values.map( (item,index) =>{
+          return (
+                <div className={styles.imgInfo} key={index}><img src={item} alt="" /></div>
+            )
       })
+      
       return(
         <div className={styles.visualBg}>
             <div className={styles.visualHead}>
-                {!isShowFouth && <Checkbox className={styles.showGroup} onChange={showIncidentGroup}  defaultChecked>只显示有故障的分组</Checkbox>}
+                {!isShowFouth && <Checkbox className={styles.showGroup} onChange={showIncidentGroup} checked={incidentGroup} >只显示有故障的分组</Checkbox>}
                 分组：<Select disabled = {isShowFouth ? true : false } defaultValue={tags[0]} onChange={gr2Change} className={styles.visualGroup}  >
                         {tagsComponent}
                     </Select>
@@ -182,7 +184,7 @@ class VisualAnalyze extends Component {
                                 <p>{tasgFitler}</p>
                                 <i className={tagsFilter}></i>
                             </div>
-                            <Select defaultValue={tags[0]} className={styles.visualGroup}  >
+                            <Select defaultValue={tags[0]} onChange={gr4Change} className={styles.visualGroup}  >
                                 {tagsComponent}
                             </Select>
                         </div>
@@ -202,22 +204,15 @@ class VisualAnalyze extends Component {
                     <div className={styles.visualInfo}>
                     { isShowImg && 
                         <div className={styles.visualImg}>
-                                <Slider {...slideSettings}>
-                                    {resInfoImgComponent}
-                                </Slider>
-                                
-                                <a href="javascript:;" className={rightArr} onClick={previmg}></a>
-                                <a href="javascript:;" className={leftArr}  onClick={nextimg}></a>
-                            
+                            <Slider {...slideSettings2}>
+                               {resInfoImgComponent}
+                            </Slider>
                         </div>
                     }
 
                         <ul className={styles.visualMsg}>
                            {resInfoListComponent}
-                        </ul>*
-                        {/* <Slider  {...slideSettings2}>
-                            {resInfoListComponent}
-                        </Slider>*/}
+                        </ul>
                     </div> 
                     <ul className={styles.visualAlertGroup}>
                         {resComponent}

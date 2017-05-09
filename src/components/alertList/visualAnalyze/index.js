@@ -11,18 +11,19 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
     ...visualAnalyze,
 
     showResList(e){
-        const target = e.target
+        const target = e.target,
+              gr2Val = target.parentNode.getAttribute('data-gr2Val'),
+              gr3Val = target.parentNode.getAttribute('data-gr2Val')
+
+              localStorage.setItem('__alert_visualAnalyze_gr2Val',gr2Val)
+              localStorage.setItem('__alert_visualAnalyze_gr3Val',gr3Val)
         dispatch({
-            type: 'visualAnalyze/queryVisualRes',
-            payload: {
-                gr2Val: target.parentNode.getAttribute('data-gr2Val'),
-                gr3Val: target.parentNode.getAttribute('data-gr3Val')
-            }
+            type: 'visualAnalyze/queryVisualRes'
         })
         dispatch({
             type: 'visualAnalyze/queryResInfo',
             payload: {
-                res: target.parentNode.getAttribute('data-gr2Val')
+                res: target.parentNode.getAttribute('data-gr3Val')
             }
         })
         
@@ -35,7 +36,7 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
     // },
     detailClick(e) {
       const alertId = e.target.getAttribute('data-id');
-      
+      console.log(alertId)
       dispatch({
         type: 'alertListTable/clickDetail',
         payload: alertId
@@ -69,18 +70,6 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
             type: 'visualAnalyze/redirectTagsList'
         })
     },
-    // tagsClickToRes(e){
-    //     const target = e.target,
-    //         gr2Val = target.getAttribute('data-gr2Val'),
-    //         gr3Val = target.getAttribute('data-gr3Val') 
-    //     dispatch({
-    //         type: 'visualAnalyze/queryVisualRes',
-    //         payload: {
-    //             gr2Val,
-    //             gr3Val
-    //         }
-    //     })
-    // },
     gr2Change(value){
         localStorage.setItem('__alert_visualAnalyze_gr2', value)
         
@@ -103,22 +92,25 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
     gr4Change(value){
         localStorage.setItem('__alert_visualAnalyze_gr4', value)
         dispatch({
-            type: 'visualAnalyze/queryVisualRes',
-            payload: {
-                val: value
-            }
+            type: 'visualAnalyze/queryVisualRes'
         })
     },
 
     showIncidentGroup(e){
-        
+        const checked = e.target.checked
         dispatch({
             type: 'visualAnalyze/queryVisualList',
             payload: {
                 isFirst: false,
-                showIncidentGroup: e.target.checked
+                showIncidentGroup: checked
             }
         })
+        dispatch({
+            type: 'visualAnalyze/updateIncidentGroup',
+            payload: checked
+        })
+        
+
     }
     
 
