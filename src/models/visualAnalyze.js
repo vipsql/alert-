@@ -106,6 +106,10 @@ export default {
       
       let groupList = []
       
+      const  isShowIncidentGroup = yield select(state => {
+        return state.visualAnalyze.incidentGroup
+      })
+      
       // 如果标签层级小于4 
       if(level < 4){
         let val 
@@ -136,7 +140,7 @@ export default {
 
       }else{
         let groupListData = yield call(queryVisual, {
-          "incidentGroup": showIncidentGroup !== undefined ? showIncidentGroup : true,
+          "incidentGroup": showIncidentGroup !== undefined ? showIncidentGroup : isShowIncidentGroup,
             tags: [
               visualSelect,
               {key: localStorage.getItem('__alert_visualAnalyze_gr2'), value: ""},
