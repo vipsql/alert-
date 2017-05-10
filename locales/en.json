@@ -385,6 +385,10 @@
 
 
   "server.notStarted": " Service Unavailable",
-  "itsm.not.found": "ITSM Service Unavailable"
+  "itsm.not.found": "ITSM Service Unavailable",
+
+  "visualAnalyze.groupBy": "groupBy",
+  "visualAnalyze.incidentGroup": "Show only the defective grouping",
+  "visualAnalyze.noData": "no data, please choose again"
 
 }

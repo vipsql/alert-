@@ -834,13 +834,13 @@ class RuleEditor extends Component {
         if (!_action.actionITSM) {
           _action.actionITSM = {
             itsmModelId: undefined,
+            itsmModelName: undefined,
             param: undefined
           };
         }
         if (value.target) {
           _action.actionITSM.param = value.target.value.replace(/\s|\n/g, "");
           let _ITSMParam = value.target.value;
-          console.log(_action.actionITSM.param)
 
           this.setState({
             ITSMParam: _ITSMParam
@@ -1185,12 +1185,18 @@ class RuleEditor extends Component {
         break;
       case 4:
         _actionITSM = action.actionITSM;
+        _actionITSM.itsmModelName = this.props.alertAssociationRules.wos.filter(item => {
+          return item.id === _actionITSM.itsmModelId;
+        })[0]['name'];
         break;
       case 5:
         _actionSuppress = action.actionSuppress;
         break;
       case 6:
         _actionChatOps = action.actionChatOps;
+        _actionChatOps.chatOpsRoomName = this.props.alertAssociationRules.rooms.filter(item => {
+          return item.id === _actionChatOps.chatOpsRoomId;
+        })[0]['topic'];
         break;
       default:
         break;
