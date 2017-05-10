@@ -834,7 +834,7 @@ class RuleEditor extends Component {
         if (!_action.actionITSM) {
           _action.actionITSM = {
             itsmModelId: undefined,
-            itsmModelName: undefined,
+            // itsmModelName: undefined,
             param: undefined
           };
         }
