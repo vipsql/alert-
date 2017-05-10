@@ -262,7 +262,7 @@ class Chart extends Component{
                     alertListPath.selectedTime = this.props.selectedTime;
                     localStorage.setItem('alertListPath', JSON.stringify(alertListPath))
                     localStorage.setItem('__visual_group', d.parent.path)
-                    const gr1 = {key:d.parent.path, value: d.name}
+                    const gr1 = {key:d.parent.name, value: d.name}
                     localStorage.setItem('__alert_visualAnalyze_gr1', JSON.stringify(gr1))
                     
                     window.location.hash = "#/alertManage/" + d.path;

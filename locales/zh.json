@@ -94,6 +94,8 @@
   "modal.operate.infoTip4": "请先将多条告警合并为一条源告警",
   "modal.operate.allowRollUp": "只允许新告警才能派发工单",
 
+  "modal.tag.select": "请选择{name}",
+
   "modal.shareChatOps": "分享到ChatOps",
   "modal.share": "分享",
   "modal.roomName": "群组名称",
@@ -382,5 +384,10 @@
 
 
   "server.notStarted": "服务不可用",
-  "itsm.not.found": "ITSM服务不可用"
+  "itsm.not.found": "ITSM服务不可用",
+
+  "visualAnalyze.groupBy": "分组",
+  "visualAnalyze.incidentGroup": "只显示有故障的分组",
+   "visualAnalyze.noData": "暂无数据，请重新选择条件"
+
 }

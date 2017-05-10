@@ -55,7 +55,7 @@ export async function getChatOpsOptions() {
     }
 }
 
-export async function shareRoom(roomId, param) {
+export async function shareRoom(roomId, incidentId, roomName, param) {
     // let hostUrl = 'alert.uyundev.cn';
     // let paramWrapper = {};
     // if (window.location.origin.indexOf("alert") > -1) {
@@ -68,6 +68,8 @@ export async function shareRoom(roomId, param) {
     // }
     let paramWrapper = {
         roomId: '' + roomId,
+        incidentId: incidentId,
+        roomName: roomName,
         body: JSON.stringify(param)
     }
 
