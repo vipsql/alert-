@@ -37,11 +37,19 @@ export default {
       const isSet = yield isSetUserTags()
       if(isSet.result && isSet.data) {
         yield put({
-          type: 'alertTagsSet/queryDashbordBySetted',
+          type: 'queryAlertDashbord',
+          payload: {
+            selectedTime: 'lastOneHour',
+            selectedStatus: 'NEW'
+          }
         })
         yield put({
           type: 'toggleAlertSetTip',
           payload: true
+        })
+        yield put({ 
+          type: 'toggleAlertSet', 
+          payload: true 
         })
       } else {
         yield put({

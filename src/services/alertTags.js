@@ -1,5 +1,5 @@
 import { request, packURL } from '../utils'
-import querystring from 'querystring';
+import {stringify} from 'qs'
 
 export async function isSetUserTags() {
     return request(`/incident/tags/isSet`, {
@@ -19,15 +19,6 @@ export async function getTagsByUser() {
     })
 }
 
-export async function getAllTags() {
-    return request(`/incident/tags/all`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    })
-}
-
 export async function setUserTags(tagObject) {
     return request(`/incident/tags`, {
         method: 'POST',
@@ -35,5 +26,24 @@ export async function setUserTags(tagObject) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(tagObject)
+    })
+}
+
+// 查询所有的Tags的Key
+export async function getAllTagsKey() {
+    return request(`/incident/tags/allKeys`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+}
+
+export async function getTagValues(param) {
+    return request(`/incident/tags/getTagValues?${stringify(param)}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
     })
 }

@@ -9,16 +9,24 @@ const tagsGroup = ({className, removeHandler, tagsList, haveTags}) => {
         'iconfont',
         'icon-anonymous-iconfont'
     )
+
+    const renderName = (key, name) => {
+        if (key == 'severity' || key == 'status') {
+            return <p>{ window[`_${key}`][name] }</p>
+        } else {
+            return <p>{ name }</p>
+        }
+    }
     
     return (
         haveTags ? <div className={className}>
-                <p className={styles.typeName}>{`${ tagsList.name }:`}</p>
+                <p className={styles.typeName}>{`${ tagsList.keyName }:`}</p>
                 {
                     tagsList.values.map( (item, index) => {
                         return (
                             <div key={ index } className={styles.tagName}>
-                                <p>{ item.name }</p>
-                                <i className={switchClass} data-id={JSON.stringify({field: tagsList.name, name: item.name})} onClick={(e) => removeHandler(e)}></i>
+                                {renderName(tagsList.key, item)}
+                                <i className={switchClass} data-id={JSON.stringify({field: tagsList.key, name: item})} onClick={(e) => removeHandler(e)}></i>
                             </div>
                         )
                     })
