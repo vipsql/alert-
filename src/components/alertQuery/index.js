@@ -403,6 +403,10 @@ class alertQueryManage extends Component{
               id: 'alertDetail.ticket.assgin',
               defaultMessage: '派发工单'
           },
+          IP_address: {
+              id: 'alertList.title.ip_address',
+              defaultMessage: 'IP地址'
+          }
       })
 
       const popoverContent = <div className={styles.popoverMain}>
@@ -601,6 +605,7 @@ class alertQueryManage extends Component{
                         <Option className={styles.keywordsMenuItem} value="3"><FormattedMessage {...localeMessage['tags']} /></Option>
                         <Option className={styles.keywordsMenuItem} value="2"><FormattedMessage {...localeMessage['description']} /></Option>
                         <Option className={styles.keywordsMenuItem} value="4"><FormattedMessage {...localeMessage['name']} /></Option>
+                        <Option className={styles.keywordsMenuItem} value="5"><FormattedMessage {...localeMessage['IP_address']} /></Option>
                       </Select>
                     )}    
                   </Item>

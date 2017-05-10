@@ -14,38 +14,7 @@ const initalState = {
      '供网店'
    ],
   //  isFirst: false, //是否从其他页面进入
-   resList: [
-        {
-            "tagValue":"Web-DB-01",
-            "resources":[
-                {
-                    "resId":"e10adc3949ba59abbe56e057f20f88dd",
-                    "resName":"CAD-APP-01",
-            "severity":3
-                },
-                {
-                    "resId":"f10adc3949ba59abbe56e057f20f88dd",
-                    "resName":"GPS-01",
-            "severity":2
-                }
-            ]
-        },
-        {
-            "tagValue":"Web-DB-01",
-            "resources":[
-                {
-                    "resId":"e10adc3949ba59abbe56e057f20f88dd",
-                    "resName":"CAD-APP-01",
-            "severity":3
-                },
-                {
-                    "resId":"f10adc3949ba59abbe56e057f20f88dd",
-                    "resName":"GPS-01",
-            "severity":2
-                }
-            ]
-        }
-    ],
+   resList: [],
    isShowFouth: false,
    incidentGroup: true, 
    tagsLevel: 4,
@@ -92,7 +61,8 @@ export default {
       // const isFirst = yield select(state => {
       //   return state.visualAnalyze.isFirst
       // })
-      const {isFirst} = payload
+      const {isFirst, showIncidentGroup} = payload
+      
       const visualSelect = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1"))
       
       // isFirst表示从告警管理页面跳过来 否则为select切换选择
@@ -140,7 +110,7 @@ export default {
 
       }else{
         let groupListData = yield call(queryVisual, {
-          "incidentGroup": true,
+          "incidentGroup": showIncidentGroup !== undefined ? showIncidentGroup : true,
             tags: [
               visualSelect,
               {key: localStorage.getItem('__alert_visualAnalyze_gr2'), value: ""},
@@ -170,19 +140,23 @@ export default {
       
 
     },
-    *queryVisualRes({payload: {gr2Val, gr3Val}}, {select, put, call}) {
+    *queryVisualRes({}, {select, put, call}) {
       const gr4key = localStorage.getItem('__alert_visualAnalyze_gr4')
+      const tags = yield select(state => {
+          const visualAnalyze = state.visualAnalyze
+
+          return visualAnalyze.tags
+        })
+      const gr3Val = localStorage.getItem('__alert_visualAnalyze_gr3Val')
       const res = yield call(queryVisualRes, {
           tags: [
             JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")),
-            {key: localStorage.getItem("__alert_visualAnalyze_gr2"), value: gr2Val},
+            {key: localStorage.getItem("__alert_visualAnalyze_gr2"), value: localStorage.getItem('__alert_visualAnalyze_gr2Val')},
             {key: localStorage.getItem("__alert_visualAnalyze_gr3"), value: gr3Val},
-            {key: gr4key ? gr4key : '', value: ''},
+            {key: gr4key ? gr4key : tags[0], value: ''}
           ]
       })
       
-      
-
       const resList = res.data
       if(res.result && resList.length > 0){
         yield put({
@@ -240,6 +214,13 @@ export default {
         ...state,
         alertList
       }
+    },
+    updateIncidentGroup(state,{payload: isChecked}){
+
+        return {
+          ...state,
+          incidentGroup: isChecked
+        }
     },
     updateGroupList(state, {payload: { groupList}}){
       return {

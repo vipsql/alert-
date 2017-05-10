@@ -56,7 +56,7 @@ export default {
               payload: detailResult.data.orderFlowNum
             })
           }
-          if (detailResult.data.ciUrl !== undefined && detailResult.data.ciUrl != '') {
+          if (detailResult.data && detailResult.data.ciUrl !== undefined && detailResult.data.ciUrl != '') {
             yield put({
               type: 'setCiUrl',
               payload: detailResult.data.ciUrl

@@ -71,7 +71,6 @@ const dispatchModal = ({currentData, closeDispatchModal, onOk, onCancal, form, i
                 <Form>
                     <Item
                         label={<FormattedMessage {...localeMessage['modal_ticketType']} />}
-                        hasFeedback
                         help={isFieldValidating('formOption') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('formOption') || []).join(', ')}
                     >
                         {getFieldDecorator('formOption', {
