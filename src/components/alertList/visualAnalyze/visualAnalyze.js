@@ -193,6 +193,7 @@ class VisualAnalyze extends Component {
         <div className={styles.visualBg}>
             <div className={styles.visualHead}>
                 {(!isShowFouth && tagsLevel > 3) && <Checkbox className={styles.showGroup} onChange={showIncidentGroup} checked={incidentGroup} ><FormattedMessage {...formatMessages['incidentGroup']} /></Checkbox>}
+                    {/* 如果标签显示分组文本和第一个分组选择框*/}
                     {
                      tagsLevel > 1 &&    
                         <div style={{display: 'inline-block'}}>
@@ -202,7 +203,7 @@ class VisualAnalyze extends Component {
                         </div>
                     }
                 
-                    
+                    {/* 如果标签第二个分组选择框*/}
                     {
                      tagsLevel > 2 &&    
                         <div style={{display: 'inline-block'}}>
@@ -212,6 +213,7 @@ class VisualAnalyze extends Component {
                             </Select>
                         </div>
                     }
+                    {/* 如果标签有4层则按照正常流程*/}
                     {
                      isShowFouth &&    
                         <div className={styles.visualFilter}>
@@ -228,9 +230,9 @@ class VisualAnalyze extends Component {
                  
                     
                 </div>
-
+                { /* 如果标签小于4层则直接请求设备列表*/ }
                 {(!isShowFouth && tagsLevel < 4)  ?
-
+                
                 <div className={styles.visualAlert}>
                     {resInfo.length > 0 &&
                         <div className={styles.visualInfo}>
@@ -256,9 +258,9 @@ class VisualAnalyze extends Component {
                     : <div className={styles.visualNoData}><FormattedMessage {...formatMessages['noData']} /></div>
                     }
                 </div>
-
+                
                 : (!isShowFouth ? 
-
+                { /* 如果标签4层以上则直接正常请求*/ }
                 (groupList.length > 0 ? 
                 <ul className={styles.visualList}>
                     {groupListComponent}
