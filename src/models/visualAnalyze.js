@@ -64,7 +64,7 @@ export default {
       const {isFirst, showIncidentGroup} = payload
       
       const visualSelect = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1"))
-      
+      debugger
       // isFirst表示从告警管理页面跳过来 否则为select切换选择
       if(isFirst){
         
@@ -255,7 +255,7 @@ export default {
       return {
         ...state,
         tags,
-        level
+        tagsLevel: level
       }
     },
     updateResInfo(state, {payload}){
