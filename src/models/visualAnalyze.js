@@ -106,19 +106,25 @@ export default {
       
       let groupList = []
       
+      const  isShowIncidentGroup = yield select(state => {
+        return state.visualAnalyze.incidentGroup
+      })
+      
       // 如果标签层级小于4 
       if(level < 4){
         let val 
         const gr1 = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1"))
+        const gr2key = localStorage.getItem('__alert_visualAnalyze_gr2') ? localStorage.getItem('__alert_visualAnalyze_gr2') :tags[0]
+        const gr3key = localStorage.getItem('__alert_visualAnalyze_gr3') ? localStorage.getItem('__alert_visualAnalyze_gr3') :tags[1]
         switch(level){
           case 1:
             val = [gr1]
             break;
           case 2:
-              val = [gr1,{key: tags[0], value: ''}]
+              val = [gr1,{key: gr2key, value: ''}]
               break;
           case 3:
-              val = [gr1,{key: tags[0], value: ''},{key: tags[1], value: ''}]
+              val = [gr1,{key: gr2key, value: ''},{key: gr3key, value: ''}]
               break;
         }
         const res = yield call(queryVisualRes,{ tags: val})
@@ -136,7 +142,7 @@ export default {
 
       }else{
         let groupListData = yield call(queryVisual, {
-          "incidentGroup": showIncidentGroup !== undefined ? showIncidentGroup : true,
+          "incidentGroup": showIncidentGroup !== undefined ? showIncidentGroup : isShowIncidentGroup,
             tags: [
               visualSelect,
               {key: localStorage.getItem('__alert_visualAnalyze_gr2'), value: ""},
