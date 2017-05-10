@@ -47,7 +47,7 @@ const chatOpsModal = ({currentData, closeChatOpsModal, onOk, onCancal, form, int
                 return;
             }
             const value = form.getFieldValue('roomOption')
-            onOk(value)
+            onOk(JSON.parse(value))
 
             form.resetFields();
         })
@@ -81,7 +81,7 @@ const chatOpsModal = ({currentData, closeChatOpsModal, onOk, onCancal, form, int
                             <Select style={{width: '90%'}} placeholder={formatMessage({...localeMessage['modal_noRoomName']})}>
                                 {
                                     chatOpsRooms.map( (item, index) => {
-                                        return <Option className={styles.menuItem} key={item._id} value={item['_id']}>{item.topic}</Option>
+                                        return <Option className={styles.menuItem} key={item._id} value={JSON.stringify({id: item['_id'], roomName: item.topic})}>{item.topic}</Option>
                                     })
                                 }
                             </Select>

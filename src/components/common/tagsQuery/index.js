@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import styles from './index.less'
 import { Modal, Button, Form, Select, Row, Col, Input, Table, Popover, Radio} from 'antd';
 import { classnames } from '../../../utils'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const Item = Form.Item;
 class TagsQuery extends Component{
@@ -22,7 +23,8 @@ class TagsQuery extends Component{
             mouseLeave, 
             deleteItemByKeyboard, 
             queryTagValues, 
-            addItem
+            addItem,
+            intl: {formatMessage}
         } = this.props;
 
         let timer = null;
@@ -31,6 +33,13 @@ class TagsQuery extends Component{
             'iconfont',
             'icon-anonymous-iconfont'
         )
+
+        const localeMessage = defineMessages({
+          placeholder: {
+              id: 'modal.tag.select',
+              defaultMessage: '请选择{name}'
+          }
+        })
 
         const itemLayout = {
             labelCol: { span: 4 },
@@ -76,7 +85,7 @@ class TagsQuery extends Component{
                                             }
                                             <li>
                                                 <div className={styles.tags_input}>
-                                                    <input type={'text'} placeholder={`请选择${tagGroup.keyName}`} onChange={ (e) => {
+                                                    <input ref={`input_${tagGroup.key}`} type={'text'} placeholder={formatMessage(localeMessage['placeholder'], {name: `${tagGroup.keyName}`})} onChange={ (e) => {
                                                         e.persist();
                                                         clearTimeout(timer)
                                                         
@@ -103,12 +112,16 @@ class TagsQuery extends Component{
                                         </ul>
                                         {
                                             tagGroup.tagSpread ?
-                                            <ul className={styles.tags_query_content} onMouseLeave={ () => {mouseLeave(JSON.stringify({field: tagGroup.key}))}}>
+                                            <ul className={styles.tags_query_content} onMouseLeave={ () => {
+                                                mouseLeave(JSON.stringify({field: tagGroup.key}))
+                                                this.refs[`input_${tagGroup.key}`].blur();
+                                            }}>
                                                 {
                                                     selectList.length > 0 ? selectList.map( (item, itemIndex) => {
                                                         return (
                                                             <li key={itemIndex} className={styles.tags_query_item} data-id={JSON.stringify({field: tagGroup.key, item: item})} onClick={ (e) => {
                                                                 addItem(e)
+                                                                this.refs[`input_${tagGroup.key}`]['value'] = '';
                                                             }}>
                                                                 {renderName(item.key, item.value)}
                                                             </li>
@@ -139,4 +152,4 @@ TagsQuery.propTypes = {
 
 }
 
-export default Form.create()(TagsQuery);
+export default injectIntl(Form.create()(TagsQuery));
