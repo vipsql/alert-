@@ -71,6 +71,25 @@ class VisualAnalyze extends Component {
           resList
       } = this.props
 
+      const formatMessages = defineMessages({
+          groupBy:{
+            id: 'visualAnalyze.groupBy',
+            defaultMessage: '分组',
+          },
+          title: {
+            id: 'visualAnalyze.title',
+            defaultMessage: '可视化分析',
+          },
+          incidentGroup: {
+            id: 'visualAnalyze.incidentGroup',
+            defaultMessage: '只显示有故障的分组',
+          },
+          noData: {
+            id: 'visualAnalyze.noData',
+            defaultMessage: '暂无数据，请重新选择条件',
+          }
+      })
+
       const content = alertList.length > 0 ?
       alertList.map((item, index) => {
         return (
@@ -84,7 +103,7 @@ class VisualAnalyze extends Component {
       let isShowImg = false //是否显示图片
       const groupListComponent =  groupList.length > 0 && groupList.map((item, index) => {
           
-            const tagsList = item.values.map( (childItem, childIndex) => {
+            const tagsList = item.values.length > 0 && item.values.map( (childItem, childIndex) => {
                 return (
                         <div className={styles.tagsGroup} key={childIndex} data-gr2Val={item.tagValue} data-gr3Val={childItem.value}  onClick={(e)=>{showResList(e)}}>
                             
@@ -173,14 +192,26 @@ class VisualAnalyze extends Component {
       return(
         <div className={styles.visualBg}>
             <div className={styles.visualHead}>
-                {!isShowFouth && <Checkbox className={styles.showGroup} onChange={showIncidentGroup} checked={incidentGroup} >只显示有故障的分组</Checkbox>}
-                分组：<Select disabled = {isShowFouth ? true : false } defaultValue={tags[0]} onChange={gr2Change} className={styles.visualGroup}  >
-                        {tagsComponent}
-                    </Select>
-                    <span className={styles.levelArrow} >></span>
-                    <Select disabled = {isShowFouth ? true : false } defaultValue={tags[1]} onChange={gr3Change} className={styles.visualGroup}  >
-                        {tagsComponent}
-                    </Select>
+                {(!isShowFouth && tagsLevel > 3) && <Checkbox className={styles.showGroup} onChange={showIncidentGroup} checked={incidentGroup} ><FormattedMessage {...formatMessages['incidentGroup']} /></Checkbox>}
+                    {
+                     tagsLevel > 1 &&    
+                        <div style={{display: 'inline-block'}}>
+                            <FormattedMessage {...formatMessages['groupBy']} />：<Select disabled = {isShowFouth ? true : false } defaultValue={tags[0]} onChange={gr2Change} className={styles.visualGroup}  >
+                                {tagsComponent}
+                            </Select>
+                        </div>
+                    }
+                
+                    
+                    {
+                     tagsLevel > 2 &&    
+                        <div style={{display: 'inline-block'}}>
+                            <span className={styles.levelArrow} >></span>
+                            <Select disabled = {isShowFouth ? true : false } defaultValue={tags[1]} onChange={gr3Change} className={styles.visualGroup}  >
+                                {tagsComponent}
+                            </Select>
+                        </div>
+                    }
                     {
                      isShowFouth &&    
                         <div className={styles.visualFilter}>
@@ -194,14 +225,73 @@ class VisualAnalyze extends Component {
                             </Select>
                         </div>
                     }
+                 
                     
                 </div>
-                {!isShowFouth ? 
+
+                {(!isShowFouth && tagsLevel < 4)  ?
+
+                <div className={styles.visualAlert}>
+                    {resInfo.length > 0 &&
+                        <div className={styles.visualInfo}>
+                        { isShowImg && 
+                            <div className={styles.visualImg}>
+                                <Slider {...slideSettings2}>
+                                {resInfoImgComponent}
+                                </Slider>
+                            </div>
+                        }
+
+                            <ul className={styles.visualMsg}>
+                            {resInfoListComponent}
+                            </ul>
+                        </div> 
+
+                        
+                    }
+                    { resList.length > 0 ? 
+                    <ul className={styles.visualAlertGroup} style={{marginRight: tagsLevel<4 ? '0' : '276px' }}>
+                        {resComponent}
+                    </ul>
+                    : <div className={styles.visualNoData}><FormattedMessage {...formatMessages['noData']} /></div>
+                    }
+                </div>
+
+                : (!isShowFouth ? 
+
                 (groupList.length > 0 ? 
                 <ul className={styles.visualList}>
                     {groupListComponent}
                 </ul> 
-                : <div className={styles.visualNoData}>暂无数据，请重新选择条件</div>
+                : <div className={styles.visualNoData}><FormattedMessage {...formatMessages['noData']} /></div>
+                )
+                
+                : <div className={styles.visualAlert}>
+                    <div className={styles.visualInfo}>
+                    { isShowImg && 
+                        <div className={styles.visualImg}>
+                            <Slider {...slideSettings2}>
+                               {resInfoImgComponent}
+                            </Slider>
+                        </div>
+                    }
+
+                        <ul className={styles.visualMsg}>
+                           {resInfoListComponent}
+                        </ul>
+                    </div> 
+                    <ul className={styles.visualAlertGroup}>
+                        {resComponent}
+                    </ul>
+                </div>)
+            }
+            
+                {/*!isShowFouth ? 
+                (groupList.length > 0 ? 
+                <ul className={styles.visualList}>
+                    {groupListComponent}
+                </ul> 
+                : <div className={styles.visualNoData}><FormattedMessage {...formatMessages['noData']} /></div>
                 )
                 
                 :
@@ -223,7 +313,7 @@ class VisualAnalyze extends Component {
                         {resComponent}
                     </ul>
                 </div>
-                }
+                */}
             </div>
       )
     }

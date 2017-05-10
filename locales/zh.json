@@ -378,5 +378,10 @@
 
 
   "server.notStarted": "服务不可用",
-  "itsm.not.found": "ITSM服务不可用"
+  "itsm.not.found": "ITSM服务不可用",
+
+  "visualAnalyze.groupBy": "分组",
+  "visualAnalyze.incidentGroup": "只显示有故障的分组",
+   "visualAnalyze.noData": "暂无数据，请重新选择条件"
+
 }

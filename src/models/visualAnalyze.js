@@ -17,7 +17,7 @@ const initalState = {
    resList: [],
    isShowFouth: false,
    incidentGroup: true, 
-   tagsLevel: 4,
+   tagsLevel: 1,
    tasgFitler: '',
    resInfo: [],
    alertList: []
@@ -96,17 +96,43 @@ export default {
           const visualAnalyze = state.visualAnalyze
 
           return {
-            level: visualAnalyze.tagsLevel,
-            tags: visualAnalyze.tags
+            l: visualAnalyze.tagsLevel,
+            t: visualAnalyze.tags
           }
         })
         level = l
         tags = t
       }
       
-      let groupList
+      let groupList = []
+      level = 3
       // 如果标签层级小于4 
       if(level < 4){
+        let val 
+        const gr1 = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1"))
+        switch(level){
+          case 1:
+            val = [gr1]
+            break;
+          case 2:
+              val = [gr1,{key: tags[0], value: ''}]
+              break;
+          case 3:
+              val = [gr1,{key: tags[0], value: ''},{key: tags[1], value: ''}]
+              break;
+        }
+        const res = yield call(queryVisualRes,{ tags: val})
+        const resList = res.data
+        if(res.result && resList.length > 0){
+          yield put({
+            type: 'updateResListDirectly',
+            payload: {
+              tagsLevel: level,
+              isShowFouth: false,
+              resList
+            }
+          })
+        }
 
       }else{
         let groupListData = yield call(queryVisual, {
@@ -124,21 +150,18 @@ export default {
              return item
           })
         }
+
+         // 更新分组数据
+        yield put({
+          type: 'updateGroupList',
+          payload: {
+            groupList
+          }
+        })
        
       }
       
       
-      // 更新分组数据
-      yield put({
-        type: 'updateGroupList',
-        payload: {
-          groupList
-        }
-      })
-      
-
-      
-
     },
     *queryVisualRes({}, {select, put, call}) {
       const gr4key = localStorage.getItem('__alert_visualAnalyze_gr4')
@@ -248,13 +271,23 @@ export default {
         isShowFouth: false
       }
     },
-    // 显示资源列表
+    // 显示资源列表(有4层)
     updateResList(state, {payload: {isShowFouth,tasgFitler, resList}}){
       
       return {
         ...state,
         isShowFouth,
         tasgFitler,
+        resList
+      }
+    },
+     // 显示资源列表(少于4层)
+    updateResListDirectly(state, {payload: {tagsLevel,isShowFouth, resList}}){
+      
+      return {
+        ...state,
+        tagsLevel,
+        isShowFouth,
         resList
       }
     }
