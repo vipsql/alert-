@@ -105,7 +105,7 @@ export default {
       }
       
       let groupList = []
-      level = 3
+      
       // 如果标签层级小于4 
       if(level < 4){
         let val 
