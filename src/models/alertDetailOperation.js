@@ -106,7 +106,8 @@ export default {
             let stringId = '' + viewDetailAlertId;
             const data = yield call(dispatchForm, {
                 id: stringId,
-                code: payload
+                code: payload.id,
+                name: payload.name
             })
             if(data.result){
                 //window.open(data.data.url)
@@ -153,7 +154,10 @@ export default {
             }
         })
         if (currentAlertDetail !== undefined && Object.keys(currentAlertDetail).length !== 0) {
-            const shareResult = yield shareRoom(payload, {
+            let roomId = payload.id;
+            let incidentId = currentAlertDetail.id;
+            let roomName = payload.roomName
+            const shareResult = yield shareRoom(roomId, incidentId, roomName, {
                 body: {
                     type: 'alert',
                     data: {

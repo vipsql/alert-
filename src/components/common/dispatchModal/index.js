@@ -47,7 +47,7 @@ const dispatchModal = ({currentData, closeDispatchModal, onOk, onCancal, form, i
                 return;
             }
             const value = form.getFieldValue('formOption')
-            onOk(value)
+            onOk(JSON.parse(value))
 
             form.resetFields();
         })
@@ -81,7 +81,7 @@ const dispatchModal = ({currentData, closeDispatchModal, onOk, onCancal, form, i
                             <Select style={{width: '90%'}} placeholder={formatMessage({...localeMessage['modal_noTicketType']})}>
                                 {
                                     formOptions.map( (item, index) => {
-                                        return <Option className={styles.menuItem} key={item.id} value={item.id}>{item.name}</Option>
+                                        return <Option className={styles.menuItem} key={item.id} value={JSON.stringify({id: item.id, name: item.name})}>{item.name}</Option>
                                     })
                                 }
                             </Select>
