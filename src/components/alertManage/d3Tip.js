@@ -6,6 +6,7 @@ import {event as currentEvent} from 'd3'
  */
 
 const el = document.createElement('div')
+
 el.id = 'tip'
 el.style.display = 'none'
 document.body.appendChild(el)

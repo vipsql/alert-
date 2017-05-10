@@ -135,13 +135,15 @@ class VisualAnalyze extends Component {
       const resComponent = resList.length > 0 && resList.map( (item,index) => {
           const resList = item.resources.map( (childItem, childIndex) => {
                 return (
-                    <li key={childIndex} data-id={childItem.resId}  onClick={(e)=>{showAlertList(e)}}>
-                        <Popover   content={content} trigger="click">
-                            <div className={styles.tagsRingTwo} style={{background: severityToColor[childItem['severity']]}}></div>
-                            {childItem['severity'] > 0 && <div className={styles.tagsRingOne} style={{background: severityToColor[childItem['severity']]}}></div>}
-                            <div className={styles.tagsName}>{childItem.resName}</div>
-                        </Popover>
-                    </li>
+                    <Popover key={childIndex}  content={content} trigger="click">
+                        <li key={childIndex} data-id={childItem.resId}  onClick={(e)=>{showAlertList(e)}}>
+                            
+                                <div className={styles.tagsRingTwo} style={{background: severityToColor[childItem['severity']]}}></div>
+                                {childItem['severity'] > 0 && <div className={styles.tagsRingOne} style={{background: severityToColor[childItem['severity']]}}></div>}
+                                <div className={styles.tagsName}>{childItem.resName}</div>
+                            
+                        </li>
+                    </Popover>
                 )
             })
           return (
@@ -268,54 +270,32 @@ class VisualAnalyze extends Component {
                 : <div className={styles.visualNoData}><FormattedMessage {...formatMessages['noData']} /></div>
                 )
                 
-                : <div className={styles.visualAlert}>
-                    <div className={styles.visualInfo}>
-                    { isShowImg && 
-                        <div className={styles.visualImg}>
-                            <Slider {...slideSettings2}>
-                               {resInfoImgComponent}
-                            </Slider>
-                        </div>
-                    }
-
-                        <ul className={styles.visualMsg}>
-                           {resInfoListComponent}
-                        </ul>
-                    </div> 
-                    <ul className={styles.visualAlertGroup}>
-                        {resComponent}
-                    </ul>
-                </div>)
-            }
-            
-                {/*!isShowFouth ? 
-                (groupList.length > 0 ? 
-                <ul className={styles.visualList}>
-                    {groupListComponent}
-                </ul> 
-                : <div className={styles.visualNoData}><FormattedMessage {...formatMessages['noData']} /></div>
-                )
-                
-                :
+                : 
+               
                 <div className={styles.visualAlert}>
-                    <div className={styles.visualInfo}>
-                    { isShowImg && 
-                        <div className={styles.visualImg}>
-                            <Slider {...slideSettings2}>
-                               {resInfoImgComponent}
-                            </Slider>
-                        </div>
-                    }
-
-                        <ul className={styles.visualMsg}>
-                           {resInfoListComponent}
-                        </ul>
-                    </div> 
-                    <ul className={styles.visualAlertGroup}>
+                     { resInfo.length > 0 &&
+                        <div className={styles.visualInfo}>
+                        { isShowImg && 
+                            <div className={styles.visualImg}>
+                                <Slider {...slideSettings2}>
+                                {resInfoImgComponent}
+                                </Slider>
+                            </div>
+                        }
+                            <ul className={styles.visualMsg}>
+                            {resInfoListComponent}
+                            </ul>
+                        </div> 
+                     }
+                    <ul className={styles.visualAlertGroup} style={{marginRight: resInfo.length>0 ? '276px' : '0' }}>
                         {resComponent}
                     </ul>
                 </div>
-                */}
+               
+
+                )
+            }
+            
             </div>
       )
     }
