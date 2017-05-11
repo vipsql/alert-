@@ -8,11 +8,7 @@ import { routerRedux } from 'dva/router';
 
 const initalState = {
    groupList: [], 
-   tags: [
-     '层级',
-     '站点',
-     '供网店'
-   ],
+   tags: [],
   //  isFirst: false, //是否从其他页面进入
    resList: [],
    isShowFouth: false,
@@ -67,7 +63,11 @@ export default {
       
       // isFirst表示从告警管理页面跳过来 否则为select切换选择
       if(isFirst){
-        
+        // 初始化状态
+        yield put({
+          type: 'init',
+          payload: initalState
+        })
         const tagsData = yield call(queryTags, {
             key: visualSelect.key,
             value: visualSelect.value
@@ -109,6 +109,7 @@ export default {
       const  isShowIncidentGroup = yield select(state => {
         return state.visualAnalyze.incidentGroup
       })
+      
       
       // 如果标签层级小于4 
       if(level < 4){
@@ -233,6 +234,13 @@ export default {
   },
 
   reducers: {
+    init(state, {payload: initalState}) {
+      return {
+        ...state,
+        ...initalState
+      }
+    },
+    
     expandList(state, { payload: {index, isExpand}}) {
       let newGroupList = state.groupList.slice(0)
       newGroupList[index]['isExpand'] = isExpand

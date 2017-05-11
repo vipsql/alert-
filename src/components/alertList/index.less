@@ -70,6 +70,7 @@
         }
         .visualFilter{
             display: inline-block;
+            transition: all ease .5s;
             .tagsFilter{
                 display: inline-block;
                 margin: 0px 5px;
@@ -113,6 +114,7 @@
     }
     .visualList{
         padding: 20px;
+        transition: all ease .5s;
         li{
             margin-bottom: 10px;
             .listHead{
@@ -169,6 +171,7 @@
                     position: absolute;
                     border-radius: 40px;
                     margin-left: -15px;
+                    // margin-top: -20px;
                     left: 50%;
                     top: 5px;
                     width: 30px;
@@ -357,6 +360,7 @@
         }
     }
     .visualBg{
+        position: relative;
         height: 100%;
         overflow: hidden;
         background: radial-gradient(50% 50%,#2065ac,#1c385e);
@@ -1198,5 +1202,14 @@
         border-radius: 10px;
         vertical-align: middle;
         margin-right: 5px;
+    }
+    // 用于可视化动画
+    .tagsGroupAnimation{
+        position: absolute;
+        // transition: all ease .5s;
+        border-radius: 50px;
+        width: 40px;
+        height: 40px;
+        background: rgb(57, 120, 187);
     }
 }

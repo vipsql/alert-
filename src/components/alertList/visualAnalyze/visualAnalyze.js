@@ -139,7 +139,7 @@ class VisualAnalyze extends Component {
                         <li key={childIndex} data-id={childItem.resId}  onClick={(e)=>{showAlertList(e)}}>
                             
                                 <div className={styles.tagsRingTwo} style={{background: severityToColor[childItem['severity']]}}></div>
-                                {childItem['severity'] > 0 && <div className={styles.tagsRingOne} style={{background: severityToColor[childItem['severity']]}}></div>}
+                                {childItem['severity'] > 0 && <div className={styles.tagsRingOne} style={{marginTop:'-20px', background: severityToColor[childItem['severity']]}}></div>}
                                 <div className={styles.tagsName}>{childItem.resName}</div>
                             
                         </li>
@@ -190,8 +190,9 @@ class VisualAnalyze extends Component {
                 <div className={styles.imgInfo} key={index}><img src={item} alt="" /></div>
             )
       })
-      
+      console.log('重新渲染')
       return(
+          
         <div className={styles.visualBg}>
             <div className={styles.visualHead}>
                 {(!isShowFouth && tagsLevel > 3) && <Checkbox className={styles.showGroup} onChange={showIncidentGroup} checked={incidentGroup} ><FormattedMessage {...formatMessages['incidentGroup']} /></Checkbox>}
@@ -206,9 +207,9 @@ class VisualAnalyze extends Component {
                     }
                 
                     
-                    {
+                    { 
                      tagsLevel > 2 &&    
-                        <div style={{display: 'inline-block'}}>
+                        <div style={{display: 'inline-block'}} id="visualGr2">
                             <span className={styles.levelArrow} >></span>
                             <Select disabled = {isShowFouth ? true : false } defaultValue={tags[1]} onChange={gr3Change} className={styles.visualGroup}  >
                                 {tagsComponent}
@@ -216,26 +217,22 @@ class VisualAnalyze extends Component {
                         </div>
                     }
                     
-                    {
-                     isShowFouth &&    
-                        <div className={styles.visualFilter}>
-                            >
-                            <div className={styles.tagsFilter} onClick={redirectTagsList}>
-                                <p>{tasgFitler}</p>
-                                <i className={tagsFilter}></i>
-                            </div>
-                            <Select defaultValue={tags[0]} onChange={gr4Change} className={styles.visualGroup}  >
-                                {tagsComponent}
-                            </Select>
+                    <div className={styles.visualFilter}  style={{opacity: isShowFouth ? 1 : 0}}>
+                        >
+                        <div className={styles.tagsFilter} onClick={redirectTagsList}>
+                            <p>{tasgFitler}</p>
+                            <i className={tagsFilter}></i>
                         </div>
-                    }
-                 
+                        <Select defaultValue={tags[0]} onChange={gr4Change} className={styles.visualGroup}  >
+                            {tagsComponent}
+                        </Select>
+                    </div>
                     
                 </div>
                 
-                {(!isShowFouth && tagsLevel < 4)  ?
-                
-                <div className={styles.visualAlert}>
+                {(tagsLevel < 4)  ?
+                /* 表示层级小于4层时，直接请求设备故障列表*/
+                <div className={styles.visualAlert} style={{opacity: !isShowFouth ? 1 : 0}}>
                     {resInfo.length > 0 &&
                         <div className={styles.visualInfo}>
                         { isShowImg && 
@@ -260,11 +257,11 @@ class VisualAnalyze extends Component {
                     : <div className={styles.visualNoData}><FormattedMessage {...formatMessages['noData']} /></div>
                     }
                 </div>
-                
+                /* 表示层级大于或等于4层时，按照正常流程*/
                 : (!isShowFouth ? 
                 
                 (groupList.length > 0 ? 
-                <ul className={styles.visualList}>
+                <ul className={styles.visualList} style={{opacity: !isShowFouth ? 1 : 0}}>
                     {groupListComponent}
                 </ul> 
                 : <div className={styles.visualNoData}><FormattedMessage {...formatMessages['noData']} /></div>
