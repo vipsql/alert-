@@ -399,7 +399,7 @@ class AlertListManage extends Component{
             </TabPane>
             { isShowVisualTab && 
            <TabPane tab={<span  className={tabVisual}><FormattedMessage {...localeMessage['tab_visual']} /></span>}  key={3}>
-                <VisualAnalyzeWrap />
+                <VisualAnalyzeWrap key={new Date().getTime()}/>
             </TabPane>
             }
           </Tabs>
