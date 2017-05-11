@@ -131,6 +131,14 @@ export default {
       yield put({ type: 'filterTags'})
       const filteredTags = yield select( state => state.tagListFilter.filteredTags )
       yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
+    },
+    /**
+     *  自动刷新
+     */
+    *refresh({payload}, {select, put, call}) {
+      yield put({ type: 'filterTags'})
+      const filteredTags = yield select( state => state.tagListFilter.filteredTags )
+      yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
     }
   },
 
