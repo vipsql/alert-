@@ -236,17 +236,17 @@ class Chart extends Component{
                     currentEvent.preventDefault()
                   })
                 .on("click", (d) => {
-                    
                     d3Tip.hide()
                     let alertListPath = {};
-                    let keyValue = d.name;
                     let pathArr = d.path.split('/');
                     if ( pathArr !== undefined && pathArr[0] !== undefined && pathArr[1] !== undefined ) {
                         let temp = pathArr[0];
                         if ( pathArr[0] == 'severity' || pathArr[0] == 'status') {
                             alertListPath[temp] = {key: pathArr[0], keyName: d.parent.name, values: pathArr[1]};
+                        } else if (pathArr[0] == 'source') {
+                            alertListPath[temp] = {key: pathArr[0], keyName: d.parent.name, values: d.name};
                         } else {
-                            alertListPath[temp] = {key: pathArr[0], keyName: d.parent.name, values: keyValue};
+                            alertListPath[temp] = {key: d.parent.name, keyName: d.parent.name, values: d.name};
                         }
                     }
                     alertListPath.severity = d.maxSeverity == 0
