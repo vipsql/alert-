@@ -264,7 +264,7 @@ export default {
       let __alert_visualAnalyze_gr1 = shareSelectTags.filter( item => item.key !== 'severity' && item.key !== 'status' && item.key !== 'source').map( (item) => {
         let child = {};
         child['key'] = item['key']
-        child['values'] = item.values.join(',')
+        child['value'] = item.values.join(',')
         return child
       })
       localStorage.setItem('__alert_visualAnalyze_gr1', JSON.stringify(__alert_visualAnalyze_gr1))
