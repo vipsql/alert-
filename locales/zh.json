@@ -78,7 +78,7 @@
   "alertOperate.close": "关闭告警",
   "alertOperate.resolve": "解决告警",
   "alertOperate.merge": "合并告警",
-  "alertOperate.relieve": "解除告警",
+  "alertOperate.relieve": "解除合并",
   "alertOperate.moreAcitons": "更多操作",
   "alertOperate.shareChatOps": "分享到ChatOps",
   "alertOperate.columns": "列定制",
@@ -125,7 +125,7 @@
   "modal.rollup": "合并告警",
   "modal.remove": "移除",
   "modal.rollupTitle": "合并告警前，请选择一条告警做源告警",
-  "modal.unrollup": "解除告警",
+  "modal.unrollup": "解除合并",
   "modal.unrollupMessage": "解除{name}的合并告警",
 
   "alertDetail.basic": "基本信息",

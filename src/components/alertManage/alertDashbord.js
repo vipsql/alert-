@@ -246,7 +246,7 @@ class Chart extends Component{
                         } else if (pathArr[0] == 'source') {
                             alertListPath[temp] = {key: pathArr[0], keyName: d.parent.name, values: d.name};
                         } else {
-                            alertListPath[temp] = {key: d.parent.name, keyName: d.parent.name, values: d.name};
+                            alertListPath[d.parent.name] = {key: d.parent.name, keyName: d.parent.name, values: d.name};
                         }
                     }
                     alertListPath.severity = d.maxSeverity == 0

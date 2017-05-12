@@ -3,7 +3,7 @@ import { Button, Popover } from 'antd';
 import { connect } from 'dva'
 import VisualAnalyze from './visualAnalyze'
 import styles from '../index.less'
-
+import $ from 'jquery'
 
 const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
   
@@ -12,20 +12,43 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
 
     showResList(e){
         const target = e.target,
-              gr2Val = target.parentNode.getAttribute('data-gr2Val'),
-              gr3Val = target.parentNode.getAttribute('data-gr2Val')
+              parentNode = target.parentNode,
+              gr2Val = parentNode.getAttribute('data-gr2Val'),
+              gr3Val = parentNode.getAttribute('data-gr3Val')
 
               localStorage.setItem('__alert_visualAnalyze_gr2Val',gr2Val)
               localStorage.setItem('__alert_visualAnalyze_gr3Val',gr3Val)
-        dispatch({
-            type: 'visualAnalyze/queryVisualRes'
+        const $_parentNode = $(parentNode),
+              offset = $_parentNode.offset(),
+              left = offset.left,
+              width = $_parentNode.width()/2,
+              top = offset.top
+        
+        const cloneNode = $('<div/>')
+        cloneNode.addClass('tagsGroupAnimation').css({
+            left: left + width,
+            top: top
+        }).appendTo('body')
+        const targetEle = $('#visualGr2'),
+              targetLeft =  targetEle.offset().left,
+              targetTop =  targetEle.offset().top
+              
+        cloneNode.animate({
+            left: targetLeft + 90,
+            top: targetTop
+        },300,() => {
+            cloneNode.remove()
+             dispatch({
+                type: 'visualAnalyze/queryVisualRes'
+            })
+            dispatch({
+                type: 'visualAnalyze/queryResInfo',
+                payload: {
+                    res: parentNode.getAttribute('data-gr3Val')
+                }
+            })
         })
-        dispatch({
-            type: 'visualAnalyze/queryResInfo',
-            payload: {
-                res: target.parentNode.getAttribute('data-gr3Val')
-            }
-        })
+       
         
     },
     // toggleIncidentGroup(){

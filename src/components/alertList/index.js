@@ -317,11 +317,8 @@ class AlertListManage extends Component{
           if(!window.__alert_refresh_timer){
             
             window.__alert_refresh_timer = setInterval(function(){
-              
-              const originTags = localStorage.getItem('alertListPath')
               dispatch({
-                type: 'alertList/queryAlertBar',
-                payload: JSON.parse(originTags) || {}
+                type: 'tagListFilter/refresh',
               })
             }, 60000)
           }
@@ -399,7 +396,7 @@ class AlertListManage extends Component{
             </TabPane>
             { isShowVisualTab && 
            <TabPane tab={<span  className={tabVisual}><FormattedMessage {...localeMessage['tab_visual']} /></span>}  key={3}>
-                <VisualAnalyzeWrap />
+                <VisualAnalyzeWrap key={new Date().getTime()}/>
             </TabPane>
             }
           </Tabs>
