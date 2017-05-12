@@ -104,8 +104,11 @@
             border: 1px solid #297ebb;
             color: #5994d6;
             background-color: #0d5990;
+            transition: all .3s ease-in-out;
             &:hover{
-                border-color: #2bb4f4;
+                //border-color: #2bb4f4;
+                background-color: #2d98db;
+                color: #fff;
             }
         }
     }
@@ -126,7 +129,10 @@
         cursor: pointer;
         transition: border .2s;
         &:hover{
-            border-color: #2bb4f4;
+            background-color: #2d98db;
+            span, i{
+                color: #fff;
+            }
         }
         &.rightBtn{
             float: right;

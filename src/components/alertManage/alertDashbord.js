@@ -261,10 +261,13 @@ class Chart extends Component{
                                                         ? {key: 'status', keyName: window.__alert_appLocaleData.messages['constants.state'], values: '190'} : undefined;
                     alertListPath.selectedTime = this.props.selectedTime;
                     localStorage.setItem('alertListPath', JSON.stringify(alertListPath))
-                    localStorage.setItem('__visual_group', d.parent.path)
-                    const gr1 = {key:d.parent.name, value: d.name}
-                    localStorage.setItem('__alert_visualAnalyze_gr1', JSON.stringify(gr1))
-                    
+
+                    const path = d.parent.path
+                    localStorage.setItem('__visual_group', path)
+                    if(path != 'source' && path != 'status' && path != 'severity'){
+                        const gr1 = [{key:d.parent.name, value: d.name}]
+                        localStorage.setItem('__alert_visualAnalyze_gr1', JSON.stringify(gr1))
+                    }
                     window.location.hash = "#/alertManage/" + d.path;
                 })
                 
