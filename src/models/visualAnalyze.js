@@ -39,7 +39,7 @@ export default {
           dispatch({
             type: 'queryVisualList',
             payload: {isFirst: true}
-          });
+          })
         }
       });
     },
@@ -69,8 +69,7 @@ export default {
           payload: initalState
         })
         const tagsData = yield call(queryTags, {
-            key: visualSelect.key,
-            value: visualSelect.value
+            tags: visualSelect
         })
         
         if(tagsData.result){
@@ -111,8 +110,8 @@ export default {
       })
       
       
-      // 如果标签层级小于4 
-      if(level < 4){
+      // 如果标签层级小于指定层级
+      if(level < visualSelect.length +3){
         let val 
         const gr1 = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1"))
         const gr2key = localStorage.getItem('__alert_visualAnalyze_gr2') ? localStorage.getItem('__alert_visualAnalyze_gr2') :tags[0]
@@ -144,11 +143,10 @@ export default {
       }else{
         let groupListData = yield call(queryVisual, {
           "incidentGroup": showIncidentGroup !== undefined ? showIncidentGroup : isShowIncidentGroup,
-            tags: [
-              visualSelect,
+            tags: visualSelect.concat([
               {key: localStorage.getItem('__alert_visualAnalyze_gr2'), value: ""},
               {key: localStorage.getItem('__alert_visualAnalyze_gr3'), value: ""}
-            ]
+            ])
         })
         if(groupListData.result){
           // 一级分组列表
@@ -179,12 +177,11 @@ export default {
         })
       const gr3Val = localStorage.getItem('__alert_visualAnalyze_gr3Val')
       const res = yield call(queryVisualRes, {
-          tags: [
-            JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")),
+          tags: JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")).concat([
             {key: localStorage.getItem("__alert_visualAnalyze_gr2"), value: localStorage.getItem('__alert_visualAnalyze_gr2Val')},
             {key: localStorage.getItem("__alert_visualAnalyze_gr3"), value: gr3Val},
             {key: gr4key ? gr4key : tags[0], value: ''}
-          ]
+          ])
       })
       
       const resList = res.data
