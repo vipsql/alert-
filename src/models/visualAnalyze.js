@@ -110,8 +110,8 @@ export default {
       })
       
       
-      // 如果标签层级小于4 
-      if(level < 4){
+      // 如果标签层级小于指定层级
+      if(level < visualSelect.length +3){
         let val 
         const gr1 = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1"))
         const gr2key = localStorage.getItem('__alert_visualAnalyze_gr2') ? localStorage.getItem('__alert_visualAnalyze_gr2') :tags[0]
