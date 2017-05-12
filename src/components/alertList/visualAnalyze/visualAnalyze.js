@@ -86,7 +86,7 @@ class VisualAnalyze extends Component {
           },
           noData: {
             id: 'visualAnalyze.noData',
-            defaultMessage: '暂无数据，请重新选择条件',
+            defaultMessage: '暂无数据',
           }
       })
 
@@ -98,7 +98,7 @@ class VisualAnalyze extends Component {
             </div>
         )
       }) :
-      (<div>暂无数据</div>)
+      (<div><FormattedMessage {...formatMessages['noData']}/></div>)
   
       let isShowImg = false //是否显示图片
       const groupListComponent =  groupList.length > 0 && groupList.map((item, index) => {
@@ -135,7 +135,7 @@ class VisualAnalyze extends Component {
       const resComponent = resList.length > 0 && resList.map( (item,index) => {
           const resList = item.resources.map( (childItem, childIndex) => {
                 return (
-                    <Popover key={childIndex}  content={content} trigger="click">
+                    <Popover key={childIndex}  content={content} >
                         <li key={childIndex} data-id={childItem.resId}  onClick={(e)=>{showAlertList(e)}}>
                             
                                 <div className={styles.tagsRingTwo} style={{background: severityToColor[childItem['severity']]}}></div>
@@ -190,7 +190,7 @@ class VisualAnalyze extends Component {
                 <div className={styles.imgInfo} key={index}><img src={item} alt="" /></div>
             )
       })
-      console.log('重新渲染')
+      
       return(
           
         <div className={styles.visualBg}>

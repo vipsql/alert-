@@ -36,7 +36,7 @@
 
   "alertList.tabs.list": "List View",
   "alertList.tabs.timeList": "Timeline",
-  "alertList.tabs.visual": "Visual Analyze",
+  "alertList.tabs.visual": "Analyzer",
   "alertList.autoRefresh": "Auto Refresh",
   "alertList.selectTags": "Select Tags",
 
@@ -389,6 +389,6 @@
 
   "visualAnalyze.groupBy": "groupBy",
   "visualAnalyze.incidentGroup": "Show only the defective grouping",
-  "visualAnalyze.noData": "no data, please choose again"
+  "visualAnalyze.noData": "No Data"
 
 }

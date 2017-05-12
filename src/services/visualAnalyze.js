@@ -3,8 +3,11 @@ import { request } from '../utils'
 // 获取标签
 export async function queryTags(params) {
   return request(`/visual/storeKeys`, {
-    method: 'get',
-    body: params
+    method: 'post',
+    body: JSON.stringify(params),
+    headers: {
+        'Content-Type': 'application/json',
+    }
   })
 }
 
