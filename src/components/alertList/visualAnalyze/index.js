@@ -9,10 +9,11 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
   
   const props = {
     ...visualAnalyze,
-
+    
     showResList(e){
-        const target = e.target,
-              parentNode = target.parentNode,
+        const target = e.target
+        if(target.className.indexOf('tagsGroup') > -1) return
+        const parentNode = target.parentNode,
               gr2Val = parentNode.getAttribute('data-gr2Val'),
               gr3Val = parentNode.getAttribute('data-gr3Val')
 
@@ -51,12 +52,6 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
        
         
     },
-    // toggleIncidentGroup(){
-    //     dispatch({
-    //         type: 'visualAnalyze/toggleIncidentGroup',
-    //         payload: 
-    //     })
-    // },
     detailClick(e) {
       const alertId = e.target.getAttribute('data-id')
       dispatch({
@@ -69,10 +64,16 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
         while(target.tagName.toLowerCase() != 'li'){
             target = target.parentNode
         }
-        dispatch({
-            type: 'visualAnalyze/showAlertList',
-            payload: target.getAttribute('data-id')
-        })
+        window.__uyun_showAlertList = setTimeout(() => {
+            dispatch({
+                type: 'visualAnalyze/showAlertList',
+                payload: target.getAttribute('data-id')
+            })
+        },300)
+        
+    },
+    cancelShowAlertList(){
+        clearTimeout(window.__uyun_showAlertList)
     },
     handleExpand(e) {
         const target = e.target,
@@ -88,6 +89,7 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
         })
     },
     redirectTagsList(){
+        localStorage.removeItem('__alert_visualAnalyze_gr4')
         dispatch({
             type: 'visualAnalyze/redirectTagsList'
         })

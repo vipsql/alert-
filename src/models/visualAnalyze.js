@@ -36,6 +36,7 @@ export default {
     init({ dispatch, history }) {
       history.listen((location, state) => {
         if (pathToRegexp('/alertManage/:alertClassify/:alertList').test(location.pathname)) {
+          
           dispatch({
             type: 'queryVisualList',
             payload: {isFirst: true}
@@ -47,7 +48,6 @@ export default {
 
   effects: {
     *queryVisualList({payload}, {select, put, call}) {
-      
       // {"key":"source", "value": "古荡派出所"}
       let level
       let tags
@@ -61,16 +61,17 @@ export default {
       
       const visualSelect = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1"))
       
-      // isFirst表示从告警管理页面跳过来 否则为select切换选择
+      // isFirst表示从重新查询 否则为select切换选择
       if(isFirst){
         // 初始化状态
         yield put({
-          type: 'init',
-          payload: initalState
+          type: 'init'
         })
+        
         const tagsData = yield call(queryTags, {
             tags: visualSelect
         })
+        
         
         if(tagsData.result){
           
@@ -88,6 +89,8 @@ export default {
               level
             }
           })
+        }else{
+          message.error(tagsData.message)
         }
 
       }else{
@@ -154,6 +157,8 @@ export default {
              item.isExpand = true
              return item
           })
+        }else{
+          message.error(groupListData.message)
         }
 
          // 更新分组数据
@@ -194,6 +199,8 @@ export default {
             resList
           }
         })
+      }else{
+        message.error(res.message)
       }
 
 
@@ -208,7 +215,9 @@ export default {
           type: 'updateResInfo',
           payload: resInfo.data
         })
-      }
+      }else{
+          message.error(resInfo.message)
+        }
     },
     *showAlertList({payload}, {select, put, call}){
       
@@ -224,14 +233,16 @@ export default {
           type: 'updateAlertList',
           payload: alertList.data
         })
-      }
+      }else{
+          message.error(alertList.message)
+        }
       
     }
     
   },
 
   reducers: {
-    init(state, {payload: initalState}) {
+    init(state) {
       return {
         ...state,
         ...initalState
