@@ -47,7 +47,6 @@ export default {
 
   effects: {
     *queryVisualList({payload}, {select, put, call}) {
-      
       // {"key":"source", "value": "古荡派出所"}
       let level
       let tags
@@ -88,6 +87,8 @@ export default {
               level
             }
           })
+        }else{
+          message.error(tagsData.message)
         }
 
       }else{
@@ -154,6 +155,8 @@ export default {
              item.isExpand = true
              return item
           })
+        }else{
+          message.error(groupListData.message)
         }
 
          // 更新分组数据
@@ -194,6 +197,8 @@ export default {
             resList
           }
         })
+      }else{
+        message.error(res.message)
       }
 
 
@@ -208,7 +213,9 @@ export default {
           type: 'updateResInfo',
           payload: resInfo.data
         })
-      }
+      }else{
+          message.error(resInfo.message)
+        }
     },
     *showAlertList({payload}, {select, put, call}){
       
@@ -224,7 +231,9 @@ export default {
           type: 'updateAlertList',
           payload: alertList.data
         })
-      }
+      }else{
+          message.error(alertList.message)
+        }
       
     }
     
