@@ -125,12 +125,14 @@ export default {
       yield put({ type: 'toggleTagsSelect', payload: false})
       const filteredTags = yield select( state => state.tagListFilter.filteredTags )
       yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
+      yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
     },
     *removeTag({payload}, {select, put, call}) {
       yield put({ type: 'removeSelectTag', payload: payload })
       yield put({ type: 'filterTags'})
       const filteredTags = yield select( state => state.tagListFilter.filteredTags )
       yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
+      yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
     },
     /**
      *  自动刷新
@@ -259,6 +261,13 @@ export default {
             }
         })
       })
+      let __alert_visualAnalyze_gr1 = shareSelectTags.filter( item => item.key !== 'severity' && item.key !== 'status' && item.key !== 'source').map( (item) => {
+        let child = {};
+        child['key'] = item['key']
+        child['value'] = item.values.join(',')
+        return child
+      })
+      localStorage.setItem('__alert_visualAnalyze_gr1', JSON.stringify(__alert_visualAnalyze_gr1))
       return { ...state, filteredTags: source }
     },
     // remove select tag
