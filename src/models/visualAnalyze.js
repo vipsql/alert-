@@ -36,6 +36,7 @@ export default {
     init({ dispatch, history }) {
       history.listen((location, state) => {
         if (pathToRegexp('/alertManage/:alertClassify/:alertList').test(location.pathname)) {
+          
           dispatch({
             type: 'queryVisualList',
             payload: {isFirst: true}
@@ -60,16 +61,17 @@ export default {
       
       const visualSelect = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1"))
       
-      // isFirst表示从告警管理页面跳过来 否则为select切换选择
+      // isFirst表示从重新查询 否则为select切换选择
       if(isFirst){
         // 初始化状态
         yield put({
-          type: 'init',
-          payload: initalState
+          type: 'init'
         })
+        
         const tagsData = yield call(queryTags, {
             tags: visualSelect
         })
+        
         
         if(tagsData.result){
           
@@ -240,7 +242,7 @@ export default {
   },
 
   reducers: {
-    init(state, {payload: initalState}) {
+    init(state) {
       return {
         ...state,
         ...initalState

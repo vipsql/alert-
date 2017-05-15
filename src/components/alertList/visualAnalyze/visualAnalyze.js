@@ -48,6 +48,12 @@ class VisualAnalyze extends Component {
     componentDidMount(){
       
     }
+    componentWillReceiveProps(nextProps){
+        
+        if(nextProps !== this.props){
+            return true
+        }
+    }
    
     render(){
       const {
@@ -60,6 +66,7 @@ class VisualAnalyze extends Component {
           showIncidentGroup,
           showAlertList,
           redirectTagsList,
+          cancelShowAlertList,
           tags,
           resInfo,
           isShowFouth,
@@ -108,7 +115,7 @@ class VisualAnalyze extends Component {
                         <div className={styles.tagsGroup} key={childIndex} data-gr2Val={item.tagValue} data-gr3Val={childItem.value}  onClick={(e)=>{showResList(e)}}>
                             
                                 <div className={styles.tagsRingTwo} style={{background: severityToColor[childItem['severity']]}}></div>
-                                {childItem['severity'] > 0 && <div className={styles.tagsRingOne} style={{background: severityToColor[childItem['severity']]}}></div>}
+                                {childItem['severity'] > -1 && <div className={styles.tagsRingOne} style={{background: severityToColor[childItem['severity']]}}></div>}
                                 <div className={styles.tagsName}>{childItem.value}</div>
                             
                         </div>
@@ -136,10 +143,10 @@ class VisualAnalyze extends Component {
           const resList = item.resources.map( (childItem, childIndex) => {
                 return (
                     <Popover key={childIndex}  content={content} >
-                        <li key={childIndex} data-id={childItem.resId}  onClick={(e)=>{showAlertList(e)}}>
+                        <li key={childIndex} data-id={childItem.resId} onMouseLeave={cancelShowAlertList}  onMouseEnter={(e)=>{showAlertList(e)}}>
                             
                                 <div className={styles.tagsRingTwo} style={{background: severityToColor[childItem['severity']]}}></div>
-                                {childItem['severity'] > 0 && <div className={styles.tagsRingOne} style={{marginTop:'-20px', background: severityToColor[childItem['severity']]}}></div>}
+                                {childItem['severity'] > -1 && <div className={styles.tagsRingOne} style={{marginTop:'-20px', background: severityToColor[childItem['severity']]}}></div>}
                                 <div className={styles.tagsName}>{childItem.resName}</div>
                             
                         </li>
@@ -161,7 +168,7 @@ class VisualAnalyze extends Component {
                         
           )
       })
-
+      
       const tagsComponent = tags.length > 0 && tags.map( (item,index) =>{
         return (
             <Select.Option key={index} value={item}>{item}</Select.Option>
@@ -223,9 +230,9 @@ class VisualAnalyze extends Component {
                             <p>{tasgFitler}</p>
                             <i className={tagsFilter}></i>
                         </div>
-                        <Select defaultValue={tags[0]} onChange={gr4Change} className={styles.visualGroup}  >
+                        {tags.length > 0 && <Select defaultValue={tags[0]} onChange={gr4Change} className={styles.visualGroup}  >
                             {tagsComponent}
-                        </Select>
+                        </Select>}
                     </div>
                     
                 </div>

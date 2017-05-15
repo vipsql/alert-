@@ -166,6 +166,9 @@
                     width: 40px;
                     height: 40px;
                     opacity: .5;
+                    animation: pulse 2s ease-in-out infinite;
+                    -webkit-animation: pulse 2s ease-in-out infinite;
+                    -moz-animation: pulse 2s ease-in-out infinite;
                 }
                 .tagsRingOne{
                     position: absolute;
@@ -176,11 +179,14 @@
                     top: 5px;
                     width: 30px;
                     height: 30px;
+
+                    // opacity: 1
                 }
                 .tagsName{
                     position: relative;
                     top: 50px; 
                 }
+                
 
             }
         }
@@ -203,6 +209,7 @@
                 color: #6ac5fe;
                 text-align: center;
                 z-index: 2;
+                word-wrap: break-word;
             }
             .visualAlertGroupLi{ 
                 position: relative;
@@ -254,6 +261,9 @@
                             width: 40px;
                             height: 40px;
                             opacity: .5;
+                            animation: pulse 2s ease-in-out infinite;
+                            -webkit-animation: pulse 2s ease-in-out infinite;
+                            -moz-animation: pulse 2s ease-in-out infinite;
                         }
                         .tagsRingOne{
                             position: absolute;
@@ -1212,4 +1222,20 @@
         height: 40px;
         background: rgb(57, 120, 187);
     }
+}
+
+@keyframes pulse {
+    0% { -webkit-transform: scale(0); opacity: 0.0; }
+    50% { opacity: 1.0; }
+    100% { -webkit-transform: scale(1.2); opacity: 0.0; }
+}
+@-webkit-keyframes pulse {
+    0% { -webkit-transform: scale(0); opacity: 0.0; }
+    50% { opacity: 1.0; }
+    100% { -webkit-transform: scale(1.2); opacity: 0.0; }
+}
+@-moz-keyframes pulse  {
+    0% { -moz-transform: scale(0); opacity: 0.0; }
+    50% { opacity: 1.0; }
+    100% { -moz-transform: scale(1.2); opacity: 0.0; }
 }
