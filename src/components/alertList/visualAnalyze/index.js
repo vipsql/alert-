@@ -11,8 +11,9 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
     ...visualAnalyze,
     
     showResList(e){
-        const target = e.target,
-              parentNode = target.parentNode,
+        const target = e.target
+        if(target.className.indexOf('tagsGroup') > -1) return
+        const parentNode = target.parentNode,
               gr2Val = parentNode.getAttribute('data-gr2Val'),
               gr3Val = parentNode.getAttribute('data-gr3Val')
 
@@ -88,6 +89,7 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
         })
     },
     redirectTagsList(){
+        localStorage.removeItem('__alert_visualAnalyze_gr4')
         dispatch({
             type: 'visualAnalyze/redirectTagsList'
         })
