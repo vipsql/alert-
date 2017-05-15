@@ -1373,6 +1373,19 @@ RuleEditor.propTypes = {
         actionChatOps: PropTypes.shape({
             chatOpsRoomId: PropTypes.string
         }),
+        // 动作升级
+        actionUpgrade: PropTypes.shape({
+            notificationGroupings: PropTypes.shape({
+                delay: PropTypes.number,
+                recipients: PropTypes.array
+            }),
+            notificationMode: PropTypes.shape({
+                notificationMode: PropTypes.string,
+                emailTitle: PropTypes.string,
+                emailMessage: PropTypes.string,
+                smsMessage: PropTypes.string
+            })
+        }),
     })
 };
 
