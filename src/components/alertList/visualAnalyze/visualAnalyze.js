@@ -260,13 +260,13 @@ class VisualAnalyze extends Component {
                         </div>
                     }
                     
-                    <div className={styles.visualFilter}  style={{opacity: isShowFouth ? 1 : 0}}>
+                    <div className={styles.visualFilter}   style={{opacity: isShowFouth ? 1 : 0 }}>
                         >
                         <div className={styles.tagsFilter} onClick={redirectTagsList}>
                             <p>{tasgFitler}</p>
                             <i className={tagsFilter}></i>
                         </div>
-                        {tags.length > 0 && <Select defaultValue={gr4State != '' ? gr4State : tags[0]} onChange={gr4ChangeOverride} className={styles.visualGroup}  >
+                        {tags.length > 0 && <Select disabled={!isShowFouth ? true : false}  defaultValue={gr4State != '' ? gr4State : tags[0]} onChange={gr4ChangeOverride} className={styles.visualGroup}  >
                             {tagsComponent}
                         </Select>}
                     </div>
