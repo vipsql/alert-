@@ -31,9 +31,6 @@ export default {
             type: 'isSetTags'
           })
         }
-        dispatch({
-          type: 'getUserInfo'
-        })
       })
     },
   },
@@ -81,17 +78,17 @@ export default {
         })
       }
     },
-    *getUserInfo({payload}, {put, call, select}) {
-      //const userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
-      //if (userInfo === null) {
-        const infoResult = yield getUserInformation()
-        if (infoResult.result) {
-          yield localStorage.setItem('UYUN_Alert_USERINFO', JSON.stringify(infoResult.data))
-        } else {
-          yield message.error(window.__alert_appLocaleData.messages[infoResult.message], 2)
-        }
-      //}
-    }
+    // *getUserInfo({payload}, {put, call, select}) {
+    //   const userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
+    //   if (userInfo === null) {
+    //     const infoResult = yield getUserInformation()
+    //     if (infoResult.result) {
+    //       yield localStorage.setItem('UYUN_Alert_USERINFO', JSON.stringify(infoResult.data))
+    //     } else {
+    //       yield message.error(window.__alert_appLocaleData.messages[infoResult.message], 2)
+    //     }
+    //   }
+    // }
 
   },
   reducers: {
