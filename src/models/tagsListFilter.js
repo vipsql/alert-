@@ -30,6 +30,10 @@ export default {
           dispatch({
             type: 'initTagsList',
           });
+          dispatch({
+            type: 'alertDetail/toggleDetailModal',
+            payload: false
+          })
         }
       });
     },

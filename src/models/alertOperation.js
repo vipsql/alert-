@@ -31,6 +31,7 @@ const initalState = {
     // 列定制(点击需要初始化进行数据结构转换)
     selectColumn: [], // 选择的列
     extendColumnList: [], //扩展字段
+    extendTagsKey: [], // 标签
     columnList: [
         {
             type: 0, // id 
@@ -494,7 +495,7 @@ export default {
 
   reducers: {
       // 列定制初始化
-      initColumn(state, {payload: {baseCols, extend}}) {
+      initColumn(state, {payload: {baseCols, extend, tags}}) {
         const { columnList } = state;
         let newList = columnList;
         baseCols.forEach( (column, index) => {
@@ -512,12 +513,13 @@ export default {
             })
             newList[1] = extend;
         }
-        return { ...state, columnList: newList, extendColumnList: extend.cols }
+        return { ...state, columnList: newList, extendColumnList: extend.cols, extendTagsKey: tags }
       },
       // show more时需要叠加columns
-      addProperties(state, {payload: properties}) {
-          const { columnList } = state;
+      addProperties(state, {payload: {properties, tags}}) {
+          const { columnList, extendTagsKey } = state;
           let colIds = [];
+          let newTags = [].concat(extendTagsKey);
           columnList.forEach( (item) => {
               if (item.type == 1) {
                   item.cols.forEach( (col) => {
@@ -533,7 +535,14 @@ export default {
                 }
             })
           }
-          return {...state, columnList: columnList, extendColumnList: columnList[columnList.length - 1].cols}
+          if (tags.length !== 0) {
+            tags.forEach( (tag) => {
+                if (!extendTagsKey.includes(tag)) {
+                    newTags.push(tag)
+                }
+            })
+          }
+          return {...state, columnList: columnList, extendColumnList: columnList[columnList.length - 1].cols, extendTagsKey: newTags}
       },
       // 列改变时触发
       setColumn(state, {payload: selectCol}) {

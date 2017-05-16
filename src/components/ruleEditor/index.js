@@ -427,17 +427,6 @@ class RuleEditor extends Component {
                     </FormItem>
                     <FormItem
                         {...desLayout}
-                        label="适用范围"
-                    >
-                        <Select
-                            style={{ width: 200 }}
-                        >
-                            <Option value="0">新接收的告警</Option>
-                            <Option value="1">已存在未关闭的告警</Option>
-                        </Select>
-                    </FormItem>
-                    <FormItem
-                        {...desLayout}
                         label={window.__alert_appLocaleData.messages['ruleEditor.excuteTime']}
                     >
                         <RadioGroup

@@ -10,7 +10,8 @@ const DropdownButton = Dropdown.Button;
 const alertOperation = ({position, 
     columnList, 
     selectGroup, 
-    extendColumnList, 
+    extendColumnList,
+    extendTagsKey,
     checkCloumFunc, 
     relieveFunc, 
     dispatchFunc, 
@@ -213,12 +214,17 @@ const alertOperation = ({position,
                     <Select className={classnames(styles.setGroup, styles.selectSingle)} placeholder={formatMessage({...localeMessage['groupBy']})} value={selectGroup} onChange={ (value) => {
                         groupFunc(value)
                     }}>
-                        <Option key={0} className={styles.menuItem} value="entityName"><FormattedMessage {...localeMessage['groupByEnityName']} /></Option>
-                        <Option key={1} className={styles.menuItem} value="source"><FormattedMessage {...localeMessage['groupBySource']} /></Option>
-                        <Option key={2} className={styles.menuItem} value="status"><FormattedMessage {...localeMessage['groupByStatus']} /></Option>
+                        <Option key={'entityName'} className={styles.menuItem} value="entityName"><FormattedMessage {...localeMessage['groupByEnityName']} /></Option>
+                        <Option key={'source'} className={styles.menuItem} value="source"><FormattedMessage {...localeMessage['groupBySource']} /></Option>
+                        <Option key={'status'} className={styles.menuItem} value="status"><FormattedMessage {...localeMessage['groupByStatus']} /></Option>
                         {
                             extendColumnList.length > 0 ? extendColumnList.map( (col, index) => {
-                                return <Option key={index + 3} className={styles.menuItem} value={col.id}><FormattedMessage {...localeMessage['groupByOther']} values={{other: col.name}}/></Option>
+                                return <Option key={col.id} className={styles.menuItem} value={col.id}><FormattedMessage {...localeMessage['groupByOther']} values={{other: col.name}}/></Option>
+                            }) : []
+                        }
+                        {
+                            extendTagsKey.length > 0 ? extendTagsKey.map( (tag, index) => {
+                                return <Option key={tag} className={styles.menuItem} value={tag}><FormattedMessage {...localeMessage['groupByOther']} values={{other: tag}}/></Option>
                             }) : []
                         }
                     </Select>
