@@ -106,6 +106,17 @@ export default {
           payload: false
         })
     },
+    // 派发工单成功后的操作
+    *afterDispatch({payload}, {select, put, call}) {
+        const { viewDetailAlertId } = yield select( state => {
+            return {
+                'viewDetailAlertId': state.alertQuery.viewDetailAlertId
+            }
+        })
+        yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: ['' + viewDetailAlertId], status: 150}})
+        yield put({type: 'openDetailModal'})
+        yield put({type: 'closeTicketModal'})
+    },
     // 打开关闭工单
     *openCloseModal({payload}, {select, put, call}) {
         yield put({type: 'toggleCloseModal', payload: true })  
@@ -214,6 +225,7 @@ export default {
             })
             if (resultData.result) {
                 yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: [stringId], status: 255}})
+                yield put({ type: 'openDetailModal' })
                 yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
@@ -242,6 +254,7 @@ export default {
             })
             if (resultData.result) {
                 yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: [stringId], status: 190}})
+                yield put({ type: 'openDetailModal' })
                 yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);

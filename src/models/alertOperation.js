@@ -283,6 +283,22 @@ export default {
             payload: false
           })
       },
+      // 派发工单成功后的操作
+      *afterDispatch({payload}, {select, put, call}) {
+          const { alertOperateModalOrigin, operateAlertIds } = yield select( state => {
+              return {
+                  'alertOperateModalOrigin': state.alertList.alertOperateModalOrigin,
+                  'operateAlertIds': state.alertListTable.operateAlertIds
+              }
+          })
+          if (alertOperateModalOrigin === 'detail') {
+              yield put({ type: 'alertDetailOperation/afterDispatch'})
+          } else {
+            let stingIds = operateAlertIds.map( item => '' + item)
+            yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 150}})
+            yield put({ type: 'alertDetail/closeTicketModal'})
+          }
+      },
       *openCloseModal({payload}, {select, put, call}) {
           // 触发筛选
           yield put({ type: 'alertListTable/filterCheckAlert'})
