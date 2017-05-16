@@ -143,7 +143,6 @@ export default function({history, app}) {
           name: 'export_close',
           getComponent(nextState, cb) {
             require.ensure([], require => {
-              cb(null, require('./routes/export/close'))
               let isLoadModal = false
               app._models.forEach(function(ele) {
                 if(ele.namespace == 'alertExport'){
@@ -153,6 +152,7 @@ export default function({history, app}) {
               if(!isLoadModal){
                app.model(require('./models/alertExport'))
               }
+              cb(null, require('./routes/export/close'))
             }, 'export_close')
           }
         },
@@ -161,7 +161,6 @@ export default function({history, app}) {
           name: 'export_resolve',
           getComponent(nextState, cb) {
             require.ensure([], require => {
-              cb(null, require('./routes/export/resolve'))
               let isLoadModal = false
               app._models.forEach(function(ele) {
                 if(ele.namespace == 'alertExport'){
@@ -171,9 +170,29 @@ export default function({history, app}) {
               if(!isLoadModal){
                app.model(require('./models/alertExport'))
               }
+              cb(null, require('./routes/export/resolve'))
             }, 'export_resolve')
           }
         },
+        {
+          path: 'dispatch/:id',
+          name: 'export_dispatch',
+          getComponent(nextState, cb) {
+            require.ensure([], require => {
+              let isLoadModal = false
+              app._models.forEach(function(ele) {
+                if(ele.namespace == 'alertExport'){
+                  
+                  isLoadModal = true
+                }
+              });
+              if(!isLoadModal){
+               app.model(require('./models/alertExport'))
+              }
+              cb(null, require('./routes/export/dispatch'))
+            }, 'export_dispatch')
+          }
+        }
       ]
     }
   ]

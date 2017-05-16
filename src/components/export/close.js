@@ -1,12 +1,12 @@
 import React, { PropTypes, Component } from 'react'
 import { classnames } from '../../utils'
-import styles from './close.less'
+import styles from './common.less'
 import { Button, Form, Select, Row, Col} from 'antd';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const Item = Form.Item;
 const Option = Select.Option;
-const Close = ({form, intl: {formatMessage}}) => {
+const Close = ({dispatch, form, intl: {formatMessage}}) => {
 
     const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
 
@@ -50,6 +50,11 @@ const Close = ({form, intl: {formatMessage}}) => {
         wrapperCol: { span: 16 },
     }
 
+    const callback = () => {
+        console.log('发送成功')
+        window.parent.postMessage({closeModal: true}, '*');
+    }
+
     return (
         <div className={styles.container}>
             <Form>
@@ -73,10 +78,33 @@ const Close = ({form, intl: {formatMessage}}) => {
                 <div className={styles.buttonContainer}>
                     <Row>
                         <Col span='8' offset='5'>
-                            <Button type="primary"><FormattedMessage {...localeMessage['modal_close']} /></Button>
+                            <Button type="primary" onClick={ () => {
+                                form.validateFieldsAndScroll( (errors, values) => {
+                                    if (!!errors) {
+                                        return;
+                                    }
+                                    const formData = form.getFieldsValue()
+                                    
+                                    dispatch({
+                                        type: 'alertExport/closeAlert',
+                                        payload: {
+                                            closeMessage: formData.closeMessage,
+                                            callback: callback
+                                        }
+                                    })
+                                    form.resetFields();
+                                })
+                            }}>
+                                <FormattedMessage {...localeMessage['modal_close']} />
+                            </Button>
                         </Col>
                         <Col span='11'>
-                            <Button type="primary"><FormattedMessage {...localeMessage['modal_cancel']} /></Button>
+                            <Button type="primary" onClick={ () => {
+                                callback();
+                                form.resetFields();
+                            }}>
+                                <FormattedMessage {...localeMessage['modal_cancel']} />
+                            </Button>
                         </Col>
                     </Row>
                 </div>
