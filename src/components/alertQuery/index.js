@@ -26,7 +26,7 @@ class alertQueryManage extends Component{
       window.addEventListener('message', (e) => {
         if(e.data.creatTicket !== undefined && e.data.creatTicket === 'success') {
           dispatch({
-            type: 'alertQueryDetail/closeTicketModal', 
+            type: 'alertQueryDetail/afterDispatch', 
           })
         }
       }, false)

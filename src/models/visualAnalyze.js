@@ -17,7 +17,7 @@ const initalState = {
    tagsLevel: 1,
    tasgFitler: '',
    resInfo: [],
-   alertList: []
+   alertList: ''
 
 }
 
@@ -122,13 +122,13 @@ export default {
         const gr3key = localStorage.getItem('__alert_visualAnalyze_gr3') ? localStorage.getItem('__alert_visualAnalyze_gr3') :tags[1]
         switch(level){
           case 1:
-            val = [gr1]
+            val = gr1
             break;
           case 2:
-              val = [gr1,{key: gr2key, value: ''}]
+              val = gr1.concat([{key: gr2key, value: ''}])
               break;
           case 3:
-              val = [gr1,{key: gr2key, value: ''},{key: gr3key, value: ''}]
+              val = gr1.concat([{key: gr2key, value: ''},{key: gr3key, value: ''}]) 
               break;
         }
         const res = yield call(queryVisualRes,{ tags: val})
@@ -261,6 +261,7 @@ export default {
         alertList
       }
     },
+
     updateIncidentGroup(state,{payload: isChecked}){
 
         return {

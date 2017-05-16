@@ -88,22 +88,22 @@ class VisualAnalyze extends Component {
       const { gr2State, gr3State, gr4State } = this.state
 
         //重载方法（主要是select change）   
-      let gr2ChangeOverride = gr2Change
-      gr2ChangeOverride = (val) =>{
+    
+      const gr2ChangeOverride = (val) =>{
           this.setState({
               gr2State: val
           })
           gr2Change(val)
       }
-      let gr3ChangeOverride = gr3Change
-      gr3ChangeOverride = (val) =>{
+      
+      const gr3ChangeOverride = (val) =>{
           this.setState({
               gr3State: val
           })
           gr3Change(val)
       }
-      let gr4ChangeOverride = gr4Change
-      gr4ChangeOverride = (val) =>{
+      
+      const gr4ChangeOverride = (val) =>{
           this.setState({
               gr4State: val
           })
@@ -130,15 +130,20 @@ class VisualAnalyze extends Component {
           }
       })
 
-      const content = alertList.length > 0 ?
-      alertList.map((item, index) => {
-        return (
-            <div key={index}>
-                <a  data-id={item.id} onClick={(e) => {detailClick(e)}}><span className="visualAlert" style={{background: severityToColor[item['severity']]}}></span>{item.name}</a>
-            </div>
-        )
-      }) :
-      (<div><FormattedMessage {...formatMessages['noData']}/></div>)
+      let AlertListContent = (
+          <div>Loading...</div>
+      )
+      if(Array.isArray(alertList)){
+        AlertListContent =  alertList.length > 0 ?
+        alertList.map((item, index) => {
+            return (    
+                <div key={index}>
+                    <a  data-id={item.id} data-isLoaded={false} data-list={alertList}  onClick={(e) => {detailClick(e)}}><span className="visualAlert" style={{background: severityToColor[item['severity']]}}></span>{item.name}</a>
+                </div>
+            )
+        }) :
+        (<div><FormattedMessage {...formatMessages['noData']}/></div>)
+      }
   
       let isShowImg = false //是否显示图片
       const groupListComponent =  groupList.length > 0 && groupList.map((item, index) => {
@@ -175,7 +180,7 @@ class VisualAnalyze extends Component {
       const resComponent = resList.length > 0 && resList.map( (item,index) => {
           const resList = item.resources.map( (childItem, childIndex) => {
                 return (
-                    <Popover key={childIndex}  content={content} >
+                    <Popover key={childIndex}  content={AlertListContent} >
                         <li key={childIndex} data-id={childItem.resId} onMouseLeave={cancelShowAlertList}  onMouseEnter={(e)=>{showAlertList(e)}}>
                             
                                 <div className={childItem['severity'] > -1 ? styles.tagsRingTwo : styles.tagsRingTwo2} style={{background: severityToColor[childItem['severity']]}}></div>
@@ -187,12 +192,10 @@ class VisualAnalyze extends Component {
                 )
             })
           return (
-               <li key={index} style={{marginLeft:'-50px'}}>
+               <li key={index}>
                      {/*这里用来显示元素*/}
                     <div className={styles.alertShowGroupName}>{item.tagValue}</div>
                     <div className={styles.visualAlertGroupLi}>
-                        {/*这里用来撑开父元素*/}
-                        <div className={styles.alertGroupName}>{item.tagValue}</div>
                         <ul  className={styles.alertList}>
                             {resList}
                         </ul>
@@ -257,13 +260,13 @@ class VisualAnalyze extends Component {
                         </div>
                     }
                     
-                    <div className={styles.visualFilter}  style={{opacity: isShowFouth ? 1 : 0}}>
+                    <div className={styles.visualFilter}   style={{opacity: isShowFouth ? 1 : 0 }}>
                         >
                         <div className={styles.tagsFilter} onClick={redirectTagsList}>
                             <p>{tasgFitler}</p>
                             <i className={tagsFilter}></i>
                         </div>
-                        {tags.length > 0 && <Select defaultValue={gr4State != '' ? gr4State : tags[0]} onChange={gr4ChangeOverride} className={styles.visualGroup}  >
+                        {tags.length > 0 && <Select disabled={!isShowFouth ? true : false}  defaultValue={gr4State != '' ? gr4State : tags[0]} onChange={gr4ChangeOverride} className={styles.visualGroup}  >
                             {tagsComponent}
                         </Select>}
                     </div>

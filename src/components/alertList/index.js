@@ -33,7 +33,7 @@ class AlertListManage extends Component{
     window.addEventListener('message', (e) => {
 		  if(e.data.creatTicket !== undefined && e.data.creatTicket === 'success') {
         dispatch({
-          type: 'alertDetail/closeTicketModal'
+          type: 'alertOperation/afterDispatch'
         })
       }
     }, false)

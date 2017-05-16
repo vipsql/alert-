@@ -232,7 +232,7 @@ class Chart extends Component{
                 .append("g")
                 .attr("class", "cell child")
                 .on("contextmenu", (d, e) => {
-                  zoom.call(this, node === d.parent ? root : d.parent);
+                    zoom.call(this, node === d.parent ? root : d.parent);
                     currentEvent.preventDefault()
                   })
                 .on("click", (d) => {
@@ -341,7 +341,6 @@ class Chart extends Component{
                 })
                 .attr("dy", ".35em")
                 .attr("text-anchor", "middle")
-                // .style("display", "none")
                 .text(function(d) {
                     return d.name;
                 });
@@ -463,11 +462,13 @@ class Chart extends Component{
                 })
                 .attr("y", function(d) {
                     return ky * d.dy / 2;
-                });
+                })
+                .style("opacity", function(d) { d.w = this.getComputedTextLength(); return kx * d.dx > d.w ? 1 : 0; })
             zoomTransition.select(".parent .label")
                 .attr("x", function(d) {
                     return kx * d.dx / 2;
                 })
+                
 
             zoomTransition.select("rect")
                 .attr("width", function(d) {
