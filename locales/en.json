@@ -294,6 +294,8 @@
   "treemap.assignedAlerts": "Assigned Alerts",
   "treemap.resolvedAlerts": "Resolved Alerts",
 
+  "unknown.Error": "Unknown.Error",
+
   "ruleEditor.baseInfo": "Basic Information",
   "ruleEditor.anyTime": "Any Time",
   "ruleEditor.peroid": "Peroid",

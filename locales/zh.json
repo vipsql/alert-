@@ -293,6 +293,8 @@
   "treemap.assignedAlerts": "处理中告警",
   "treemap.resolvedAlerts": "已解决告警",
 
+  "unknown.Error": "未知错误",
+
   "ruleEditor.baseInfo": "基本信息",
   "ruleEditor.anyTime": "任意时间均执行",
   "ruleEditor.peroid": "周期性执行",

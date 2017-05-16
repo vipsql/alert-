@@ -52,9 +52,13 @@ export default {
                   closeMessage: payload
               })
               if (resultData.result) {
-                  yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: [stringId], status: 255}})
-                  yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
-                  yield put({ type: 'alertDetail/toggleDetailModal', payload: false})
+                  if (resultData.data.result) {
+                      yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: [stringId], status: 255}})
+                      yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                      yield put({ type: 'alertDetail/toggleDetailModal', payload: false})
+                  } else {
+                      yield message.error(`${resultData.data.failures}`, 3);
+                  }
               } else {
                   yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
               }
@@ -75,18 +79,22 @@ export default {
           })
           
           if ( viewDetailAlertId ) {
-              let stringId = '' + viewDetailAlertId;
-              const resultData = yield resolve({
-                  incidentIds: [stringId],
-                  resolveMessage: payload
-              })
-              if (resultData.result) {
-                  yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: [stringId], status: 190}})
-                  yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
-                  yield put({ type: 'alertDetail/toggleDetailModal', payload: false})
-              } else {
-                  yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
-              }
+            let stringId = '' + viewDetailAlertId;
+            const resultData = yield resolve({
+                incidentIds: [stringId],
+                resolveMessage: payload
+            })
+            if (resultData.result) {
+                if (resultData.data.result) {
+                    yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: [stringId], status: 190}})
+                    yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                    yield put({ type: 'alertDetail/toggleDetailModal', payload: false})
+                } else {
+                    yield message.error(`${resultData.data.failures}`, 3);
+                }
+            } else {
+                yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
+            }
           } else {
               console.error('please select incidet/incident is error');
           }

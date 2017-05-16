@@ -71,7 +71,7 @@ function ajax(url, options){
         } else {
           resolve({
             result: false,
-            message: xhr.responseJSON !== undefined && xhr.responseJSON.message !== undefined ? xhr.responseJSON.message : 'Unknown Error'
+            message: xhr.responseJSON !== undefined && xhr.responseJSON.message !== undefined ? xhr.responseJSON.message : 'unknown.Error'
           })
         }
       })
