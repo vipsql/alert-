@@ -89,6 +89,7 @@
   "alertOperate.groupByOther": "GroupBy {other}",
 
   "modal.tag.select": "Please enter {name}",
+  "modal.tag.repeat": "Tag has been selected",
 
   "modal.operate.infoTip1": "Please select an incident",
   "modal.operate.infoTip2": "Only one incident is allowed to operate",
