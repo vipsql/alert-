@@ -232,7 +232,7 @@ class Chart extends Component{
                 .append("g")
                 .attr("class", "cell child")
                 .on("contextmenu", (d, e) => {
-                  zoom.call(this, node === d.parent ? root : d.parent);
+                    zoom.call(this, node === d.parent ? root : d.parent);
                     currentEvent.preventDefault()
                   })
                 .on("click", (d) => {
@@ -341,7 +341,7 @@ class Chart extends Component{
                 })
                 .attr("dy", ".35em")
                 .attr("text-anchor", "middle")
-                // .style("display", "none")
+                .style("opacity", function(d) { d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; })
                 .text(function(d) {
                     return d.name;
                 });

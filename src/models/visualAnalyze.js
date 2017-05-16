@@ -17,7 +17,7 @@ const initalState = {
    tagsLevel: 1,
    tasgFitler: '',
    resInfo: [],
-   alertList: []
+   alertList: ''
 
 }
 
@@ -261,6 +261,7 @@ export default {
         alertList
       }
     },
+
     updateIncidentGroup(state,{payload: isChecked}){
 
         return {

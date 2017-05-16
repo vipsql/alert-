@@ -88,22 +88,22 @@ class VisualAnalyze extends Component {
       const { gr2State, gr3State, gr4State } = this.state
 
         //重载方法（主要是select change）   
-      let gr2ChangeOverride = gr2Change
-      gr2ChangeOverride = (val) =>{
+    
+      const gr2ChangeOverride = (val) =>{
           this.setState({
               gr2State: val
           })
           gr2Change(val)
       }
-      let gr3ChangeOverride = gr3Change
-      gr3ChangeOverride = (val) =>{
+      
+      const gr3ChangeOverride = (val) =>{
           this.setState({
               gr3State: val
           })
           gr3Change(val)
       }
-      let gr4ChangeOverride = gr4Change
-      gr4ChangeOverride = (val) =>{
+      
+      const gr4ChangeOverride = (val) =>{
           this.setState({
               gr4State: val
           })
@@ -130,15 +130,20 @@ class VisualAnalyze extends Component {
           }
       })
 
-      const content = alertList.length > 0 ?
-      alertList.map((item, index) => {
-        return (
-            <div key={index}>
-                <a  data-id={item.id} onClick={(e) => {detailClick(e)}}><span className="visualAlert" style={{background: severityToColor[item['severity']]}}></span>{item.name}</a>
-            </div>
-        )
-      }) :
-      (<div><FormattedMessage {...formatMessages['noData']}/></div>)
+      let AlertListContent = (
+          <div>Loading...</div>
+      )
+      if(Array.isArray(alertList)){
+        AlertListContent =  alertList.length > 0 ?
+        alertList.map((item, index) => {
+            return (    
+                <div key={index}>
+                    <a  data-id={item.id} data-isLoaded={false} data-list={alertList}  onClick={(e) => {detailClick(e)}}><span className="visualAlert" style={{background: severityToColor[item['severity']]}}></span>{item.name}</a>
+                </div>
+            )
+        }) :
+        (<div><FormattedMessage {...formatMessages['noData']}/></div>)
+      }
   
       let isShowImg = false //是否显示图片
       const groupListComponent =  groupList.length > 0 && groupList.map((item, index) => {
@@ -175,7 +180,7 @@ class VisualAnalyze extends Component {
       const resComponent = resList.length > 0 && resList.map( (item,index) => {
           const resList = item.resources.map( (childItem, childIndex) => {
                 return (
-                    <Popover key={childIndex}  content={content} >
+                    <Popover key={childIndex}  content={AlertListContent} >
                         <li key={childIndex} data-id={childItem.resId} onMouseLeave={cancelShowAlertList}  onMouseEnter={(e)=>{showAlertList(e)}}>
                             
                                 <div className={childItem['severity'] > -1 ? styles.tagsRingTwo : styles.tagsRingTwo2} style={{background: severityToColor[childItem['severity']]}}></div>
