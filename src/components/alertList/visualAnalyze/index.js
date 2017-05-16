@@ -96,7 +96,6 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
     },
     gr2Change(value){
         localStorage.setItem('__alert_visualAnalyze_gr2', value)
-        
         dispatch({
             type: 'visualAnalyze/queryVisualList',
             payload: {

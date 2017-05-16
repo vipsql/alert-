@@ -45,6 +45,14 @@ const slideSettings2 = {
 }
 
 class VisualAnalyze extends Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            gr2State: '',
+            gr3State: '',
+            gr4State: ''
+        }
+    }
     componentDidMount(){
       
     }
@@ -77,7 +85,32 @@ class VisualAnalyze extends Component {
           incidentGroup,
           resList
       } = this.props
+      const { gr2State, gr3State, gr4State } = this.state
 
+        //重载方法（主要是select change）   
+      let gr2ChangeOverride = gr2Change
+      gr2ChangeOverride = (val) =>{
+          this.setState({
+              gr2State: val
+          })
+          gr2Change(val)
+      }
+      let gr3ChangeOverride = gr3Change
+      gr3ChangeOverride = (val) =>{
+          this.setState({
+              gr3State: val
+          })
+          gr3Change(val)
+      }
+      let gr4ChangeOverride = gr4Change
+      gr4ChangeOverride = (val) =>{
+          this.setState({
+              gr4State: val
+          })
+          gr4Change(val)
+      }
+
+       
       const formatMessages = defineMessages({
           groupBy:{
             id: 'visualAnalyze.groupBy',
@@ -114,7 +147,7 @@ class VisualAnalyze extends Component {
                 return (
                         <div className={styles.tagsGroup} key={childIndex} data-gr2Val={item.tagValue} data-gr3Val={childItem.value}  onClick={(e)=>{showResList(e)}}>
                             
-                                <div className={styles.tagsRingTwo} style={{background: severityToColor[childItem['severity']]}}></div>
+                                <div className={childItem['severity'] > -1 ? styles.tagsRingTwo : styles.tagsRingTwo2} style={{background: severityToColor[childItem['severity']]}}></div>
                                 {childItem['severity'] > -1 && <div className={styles.tagsRingOne} style={{background: severityToColor[childItem['severity']]}}></div>}
                                 <div className={styles.tagsName}>{childItem.value}</div>
                             
@@ -145,7 +178,7 @@ class VisualAnalyze extends Component {
                     <Popover key={childIndex}  content={content} >
                         <li key={childIndex} data-id={childItem.resId} onMouseLeave={cancelShowAlertList}  onMouseEnter={(e)=>{showAlertList(e)}}>
                             
-                                <div className={styles.tagsRingTwo} style={{background: severityToColor[childItem['severity']]}}></div>
+                                <div className={childItem['severity'] > -1 ? styles.tagsRingTwo : styles.tagsRingTwo2} style={{background: severityToColor[childItem['severity']]}}></div>
                                 {childItem['severity'] > -1 && <div className={styles.tagsRingOne} style={{marginTop:'-20px', background: severityToColor[childItem['severity']]}}></div>}
                                 <div className={styles.tagsName}>{childItem.resName}</div>
                             
@@ -207,7 +240,7 @@ class VisualAnalyze extends Component {
                     {
                      tagsLevel > 1 &&    
                         <div style={{display: 'inline-block'}}>
-                            <FormattedMessage {...formatMessages['groupBy']} />：<Select disabled = {isShowFouth ? true : false } defaultValue={tags[0]} onChange={gr2Change} className={styles.visualGroup}  >
+                            <FormattedMessage {...formatMessages['groupBy']} />：<Select disabled = {isShowFouth ? true : false } defaultValue={gr2State != '' ? gr2State : tags[0]} onChange={gr2ChangeOverride} className={styles.visualGroup}  >
                                 {tagsComponent}
                             </Select>
                         </div>
@@ -218,7 +251,7 @@ class VisualAnalyze extends Component {
                      tagsLevel > 2 &&    
                         <div style={{display: 'inline-block'}} id="visualGr2">
                             <span className={styles.levelArrow} >></span>
-                            <Select disabled = {isShowFouth ? true : false } defaultValue={tags[1]} onChange={gr3Change} className={styles.visualGroup}  >
+                            <Select disabled = {isShowFouth ? true : false } defaultValue={gr3State != '' ? gr3State : tags[1]} onChange={gr3ChangeOverride} className={styles.visualGroup}  >
                                 {tagsComponent}
                             </Select>
                         </div>
@@ -230,7 +263,7 @@ class VisualAnalyze extends Component {
                             <p>{tasgFitler}</p>
                             <i className={tagsFilter}></i>
                         </div>
-                        {tags.length > 0 && <Select defaultValue={tags[0]} onChange={gr4Change} className={styles.visualGroup}  >
+                        {tags.length > 0 && <Select defaultValue={gr4State != '' ? gr4State : tags[0]} onChange={gr4ChangeOverride} className={styles.visualGroup}  >
                             {tagsComponent}
                         </Select>}
                     </div>

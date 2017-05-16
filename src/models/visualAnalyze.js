@@ -11,6 +11,7 @@ const initalState = {
    tags: [],
   //  isFirst: false, //是否从其他页面进入
    resList: [],
+   
    isShowFouth: false,
    incidentGroup: true, 
    tagsLevel: 1,
@@ -132,7 +133,7 @@ export default {
         }
         const res = yield call(queryVisualRes,{ tags: val})
         const resList = res.data
-        if(res.result && resList.length > 0){
+        if(res.result){
           yield put({
             type: 'updateResListDirectly',
             payload: {
@@ -190,7 +191,7 @@ export default {
       })
       
       const resList = res.data
-      if(res.result && resList.length > 0){
+      if(res.result){
         yield put({
           type: 'updateResList',
           payload: {
