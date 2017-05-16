@@ -60,6 +60,11 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
       })
     },
     showAlertList(e){
+        // 首先初始数据
+        dispatch({
+            type: 'visualAnalyze/updateAlertList',
+            payload: ''
+        })
         let target = e.target
         while(target.tagName.toLowerCase() != 'li'){
             target = target.parentNode
@@ -74,6 +79,7 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
     },
     cancelShowAlertList(){
         clearTimeout(window.__uyun_showAlertList)
+        
     },
     handleExpand(e) {
         const target = e.target,
