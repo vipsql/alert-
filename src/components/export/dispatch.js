@@ -66,8 +66,8 @@ class Dispatch extends Component{
         return (
             <div className={styles.container}>
                 {
-                    true ?
-                    <iframe src={'http://localhost:8000/#/export/close/123'} />
+                    isShowTicketModal ?
+                    <iframe src={ticketUrl} />
                     :
                     <Form>
                         <Item
