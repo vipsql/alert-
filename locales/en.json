@@ -341,7 +341,7 @@
   "ruleEditor.word2": "Change the state of matched alerts to Closed or delete the matched records.",
   "ruleEditor.notifyObj": "To",
   "ruleEditor.notifySelectObj": "",
-  "ruleEditor.notifyMode": "Via",
+  "ruleEditor.notifyMode": "Via:",
   "ruleEditor.email": "Email",
   "ruleEditor.sms": "SMS",
   "ruleEditor.chatops": "分享到ChatOps私聊窗口",
