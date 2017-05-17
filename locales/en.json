@@ -305,6 +305,9 @@
   "ruleEditor.weekly": "Weekly",
   "ruleEditor.monthly": "Monthly",
   "ruleEditor.ruleName": "Rule Name",
+  "ruleEditor.target": "Target",
+  "ruleEditor.newTarget": "New Incoming Alerts",
+  "ruleEditor.oldTarget": "Exist & Unclosed Alerts",
   "ruleEditor.description": "Description",
   "ruleEditor.excuteTime": "Execute Time",
   "ruleEditor.source": "Source",
@@ -384,6 +387,8 @@
   "ruleEditor.s4": "Resolved",
   "ruleEditor.s5": "Closed",
   "ruleEditor.word5": "For the matched alerts, excute the suppression action.",
+  "ruleEditor.word6": "minutes - if the alert is Not",
+  "ruleEditor.word7": ", then notify",
 
 
   "server.notStarted": " Service Unavailable",

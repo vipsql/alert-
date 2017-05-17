@@ -304,6 +304,9 @@
   "ruleEditor.weekly": "每周",
   "ruleEditor.monthly": "每月",
   "ruleEditor.ruleName": "规则名称",
+  "ruleEditor.target": "适用范围",
+  "ruleEditor.newTarget": "新接收的告警",
+  "ruleEditor.oldTarget": "已存在未关闭的告警",
   "ruleEditor.description": "规则描述",
   "ruleEditor.excuteTime": "执行安排",
   "ruleEditor.source": "告警来源",
@@ -383,7 +386,8 @@
   "ruleEditor.s4": "已解决",
   "ruleEditor.s5": "已关闭",
   "ruleEditor.word5": "对符合条件的告警进行抑制动作，被抑制的告警将不会被保存。",
-
+  "ruleEditor.word6": "分钟，如果告警不是",
+  "ruleEditor.word7": "，执行升级，并通知",
 
   "server.notStarted": "服务不可用",
   "itsm.not.found": "ITSM服务不可用",

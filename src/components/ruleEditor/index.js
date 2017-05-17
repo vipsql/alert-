@@ -458,15 +458,15 @@ class RuleEditor extends Component {
                     </FormItem>
                     <FormItem
                         {...desLayout}
-                        label="适用范围"
+                        label={window.__alert_appLocaleData.messages['ruleEditor.target']}
                     >
                         <Select
                             style={{ width: 200 }}
                             onChange={this.changeTarget.bind(this)}
                             value={this.state.target}
                         >
-                            <Option value={0}>新接收的告警</Option>
-                            <Option value={1}>已存在未关闭的告警</Option>
+                            <Option value={0}>{window.__alert_appLocaleData.messages['ruleEditor.newTarget']}</Option>
+                            <Option value={1}>{window.__alert_appLocaleData.messages['ruleEditor.oldTarget']}</Option>
                         </Select>
                     </FormItem>
                     <FormItem
@@ -623,7 +623,7 @@ class RuleEditor extends Component {
                                                 // 此处可能有BUG：数据的key值不是唯一
                                                 <div key={`${item.delay}${item.recipients.length}${index}`} className={styles.reclist}>
                                                     <Input style={{ width: 50 }} defaultValue={item.delay} onBlur={this.changeUpgrade.bind(this, index)} />
-                                                    <span className={styles.label}>分钟，如果告警不是</span>
+                                                    <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word6']}</span>
                                                     <Select
                                                         mode="multiple"
                                                         style={{ width: 180 }}
@@ -636,7 +636,7 @@ class RuleEditor extends Component {
                                                         <Option value={190}>已解决</Option>
                                                         <Option value={255}>已关闭</Option>
                                                     </Select>
-                                                    <span className={styles.label}>，执行升级，并通知</span>
+                                                    <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word7']}</span>
                                                     {/* <Select style={{ width: 100 }} placeholder="动作类型">
                                                         <Option key="1">123</Option>
                                                         <Option key="2">321</Option>
