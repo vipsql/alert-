@@ -54,6 +54,7 @@ export default {
               if (resultData.result) {
                   if (resultData.data.result) {
                       yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: [stringId], status: 255}})
+                      yield put({ type: 'alertDetail/openDetailModal'})
                       yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
                       yield put({ type: 'alertDetail/toggleDetailModal', payload: false})
                   } else {
@@ -87,6 +88,7 @@ export default {
             if (resultData.result) {
                 if (resultData.data.result) {
                     yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: [stringId], status: 190}})
+                    yield put({ type: 'alertDetail/openDetailModal'})
                     yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
                     yield put({ type: 'alertDetail/toggleDetailModal', payload: false})
                 } else {
@@ -138,6 +140,17 @@ export default {
               type: 'toggleFormModal',
               payload: false
           })
+      },
+      // 派发工单成功后的操作
+      *afterDispatch({payload}, {select, put, call}) {
+          const { viewDetailAlertId } = yield select( state => {
+              return {
+                  'viewDetailAlertId': state.alertListTable.viewDetailAlertId
+              }
+          })
+          yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: ['' + viewDetailAlertId], status: 150}})
+          yield put({ type: 'alertDetail/openDetailModal'})
+          yield put({ type: 'alertDetail/closeTicketModal'})
       },
       // 打开分享到ChatOps的modal
       *openChatOps({payload}, {select, put, call}) {

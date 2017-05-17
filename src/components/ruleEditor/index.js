@@ -427,17 +427,6 @@ class RuleEditor extends Component {
                     </FormItem>
                     <FormItem
                         {...desLayout}
-                        label="适用范围"
-                    >
-                        <Select
-                            style={{ width: 200 }}
-                        >
-                            <Option value="0">新接收的告警</Option>
-                            <Option value="1">已存在未关闭的告警</Option>
-                        </Select>
-                    </FormItem>
-                    <FormItem
-                        {...desLayout}
                         label={window.__alert_appLocaleData.messages['ruleEditor.excuteTime']}
                     >
                         <RadioGroup
@@ -1372,6 +1361,19 @@ RuleEditor.propTypes = {
         }),
         actionChatOps: PropTypes.shape({
             chatOpsRoomId: PropTypes.string
+        }),
+        // 动作升级
+        actionUpgrade: PropTypes.shape({
+            notificationGroupings: PropTypes.shape({
+                delay: PropTypes.number,
+                recipients: PropTypes.array
+            }),
+            notificationMode: PropTypes.shape({
+                notificationMode: PropTypes.string,
+                emailTitle: PropTypes.string,
+                emailMessage: PropTypes.string,
+                smsMessage: PropTypes.string
+            })
         }),
     })
 };

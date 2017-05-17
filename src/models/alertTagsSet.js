@@ -88,7 +88,7 @@ export default {
           let status = true;
           group.selectedChildren.forEach( (child, itemIndex) => {
             if (child.id === payload.item.id) {
-              message.error('已经选择了该标签', 3)
+              message.error(window.__alert_appLocaleData.messages['modal.tag.repeat'], 3)
               status = false;
             }
           })

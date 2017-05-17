@@ -33,7 +33,7 @@ class AlertListManage extends Component{
     window.addEventListener('message', (e) => {
 		  if(e.data.creatTicket !== undefined && e.data.creatTicket === 'success') {
         dispatch({
-          type: 'alertDetail/closeTicketModal'
+          type: 'alertOperation/afterDispatch'
         })
       }
     }, false)
@@ -67,12 +67,12 @@ class AlertListManage extends Component{
     
     const { levels } = alertListTable;
     const { alertOperateModalOrigin } = alertList
-
+    
     const operateProps = {
       selectGroup: alertOperation.selectGroup,
       columnList: alertOperation.columnList,
       extendColumnList: alertOperation.extendColumnList,
-
+      extendTagsKey: alertOperation.extendTagsKey,
       checkCloumFunc: (e) => {
         dispatch({
             type: 'alertOperation/checkColumn',

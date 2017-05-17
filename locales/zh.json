@@ -95,6 +95,7 @@
   "modal.operate.allowRollUp": "只允许新告警才能派发工单",
 
   "modal.tag.select": "请选择{name}",
+  "modal.tag.repeat": "该标签已选择",
 
   "modal.shareChatOps": "分享到ChatOps",
   "modal.share": "分享",

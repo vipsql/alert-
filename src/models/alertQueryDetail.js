@@ -22,6 +22,7 @@ const initalState = {
 
     selectColumn: [], // 选择的列
     extendColumnList: [], //扩展字段
+    extendTagsKey: [], // 标签
     columnList: [
         {
             type: 0, // id 
@@ -104,6 +105,17 @@ export default {
           type: 'toggleDispatchModal',
           payload: false
         })
+    },
+    // 派发工单成功后的操作
+    *afterDispatch({payload}, {select, put, call}) {
+        const { viewDetailAlertId } = yield select( state => {
+            return {
+                'viewDetailAlertId': state.alertQuery.viewDetailAlertId
+            }
+        })
+        yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: ['' + viewDetailAlertId], status: 150}})
+        yield put({type: 'openDetailModal'})
+        yield put({type: 'closeTicketModal'})
     },
     // 打开关闭工单
     *openCloseModal({payload}, {select, put, call}) {
@@ -214,6 +226,7 @@ export default {
             if (resultData.result) {
                 if (resultData.data.result) {
                     yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: [stringId], status: 255}})
+                    yield put({ type: 'openDetailModal' })
                     yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
                 } else {
                     yield message.error(`${resultData.data.failures}`, 3);
@@ -246,6 +259,7 @@ export default {
             if (resultData.result) {
                 if (resultData.data.result) {
                     yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: [stringId], status: 190}})
+                    yield put({ type: 'openDetailModal' })
                     yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
                 } else {
                     yield message.error(`${resultData.data.failures}`, 3);
@@ -359,7 +373,7 @@ export default {
 
   reducers: {
     // 列定制初始化
-    initColumn(state, {payload: {baseCols, extend}}) {
+    initColumn(state, {payload: {baseCols, extend, tags}}) {
         const { columnList } = state;
         let newList = columnList;
         baseCols.forEach( (column, index) => {
@@ -377,12 +391,13 @@ export default {
             })
             newList[1] = extend
         }
-        return { ...state, columnList: newList, extendColumnList: extend.cols }
+        return { ...state, columnList: newList, extendColumnList: extend.cols, extendTagsKey: tags}
     },
     // show more时需要叠加columns
-    addProperties(state, {payload: properties}) {
-        let { columnList } = state;
+    addProperties(state, {payload: {properties, tags}}) {
+        let { columnList, extendTagsKey } = state;
         let colIds = [];
+        let newTags = [].concat(extendTagsKey);
         columnList.forEach( (item) => {
             if (item.type == 1) {
                 item.cols.forEach( (col) => {
@@ -398,7 +413,14 @@ export default {
                 }
             })
         }
-        return {...state, columnList: columnList, extendColumnList: columnList[columnList.length - 1].cols}
+        if (tags.length !== 0) {
+            tags.forEach( (tag) => {
+                if (!extendTagsKey.includes(tag)) {
+                    newTags.push(tag)
+                }
+            })
+        }
+        return {...state, columnList: columnList, extendColumnList: columnList[columnList.length - 1].cols, extendTagsKey: newTags}
     },
     // 列改变时触发
     setColumn(state, {payload: selectCol}) {

@@ -161,7 +161,7 @@ class ListTable extends Component {
           td = <td key={key}>{data}</td>
         }
         if(key == 'status'){
-          switch (data) {
+          switch (Number(data)) {
             case 0:
               data = window['_status']['0']
               break;

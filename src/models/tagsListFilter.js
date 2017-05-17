@@ -30,6 +30,10 @@ export default {
           dispatch({
             type: 'initTagsList',
           });
+          dispatch({
+            type: 'alertDetail/toggleDetailModal',
+            payload: false
+          })
         }
       });
     },
@@ -101,7 +105,7 @@ export default {
           let status = true;
           group.selectedChildren.forEach( (child, itemIndex) => {
             if (child.name === payload.item.value) {
-              message.error('已经选择了该标签', 3)
+              message.error(window.__alert_appLocaleData.messages['modal.tag.repeat'], 3)
               status = false;
             }
           })
