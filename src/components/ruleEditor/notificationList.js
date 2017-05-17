@@ -38,11 +38,11 @@ class NotificationList extends Component {
             <Tabs animated={false} className={styles.notificationTabs}>
                 <TabPane tab={
                     <div>
-                        <Checkbox 
-                            id="email" 
-                            checked={checkedState.email} 
-                            value={1} 
-                            onChange={this.changeAction.bind(this, 3)} 
+                        <Checkbox
+                            id="email"
+                            checked={checkedState.email}
+                            value={1}
+                            onChange={this.changeAction.bind(this, 3)}
                         />
                         <span>{window.__alert_appLocaleData.messages['ruleEditor.email']}</span>
                     </div>
@@ -70,7 +70,7 @@ class NotificationList extends Component {
                             // placeholder={window.__alert_appLocaleData.messages['ruleEditor.phBody']}
                             />
 
-                            <Popover overlayStyle={{ width: '45%' }} overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={emailVarContent}>
+                            <Popover overlayStyle={{ width: '44%' }} overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={emailVarContent}>
                                 <div className={styles.insertVar}>{window.__alert_appLocaleData.messages['ruleEditor.vars']}</div>
                             </Popover>
                         </FormItem>
@@ -79,11 +79,11 @@ class NotificationList extends Component {
                 </TabPane>
                 <TabPane tab={
                     <div>
-                        <Checkbox 
-                            id="sms" 
-                            checked={checkedState.sms} 
-                            value={2} 
-                            onChange={this.changeAction.bind(this, 3)} 
+                        <Checkbox
+                            id="sms"
+                            checked={checkedState.sms}
+                            value={2}
+                            onChange={this.changeAction.bind(this, 3)}
                         />
                         <span>{window.__alert_appLocaleData.messages['ruleEditor.sms']}</span>
                     </div>
@@ -107,12 +107,12 @@ class NotificationList extends Component {
                     window.__alert_appLocaleData.locale === 'zh-cn' &&
                     <TabPane disabled={this.props.alertAssociationRules.rooms.length === 0 ? true : false} tab={
                         <div>
-                            <Checkbox 
-                                disabled={this.props.alertAssociationRules.rooms.length === 0 ? true : false} 
-                                id="chatops" 
-                                checked={checkedState.chatops} 
+                            <Checkbox
+                                disabled={this.props.alertAssociationRules.rooms.length === 0 ? true : false}
+                                id="chatops"
+                                checked={checkedState.chatops}
                                 value={3}
-                                onChange={this.changeAction.bind(this, 3)} 
+                                onChange={this.changeAction.bind(this, 3)}
                             />
                             <span>{window.__alert_appLocaleData.messages['ruleEditor.chatops']}</span>
                         </div>

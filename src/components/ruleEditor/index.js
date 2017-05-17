@@ -188,9 +188,17 @@ const formatMessages = defineMessages({
         id: 'ruleEditor.peroid',
         defaultMessage: '周期性执行'
     },
+    peroid1: {
+        id: 'ruleEditor.peroid1',
+        defaultMessage: '周期性时间点执行'
+    },
     fixedTime: {
         id: 'ruleEditor.fixedTime',
         defaultMessage: '固定时间段执行'
+    },
+    fixedTime1: {
+        id: 'ruleEditor.fixedTime1',
+        defaultMessage: '固定时间点执行'
     },
     schedule: {
         id: 'ruleEditor.schedule',
@@ -252,7 +260,7 @@ class RuleEditor extends Component {
             recipients: [],
             ITSMParam: '',
             /* 适用范围 */
-            scope: props.scope,
+            target: props.target,
         };
     }
     componentWillMount() {
@@ -356,7 +364,7 @@ class RuleEditor extends Component {
 
     render() {
         conditionsDom = []; // 重置，防止重复 render
-        const { time, timeStart, timeEnd, source, condition, action, email, sms, chatops } = this.state;
+        const { time, timeStart, timeEnd, source, condition, action, email, sms, chatops, target } = this.state;
         const itemLayout = {
             labelCol: { span: 2 },
             wrapperCol: { span: 4 }
@@ -405,8 +413,24 @@ class RuleEditor extends Component {
         this.cycleTimeStart = `${timeStart.hours}:${timeStart.mins}`;
         this.cycleTimeEnd = `${timeEnd.hours}:${timeEnd.mins}`;
 
-        const cycleTimeString = time.timeCycle >= 0 ? `${cycleDay}${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}` : '';
-        const dayTimeString = time.dayStart && time.dayEnd ? `${moment(time.dayStart).format('YYYY-MM-DD')} ~ ${moment(time.dayEnd).format('YYYY-MM-DD')}、${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}` : '';
+        const cycleTimeString = (() => {
+            if (time.timeCycle >= 0 ) {
+                return target === 0 
+                    ? `${cycleDay}${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}`
+                    : `${cycleDay}${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")}`;
+            } else {
+                return '';
+            }
+        })();
+        const dayTimeString = (() => {
+            if (time.dayStart && time.dayEnd) {
+                return target === 0
+                    ? `${moment(time.dayStart).format('YYYY-MM-DD')} ~ ${moment(time.dayEnd).format('YYYY-MM-DD')}、${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}`
+                    : `${moment(time.dayStart).format('YYYY-MM-DD')} ~ ${moment(time.dayEnd).format('YYYY-MM-DD')}、${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")}`;
+            } else {
+                return '';
+            }
+        })();
 
         console.info('[state]', this.state);
         // console.info('[xx]', this.props.alertAssociationRules);
@@ -438,8 +462,8 @@ class RuleEditor extends Component {
                     >
                         <Select
                             style={{ width: 200 }}
-                            onChange={this.changeScope.bind(this)}
-                            value={this.state.scope}
+                            onChange={this.changeTarget.bind(this)}
+                            value={this.state.target}
                         >
                             <Option value={0}>新接收的告警</Option>
                             <Option value={1}>已存在未关闭的告警</Option>
@@ -453,9 +477,24 @@ class RuleEditor extends Component {
                             onChange={this.changeType.bind(this)}
                             value={this.state.type}
                         >
-                            <Radio value={0}><FormattedMessage {...formatMessages['anyTime']} /></Radio>
-                            <Radio value={2}><FormattedMessage {...formatMessages['peroid']} /></Radio>
-                            <Radio value={1}><FormattedMessage {...formatMessages['fixedTime']} /></Radio>
+                            {
+                                target === 0 &&
+                                <Radio value={0}><FormattedMessage {...formatMessages['anyTime']} /></Radio>
+                            }
+                            <Radio value={2}>
+                                {
+                                    target === 0 
+                                        ? <FormattedMessage {...formatMessages['peroid']} />
+                                        : <FormattedMessage {...formatMessages['peroid1']} />
+                                }
+                            </Radio>
+                            <Radio value={1}>
+                                {
+                                    target === 0 
+                                        ? <FormattedMessage {...formatMessages['fixedTime']} />
+                                        : <FormattedMessage {...formatMessages['fixedTime1']} />
+                                }
+                            </Radio>
                         </RadioGroup>
                         {
                             this.state.type === 2 &&
@@ -490,7 +529,7 @@ class RuleEditor extends Component {
                                                     time.timeCycle === 2 &&
                                                     <CheckboxGroup options={MonthArray} defaultValue={time.timeCycleMonth.split(',')} onChange={this.changeTimeCycle.bind(this, 'timeCycleMonth')} />
                                                 }
-                                                <TimeSlider timeStart={timeStart} timeEnd={timeEnd} changeTime={this.changeTime.bind(this)} />
+                                                <TimeSlider target={this.state.target} timeStart={timeStart} timeEnd={timeEnd} changeTime={this.changeTime.bind(this)} />
                                             </div>
                                         </div>
                                     )}
@@ -575,19 +614,27 @@ class RuleEditor extends Component {
                             </div>
                         </TabPane>
                         {
-                            // this.state.scope === 1 &&
+                            this.state.target === 1 &&
                             <TabPane tab="升级告警" key="2">
                                 <div>
                                     {
                                         action.actionUpgrade.notificationGroupings.map((item, index) => {
                                             return (
-                                                <div key={item.delay + '-' + index} className={styles.reclist}>
+                                                // 此处可能有BUG：数据的key值不是唯一
+                                                <div key={`${item.delay}${item.recipients.length}${index}`} className={styles.reclist}>
                                                     <Input style={{ width: 50 }} defaultValue={item.delay} onBlur={this.changeUpgrade.bind(this, index)} />
                                                     <span className={styles.label}>分钟，如果告警不是</span>
-                                                    <Select style={{ width: 140 }} placeholder="请选择告警状态">
-                                                        <Option key="0">处理中</Option>
-                                                        <Option key="1">已解决</Option>
-                                                        <Option key="2">已关闭</Option>
+                                                    <Select
+                                                        mode="multiple"
+                                                        style={{ width: 180 }}
+                                                        placeholder="请选择告警状态"
+                                                        className={styles.recipients}
+                                                        onChange={this.changeUpgradeMode.bind(this, index)}
+                                                    >
+                                                        <Option value={0}>未接手</Option>
+                                                        <Option value={150}>处理中</Option>
+                                                        <Option value={190}>已解决</Option>
+                                                        <Option value={255}>已关闭</Option>
                                                     </Select>
                                                     <span className={styles.label}>，执行升级，并通知</span>
                                                     {/* <Select style={{ width: 100 }} placeholder="动作类型">
@@ -806,6 +853,14 @@ class RuleEditor extends Component {
         });
     }
 
+    changeUpgradeMode(index, value) {
+        const _action = _.cloneDeep(this.state.action);
+        _action.actionUpgrade.notificationGroupings[index].status = value;
+        this.setState({
+            action: _action
+        });
+    }
+
     changeUpgradeRecipients(index, value) {
         const _action = _.cloneDeep(this.state.action);
         const { users } = this.props.alertAssociationRules;
@@ -827,12 +882,11 @@ class RuleEditor extends Component {
             action: _action
         });
     }
-
-
     addNotificationGroup() {
         const _action = _.cloneDeep(this.state.action);
         const item = {
             delay: undefined,
+            status: [],
             recipients: []
         };
         _action.actionUpgrade.notificationGroupings.push(item);
@@ -848,14 +902,27 @@ class RuleEditor extends Component {
             action: _action
         });
     }
-
-    changeScope(value) {
-        // console.log(value);
-        this.setState({
-            scope: value
-        });
+    changeTarget(value) {
+        if (value === 0 && this.state.action.type[0] === 2) { // 如果当前动作是升级告警，则初始化动作
+            const _action = _.cloneDeep(this.state.action);
+            _action.type[0] = 1;
+            this.setState({
+                action: _action,
+                target: value
+            });
+        } else {
+            if (this.state.type === 0) {
+                this.setState({
+                    target: value,
+                    type: 2
+                });
+            } else {
+                this.setState({
+                    target: value
+                });
+            }
+        }
     }
-
     changeAction(type, value) {
         // console.info('changeAction', this);
         // debugger
@@ -1336,7 +1403,7 @@ RuleEditor.defaultProps = {
     name: '',
     description: '',
     type: 0,
-    scope: 0,
+    target: 0,
     time: {
         // dayStart: moment().format(),
         // dayEnd: moment().format(),
@@ -1394,6 +1461,7 @@ RuleEditor.defaultProps = {
         actionUpgrade: {
             notificationGroupings: [{
                 delay: 15,
+                status: [],
                 recipients: []
             }],
             notificationMode: {
@@ -1479,6 +1547,7 @@ RuleEditor.propTypes = {
         actionUpgrade: PropTypes.shape({
             notificationGroupings: PropTypes.shape({
                 delay: PropTypes.number,
+                status: PropTypes.array,
                 recipients: PropTypes.array
             }),
             notificationMode: PropTypes.shape({
