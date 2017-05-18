@@ -292,14 +292,14 @@ class RuleEditor extends Component {
     componentWillReceiveProps(nextProps, nextState) {
 
         const {
-      dayStart = '',
+            dayStart = '',
             dayEnd = '',
             timeCycle = 0,
             timeCycleWeek = '',
             timeCycleMonth = '',
             timeStart = '',
             timeEnd = ''
-    } = nextProps.time;
+        } = nextProps.time;
 
         let _timeStart = {
             hours: 0,
@@ -335,6 +335,7 @@ class RuleEditor extends Component {
                 },
                 description: nextProps.description,
                 type: nextProps.type,
+                target: nextProps.target,
                 source: nextProps.source,
                 condition: makeCondition(_.cloneDeep(nextProps.condition)),
                 action: nextProps.action,
@@ -414,8 +415,8 @@ class RuleEditor extends Component {
         this.cycleTimeEnd = `${timeEnd.hours}:${timeEnd.mins}`;
 
         const cycleTimeString = (() => {
-            if (time.timeCycle >= 0 ) {
-                return target === 0 
+            if (time.timeCycle >= 0) {
+                return target === 0
                     ? `${cycleDay}${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")} ~ ${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}`
                     : `${cycleDay}${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")}`;
             } else {
@@ -483,14 +484,14 @@ class RuleEditor extends Component {
                             }
                             <Radio value={2}>
                                 {
-                                    target === 0 
+                                    target === 0
                                         ? <FormattedMessage {...formatMessages['peroid']} />
                                         : <FormattedMessage {...formatMessages['peroid1']} />
                                 }
                             </Radio>
                             <Radio value={1}>
                                 {
-                                    target === 0 
+                                    target === 0
                                         ? <FormattedMessage {...formatMessages['fixedTime']} />
                                         : <FormattedMessage {...formatMessages['fixedTime1']} />
                                 }
@@ -552,7 +553,7 @@ class RuleEditor extends Component {
                                                 onChange={this.changeDate.bind(this)} dateInputPlaceholder={[window.__alert_appLocaleData.messages['ruleEditor.startDate'], window.__alert_appLocaleData.messages['ruleEditor.endDate']]} className={styles.calendar} renderFooter={() => {
                                                     return (
                                                         <div className={styles.timeCycleBd}>
-                                                            <TimeSlider timeStart={timeStart} timeEnd={timeEnd} changeTime={this.changeTime.bind(this)} />
+                                                            <TimeSlider target={this.state.target} timeStart={timeStart} timeEnd={timeEnd} changeTime={this.changeTime.bind(this)} />
                                                         </div>
                                                     );
                                                 }} />
@@ -656,8 +657,8 @@ class RuleEditor extends Component {
                                                     </Select>
                                                     {
                                                         index === 0
-                                                        ? <i className={styles.addUper} onClick={this.addNotificationGroup.bind(this)}>+</i>
-                                                        : <i className={styles.delUper} onClick={this.delNotificationGroup.bind(this, index)}>X</i>
+                                                            ? <i className={styles.addUper} onClick={this.addNotificationGroup.bind(this)}>+</i>
+                                                            : <i className={styles.delUper} onClick={this.delNotificationGroup.bind(this, index)}>X</i>
                                                     }
                                                 </div>
                                             );
@@ -1042,11 +1043,7 @@ class RuleEditor extends Component {
     createTitle(node, level) {
         const { logic } = node;
         return (
-            <div className={cls(
-                styles.title,
-                `treeTag${level}`
-            )}
-            >
+            <div className={cls(styles.title, 'treeTag' + level)}>
                 <Select value={logic} placeholder={window.__alert_appLocaleData.messages['ruleEditor.selectLogic']} onChange={this.changeTitleLogic.bind(this, node, level)}>
                     <Option value="and">{window.__alert_appLocaleData.messages['ruleEditor.and']}</Option>
                     <Option value="or">{window.__alert_appLocaleData.messages['ruleEditor.or']}</Option>
@@ -1284,7 +1281,7 @@ class RuleEditor extends Component {
         if (momentArray.length >= 2) {
             const _time = _.cloneDeep(this.state.time);
             for (let i = 0, len = momentArray.length; i < len; i += 1) {
-                let _day = moment(momentArray[i]).format().toString(); // 当前日历组件选择的时间
+                let _day = momentArray[i].format('YYYY-MM-DDTHH:mmZ'); // 当前日历组件选择的时间
                 i === 0
                     ? _time['dayStart'] = _day
                     : _time['dayEnd'] = _day;
@@ -1298,12 +1295,10 @@ class RuleEditor extends Component {
     handleSubmit(event) {
         const { dispatch, form, alertAssociationRules } = this.props;
         const { name, description, type, source, condition, time, timeStart, timeEnd, action } = this.state;
-
         event.preventDefault();
-
         let _time = {};
-        let hmStart = `${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")}:00`;
-        let hmEnd = `${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}:00`;
+        let hmStart = `${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")}`;
+        let hmEnd = `${moment(this.cycleTimeEnd, 'H:mm').format("HH:mm")}`;
         let local = moment().format().substr(19, 6);
         /* 动作 */
         let _actionDelOrClose = undefined;
@@ -1312,9 +1307,7 @@ class RuleEditor extends Component {
         let _actionSuppress = undefined;
         let _actionChatOps = undefined;
         let _actionUpgrade = undefined;
-
         switch (type) {
-
             case 2: // 周期
                 if (time.timeCycle === 1) { // 每周
                     _time.timeCycle = time.timeCycle;
@@ -1328,8 +1321,8 @@ class RuleEditor extends Component {
                 _time.timeEnd = `${hmEnd}${local}`;
                 break;
             case 1: // 固定
-                _time.dayStart = time.dayStart.replace(time.dayStart.substr(11, 8), hmStart).replace('+', '+');
-                _time.dayEnd = time.dayEnd.replace(time.dayStart.substr(11, 8), hmEnd).replace('+', '+');
+                _time.dayStart = time.dayStart.replace(time.dayStart.substr(11, 5), hmStart);
+                _time.dayEnd = time.dayEnd.replace(time.dayStart.substr(11, 5), hmEnd);
                 break;
             default:
                 break;
@@ -1387,14 +1380,14 @@ class RuleEditor extends Component {
                 actionUpgrade: _actionUpgrade
             }
         };
-
-        debugger;
-        // dispatch({
-        //     type: 'alertAssociationRules/createRule',
-        //     payload: {
-        //         ...params
-        //     }
-        // });
+        // console.log(_time);
+        // debugger;
+        dispatch({
+            type: 'alertAssociationRules/createRule',
+            payload: {
+                ...params
+            }
+        });
 
     }
 }
