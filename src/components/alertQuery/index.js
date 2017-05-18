@@ -573,10 +573,10 @@ class alertQueryManage extends Component{
                       
                     })(
                         <Select placeholder={formatMessage({...localeMessage['severity_placeholder']})}>
-                          <Option value="0">{window['_severity']['0']}</Option>
-                          <Option value="1">{window['_severity']['1']}</Option>
-                          <Option value="2">{window['_severity']['2']}</Option>
                           <Option value="3">{window['_severity']['3']}</Option>
+                          <Option value="2">{window['_severity']['2']}</Option>
+                          <Option value="1">{window['_severity']['1']}</Option>
+                          <Option value="0">{window['_severity']['0']}</Option>
                         </Select>
                     )}
                   </Item>
