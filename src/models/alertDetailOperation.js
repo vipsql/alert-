@@ -7,12 +7,14 @@ const initalState = {
     // 操作的alertIds
     formOptions: [],
     chatOpsRooms: [],
+    suppressTime: '5',
 
     // 各个modal弹窗
     isShowFormModal: false, // 派发
     isShowCloseModal: false, // 关闭
     isShowResolveModal: false, // 解决
     isShowChatOpsModal: false, //chatops
+    isShowSuppressModal: false, // suppress
 }
 
 export default {
@@ -21,65 +23,79 @@ export default {
   state: initalState,
 
   effects: {
-      // 打开派发工单做的相应处理
-      *openFormModal({payload}, {select, put, call}) {
-          const options = yield getFormOptions();
-          if (options.result) {
-              yield put({
-                  type: 'setFormOptions',
-                  payload: options.data || []
-              })
-          } else {
-              yield message.error(`${options.message}`, 3)
-          }
-          yield put({
+    // 打开抑制告警Modal
+    *openSuppress({payload: {min}}, {select, put, call}) {
+        yield put({
+            type: 'toggleSuppressModal',
+            payload: {
+                status: true,
+                suppressTime: min
+            }
+        })
+    },
+    // 抑制告警
+    *suppressIncidents({payload: time}, {select, put, call}) {
+        
+    },
+    // 打开派发工单做的相应处理
+    *openFormModal({payload}, {select, put, call}) {
+        const options = yield getFormOptions();
+        if (options.result) {
+            yield put({
+                type: 'setFormOptions',
+                payload: options.data || []
+            })
+        } else {
+            yield message.error(`${options.message}`, 3)
+        }
+        yield put({
             type: 'toggleFormModal',
             payload: true
-          })
-      },
-      // 关闭告警
-      *closeAlert({payload}, {select, put, call}) {
-          const { viewDetailAlertId } = yield select( state => {
-              return {
-                  'viewDetailAlertId': state.alertListTable.viewDetailAlertId
-              }
-          })
-          
-          if ( viewDetailAlertId ) {
-              let stringId = '' + viewDetailAlertId;
-              const resultData = yield close({
-                  incidentIds: [stringId],
-                  closeMessage: payload
-              })
-              if (resultData.result) {
-                  if (resultData.data.result) {
-                      yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: [stringId], status: 255}})
-                      yield put({ type: 'alertDetail/openDetailModal'})
-                      yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
-                      yield put({ type: 'alertDetail/toggleDetailModal', payload: false})
-                  } else {
-                      yield message.error(`${resultData.data.failures}`, 3);
-                  }
-              } else {
-                  yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
-              }
-          } else {
-              console.error('please select incidet/incident is error');
-          }
-          yield put({
+        })
+    },
+    // 关闭告警
+    *closeAlert({payload}, {select, put, call}) {
+        const { viewDetailAlertId } = yield select( state => {
+            return {
+                'viewDetailAlertId': state.alertListTable.viewDetailAlertId
+            }
+        })
+        
+        if ( viewDetailAlertId ) {
+            let stringId = '' + viewDetailAlertId;
+            const resultData = yield close({
+                incidentIds: [stringId],
+                closeMessage: payload
+            })
+            if (resultData.result) {
+                if (resultData.data.result) {
+                    yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: [stringId], status: 255}})
+                    yield put({ type: 'alertDetail/openDetailModal'})
+                    yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                    yield put({ type: 'alertDetail/toggleDetailModal', payload: false})
+                } else {
+                    yield message.error(`${resultData.data.failures}`, 3);
+                }
+            } else {
+                yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
+            }
+        } else {
+            console.error('please select incidet/incident is error');
+        }
+        yield put({
             type: 'toggleCloseModal',
             payload: false
-          })
-      },
-      // 解决告警
-      *resolveAlert({payload}, {select, put, call}) {
-          const { viewDetailAlertId } = yield select( state => {
-              return {
-                  'viewDetailAlertId': state.alertListTable.viewDetailAlertId
-              }
-          })
-          
-          if ( viewDetailAlertId ) {
+        })
+    },
+    // 解决告警
+    *resolveAlert({payload}, {select, put, call}) {
+        const { viewDetailAlertId } = yield select( state => {
+            return {
+                'viewDetailAlertId': state.alertListTable.viewDetailAlertId
+            }
+        })
+        
+        if ( viewDetailAlertId ) {
             let stringId = '' + viewDetailAlertId;
             const resultData = yield resolve({
                 incidentIds: [stringId],
@@ -97,22 +113,22 @@ export default {
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
             }
-          } else {
-              console.error('please select incidet/incident is error');
-          }
-          yield put({
+        } else {
+            console.error('please select incidet/incident is error');
+        }
+        yield put({
             type: 'toggleResolveModal',
             payload: false
-          })
-      },
-      // 确定派发工单
-      *dispatchForm({payload}, {select, put, call}) {
-          const { viewDetailAlertId} = yield select( state => {
-              return {
-                  'viewDetailAlertId':state.alertListTable.viewDetailAlertId
-              }
-          })
-          if (viewDetailAlertId) {
+        })
+    },
+    // 确定派发工单
+    *dispatchForm({payload}, {select, put, call}) {
+        const { viewDetailAlertId} = yield select( state => {
+            return {
+                'viewDetailAlertId':state.alertListTable.viewDetailAlertId
+            }
+        })
+        if (viewDetailAlertId) {
             let stringId = '' + viewDetailAlertId;
             const data = yield call(dispatchForm, {
                 id: stringId,
@@ -121,7 +137,7 @@ export default {
             })
             if(data.result){
                 //window.open(data.data.url)
-                 yield put({ 
+                yield put({ 
                     type: 'alertDetail/toggleTicketModal', 
                     payload: {
                         isShowTicketModal: true,
@@ -132,28 +148,28 @@ export default {
                 yield message.error(window.__alert_appLocaleData.messages[data.message], 3);
             }
             
-          }else{
-              console.error('selectedAlertIds error');
-          }
+        }else{
+            console.error('selectedAlertIds error');
+        }
 
-          yield put({
-              type: 'toggleFormModal',
-              payload: false
-          })
-      },
-      // 派发工单成功后的操作
-      *afterDispatch({payload}, {select, put, call}) {
-          const { viewDetailAlertId } = yield select( state => {
-              return {
-                  'viewDetailAlertId': state.alertListTable.viewDetailAlertId
-              }
-          })
-          yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: ['' + viewDetailAlertId], status: 150}})
-          yield put({ type: 'alertDetail/openDetailModal'})
-          yield put({ type: 'alertDetail/closeTicketModal'})
-      },
-      // 打开分享到ChatOps的modal
-      *openChatOps({payload}, {select, put, call}) {
+        yield put({
+            type: 'toggleFormModal',
+            payload: false
+        })
+    },
+    // 派发工单成功后的操作
+    *afterDispatch({payload}, {select, put, call}) {
+        const { viewDetailAlertId } = yield select( state => {
+            return {
+                'viewDetailAlertId': state.alertListTable.viewDetailAlertId
+            }
+        })
+        yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: ['' + viewDetailAlertId], status: 150}})
+        yield put({ type: 'alertDetail/openDetailModal'})
+        yield put({ type: 'alertDetail/closeTicketModal'})
+    },
+    // 打开分享到ChatOps的modal
+    *openChatOps({payload}, {select, put, call}) {
             const options = yield getChatOpsOptions();
             if (options.result) {
                 yield put({
@@ -167,8 +183,8 @@ export default {
                 type: 'toggleChatOpsModal',
                 payload: true
             })
-      },
-      *shareChatOps({payload}, {select, put, call}) {
+    },
+    *shareChatOps({payload}, {select, put, call}) {
         const {currentAlertDetail} = yield select( state => {
             return {
                 'currentAlertDetail': state.alertDetail.currentAlertDetail
@@ -223,6 +239,9 @@ export default {
       },
       toggleResolveModal(state, {payload: isShowResolveModal}) {
           return { ...state, isShowResolveModal }
+      },
+      toggleSuppressModal(state, {payload: {suppressTime = initalState.suppressTime, status}}) {
+          return { ...state, isShowSuppressModal: status, suppressTime }
       },
   }
 }

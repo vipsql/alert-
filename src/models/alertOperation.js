@@ -18,10 +18,12 @@ const initalState = {
     isShowMergeModal: false, // 合并
     isShowRelieveModal: false, // 解除
     isShowChatOpsModal: false, //chatops
+    isShowSuppressModal: false, // suppress
 
     isSelectAlert: false, // 是否选择了告警
     isSelectOrigin: false, // 是否选择了源告警
 
+    suppressTime: '5', // 抑制时间
     originAlert: [], //选择的radio是个数组
     relieveAlert: {}, // 选中的解除对象
     mergeInfoList: [
@@ -44,6 +46,10 @@ const initalState = {
                 {id: 'lastTime', checked: false,},
                 {id: 'lastOccurTime', checked: false,},
                 {id: 'status', checked: false,},
+                {id: 'firstOccurTime', checked: false,},
+                {id: 'entityAddr', checked: false,},
+                {id: 'orderFlowNum', checked: false,},
+                {id: 'notifyList', checked: false,},
             ]
         }
     ],
@@ -59,20 +65,42 @@ export default {
   state: initalState,
 
   effects: {
-      // 列定制初始化(将数据变为设定的结构)
-    //   *initalColumn({payload}, {select, put, call}) {
-    //       // 这里后期要先做查询得到扩展字段，再和columnList拼接
-    //       const { columns } = yield select( state => {
-    //           return {
-    //               'columns': state.alertListTable.columns
-    //           }
-    //       })
-    //       const columnResult = yield call(queryCloumns)
-    //       if (!columnResult.result) {
-    //           yield message.error(window.__alert_appLocaleData.messages[columnResult.message], 2);
-    //       }
-    //       yield put({ type: 'initColumn', payload: {baseCols: columns, extend: columnResult.data || {}}})
-    //   },
+      // 打开抑制告警Modal
+      *openSuppress({payload: {min, position}}, {select, put, call}) {
+          // 触发筛选
+          yield put({ type: 'alertListTable/filterCheckAlert'})
+          const { operateAlertIds } = yield select( state => {
+              return {
+                  'operateAlertIds': state.alertListTable.operateAlertIds,
+              }
+          })
+          yield put({
+              type: 'alertList/toggleModalOrigin',
+              payload: position
+          })
+          if (position !== undefined && position === 'detail') {
+              yield put({
+                  type: 'alertDetailOperation/openSuppress',
+                  payload: {time: min}
+              })
+          } else {
+            if (operateAlertIds.length === 0) {
+                yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
+            } else {
+                yield put({
+                    type: 'toggleSuppressModal',
+                    payload: {
+                        status: true,
+                        suppressTime: min
+                    }
+                })
+            }
+          }
+      },
+      // 抑制告警
+      *suppressIncidents({payload: time}, {select, put, call}) {
+          
+      },
       // 打开解除告警modal
       *openRelieveModal({payload}, {select, put, call}) {
           // 触发筛选
@@ -633,6 +661,9 @@ export default {
       },
       toggleResolveModal(state, {payload: isShowResolveModal}) {
           return { ...state, isShowResolveModal }
+      },
+      toggleSuppressModal(state, {payload: {suppressTime = initalState.suppressTime, status}}) {
+          return { ...state, isShowSuppressModal: status, suppressTime }
       },
       // selectRows是合并告警时触发
       selectRows(state, {payload: originAlert}) {

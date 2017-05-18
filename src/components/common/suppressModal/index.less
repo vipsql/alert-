@@ -1,0 +1,44 @@
+@import "../../vars.less";
+
+// delete modal
+.suppressMain{
+    padding: 30px 25px;
+    p{
+        font-size: 14px;
+        &:before{
+            display: inline-block;;
+            margin-right: 20px;
+            width: 30px;
+            height: 30px;
+            border-radius: 20px;
+            background: #fff;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            color: #1d6aa7;
+            content: '!';
+        }
+    }
+}
+// common modal footer
+.modalFooter{
+    height: 60px;
+    line-height: 60px;
+    margin: -10px -16px -10px -10px;
+    //background: #f2f7fc;
+    background: #145e99;
+    text-align: center;
+    button{
+        width: 82px;
+    }
+    .ghostBtn{
+        color: #fff;
+        background-color: #108ee9;
+        border-color: #108ee9;
+        &:hover{
+            color: #fff;
+            background-color: #49a9ee;
+            border-color: #49a9ee;
+        }
+    }
+}

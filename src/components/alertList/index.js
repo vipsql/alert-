@@ -17,6 +17,7 @@ import DispatchModal from '../common/dispatchModal/index.js'
 import RelieveModal from './relieveModal'
 import ChatOpshModal from '../common/chatOpsModal/index.js'
 import ResolveModal from '../common/resolveModal/index.js'
+import SuppressModal from '../common/suppressModal/index.js'
 import { classnames } from '../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -129,6 +130,15 @@ class AlertListManage extends Component{
           type: 'alertOperation/openChatOps',
           payload: position
         })
+      },
+      showSuppressModal: (min, position) => {
+        dispatch({
+          type: 'alertOperation/openSuppress',
+          payload: {
+            time: min,
+            position: position
+          }
+        })
       }
     }
 
@@ -146,6 +156,7 @@ class AlertListManage extends Component{
         dispatchDisabled: !(alertDetail['currentAlertDetail']['status'] == 0 && !alertDetail['currentAlertDetail']['parentId']),
         closeDisabled: alertDetail['currentAlertDetail']['status'] == 255 || alertDetail['currentAlertDetail']['status'] == 40,
         resolveDisabled: alertDetail['currentAlertDetail']['status'] == 255 || alertDetail['currentAlertDetail']['status'] == 190,
+        suppressDisabled: !alertDetail['currentAlertDetail']['status'] == 0
       },
       clickTicketFlow: (operateForm) => {
         if (operateForm !== undefined && operateForm !== '') {
@@ -304,6 +315,25 @@ class AlertListManage extends Component{
         })
       }
     }
+
+    const suppressModalProps = {
+      suppressTime: alertOperateModalOrigin === 'detail' ? alertDetailOperation.suppressTime : alertOperation.suppressTime,
+      isShowSuppressModal: alertOperateModalOrigin === 'detail' ? alertDetailOperation.isShowSuppressModal : alertOperation.isShowSuppressModal,
+      onOk: (time) => {
+        dispatch({
+            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/suppressIncidents' : 'alertOperation/suppressIncidents',
+            payload: time
+        })
+      },
+      onCancel: () => {
+        dispatch({
+            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleSuppressModal' : 'alertOperation/toggleSuppressModal',
+            payload: {
+              status: false
+            }
+        })
+      }
+    }
     
     const refreshProps = {
       onChange(checked){
@@ -432,6 +462,7 @@ class AlertListManage extends Component{
         <ChatOpshModal {...chatOpsModalProps}/>
         <ResolveModal {...resolveModalProps}/>
         <RelieveModal />
+        <SuppressModal {...suppressModalProps}/>
       </div>
     )
   }
