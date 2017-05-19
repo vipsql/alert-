@@ -14,7 +14,7 @@ function isApiUrl(url) {
     //return `http://${url}`
     return url;
   }
-
+  
   return `${ROOT_PATH}${url}`;
 }
 // $.ajax({
@@ -42,9 +42,9 @@ function ajax(url, options){
           ...options.headers,
         },
         xhrFields: {
-          //withCredentials: true
+          // withCredentials: true
         },
-        //timeout: 10000
+        // timeout: 10000
       }
       $.ajax(configs).done( data => {
         resolve({

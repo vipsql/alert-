@@ -9,7 +9,7 @@ import styles from './timeSlider.less';
 
 class TimeSlider extends Component {
   render() {
-    const { timeStart, timeEnd, changeTime } = this.props;
+    const { timeStart, timeEnd, changeTime, target } = this.props;
     return (
       <div className={styles.timeWrap}>
         <div className={styles.timeStart}>
@@ -17,7 +17,7 @@ class TimeSlider extends Component {
           <Slider onChange={changeTime.bind(this, 'timeStart', 'hours')} value={timeStart.hours} className={cls(styles.hours, `timeMarks${timeStart.hours}`)} tipFormatter={null} max={23} />
           <Slider onChange={changeTime.bind(this, 'timeStart', 'mins')} value={timeStart.mins} className={cls(styles.mins, `timeMarks${timeStart.mins}`)} tipFormatter={null} max={59} />
         </div>
-        <div className={styles.timeEnd}>
+        <div className={styles.timeEnd} style={{display: `${target === 0 ? 'block' : 'none'}`}}>
           <p className={styles.title}>{window.__alert_appLocaleData.messages['ruleEditor.endTime']}：</p>
           <Slider onChange={changeTime.bind(this, 'timeEnd', 'hours')} value={timeEnd.hours} className={cls(styles.hours, `timeMarks${timeEnd.hours}`)} tipFormatter={null} max={23} />
           <Slider onChange={changeTime.bind(this, 'timeEnd', 'mins')} value={timeEnd.mins} className={cls(styles.mins, `timeMarks${timeEnd.mins}`)} tipFormatter={null} max={59} />
