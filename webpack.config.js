@@ -28,38 +28,50 @@ module.exports = function (webpackConfig, env) {
 
   //
   webpackConfig.plugins.push(
-
-       new CopyWebpackPlugin([
-           {
-             from: __dirname + '/iconfont/**',
-             to: __dirname + '/dist/'
-           },
-           {
-             from: __dirname + '/apidocs_en.html',
-             to: __dirname + '/dist/'
-           },
-           {
-             from: __dirname + '/apidocs_zh.html',
-             to: __dirname + '/dist/'
-           },
-           {
-             from: __dirname + '/polyfill-ie10.js',
-             to: __dirname + '/dist/'
-           },
-           {
-             from: __dirname + '/polyfill-ie11.js',
-             to: __dirname + '/dist/'
-           },
-           {
-             from: __dirname + '/guideTip.png',
-             to: __dirname + '/dist/'
-           },
-           {
-             from: __dirname + '/guideTip_en.png',
-             to: __dirname + '/dist/'
-           }
-       ])
-
+    new CopyWebpackPlugin([
+      {
+        from: __dirname + '/iconfont/**',
+        to: __dirname + '/dist/'
+      },
+      {
+        from: __dirname + '/apidocs_en.html',
+        to: __dirname + '/dist/'
+      },
+      {
+        from: __dirname + '/apidocs_zh.html',
+        to: __dirname + '/dist/'
+      },
+      {
+        from: __dirname + '/polyfill-ie10.js',
+        to: __dirname + '/dist/'
+      },
+      {
+        from: __dirname + '/polyfill-ie11.js',
+        to: __dirname + '/dist/'
+      },
+      {
+        from: __dirname + '/guideTip.png',
+        to: __dirname + '/dist/'
+      },
+      {
+        from: __dirname + '/guideTip_en.png',
+        to: __dirname + '/dist/'
+      }
+    ]),
+    new HtmlWebpackPlugin({
+      title: 'Alert',
+      filename: './dist/rest.html',
+      template: './src/template/rest.html',
+      inject: true,
+      chunks: []
+    }),
+    new HtmlWebpackPlugin({
+      title: 'Alert',
+      filename: './dist/index.html',
+      template: './src/template/index.html',
+      inject: true,
+      chunks: []
+    })
    );
 
   // Don't extract common.js and common.css

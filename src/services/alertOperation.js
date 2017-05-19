@@ -133,6 +133,16 @@ export async function relieve(param) {
     })
 }
 
+export async function suppress(param) {
+    return request(`/rule/queryRules`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(param)
+    })
+}
+
 // 修改工单流水号
 export async function changeTicket(params) {
     return request(`/incident/updateFlowNo`, {

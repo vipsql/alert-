@@ -149,6 +149,10 @@ const alertOperation = ({position,
             id: 'alertOperate.groupByStatus',
             defaultMessage: '按状态分组',
         },
+        groupBySeverity: {
+            id: 'alertOperate.groupBySeverity',
+            defaultMessage: '按级别分组',
+        },
         groupByOther: {
             id: 'alertOperate.groupByOther',
             defaultMessage: '按{other}分组',
@@ -218,9 +222,11 @@ const alertOperation = ({position,
                 :
                 undefined
             }
-            <Select disabled={suppressDisabled} className={styles.selectSingle} allowClear placeholder={formatMessage({...localeMessage['suppress']})} onChange={ (min) => {
+            <Select disabled={suppressDisabled} style={{width: '100px'}} className={styles.selectSingle} allowClear placeholder={formatMessage({...localeMessage['suppress']})} onChange={ (min) => {
                 // 以分钟计
-                showSuppressModal(min, position)
+                if (min) {
+                    showSuppressModal(min, position)
+                }
             }}>
                 <Option value="5"><FormattedMessage {...localeMessage['suppress_five']} /></Option>
                 <Option value="10"><FormattedMessage {...localeMessage['suppress_ten']} /></Option>
@@ -228,7 +234,7 @@ const alertOperation = ({position,
             </Select>
             {
                 window.__alert_appLocaleData.locale == 'zh-cn' ?
-                <Select className={styles.showChatOps} allowClear placeholder={formatMessage({...localeMessage['moreOperate']})} onChange={ (operate) => {
+                <Select className={styles.showChatOps} style={{width: '110px'}} allowClear placeholder={formatMessage({...localeMessage['moreOperate']})} onChange={ (operate) => {
                     switch (operate) {
                         case 'ChatOps':
                             showChatOpsFunc(position)
@@ -249,6 +255,7 @@ const alertOperation = ({position,
                     <Select className={classnames(styles.setGroup, styles.selectSingle)} placeholder={formatMessage({...localeMessage['groupBy']})} value={selectGroup} onChange={ (value) => {
                         groupFunc(value)
                     }}>
+                        <Option key={'severity'} className={styles.menuItem} value="severity"><FormattedMessage {...localeMessage['groupBySeverity']} /></Option>
                         <Option key={'entityName'} className={styles.menuItem} value="entityName"><FormattedMessage {...localeMessage['groupByEnityName']} /></Option>
                         <Option key={'source'} className={styles.menuItem} value="source"><FormattedMessage {...localeMessage['groupBySource']} /></Option>
                         <Option key={'status'} className={styles.menuItem} value="status"><FormattedMessage {...localeMessage['groupByStatus']} /></Option>

@@ -330,6 +330,9 @@ class ListTable extends Component {
                     groupBy && groupBy == 'status' ?
                     window['_status'][item.classify]
                     :
+                    groupBy && groupBy == 'severity' ? 
+                    window['_severity'][item.classify]
+                    :
                     item.classify ? item.classify : <FormattedMessage {...formatMessages['Unknown']} />
                   }
               </td>
@@ -341,6 +344,9 @@ class ListTable extends Component {
                   {
                     groupBy && groupBy == 'status' ?
                     window['_status'][item.classify]
+                    :
+                    groupBy && groupBy == 'severity' ? 
+                    window['_severity'][item.classify]
                     :
                     item.classify ? item.classify : <FormattedMessage {...formatMessages['Unknown']} />
                   }

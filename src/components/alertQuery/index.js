@@ -388,6 +388,10 @@ class alertQueryManage extends Component{
               id: 'alertOperate.groupByStatus',
               defaultMessage: '按状态分组',
           },
+          groupBySeverity: {
+              id: 'alertOperate.groupBySeverity',
+              defaultMessage: '按级别分组',
+          },
           groupByOther: {
               id: 'alertOperate.groupByOther',
               defaultMessage: '按{other}分组',
@@ -726,6 +730,7 @@ class alertQueryManage extends Component{
                             payload: value,
                         })
                     }}>
+                        <Option key={'severity'} className={styles.menuItem} value="severity"><FormattedMessage {...localeMessage['groupBySeverity']} /></Option>
                         <Option key={'entityName'} className={styles.menuItem} value="entityName"><FormattedMessage {...localeMessage['groupByEnityName']} /></Option>
                         <Option key={'source'} className={styles.menuItem} value="source"><FormattedMessage {...localeMessage['groupBySource']} /></Option>
                         <Option key={'status'} className={styles.menuItem} value="status"><FormattedMessage {...localeMessage['groupByStatus']} /></Option>

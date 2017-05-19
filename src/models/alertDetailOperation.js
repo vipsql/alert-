@@ -1,5 +1,5 @@
 import {parse} from 'qs'
-import { getFormOptions, dispatchForm, close, resolve, merge, relieve, getChatOpsOptions, shareRoom} from '../services/alertOperation'
+import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom} from '../services/alertOperation'
 import { message } from 'antd';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -35,7 +35,32 @@ export default {
     },
     // 抑制告警
     *suppressIncidents({payload: time}, {select, put, call}) {
+        const { viewDetailAlertId } = yield select( state => {
+            return {
+                'viewDetailAlertId': state.alertListTable.viewDetailAlertId
+            }
+        })
         
+        if (viewDetailAlertId && time !== undefined) {
+            let stringId = '' + viewDetailAlertId;
+            const suppressData = yield suppress({
+                incidentIds: [stringId],
+                time: '' + time
+            })
+            if (suppressData.result) {
+                yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+            } else {
+                yield message.error(window.__alert_appLocaleData.messages[suppressData.message], 3);
+            }
+        } else {
+            console.error('select incident/incident type error');
+        }
+        yield put({
+          type: 'toggleSuppressModal',
+          payload: {
+              status: false
+          }
+        })
     },
     // 打开派发工单做的相应处理
     *openFormModal({payload}, {select, put, call}) {

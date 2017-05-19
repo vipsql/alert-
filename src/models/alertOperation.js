@@ -1,5 +1,5 @@
 import {parse} from 'qs'
-import { getFormOptions, dispatchForm, close, resolve, merge, relieve, getChatOpsOptions, shareRoom} from '../services/alertOperation'
+import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom} from '../services/alertOperation'
 import { queryAlertList, queryChild, queryAlertListTime } from '../services/alertList'
 import { queryCloumns } from '../services/alertQuery'
 import { message } from 'antd';
@@ -99,7 +99,28 @@ export default {
       },
       // 抑制告警
       *suppressIncidents({payload: time}, {select, put, call}) {
-          
+        const {selectedAlertIds} = yield select( state => {
+            return {
+                'selectedAlertIds':state.alertListTable.selectedAlertIds
+            }
+        })
+        if (selectedAlertIds.length !== 0) {
+            const suppressData = yield suppress({
+                incidentIds: selectedAlertIds,
+                time: '' + time
+            })
+            if (suppressData.result) {
+                yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+            } else {
+                yield message.error(window.__alert_appLocaleData.messages[suppressData.message], 3);
+            }
+        }
+        yield put({
+            type: 'toggleSuppressModal',
+            payload: {
+                status: false
+            }
+        })
       },
       // 打开解除告警modal
       *openRelieveModal({payload}, {select, put, call}) {

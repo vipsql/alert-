@@ -96,6 +96,7 @@
   "alertOperate.shareChatOps": "分享到ChatOps",
   "alertOperate.columns": "列定制",
   "alertOperate.groupBy": "分组显示",
+  "alertOperate.groupBySeverity": "按级别分组",
   "alertOperate.groupByEnityName": "按对象分组",
   "alertOperate.groupBySource": "按来源分组",
   "alertOperate.groupByStatus": "按状态分组",

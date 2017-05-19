@@ -339,6 +339,11 @@ export default {
           payload: true
         })
         const groupList = yield groupSort()(tempListData, payload.group)
+        if (payload.group !== undefined && payload.group === 'severity') {
+          groupList.sort( (prev, next) => {
+            return Number(next.classify) - Number(prev.classify);
+          })
+        }
         yield put({
           type: 'updateAlertListToGroup',
           payload: {

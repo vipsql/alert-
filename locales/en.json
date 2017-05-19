@@ -96,6 +96,7 @@
   "alertOperate.shareChatOps": "Share to ChatOps",
   "alertOperate.columns": "Columns",
   "alertOperate.groupBy": "GroupBy",
+  "alertOperate.groupBySeverity": "GroupBy Severity",
   "alertOperate.groupByEnityName": "GroupBy EnityName",
   "alertOperate.groupBySource": "GroupBy Source",
   "alertOperate.groupByStatus": "GroupBy Status",
