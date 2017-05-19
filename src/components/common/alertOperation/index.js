@@ -10,7 +10,8 @@ const DropdownButton = Dropdown.Button;
 const alertOperation = ({position, 
     columnList, 
     selectGroup, 
-    extendColumnList, 
+    extendColumnList,
+    extendTagsKey,
     checkCloumFunc, 
     relieveFunc, 
     dispatchFunc, 
@@ -20,9 +21,11 @@ const alertOperation = ({position,
     groupFunc, 
     noGroupFunc,
     showChatOpsFunc,
+    showSuppressModal,
     dispatchDisabled,
     closeDisabled,
     resolveDisabled,
+    suppressDisabled,
     intl: {formatMessage} }) => {
 
     const localeMessage = defineMessages({
@@ -78,6 +81,22 @@ const alertOperation = ({position,
             id: 'alertList.title.lastOccurTime',
             defaultMessage: '最后发送时间',
         },
+        firstOccurTime:{
+            id: 'alertList.title.firstOccurTime',
+            defaultMessage: '首次发生时间',
+        },
+        entityAddr:{
+            id: 'alertList.title.entityAddr',
+            defaultMessage: 'IP地址',
+        },
+        orderFlowNum:{
+            id: 'alertList.title.orderFlowNum',
+            defaultMessage: '关联工单',
+        },
+        notifyList:{
+            id: 'alertList.title.notifyList',
+            defaultMessage: '是否分享',
+        },
         basic: {
             id: 'alertList.title.basic',
             defaultMessage: '常规',
@@ -89,6 +108,22 @@ const alertOperation = ({position,
         moreOperate: {
             id: 'alertOperate.moreAcitons',
             defaultMessage: '更多操作',
+        },
+        suppress: {
+            id: 'alertOperate.suppress',
+            defaultMessage: '抑制告警',
+        },
+        suppress_five: {
+            id: 'alertOperate.suppress.five',
+            defaultMessage: '5分钟内不再提醒',
+        },
+        suppress_ten: {
+            id: 'alertOperate.suppress.ten',
+            defaultMessage: '10分钟内不再提醒',
+        },
+        suppress_halfHour: {
+            id: 'alertOperate.suppress.halfHour',
+            defaultMessage: '半小时内不再提醒',
         },
         chatOps: {
             id: 'alertOperate.shareChatOps',
@@ -125,13 +160,6 @@ const alertOperation = ({position,
         'iconfont',
         'icon-bushu'
     )
-
-    // <Select className={styles.selectSingle} defaultValue="0">
-    //     <Option value="0">抑制告警</Option>
-    //     <Option value="1">5分钟内不再提醒</Option>
-    //     <Option value="2">10分钟内不再提醒</Option>
-    //     <Option value="3">半小时内不再提醒</Option>
-    // </Select>
 
     const switchClass = classnames(
         'icon',
@@ -190,6 +218,14 @@ const alertOperation = ({position,
                 :
                 undefined
             }
+            <Select disabled={suppressDisabled} className={styles.selectSingle} allowClear placeholder={formatMessage({...localeMessage['suppress']})} onChange={ (min) => {
+                // 以分钟计
+                showSuppressModal(min, position)
+            }}>
+                <Option value="5"><FormattedMessage {...localeMessage['suppress_five']} /></Option>
+                <Option value="10"><FormattedMessage {...localeMessage['suppress_ten']} /></Option>
+                <Option value="30"><FormattedMessage {...localeMessage['suppress_halfHour']} /></Option>
+            </Select>
             {
                 window.__alert_appLocaleData.locale == 'zh-cn' ?
                 <Select className={styles.showChatOps} allowClear placeholder={formatMessage({...localeMessage['moreOperate']})} onChange={ (operate) => {
@@ -213,12 +249,17 @@ const alertOperation = ({position,
                     <Select className={classnames(styles.setGroup, styles.selectSingle)} placeholder={formatMessage({...localeMessage['groupBy']})} value={selectGroup} onChange={ (value) => {
                         groupFunc(value)
                     }}>
-                        <Option key={0} className={styles.menuItem} value="entityName"><FormattedMessage {...localeMessage['groupByEnityName']} /></Option>
-                        <Option key={1} className={styles.menuItem} value="source"><FormattedMessage {...localeMessage['groupBySource']} /></Option>
-                        <Option key={2} className={styles.menuItem} value="status"><FormattedMessage {...localeMessage['groupByStatus']} /></Option>
+                        <Option key={'entityName'} className={styles.menuItem} value="entityName"><FormattedMessage {...localeMessage['groupByEnityName']} /></Option>
+                        <Option key={'source'} className={styles.menuItem} value="source"><FormattedMessage {...localeMessage['groupBySource']} /></Option>
+                        <Option key={'status'} className={styles.menuItem} value="status"><FormattedMessage {...localeMessage['groupByStatus']} /></Option>
                         {
                             extendColumnList.length > 0 ? extendColumnList.map( (col, index) => {
-                                return <Option key={index + 3} className={styles.menuItem} value={col.id}><FormattedMessage {...localeMessage['groupByOther']} values={{other: col.name}}/></Option>
+                                return <Option key={col.id} className={styles.menuItem} value={col.id}><FormattedMessage {...localeMessage['groupByOther']} values={{other: col.name}}/></Option>
+                            }) : []
+                        }
+                        {
+                            extendTagsKey.length > 0 ? extendTagsKey.map( (tag, index) => {
+                                return <Option key={tag} className={styles.menuItem} value={tag}><FormattedMessage {...localeMessage['groupByOther']} values={{other: tag}}/></Option>
                             }) : []
                         }
                     </Select>
@@ -254,9 +295,11 @@ alertOperation.defaultProps = {
     groupFunc: () => {},
     noGroupFunc: () => {},
     showChatOpsFunc: () => {},
+    showSuppressModal: () => {},
     dispatchDisabled: false,
     closeDisabled: false,
-    resolveDisabled: false
+    resolveDisabled: false,
+    suppressDisabled: false
 }
 
 alertOperation.propTypes = {

@@ -541,7 +541,8 @@ export default {
             type: 'alertOperation/initColumn',
             payload: {
               baseCols: columns, 
-              extend: listData.data.properties
+              extend: listData.data.properties,
+              tags: listData.data.tagKeys
             }
           })
 
@@ -761,7 +762,10 @@ export default {
         })
         yield put({
           type: 'alertOperation/addProperties',
-          payload: listReturnData.data.properties
+          payload: {
+            properties: listReturnData.data.properties,
+            tags: listReturnData.data.tagKeys 
+          }
         })
       } else {
         yield message.error(window.__alert_appLocaleData.messages[listReturnData.message], 2)

@@ -155,13 +155,13 @@ curl -H "Content-type: application/json;charset=utf-8" -X POST -d '[
  <script>
  	function getUrl() {
 		document.getElementById('url').innerHTML = window.parent.__alert_restApiUrl
-		document.getElementById('example').innerHTML = document.getElementById('example').innerHTML + '"' + window.parent.__alert_restApiUrl + '"'
+		document.getElementById('example').innerHTML = document.getElementById('example').innerHTML + window.parent.__alert_restApiUrl;
 	}
 	window.addEventListener('message', function(e){
 		var len = document.getElementById('example').innerHTML.length;
 		if(e.source!=window.parent) return;
 		document.getElementById('url').innerHTML = document.getElementById('url').innerHTML + '&app_Key=' + e.data
-		document.getElementById('example').innerHTML = document.getElementById('example').innerHTML.slice( 0, len - 1 ) + '\&app_Key=' + e.data + '"'
+		document.getElementById('example').innerHTML = document.getElementById('example').innerHTML.slice( 0, len) + '\\&app_Key=' + e.data
 	}, false);
  </script>
 </html>

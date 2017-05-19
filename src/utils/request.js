@@ -42,7 +42,7 @@ function ajax(url, options){
           ...options.headers,
         },
         xhrFields: {
-          // withCredentials: true
+          withCredentials: true
         },
         //timeout: 10000
       }
@@ -71,7 +71,7 @@ function ajax(url, options){
         } else {
           resolve({
             result: false,
-            message: xhr.responseJSON !== undefined && xhr.responseJSON.message !== undefined ? xhr.responseJSON.message : 'Unknown Error'
+            message: xhr.responseJSON !== undefined && xhr.responseJSON.message !== undefined ? xhr.responseJSON.message : 'unknown.Error'
           })
         }
       })

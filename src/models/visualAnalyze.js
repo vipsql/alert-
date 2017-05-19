@@ -11,12 +11,13 @@ const initalState = {
    tags: [],
   //  isFirst: false, //是否从其他页面进入
    resList: [],
+   
    isShowFouth: false,
    incidentGroup: true, 
    tagsLevel: 1,
    tasgFitler: '',
    resInfo: [],
-   alertList: []
+   alertList: ''
 
 }
 
@@ -36,6 +37,7 @@ export default {
     init({ dispatch, history }) {
       history.listen((location, state) => {
         if (pathToRegexp('/alertManage/:alertClassify/:alertList').test(location.pathname)) {
+          
           dispatch({
             type: 'queryVisualList',
             payload: {isFirst: true}
@@ -60,16 +62,17 @@ export default {
       
       const visualSelect = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1"))
       
-      // isFirst表示从告警管理页面跳过来 否则为select切换选择
+      // isFirst表示从重新查询 否则为select切换选择
       if(isFirst){
         // 初始化状态
         yield put({
-          type: 'init',
-          payload: initalState
+          type: 'init'
         })
+        
         const tagsData = yield call(queryTags, {
             tags: visualSelect
         })
+        
         
         if(tagsData.result){
           
@@ -119,18 +122,18 @@ export default {
         const gr3key = localStorage.getItem('__alert_visualAnalyze_gr3') ? localStorage.getItem('__alert_visualAnalyze_gr3') :tags[1]
         switch(level){
           case 1:
-            val = [gr1]
+            val = gr1
             break;
           case 2:
-              val = [gr1,{key: gr2key, value: ''}]
+              val = gr1.concat([{key: gr2key, value: ''}])
               break;
           case 3:
-              val = [gr1,{key: gr2key, value: ''},{key: gr3key, value: ''}]
+              val = gr1.concat([{key: gr2key, value: ''},{key: gr3key, value: ''}]) 
               break;
         }
         const res = yield call(queryVisualRes,{ tags: val})
         const resList = res.data
-        if(res.result && resList.length > 0){
+        if(res.result){
           yield put({
             type: 'updateResListDirectly',
             payload: {
@@ -188,7 +191,7 @@ export default {
       })
       
       const resList = res.data
-      if(res.result && resList.length > 0){
+      if(res.result){
         yield put({
           type: 'updateResList',
           payload: {
@@ -240,7 +243,7 @@ export default {
   },
 
   reducers: {
-    init(state, {payload: initalState}) {
+    init(state) {
       return {
         ...state,
         ...initalState
@@ -258,6 +261,7 @@ export default {
         alertList
       }
     },
+
     updateIncidentGroup(state,{payload: isChecked}){
 
         return {

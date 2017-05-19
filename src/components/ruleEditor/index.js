@@ -471,7 +471,6 @@ class RuleEditor extends Component {
                         </Select>
                     </FormItem>
                     <FormItem
-                        {...desLayout}
                         label={window.__alert_appLocaleData.messages['ruleEditor.excuteTime']}
                     >
                         <RadioGroup

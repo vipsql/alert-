@@ -132,6 +132,68 @@ export default function({history, app}) {
           }
         }
       ]
+    },
+    // -----------外调页面---------------------------
+    {
+      path: '/export',
+      name: 'exportPage',
+      childRoutes: [
+        {
+          path: 'close/:id',
+          name: 'export_close',
+          getComponent(nextState, cb) {
+            require.ensure([], require => {
+              let isLoadModal = false
+              app._models.forEach(function(ele) {
+                if(ele.namespace == 'alertExport'){
+                  isLoadModal = true
+                }
+              });
+              if(!isLoadModal){
+               app.model(require('./models/alertExport'))
+              }
+              cb(null, require('./routes/export/close'))
+            }, 'export_close')
+          }
+        },
+        {
+          path: 'resolve/:id',
+          name: 'export_resolve',
+          getComponent(nextState, cb) {
+            require.ensure([], require => {
+              let isLoadModal = false
+              app._models.forEach(function(ele) {
+                if(ele.namespace == 'alertExport'){
+                  isLoadModal = true
+                }
+              });
+              if(!isLoadModal){
+               app.model(require('./models/alertExport'))
+              }
+              cb(null, require('./routes/export/resolve'))
+            }, 'export_resolve')
+          }
+        },
+        {
+          path: 'dispatch/:id',
+          name: 'export_dispatch',
+          getComponent(nextState, cb) {
+            require.ensure([], require => {
+              let isLoadModal = false
+              app._models.forEach(function(ele) {
+                if(ele.namespace == 'alertExport'){
+                  
+                  isLoadModal = true
+                }
+              });
+              if(!isLoadModal){
+               app.model(require('./models/alertExport'))
+              }
+              cb(null, require('./routes/export/dispatch'))
+            }, 'export_dispatch')
+          }
+        }
+      ]
     }
   ]
 

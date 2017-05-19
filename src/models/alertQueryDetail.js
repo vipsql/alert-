@@ -8,6 +8,7 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 const initalState = {
     isShowDetail: false, // 是否显示detail
     selectGroup: window['_groupBy'], // 默认是分组设置
+    suppressTime: '5',
 
     isShowFormModal: false, // 派发工单modal
     isShowChatOpsModal: false,
@@ -15,6 +16,7 @@ const initalState = {
     chatOpsRooms: [], // 群组
     isShowCloseModal: false,
     isShowResolveModal: false,
+    isShowSuppressModal: false, // suppress
 
     isShowTicketModal: false, //派发工单框
     ticketUrl: '', //工单链接
@@ -22,6 +24,7 @@ const initalState = {
 
     selectColumn: [], // 选择的列
     extendColumnList: [], //扩展字段
+    extendTagsKey: [], // 标签
     columnList: [
         {
             type: 0, // id 
@@ -33,7 +36,11 @@ const initalState = {
                 {id: 'count', checked: false,},
                 {id: 'lastTime', checked: false,},
                 {id: 'lastOccurTime', checked: false,},
-                {id: 'status', checked: true,}
+                {id: 'status', checked: false,},
+                {id: 'firstOccurTime', checked: false,},
+                {id: 'entityAddr', checked: false,},
+                {id: 'orderFlowNum', checked: false,},
+                {id: 'notifyList', checked: false,},
             ]
         },
     ],
@@ -53,10 +60,20 @@ export default {
   state: initalState,
 
   effects: {
-    *initalForm() {
-      // 将初始的detail form --> operateForm
+     // 打开抑制告警Modal
+    *openSuppress({payload: {min}}, {select, put, call}) {
+        yield put({
+            type: 'toggleSuppressModal',
+            payload: {
+                status: true,
+                suppressTime: min
+            }
+        })
     },
-
+    // 抑制告警
+    *suppressIncidents({payload: time}, {select, put, call}) {
+        
+    },
     // 打开派发工单做的相应处理
     *openFormModal({payload}, {select, put, call}) { 
         const options = yield getFormOptions();
@@ -104,6 +121,17 @@ export default {
           type: 'toggleDispatchModal',
           payload: false
         })
+    },
+    // 派发工单成功后的操作
+    *afterDispatch({payload}, {select, put, call}) {
+        const { viewDetailAlertId } = yield select( state => {
+            return {
+                'viewDetailAlertId': state.alertQuery.viewDetailAlertId
+            }
+        })
+        yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: ['' + viewDetailAlertId], status: 150}})
+        yield put({type: 'openDetailModal'})
+        yield put({type: 'closeTicketModal'})
     },
     // 打开关闭工单
     *openCloseModal({payload}, {select, put, call}) {
@@ -212,8 +240,13 @@ export default {
                 closeMessage: payload
             })
             if (resultData.result) {
-                yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: [stringId], status: 255}})
-                yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                if (resultData.data.result) {
+                    yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: [stringId], status: 255}})
+                    yield put({ type: 'openDetailModal' })
+                    yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                } else {
+                    yield message.error(`${resultData.data.failures}`, 3);
+                }
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
             }
@@ -240,8 +273,13 @@ export default {
                 resolveMessage: payload
             })
             if (resultData.result) {
-                yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: [stringId], status: 190}})
-                yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                if (resultData.data.result) {
+                    yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: [stringId], status: 190}})
+                    yield put({ type: 'openDetailModal' })
+                    yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                } else {
+                    yield message.error(`${resultData.data.failures}`, 3);
+                }
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
             }
@@ -326,21 +364,6 @@ export default {
             }
         })
     },
-    // 列定制初始化(将数据变为设定的结构)
-    // *initalColumn({payload}, {select, put, call}) {
-    //     // 这里后期要先做查询得到扩展字段，再和columnList拼接
-    //     const { columns } = yield select( state => {
-    //         return {
-    //             'columns': state.alertQuery.columns
-    //         }
-    //     })
-    //     const columnResult = yield call(queryCloumns)
-    //     if (!columnResult.result) {
-    //         yield message.error(window.__alert_appLocaleData.messages[columnResult.message], 2);
-    //     }
-    //     yield put({ type: 'initColumn', payload: {baseCols: columns, extend: columnResult.data || {}}})
-        
-    // },
     // 列定制
     *checkColumn({payload}, {select, put, call}) {
         yield put({ type: 'setColumn', payload: payload })
@@ -351,7 +374,7 @@ export default {
 
   reducers: {
     // 列定制初始化
-    initColumn(state, {payload: {baseCols, extend}}) {
+    initColumn(state, {payload: {baseCols, extend, tags}}) {
         const { columnList } = state;
         let newList = columnList;
         baseCols.forEach( (column, index) => {
@@ -369,12 +392,13 @@ export default {
             })
             newList[1] = extend
         }
-        return { ...state, columnList: newList, extendColumnList: extend.cols }
+        return { ...state, columnList: newList, extendColumnList: extend.cols, extendTagsKey: tags}
     },
     // show more时需要叠加columns
-    addProperties(state, {payload: properties}) {
-        let { columnList } = state;
+    addProperties(state, {payload: {properties, tags}}) {
+        let { columnList, extendTagsKey } = state;
         let colIds = [];
+        let newTags = [].concat(extendTagsKey);
         columnList.forEach( (item) => {
             if (item.type == 1) {
                 item.cols.forEach( (col) => {
@@ -390,7 +414,14 @@ export default {
                 }
             })
         }
-        return {...state, columnList: columnList, extendColumnList: columnList[columnList.length - 1].cols}
+        if (tags.length !== 0) {
+            tags.forEach( (tag) => {
+                if (!extendTagsKey.includes(tag)) {
+                    newTags.push(tag)
+                }
+            })
+        }
+        return {...state, columnList: columnList, extendColumnList: columnList[columnList.length - 1].cols, extendTagsKey: newTags}
     },
     // 列改变时触发
     setColumn(state, {payload: selectCol}) {
@@ -454,7 +485,7 @@ export default {
     },
     // 切换派发工单modal的状态
     toggleDispatchModal(state, {payload: isShowFormModal}) {
-      return { ...state, isShowFormModal }
+        return { ...state, isShowFormModal }
     },
     toggleCloseModal(state, {payload: isShowCloseModal}) {
         return { ...state, isShowCloseModal }
@@ -464,19 +495,22 @@ export default {
     },
     // 切换工单的状态
     toggleFormModal(state, {payload: isShowOperateForm}) {
-      return { ...state, isShowOperateForm }
+        return { ...state, isShowOperateForm }
     },
     // 切换备注的状态
     toggleRemarkModal(state, {payload: isShowRemark}) {
-      return { ...state, isShowRemark }
+        return { ...state, isShowRemark }
+    },
+    toggleSuppressModal(state, {payload: {suppressTime = initalState.suppressTime, status}}) {
+        return { ...state, isShowSuppressModal: status, suppressTime }
     },
     // 存储工单信息
     setFormData(state, {payload: operateForm}) {
-      return { ...state, operateForm }
+        return { ...state, operateForm }
     },
     // 存储备注信息
     setRemarkData(state, {payload: operateRemark}) {
-      return { ...state, operateRemark }
+        return { ...state, operateRemark }
     },
     // 派发工单框
     toggleTicketModal(state, {payload: payload}){
