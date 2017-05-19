@@ -324,7 +324,7 @@
   "ruleEditor.weekly": "每周",
   "ruleEditor.monthly": "每月",
   "ruleEditor.ruleName": "规则名称",
-  "ruleEditor.target": "适用范围111",
+  "ruleEditor.target": "适用范围",
   "ruleEditor.newTarget": "新接收的告警",
   "ruleEditor.oldTarget": "已存在未关闭的告警",
   "ruleEditor.description": "规则描述",
