@@ -94,8 +94,8 @@ class NotificationList extends Component {
                             className={styles.msgContent}
                         >
                             <Input id="smsMessage"
-                                value={action.actionNotification ? action.actionNotification.notificationMode.smsMessage : undefined}
-                                onChange={this.changeAction.bind(this, 3)} type="textarea" placeholder={window.__alert_appLocaleData.messages['ruleEditor.phBody']} />
+                                value={action.actionNotification ? action.actionNotification.notificationMode.smsMessage : '${severity}, ${entityName}, ${firstOccurTime}, ${description}'}
+                                onChange={this.changeAction.bind(this, 3)} type="textarea" />
 
                             <Popover overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={smsVarContent}>
                                 <div className={styles.insertVar}>{window.__alert_appLocaleData.messages['ruleEditor.vars']}</div>

@@ -365,7 +365,7 @@
   "ruleEditor.word2": "Change the state of matched alerts to Closed or delete the matched records.",
   "ruleEditor.notifyObj": "To",
   "ruleEditor.notifySelectObj": "",
-  "ruleEditor.notifyMode": "Via:",
+  "ruleEditor.notifyMode": "Via：",
   "ruleEditor.email": "Email",
   "ruleEditor.sms": "SMS",
   "ruleEditor.chatops": "Share to personal ChatOps window",
@@ -408,6 +408,8 @@
   "ruleEditor.word5": "For the matched alerts, excute the suppression action.",
   "ruleEditor.word6": "minutes - if the alert is Not",
   "ruleEditor.word7": ", then notify",
+  "ruleEditor.alertUpgrade": "Upgrade",
+  "ruleEditor.word8": "",
 
 
   "server.notStarted": " Service Unavailable",

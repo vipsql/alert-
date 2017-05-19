@@ -262,6 +262,22 @@ class RuleEditor extends Component {
             /* 适用范围 */
             target: props.target,
         };
+
+        if (!this.state.action.actionUpgrade) {
+            this.state.action.actionUpgrade = {
+                notificationGroupings: [{
+                    delay: 15,
+                    status: [],
+                    recipients: []
+                }],
+                notificationMode: {
+                    notificationMode: [],
+                    emailTitle: '${entityName}:${name}',
+                    emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
+                    smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
+                }
+            }
+        }
     }
     componentWillMount() {
         const { dispatch } = this.props;
@@ -320,8 +336,29 @@ class RuleEditor extends Component {
             _timeEnd.hours = nextProps.time.timeEnd.substr(0, 2);
             _timeEnd.mins = nextProps.time.timeEnd.substr(3, 2);
         }
-        // debugger
         if (nextProps.name) {
+            let _action = undefined;
+            _action = _.cloneDeep(nextProps.action);
+            if (nextProps.action.actionUpgrade) {
+                _action.actionNotification = {
+                    notificationMode: _action.actionUpgrade.notificationMode,
+                    recipients: []
+                };
+            } else {
+                _action.actionUpgrade = {
+                    notificationGroupings: [{
+                        delay: 15,
+                        status: [],
+                        recipients: []
+                    }],
+                    notificationMode: {
+                        notificationMode: [],
+                        emailTitle: '${entityName}:${name}',
+                        emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
+                        smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
+                    }
+                };
+            }
             this.setState({
                 name: nextProps.name,
                 time: {
@@ -338,14 +375,13 @@ class RuleEditor extends Component {
                 target: nextProps.target,
                 source: nextProps.source,
                 condition: makeCondition(_.cloneDeep(nextProps.condition)),
-                action: nextProps.action,
+                action: _action || nextProps.action,
                 ITSMParam: nextProps.action.actionITSM
                     ? JSON.stringify(JSON.parse(nextProps.action.actionITSM.param), null, 2)
                     : '',
                 timeStart: _timeStart,
                 timeEnd: _timeEnd
             });
-
         }
 
         if (nextProps.alertAssociationRules.ITSMParam) {
@@ -471,6 +507,7 @@ class RuleEditor extends Component {
                         </Select>
                     </FormItem>
                     <FormItem
+                        {...desLayout}
                         label={window.__alert_appLocaleData.messages['ruleEditor.excuteTime']}
                     >
                         <RadioGroup
@@ -516,7 +553,9 @@ class RuleEditor extends Component {
                                                     'active': time.timeCycle === 2
                                                 })} onClick={this.changeTimeCycleType.bind(this, 2)}>{window.__alert_appLocaleData.messages['ruleEditor.monthly']}</span>
                                             </div>
-                                            <div className={cls(styles.timeCycleBd, `${time.timeCycle.length === 0 ? styles.hidden : ''}`)}>
+                                            <div className={cls(styles.timeCycleBd, {
+                                                [styles.hidden]: time.timeCycle.length === 0
+                                            })}>
                                                 {
                                                     time.timeCycle !== 0 &&
                                                     <p>{window.__alert_appLocaleData.messages['ruleEditor.excutionCycle']}：</p>
@@ -596,7 +635,7 @@ class RuleEditor extends Component {
                 <h2>{window.__alert_appLocaleData.messages['ruleEditor.setAct']}</h2>
                 <div>
                     <Tabs className={styles.setActions} animated={false} activeKey={action.type[0].toString()} onChange={this.changeActionType.bind(this)}>
-
+                        {/* 关闭/删除告警 */}
                         <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.closeOrDel']} key="1" className={styles.actionDelOrClose}>
                             <div>
                                 <em>{window.__alert_appLocaleData.messages['ruleEditor.word2']}</em>
@@ -613,54 +652,61 @@ class RuleEditor extends Component {
                                 <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word4']}</span>
                             </div>
                         </TabPane>
-                        {
+                        {/* 升级告警 */}
+                        {   
                             this.state.target === 1 &&
-                            <TabPane tab="升级告警" key="2">
+                            <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.alertUpgrade']} key="2">
                                 <div>
                                     {
                                         action.actionUpgrade.notificationGroupings.map((item, index) => {
-                                            return (
-                                                // 此处可能有BUG：数据的key值不是唯一
-                                                <div key={`${item.delay}${item.recipients.length}${index}`} className={styles.reclist}>
-                                                    <Input style={{ width: 50 }} defaultValue={item.delay} onBlur={this.changeUpgrade.bind(this, index)} />
-                                                    <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word6']}</span>
-                                                    <Select
-                                                        mode="multiple"
-                                                        style={{ width: 180 }}
-                                                        placeholder="请选择告警状态"
-                                                        className={styles.recipients}
-                                                        onChange={this.changeUpgradeMode.bind(this, index)}
-                                                    >
-                                                        <Option value={0}>未接手</Option>
-                                                        <Option value={150}>处理中</Option>
-                                                        <Option value={190}>已解决</Option>
-                                                        <Option value={255}>已关闭</Option>
-                                                    </Select>
-                                                    <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word7']}</span>
-                                                    {/* <Select style={{ width: 100 }} placeholder="动作类型">
-                                                        <Option key="1">123</Option>
-                                                        <Option key="2">321</Option>
-                                                    </Select>
-                                                    <span className={styles.label}>，并通知</span> */}
-                                                    <Select
-                                                        style={{ width: 250 }}
-                                                        mode="multiple"
-                                                        placeholder={window.__alert_appLocaleData.messages['ruleEditor.notifySelectObj']}
-                                                        onChange={this.changeUpgradeRecipients.bind(this, index)}
-                                                        className={styles.recipients}
-                                                        value={item.recipients.map(item => item.userId)}
-                                                    >
+                                            if (item) {
+                                                return (
+                                                    // 此处可能有BUG：数据的key值不是唯一
+                                                    <div key={index} className={styles.reclist}>
+                                                        <Input style={{ width: 50 }} defaultValue={item.delay} onBlur={this.changeUpgrade.bind(this, index)} />
+                                                        <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word6']}</span>
+                                                        <Select
+                                                            mode="multiple"
+                                                            style={{ width: 180 }}
+                                                            placeholder={window.__alert_appLocaleData.messages['ruleEditor.word8']}
+                                                            className={styles.recipients}
+                                                            onChange={this.changeUpgradeMode.bind(this, index)}
+                                                            value={item.status}
+                                                        >
+                                                            <Option value={0}>{window.__alert_appLocaleData.messages['ruleEditor.s1']}</Option>
+                                                            <Option value={150}>{window.__alert_appLocaleData.messages['ruleEditor.s3']}</Option>
+                                                            <Option value={190}>{window.__alert_appLocaleData.messages['ruleEditor.s4']}</Option>
+                                                            <Option value={255}>{window.__alert_appLocaleData.messages['ruleEditor.s5']}</Option>
+                                                        </Select>
+                                                        <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word7']}</span>
+                                                        {/* <Select style={{ width: 100 }} placeholder="动作类型">
+                                                            <Option key="1">123</Option>
+                                                            <Option key="2">321</Option>
+                                                        </Select>
+                                                        <span className={styles.label}>，并通知</span> */}
+                                                        <Select
+                                                            style={{ width: 250 }}
+                                                            mode="multiple"
+                                                            placeholder={window.__alert_appLocaleData.messages['ruleEditor.notifySelectObj']}
+                                                            onChange={this.changeUpgradeRecipients.bind(this, index)}
+                                                            className={styles.recipients}
+                                                            value={item.recipients.map(item => item.userId)}
+                                                        >
+                                                            {
+                                                                this.props.alertAssociationRules.users.map((item, index) => <Option key={item.userId} value={item.userId}>{item.realName}</Option>)
+                                                            }
+                                                        </Select>
                                                         {
-                                                            this.props.alertAssociationRules.users.map((item, index) => <Option key={item.userId} value={item.userId}>{item.realName}</Option>)
+                                                            index === 0
+                                                                ? <i className={styles.addUper} onClick={this.addNotificationGroup.bind(this)}>+</i>
+                                                                : <i className={styles.delUper} onClick={this.delNotificationGroup.bind(this, index)}>X</i>
                                                         }
-                                                    </Select>
-                                                    {
-                                                        index === 0
-                                                            ? <i className={styles.addUper} onClick={this.addNotificationGroup.bind(this)}>+</i>
-                                                            : <i className={styles.delUper} onClick={this.delNotificationGroup.bind(this, index)}>X</i>
-                                                    }
-                                                </div>
-                                            );
+                                                    </div>
+                                                );
+                                            } else {
+                                                return null;
+                                            }
+                                            
                                         })
                                     }
 
@@ -678,6 +724,7 @@ class RuleEditor extends Component {
                                 </div>
                             </TabPane>
                         }
+                        {/* 告警通知 */}
                         <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.notify']} key="3" className={styles.actionNotification}>
                             <div>
 
@@ -711,6 +758,7 @@ class RuleEditor extends Component {
                                 </div>
                             </div>
                         </TabPane>
+                        {/* 告警派单 */}
                         <TabPane disabled={this.props.alertAssociationRules.wos.length === 0 ? true : false} tab={window.__alert_appLocaleData.messages['ruleEditor.ticket']} key="4" className={styles.actionITSM}>
                             <div>
                                 <FormItem
@@ -742,11 +790,13 @@ class RuleEditor extends Component {
 
                             </div>
                         </TabPane>
+                        {/* 抑制告警 */}
                         <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.suppress']} key="5" className={styles.actionSuppress}>
                             <div>
                                 <span>{window.__alert_appLocaleData.messages['ruleEditor.word5']}</span>
                             </div>
                         </TabPane>
+                        {/* 分享到ChatOps */}
                         {
                             window.__alert_appLocaleData.locale === 'zh-cn' &&
                             <TabPane disabled={this.props.alertAssociationRules.rooms.length === 0 ? true : false} tab={window.__alert_appLocaleData.messages['ruleEditor.shareChatOps']} key="6">
@@ -774,22 +824,29 @@ class RuleEditor extends Component {
 
     isChecked(props) {
         const _action = _.cloneDeep(props.action);
-        // debugger
         let email = false;
         let sms = false;
         let chatops = false;
         let recipients = [];
         if (!_action.actionNotification) {
-            _action.actionNotification = {
-                recipients: [],
-                notificationMode: {
-                    notificationMode: [],
-                    emailTitle: '${entityName}:${name}',
-                    emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
-                    smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
+            if (_action.actionUpgrade) {
+                _action.actionNotification = {
+                    recipients: [],
+                    notificationMode: _action.actionUpgrade.notificationMode
                 }
-            };
+            } else {
+                _action.actionNotification = {
+                    recipients: [],
+                    notificationMode: {
+                        notificationMode: [],
+                        emailTitle: '${entityName}:${name}',
+                        emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
+                        smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
+                    }
+                };
+            }
         }
+
         const mode = _action.actionNotification.notificationMode.notificationMode;
         for (let i = mode.length - 1; i >= 0; i -= 1) {
             if (mode[i] === 1) {
@@ -804,7 +861,6 @@ class RuleEditor extends Component {
         }
 
         recipients = _action.actionNotification.recipients.map(item => item.userId);
-        // debugger
         this.setState({
             email: email,
             sms: sms,
@@ -897,7 +953,7 @@ class RuleEditor extends Component {
 
     delNotificationGroup(index) {
         const _action = _.cloneDeep(this.state.action);
-        _action.actionUpgrade.notificationGroupings.splice(index, 1);
+        _action.actionUpgrade.notificationGroupings.splice(index, 1, null);
         this.setState({
             action: _action
         });
@@ -925,7 +981,6 @@ class RuleEditor extends Component {
     }
     changeAction(type, value) {
         // console.info('changeAction', this);
-        // debugger
         const { dispatch } = this.props;
         const _action = _.cloneDeep(this.state.action);
         switch (type) {
@@ -1004,7 +1059,6 @@ class RuleEditor extends Component {
                     });
                 } else {
                     _action.actionITSM.itsmModelId = value;
-                    // debugger;
                     dispatch({
                         type: 'alertAssociationRules/getshowITSMParam',
                         payload: {
@@ -1293,7 +1347,7 @@ class RuleEditor extends Component {
 
     handleSubmit(event) {
         const { dispatch, form, alertAssociationRules } = this.props;
-        const { name, description, type, source, condition, time, timeStart, timeEnd, action } = this.state;
+        const { name, description, type, source, condition, time, timeStart, timeEnd, action, target } = this.state;
         event.preventDefault();
         let _time = {};
         let hmStart = `${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")}`;
@@ -1332,7 +1386,8 @@ class RuleEditor extends Component {
                 break;
             case 2:
                 _actionUpgrade = action.actionUpgrade;
-                _actionUpgrade.notificationMode = action.actionNotification.notificationMode
+                _actionUpgrade.notificationMode = action.actionNotification.notificationMode;
+                _actionUpgrade.notificationGroupings = action.actionUpgrade.notificationGroupings.filter(item => item && item.status.length !== 0 && item.recipients.length !== 0);
                 break;
             case 3:
                 _actionNotification = action.actionNotification;
@@ -1363,6 +1418,7 @@ class RuleEditor extends Component {
                 name,
                 description,
                 type,
+                target,
                 time: type === 0 ? undefined : _time,
                 source,
                 condition: __condition,
@@ -1379,8 +1435,6 @@ class RuleEditor extends Component {
                 actionUpgrade: _actionUpgrade
             }
         };
-        // console.log(_time);
-        // debugger;
         dispatch({
             type: 'alertAssociationRules/createRule',
             payload: {
