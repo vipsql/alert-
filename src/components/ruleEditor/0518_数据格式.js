@@ -1,0 +1,115 @@
+var data = {
+    "rule": {
+        "name": "测试规则",
+        "description": "测试描述",
+        //目标告警（0：实时告警；1：历史告警）
+        "target": 1,
+        "type": 0,
+        "time": {
+            "dayStart": "2017-03-25T17:15+08:00",
+            "dayEnd": "2017-03-25T17:15+08:00",
+            "timeCycle": 0,
+            "timeCycleWeek": "0,1,6",
+            "timeCycleMonth": "0,30",
+            "timeStart": "12:15+08:00",
+            "timeEnd": "12:15+08:00"
+        },
+        "source": "Monitor",
+        "condition": {
+            "content": [{
+                "key": "severity",
+                "opt": ">",
+                "value": "2"
+            }],
+            "complex": [{
+                "content": [{
+                    "key": "severity",
+                    "opt": ">",
+                    "value": "2"
+                }],
+                "complex": [{
+                    "content": [{
+                        "key": "severity",
+                        "opt": ">",
+                        "value": "2"
+                    }, {
+                        "key": "severity",
+                        "opt": ">",
+                        "value": "2"
+                    }],
+                    "logic": "and"
+                }],
+                "logic": "and"
+            }],
+            "logic": "and"
+        }
+    },
+    "action": {
+        "type": [2],
+        "tenant": "tenant_123456123",
+        "actionDelOrClose": {
+            "operation": 1,
+            "type": 1
+        },
+        "actionNotification": {
+            "recipients": [{
+                "userId": "12345132uiu895jsdfgnjs2309",
+                "realName": "hahaha",
+                "email": "zjap@uyunsoft.cn",
+                "mobile": "1231244"
+            }, {
+                "userId": "12345132uiu895jsdfgnjs2309",
+                "realName": "hahaha",
+                "email": "zjap@uyunsoft.cn",
+                "mobile": "1231244"
+            }
+            ],
+            "notificationMode": {
+                "notificationMode": [
+                    1,
+                    3
+                ],
+                "emailTitle": "emailTitle",
+                "emailMessage": "emailmesage",
+                "smsMessage": "smsMessage"
+            },
+            "type": 3
+        },
+        "actionITSM": {
+            "itsmModelId": "changed",
+            "param": {
+                "cesjo": "cesj"
+            },
+            "type": 4
+        },
+        "actionChatOps": {
+            "chatOpsRoomId": "chatanfakj32us232j",
+            "type": 6
+        },
+        "actionSuppress": {
+            "type": 5
+        },
+        //告警升级
+        "actionUpgrade": {
+            "notificationGroupings": [{
+                "delay": 15,
+                "status": [
+                    190,
+                    255
+                ],
+                "recipients": [{
+                    "userId": "xxx",
+                    "realName": "xxx",
+                    "email": "xxx",
+                    "mobile": "xxx"
+                }]
+            }],
+            "notificationMode": {
+                "notificationMode": [1],
+                "emailTitle": "xxx",
+                "emailMessage": "xxx",
+                "smsMessage": "xxx"
+            }
+        }
+    }
+}
