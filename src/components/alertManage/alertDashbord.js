@@ -25,6 +25,10 @@ const formatMessages = defineMessages({
         defaultMessage: '已解决告警',
     },
 })
+const deepCopy= (soruce) => {
+     return JSON.parse(JSON.stringify(soruce));
+}
+
 
 class Chart extends Component{
 
@@ -40,7 +44,7 @@ class Chart extends Component{
 
     }
     shouldComponentUpdate(nextProps){
-      return this.props.currentDashbordData !== nextProps.currentDashbordData
+      return this.props.currentDashbordData !== nextProps.currentDashbordData || this.props.isFullScreen !== nextProps.isFullScreen
     }
     componentDidMount(){
         const self = this;
@@ -51,7 +55,7 @@ class Chart extends Component{
             '3': "#eb5a30" // 紧急
         }
         this.chartWidth = document.documentElement.clientWidth - 160 - 90;
-        this.chartHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight) - 180;
+        this.chartHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight) ;
         this.xscale = d3.scale.linear().range([0, this.chartWidth]);
         this.yscale = d3.scale.linear().range([0, this.chartHeight]);
         this.color = function(num){
@@ -76,6 +80,14 @@ class Chart extends Component{
             // })
             this.props.requestFresh()
         }, 60000)
+
+        document.addEventListener('keyup',(e) =>{
+            if(this.props.isFullScreen){
+                if(e.keyCode === 27){ //esc按键
+                    self.props.setFullScreen()
+                }
+            }
+        },false)
     }
     componentDidUpdate(){
         let { intl: {formatMessage}, selectedStatus } = this.props;
@@ -85,18 +97,47 @@ class Chart extends Component{
         } else {
             this.chartWidth = document.documentElement.clientWidth - 160 - 90;
         }
+
+        // 如果全屏
+        const treemapNode = document.querySelector('#treemap')
+        if(this.props.isFullScreen){
+             //这里是为了遮住头部的那段空白 用了下面hack
+            //  高度添加40px(headerHeight为40)
+            // 然后在往上移动40px遮住空白
+            this.chartWidth = window.innerWidth
+            this.chartHeight = window.innerHeight
+            treemapNode.style.cssText = 'position:fixed;top:-20px;left:0'
+            
+        }else{
+            treemapNode.style.cssText = 'position:absolute'
+        }
+        
+
         this.xscale = d3.scale.linear().range([0, this.chartWidth]);
 
         d3.select("#treemap")
             .select('svg')
             .attr("width", this.chartWidth)
         
+        // 计算总的告警数 主要是为了当告警数很小时 区域无法显示 给一个最小的区域快大小
+        let sumAlerts = 0
+        this.props.currentDashbordData.forEach( (item)=>{
+            sumAlerts += item.value
+        })    
+        
+
         this.treemap = d3.layout.treemap()
           .round(false)
           .size([this.chartWidth, this.chartHeight])
           .sticky(true)
           .value(function(d) {
-              return d.value;
+              if(d.fixedValue){
+                return d.fixedValue;
+              }else{
+                // 后面加一个数字 表示给一个最小size
+                return d.value + sumAlerts * 0.05;
+              }
+              
           });
         var headerHeight = 40;
         var headerColor = "#0d3158";
@@ -111,7 +152,7 @@ class Chart extends Component{
             d3.select("#treemap").select('svg').attr('height', this.chartHeight)
         }
 
-        let updateData = this.props.currentDashbordData
+        let updateData = deepCopy(this.props.currentDashbordData)
         updateData.forEach((item, index) => {            
             if(item.value == 0){item.noData = true}
                 if(item.children){
@@ -356,13 +397,18 @@ class Chart extends Component{
 
 
         function size(d) {
-            return d.value;
+            if(d.fixedValue){
+                return d.fixedValue;
+              }else{
+                  
+                return d.value;
+              }
         }
 
 
-        function count(d) {
-            return 1;
-        }
+        // function count(d) {
+        //     return 1;
+        // }
 
 
         //and another one
@@ -500,6 +546,7 @@ class Chart extends Component{
     }
 
     render(){
+        
         const hasData = Array.isArray(this.props.currentDashbordData) && this.props.currentDashbordData.length > 0
         
         // 下面分开判断主要是为了没数据居中显示
@@ -507,7 +554,9 @@ class Chart extends Component{
             <div>
             <div className={styles.loadingWrap}>
                 <Spin spinning= {this.props.isLoading}>
-                    <div id="treemap" className={styles.treemap}></div> 
+                    <div id="treemap" className={styles.treemap}>
+                    
+                    </div> 
                 </Spin>
             </div>
             { !hasData && <div className={styles.alertNoData}><FormattedMessage {...formatMessages['noData']} /></div>}

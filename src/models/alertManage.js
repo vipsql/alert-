@@ -11,6 +11,8 @@ const initialState = {
     isLoading: true, //加载
     selectedTime: 'lastOneHour', // 选择的最近时间
     selectedStatus: 'NEW', // 选择的过滤状态
+    isFullScreen: false, //是否全屏
+    isFixed: false, //是否固定
     levels: { }
 }
 
@@ -64,10 +66,11 @@ export default {
     }, 
     *queryAlertDashbord({payload}, {call, put, select}) {
 
-      let { selectedTime, selectedStatus } = yield select( state => {
+      let { selectedTime, selectedStatus, isFixed } = yield select( state => {
         return {
           'selectedTime': state.alertManage.selectedTime,
-          'selectedStatus': state.alertManage.selectedStatus
+          'selectedStatus': state.alertManage.selectedStatus,
+          'isFixed': state.alertManage.isFixed
         }
       })
 
@@ -87,15 +90,29 @@ export default {
       const treemapData = yield queryDashbord(params)
 
       if (treemapData.result) {
-        let filterDate = [];
+        let filterData = [];
         if (treemapData.data && treemapData.data.picList && treemapData.data.picList.length !== 0) {
-          filterDate = yield treemapData.data.picList.filter( item => item['path'] != 'status' )
+          let dashbordData = treemapData.data.picList
+          if(isFixed){
+              dashbordData = JSON.parse(JSON.stringify(dashbordData))
+              dashbordData.forEach( (item) =>{
+                if(item.children){
+                  item.children.forEach((childItem) => {
+                    childItem.fixedValue = 1
+                    
+                  })
+                  item.fixedValue = item.children.length
+                }
+              
+            })
+          }
+          filterData = yield dashbordData.filter( item => item['path'] != 'status' )
         }
 
         yield put({
           type: 'setCurrentTreemap',
           payload: {
-            currentDashbordData: filterDate || [],
+            currentDashbordData: filterData || [],
             isLoading: false,
             selectedTime: selectedTime,
             selectedStatus: selectedStatus
@@ -137,6 +154,39 @@ export default {
     toggleAlertSetTip(state, { payload: hideAlertSetTip }){
       return { ...state, hideAlertSetTip }
     },
+    // 设置全屏
+    setFullScreen(state){
+      return {...state, isFullScreen: !state.isFullScreen}
+    },
+    // 设置布局（固定大小和自动布局）
+    setLayout(state,{payload: isFixed}){
+      const cloneData = JSON.parse(JSON.stringify(state.currentDashbordData))
+      
+      if(isFixed == '0'){
+          cloneData.forEach( (item) =>{
+            if(item.children){
+              item.children.forEach((childItem) => {
+                childItem.fixedValue = 1
+                
+              })
+              item.fixedValue = item.children.length
+            }
+          
+        })
+      }else{
+        cloneData.forEach( (item) =>{
+          if(item.children){
+              item.children.forEach((childItem) => {
+                delete childItem.fixedValue
+              })
+            }
+          delete item.fixedValue
+        })
+      }
+      
+      return {...state, currentDashbordData: cloneData, isFixed: isFixed == '0' ? true : false}
+      
+    }
   }
 
 }

@@ -39,7 +39,7 @@
 }
 .treemap{
   width: 100%;
-  top: 10px;
+  top: 0;
   // background:#0d3158
 }
 .alertSetInfo{
@@ -91,6 +91,39 @@
     vertical-align: middle;
     font-size: 14px;
   }
+}
+.layout{
+  float: right;
+  padding-top: 4px;
+  margin-right: 12px;
+   
+  a{
+    display: inline-block;
+    &.autoLayout, &.fixedLayout{
+      width: 32px;
+      height: 26px;
+      background: #275fa4;
+      border-radius: 2px;
+      color: #74afd9;
+      text-align: center;
+    }
+    &.fullScreen{
+      margin-right: 10px;
+    }
+    &.autoLayout{
+      border-radius: 3px 0 0 3px;
+    }
+    &.fixedLayout{
+      border-radius: 0  3px 3px 0;
+    }
+    
+  }
+  :global{
+    a.curLayout{
+        background: #204f86;
+        color: white;
+    }
+  } 
 }
 
 ul.alertStatus{

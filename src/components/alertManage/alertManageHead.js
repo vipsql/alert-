@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import styles from './index.less'
-import { Select, Radio } from 'antd'
+import { Select, Radio, Tooltip} from 'antd'
 import { classnames } from '../../utils'
 import LevelIcon from '../common/levelIcon/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
@@ -50,22 +50,55 @@ const formatMessages = defineMessages({
     }
 })
 
+
+
 const AlertManageHead = ({
   isSetAlert,
   levels,
   showTagsModal,
   queryByTime,
-  queryByStatus
+  queryByStatus,
+  setLayout,
+  isFixed,
+  setFullScreen
 }) => {
   const setClass = classnames(
     'iconfont',
     'icon-bushu'
   )
-
+  const fixedLayoutClass = classnames(
+    'iconfont',
+    'icon-gudingdaxiao'
+  )
+  const autoLayoutClass = classnames(
+    'iconfont',
+    'icon-angaojingshu'
+  )
+  const fullScreenClass = classnames(
+    'iconfont',
+    'icon-zuidahua'
+  )
+  const layouthandler = (e) =>{
+    // 如果是当前状态不更新布局（通过className）
+    if(e.target.className.indexOf('curLayout') > -1) return 
+    setLayout(e)
+  }
   return (
     <div className={styles.manageHead}>
+        
         <div className={styles.focusSet} onClick={showTagsModal}>
           <i className={setClass}></i><FormattedMessage {...formatMessages['set']} />
+        </div>
+        <div className={styles.layout}>
+           <a href="javascript:void(0)" className={classnames(styles.fullScreen)} onClick={setFullScreen}>
+            <Tooltip title="全屏"><i className={fullScreenClass}></i></Tooltip>
+           </a>
+           <Tooltip title="自动布局"><a href="javascript:void(0)" className={classnames(styles.autoLayout,!isFixed ? 'curLayout' : '')} data-isFixed="1" onClick={(e) => {layouthandler(e)}}>
+            <i className={autoLayoutClass}></i>
+           </a></Tooltip>
+           <Tooltip title="固定布局"><a href="javascript:void(0)" className={classnames(styles.fixedLayout, isFixed ? 'curLayout' : '')} data-isFixed="0" onClick={(e) => {layouthandler(e)}}>
+           <i className={fixedLayoutClass}></i>
+           </a></Tooltip>
         </div>
         {isSetAlert &&
           <div>
