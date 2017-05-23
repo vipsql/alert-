@@ -18,6 +18,7 @@ import RelieveModal from './relieveModal'
 import ChatOpshModal from '../common/chatOpsModal/index.js'
 import ResolveModal from '../common/resolveModal/index.js'
 import SuppressModal from '../common/suppressModal/index.js'
+import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 import { classnames } from '../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -131,11 +132,19 @@ class AlertListManage extends Component{
           payload: position
         })
       },
-      showSuppressModal: (min, position) => {
+      suppressIncidents: (min, position) => {
         dispatch({
-          type: 'alertOperation/openSuppress',
+          type: 'alertOperation/beforeSuppressIncidents',
           payload: {
             time: min,
+            position: position
+          }
+        })
+      },
+      showSuppressTimeSlider: (position) => {
+        dispatch({
+          type: 'alertOperation/openSuppressTimeSlider',
+          payload: {
             position: position
           }
         })
@@ -156,7 +165,6 @@ class AlertListManage extends Component{
         dispatchDisabled: !(alertDetail['currentAlertDetail']['status'] == 0 && !alertDetail['currentAlertDetail']['parentId']),
         closeDisabled: alertDetail['currentAlertDetail']['status'] == 255 || alertDetail['currentAlertDetail']['status'] == 40,
         resolveDisabled: alertDetail['currentAlertDetail']['status'] == 255 || alertDetail['currentAlertDetail']['status'] == 190,
-        suppressDisabled: !alertDetail['currentAlertDetail']['status'] == 0
       },
       clickTicketFlow: (operateForm) => {
         if (operateForm !== undefined && operateForm !== '') {
@@ -316,21 +324,37 @@ class AlertListManage extends Component{
       }
     }
 
-    const suppressModalProps = {
-      suppressTime: alertOperateModalOrigin === 'detail' ? alertDetailOperation.suppressTime : alertOperation.suppressTime,
-      isShowSuppressModal: alertOperateModalOrigin === 'detail' ? alertDetailOperation.isShowSuppressModal : alertOperation.isShowSuppressModal,
+    const timeSliderProps = {
+      isShowTimeSliderModal: alertOperateModalOrigin === 'detail' ? alertDetailOperation.isShowTimeSliderModal : alertOperation.isShowTimeSliderModal,
       onOk: (time) => {
         dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/suppressIncidents' : 'alertOperation/suppressIncidents',
-            payload: time
+          type: alertOperateModalOrigin === 'detail' ? "alertDetailOperation/suppressIncidents" : "alertOperation/suppressIncidents",
+          payload: {
+            time: time
+          }
+        })
+        dispatch({
+          type: alertOperateModalOrigin === 'detail' ? "alertDetailOperation/toggleSuppressTimeSliderModal" : "alertOperation/toggleSuppressTimeSliderModal",
+          payload: false
         })
       },
       onCancel: () => {
         dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleSuppressModal' : 'alertOperation/toggleSuppressModal',
-            payload: {
-              status: false
-            }
+          type: alertOperateModalOrigin === 'detail' ? "alertDetailOperation/toggleSuppressTimeSliderModal" : "alertOperation/toggleSuppressTimeSliderModal",
+          payload: false
+        })
+      }
+    }
+
+    const suppressModalProps = {
+      isShowRemindModal: alertOperateModalOrigin === 'detail' ? alertDetailOperation.isShowRemindModal : alertOperation.isShowRemindModal,
+      onKnow: (checked) => {
+        if (checked) {
+          localStorage.setItem('__alert_suppress_remind', 'false')
+        }
+        dispatch({
+          type: alertOperateModalOrigin === 'detail' ? "alertDetailOperation/toggleRemindModal" : "alertOperation/toggleRemindModal",
+          payload: false
         })
       }
     }
@@ -463,6 +487,7 @@ class AlertListManage extends Component{
         <ResolveModal {...resolveModalProps}/>
         <RelieveModal />
         <SuppressModal {...suppressModalProps}/>
+        <SuppressTimeSlider {...timeSliderProps} />
       </div>
     )
   }

@@ -10,6 +10,7 @@ import DispatchModal from '../common/dispatchModal/index.js'
 import ChatOpshModal from '../common/chatOpsModal/index.js'
 import ResolveModal from '../common/resolveModal/index.js'
 import SuppressModal from '../common/suppressModal/index.js'
+import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const Item = Form.Item;
@@ -87,12 +88,17 @@ class alertQueryManage extends Component{
             type: 'alertQueryDetail/openChatOps',
           })
         },
-        showSuppressModal: (min, position) => {
+        suppressIncidents: (min, position) => {
           dispatch({
-            type: 'alertQueryDetail/openSuppress',
+            type: 'alertQueryDetail/suppressIncidents',
             payload: {
               time: min
             }
+          })
+        },
+        showSuppressTimeSlider: (position) => {
+          dispatch({
+            type: 'alertQueryDetail/openSuppressTimeSlider',
           })
         }
       }
@@ -111,7 +117,6 @@ class alertQueryManage extends Component{
           dispatchDisabled: !(alertQueryDetail['currentAlertDetail']['status'] == 0 && !alertQueryDetail['currentAlertDetail']['parentId']),
           closeDisabled: alertQueryDetail['currentAlertDetail']['status'] == 255 || alertQueryDetail['currentAlertDetail']['status'] == 40,
           resolveDisabled: alertQueryDetail['currentAlertDetail']['status'] == 255 || alertQueryDetail['currentAlertDetail']['status'] == 190,
-          suppressDisabled: !alertQueryDetail['currentAlertDetail']['status'] == 0
         },
 
         closeDeatilModal: () => {
@@ -274,21 +279,37 @@ class alertQueryManage extends Component{
         }
       }
 
-      const suppressModalProps = {
-        suppressTime: alertQueryDetail.suppressTime,
-        isShowSuppressModal: alertQueryDetail.isShowSuppressModal,
+      const timeSliderProps = {
+        isShowTimeSliderModal: alertQueryDetail.isShowTimeSliderModal,
         onOk: (time) => {
           dispatch({
-              type: 'alertQueryDetail/suppressIncidents',
-              payload: time
+            type: "alertQueryDetail/suppressIncidents",
+            payload: {
+              time: time
+            }
+          })
+          dispatch({
+            type: "alertQueryDetail/toggleSuppressTimeSliderModal",
+            payload: false
           })
         },
         onCancel: () => {
           dispatch({
-              type: 'alertQueryDetail/toggleSuppressModal',
-              payload: {
-                status: false
-              }
+            type: "alertQueryDetail/toggleSuppressTimeSliderModal",
+            payload: false
+          })
+        }
+      }
+
+      const suppressModalProps = {
+        isShowRemindModal: alertQueryDetail.isShowRemindModal,
+        onKnow: (checked) => {
+          if (checked) {
+            localStorage.setItem('__alert_suppress_remind', 'false')
+          }
+          dispatch({
+            type: "alertQueryDetail/toggleRemindModal",
+            payload: false
           })
         }
       }
@@ -781,6 +802,7 @@ class alertQueryManage extends Component{
             <ChatOpshModal {...chatOpsModalProps}/>
             <ResolveModal {...resolveModalProps}/>
             <SuppressModal {...suppressModalProps}/>
+            <SuppressTimeSlider {...timeSliderProps} />
           </div>
       )
     }

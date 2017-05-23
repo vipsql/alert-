@@ -7,14 +7,14 @@ const initalState = {
     // 操作的alertIds
     formOptions: [],
     chatOpsRooms: [],
-    suppressTime: '5',
 
     // 各个modal弹窗
     isShowFormModal: false, // 派发
     isShowCloseModal: false, // 关闭
     isShowResolveModal: false, // 解决
     isShowChatOpsModal: false, //chatops
-    isShowSuppressModal: false, // suppress
+    isShowTimeSliderModal: false, // suppress
+    isShowRemindModal: false, // 提醒框
 }
 
 export default {
@@ -24,17 +24,15 @@ export default {
 
   effects: {
     // 打开抑制告警Modal
-    *openSuppress({payload: {min}}, {select, put, call}) {
+    *openSuppressTimeSlider({payload}, {select, put, call}) {
         yield put({
-            type: 'toggleSuppressModal',
-            payload: {
-                status: true,
-                suppressTime: min
-            }
+            type: 'toggleSuppressTimeSliderModal',
+            payload: true
         })
     },
     // 抑制告警
-    *suppressIncidents({payload: time}, {select, put, call}) {
+    *suppressIncidents({payload: {time}}, {select, put, call}) {
+        const successRemind = yield localStorage.getItem('__alert_suppress_remind')
         const { viewDetailAlertId } = yield select( state => {
             return {
                 'viewDetailAlertId': state.alertListTable.viewDetailAlertId
@@ -45,22 +43,23 @@ export default {
             let stringId = '' + viewDetailAlertId;
             const suppressData = yield suppress({
                 incidentIds: [stringId],
-                time: '' + time
+                time: Number(time)
             })
             if (suppressData.result) {
-                yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                if (successRemind === null || JSON.parse(successRemind)) {
+                    yield put({
+                        type: 'toggleRemindModal',
+                        payload: true
+                    })
+                } else {
+                    yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                }
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[suppressData.message], 3);
             }
         } else {
             console.error('select incident/incident type error');
         }
-        yield put({
-          type: 'toggleSuppressModal',
-          payload: {
-              status: false
-          }
-        })
     },
     // 打开派发工单做的相应处理
     *openFormModal({payload}, {select, put, call}) {
@@ -265,8 +264,11 @@ export default {
       toggleResolveModal(state, {payload: isShowResolveModal}) {
           return { ...state, isShowResolveModal }
       },
-      toggleSuppressModal(state, {payload: {suppressTime = initalState.suppressTime, status}}) {
-          return { ...state, isShowSuppressModal: status, suppressTime }
+      toggleSuppressTimeSliderModal(state, {payload: isShowTimeSliderModal}) {
+          return { ...state, isShowTimeSliderModal}
+      },
+      toggleRemindModal(state, {payload: isShowRemindModal}) {
+          return { ...state, isShowRemindModal }
       },
   }
 }

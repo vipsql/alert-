@@ -18,12 +18,12 @@ const initalState = {
     isShowMergeModal: false, // 合并
     isShowRelieveModal: false, // 解除
     isShowChatOpsModal: false, //chatops
-    isShowSuppressModal: false, // suppress
+    isShowTimeSliderModal: false, // suppress
+    isShowRemindModal: false, // 提醒框
 
     isSelectAlert: false, // 是否选择了告警
     isSelectOrigin: false, // 是否选择了源告警
 
-    suppressTime: '5', // 抑制时间
     originAlert: [], //选择的radio是个数组
     relieveAlert: {}, // 选中的解除对象
     mergeInfoList: [
@@ -66,7 +66,7 @@ export default {
 
   effects: {
       // 打开抑制告警Modal
-      *openSuppress({payload: {min, position}}, {select, put, call}) {
+      *openSuppressTimeSlider({payload: {position}}, {select, put, call}) {
           // 触发筛选
           yield put({ type: 'alertListTable/filterCheckAlert'})
           const { operateAlertIds } = yield select( state => {
@@ -80,47 +80,72 @@ export default {
           })
           if (position !== undefined && position === 'detail') {
               yield put({
-                  type: 'alertDetailOperation/openSuppress',
-                  payload: {time: min}
+                  type: 'alertDetailOperation/openSuppressTimeSlider',
               })
           } else {
             if (operateAlertIds.length === 0) {
                 yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
             } else {
                 yield put({
-                    type: 'toggleSuppressModal',
-                    payload: {
-                        status: true,
-                        suppressTime: min
-                    }
+                    type: 'toggleSuppressTimeSliderModal',
+                    payload: true
                 })
             }
           }
       },
       // 抑制告警
-      *suppressIncidents({payload: time}, {select, put, call}) {
-        const {selectedAlertIds} = yield select( state => {
+      *beforeSuppressIncidents({payload: {time, position}}, {select, put, call}) {
+        // 触发筛选
+        yield put({ type: 'alertListTable/filterCheckAlert'})
+        
+        yield put({
+            type: 'alertList/toggleModalOrigin',
+            payload: position
+        })
+        if (position !== undefined && position === 'detail') {
+            yield put({
+                type: 'alertDetailOperation/suppressIncidents',
+                payload: {
+                    time: time
+                }
+            })
+        } else {
+            yield put({
+                type: 'suppressIncidents',
+                payload: {
+                    time: time
+                }
+            })
+        }
+      },
+      // 抑制告警
+      *suppressIncidents({payload: {time}}, {select, put, call}) {
+        const successRemind = yield localStorage.getItem('__alert_suppress_remind')
+        const {operateAlertIds} = yield select( state => {
             return {
-                'selectedAlertIds':state.alertListTable.selectedAlertIds
+                'operateAlertIds':state.alertListTable.operateAlertIds
             }
         })
-        if (selectedAlertIds.length !== 0) {
+        if (operateAlertIds.length !== 0) {
             const suppressData = yield suppress({
-                incidentIds: selectedAlertIds,
-                time: '' + time
+                incidentIds: operateAlertIds,
+                time: Number(time)
             })
             if (suppressData.result) {
-                yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                if (successRemind === null || JSON.parse(successRemind)) {
+                    yield put({
+                        type: 'toggleRemindModal',
+                        payload: true
+                    })
+                } else {
+                    yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                }
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[suppressData.message], 3);
             }
+        } else if(operateAlertIds.length === 0){
+            yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
         }
-        yield put({
-            type: 'toggleSuppressModal',
-            payload: {
-                status: false
-            }
-        })
       },
       // 打开解除告警modal
       *openRelieveModal({payload}, {select, put, call}) {
@@ -683,8 +708,11 @@ export default {
       toggleResolveModal(state, {payload: isShowResolveModal}) {
           return { ...state, isShowResolveModal }
       },
-      toggleSuppressModal(state, {payload: {suppressTime = initalState.suppressTime, status}}) {
-          return { ...state, isShowSuppressModal: status, suppressTime }
+      toggleSuppressTimeSliderModal(state, {payload: isShowTimeSliderModal}) {
+          return { ...state, isShowTimeSliderModal}
+      },
+      toggleRemindModal(state, {payload: isShowRemindModal}) {
+          return { ...state, isShowRemindModal }
       },
       // selectRows是合并告警时触发
       selectRows(state, {payload: originAlert}) {

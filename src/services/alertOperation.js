@@ -134,7 +134,7 @@ export async function relieve(param) {
 }
 
 export async function suppress(param) {
-    return request(`/rule/queryRules`, {
+    return request(`/rule/fastInhibition`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

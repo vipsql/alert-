@@ -21,11 +21,11 @@ const alertOperation = ({position,
     groupFunc, 
     noGroupFunc,
     showChatOpsFunc,
-    showSuppressModal,
+    suppressIncidents,
+    showSuppressTimeSlider,
     dispatchDisabled,
     closeDisabled,
     resolveDisabled,
-    suppressDisabled,
     intl: {formatMessage} }) => {
 
     const localeMessage = defineMessages({
@@ -125,6 +125,10 @@ const alertOperation = ({position,
             id: 'alertOperate.suppress.halfHour',
             defaultMessage: '半小时内不再提醒',
         },
+        suppress_customer: {
+            id: 'alertOperate.suppress.customer',
+            defaultMessage: '自定义时间',
+        },
         chatOps: {
             id: 'alertOperate.shareChatOps',
             defaultMessage: '分享到ChatOps',
@@ -222,15 +226,19 @@ const alertOperation = ({position,
                 :
                 undefined
             }
-            <Select disabled={suppressDisabled} style={{width: '100px'}} className={styles.selectSingle} allowClear placeholder={formatMessage({...localeMessage['suppress']})} onChange={ (min) => {
-                // 以分钟计
+            <Select style={{width: '100px'}} className={styles.selectSingle} allowClear placeholder={formatMessage({...localeMessage['suppress']})} onChange={ (min) => {
+                // 以分钟计 --> 100 customer
                 if (min) {
-                    showSuppressModal(min, position)
+                    if(min !== '100') 
+                        suppressIncidents(min, position)
+                    else
+                        showSuppressTimeSlider(position)
                 }
             }}>
                 <Option value="5"><FormattedMessage {...localeMessage['suppress_five']} /></Option>
                 <Option value="10"><FormattedMessage {...localeMessage['suppress_ten']} /></Option>
                 <Option value="30"><FormattedMessage {...localeMessage['suppress_halfHour']} /></Option>
+                <Option value="100"><FormattedMessage {...localeMessage['suppress_customer']} /></Option>
             </Select>
             {
                 window.__alert_appLocaleData.locale == 'zh-cn' ?
@@ -302,11 +310,11 @@ alertOperation.defaultProps = {
     groupFunc: () => {},
     noGroupFunc: () => {},
     showChatOpsFunc: () => {},
-    showSuppressModal: () => {},
+    suppressIncidents: () => {},
+    showSuppressTimeSlider: () => {},
     dispatchDisabled: false,
     closeDisabled: false,
-    resolveDisabled: false,
-    suppressDisabled: false
+    resolveDisabled: false
 }
 
 alertOperation.propTypes = {

@@ -6,10 +6,10 @@ import styles from '../index.less'
 
 
 // function ListTimeTableWrap({dispatch, alertListTimeTable}){
-const  ListTimeTableWrap = ({dispatch, alertListTable}) => {
+const  ListTimeTableWrap = ({dispatch, alertListTable, selectedTime}) => {
   const props = {
     ...alertListTable,
-
+    selectedTime,
     loadMore(){
       dispatch({
         type: 'alertListTable/loadMore'
@@ -104,7 +104,8 @@ export default connect(
     return {
       alertListTable: {
         ...state.alertListTable,
-      }
+      },
+      selectedTime: state.alertList.selectedTime
     }
   }
 )(ListTimeTableWrap)
