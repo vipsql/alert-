@@ -68,8 +68,8 @@ export async function shareRoom(roomId, incidentId, roomName, param) {
     // }
     let paramWrapper = {
         roomId: '' + roomId,
-        //incidentId: incidentId,
-        //roomName: roomName,
+        incidentId: incidentId,
+        roomName: roomName,
         body: JSON.stringify(param)
     }
 
@@ -83,7 +83,6 @@ export async function shareRoom(roomId, incidentId, roomName, param) {
 }
 
 export async function dispatchForm(param) {
-    delete param.name;
     return request(`/dataService/assignWO`, {
         method: 'POST',
         headers: {

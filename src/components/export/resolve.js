@@ -39,7 +39,8 @@ const Resolve = ({dispatch, form, intl: {formatMessage}}) => {
 
     const callback = () => {
         console.log('发送成功')
-        window.parent.postMessage({closeModal: true}, '*');
+        $$.dialog.close()
+        //window.parent.postMessage({closeModal: true}, '*');
     }
 
     return (

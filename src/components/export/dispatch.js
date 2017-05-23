@@ -17,17 +17,19 @@ class Dispatch extends Component{
       const {dispatch} = this.props;
       window.addEventListener('message', (e) => {
         if(e.data.creatTicket !== undefined && e.data.creatTicket === 'success') {
-          window.parent.postMessage({closeModal: true}, '*');
-          dispatch({
-            type: 'alertExport/closeTicketModal', 
-          })
+            $$.dialog.close()
+            //window.parent.postMessage({closeModal: true}, '*');
+            dispatch({
+                type: 'alertExport/closeTicketModal', 
+            })
         }
       }, false)
     }
 
     callback() {
         console.log('发送成功')
-        window.parent.postMessage({closeModal: true}, '*');
+        $$.dialog.close()
+        //window.parent.postMessage({closeModal: true}, '*');
     }
 
     render() {

@@ -18,6 +18,7 @@ const initalState = {
   __groupFieldProps: [], // 全量，不可重复
   __groupComposeProps: [], // 已映射字段 + 新字段名
   __mergeProps: [], // 如果选择entityName或者name + 新字段名
+  __identifyProps: [], // 如果选择entityName或者entityAddr + 新字段名
 
 }
 
@@ -174,6 +175,7 @@ export default {
         __groupFieldProps: fields,
         __groupComposeProps: [],
         __mergeProps: [],
+        __identifyProps: [],
         operateAppRules: initalState.operateAppRules,
         operateType,
         CMDBClass,
@@ -191,6 +193,7 @@ export default {
       let __groupFieldProps = [].concat(fields);
       let __groupComposeProps = [];
       let __mergeProps = [];
+      let __identifyProps = [];
       appRules.forEach( (rule, index) => {
         if (rule.id == id) {
           operateAppRules = rule;
@@ -207,6 +210,9 @@ export default {
          if (field === 'name' || field === 'entityName') {
            __mergeProps.push(field)
          }
+         if (field === 'entityAddr' || field === 'entityName') {
+           __identifyProps.push(field)
+         }
          __groupComposeProps.push(field);
          if (__matchProps.includes(field)) {
            __matchProps = __matchProps.filter( match => match !== field )
@@ -216,6 +222,9 @@ export default {
          if ((field === 'name' || field === 'entityName') && !__mergeProps.includes(field)) {
            __mergeProps.push(field);
          }
+         if ((field === 'entityAddr' || field === 'entityName') && !__identifyProps.includes(field)) {
+           __identifyProps.push(field);
+         }
          if (__groupFieldProps.includes(field)) {
            __groupFieldProps = __groupFieldProps.filter( match => match !== field )
          }
@@ -223,6 +232,7 @@ export default {
       codeProperties.length > 0 && codeProperties.forEach( (property, index) => {
          __groupComposeProps.push(property.code);
          __mergeProps.push(property.code);
+         __identifyProps.push(property.code);
       })
 
       return {
@@ -232,6 +242,7 @@ export default {
         __groupFieldProps,
         __groupComposeProps,
         __mergeProps,
+        __identifyProps,
         operateAppRules,
         operateType,
         CMDBClass,

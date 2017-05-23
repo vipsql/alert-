@@ -18,7 +18,7 @@
   "leftMenu.set": "Settings",
   "lefeMenu.help": "Help",
 
-  "alertManage.addTags": "Add Tags",
+  "alertManage.addTags": "Edit Map",
   "alertManage.oneHour": "last 60 minutes",
   "alertManage.fourHours": "last 4 hours",
   "alertManage.oneDay": "last 24 hours",
@@ -242,6 +242,8 @@
   "modal.trap.noSelectField": "No Fields",
   "modal.trap.mergeKeys": "Merge Keys",
   "modal.trap.mergeKeys.message": "Specify the key fields to merge alerts.",
+  "modal.trap.identifyKeys": "定位关键字段",
+  "modal.trap.identifyKeys.message": "用于定位具体CI项的关键标识",
   "modal.trap.bindCMDB": "Binding CI Class",
   "modal.trap.bindCMDB.placeholder": "Pleasr Enter Binding CI Class",
   "modal.trap.severityMapper": "Severity",
