@@ -79,8 +79,28 @@ export default {
           const data = tagsData.data 
           level = data.level
           tags = data.keys
-          gr2 = tags[0]
-          gr3 = tags[1]
+          
+          // 判断用户是否访问过类似路径 如果匹配到用户之前的路径直接使用
+          // 比如 用户从 派出所-街道-站点 则存为一条路径
+          // 派出所，来源-街道-站点 则存另为一条路径
+          // 第一个分组key作为存储用户路径的依据
+
+          // construction
+          const gr1key = visualSelect.map(item => {
+            return item.key
+          })
+          if(localStorage.getItem(gr1key.join())){
+            
+            const userStore = JSON.parse(localStorage.getItem(gr1key))
+            gr2 = userStore.gr2key
+            gr3 = userStore.gr3key
+          }else{
+            // 这个是正常流程 默认取值
+            gr2 = tags[0]
+            gr3 = tags[1]
+          }
+
+
           // 默认选择标签
           setGroups(gr2, gr3) 
           yield put({

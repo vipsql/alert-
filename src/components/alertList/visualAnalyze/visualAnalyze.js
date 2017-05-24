@@ -47,10 +47,20 @@ const slideSettings2 = {
 class VisualAnalyze extends Component {
     constructor(props){
         super(props)
+        const gr1key = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")).map(item => {
+            return item.key
+        })
+        let gr2State, gr3State, gr4State
+        if(localStorage.getItem(gr1key.join())){
+            const userStore = JSON.parse(localStorage.getItem(gr1key))
+            gr2State = userStore.gr2key
+            gr3State = userStore.gr3key
+        }
+        gr4State =  localStorage.getItem('__alert_visualAnalyze_gr4')     
         this.state = {
-            gr2State: '',
-            gr3State: '',
-            gr4State: ''
+            gr2State: gr2State ? gr2State : '',
+            gr3State: gr3State ? gr3State : '',
+            gr4State: gr4State ? gr4State : ''
         }
     }
     componentDidMount(){
