@@ -758,7 +758,7 @@ class RuleEditor extends Component {
                                     />
                                 </div>
                                 <Checkbox className={styles.nLevelUp} checked={action.actionNotification && action.actionNotification.notifyWhenLevelUp} onChange={this.changeNotifyLevelUp.bind(this)}>{window.__alert_appLocaleData.messages['ruleEditor.nLevelUp']}</Checkbox>
-                                
+
                             </div>
                         </TabPane>
                         {/* 告警派单 */}
@@ -794,11 +794,14 @@ class RuleEditor extends Component {
                             </div>
                         </TabPane>
                         {/* 抑制告警 */}
-                        <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.suppress']} key="5" className={styles.actionSuppress}>
-                            <div>
-                                <span>{window.__alert_appLocaleData.messages['ruleEditor.word5']}</span>
-                            </div>
-                        </TabPane>
+                        {
+                            this.state.target !== 1 &&
+                            <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.suppress']} key="5" className={styles.actionSuppress}>
+                                <div>
+                                    <span>{window.__alert_appLocaleData.messages['ruleEditor.word5']}</span>
+                                </div>
+                            </TabPane>
+                        }
                         {/* 分享到ChatOps */}
                         {
                             window.__alert_appLocaleData.locale === 'zh-cn' &&
@@ -980,6 +983,13 @@ class RuleEditor extends Component {
                 target: value
             });
         } else {
+            if (this.state.action.type[0] === 5) {
+                const _action = _.cloneDeep(this.state.action);
+                _action.type[0] = 1;
+                this.setState({
+                    action: _action
+                });
+            }
             if (this.state.type === 0) {
                 this.setState({
                     target: value,
@@ -991,6 +1001,7 @@ class RuleEditor extends Component {
                 });
             }
         }
+        debugger
     }
     changeAction(type, value) {
         // console.info('changeAction', this);
