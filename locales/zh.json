@@ -410,7 +410,7 @@
   "ruleEditor.v2": "提醒",
   "ruleEditor.v3": "警告",
   "ruleEditor.v4": "紧急",
-  "ruleEditor.s1": "未接手",
+  "ruleEditor.s1": "处理中或已解决",
   "ruleEditor.s2": "已确认",
   "ruleEditor.s3": "处理中",
   "ruleEditor.s4": "已解决",
@@ -420,6 +420,7 @@
   "ruleEditor.word7": "，执行升级，并通知",
   "ruleEditor.alertUpgrade": "升级告警",
   "ruleEditor.word8": "请选择告警状态",
+  "ruleEditor.nLevelUp": "当且仅当告警级别提高时再次提醒",
 
   "server.notStarted": "服务不可用",
   "itsm.not.found": "ITSM服务不可用",

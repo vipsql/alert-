@@ -411,7 +411,7 @@
   "ruleEditor.v2": "Information",
   "ruleEditor.v3": "Warning",
   "ruleEditor.v4": "Critical",
-  "ruleEditor.s1": "Open",
+  "ruleEditor.s1": "Assigned or resolved",
   "ruleEditor.s2": "Acknowledged",
   "ruleEditor.s3": "Assigned",
   "ruleEditor.s4": "Resolved",
@@ -421,6 +421,7 @@
   "ruleEditor.word7": ", then notify",
   "ruleEditor.alertUpgrade": "Upgrade",
   "ruleEditor.word8": "",
+  "ruleEditor.nLevelUp": "Remind the recipients again if and only if the severity has been changed",
 
 
   "server.notStarted": " Service Unavailable",

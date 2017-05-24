@@ -52,6 +52,7 @@ var data = {
             "type": 1
         },
         "actionNotification": {
+            notifyWhenLevelUp: true,
             "recipients": [{
                 "userId": "12345132uiu895jsdfgnjs2309",
                 "realName": "hahaha",
