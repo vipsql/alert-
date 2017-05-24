@@ -80,7 +80,8 @@ const AlertManageHead = ({
   )
   const layouthandler = (e) =>{
     // 如果是当前状态不更新布局（通过className）
-    if(e.target.className.indexOf('curLayout') > -1) return 
+    const target = e.target.tagName.toLocaleLowerCase() == 'i' ?  e.target.parentNode : e.target
+    if(target.className.indexOf('curLayout') > -1) return 
     setLayout(e)
   }
   return (

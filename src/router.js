@@ -39,6 +39,25 @@ export default function({history, app}) {
 
               cb(null, require('./routes/alertList'))
             }, 'alertList')
+          },
+          onLeave(){
+            try{
+                // 每次离开记录从热图那边的轨迹
+                let gr1 = localStorage.getItem('__alert_visualAnalyze_gr1') 
+                // 用户路径记录
+                let userRecordKey 
+                const gr1keys = gr1.map((item) => {
+                  return item.key
+                })
+                userRecordKey = gr1keys.join()
+                const userRecordVal = {
+                  gr2key: localStorage.getItem('__alert_visualAnalyze_gr2'),
+                  gr3key: localStorage.getItem('__alert_visualAnalyze_gr3')
+                }
+                localStorage.setItem(userRecord, JSON.stringify(userRecordVal))
+              }catch(e){
+              
+            }
           }
 
         }, {
