@@ -1001,7 +1001,6 @@ class RuleEditor extends Component {
                 });
             }
         }
-        debugger
     }
     changeAction(type, value) {
         // console.info('changeAction', this);
