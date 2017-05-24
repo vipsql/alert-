@@ -515,8 +515,11 @@ class RuleEditor extends Component {
                             onChange={this.changeType.bind(this)}
                             value={this.state.type}
                         >
-                            
-                            <Radio value={0}><FormattedMessage {...formatMessages['anyTime']} /></Radio>
+
+                            {
+                                target === 0 &&
+                                <Radio value={0}><FormattedMessage {...formatMessages['anyTime']} /></Radio>
+                            }
                             <Radio value={2}>
                                 {
                                     target === 0
@@ -988,9 +991,16 @@ class RuleEditor extends Component {
                     action: _action
                 });
             }
-            this.setState({
-                target: value
-            });
+            if (this.state.type === 0) {
+                this.setState({
+                    target: value,
+                    type: 2
+                });
+            } else {
+                this.setState({
+                    target: value
+                });
+            }
         }
     }
     changeAction(type, value) {
