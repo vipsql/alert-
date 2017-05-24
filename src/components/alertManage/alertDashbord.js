@@ -89,11 +89,7 @@ class Chart extends Component{
     componentDidUpdate(){
         let { intl: {formatMessage}, selectedStatus } = this.props;
 
-        if (this.props.isFold) {
-            this.chartWidth = document.documentElement.clientWidth - 140;
-        } else {
-            this.chartWidth = document.documentElement.clientWidth - 160 - 90;
-        }
+        
 
         // 如果全屏
         const treemapNode = document.querySelector('#treemap')
@@ -106,7 +102,11 @@ class Chart extends Component{
             treemapNode.style.cssText = 'position:fixed;top:-20px;left:0'
             
         }else{
-            this.chartWidth = window.innerWidth- 160 - 90
+            if (this.props.isFold) {
+                this.chartWidth = document.documentElement.clientWidth - 140;
+            } else {
+                this.chartWidth = document.documentElement.clientWidth - 160 - 90;
+            }
             this.chartHeight = window.innerHeight - 180
             treemapNode.style.cssText = 'position:absolute;'
         }
