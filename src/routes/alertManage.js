@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'dva'
-import { Modal, Button } from 'antd';
+import { Modal, Button } from 'antd'
 import Chart from '../components/alertManage/alertDashbord'
 import AlertSet from '../components/alertManage/alertSet'
 import AlertManageHead from '../components/alertManage/alertManageHead'
@@ -18,6 +18,8 @@ function AlertManage({dispatch, alertManage, isFold}){
     tagsNum,
     tagsList,
     isLoading,
+    isFullScreen,
+    isFixed,
     currentDashbordData,
     selectedStatus,
     selectedTime
@@ -41,7 +43,8 @@ function AlertManage({dispatch, alertManage, isFold}){
   const alertManageHeadProps = {
     isSetAlert,
     levels,
-
+    isFixed,
+    isFullScreen,
     showTagsModal(){
       dispatch({
         type: 'alertTagsSet/openSetModal',
@@ -63,6 +66,20 @@ function AlertManage({dispatch, alertManage, isFold}){
           selectedStatus: status
         }
       })
+    },
+    setFullScreen(){
+      dispatch({
+        type: 'alertManage/setFullScreen',
+        payload: !isFullScreen 
+      })
+    },
+    setLayout(e){
+      const target = e.target.tagName.toLocaleLowerCase() == 'i' ?  e.target.parentNode : e.target
+      const  isFixed = target.getAttribute('data-isFixed')
+      dispatch({
+        type: 'alertManage/setLayout',
+        payload: isFixed
+      })
     }
 
   }
@@ -73,6 +90,12 @@ function AlertManage({dispatch, alertManage, isFold}){
     isFold,
     currentDashbordData,
     isLoading,
+    isFullScreen,
+    setFullScreen(){
+      dispatch({
+        type: 'alertManage/setFullScreen'
+      })
+    },
     requestFresh(){
       dispatch({
         type: 'alertManage/queryAlertDashbord'
