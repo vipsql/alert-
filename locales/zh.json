@@ -417,6 +417,7 @@
   "ruleEditor.word7": "，执行升级，并通知",
   "ruleEditor.alertUpgrade": "升级告警",
   "ruleEditor.word8": "请选择告警状态",
+  "ruleEditor.nLevelUp": "当且仅当告警级别提高时再次提醒",
 
   "server.notStarted": "服务不可用",
   "itsm.not.found": "ITSM服务不可用",

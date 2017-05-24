@@ -418,6 +418,7 @@
   "ruleEditor.word7": ", then notify",
   "ruleEditor.alertUpgrade": "Upgrade",
   "ruleEditor.word8": "",
+  "ruleEditor.nLevelUp": "Remind the recipient again if and only if the severity has  beeen changed",
 
 
   "server.notStarted": " Service Unavailable",

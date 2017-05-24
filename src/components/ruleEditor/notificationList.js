@@ -74,7 +74,6 @@ class NotificationList extends Component {
                                 <div className={styles.insertVar}>{window.__alert_appLocaleData.messages['ruleEditor.vars']}</div>
                             </Popover>
                         </FormItem>
-
                     </div>
                 </TabPane>
                 <TabPane tab={

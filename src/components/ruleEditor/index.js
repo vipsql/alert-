@@ -342,6 +342,7 @@ class RuleEditor extends Component {
             if (nextProps.action.actionUpgrade) {
                 _action.actionNotification = {
                     notificationMode: _action.actionUpgrade.notificationMode,
+                    notifyWhenLevelUp: false,
                     recipients: []
                 };
             } else {
@@ -554,7 +555,7 @@ class RuleEditor extends Component {
                                                 })} onClick={this.changeTimeCycleType.bind(this, 2)}>{window.__alert_appLocaleData.messages['ruleEditor.monthly']}</span>
                                             </div>
                                             <div className={cls(styles.timeCycleBd, {
-                                                [styles.hidden]: time.timeCycle.length === 0
+                                                [styles.hidden]: time.timeCycle && time.timeCycle.length === 0
                                             })}>
                                                 {
                                                     time.timeCycle !== 0 &&
@@ -653,7 +654,7 @@ class RuleEditor extends Component {
                             </div>
                         </TabPane>
                         {/* 升级告警 */}
-                        {   
+                        {
                             this.state.target === 1 &&
                             <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.alertUpgrade']} key="2">
                                 <div>
@@ -706,7 +707,7 @@ class RuleEditor extends Component {
                                             } else {
                                                 return null;
                                             }
-                                            
+
                                         })
                                     }
 
@@ -756,6 +757,8 @@ class RuleEditor extends Component {
                                         alertAssociationRules={this.props.alertAssociationRules}
                                     />
                                 </div>
+                                <Checkbox className={styles.nLevelUp} checked={action.actionNotification && action.actionNotification.notifyWhenLevelUp} onChange={this.changeNotifyLevelUp.bind(this)}>{window.__alert_appLocaleData.messages['ruleEditor.nLevelUp']}</Checkbox>
+                                
                             </div>
                         </TabPane>
                         {/* 告警派单 */}
@@ -832,11 +835,13 @@ class RuleEditor extends Component {
             if (_action.actionUpgrade) {
                 _action.actionNotification = {
                     recipients: [],
+                    notifyWhenLevelUp: false,
                     notificationMode: _action.actionUpgrade.notificationMode
                 }
             } else {
                 _action.actionNotification = {
                     recipients: [],
+                    notifyWhenLevelUp: false,
                     notificationMode: {
                         notificationMode: [],
                         emailTitle: '${entityName}:${name}',
@@ -866,6 +871,14 @@ class RuleEditor extends Component {
             sms: sms,
             chatops: chatops,
             recipients: recipients
+        });
+    }
+
+    changeNotifyLevelUp(event) {
+        const _action = _.cloneDeep(this.state.action);
+        _action.actionNotification.notifyWhenLevelUp = event.target.checked;
+        this.setState({
+            action: _action
         });
     }
 
@@ -1395,7 +1408,7 @@ class RuleEditor extends Component {
             case 4:
                 _actionITSM = action.actionITSM;
                 _actionITSM.itsmModelName = this.props.alertAssociationRules.wos.filter(item => {
-                  return item.id === _actionITSM.itsmModelId;
+                    return item.id === _actionITSM.itsmModelId;
                 })[0]['name'];
                 break;
             case 5:
@@ -1404,7 +1417,7 @@ class RuleEditor extends Component {
             case 6:
                 _actionChatOps = action.actionChatOps;
                 _actionChatOps.chatOpsRoomName = this.props.alertAssociationRules.rooms.filter(item => {
-                  return item.id === _actionChatOps.chatOpsRoomId;
+                    return item.id === _actionChatOps.chatOpsRoomId;
                 })[0]['topic'];
                 break;
             default:
@@ -1489,6 +1502,7 @@ RuleEditor.defaultProps = {
             operation: undefined
         },
         actionNotification: {
+            notifyWhenLevelUp: false,
             recipients: [],
             notificationMode: {
                 notificationMode: [],
@@ -1573,6 +1587,7 @@ RuleEditor.propTypes = {
             operation: PropTypes.number
         }),
         actionNotification: PropTypes.shape({
+            notifyWhenLevelUp: PropTypes.bool,
             recipients: PropTypes.array.isRequired,
             notificationMode: PropTypes.shape({
                 // EMAIL(1，"电子邮件")，SMS(2，"短信")，CHATOPS_PRIVATE(3，"Chatops私聊")，多选
