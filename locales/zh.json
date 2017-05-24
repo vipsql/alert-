@@ -95,6 +95,7 @@
   "alertOperate.relieve": "解除合并",
   "alertOperate.moreAcitons": "更多操作",
   "alertOperate.shareChatOps": "分享到ChatOps",
+  "alertOperate.manualNotify": "手工通知",
   "alertOperate.columns": "列定制",
   "alertOperate.groupBy": "分组显示",
   "alertOperate.groupBySeverity": "按级别分组",
@@ -118,8 +119,10 @@
   "modal.noRoomName": "请选择群组",
 
   "modal.ok": "确定",
+  "modal.submit": "提交",
   "modal.delete": "删除",
   "modal.cancel": "取消",
+  "modal.notifyIncident": "告警通知",
   "modal.createTicket": "派发工单",
   "modal.create": "派发",
   "modal.ticketType": "工单类型",

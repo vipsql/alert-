@@ -10,6 +10,7 @@ import DispatchModal from '../common/dispatchModal/index.js'
 import ChatOpshModal from '../common/chatOpsModal/index.js'
 import ResolveModal from '../common/resolveModal/index.js'
 import SuppressModal from '../common/suppressModal/index.js'
+import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -88,6 +89,11 @@ class alertQueryManage extends Component{
             type: 'alertQueryDetail/openChatOps',
           })
         },
+        showNotifyFunc: (position) => {
+          dispatch({
+            type: 'alertQueryDetail/openNotify',
+          })
+        },
         suppressIncidents: (min, position) => {
           dispatch({
             type: 'alertQueryDetail/suppressIncidents',
@@ -117,6 +123,7 @@ class alertQueryManage extends Component{
           dispatchDisabled: !(alertQueryDetail['currentAlertDetail']['status'] == 0 && !alertQueryDetail['currentAlertDetail']['parentId']),
           closeDisabled: alertQueryDetail['currentAlertDetail']['status'] == 255 || alertQueryDetail['currentAlertDetail']['status'] == 40,
           resolveDisabled: alertQueryDetail['currentAlertDetail']['status'] == 255 || alertQueryDetail['currentAlertDetail']['status'] == 190,
+          notifyDisabled: !(alertQueryDetail['currentAlertDetail']['status'] == 0 || alertQueryDetail['currentAlertDetail']['status'] == 150)
         },
 
         closeDeatilModal: () => {
@@ -275,6 +282,26 @@ class alertQueryManage extends Component{
           dispatch({
               type: 'alertQueryDetail/toggleChatOpsModal',
               payload: false
+          })
+        }
+      }
+
+      const notifyModalProps = {
+        isShowNotifyModal: alertQueryDetail.isShowNotifyModal,
+        notifyIncident: alertQueryDetail.notifyIncident,
+        notifyUsers: alertQueryDetail.notifyUsers,
+        onOk: (data) => {
+          dispatch({
+            type: "alertQueryDetail/notyfiyIncident",
+            payload: data
+          })
+        },
+        onCancel: () => {
+          dispatch({
+            type: "alertQueryDetail/initManualNotifyModal",
+            payload: {
+              isShowNotifyModal: false
+            }
           })
         }
       }
@@ -803,6 +830,7 @@ class alertQueryManage extends Component{
             <ResolveModal {...resolveModalProps}/>
             <SuppressModal {...suppressModalProps}/>
             <SuppressTimeSlider {...timeSliderProps} />
+            <ManualNotifyModal {...notifyModalProps} />
           </div>
       )
     }

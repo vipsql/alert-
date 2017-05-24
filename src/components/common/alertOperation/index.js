@@ -26,6 +26,8 @@ const alertOperation = ({position,
     dispatchDisabled,
     closeDisabled,
     resolveDisabled,
+    notifyDisabled,
+    showNotifyFunc,
     intl: {formatMessage} }) => {
 
     const localeMessage = defineMessages({
@@ -132,6 +134,10 @@ const alertOperation = ({position,
         chatOps: {
             id: 'alertOperate.shareChatOps',
             defaultMessage: '分享到ChatOps',
+        },
+        notify: {
+            id: 'alertOperate.manualNotify',
+            defaultMessage: '手工通知',
         },
         columns: {
             id: 'alertOperate.columns',
@@ -247,11 +253,15 @@ const alertOperation = ({position,
                         case 'ChatOps':
                             showChatOpsFunc(position)
                         break;
+                        case 'notify':
+                            showNotifyFunc(position)
+                        break;
                         default:
                             () => {}
                         break;
                     }
                 }}>
+                    <Option disabled={notifyDisabled} value="notify"><FormattedMessage {...localeMessage['notify']} /></Option>
                     <Option value="ChatOps"><FormattedMessage {...localeMessage['chatOps']} /></Option>
                 </Select>
                 :
@@ -310,11 +320,13 @@ alertOperation.defaultProps = {
     groupFunc: () => {},
     noGroupFunc: () => {},
     showChatOpsFunc: () => {},
+    showNotifyFunc: () => {},
     suppressIncidents: () => {},
     showSuppressTimeSlider: () => {},
     dispatchDisabled: false,
     closeDisabled: false,
-    resolveDisabled: false
+    resolveDisabled: false,
+    notifyDisabled: false
 }
 
 alertOperation.propTypes = {

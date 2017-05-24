@@ -162,3 +162,14 @@ export async function viewTicket(code) {
         }
     })
 }
+
+// 手工通知
+export async function notifyOperate(params) {
+    return request(`/dataService/manualNotify`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(params)
+    })
+}

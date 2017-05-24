@@ -1,7 +1,8 @@
 import {parse} from 'qs'
 import { queryDetail } from '../services/alertDetail'
 import { queryCloumns } from '../services/alertQuery'
-import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, changeTicket, viewTicket} from '../services/alertOperation'
+import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, changeTicket, viewTicket, notifyOperate} from '../services/alertOperation'
+import { getUsers } from '../services/alertAssociationRules';
 import { message } from 'antd'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -17,6 +18,9 @@ const initalState = {
     isShowResolveModal: false,
     isShowTimeSliderModal: false, // suppress
     isShowRemindModal: false, // 提醒框
+    isShowNotifyModal: false, // 手工通知
+    notifyIncident: {}, // 通知告警
+    notifyUsers: [], // 告警通知用户
 
     isShowTicketModal: false, //派发工单框
     ticketUrl: '', //工单链接
@@ -97,6 +101,56 @@ export default {
         } else {
             console.error('select incident/incident type error');
         }
+    },
+    // 手工通知
+    *openNotify({payload}, {select, put, call}) {
+        const {currentAlertDetail} = yield select( state => {
+            return {
+                'currentAlertDetail': state.alertQueryDetail.currentAlertDetail
+            }
+        })
+        const result = yield call(getUsers);
+        if (result.result) {
+            yield put({
+                type: 'initManualNotifyModal',
+                payload: {
+                    notifyIncident: currentAlertDetail,
+                    isShowNotifyModal: true,
+                    notifyUsers: result.data
+                }
+            })
+        } else {
+            yield message.error(window.__alert_appLocaleData.messages[result.message], 3);
+        }
+    },
+    *notyfiyIncident({payload}, {select, put, call}) {
+        const { viewDetailAlertId } = yield select( state => {
+            return {
+                'viewDetailAlertId': state.alertQuery.viewDetailAlertId
+            }
+        })
+        if (viewDetailAlertId) {
+            let stringId = '' + viewDetailAlertId;
+            const notify = yield call(notifyOperate, {
+                incidentId: stringId,
+                ...payload
+            })
+            if (notify.result) {
+                yield put({ type: 'alertQuery/changeCloseState', payload: {arrList: [stringId], status: 150}})
+                yield put({ type: 'openDetailModal' })
+                yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+            } else {
+                yield message.error(window.__alert_appLocaleData.messages[notify.message], 3);
+            }
+        } else {
+            console.error('please select incidet/incident is error');
+        }
+        yield put({
+            type: 'initManualNotifyModal',
+            payload: {
+                isShowNotifyModal: false
+            }
+        })
     },
     // 打开派发工单做的相应处理
     *openFormModal({payload}, {select, put, call}) { 
@@ -530,6 +584,9 @@ export default {
     },
     toggleRemindModal(state, {payload: isShowRemindModal}) {
         return { ...state, isShowRemindModal }
+    },
+    initManualNotifyModal(state, {payload: {isShowNotifyModal = false, notifyIncident = {}, notifyUsers = []}}) {
+        return { ...state, isShowNotifyModal, notifyIncident, notifyUsers }
     },
     // 存储工单信息
     setFormData(state, {payload: operateForm}) {

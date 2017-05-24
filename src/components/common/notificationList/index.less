@@ -1,0 +1,67 @@
+@import "../../vars.less";
+
+.wrapper{
+    position: relative;
+    padding: 10px;
+    :global{
+        .ant-form-item{
+            margin-bottom: 17px;
+        }
+        .ant-form-item-label label{
+            color: #fff;
+            font-size: 13px;
+        }
+    }
+    .recipients {
+        width: 100% !important;
+        color: #fff;
+        :global {
+            .ant-select-selection--multiple .ant-select-selection__choice {
+                border-radius: 2px;
+                background-color: #158ad4;
+                color: #fff;
+            }
+            .ant-select-selection__choice__remove {
+                top: 2px;
+                right: 0;
+                display: inline-block;
+                padding: 0;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background-color: #094e80;
+                color: #fff;
+                line-height: 20px;
+            }
+        }
+    }
+    .notificationTabs{
+        :global{
+            .ant-tabs-bar{
+                margin-bottom: 17px;
+                background: #1d6aa7;
+                border-bottom: none;
+                .ant-tabs-nav-scroll{
+                    margin-left: 10px;
+                }
+                .ant-tabs-nav .ant-tabs-tab{
+                    padding: 8px;
+                    border: 2px dotted #6ca4cd;
+                    border-radius: 4px;
+                    margin-right: 10px;
+                    background-color: #217dc6;
+                    &:hover{
+                        color: #fff;
+                    }
+                    & label.ant-checkbox-wrapper{
+                        margin-right: 0px;
+                    }
+                }
+                .ant-tabs-nav .ant-tabs-tab-active{
+                    transition: background .3s ease-in-out;
+                    background-color: #0d5990;
+                }
+            }
+        }
+    }
+}
