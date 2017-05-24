@@ -164,6 +164,7 @@ const SNMP_Trap = (props) => {
                 appRule.properties = state.properties.filter( (property) => { delete property.enitable; return property.code !== undefined && property.code !== '' && property.name !== undefined && property.name !== '' && property.oid !== undefined && property.oid !== ''})
                 appRule.mergeKey = state.mergeKey
                 appRule.dataSource = state.dataSource
+                appRule.identifyKey = state.identifyKey
 
                 dispatch({
                     type: 'snmpTrapRules/saveRule',

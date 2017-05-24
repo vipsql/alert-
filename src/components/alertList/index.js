@@ -17,6 +17,9 @@ import DispatchModal from '../common/dispatchModal/index.js'
 import RelieveModal from './relieveModal'
 import ChatOpshModal from '../common/chatOpsModal/index.js'
 import ResolveModal from '../common/resolveModal/index.js'
+import SuppressModal from '../common/suppressModal/index.js'
+import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
+import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import { classnames } from '../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -129,6 +132,29 @@ class AlertListManage extends Component{
           type: 'alertOperation/openChatOps',
           payload: position
         })
+      },
+      showNotifyFunc: (position) => {
+        dispatch({
+          type: 'alertOperation/openNotify',
+          payload: position
+        })
+      },
+      suppressIncidents: (min, position) => {
+        dispatch({
+          type: 'alertOperation/beforeSuppressIncidents',
+          payload: {
+            time: min,
+            position: position
+          }
+        })
+      },
+      showSuppressTimeSlider: (position) => {
+        dispatch({
+          type: 'alertOperation/openSuppressTimeSlider',
+          payload: {
+            position: position
+          }
+        })
       }
     }
 
@@ -146,6 +172,7 @@ class AlertListManage extends Component{
         dispatchDisabled: !(alertDetail['currentAlertDetail']['status'] == 0 && !alertDetail['currentAlertDetail']['parentId']),
         closeDisabled: alertDetail['currentAlertDetail']['status'] == 255 || alertDetail['currentAlertDetail']['status'] == 40,
         resolveDisabled: alertDetail['currentAlertDetail']['status'] == 255 || alertDetail['currentAlertDetail']['status'] == 190,
+        notifyDisabled: !(alertDetail['currentAlertDetail']['status'] == 0 || alertDetail['currentAlertDetail']['status'] == 150)
       },
       clickTicketFlow: (operateForm) => {
         if (operateForm !== undefined && operateForm !== '') {
@@ -304,6 +331,61 @@ class AlertListManage extends Component{
         })
       }
     }
+
+    const timeSliderProps = {
+      isShowTimeSliderModal: alertOperateModalOrigin === 'detail' ? alertDetailOperation.isShowTimeSliderModal : alertOperation.isShowTimeSliderModal,
+      onOk: (time) => {
+        dispatch({
+          type: alertOperateModalOrigin === 'detail' ? "alertDetailOperation/suppressIncidents" : "alertOperation/suppressIncidents",
+          payload: {
+            time: time
+          }
+        })
+        dispatch({
+          type: alertOperateModalOrigin === 'detail' ? "alertDetailOperation/toggleSuppressTimeSliderModal" : "alertOperation/toggleSuppressTimeSliderModal",
+          payload: false
+        })
+      },
+      onCancel: () => {
+        dispatch({
+          type: alertOperateModalOrigin === 'detail' ? "alertDetailOperation/toggleSuppressTimeSliderModal" : "alertOperation/toggleSuppressTimeSliderModal",
+          payload: false
+        })
+      }
+    }
+
+    const suppressModalProps = {
+      isShowRemindModal: alertOperateModalOrigin === 'detail' ? alertDetailOperation.isShowRemindModal : alertOperation.isShowRemindModal,
+      onKnow: (checked) => {
+        if (checked) {
+          localStorage.setItem('__alert_suppress_remind', 'false')
+        }
+        dispatch({
+          type: alertOperateModalOrigin === 'detail' ? "alertDetailOperation/toggleRemindModal" : "alertOperation/toggleRemindModal",
+          payload: false
+        })
+      }
+    }
+
+    const notifyModalProps = {
+      isShowNotifyModal: alertOperateModalOrigin === 'detail' ? alertDetailOperation.isShowNotifyModal : alertOperation.isShowNotifyModal,
+      notifyIncident: alertOperateModalOrigin === 'detail' ? alertDetailOperation.notifyIncident : alertOperation.notifyIncident,
+      notifyUsers: alertOperateModalOrigin === 'detail' ? alertDetailOperation.notifyUsers : alertOperation.notifyUsers,
+      onOk: (data) => {
+        dispatch({
+          type: alertOperateModalOrigin === 'detail' ? "alertDetailOperation/notyfiyIncident" : "alertOperation/notyfiyIncident",
+          payload: data
+        })
+      },
+      onCancel: () => {
+        dispatch({
+          type: alertOperateModalOrigin === 'detail' ? "alertDetailOperation/initManualNotifyModal" : "alertOperation/initManualNotifyModal",
+          payload: {
+            isShowNotifyModal: false
+          }
+        })
+      }
+    }
     
     const refreshProps = {
       onChange(checked){
@@ -432,6 +514,9 @@ class AlertListManage extends Component{
         <ChatOpshModal {...chatOpsModalProps}/>
         <ResolveModal {...resolveModalProps}/>
         <RelieveModal />
+        <SuppressModal {...suppressModalProps}/>
+        <SuppressTimeSlider {...timeSliderProps} />
+        <ManualNotifyModal {...notifyModalProps} />
       </div>
     )
   }

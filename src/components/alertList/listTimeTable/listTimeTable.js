@@ -8,7 +8,7 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import { classnames } from '../../../utils'
 class ListTimeTable extends Component {
     componentDidMount(){
-      
+
       const { setTimeLineWidth, begin, end  } = this.props
 
       const table = document.getElementById('listTimeTable')
@@ -50,7 +50,8 @@ class ListTimeTable extends Component {
         selectedAll,
         toggleSelectedAll,
         relieveClick,
-        isLoading
+        isLoading,
+        selectedTime
       } = this.props
       
       let colsKey = []
@@ -119,14 +120,33 @@ class ListTimeTable extends Component {
       
       const formatDate = function(date){
         const d = new Date(date)
+        let month = d.getMonth() + 1;
+        let dates = d.getDate()
         let hours = d.getHours()
         let mins = d.getMinutes()
 
+        month = month < 10 ? '0' + month : month
+        dates = dates < 10 ? '0' + dates : dates
         hours = hours < 10 ? '0' + hours : hours
         mins = mins < 10 ? '0' + mins : mins
 
+        let result = hours + ':' + mins;
 
-        return hours + ':' + mins
+        switch(selectedTime) {
+          case 'lastOneWeek':
+            result = month + '-' + dates;
+            break;
+          case 'lastFifteenDay':
+            result = month + '-' + dates;
+            break;
+          case 'lastOneMonth':
+            result = month + '-' + dates;
+            break;
+          default: 
+            break;
+        }
+
+        return result;
       }
       for(let i = 0; i < defaultShowNums; i++){
         

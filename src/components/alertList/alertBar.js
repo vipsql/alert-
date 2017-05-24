@@ -96,18 +96,44 @@ class AlertBar extends Component{
   shouldComponentUpdate(nextProps, nextState){   
     return this.props.alertList.barData !== nextProps.alertList.barData || this.props.alertList.isResize !== nextProps.alertList.isResize
   }
-  renderBar(barData, begin){
+  renderBar(barData, selectedTime){
     const { dispatch } = this.props
-    let timer = null
-    
+    let timer = null,
+        minGranularity = 2,
+        format = d3.time.format('%H:%M');
+        
+    switch(selectedTime) {
+      case 'lastOneHour':
+        minGranularity = 1;
+        break;
+      case 'lastFourHour':
+        minGranularity = 5;
+        break;
+      case 'lastOneDay':
+        minGranularity = 30;
+        break;
+      case 'lastOneWeek':
+        minGranularity = 3 * 60;
+        format = d3.time.format('%m-%d');
+        break;
+      case 'lastFifteenDay':
+        minGranularity = 6 * 60;
+        format = d3.time.format('%m-%d');
+        break;
+      case 'lastOneMonth':
+        minGranularity = 12 * 60;
+        format = d3.time.format('%m-%d');
+        break;
+      default: 
+        break;
+    }
     const startTime = barData[0]['time']
     const endtTime = barData[barData.length - 1]['time']
     const start = new Date(startTime)
     const end = new Date(endtTime)
-    const latestHour = new Date(begin)
 
     // Create the crossfilter for the relevant dimensions and groups.
-    const min5 = n_minutes_interval(2);
+    const min5 = n_minutes_interval(minGranularity);
     const alertList = crossfilter(barData)
     const clientWidth = document.documentElement.clientWidth || document.body.clientWidth
     
@@ -128,13 +154,30 @@ class AlertBar extends Component{
                   .renderHorizontalGridLines(true)
                   .x(d3.time.scale().domain([start, end]))
                   .xUnits(min5.range)
-                  .filter([latestHour, end])
+                  .filter([start, end])
                   
-
-    this.chart.xAxis().tickSize(0).tickPadding(10).tickFormat(d3.time.format('%H:%M'))
+    this.chart.xAxis().tickSize(0).tickPadding(10).tickFormat(format)
+    // this.chart.selectAll('g.tick text')
+    //           .call(function (text, width) {
+    //             text.each(function() {
+                  
+    //               var text = d3.select(this);
+    //               console.log(text.text())
+    //               var words = text.text().split(/\s/).reverse(),
+    //                   y = text.attr("y"),
+    //                   dy = parseFloat(text.attr("dy")),
+    //                   tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+    //               console.log(words)
+    //               words.forEach( (word, index) => {
+    //                 console.log(word)
+    //                 if(index === 0) tspan.text(word)
+    //                 if(index > 0) text.append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em").text(word);
+    //               })
+    //             })
+    //           })
     this.chart.render()
       // brush拖动选择过滤 
-     this.chart.on('filtered', function(d, f){
+    this.chart.on('filtered', function(d, f){
           
       clearTimeout(timer)
     
@@ -158,13 +201,13 @@ class AlertBar extends Component{
   }
   componentDidMount(){
     // this.chart = dc.barChart(".dc-chart")
-    const { barData, begin} = this.props.alertList
+    const { barData, selectedTime } = this.props.alertList
     const { dispatch }  = this.props
 
     const len = barData.length
 
     if(len > 0) {
-        this.renderBar(barData, begin)
+        this.renderBar(barData, selectedTime)
     }
 
     
@@ -176,8 +219,8 @@ class AlertBar extends Component{
     
   }
   componentDidUpdate(){
-    const { barData, begin} = this.props.alertList
-    this.renderBar(barData, begin)
+    const { barData, selectedTime } = this.props.alertList
+    this.renderBar(barData, selectedTime)
     
   }
   render(){
@@ -187,13 +230,13 @@ class AlertBar extends Component{
     } = this.props.alertList
 
     const len = barData.length
-
+    
     return (
       <div>
         { len && !this.props.alertList.isLoading ?
-        <div className={styles.timeAlert}>
+        <div className={styles.timeAlert} style={{ height: '80px'}}>
           <div id="date-chart" className="dc-chart"></div>
-          <div className={styles.xAxisLine}></div>
+          <div className={styles.xAxisLine} style={{ bottom: '22px'}}></div>
         </div>
         :
         <Spin spinning={this.props.alertList.isLoading}>

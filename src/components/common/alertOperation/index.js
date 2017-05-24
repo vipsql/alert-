@@ -21,9 +21,13 @@ const alertOperation = ({position,
     groupFunc, 
     noGroupFunc,
     showChatOpsFunc,
+    suppressIncidents,
+    showSuppressTimeSlider,
     dispatchDisabled,
     closeDisabled,
     resolveDisabled,
+    notifyDisabled,
+    showNotifyFunc,
     intl: {formatMessage} }) => {
 
     const localeMessage = defineMessages({
@@ -79,6 +83,22 @@ const alertOperation = ({position,
             id: 'alertList.title.lastOccurTime',
             defaultMessage: '最后发送时间',
         },
+        firstOccurTime:{
+            id: 'alertList.title.firstOccurTime',
+            defaultMessage: '首次发生时间',
+        },
+        entityAddr:{
+            id: 'alertList.title.entityAddr',
+            defaultMessage: 'IP地址',
+        },
+        orderFlowNum:{
+            id: 'alertList.title.orderFlowNum',
+            defaultMessage: '关联工单',
+        },
+        notifyList:{
+            id: 'alertList.title.notifyList',
+            defaultMessage: '是否分享',
+        },
         basic: {
             id: 'alertList.title.basic',
             defaultMessage: '常规',
@@ -91,9 +111,33 @@ const alertOperation = ({position,
             id: 'alertOperate.moreAcitons',
             defaultMessage: '更多操作',
         },
+        suppress: {
+            id: 'alertOperate.suppress',
+            defaultMessage: '抑制告警',
+        },
+        suppress_five: {
+            id: 'alertOperate.suppress.five',
+            defaultMessage: '5分钟内不再提醒',
+        },
+        suppress_ten: {
+            id: 'alertOperate.suppress.ten',
+            defaultMessage: '10分钟内不再提醒',
+        },
+        suppress_halfHour: {
+            id: 'alertOperate.suppress.halfHour',
+            defaultMessage: '半小时内不再提醒',
+        },
+        suppress_customer: {
+            id: 'alertOperate.suppress.customer',
+            defaultMessage: '自定义时间',
+        },
         chatOps: {
             id: 'alertOperate.shareChatOps',
             defaultMessage: '分享到ChatOps',
+        },
+        notify: {
+            id: 'alertOperate.manualNotify',
+            defaultMessage: '手工通知',
         },
         columns: {
             id: 'alertOperate.columns',
@@ -115,6 +159,10 @@ const alertOperation = ({position,
             id: 'alertOperate.groupByStatus',
             defaultMessage: '按状态分组',
         },
+        groupBySeverity: {
+            id: 'alertOperate.groupBySeverity',
+            defaultMessage: '按级别分组',
+        },
         groupByOther: {
             id: 'alertOperate.groupByOther',
             defaultMessage: '按{other}分组',
@@ -126,13 +174,6 @@ const alertOperation = ({position,
         'iconfont',
         'icon-bushu'
     )
-
-    // <Select className={styles.selectSingle} defaultValue="0">
-    //     <Option value="0">抑制告警</Option>
-    //     <Option value="1">5分钟内不再提醒</Option>
-    //     <Option value="2">10分钟内不再提醒</Option>
-    //     <Option value="3">半小时内不再提醒</Option>
-    // </Select>
 
     const switchClass = classnames(
         'icon',
@@ -191,18 +232,36 @@ const alertOperation = ({position,
                 :
                 undefined
             }
+            <Select style={{width: '100px'}} className={styles.selectSingle} allowClear placeholder={formatMessage({...localeMessage['suppress']})} onChange={ (min) => {
+                // 以分钟计 --> 100 customer
+                if (min) {
+                    if(min !== '100') 
+                        suppressIncidents(min, position)
+                    else
+                        showSuppressTimeSlider(position)
+                }
+            }}>
+                <Option value="5"><FormattedMessage {...localeMessage['suppress_five']} /></Option>
+                <Option value="10"><FormattedMessage {...localeMessage['suppress_ten']} /></Option>
+                <Option value="30"><FormattedMessage {...localeMessage['suppress_halfHour']} /></Option>
+                <Option value="100"><FormattedMessage {...localeMessage['suppress_customer']} /></Option>
+            </Select>
             {
                 window.__alert_appLocaleData.locale == 'zh-cn' ?
-                <Select className={styles.showChatOps} allowClear placeholder={formatMessage({...localeMessage['moreOperate']})} onChange={ (operate) => {
+                <Select className={styles.showChatOps} style={{width: '110px'}} allowClear placeholder={formatMessage({...localeMessage['moreOperate']})} onChange={ (operate) => {
                     switch (operate) {
                         case 'ChatOps':
                             showChatOpsFunc(position)
+                        break;
+                        case 'notify':
+                            showNotifyFunc(position)
                         break;
                         default:
                             () => {}
                         break;
                     }
                 }}>
+                    <Option disabled={notifyDisabled} value="notify"><FormattedMessage {...localeMessage['notify']} /></Option>
                     <Option value="ChatOps"><FormattedMessage {...localeMessage['chatOps']} /></Option>
                 </Select>
                 :
@@ -214,6 +273,7 @@ const alertOperation = ({position,
                     <Select className={classnames(styles.setGroup, styles.selectSingle)} placeholder={formatMessage({...localeMessage['groupBy']})} value={selectGroup} onChange={ (value) => {
                         groupFunc(value)
                     }}>
+                        <Option key={'severity'} className={styles.menuItem} value="severity"><FormattedMessage {...localeMessage['groupBySeverity']} /></Option>
                         <Option key={'entityName'} className={styles.menuItem} value="entityName"><FormattedMessage {...localeMessage['groupByEnityName']} /></Option>
                         <Option key={'source'} className={styles.menuItem} value="source"><FormattedMessage {...localeMessage['groupBySource']} /></Option>
                         <Option key={'status'} className={styles.menuItem} value="status"><FormattedMessage {...localeMessage['groupByStatus']} /></Option>
@@ -260,9 +320,13 @@ alertOperation.defaultProps = {
     groupFunc: () => {},
     noGroupFunc: () => {},
     showChatOpsFunc: () => {},
+    showNotifyFunc: () => {},
+    suppressIncidents: () => {},
+    showSuppressTimeSlider: () => {},
     dispatchDisabled: false,
     closeDisabled: false,
-    resolveDisabled: false
+    resolveDisabled: false,
+    notifyDisabled: false
 }
 
 alertOperation.propTypes = {

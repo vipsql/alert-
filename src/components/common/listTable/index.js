@@ -72,6 +72,22 @@ class ListTable extends Component {
           id: 'alertList.title.lastOccurTime',
           defaultMessage: '最后发送时间',
         },
+        firstOccurTime:{
+            id: 'alertList.title.firstOccurTime',
+            defaultMessage: '首次发生时间',
+        },
+        entityAddr:{
+            id: 'alertList.title.entityAddr',
+            defaultMessage: 'IP地址',
+        },
+        orderFlowNum:{
+            id: 'alertList.title.orderFlowNum',
+            defaultMessage: '关联工单',
+        },
+        notifyList:{
+            id: 'alertList.title.notifyList',
+            defaultMessage: '是否分享',
+        },
         showMore: {
           id: 'alertList.showMore',
           defaultMessage: '显示更多',
@@ -143,10 +159,21 @@ class ListTable extends Component {
             </td>
           )
         }
+        if(key == 'notifyList'){
+          if (item['isNotify'] && data !== undefined && data.length > 0) {
+            let temp = data.map( (key) => {
+              return window.__alert_appLocaleData.messages[`alertList.notifyList.${key}`]
+            })
+            data = temp.join(' / ')
+          }
+        }
+        if(key == 'firstOccurTime'){
+          const date = new Date(data)
+          data = formatDate(data)
+        }
         if(key == 'lastOccurTime'){
           const date = new Date(data)
           data = formatDate(data)
-          td = <td key={key}>{data}</td>
         }
         if(key == 'lastTime'){
           // 如果小于1小时 显示分钟
@@ -158,7 +185,6 @@ class ListTable extends Component {
           }else{
             data = `${+(data/hours).toFixed(1)}h`
           }
-          td = <td key={key}>{data}</td>
         }
         if(key == 'status'){
           switch (Number(data)) {
@@ -181,7 +207,6 @@ class ListTable extends Component {
               data
               break;
           }
-          td = <td key={key}>{data}</td>
         }
         
         const relieveIcon = classnames(
@@ -199,7 +224,7 @@ class ListTable extends Component {
               undefined
             }
           </td>
-        } else if (key == 'description' || key == 'entityName'){
+        } else if (key == 'description' || key == 'entityName' || key =='notifyList'){
            td = <td key={key} title={data}>{data}</td>
         } else {
            td = <td key={key}>{data}</td>
@@ -216,10 +241,21 @@ class ListTable extends Component {
       keys.forEach((key, index) => {
         let data = item[key];
         let td;
+        if(key == 'notifyList'){
+          if (item['isNotify'] && data !== undefined && data.length > 0) {
+            let temp = data.map( (key) => {
+              return window.__alert_appLocaleData.messages[`alertList.notifyList.${key}`]
+            })
+            data = temp.join(' / ')
+          }
+        }
+        if(key == 'firstOccurTime'){
+          const date = new Date(data)
+          data = formatDate(data)
+        }
         if(key == 'lastOccurTime'){
           const date = new Date(data)
           data = formatDate(data)
-          td = <td key={key}>{data}</td>
         }
         if(key == 'lastTime'){
           // 如果小于1小时 显示分钟
@@ -231,12 +267,9 @@ class ListTable extends Component {
           }else{
             data = `${+(data/hours).toFixed(1)}h`
           }
-          
-          
-          td = <td key={key}>{data}</td>
         }
         if(key == 'status'){
-          switch (data) {
+          switch (Number(data)) {
             case 0:
               data = window['_status']['0']
               break;
@@ -256,11 +289,10 @@ class ListTable extends Component {
               data
               break;
           }
-          td = <td key={key}>{data}</td>
         }
         if(key == 'name') {
           td = <td key={key} title={data} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >{data}</td>
-        } else if (key == 'description' || key == 'entityName'){
+        } else if (key == 'description' || key == 'entityName' || key =='notifyList'){
           td = <td key={key} title={data}>{data}</td>
         } else {
           td = <td key={key}>{data}</td>
@@ -298,6 +330,9 @@ class ListTable extends Component {
                     groupBy && groupBy == 'status' ?
                     window['_status'][item.classify]
                     :
+                    groupBy && groupBy == 'severity' ? 
+                    window['_severity'][item.classify]
+                    :
                     item.classify ? item.classify : <FormattedMessage {...formatMessages['Unknown']} />
                   }
               </td>
@@ -309,6 +344,9 @@ class ListTable extends Component {
                   {
                     groupBy && groupBy == 'status' ?
                     window['_status'][item.classify]
+                    :
+                    groupBy && groupBy == 'severity' ? 
+                    window['_severity'][item.classify]
                     :
                     item.classify ? item.classify : <FormattedMessage {...formatMessages['Unknown']} />
                   }

@@ -1,4 +1,4 @@
-import { querySource, queryAlertList, queryCount} from '../services/alertQuery'
+import { querySource, queryAlertList, queryCount, queryProperty} from '../services/alertQuery'
 import { groupSort } from '../utils'
 import { message } from 'antd'
 import {parse} from 'qs'
@@ -8,6 +8,7 @@ const initalState = {
 
     haveQuery: false, // 是否包含查询条件
     sourceOptions: [], // 来源
+    propertyOptions: [], // 扩展
     queryCount: {}, // 查询数量结果
     currentQuery: {}, // 当前的查询条件
 
@@ -78,8 +79,8 @@ export default {
       return { ...state, data, tempListData }
     },
     // 存放告警来源的options
-    setSourceOptions(state, { payload: sourceOptions}) {
-      return { ...state, sourceOptions }
+    setOptions(state, { payload: {sourceOptions, propertyOptions}}) {
+      return { ...state, sourceOptions, propertyOptions }
     },
     // 用来一次性结构状态，避免过度渲染
     changeState(state, { payload }) {
@@ -194,22 +195,27 @@ export default {
      * 3. 查询告警来源的options
      */
     *alertQuerySetup({payload},{call, put, select}){
-       yield put({ type: 'alertQueryDetail/toggleDetailModal', payload: false })
-       yield put({ type: 'clear'})
-       yield put({ type: 'queryAlertList'})
-       // 列定制初始化
-       //yield put({ type: 'alertQueryDetail/initalColumn'})
+      yield put({ type: 'alertQueryDetail/toggleDetailModal', payload: false })
+      yield put({ type: 'clear'})
+      yield put({ type: 'queryAlertList'})
 
-       const options = yield call(querySource)
-       
-       if (options.result) {
-         yield put({
-           type: 'setSourceOptions',
-           payload: options.data || [],
-         })
-       } else {
-         yield message.error(window.__alert_appLocaleData.messages[options.message], 3)
-       }
+      // 查询来源和扩展标签
+      const sourceOptions = yield call(querySource)
+      const propertyOptions = yield call(queryProperty)
+      
+      if (!sourceOptions.result) {
+        yield message.error(window.__alert_appLocaleData.messages[sourceOptions.message], 3)
+      }
+      if (!propertyOptions.result) {
+        yield message.error(window.__alert_appLocaleData.messages[propertyOptions.message], 3)
+      }
+      yield put({
+        type: 'setOptions',
+        payload: {
+          sourceOptions: sourceOptions.result ? sourceOptions.data : [],
+          propertyOptions: propertyOptions.result ? propertyOptions.data : [],
+        }
+      })
     },
 
     // 点击查找
@@ -333,6 +339,11 @@ export default {
           payload: true
         })
         const groupList = yield groupSort()(tempListData, payload.group)
+        if (payload.group !== undefined && payload.group === 'severity') {
+          groupList.sort( (prev, next) => {
+            return Number(next.classify) - Number(prev.classify);
+          })
+        }
         yield put({
           type: 'updateAlertListToGroup',
           payload: {

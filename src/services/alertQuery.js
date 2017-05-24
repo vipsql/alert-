@@ -9,6 +9,15 @@ export async function querySource() {
     })
 }
 
+export async function queryProperty() {
+    return request(`/incident/getPropertiesDistinct`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+}
+
 export async function queryAlertList(params) {
     return request(`/incident/queryHistory`, {
         method: 'POST',

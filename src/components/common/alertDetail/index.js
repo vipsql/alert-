@@ -116,7 +116,7 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
             defaultMessage: '持续时间',
         },
         firstOccurred:{
-            id: 'alertList.title.firstOccurred',
+            id: 'alertList.title.firstOccurTime',
             defaultMessage: '首次发生时间',
         },
         lastOccurTime:{

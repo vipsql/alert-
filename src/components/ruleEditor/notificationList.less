@@ -1,0 +1,106 @@
+.notificationTabsLabel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    margin-top: 59px;
+    width: 8.333%;
+    text-align: right;
+    font-size: 13px;
+
+    &:after {
+        position: relative;
+        top: -.5px;
+        margin: 0 8px 0 2px;
+        content: ":";
+    }
+}
+
+.notificationTabs {
+    position: relative;
+    // margin-left: 8.333%;
+    overflow: visible;
+
+    :global {
+        .ant-tabs-tab {
+            height: 30px !important;
+            border-style: dashed !important;
+            border-color: #6CA4CD !important;
+            line-height: 30px !important;
+        }
+
+        .ant-tabs-tab-active {
+            background-color: #1681C4 !important;
+        }
+
+        .ant-checkbox-wrapper {
+            margin-right: 5px;
+
+            & + span {
+                padding: 0;
+            }
+        }
+
+        .ant-tabs-tabpane {
+            padding: 0 !important;
+            // & > div {
+            //   position: relative;
+            // }
+        }
+
+        .ant-form-item-control-wrapper,
+        .ant-form-item-label {
+            float: left;
+            width: 75px;
+        }
+        // .ant-form-item-label label {
+        // position: relative;
+        // top: -5px;
+        // }
+    }
+
+    .mailTitle {
+        :global {
+            .ant-form-item-control-wrapper {
+                width: 40%;
+            }
+        }
+    }
+
+    .msgContent {
+        :global {
+            .ant-form-item-control-wrapper {
+                width: 60%;
+            }
+        }
+    }
+}
+
+.varsWrap {
+    width: 45%;
+    // position: relative;
+    border: 0;
+
+    :global {
+        .ant-popover-arrow {
+            display: none;
+        }
+
+        .ant-popover-inner {
+            background-color: #09284B;
+        }
+    }
+}
+
+.insertVar {
+    position: absolute;
+    top: 26px;
+    left: -65px;
+    display: inline-block;
+    padding: 0 5px;
+    height: 24px;
+    background-color: #09284B;
+    color: #5994D6;
+    line-height: 24px;
+    cursor: pointer;
+}

@@ -20,11 +20,13 @@ class ruleModal extends Component{
             properties: [{'oid': undefined, 'code': undefined, 'name': undefined, 'enitable': true}],
             groupFieldsList: [{'field': undefined, 'compose': undefined, 'enitable': true}],
             levelList: [{'trap': undefined, 'severity': undefined, 'enitable': true}],
-            mergeKey: '', 
+            mergeKey: '',
+            identifyKey: '',
             __matchProps: [],
             __groupFieldProps: [],
             __groupComposeProps: [],
             __mergeProps: [],
+            __identifyProps: [],
         }
         
         this.haveOIDChildrenList = false; // Trap OID + 精确匹配时 --> true
@@ -37,6 +39,7 @@ class ruleModal extends Component{
         this.editComposeField = this.editComposeField.bind(this)
         this.deleComposeField = this.deleComposeField.bind(this)
         this.clickCompose = this.clickCompose.bind(this)
+        this.clickIdentifyKey = this.clickIdentifyKey.bind(this)
         this.clickComposeByField = this.clickComposeByField.bind(this)
         this.addOrRemoveSeverity = this.addOrRemoveSeverity.bind(this)
     }
@@ -52,10 +55,12 @@ class ruleModal extends Component{
                 groupFieldsList: nextProps.snmpTrapRules.groupFieldsList.length !== 0 ? nextProps.snmpTrapRules.groupFieldsList : [{'field': undefined, 'compose': undefined, 'enitable': true}],
                 levelList: nextProps.snmpTrapRules.levelList.length !== 0 ? nextProps.snmpTrapRules.levelList : [{'trap': undefined, 'severity': undefined, 'enitable': true}],
                 mergeKey: nextProps.snmpTrapRules.operateAppRules.mergeKey || '',
+                identifyKey: nextProps.snmpTrapRules.operateAppRules.identifyKey || '',
                 __matchProps: nextProps.snmpTrapRules.__matchProps,
                 __groupFieldProps: nextProps.snmpTrapRules.__groupFieldProps,
                 __groupComposeProps: nextProps.snmpTrapRules.__groupComposeProps,
                 __mergeProps: nextProps.snmpTrapRules.__mergeProps,
+                __identifyProps: nextProps.snmpTrapRules.__identifyProps,
             })
         }
     }
@@ -86,6 +91,24 @@ class ruleModal extends Component{
                 !__newMergeProps.includes(field['field']) && __newMergeProps.push(field['field'])
         })
         this.setState({ __mergeProps: [...__newMergeProps]})
+    }
+
+    // 定位关键字段
+    clickIdentifyKey() {
+        let __newidentifyProps = [];
+        this.state.matchFields.forEach( (field) => {
+            if (field['enitable'] === undefined && (field['mapper'] === 'entityAddr' || field['mapper'] === 'entityName') && field['mapper'] !== undefined)
+                !__newidentifyProps.includes(field['mapper']) && __newidentifyProps.push(field['mapper'])
+        })
+        this.state.properties.forEach( (field) => {
+            if (field['enitable'] === undefined && field['code'] !== undefined && field['code'] !== '')
+                !__newidentifyProps.includes(field['code']) && __newidentifyProps.push(field['code'])
+        })
+        this.state.groupFieldsList.forEach( (field) => {
+            if (field['enitable'] === undefined && (field['field'] === 'entityAddr' || field['field'] === 'entityName') && field['field'] !== undefined)
+                !__newidentifyProps.includes(field['field']) && __newidentifyProps.push(field['field'])
+        })
+        this.setState({ __identifyProps: [...__newidentifyProps]})
     }
 
     // 点击组合时触发
@@ -396,11 +419,19 @@ class ruleModal extends Component{
             },
             rule_mergeKeys: {
                 id: 'modal.trap.mergeKeys',
-                defaultMessage: '合并原则'
+                defaultMessage: '归并关键字段'
             },
             rule_mergeKeys_message: {
                 id: 'modal.trap.mergeKeys.message',
                 defaultMessage: '指定合并告警的关键字段'
+            },
+            rule_IdentifyKeys: {
+                id: 'modal.trap.identifyKeys',
+                defaultMessage: '定位关键字段'
+            },
+            rule_IdentifyKeys_message: {
+                id: 'modal.trap.identifyKeys.message',
+                defaultMessage: '用于定位具体CI项的关键标识'
             },
             rule_bindCMDB: {
                 id: 'modal.trap.bindCMDB',
@@ -1051,6 +1082,49 @@ class ruleModal extends Component{
                                     }
                                 </Select>
                             )}
+                        </Item>
+                        <Item
+                            {...itemLayout}
+                            label={formatMessage({...localeMessage['rule_IdentifyKeys']})}
+                            wrapperCol={{span: 18}}
+                        >
+                            <div className={styles.mergeInput}>
+                                {getFieldDecorator('identifyKey', {})(
+                                    <div className={styles.composeContainer}>
+                                        <Input value={this.state.identifyKey} placeholder='$entity_name,$entity_address' onChange={(e) => {
+                                            //TODO
+                                            this.setState({ identifyKey: e.target.value })
+                                        }} />
+                                        <Popover placement='bottomRight' overlayClassName={styles.popover} onClick={ this.clickIdentifyKey } trigger="click" content={
+                                            <div className={styles.popoverMain}>
+                                                {
+                                                    this.state.__identifyProps.length > 0 ? this.state.__identifyProps.map( (field, itemIndex) => {
+                                                        if (this.state.identifyKey !== '' && this.state.identifyKey.match(/\$\{\w*\}/g) !== null && this.state.identifyKey.match(/\$\{\w*\}/g).includes(`$\{${field}\}`)) {
+                                                            return <span className={styles.selected} key={itemIndex} data-content={field} onClick={ (e) => {
+                                                                //TODO
+                                                                e.stopPropagation();
+                                                                let value = this.state.identifyKey.replace(`$\{${e.target.getAttribute('data-content')}\}`, '');
+                                                                this.setState({ identifyKey: value })
+                                                            }}>{field}</span>
+                                                        }
+                                                        return <span key={itemIndex} data-content={field} onClick={ (e) => {
+                                                            //TODO
+                                                            e.stopPropagation();
+                                                            let value = `$\{${e.target.getAttribute('data-content')}\}`;
+                                                            if (this.state.identifyKey !== '' )
+                                                                value = this.state.identifyKey + `$\{${e.target.getAttribute('data-content')}\}`;
+                                                            this.setState({ identifyKey: value })
+                                                        }}>{field}</span>
+                                                    }) : <span className={styles.noData}>{formatMessage({...localeMessage['rule_noSelectField']})}</span>
+                                                }
+                                            </div>
+                                        } >
+                                            <i className={classnames(styles.composeIcon, composeClass)}></i>
+                                        </Popover>
+                                    </div>
+                                )}
+                            </div>
+                            <span className={styles.mergeMessage}>{formatMessage({...localeMessage['rule_IdentifyKeys_message']})}</span>
                         </Item>
                         {
                             this.state.dataSource == 1 ?

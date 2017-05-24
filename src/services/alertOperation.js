@@ -68,8 +68,8 @@ export async function shareRoom(roomId, incidentId, roomName, param) {
     // }
     let paramWrapper = {
         roomId: '' + roomId,
-        //incidentId: incidentId,
-        //roomName: roomName,
+        incidentId: incidentId,
+        roomName: roomName,
         body: JSON.stringify(param)
     }
 
@@ -83,7 +83,6 @@ export async function shareRoom(roomId, incidentId, roomName, param) {
 }
 
 export async function dispatchForm(param) {
-    delete param.name;
     return request(`/dataService/assignWO`, {
         method: 'POST',
         headers: {
@@ -133,6 +132,16 @@ export async function relieve(param) {
     })
 }
 
+export async function suppress(param) {
+    return request(`/rule/fastInhibition`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(param)
+    })
+}
+
 // 修改工单流水号
 export async function changeTicket(params) {
     return request(`/incident/updateFlowNo`, {
@@ -151,5 +160,16 @@ export async function viewTicket(code) {
         headers: {
             'Content-Type': 'application/json',
         }
+    })
+}
+
+// 手工通知
+export async function notifyOperate(params) {
+    return request(`/dataService/manualNotify`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(params)
     })
 }

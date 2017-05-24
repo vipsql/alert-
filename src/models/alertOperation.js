@@ -1,6 +1,7 @@
 import {parse} from 'qs'
-import { getFormOptions, dispatchForm, close, resolve, merge, relieve, getChatOpsOptions, shareRoom} from '../services/alertOperation'
+import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, notifyOperate} from '../services/alertOperation'
 import { queryAlertList, queryChild, queryAlertListTime } from '../services/alertList'
+import { getUsers } from '../services/alertAssociationRules';
 import { queryCloumns } from '../services/alertQuery'
 import { message } from 'antd';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
@@ -18,6 +19,11 @@ const initalState = {
     isShowMergeModal: false, // 合并
     isShowRelieveModal: false, // 解除
     isShowChatOpsModal: false, //chatops
+    isShowTimeSliderModal: false, // suppress
+    isShowRemindModal: false, // 提醒框
+    isShowNotifyModal: false, // 手工通知
+    notifyIncident: {}, // 通知告警
+    notifyUsers: [], // 通知用户
 
     isSelectAlert: false, // 是否选择了告警
     isSelectOrigin: false, // 是否选择了源告警
@@ -44,6 +50,10 @@ const initalState = {
                 {id: 'lastTime', checked: false,},
                 {id: 'lastOccurTime', checked: false,},
                 {id: 'status', checked: false,},
+                {id: 'firstOccurTime', checked: false,},
+                {id: 'entityAddr', checked: false,},
+                {id: 'orderFlowNum', checked: false,},
+                {id: 'notifyList', checked: false,},
             ]
         }
     ],
@@ -59,20 +69,157 @@ export default {
   state: initalState,
 
   effects: {
-      // 列定制初始化(将数据变为设定的结构)
-    //   *initalColumn({payload}, {select, put, call}) {
-    //       // 这里后期要先做查询得到扩展字段，再和columnList拼接
-    //       const { columns } = yield select( state => {
-    //           return {
-    //               'columns': state.alertListTable.columns
-    //           }
-    //       })
-    //       const columnResult = yield call(queryCloumns)
-    //       if (!columnResult.result) {
-    //           yield message.error(window.__alert_appLocaleData.messages[columnResult.message], 2);
-    //       }
-    //       yield put({ type: 'initColumn', payload: {baseCols: columns, extend: columnResult.data || {}}})
-    //   },
+      // 打开抑制告警Modal
+      *openSuppressTimeSlider({payload: {position}}, {select, put, call}) {
+          // 触发筛选
+          yield put({ type: 'alertListTable/filterCheckAlert'})
+          const { operateAlertIds } = yield select( state => {
+              return {
+                  'operateAlertIds': state.alertListTable.operateAlertIds,
+              }
+          })
+          yield put({
+              type: 'alertList/toggleModalOrigin',
+              payload: position
+          })
+          if (position !== undefined && position === 'detail') {
+              yield put({
+                  type: 'alertDetailOperation/openSuppressTimeSlider',
+              })
+          } else {
+            if (operateAlertIds.length === 0) {
+                yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
+            } else {
+                yield put({
+                    type: 'toggleSuppressTimeSliderModal',
+                    payload: true
+                })
+            }
+          }
+      },
+      // 抑制告警
+      *beforeSuppressIncidents({payload: {time, position}}, {select, put, call}) {
+        // 触发筛选
+        yield put({ type: 'alertListTable/filterCheckAlert'})
+        
+        yield put({
+            type: 'alertList/toggleModalOrigin',
+            payload: position
+        })
+        if (position !== undefined && position === 'detail') {
+            yield put({
+                type: 'alertDetailOperation/suppressIncidents',
+                payload: {
+                    time: time
+                }
+            })
+        } else {
+            yield put({
+                type: 'suppressIncidents',
+                payload: {
+                    time: time
+                }
+            })
+        }
+      },
+      // 手工通知
+      *openNotify({payload: position}, {select, put, call}) {
+        // 触发筛选
+        yield put({ type: 'alertListTable/filterCheckAlert'})
+        const { selectedAlertIds } = yield select( state => {
+            return {
+                'selectedAlertIds': state.alertListTable.selectedAlertIds,
+            }
+        })
+        yield put({
+            type: 'alertList/toggleModalOrigin',
+            payload: position
+        })
+        if (position !== undefined && position === 'detail') {
+            yield put({
+                type: 'alertDetailOperation/openNotify',
+            })
+        } else {
+            if (selectedAlertIds.length === 0) {
+                yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 2);
+            } else if (selectedAlertIds.length > 1) {
+                yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip2'], 2);
+            } else {
+                const result = yield call(getUsers);
+                if (result.result) {
+                    yield put({
+                        type: 'initManualNotifyModal',
+                        payload: {
+                            notifyIncident: selectedAlertIds[0],
+                            isShowNotifyModal: true,
+                            notifyUsers: result.data
+                        }
+                    })
+                } else {
+                    yield message.error(window.__alert_appLocaleData.messages[result.message], 3);
+                }
+            }
+        }
+      },
+      *notyfiyIncident({payload}, {select, put, call}) {
+        const {operateAlertIds} = yield select( state => {
+            return {
+                'operateAlertIds':state.alertListTable.operateAlertIds
+            }
+        })
+        let stingIds = operateAlertIds.map(item => {return '' + item})
+        if (operateAlertIds.length === 1) {
+            const notify = yield call(notifyOperate, {
+                incidentId: stingIds[0],
+                ...payload
+            })
+            if (notify.result) {
+                yield put({ type: 'alertListTable/resetCheckedAlert'})
+                yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 150}})
+                yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+            } else {
+                yield message.error(window.__alert_appLocaleData.messages[notify.message], 3);
+            }
+            yield put({
+                type: 'initManualNotifyModal',
+                payload: {
+                    isShowNotifyModal: false
+                }
+            })
+        } else {
+            yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 2);
+        }
+      },
+      // 抑制告警
+      *suppressIncidents({payload: {time}}, {select, put, call}) {
+        const successRemind = yield localStorage.getItem('__alert_suppress_remind')
+        const {operateAlertIds} = yield select( state => {
+            return {
+                'operateAlertIds':state.alertListTable.operateAlertIds
+            }
+        })
+        if (operateAlertIds.length !== 0) {
+            const suppressData = yield suppress({
+                incidentIds: operateAlertIds,
+                time: Number(time)
+            })
+            if (suppressData.result) {
+                if (successRemind === null || JSON.parse(successRemind)) {
+                    yield put({
+                        type: 'toggleRemindModal',
+                        payload: true
+                    })
+                } else {
+                    yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                }
+                yield put({ type: 'alertListTable/resetCheckedAlert'})
+            } else {
+                yield message.error(window.__alert_appLocaleData.messages[suppressData.message], 3);
+            }
+        } else if(operateAlertIds.length === 0){
+            yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
+        }
+      },
       // 打开解除告警modal
       *openRelieveModal({payload}, {select, put, call}) {
           // 触发筛选
@@ -267,8 +414,6 @@ export default {
                         ticketUrl: data.data.url
                     }
                 })
-
-                yield put({ type: 'alertListTable/resetCheckedAlert'})
             }else{
                 // 500 error
                 yield message.error(window.__alert_appLocaleData.messages[data.message], 3);
@@ -295,6 +440,7 @@ export default {
               yield put({ type: 'alertDetailOperation/afterDispatch'})
           } else {
             let stingIds = operateAlertIds.map( item => '' + item)
+            yield put({ type: 'alertListTable/resetCheckedAlert'})
             yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 150}})
             yield put({ type: 'alertDetail/closeTicketModal'})
           }
@@ -335,9 +481,13 @@ export default {
                 closeMessage: payload
             })
             if (resultData.result) {
-                yield put({ type: 'alertListTable/resetCheckedAlert'})
-                yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 255}})
-                yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                if (resultData.data.result) {
+                    yield put({ type: 'alertListTable/resetCheckedAlert'})
+                    yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 255}})
+                    yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                } else {
+                    yield message.error(`${resultData.data.failures}`, 3);
+                }
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
             }
@@ -387,9 +537,13 @@ export default {
                 resolveMessage: payload
             })
             if (resultData.result) {
-                yield put({ type: 'alertListTable/resetCheckedAlert'})
-                yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 190}})
-                yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                if (resultData.data.result) {
+                    yield put({ type: 'alertListTable/resetCheckedAlert'})
+                    yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 190}})
+                    yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
+                } else {
+                    yield message.error(`${resultData.data.failures}`, 3);
+                }
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
             }
@@ -463,6 +617,7 @@ export default {
                     }
                 });
                 if (shareResult.result) {
+                    yield put({ type: 'alertListTable/resetCheckedAlert'})
                     yield message.success(window.__alert_appLocaleData.messages['constants.success'], 2)
                 } else {
                     yield message.error(`${shareResult.message}`, 2)
@@ -625,6 +780,15 @@ export default {
       },
       toggleResolveModal(state, {payload: isShowResolveModal}) {
           return { ...state, isShowResolveModal }
+      },
+      toggleSuppressTimeSliderModal(state, {payload: isShowTimeSliderModal}) {
+          return { ...state, isShowTimeSliderModal}
+      },
+      toggleRemindModal(state, {payload: isShowRemindModal}) {
+          return { ...state, isShowRemindModal }
+      },
+      initManualNotifyModal(state, {payload: {isShowNotifyModal = false, notifyIncident = {}, notifyUsers = []}}) {
+          return { ...state, isShowNotifyModal, notifyIncident, notifyUsers }
       },
       // selectRows是合并告警时触发
       selectRows(state, {payload: originAlert}) {

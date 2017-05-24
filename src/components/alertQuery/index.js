@@ -9,6 +9,9 @@ import CloseModal from '../common/closeModal/index.js'
 import DispatchModal from '../common/dispatchModal/index.js'
 import ChatOpshModal from '../common/chatOpsModal/index.js'
 import ResolveModal from '../common/resolveModal/index.js'
+import SuppressModal from '../common/suppressModal/index.js'
+import ManualNotifyModal from '../common/manualNotifyModal/index.js'
+import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const Item = Form.Item;
@@ -35,9 +38,9 @@ class alertQueryManage extends Component{
     render() {
       const {dispatch, form, alertQuery, alertQueryDetail, intl: {formatMessage}} = this.props;
 
-      const { haveQuery, sourceOptions, queryCount } = alertQuery;
+      const { haveQuery, sourceOptions, propertyOptions, queryCount } = alertQuery;
       
-      const { selectGroup, columnList, extendColumnList, extendTagsKey } = alertQueryDetail
+      const { selectGroup, columnList, extendColumnList, extendTagsKey, } = alertQueryDetail
 
       const { getFieldDecorator, getFieldsValue } = form;
 
@@ -85,6 +88,24 @@ class alertQueryManage extends Component{
           dispatch({
             type: 'alertQueryDetail/openChatOps',
           })
+        },
+        showNotifyFunc: (position) => {
+          dispatch({
+            type: 'alertQueryDetail/openNotify',
+          })
+        },
+        suppressIncidents: (min, position) => {
+          dispatch({
+            type: 'alertQueryDetail/suppressIncidents',
+            payload: {
+              time: min
+            }
+          })
+        },
+        showSuppressTimeSlider: (position) => {
+          dispatch({
+            type: 'alertQueryDetail/openSuppressTimeSlider',
+          })
         }
       }
 
@@ -102,6 +123,7 @@ class alertQueryManage extends Component{
           dispatchDisabled: !(alertQueryDetail['currentAlertDetail']['status'] == 0 && !alertQueryDetail['currentAlertDetail']['parentId']),
           closeDisabled: alertQueryDetail['currentAlertDetail']['status'] == 255 || alertQueryDetail['currentAlertDetail']['status'] == 40,
           resolveDisabled: alertQueryDetail['currentAlertDetail']['status'] == 255 || alertQueryDetail['currentAlertDetail']['status'] == 190,
+          notifyDisabled: !(alertQueryDetail['currentAlertDetail']['status'] == 0 || alertQueryDetail['currentAlertDetail']['status'] == 150)
         },
 
         closeDeatilModal: () => {
@@ -264,6 +286,61 @@ class alertQueryManage extends Component{
         }
       }
 
+      const notifyModalProps = {
+        isShowNotifyModal: alertQueryDetail.isShowNotifyModal,
+        notifyIncident: alertQueryDetail.notifyIncident,
+        notifyUsers: alertQueryDetail.notifyUsers,
+        onOk: (data) => {
+          dispatch({
+            type: "alertQueryDetail/notyfiyIncident",
+            payload: data
+          })
+        },
+        onCancel: () => {
+          dispatch({
+            type: "alertQueryDetail/initManualNotifyModal",
+            payload: {
+              isShowNotifyModal: false
+            }
+          })
+        }
+      }
+
+      const timeSliderProps = {
+        isShowTimeSliderModal: alertQueryDetail.isShowTimeSliderModal,
+        onOk: (time) => {
+          dispatch({
+            type: "alertQueryDetail/suppressIncidents",
+            payload: {
+              time: time
+            }
+          })
+          dispatch({
+            type: "alertQueryDetail/toggleSuppressTimeSliderModal",
+            payload: false
+          })
+        },
+        onCancel: () => {
+          dispatch({
+            type: "alertQueryDetail/toggleSuppressTimeSliderModal",
+            payload: false
+          })
+        }
+      }
+
+      const suppressModalProps = {
+        isShowRemindModal: alertQueryDetail.isShowRemindModal,
+        onKnow: (checked) => {
+          if (checked) {
+            localStorage.setItem('__alert_suppress_remind', 'false')
+          }
+          dispatch({
+            type: "alertQueryDetail/toggleRemindModal",
+            payload: false
+          })
+        }
+      }
+
       const ticketModalProps = {
         isShowTicketModal: alertQueryDetail.isShowTicketModal,
         ticketUrl: alertQueryDetail.ticketUrl,
@@ -315,6 +392,22 @@ class alertQueryManage extends Component{
               id: 'alertList.title.lastOccurTime',
               defaultMessage: '最后发送时间',
           },
+          firstOccurTime:{
+              id: 'alertList.title.firstOccurTime',
+              defaultMessage: '首次发生时间',
+          },
+          entityAddr:{
+              id: 'alertList.title.entityAddr',
+              defaultMessage: 'IP地址',
+          },
+          orderFlowNum:{
+              id: 'alertList.title.orderFlowNum',
+              defaultMessage: '关联工单',
+          },
+          notifyList:{
+              id: 'alertList.title.notifyList',
+              defaultMessage: '是否分享',
+          },
           basic: {
               id: 'alertList.title.basic',
               defaultMessage: '常规',
@@ -343,6 +436,10 @@ class alertQueryManage extends Component{
               id: 'alertOperate.groupByStatus',
               defaultMessage: '按状态分组',
           },
+          groupBySeverity: {
+              id: 'alertOperate.groupBySeverity',
+              defaultMessage: '按级别分组',
+          },
           groupByOther: {
               id: 'alertOperate.groupByOther',
               defaultMessage: '按{other}分组',
@@ -354,6 +451,18 @@ class alertQueryManage extends Component{
           keyWords_placeholder: {
               id: 'alertQuery.label.keyWords.placeholder',
               defaultMessage: '请输入关键字',
+          },
+          notifyList_placeholder: {
+              id: 'alertQuery.label.notifyList.placeholder',
+              defaultMessage: '请选择是否分享',
+          },
+          notifyList_yes: {
+              id: 'alertQuery.label.notifyList.yes',
+              defaultMessage: '是',
+          },
+          notifyList_no: {
+              id: 'alertQuery.label.notifyList.no',
+              defaultMessage: '否',
           },
           tags: {
               id: 'alertQuery.label.tags',
@@ -404,7 +513,7 @@ class alertQueryManage extends Component{
               defaultMessage: '派发工单'
           },
           IP_address: {
-              id: 'alertList.title.ip_address',
+              id: 'alertList.title.entityAddr',
               defaultMessage: 'IP地址'
           }
       })
@@ -445,7 +554,10 @@ class alertQueryManage extends Component{
                 return;
             }
             const formData = form.getFieldsValue()
-            
+
+            let keyWords = JSON.parse(formData.keyWordsType);
+            formData.keyName = keyWords.keyName;
+            formData.keyWordsType = keyWords.keyWordsType;
             
             if (formData.dateTime !== undefined && formData.dateTime.length !== 0) {
               //   开始时间统一处理为当前日期的0点时间戳
@@ -513,10 +625,10 @@ class alertQueryManage extends Component{
                       
                     })(
                         <Select placeholder={formatMessage({...localeMessage['severity_placeholder']})}>
-                          <Option value="0">{window['_severity']['0']}</Option>
-                          <Option value="1">{window['_severity']['1']}</Option>
-                          <Option value="2">{window['_severity']['2']}</Option>
                           <Option value="3">{window['_severity']['3']}</Option>
+                          <Option value="2">{window['_severity']['2']}</Option>
+                          <Option value="1">{window['_severity']['1']}</Option>
+                          <Option value="0">{window['_severity']['0']}</Option>
                         </Select>
                     )}
                   </Item>
@@ -591,21 +703,42 @@ class alertQueryManage extends Component{
                 </Col>
               </Row>
               <Row className={styles.rowStyle}>
-                <Col className={styles.colStyle}>
+                <Col span={8}>
                   <Item
-                    labelCol={{span: 2}}
-                    wrapperCol={{span: 4}}
+                    {...formItemLayout}
+                    label={<FormattedMessage {...localeMessage['notifyList']} />}
+                  >
+                    {getFieldDecorator('isNotify', {
+                      
+                    })(
+                        <Select placeholder={formatMessage({...localeMessage['notifyList_placeholder']})}>
+                          <Option value='true'>{formatMessage({...localeMessage['notifyList_yes']})}</Option>
+                          <Option value='false'>{formatMessage({...localeMessage['notifyList_no']})}</Option>
+                        </Select>
+                    )}
+                  </Item>
+                </Col>
+                <Col span={8} className={styles.colStyle}>
+                  <Item
+                    {...formItemLayout}
+                    wrapperCol={{span: 10}}
                     label={<FormattedMessage {...localeMessage['keyWords']} />}
                   > 
                     {getFieldDecorator('keyWordsType', {
-                      initialValue: '1'
+                      initialValue: JSON.stringify({'keyWordsType': '1'})
                     })(
                       <Select size='large'>
-                        <Option className={styles.keywordsMenuItem} value="1"><FormattedMessage {...localeMessage['entityName']} /></Option>
-                        <Option className={styles.keywordsMenuItem} value="3"><FormattedMessage {...localeMessage['tags']} /></Option>
-                        <Option className={styles.keywordsMenuItem} value="2"><FormattedMessage {...localeMessage['description']} /></Option>
-                        <Option className={styles.keywordsMenuItem} value="4"><FormattedMessage {...localeMessage['name']} /></Option>
-                        <Option className={styles.keywordsMenuItem} value="5"><FormattedMessage {...localeMessage['IP_address']} /></Option>
+                        <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '1'})}><FormattedMessage {...localeMessage['entityName']} /></Option>
+                        <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '3'})}><FormattedMessage {...localeMessage['tags']} /></Option>
+                        <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '2'})}><FormattedMessage {...localeMessage['description']} /></Option>
+                        <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '4'})}><FormattedMessage {...localeMessage['name']} /></Option>
+                        <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '5'})}><FormattedMessage {...localeMessage['IP_address']} /></Option>
+                        <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '6'})}><FormattedMessage {...localeMessage['orderFlowNum']} /></Option>
+                        {
+                          propertyOptions.length > 0 ? propertyOptions.map( (item, index) => {
+                            return <Option key={item.code} className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '100', 'keyName': item.code})}>{item.name}</Option>
+                          }) : []
+                        }
                       </Select>
                     )}    
                   </Item>
@@ -620,7 +753,6 @@ class alertQueryManage extends Component{
                   </Item>
                 </Col>
                 <Button type="primary" size="large" htmlType="submit" onClick={ (e) => {onOk(e, form)} }><FormattedMessage {...localeMessage['search']} /></Button>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <Button type="primary" size="large" onClick={ () => {form.resetFields()} }><FormattedMessage {...localeMessage['reset']} /></Button>
               </Row>
             </Form>
@@ -646,6 +778,7 @@ class alertQueryManage extends Component{
                             payload: value,
                         })
                     }}>
+                        <Option key={'severity'} className={styles.menuItem} value="severity"><FormattedMessage {...localeMessage['groupBySeverity']} /></Option>
                         <Option key={'entityName'} className={styles.menuItem} value="entityName"><FormattedMessage {...localeMessage['groupByEnityName']} /></Option>
                         <Option key={'source'} className={styles.menuItem} value="source"><FormattedMessage {...localeMessage['groupBySource']} /></Option>
                         <Option key={'status'} className={styles.menuItem} value="status"><FormattedMessage {...localeMessage['groupByStatus']} /></Option>
@@ -695,6 +828,9 @@ class alertQueryManage extends Component{
             <DispatchModal {...dispatchModalProps}/>
             <ChatOpshModal {...chatOpsModalProps}/>
             <ResolveModal {...resolveModalProps}/>
+            <SuppressModal {...suppressModalProps}/>
+            <SuppressTimeSlider {...timeSliderProps} />
+            <ManualNotifyModal {...notifyModalProps} />
           </div>
       )
     }

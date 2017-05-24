@@ -1,4 +1,5 @@
 import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery, add, update, view, getTrapUrl} from '../services/alertConfig'
+import { getUserInformation } from '../services/app'
 import {parse} from 'qs'
 import { message } from 'antd'
 import pathToRegexp from 'path-to-regexp';
@@ -89,11 +90,11 @@ export default {
     // 通过modal进入详情页
     *addApplicationView({payload}, {select, put, call}) {
       if (payload !== undefined) {
-        const info = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
-        if (info !== undefined) {
+        const infoResult = yield getUserInformation()
+        if (infoResult.result) {
           yield put({
             type: 'setApiKeys',
-            payload: info.apiKeys[0] || undefined
+            payload: infoResult.data.apiKeys[0] || undefined
           })
         }
         yield put({ type: 'initalAddAppView', payload: {isShowTypeModal: false, appTypeId: payload, UUID: undefined}}) // isShowTypeModal -> false, currentOperateAppType -> Object
@@ -123,16 +124,16 @@ export default {
     *editApplicationView({payload}, {select, put, call}) {
       if (payload !== undefined) {
         const viewResult = yield call(view, payload)
-        const info = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
+        const infoResult = yield getUserInformation()
         if (viewResult.result) {
           yield put({
             type: 'setCurrent',
             payload: viewResult.data || {}
           })
-          if (info !== undefined) {
+          if (infoResult.result) {
             yield put({
               type: 'setApiKeys',
-              payload: info.apiKeys[0] || undefined
+              payload: infoResult.data.apiKeys[0] || undefined
             })
           }
           if (viewResult.data.applyType !== undefined) {
