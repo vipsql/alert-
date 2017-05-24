@@ -408,7 +408,7 @@
   "ruleEditor.v2": "Information",
   "ruleEditor.v3": "Warning",
   "ruleEditor.v4": "Critical",
-  "ruleEditor.s1": "Open",
+  "ruleEditor.s1": "Assigned or resolved",
   "ruleEditor.s2": "Acknowledged",
   "ruleEditor.s3": "Assigned",
   "ruleEditor.s4": "Resolved",

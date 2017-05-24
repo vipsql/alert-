@@ -407,7 +407,7 @@
   "ruleEditor.v2": "提醒",
   "ruleEditor.v3": "警告",
   "ruleEditor.v4": "紧急",
-  "ruleEditor.s1": "未接手",
+  "ruleEditor.s1": "处理中或已解决",
   "ruleEditor.s2": "已确认",
   "ruleEditor.s3": "处理中",
   "ruleEditor.s4": "已解决",

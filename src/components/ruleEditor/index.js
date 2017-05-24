@@ -267,7 +267,7 @@ class RuleEditor extends Component {
             this.state.action.actionUpgrade = {
                 notificationGroupings: [{
                     delay: 15,
-                    status: [],
+                    status: undefined,
                     recipients: []
                 }],
                 notificationMode: {
@@ -349,7 +349,7 @@ class RuleEditor extends Component {
                 _action.actionUpgrade = {
                     notificationGroupings: [{
                         delay: 15,
-                        status: [],
+                        status: undefined,
                         recipients: []
                     }],
                     notificationMode: {
@@ -515,10 +515,8 @@ class RuleEditor extends Component {
                             onChange={this.changeType.bind(this)}
                             value={this.state.type}
                         >
-                            {
-                                target === 0 &&
-                                <Radio value={0}><FormattedMessage {...formatMessages['anyTime']} /></Radio>
-                            }
+                            
+                            <Radio value={0}><FormattedMessage {...formatMessages['anyTime']} /></Radio>
                             <Radio value={2}>
                                 {
                                     target === 0
@@ -667,7 +665,7 @@ class RuleEditor extends Component {
                                                         <Input style={{ width: 50 }} defaultValue={item.delay} onBlur={this.changeUpgrade.bind(this, index)} />
                                                         <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word6']}</span>
                                                         <Select
-                                                            mode="multiple"
+                                                            // mode="multiple"
                                                             style={{ width: 180 }}
                                                             placeholder={window.__alert_appLocaleData.messages['ruleEditor.word8']}
                                                             className={styles.recipients}
@@ -676,8 +674,8 @@ class RuleEditor extends Component {
                                                         >
                                                             <Option value={0}>{window.__alert_appLocaleData.messages['ruleEditor.s1']}</Option>
                                                             <Option value={150}>{window.__alert_appLocaleData.messages['ruleEditor.s3']}</Option>
-                                                            <Option value={190}>{window.__alert_appLocaleData.messages['ruleEditor.s4']}</Option>
-                                                            <Option value={255}>{window.__alert_appLocaleData.messages['ruleEditor.s5']}</Option>
+                                                            <Option value={190}>{window.__alert_appLocaleData.messages['ruleEditor.s5']}</Option>
+                                                            {/* <Option value={255}>{window.__alert_appLocaleData.messages['ruleEditor.s4']}</Option> */}
                                                         </Select>
                                                         <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word7']}</span>
                                                         {/* <Select style={{ width: 100 }} placeholder="动作类型">
@@ -990,16 +988,9 @@ class RuleEditor extends Component {
                     action: _action
                 });
             }
-            if (this.state.type === 0) {
-                this.setState({
-                    target: value,
-                    type: 2
-                });
-            } else {
-                this.setState({
-                    target: value
-                });
-            }
+            this.setState({
+                target: value
+            });
         }
     }
     changeAction(type, value) {
@@ -1022,8 +1013,8 @@ class RuleEditor extends Component {
                         notificationMode: {
                             notificationMode: [],
                             emailTitle: '${entityName}:${name}',
-                            emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, <1>description</1>',
-                            smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, <1>description</1>'
+                            emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
+                            smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
                         }
                     };
                 }
@@ -1531,7 +1522,7 @@ RuleEditor.defaultProps = {
         actionUpgrade: {
             notificationGroupings: [{
                 delay: 15,
-                status: [],
+                status: undefined,
                 recipients: []
             }],
             notificationMode: {
@@ -1618,7 +1609,7 @@ RuleEditor.propTypes = {
         actionUpgrade: PropTypes.shape({
             notificationGroupings: PropTypes.shape({
                 delay: PropTypes.number,
-                status: PropTypes.array,
+                status: PropTypes.number,
                 recipients: PropTypes.array
             }),
             notificationMode: PropTypes.shape({
