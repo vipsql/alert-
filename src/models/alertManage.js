@@ -99,9 +99,9 @@ export default {
                 if(item.children){
                   item.children.forEach((childItem) => {
                     childItem.fixedValue = 1
-                    
+                    item.fixedValue += 1
                   })
-                  item.fixedValue = item.children.length
+                  // item.fixedValue = item.children.length
                 }
               
             })
@@ -167,9 +167,9 @@ export default {
             if(item.children){
               item.children.forEach((childItem) => {
                 childItem.fixedValue = 1
-                
+                item.fixedValue += 1
               })
-              item.fixedValue = item.children.length
+              // item.fixedValue = item.children.length
             }
           
         })

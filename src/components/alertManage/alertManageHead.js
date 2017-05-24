@@ -60,6 +60,7 @@ const AlertManageHead = ({
   queryByStatus,
   setLayout,
   isFixed,
+  isFullScreen,
   setFullScreen
 }) => {
   const setClass = classnames(
@@ -78,6 +79,10 @@ const AlertManageHead = ({
     'iconfont',
     'icon-zuidahua'
   )
+   const minFullScreenClass = classnames(
+    'iconfont',
+    'icon-zuixiaohua'
+  )
   const layouthandler = (e) =>{
     // 如果是当前状态不更新布局（通过className）
     const target = e.target.tagName.toLocaleLowerCase() == 'i' ?  e.target.parentNode : e.target
@@ -86,20 +91,26 @@ const AlertManageHead = ({
   }
   return (
     <div className={styles.manageHead}>
-        
+        {isFullScreen && <div className={styles.fullScreenMask}></div>}
         <div className={styles.focusSet} onClick={showTagsModal}>
           <i className={setClass}></i><FormattedMessage {...formatMessages['set']} />
         </div>
         <div className={styles.layout}>
+            
+            {isFullScreen && 
+              <a href="javascript:void(0)" className={classnames(styles.minFullScreen)} onClick={setFullScreen}>
+              <Tooltip title="还原"><i className={minFullScreenClass}></i></Tooltip>
+            </a>
+            }
            <a href="javascript:void(0)" className={classnames(styles.fullScreen)} onClick={setFullScreen}>
             <Tooltip title="全屏"><i className={fullScreenClass}></i></Tooltip>
            </a>
-           <Tooltip title="自动布局"><a href="javascript:void(0)" className={classnames(styles.autoLayout,!isFixed ? 'curLayout' : '')} data-isFixed="1" onClick={(e) => {layouthandler(e)}}>
-            <i className={autoLayoutClass}></i>
-           </a></Tooltip>
-           <Tooltip title="固定布局"><a href="javascript:void(0)" className={classnames(styles.fixedLayout, isFixed ? 'curLayout' : '')} data-isFixed="0" onClick={(e) => {layouthandler(e)}}>
-           <i className={fixedLayoutClass}></i>
-           </a></Tooltip>
+           <a href="javascript:void(0)" className={classnames(styles.autoLayout,!isFixed ? 'curLayout' : '')} data-isFixed="1" onClick={(e) => {layouthandler(e)}}>
+            <Tooltip title="自动布局"><i className={autoLayoutClass}></i></Tooltip>
+           </a>
+           <a href="javascript:void(0)" className={classnames(styles.fixedLayout, isFixed ? 'curLayout' : '')} data-isFixed="0" onClick={(e) => {layouthandler(e)}}>
+           <Tooltip title="固定布局"><i className={fixedLayoutClass}></i></Tooltip>
+           </a>
         </div>
         {isSetAlert &&
           <div>

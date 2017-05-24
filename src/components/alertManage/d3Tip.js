@@ -54,5 +54,6 @@ export default class Tip {
 
   hide = () => {
     el.classList.remove('alertShow')
+    el.style.display = 'none'
   }
 }

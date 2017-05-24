@@ -34,7 +34,7 @@ class Chart extends Component{
 
     constructor(props) {
         super(props)
-        this.setTreemapHeight = this.setTreemapHeight.bind(this);
+        // this.setTreemapHeight = this.setTreemapHeight.bind(this);
         this.timer = null // 定时器
     }
     setTreemapHeight(ele){
@@ -54,14 +54,13 @@ class Chart extends Component{
             '2': '#ff9524', // 警告
             '3': "#eb5a30" // 紧急
         }
-        this.chartWidth = document.documentElement.clientWidth - 160 - 90;
-        this.chartHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight) ;
-        this.xscale = d3.scale.linear().range([0, this.chartWidth]);
-        this.yscale = d3.scale.linear().range([0, this.chartHeight]);
+        this.chartWidth = document.documentElement.clientWidth - 160 - 90
+        this.chartHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight) - 180
+        this.xscale = d3.scale.linear().range([0, this.chartWidth])
+        this.yscale = d3.scale.linear().range([0, this.chartHeight])
         this.color = function(num){
             return severityToColor[num]
-        };
-
+        }
 
         this.chart = d3.select("#treemap")
             .append("svg:svg")
@@ -71,16 +70,14 @@ class Chart extends Component{
         
 
         this.timer = setInterval( () =>{
-            // var data = {"message":"热图查询成功","data":{"totalCriticalCnt":33,"totalMajorCnt":29,"totalInfoCnt":24,"totalMinorCnt":13,"totalWarnCnt":22,"picList":[{"name":"资源类型名称","value":19,"path":"entityTypeName","children":[{"name":"光缆","path":"entityTypeName\/guanglan","value":9,"maxSeverity":50},{"name":"计算机","path":"entityTypeName\/jisuanji","value":10,"maxSeverity":50}]},{"name":"告警级别","value":102,"path":"severity","children":[{"name":"紧急","path":"severity\/jinji","value":27,"maxSeverity":50},{"name":"警告","path":"severity\/jinggu","value":19,"maxSeverity":20},{"name":"次要","path":"severity\/ciyao","value":13,"maxSeverity":30},{"name":"主要","path":"severity\/zhuyao","value":22,"maxSeverity":40},{"name":"提醒","path":"severity\/dixing","value":21,"maxSeverity":10}]}]},"result":true}
-            // .data.picList
-            // this.myChart.setOption({
-            //     series: [{
-            //         data: data
-            //     }]
-            // })
-            this.props.requestFresh()
+            // 全屏下不刷新
+            if(!this.props.isFullScreen){
+                this.props.requestFresh()
+            }
+            
         }, 60000)
 
+        // 监听ESC
         document.addEventListener('keyup',(e) =>{
             if(this.props.isFullScreen){
                 if(e.keyCode === 27){ //esc按键
@@ -109,15 +106,19 @@ class Chart extends Component{
             treemapNode.style.cssText = 'position:fixed;top:-20px;left:0'
             
         }else{
-            treemapNode.style.cssText = 'position:absolute'
+            this.chartWidth = window.innerWidth- 160 - 90
+            this.chartHeight = window.innerHeight - 180
+            treemapNode.style.cssText = 'position:absolute;'
         }
         
 
         this.xscale = d3.scale.linear().range([0, this.chartWidth]);
+        this.yscale = d3.scale.linear().range([0, this.chartHeight]);
 
         d3.select("#treemap")
             .select('svg')
             .attr("width", this.chartWidth)
+            .attr("height", this.chartHeight)
         
         // 计算总的告警数 主要是为了当告警数很小时 区域无法显示 给一个最小的区域快大小
         let sumAlerts = 0
@@ -132,10 +133,9 @@ class Chart extends Component{
           .sticky(true)
           .value(function(d) {
               if(d.fixedValue){
-                return d.fixedValue;
+                return d.fixedValue
               }else{
-                // 后面加一个数字 表示给一个最小size
-                return d.value + sumAlerts * 0.05;
+                return d.value
               }
               
           });
@@ -172,19 +172,19 @@ class Chart extends Component{
         })
 
         node = root = {
-              path: 'root',
-              children: updateData
-            };
+            path: 'root',
+            children: updateData
+        };
 
-            var nodes = this.treemap.nodes(root);
-            
-            var children = nodes.filter(function(d) {
-                return !d.children;
-            });
-            var parents = nodes.filter(function(d) {
+        var nodes = this.treemap.nodes(root);
+        
+        var children = nodes.filter(function(d) {
+            return !d.children;
+        });
+        var parents = nodes.filter(function(d) {
 
-                return d.children;
-            });
+            return d.children;
+        });
 
         // d3.json("../../../mock/alert.json", function(data) {
         if(children.length > 0){
@@ -273,7 +273,8 @@ class Chart extends Component{
                 .append("g")
                 .attr("class", "cell child")
                 .on("contextmenu", (d, e) => {
-                    zoom.call(this, node === d.parent ? root : d.parent);
+                    zoom.call(this, node === d.parent ? root : d.parent)
+                    d3Tip.hide()
                     currentEvent.preventDefault()
                   })
                 .on("click", (d) => {
@@ -400,7 +401,6 @@ class Chart extends Component{
             if(d.fixedValue){
                 return d.fixedValue;
               }else{
-                  
                 return d.value;
               }
         }
@@ -552,9 +552,10 @@ class Chart extends Component{
         // 下面分开判断主要是为了没数据居中显示
         return (
             <div>
+            
             <div className={styles.loadingWrap}>
                 <Spin spinning= {this.props.isLoading}>
-                    <div id="treemap" className={styles.treemap}>
+                    <div id="treemap" className={styles.treemap}> 
                     
                     </div> 
                 </Spin>

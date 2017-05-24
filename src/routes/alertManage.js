@@ -44,6 +44,7 @@ function AlertManage({dispatch, alertManage, isFold}){
     isSetAlert,
     levels,
     isFixed,
+    isFullScreen,
     showTagsModal(){
       dispatch({
         type: 'alertTagsSet/openSetModal',
