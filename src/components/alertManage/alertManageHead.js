@@ -105,12 +105,13 @@ const AlertManageHead = ({
            <a href="javascript:void(0)" className={classnames(styles.fullScreen)} onClick={setFullScreen}>
             <Tooltip title="全屏"><i className={fullScreenClass}></i></Tooltip>
            </a>
-           <a href="javascript:void(0)" className={classnames(styles.autoLayout,!isFixed ? 'curLayout' : '')} data-isFixed="1" onClick={(e) => {layouthandler(e)}}>
-            <Tooltip title="自动布局"><i className={autoLayoutClass}></i></Tooltip>
-           </a>
            <a href="javascript:void(0)" className={classnames(styles.fixedLayout, isFixed ? 'curLayout' : '')} data-isFixed="0" onClick={(e) => {layouthandler(e)}}>
            <Tooltip title="固定布局"><i className={fixedLayoutClass}></i></Tooltip>
            </a>
+           <a href="javascript:void(0)" className={classnames(styles.autoLayout,!isFixed ? 'curLayout' : '')} data-isFixed="1" onClick={(e) => {layouthandler(e)}}>
+            <Tooltip title="自动布局"><i className={autoLayoutClass}></i></Tooltip>
+           </a>
+           
         </div>
         {isSetAlert &&
           <div>
