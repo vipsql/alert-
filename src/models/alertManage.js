@@ -94,17 +94,22 @@ export default {
         if (treemapData.data && treemapData.data.picList && treemapData.data.picList.length !== 0) {
           let dashbordData = treemapData.data.picList
           if(isFixed){
+            debugger
               dashbordData = JSON.parse(JSON.stringify(dashbordData))
+             
               dashbordData.forEach( (item) =>{
                 if(item.children){
                   item.children.forEach((childItem) => {
                     childItem.fixedValue = 1
-                    item.fixedValue += 1
+                    // 保存真是数据修复显示tip 告警数不正确bug
+                    childItem.trueVal =  childItem.value
+                    item.fixedValue = (item.fixedValue ? item.fixedValue : 0) + 1
                   })
                   // item.fixedValue = item.children.length
                 }
               
             })
+            
           }
           filterData = yield dashbordData.filter( item => item['path'] != 'status' )
         }
@@ -167,7 +172,9 @@ export default {
             if(item.children){
               item.children.forEach((childItem) => {
                 childItem.fixedValue = 1
-                item.fixedValue += 1
+                // 保存真是数据修复显示tip 告警数不正确bug
+                childItem.trueVal =  childItem.value
+                item.fixedValue = (item.fixedValue ? item.fixedValue : 0) + 1
               })
               // item.fixedValue = item.children.length
             }

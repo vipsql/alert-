@@ -176,7 +176,7 @@ class Chart extends Component{
             children: updateData
         };
 
-        var nodes = this.treemap.nodes(root);
+        var nodes = this.treemap.nodes(root)
         
         var children = nodes.filter(function(d) {
             return !d.children;
