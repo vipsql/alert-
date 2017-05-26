@@ -40,7 +40,9 @@ export default class Tip {
     if (d.parent.path == 'severity' || d.parent.path == 'status') {
       temp = window[`_${d.parent.path}`][d.name]
     }
-    const val = d.noData ? 0 : d.value
+    
+    
+    const val = d.noData ? 0 : (d.fixedValue ? d.trueVal : d.value)
     el.innerHTML = `${__alert_appLocaleData.messages['treemap.tagsGroup']}: ` + temp + '<br/>' + `${stateMessage}: ` + val 
     el.style.display = 'block'
     el.style.top = o.top - 55 + 'px'

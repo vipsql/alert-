@@ -95,7 +95,7 @@ const  VisualAnalyzeWrap = ({dispatch, visualAnalyze}) => {
         })
     },
     redirectTagsList(){
-        localStorage.removeItem('__alert_visualAnalyze_gr4')
+        // localStorage.removeItem('__alert_visualAnalyze_gr4')
         dispatch({
             type: 'visualAnalyze/redirectTagsList'
         })
