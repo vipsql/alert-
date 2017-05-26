@@ -123,10 +123,10 @@ export default {
           type: 'setLevels',
           payload: {
             levels: {
-              totalOkCnt: treemapData.data.totalOkCnt, // 恢复
-              totalCriticalCnt: treemapData.data.totalCriticalCnt, // 紧急
-              totalWarnCnt: treemapData.data.totalWarnCnt, // 警告
-              totalInfoCnt: treemapData.data.totalInfoCnt // 提醒
+              totalOkCnt: treemapData.data ? treemapData.data.totalOkCnt : 0, // 恢复
+              totalCriticalCnt: treemapData.data ? treemapData.data.totalCriticalCnt : 0, // 紧急
+              totalWarnCnt: treemapData.data ? treemapData.data.totalWarnCnt : 0, // 警告
+              totalInfoCnt: treemapData.data ? treemapData.data.totalInfoCnt : 0, // 提醒
             }
           }
         })

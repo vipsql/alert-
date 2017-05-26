@@ -10,5 +10,4 @@ export default {
     //"api_root": "http://10.1.250.32:8100/api/v2" // zhao
     // "api_root": "http://10.1.251.102:8100/api/v2" // fang
     // "api_root": "http://10.1.200.105:8100/api/v2"
-    // "api_root": "http://10.1.251.102:8100/api/v2" // 方鑫_开发环境
 }

@@ -248,7 +248,7 @@ const alertOperation = ({position,
             </Select>
             {
                 window.__alert_appLocaleData.locale == 'zh-cn' ?
-                <Select className={styles.showChatOps} style={{width: '110px'}} allowClear placeholder={formatMessage({...localeMessage['moreOperate']})} onChange={ (operate) => {
+                <Select className={styles.showChatOps} style={{width: '100px'}} allowClear placeholder={formatMessage({...localeMessage['moreOperate']})} onChange={ (operate) => {
                     switch (operate) {
                         case 'ChatOps':
                             showChatOpsFunc(position)
