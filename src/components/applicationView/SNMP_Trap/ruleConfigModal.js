@@ -766,7 +766,7 @@ class ruleModal extends Component{
                                     {
                                         title: <FormattedMessage {...localeMessage['rule_OID']}/>,
                                         dataIndex: 'oid',
-                                        width: '150px',
+                                        width: '200px',
                                         key: 'oid',
                                         render: (text, record, index) => {
                                             let { oid, enitable } = this.state.properties[index];

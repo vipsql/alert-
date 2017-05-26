@@ -87,6 +87,22 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
                                     : currentAlertDetail.severity == 0 ? styles.hfLevel : false
 
     const localeMessage = defineMessages({
+        name: {
+            id: 'alertList.title.name',
+            defaultMessage: '告警名称'
+        },
+        entityName: {
+            id: 'alertList.title.enityName',
+            defaultMessage: '对象'
+        },
+        entityAddr: {
+            id: 'alertList.title.entityAddr',
+            defaultMessage: 'IP地址'
+        },
+        notifyList: {
+            id: 'alertList.title.notifyList',
+            defaultMessage: '是否分享'
+        },
         unknown: {
             id: 'alertList.unknown',
             defaultMessage: '未知',
@@ -185,6 +201,13 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
         }
     })
 
+    const sharedFunc = (notifyList) => {
+        let temp = notifyList.map( (key) => {
+            return window.__alert_appLocaleData.messages[`alertList.notifyList.${key}`]
+        })
+        return temp.join(' / ');
+    }
+
     return (
         <div className={styles.main}>
             <div className={styles.detailHead}>
@@ -196,8 +219,12 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
                 <div className={styles.infoBody}>
                     <p>{formatMessage({...localeMessage['basic']})}</p>
                     <ul>
+                        <li><span>{formatMessage({...localeMessage['name']})}:</span><span>{currentAlertDetail.name ? currentAlertDetail.name : formatMessage({...localeMessage['unknown']})}</span></li>
+                        <li><span>{formatMessage({...localeMessage['entityName']})}:</span><span>{currentAlertDetail.entityName ? currentAlertDetail.entityName : formatMessage({...localeMessage['unknown']})}</span></li>
+                        <li><span>{formatMessage({...localeMessage['entityAddr']})}:</span><span>{currentAlertDetail.entityAddr ? currentAlertDetail.entityAddr : formatMessage({...localeMessage['unknown']})}</span></li>
+                        <li><span>{formatMessage({...localeMessage['notifyList']})}:</span><span>{currentAlertDetail.isNotify ? sharedFunc(currentAlertDetail.notifyList) : formatMessage({...localeMessage['unknown']})}</span></li>
                         <li><span>{formatMessage({...localeMessage['status']})}:</span><span>{window['_status'][currentAlertDetail.status]}</span></li>
-                        <li><span>{formatMessage({...localeMessage['severity']})}:</span><span className={severityColor}>{window['_severity'][currentAlertDetail.severity]}</span></li>
+                        <li><span>{formatMessage({...localeMessage['severity']})}:</span><span className={classnames(severityColor, styles.icon)} /><span>{window['_severity'][currentAlertDetail.severity]}</span></li>
                         <li><span>{formatMessage({...localeMessage['source']})}:</span><span>{currentAlertDetail.source ? currentAlertDetail.source : formatMessage({...localeMessage['unknown']})}</span></li>
                         {
                             currentAlertDetail.tags !== null && currentAlertDetail.tags.length !== 0 ?

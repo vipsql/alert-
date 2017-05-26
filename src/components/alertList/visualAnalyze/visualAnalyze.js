@@ -15,7 +15,7 @@ const severityToColor = {
     '0': '#a5f664', // 正常
     '1': '#fadc23', // 提醒
     '2': '#ff9524', // 警告
-    '3': "#eb5a30" // 紧急
+    '3': "#f45131" // 紧急
 }
 const tagsFilter = classnames(
     'iconfont',
