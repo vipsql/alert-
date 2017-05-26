@@ -1,4 +1,5 @@
 import { querySource, queryAlertList, queryCount, queryProperty} from '../services/alertQuery'
+import { viewTicket } from '../services/alertOperation'
 import { groupSort } from '../utils'
 import { message } from 'antd'
 import {parse} from 'qs'
@@ -185,8 +186,30 @@ export default {
         })
         return { ...state, data: newData }
       }
+    },
+    // 修改data数组某一行的值
+    updateDataRow(state, {payload}) {
+      const { data } = state;
+      let newData = Object.assign([], data);
+      newData = newData.map((tempRow) => {
+        if(tempRow['id'] == payload['id']) {
+          tempRow = {...tempRow, ...payload};
+        }
+        return tempRow;
+      });
+      return {...state, data: newData};
+    },
+    // 修改tempListData数组某一行的值
+    updateTempDataRow(state, {payload}) {
+      const { tempListData } = state;
+      let newTempListData = Object.assign({}, tempListData);
+      newTempListData = newTempListData.map((tempRow) => {
+        if(tempRow['id'] == payload['id']) {
+          tempRow = {...tempRow, ...payload};
+        }
+      });
+      return {...state, tempListData: newTempListData};
     }
-
   },
   effects: {
     /**
@@ -455,6 +478,23 @@ export default {
       } else {
         console.error('orderBy error')
       }
+    },
+    // 工单号点击后跳转到工单详情页面并保留工单详情地址
+    *orderFlowNumClick({payload: {orderFlowNum, id}}, {select, put, call}) {
+      const itsmDetailUrlData = yield call(viewTicket, orderFlowNum);
+      const itsmDetailUrl = itsmDetailUrlData.data.url;
+      const { isGroup } = yield select( state => {
+        return {
+          'isGroup': state.alertQuery.isGroup
+        }
+      })
+      
+      if(!isGroup) {
+        yield put({ type: 'updateDataRow', payload: {itsmDetailUrl, id}})
+      } else {
+        yield put({ type: 'updateTempDateRow', payload: {itsmDetailUrl, id}})
+      }
+      window.open(itsmDetailUrl);
     }
   },
 

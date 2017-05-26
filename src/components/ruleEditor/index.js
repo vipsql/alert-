@@ -267,14 +267,14 @@ class RuleEditor extends Component {
             this.state.action.actionUpgrade = {
                 notificationGroupings: [{
                     delay: 15,
-                    status: undefined,
+                    status: [],
                     recipients: []
                 }],
                 notificationMode: {
                     notificationMode: [],
                     emailTitle: '${entityName}:${name}',
-                    emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
-                    smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
+                    emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
+                    smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
                 }
             }
         }
@@ -349,14 +349,14 @@ class RuleEditor extends Component {
                 _action.actionUpgrade = {
                     notificationGroupings: [{
                         delay: 15,
-                        status: undefined,
+                        status: [],
                         recipients: []
                     }],
                     notificationMode: {
                         notificationMode: [],
                         emailTitle: '${entityName}:${name}',
-                        emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
-                        smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
+                        emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
+                        smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
                     }
                 };
             }
@@ -673,11 +673,19 @@ class RuleEditor extends Component {
                                                             placeholder={window.__alert_appLocaleData.messages['ruleEditor.word8']}
                                                             className={styles.recipients}
                                                             onChange={this.changeUpgradeMode.bind(this, index)}
-                                                            value={item.status}
+                                                            value={(() => {
+                                                                if (item.status.length === 2) {
+                                                                    return 0;
+                                                                } else if (item.status.length === 1) {
+                                                                    return item.status[0] === 255 ? 2 : 1;
+                                                                } else {
+                                                                    return undefined;
+                                                                }
+                                                            })()}
                                                         >
                                                             <Option value={0}>{window.__alert_appLocaleData.messages['ruleEditor.s1']}</Option>
-                                                            <Option value={150}>{window.__alert_appLocaleData.messages['ruleEditor.s3']}</Option>
-                                                            <Option value={190}>{window.__alert_appLocaleData.messages['ruleEditor.s5']}</Option>
+                                                            <Option value={1}>{window.__alert_appLocaleData.messages['ruleEditor.s3']}</Option>
+                                                            <Option value={2}>{window.__alert_appLocaleData.messages['ruleEditor.s5']}</Option>
                                                             {/* <Option value={255}>{window.__alert_appLocaleData.messages['ruleEditor.s4']}</Option> */}
                                                         </Select>
                                                         <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word7']}</span>
@@ -849,8 +857,8 @@ class RuleEditor extends Component {
                     notificationMode: {
                         notificationMode: [],
                         emailTitle: '${entityName}:${name}',
-                        emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
-                        smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
+                        emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
+                        smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
                     }
                 };
             }
@@ -905,8 +913,8 @@ class RuleEditor extends Component {
                 notificationMode: {
                     notificationMode: [],
                     emailTitle: '${entityName}:${name}',
-                    emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
-                    smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
+                    emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
+                    smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
                 }
             };
         }
@@ -928,7 +936,21 @@ class RuleEditor extends Component {
 
     changeUpgradeMode(index, value) {
         const _action = _.cloneDeep(this.state.action);
-        _action.actionUpgrade.notificationGroupings[index].status = value;
+        let val = [];
+        switch(value) {
+            case 0:
+                val = [150, 190]
+                break;
+            case 1:
+                val = [150]
+                break;
+            case 2:
+                val = [255]
+                break;
+            default:
+                break;
+        }
+        _action.actionUpgrade.notificationGroupings[index].status = val;
         this.setState({
             action: _action
         });
@@ -1023,8 +1045,8 @@ class RuleEditor extends Component {
                         notificationMode: {
                             notificationMode: [],
                             emailTitle: '${entityName}:${name}',
-                            emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
-                            smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
+                            emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
+                            smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
                         }
                     };
                 }
@@ -1411,7 +1433,7 @@ class RuleEditor extends Component {
             case 2:
                 _actionUpgrade = action.actionUpgrade;
                 _actionUpgrade.notificationMode = action.actionNotification.notificationMode;
-                _actionUpgrade.notificationGroupings = action.actionUpgrade.notificationGroupings.filter(item => item && item.status.length !== 0 && item.recipients.length !== 0);
+                _actionUpgrade.notificationGroupings = action.actionUpgrade.notificationGroupings.filter(item => item);
                 break;
             case 3:
                 _actionNotification = action.actionNotification;
@@ -1518,8 +1540,8 @@ RuleEditor.defaultProps = {
             notificationMode: {
                 notificationMode: [],
                 emailTitle: '${entityName}:${name}',
-                emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
-                smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
+                emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
+                smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
             }
         },
         actionITSM: {
@@ -1532,14 +1554,14 @@ RuleEditor.defaultProps = {
         actionUpgrade: {
             notificationGroupings: [{
                 delay: 15,
-                status: undefined,
+                status: [],
                 recipients: []
             }],
             notificationMode: {
                 notificationMode: [],
                 emailTitle: '${entityName}:${name}',
-                emailMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}',
-                smsMessage: '${severity}, ${entityName}, ${firstOccurTime}, ${description}'
+                emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
+                smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
             }
         }
     },
@@ -1619,7 +1641,7 @@ RuleEditor.propTypes = {
         actionUpgrade: PropTypes.shape({
             notificationGroupings: PropTypes.shape({
                 delay: PropTypes.number,
-                status: PropTypes.number,
+                status: PropTypes.array,
                 recipients: PropTypes.array
             }),
             notificationMode: PropTypes.shape({
