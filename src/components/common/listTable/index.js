@@ -28,6 +28,7 @@ class ListTable extends Component {
       selectedAll,
       toggleSelectedAll,
       relieveClick,
+      orderFlowNumClick,
       isLoading,
       orderUp,
       orderDown,
@@ -225,9 +226,16 @@ class ListTable extends Component {
             }
           </td>
         } else if (key == 'description' || key == 'entityName' || key =='notifyList'){
-           td = <td key={key} title={data}>{data}</td>
+          td = <td key={key} title={data}>{data}</td>
+        } else if (key == 'orderFlowNum' && data) {
+          if(typeof item['itsmDetailUrl'] != 'undefined') {
+            console.log(item['itsmDetailUrl']);
+            td = <td key={key} title={data}><a target='_blank' href={item['itsmDetailUrl']}>{data}</a></td>
+          } else {
+            td = <td key={key} title={data}><a href='javascript:;' onClick={orderFlowNumClick} data-flow-num={data} data-id={item['id']}>{data}</a></td>
+          }
         } else {
-           td = <td key={key}>{data}</td>
+          td = <td key={key}>{data}</td>
         }
         tds.push(td)
       })
@@ -470,6 +478,7 @@ ListTable.defaultProps = {
   noSpreadChild: () => {},
   toggleSelectedAll: () => {},
   relieveClick: () => {},
+  orderFlowNumClick: () => {}
 }
 
 ListTable.propTypes = { 
