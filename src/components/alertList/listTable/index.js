@@ -117,6 +117,14 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
         type: 'alertListTable/orderByTittle',
         payload: orderKey
       })
+    },
+    orderFlowNumClick(e) {
+      const orderFlowNum = e.target.getAttribute('data-flow-num');
+      const id = e.target.getAttribute('data-id');
+      dispatch({
+        type: 'alertListTable/orderFlowNumClick',
+        payload: {orderFlowNum, id}
+      })
     }
   }
 
