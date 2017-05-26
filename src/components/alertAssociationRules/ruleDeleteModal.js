@@ -19,11 +19,11 @@ const ruleDeleteModal = ({alertAssociationRules, dispatch}) => {
             defaultMessage: '取消'
         },
         deleteOperate: {
-            id: 'alertAssociationRules.modal.deleteTitle',
+            id: 'modal.rule.deleteTitle',
             defaultMessage: '删除规则'
         },
         deleteMessage: {
-            id: 'alertAssociationRules.modal.deleteMessage',
+            id: 'modal.rule.deleteMessage',
             defaultMessage: '您确定要删除{message}规则吗',
             values: {
                 message: Object.keys(currentDeleteRule).length !== 0 ? currentDeleteRule['name'] : '' 
