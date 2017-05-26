@@ -259,6 +259,9 @@
   "modal.trap.deleteTitle": "Delete Rule",
   "modal.trap.deleteMessage": "Are you sure to delete the {message} Rule?",
 
+  "modal.rule.deleteTitle": "Delete Rule",
+  "modal.rule.deleteMessage": "Are you sure to delete the {message} Rule?",
+
   "alertApplication.videoMon.headerTitle": "Use Web Hook to build an integration between Uyun Alert and Uyun VideoMon.",
   "alertApplication.videoMon.step2": "Send data to the Monitor",
   "alertApplication.videoMon.step2Message": "Please copy the URL below to your application.",

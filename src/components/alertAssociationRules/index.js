@@ -5,6 +5,7 @@ import { Row, Col, Tabs, Button } from 'antd'
 import { classnames } from '../../utils'
 import { Link } from 'dva/router'
 import AssociationRulesList from '../common/configList'
+import RuleDeleteModal from './RuleDeleteModal'
 
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -107,10 +108,13 @@ const alertAssociationRules = ({dispatch, alertAssociationRules, intl: {formatMe
                 }
             })
         },
-        deleteClick: (id) => {
+        deleteClick: (item) => {
             dispatch({
-                type: 'alertAssociationRules/deleteRule',
-                payload: id
+                type: 'alertAssociationRules/toggleDeleteModal',
+                payload: {
+                    currentDeleteRule: item,
+                    isShowDeleteModal: true
+                }
             })
         },
         spreadGroup: (e) => {
@@ -152,6 +156,7 @@ const alertAssociationRules = ({dispatch, alertAssociationRules, intl: {formatMe
                 <p className={styles.total}><FormattedMessage {...localeMessage['ruleTotal']} values={{num: `${alertAssociationRules.associationRulesTotal}`}}/></p>
             </div>
             <AssociationRulesList {...rulesListProps} />
+            <RuleDeleteModal />
         </div>
     )
 }
