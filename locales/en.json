@@ -432,6 +432,11 @@
 
   "visualAnalyze.groupBy": "Groupby",
   "visualAnalyze.incidentGroup": "Display alert groups only",
-  "visualAnalyze.noData": "No Data"
+  "visualAnalyze.noData": "No Data",
+
+  "layout.fixedLayout": "FixedLayout",
+  "layout.autoLayout": "AutoLayout",
+  "layout.fullScreen": "FullScreen",
+  "layout.initialize": "Initialize"
 
 }

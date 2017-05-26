@@ -95,21 +95,21 @@ const AlertManageHead = ({
         <div className={styles.focusSet} onClick={showTagsModal}>
           <i className={setClass}></i><FormattedMessage {...formatMessages['set']} />
         </div>
-        <div className={styles.layout}>
+        <div className={styles.layout} >
             
             {isFullScreen && 
               <a href="javascript:void(0)" className={classnames(styles.minFullScreen)} onClick={setFullScreen}>
-              <Tooltip title="还原"><i className={minFullScreenClass}></i></Tooltip>
+              <Tooltip title={__alert_appLocaleData.messages['layout.initialize']}><i className={minFullScreenClass}></i></Tooltip>
             </a>
             }
            <a href="javascript:void(0)" className={classnames(styles.fullScreen)} onClick={setFullScreen}>
-            <Tooltip title="全屏"><i className={fullScreenClass}></i></Tooltip>
+            <Tooltip title={__alert_appLocaleData.messages['layout.fullScreen']}><i className={fullScreenClass}></i></Tooltip>
            </a>
            <a href="javascript:void(0)" className={classnames(styles.fixedLayout, isFixed ? 'curLayout' : '')} data-isFixed="0" onClick={(e) => {layouthandler(e)}}>
-           <Tooltip title="固定布局"><i className={fixedLayoutClass}></i></Tooltip>
+           <Tooltip title={__alert_appLocaleData.messages['layout.fixedLayout']}><i className={fixedLayoutClass}></i></Tooltip>
            </a>
            <a href="javascript:void(0)" className={classnames(styles.autoLayout,!isFixed ? 'curLayout' : '')} data-isFixed="1" onClick={(e) => {layouthandler(e)}}>
-            <Tooltip title="自动布局"><i className={autoLayoutClass}></i></Tooltip>
+            <Tooltip title={__alert_appLocaleData.messages['layout.autoLayout']}><i className={autoLayoutClass}></i></Tooltip>
            </a>
            
         </div>
