@@ -1,4 +1,5 @@
 import { queryAlertList, queryChild, queryAlertListTime } from '../services/alertList'
+import { viewTicket } from '../services/alertOperation'
 import {parse} from 'qs'
 import { message } from 'antd'
 import { groupSort } from '../utils'
@@ -436,8 +437,32 @@ export default {
         })
         return { ...state, data: newData }
       }
+    },
+    // 修改data数组某一行的值
+    updateDataRow(state, {payload}) {
+      const { data, isGroup } = state;
+      let newData = Object.assign([], data);
+      if (isGroup) {
+        newData = newData.map((tempGroup) => {
+          let data = tempGroup.children.map( (tempRow) => {
+            if(tempRow['id'] == payload['id']) {
+              tempRow = {...tempRow, ...payload};
+            }
+            return tempRow
+          })
+          tempGroup.children = data;
+          return tempGroup;
+        });
+      } else {
+        newData = newData.map((tempRow) => {
+          if(tempRow['id'] == payload['id']) {
+            tempRow = {...tempRow, ...payload};
+          }
+          return tempRow;
+        });
+      }
+      return {...state, data: newData};
     }
-
   },
   effects: {
 
@@ -800,6 +825,16 @@ export default {
         yield put({ type: 'queryAlertList' })
       } else {
         console.error('orderBy error')
+      }
+    },
+    *orderFlowNumClick({payload: {orderFlowNum, id}}, {select, put, call}) {
+      const itsmDetailUrlData = yield call(viewTicket, orderFlowNum);
+      if (itsmDetailUrlData.result) {
+        const itsmDetailUrl = itsmDetailUrlData.data.url;
+        yield put({ type: 'updateDataRow', payload: {itsmDetailUrl, id}})
+        window.open(itsmDetailUrl);
+      } else {
+        yield message.error(window.__alert_appLocaleData.messages[itsmDetailUrlData.message], 2)
       }
     }
   },

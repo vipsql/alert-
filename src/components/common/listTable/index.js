@@ -102,7 +102,7 @@ class ListTable extends Component {
           defaultMessage: '未知',
         }
     })
-    
+
     columns.forEach( (item) => {
       const isOrder = item.order || false
       //const width = item.width || 'auto'
@@ -229,7 +229,6 @@ class ListTable extends Component {
           td = <td key={key} title={data}>{data}</td>
         } else if (key == 'orderFlowNum' && data) {
           if(typeof item['itsmDetailUrl'] != 'undefined') {
-            console.log(item['itsmDetailUrl']);
             td = <td key={key} title={data}><a target='_blank' href={item['itsmDetailUrl']}>{data}</a></td>
           } else {
             td = <td key={key} title={data}><a href='javascript:;' onClick={orderFlowNumClick} data-flow-num={data} data-id={item['id']}>{data}</a></td>
