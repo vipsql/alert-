@@ -1416,6 +1416,9 @@ class RuleEditor extends Component {
                     _time.timeCycle = time.timeCycle;
                     _time.timeCycleMonth = time.timeCycleMonth;
                 }
+                if (time.timeCycle === 0) { // 每日
+                    _time.timeCycle = time.timeCycle;
+                }
                 _time.timeStart = `${hmStart}${local}`;
                 _time.timeEnd = `${hmEnd}${local}`;
                 break;
@@ -1481,6 +1484,7 @@ class RuleEditor extends Component {
                 actionUpgrade: _actionUpgrade
             }
         };
+        console.log({...params})
         dispatch({
             type: 'alertAssociationRules/createRule',
             payload: {
