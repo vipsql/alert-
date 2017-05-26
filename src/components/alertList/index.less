@@ -779,7 +779,23 @@
   :global{
     .ant-modal-body{
       max-height: 400px;
-      overflow: scroll;
+      overflow: auto;
+      &::-webkit-scrollbar-thumb {
+        width: 7px;
+        //background-color: #d3d4d6;
+        background-color: #1d6aa7;
+        border: 2px solid #153d5e;
+        border-radius: 7px;
+      }
+      &::-webkit-scrollbar {
+          width: 7px;
+          height: 7px;
+          background-color: #153d5e;
+          border-radius: 7px;
+      }
+      &::-webkit-scrollbar-track {
+          width: 10px;
+      }
     }
   }
 }

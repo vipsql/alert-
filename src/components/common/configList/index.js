@@ -127,7 +127,7 @@ class commonList extends Component {
           td = <td key={key}>
            <Link to={`alertConfig/alertAssociationRules/ruleEditor/edit/${item['id']}`}><Button className={styles.editBtn} size='small'>{formatMessage({...formatMessages['action_edit']})}</Button></Link>
            &nbsp;&nbsp;
-           <Button size='small' className={styles.delBtn} onClick={ () => {deleteClick(item['id'])}}>{formatMessage({...formatMessages['action_delete']})}</Button>
+           <Button size='small' className={styles.delBtn} onClick={ () => {deleteClick(item)}}>{formatMessage({...formatMessages['action_delete']})}</Button>
           </td>
         } else {
           td = <td key={key}>{data}</td>

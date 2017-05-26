@@ -45,6 +45,8 @@ const initalState = {
   associationRulesTotal: 0,
   associationRules: [], // 配置规则列表
   currentEditRule: {}, // 当前编辑的规则
+  currentDeleteRule: {},
+  isShowDeleteModal: false,
   orderBy: undefined, // 排序字段
   orderType: undefined, // 1 --> 升序
   users: [], // 用户列表
@@ -160,12 +162,13 @@ export default {
     },
     // 删除规则
     *deleteRule({payload}, {select, put, call}) {
-      if (payload !== undefined) {
-        const deleteResult = yield call(deleteRule, payload)
+      const currentDeleteRule = yield select((state) => state.alertAssociationRules.currentDeleteRule);
+      if (currentDeleteRule.id !== undefined) {
+        const deleteResult = yield call(deleteRule, currentDeleteRule.id)
         if (deleteResult.result) {
           yield put({
             type: 'deleteRuleOperate',
-            payload: payload
+            payload: currentDeleteRule.id
           })
         } else {
           yield message.error(window.__alert_appLocaleData.messages[deleteResult.message], 2)
@@ -422,7 +425,7 @@ export default {
         item.children = temp
         return item;
       })
-      return { ...state, associationRules: newData }
+      return { ...state, associationRules: newData, isShowDeleteModal: false, currentDeleteRule: {} }
     },
     setCurrent(state, { payload }) {
       return { ...state, currentEditRule: payload }
@@ -450,5 +453,8 @@ export default {
     clear(state, {payload}) {
       return { ...state, currentEditRule: {}, ITSMParam: '' }
     },
+    toggleDeleteModal(state, {payload: {currentDeleteRule, isShowDeleteModal}}) {
+      return { ...state, currentDeleteRule, isShowDeleteModal }
+    }
   },
 }

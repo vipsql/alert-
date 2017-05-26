@@ -120,7 +120,7 @@ class alertQueryManage extends Component{
         },
         operateProps: {
             ...operateProps,
-          dispatchDisabled: !(alertQueryDetail['currentAlertDetail']['status'] == 0 && !alertQueryDetail['currentAlertDetail']['parentId']),
+          dispatchDisabled: !(alertQueryDetail['currentAlertDetail']['status'] != 255 && !alertQueryDetail['currentAlertDetail']['parentId']),
           closeDisabled: alertQueryDetail['currentAlertDetail']['status'] == 255 || alertQueryDetail['currentAlertDetail']['status'] == 40,
           resolveDisabled: alertQueryDetail['currentAlertDetail']['status'] == 255 || alertQueryDetail['currentAlertDetail']['status'] == 190,
           notifyDisabled: !(alertQueryDetail['currentAlertDetail']['status'] == 0 || alertQueryDetail['currentAlertDetail']['status'] == 150)
