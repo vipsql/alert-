@@ -109,6 +109,7 @@ class alertQueryManage extends Component{
         }
       }
 
+      const currentAlertDetail = alertQueryDetail['currentAlertDetail'] || {};
       const alertDeatilProps = {
         extraProps: {
           currentAlertDetail: alertQueryDetail.currentAlertDetail, 
@@ -119,11 +120,17 @@ class alertQueryManage extends Component{
           ciUrl: alertQueryDetail.ciUrl
         },
         operateProps: {
-            ...operateProps,
-          dispatchDisabled: !(alertQueryDetail['currentAlertDetail']['status'] != 255 && !alertQueryDetail['currentAlertDetail']['parentId']),
-          closeDisabled: alertQueryDetail['currentAlertDetail']['status'] == 255 || alertQueryDetail['currentAlertDetail']['status'] == 40,
-          resolveDisabled: alertQueryDetail['currentAlertDetail']['status'] == 255 || alertQueryDetail['currentAlertDetail']['status'] == 190,
-          notifyDisabled: !(alertQueryDetail['currentAlertDetail']['status'] == 0 || alertQueryDetail['currentAlertDetail']['status'] == 150)
+          ...operateProps,
+          // 子告警不能派发、已关闭的不能派发
+          dispatchDisabled: currentAlertDetail['parentId'] || currentAlertDetail['status'] == 255,
+          // 子告警不能关闭、处理中和已关闭的不能关闭
+          closeDisabled: currentAlertDetail['parentId'] || currentAlertDetail['status'] == 255 || currentAlertDetail['status'] == 40,
+          // 子告警不能解决、已解决和已关闭的不能解决
+          resolveDisabled: currentAlertDetail['parentId'] || currentAlertDetail['status'] == 255 || currentAlertDetail['status'] == 190,
+          // 子告警不能通知、只有未接手和处理中的告警能通知
+          notifyDisabled: currentAlertDetail['parentId'] || !(currentAlertDetail['status'] == 0 || currentAlertDetail['status'] == 150),
+          // 子告警不能分享
+          shareDisabled: currentAlertDetail['parentId']
         },
 
         closeDeatilModal: () => {
