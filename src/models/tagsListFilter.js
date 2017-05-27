@@ -83,10 +83,18 @@ export default {
         if (!tagValues.result) {
           yield message.error(window.__alert_appLocaleData.messages[tagValues.message], 2);
         }
+        let tags = [];
+        if(payload.key == "status" && tagValues.result) {
+          tags = tagValues.data.filter((tag) => {
+            return tag.value != "255"
+          })
+        } else if(tagValues.result) {
+          tags = tagValues.data;
+        }
         yield put({
           type: 'setSelectList',
           payload: {
-            selectList: tagValues.result ? tagValues.data : [],
+            selectList: tags,
             targetKey: payload.key
           }
         })
