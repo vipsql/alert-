@@ -304,11 +304,13 @@
   "incidentid.can.not.be.empty": "告警不能为空",
   "tag.id.list.can.not.be.null": "标签ID列表不能为空",
   "decompose.incident.failed": "分解告警失败",
-  "incident.resolved.not.merge": "已解决的告警不能合并",
+  "incident.close.not.merge": "已关闭的告警不能合并",
   "incident.closed.not.close": "已关闭的告警不能关闭",
   "incident.resolve.or.close": "已关闭或已解决的告警不能解决",
   "incident.child.not.operate": "子告警不能操作",
   "incident.flow.no.error": "工单单号不正确",
+  "incident.status.not.operate": "该状态的告警不能操作",
+  "tag.no.service.error": "标签服务不可用",
   "user.not.exist": "用户不存在",
   "tenant.not.exist": "租户不存在",
   "tenant.no.apikey": "租户没有相应的apikey",
@@ -317,6 +319,8 @@
   "rule.parse.exp": "规则解析失败",
   "rule.not.conform": "规则格式不符合",
   "rule.not.exist": "规则不存在",
+  "itsm.not.found": "ITSM服务不存在",
+  "res.over.limit": "标签对应的资源数量超过5000查询失败",
 
   "error.serverError": "服务端错误",
   "treemap.tagsGroup": "标签分组名",
@@ -436,6 +440,5 @@
   "layout.autoLayout": "自动布局",
   "layout.fullScreen": "全屏",
   "layout.initialize": "还原"
-
 
 }

@@ -27,6 +27,7 @@ const alertOperation = ({position,
     closeDisabled,
     resolveDisabled,
     notifyDisabled,
+    shareDisabled,
     showNotifyFunc,
     intl: {formatMessage} }) => {
 
@@ -262,7 +263,7 @@ const alertOperation = ({position,
                     }
                 }}>
                     <Option disabled={notifyDisabled} value="notify"><FormattedMessage {...localeMessage['notify']} /></Option>
-                    <Option value="ChatOps"><FormattedMessage {...localeMessage['chatOps']} /></Option>
+                    <Option value="ChatOps" disabled={shareDisabled}><FormattedMessage {...localeMessage['chatOps']} /></Option>
                 </Select>
                 :
                 undefined
@@ -326,7 +327,8 @@ alertOperation.defaultProps = {
     dispatchDisabled: false,
     closeDisabled: false,
     resolveDisabled: false,
-    notifyDisabled: false
+    notifyDisabled: false,
+    shareDisabled: false,
 }
 
 alertOperation.propTypes = {

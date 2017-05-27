@@ -158,9 +158,10 @@ class AlertListManage extends Component{
       }
     }
 
+    const currentAlertDetail = alertDetail['currentAlertDetail'] || {};
     const alertDeatilProps = {
       extraProps: {
-        currentAlertDetail: alertDetail.currentAlertDetail, 
+        currentAlertDetail, 
         isShowOperateForm: alertDetail.isShowOperateForm, 
         operateForm: alertDetail.operateForm, 
         isShowRemark: alertDetail.isShowRemark, 
@@ -169,10 +170,16 @@ class AlertListManage extends Component{
       },
       operateProps: {
         ...operateProps,
-        dispatchDisabled: !(alertDetail['currentAlertDetail']['status'] != 255 && !alertDetail['currentAlertDetail']['parentId']),
-        closeDisabled: alertDetail['currentAlertDetail']['status'] == 255 || alertDetail['currentAlertDetail']['status'] == 40,
-        resolveDisabled: alertDetail['currentAlertDetail']['status'] == 255 || alertDetail['currentAlertDetail']['status'] == 190,
-        notifyDisabled: !(alertDetail['currentAlertDetail']['status'] == 0 || alertDetail['currentAlertDetail']['status'] == 150)
+        // 子告警不能派发、已关闭的不能派发
+        dispatchDisabled: currentAlertDetail['parentId'] || currentAlertDetail['status'] == 255,
+        // 子告警不能关闭、处理中和已关闭的不能关闭
+        closeDisabled: currentAlertDetail['parentId'] || currentAlertDetail['status'] == 255 || currentAlertDetail['status'] == 40,
+        // 子告警不能解决、已解决和已关闭的不能解决
+        resolveDisabled: currentAlertDetail['parentId'] || currentAlertDetail['status'] == 255 || currentAlertDetail['status'] == 190,
+        // 子告警不能通知、只有未接手和处理中的告警能通知
+        notifyDisabled: currentAlertDetail['parentId'] || !(currentAlertDetail['status'] == 0 || currentAlertDetail['status'] == 150),
+        // 子告警不能分享
+        shareDisabled: currentAlertDetail['parentId']
       },
       clickTicketFlow: (operateForm) => {
         if (operateForm !== undefined && operateForm !== '') {
