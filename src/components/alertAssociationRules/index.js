@@ -5,7 +5,7 @@ import { Row, Col, Tabs, Button } from 'antd'
 import { classnames } from '../../utils'
 import { Link } from 'dva/router'
 import AssociationRulesList from '../common/configList'
-import RuleDeleteModal from './RuleDeleteModal'
+import RuleDeleteModal from './ruleDeleteModal'
 
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
