@@ -371,8 +371,6 @@ export default {
                 yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
             } else if (operateAlertIds.length > 1) {
                 yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip4'], 3);
-            } else if (selectedAlertIds.length === 1 && selectedAlertIds[0]['status'] != 0 ) { // 只能是新告警且不是子告警才能合并，子告警在该页面上没有checkbox所以不做判断
-                yield message.error(window.__alert_appLocaleData.messages['modal.operate.allowRollUp'], 3);
             } else {
                 const options = yield getFormOptions();
                 if (options.result) {
