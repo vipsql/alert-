@@ -766,8 +766,10 @@ class RuleEditor extends Component {
                                         alertAssociationRules={this.props.alertAssociationRules}
                                     />
                                 </div>
-                                <Checkbox className={styles.nLevelUp} checked={action.actionNotification && action.actionNotification.notifyWhenLevelUp} onChange={this.changeNotifyLevelUp.bind(this)}>{window.__alert_appLocaleData.messages['ruleEditor.nLevelUp']}</Checkbox>
-
+                                {
+                                    this.state.target === 0 && 
+                                    <Checkbox className={styles.nLevelUp} checked={action.actionNotification && action.actionNotification.notifyWhenLevelUp} onChange={this.changeNotifyLevelUp.bind(this)}>{window.__alert_appLocaleData.messages['ruleEditor.nLevelUp']}</Checkbox>
+                                }
                             </div>
                         </TabPane>
                         {/* 告警派单 */}
