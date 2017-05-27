@@ -83,6 +83,8 @@ export default {
         if (!tagValues.result) {
           yield message.error(window.__alert_appLocaleData.messages[tagValues.message], 2);
         }
+
+        // 状态过滤项，后台多返回了一个“已关闭”过滤项，前台通过下列代码将它去掉
         let tags = [];
         if(payload.key == "status" && tagValues.result) {
           tags = tagValues.data.filter((tag) => {
