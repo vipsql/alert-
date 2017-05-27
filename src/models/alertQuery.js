@@ -110,9 +110,9 @@ export default {
     toggleDetailAlertId(state, {payload: viewDetailAlertId}) {
       return { ...state, viewDetailAlertId }
     },
-    // 初始化
-    clear(state) {
-      return { ...state, ...initalState }
+    // 初始化data
+    clearQuery(state) {
+      return { ...state, data: initalState.data, currentPage: initalState.currentPage, queryCount: initalState.queryCount, isShowMore: initalState.isShowMore }
     },
     // 不分组更新
     updateAlertListToNoGroup(state, {payload: {info, tempListData, isShowMore, isGroup, orderBy, orderType, queryCount, currentPage}}) {
@@ -221,7 +221,7 @@ export default {
      */
     *alertQuerySetup({payload},{call, put, select}){
       yield put({ type: 'alertQueryDetail/toggleDetailModal', payload: false })
-      yield put({ type: 'clear'})
+      yield put({ type: 'clearQuery'})
       yield put({ type: 'queryAlertList'})
 
       // 查询来源和扩展标签
