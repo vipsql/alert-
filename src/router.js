@@ -35,8 +35,8 @@ export default function({history, app}) {
           path: 'alertManage/:alertClassify/:alertList',
           name: 'alertList',
           getComponent(nextState, cb) {
+            nextState.params.isNeedContent = false;
             require.ensure([], require => {
-
               cb(null, require('./routes/alertList'))
             }, 'alertList')
           }

@@ -18,6 +18,29 @@
     }
 }
 
+.showBar {
+    
+}
+
+.hideBar {
+    display: none
+}
+
+.toggleBarButton {
+    background-color: #1e5b97;
+    width: 100%;   
+    border: none;
+    font-weight: 2px;
+}
+
+.toggleBarButton:hover {
+    background-color: #1e5b97;
+}
+
+.toggleBarButton:focus {
+    background-color: #1e5b97;
+}
+
 // levelBar
 .alertListPage{
     position: relative;
@@ -27,6 +50,9 @@
     background: #143b67;
     border: 1px solid #143b67;
     border-radius: 3px;
+    &.marginTop0 {
+        margin-top: 0px;
+    }
     .listTab, .timeTab, .visualTab{
         span{
             margin-left: 5px;
@@ -430,6 +456,26 @@
     position: relative;
     height: 30px
 }
+@keyframes downIn{
+    from{
+        transform: translate(0, 100%);
+        opacity: 0;
+    }
+    to{
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+}
+@keyframes downOut{
+    from{
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+    to{
+        transform: translate(0, 100%);
+        opacity: 0;
+    }
+}
 .timeAlert{
   position: relative;
   border: 1px solid #214c77;
@@ -437,6 +483,7 @@
   //border: 1px solid #e4e7ec;
   //background:white;
   border-radius: 3px;
+  animation: downIn 0.3s both;
   .xAxisLine{
     position: absolute;
     left: 0;
