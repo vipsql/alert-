@@ -193,9 +193,9 @@ class Condition extends Component {
                     <Select onChange={changeConditionContent.bind(_this, node, index, 'value')} className={styles.value} style={{ width: 150 }} value={value} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phTag']}>
                         {
                             valueList[_key] &&
-                            valueList[_key].map(item => (
-                                <Option key={item.value}>{item.name}</Option>
-                            ))
+                            valueList[_key].map(item => {
+                                return <Option key={item.name}>{item.name}</Option>
+                            })
                         }
                     </Select>
                 }

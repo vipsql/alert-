@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 
-import { Tabs, Select, Switch, Checkbox } from 'antd'
+import { Tabs, Select, Switch, Checkbox, Button } from 'antd'
 import ListTableWrap from './listTable'
 import ListTimeTableWrap from './listTimeTable'
 import VisualAnalyzeWrap from './visualAnalyze'
@@ -159,6 +159,13 @@ class AlertListManage extends Component{
     }
 
     const currentAlertDetail = alertDetail['currentAlertDetail'] || {};
+    const toggleBarButtonClick = (e) => {
+      const isShowAlertBar = !alertList.isShowBar;
+      dispatch({
+        type: 'alertList/toggleBar',
+        payload: isShowAlertBar,
+      })
+    }
     const alertDeatilProps = {
       extraProps: {
         currentAlertDetail, 
@@ -445,6 +452,14 @@ class AlertListManage extends Component{
       'iconfont',
       'icon-shanchux'
     )
+    const zhankaiClass = classnames(
+      'iconfont',
+      'icon-xialasanjiao'
+    )
+    const shouqiClass = classnames(
+      'iconfont',
+      'icon-xialasanjiao-copy'
+    )
     // 转数字匹配等级，并作排序
     let levels_wapper = {};
     Object.keys(levels).length !== 0 && Object.keys(levels).forEach( (severity) => {
@@ -470,10 +485,13 @@ class AlertListManage extends Component{
           
     return (
       <div style={{ position: 'relative'}}>
-        <AlertTagsFilter />
-        <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch {...refreshProps}/></div>
-        <AlertBar />
-        <div className={styles.alertListPage}>
+        <div className={alertList.isShowBar?styles.showBar:styles.hideBar}>
+          <AlertTagsFilter />
+          <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch {...refreshProps}/></div>
+          <AlertBar />
+        </div>
+        <Button className={classnames(styles.toggleBarButton, zhankaiClass)} onClick={toggleBarButtonClick} size="small"><i className={ alertList.isShowBar?shouqiClass:zhankaiClass }/></Button>
+        <div className={styles.alertListPage + " " + (alertList.isShowBar?'':styles.marginTop0)}>
           <Tabs>
             <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key={1}>
               <AlertOperation position='list' {...operateProps}/>

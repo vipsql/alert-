@@ -8,6 +8,7 @@ export default {
     alertOperateModalOrigin: undefined, // 这个状态是用来区别那个Modal打开的 --> 对应position
     isLoading: false, // alertBar加载
     isResize: false, //是否折叠
+    isShowBar: true, // 是否显示时间段柱状图
     barData:[], // 最近4小时告警数据
     begin: 0, //告警开始时间(时间线)
     end: 0,  //告警结束时间(时间线)
@@ -120,7 +121,11 @@ export default {
     },
     toggleAlertBarLoading(state, {payload: isLoading}) {
       return { ...state, isLoading }
-    }
+    },
+    // 显示或隐藏时间段柱状统计图
+    toggleBar(state, {payload: isShowBar}) {
+      return {...state, isShowBar}
+    },
   },
 
 

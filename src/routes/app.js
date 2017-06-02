@@ -7,8 +7,11 @@ import { Spin } from 'antd'
 import { classnames } from '../utils'
 import '../components/layout/common.less'
 
-function App ({children, location, dispatch, app}) {
+function App ({children, location, dispatch, app, isNeedContent, temp}) {
   const {isShowMask, isFold} = app
+  // params.isNeedContent确定需不需要content这个容器
+  const {params} = children.props || {};
+  
   const LeftMenuProps = {
     isFold,
     location,
@@ -40,7 +43,7 @@ function App ({children, location, dispatch, app}) {
         <div className={styles.main}>
           <Bread location={location} />
           <div className={styles.container}>
-            <div className={styles.content}>
+            <div className={params.isNeedContent === false?'':styles.content}>
               {children}
             </div>
           </div>
