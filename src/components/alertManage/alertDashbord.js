@@ -555,7 +555,7 @@ class Chart extends Component{
             
             <div className={styles.loadingWrap}>
                 <Spin spinning= {this.props.isLoading}>
-                    <div id="treemap" className={styles.treemap}> 
+                    <div id="treemap" className={styles.treemap + ' ' + (this.props.isFullScreen?styles.maxTreemap:'')}> 
                     
                     </div> 
                 </Spin>
