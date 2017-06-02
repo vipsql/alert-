@@ -139,7 +139,7 @@ export default {
       // visualSelect 是热图以及tagsFileter选择的条件 如果选择了2个维度就是 最终的层级为2 + 3
       if(level < visualSelect.length +3){
         let val 
-        const gr1 = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1"))
+        const gr1 = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")) || [];
         const gr2key = localStorage.getItem('__alert_visualAnalyze_gr2') ? localStorage.getItem('__alert_visualAnalyze_gr2') :tags[0]
         const gr3key = localStorage.getItem('__alert_visualAnalyze_gr3') ? localStorage.getItem('__alert_visualAnalyze_gr3') :tags[1]
         switch(level){
@@ -204,8 +204,9 @@ export default {
           return visualAnalyze.tags
         })
       const gr3Val = localStorage.getItem('__alert_visualAnalyze_gr3Val')
+      const visualSelect = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")) || []
       const res = yield call(queryVisualRes, {
-          tags: JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")).concat([
+          tags: visualSelect.concat([
             {key: localStorage.getItem("__alert_visualAnalyze_gr2"), value: localStorage.getItem('__alert_visualAnalyze_gr2Val')},
             {key: localStorage.getItem("__alert_visualAnalyze_gr3"), value: gr3Val},
             {key: gr4key ? gr4key : tags[0], value: ''}
