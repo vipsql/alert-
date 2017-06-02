@@ -60,7 +60,7 @@ export default {
       // })
       const {isFirst, showIncidentGroup} = payload
       
-      const visualSelect = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1"))
+      const visualSelect = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")) || [];
       
       // isFirst表示从重新查询 否则为select切换选择
       if(isFirst){
