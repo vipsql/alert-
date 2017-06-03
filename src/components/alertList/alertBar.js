@@ -138,7 +138,7 @@ class AlertBar extends Component{
     const clientWidth = document.documentElement.clientWidth || document.body.clientWidth
     
     const leftMenuWidth = this.props.alertList.isResize ? 50 : 160 //是否折叠
-    const width = clientWidth - leftMenuWidth - 90;
+    const width = clientWidth - leftMenuWidth - 50;
     
     const height = 80
     const margins = {top: 0, right: 20, bottom: 25, left: 15}

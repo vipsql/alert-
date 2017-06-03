@@ -27,6 +27,8 @@ class alertQueryManage extends Component{
     componentDidMount() {
       const {dispatch} = this.props;
       window.addEventListener('message', (e) => {
+        console.log(e.data)
+        console.log(e.data.creatTicket)
         if(e.data.creatTicket !== undefined && e.data.creatTicket === 'success') {
           dispatch({
             type: 'alertQueryDetail/afterDispatch', 
