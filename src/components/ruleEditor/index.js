@@ -1541,7 +1541,7 @@ RuleEditor.defaultProps = {
             operation: undefined
         },
         actionNotification: {
-            notifyWhenLevelUp: false,
+            notifyWhenLevelUp: true,
             recipients: [],
             notificationMode: {
                 notificationMode: [],
