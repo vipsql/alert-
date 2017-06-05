@@ -279,6 +279,16 @@ export default {
     },
     // 工单详情
     *viewTicketDetail({payload}, {select, put, call}) {
+        const { currentAlertDetail } = yield select( state => {
+            return {
+                'currentAlertDetail': state.alertQueryDetail.currentAlertDetail
+            }
+        })
+        if (currentAlertDetail.itsmDetailUrl) {
+            yield window.open(currentAlertDetail.itsmDetailUrl)
+
+            return;
+        }
         if (payload !== undefined) {
             const viewResult = yield call(viewTicket, payload)
             if (viewResult.result) {
