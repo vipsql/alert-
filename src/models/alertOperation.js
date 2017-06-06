@@ -24,6 +24,7 @@ const initalState = {
     isShowNotifyModal: false, // 手工通知
     notifyIncident: {}, // 通知告警
     notifyUsers: [], // 通知用户
+    disableChatOps: false,
 
     isSelectAlert: false, // 是否选择了告警
     isSelectOrigin: false, // 是否选择了源告警
@@ -145,6 +146,7 @@ export default {
             } else if (selectedAlertIds.length > 1) {
                 yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip2'], 2);
             } else {
+                const options = yield getChatOpsOptions();
                 const result = yield call(getUsers);
                 if (result.result) {
                     yield put({
@@ -152,7 +154,8 @@ export default {
                         payload: {
                             notifyIncident: selectedAlertIds[0],
                             isShowNotifyModal: true,
-                            notifyUsers: result.data
+                            notifyUsers: result.data,
+                            disableChatOps: options.result ? false : true
                         }
                     })
                 } else {
@@ -785,8 +788,8 @@ export default {
       toggleRemindModal(state, {payload: isShowRemindModal}) {
           return { ...state, isShowRemindModal }
       },
-      initManualNotifyModal(state, {payload: {isShowNotifyModal = false, notifyIncident = {}, notifyUsers = []}}) {
-          return { ...state, isShowNotifyModal, notifyIncident, notifyUsers }
+      initManualNotifyModal(state, {payload: {isShowNotifyModal = false, notifyIncident = {}, notifyUsers = [], disableChatOps = false}}) {
+          return { ...state, isShowNotifyModal, notifyIncident, notifyUsers, disableChatOps }
       },
       // selectRows是合并告警时触发
       selectRows(state, {payload: originAlert}) {

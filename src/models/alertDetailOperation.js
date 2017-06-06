@@ -18,7 +18,8 @@ const initalState = {
     isShowRemindModal: false, // 提醒框
     isShowNotifyModal: false, // 手工通知
     notifyIncident: {}, // 通知告警
-    notifyUsers: [] // 告警通知用户
+    notifyUsers: [], // 告警通知用户
+    disableChatOps: false
 }
 
 export default {
@@ -67,6 +68,7 @@ export default {
     },
     // 手工通知
     *openNotify({payload}, {select, put, call}) {
+        const options = yield getChatOpsOptions();
         const {currentAlertDetail} = yield select( state => {
             return {
                 'currentAlertDetail': state.alertDetail.currentAlertDetail
@@ -79,7 +81,8 @@ export default {
                 payload: {
                     notifyIncident: currentAlertDetail,
                     isShowNotifyModal: true,
-                    notifyUsers: result.data
+                    notifyUsers: result.data,
+                    disableChatOps: options.result ? false : true
                 }
             })
         } else {
@@ -324,8 +327,8 @@ export default {
       toggleRemindModal(state, {payload: isShowRemindModal}) {
           return { ...state, isShowRemindModal }
       },
-      initManualNotifyModal(state, {payload: {isShowNotifyModal = false, notifyIncident = {}, notifyUsers = []}}) {
-          return { ...state, isShowNotifyModal, notifyIncident, notifyUsers }
+      initManualNotifyModal(state, {payload: {isShowNotifyModal = false, notifyIncident = {}, notifyUsers = [], disableChatOps = false}}) {
+          return { ...state, isShowNotifyModal, notifyIncident, notifyUsers, disableChatOps }
       },
   }
 }
