@@ -265,7 +265,7 @@ const alertOperation = ({position,
                     window.__alert_appLocaleData.locale == 'zh-cn' ?
                     <Option value="ChatOps" disabled={shareDisabled}><FormattedMessage {...localeMessage['chatOps']} /></Option>
                     :
-                    undefined
+                    []
                 }
             </Select>
             {
