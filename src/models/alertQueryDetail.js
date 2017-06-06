@@ -21,6 +21,7 @@ const initalState = {
     isShowNotifyModal: false, // 手工通知
     notifyIncident: {}, // 通知告警
     notifyUsers: [], // 告警通知用户
+    disableChatOps: false, // 是否可以私发chatops
 
     isShowTicketModal: false, //派发工单框
     ticketUrl: '', //工单链接
@@ -104,6 +105,7 @@ export default {
     },
     // 手工通知
     *openNotify({payload}, {select, put, call}) {
+        const options = yield getChatOpsOptions();
         const {currentAlertDetail} = yield select( state => {
             return {
                 'currentAlertDetail': state.alertQueryDetail.currentAlertDetail
@@ -116,7 +118,8 @@ export default {
                 payload: {
                     notifyIncident: currentAlertDetail,
                     isShowNotifyModal: true,
-                    notifyUsers: result.data
+                    notifyUsers: result.data,
+                    disableChatOps: options.result ? false : true
                 }
             })
         } else {
@@ -595,8 +598,8 @@ export default {
     toggleRemindModal(state, {payload: isShowRemindModal}) {
         return { ...state, isShowRemindModal }
     },
-    initManualNotifyModal(state, {payload: {isShowNotifyModal = false, notifyIncident = {}, notifyUsers = []}}) {
-        return { ...state, isShowNotifyModal, notifyIncident, notifyUsers }
+    initManualNotifyModal(state, {payload: {isShowNotifyModal = false, notifyIncident = {}, notifyUsers = [], disableChatOps = false}}) {
+        return { ...state, isShowNotifyModal, notifyIncident, notifyUsers, disableChatOps }
     },
     // 存储工单信息
     setFormData(state, {payload: operateForm}) {

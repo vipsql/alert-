@@ -382,6 +382,7 @@ class AlertListManage extends Component{
     }
 
     const notifyModalProps = {
+      disableChatOps: alertOperateModalOrigin === 'detail' ? alertDetailOperation.disableChatOps : alertOperation.disableChatOps,
       isShowNotifyModal: alertOperateModalOrigin === 'detail' ? alertDetailOperation.isShowNotifyModal : alertOperation.isShowNotifyModal,
       notifyIncident: alertOperateModalOrigin === 'detail' ? alertDetailOperation.notifyIncident : alertOperation.notifyIncident,
       notifyUsers: alertOperateModalOrigin === 'detail' ? alertDetailOperation.notifyUsers : alertOperation.notifyUsers,

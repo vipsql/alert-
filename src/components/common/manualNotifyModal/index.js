@@ -151,6 +151,7 @@ class notifyModal extends Component {
                     notifyIncident={notifyIncident}
                     notifyUsers={notifyUsers}
                     changeAction={this.changeAction}
+                    disableChatOps={this.props.disableChatOps}
                 />
             </Modal>
         )

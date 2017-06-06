@@ -53,6 +53,7 @@ class NotificationList extends Component {
             notifyIncident,
             notifyUsers,
             action,
+            disableChatOps
         } = this.props;
 
         const desLayout = {
@@ -160,20 +161,18 @@ class NotificationList extends Component {
                             </FormItem>
                         </div>
                     </TabPane>
-                    {
-                        window.__alert_appLocaleData.locale === 'zh-cn' &&
-                        <TabPane tab={
-                            <div>
-                                <Checkbox
-                                    id="chatops"
-                                    checked={checkedState.chatops}
-                                    value={3}
-                                    onChange={this.changeAction.bind(this)}
-                                />
-                                <span>{window.__alert_appLocaleData.messages['ruleEditor.chatops']}</span>
-                            </div>
-                        } key="3" />
-                    }
+                    <TabPane disabled={window.__alert_appLocaleData.locale !== 'zh-cn' || disableChatOps} tab={
+                        <div>
+                            <Checkbox
+                                id="chatops"
+                                disabled={window.__alert_appLocaleData.locale !== 'zh-cn' || disableChatOps}
+                                checked={checkedState.chatops}
+                                value={3}
+                                onChange={this.changeAction.bind(this)}
+                            />
+                            <span>{window.__alert_appLocaleData.messages['ruleEditor.chatops']}</span>
+                        </div>
+                    } key="3" />
                 </Tabs>
             </div>
         );

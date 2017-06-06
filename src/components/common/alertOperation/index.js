@@ -247,27 +247,27 @@ const alertOperation = ({position,
                 <Option value="30"><FormattedMessage {...localeMessage['suppress_halfHour']} /></Option>
                 <Option value="100"><FormattedMessage {...localeMessage['suppress_customer']} /></Option>
             </Select>
-            {
-                window.__alert_appLocaleData.locale == 'zh-cn' ?
-                <Select className={styles.showChatOps} style={{width: '100px'}} allowClear placeholder={formatMessage({...localeMessage['moreOperate']})} onChange={ (operate) => {
-                    switch (operate) {
-                        case 'ChatOps':
-                            showChatOpsFunc(position)
-                        break;
-                        case 'notify':
-                            showNotifyFunc(position)
-                        break;
-                        default:
-                            () => {}
-                        break;
-                    }
-                }}>
-                    <Option disabled={notifyDisabled} value="notify"><FormattedMessage {...localeMessage['notify']} /></Option>
+            <Select className={styles.showChatOps} style={{width: '100px'}} allowClear placeholder={formatMessage({...localeMessage['moreOperate']})} onChange={ (operate) => {
+                switch (operate) {
+                    case 'ChatOps':
+                        showChatOpsFunc(position)
+                    break;
+                    case 'notify':
+                        showNotifyFunc(position)
+                    break;
+                    default:
+                        () => {}
+                    break;
+                }
+            }}>
+                <Option disabled={notifyDisabled} value="notify"><FormattedMessage {...localeMessage['notify']} /></Option>
+                {
+                    window.__alert_appLocaleData.locale == 'zh-cn' ?
                     <Option value="ChatOps" disabled={shareDisabled}><FormattedMessage {...localeMessage['chatOps']} /></Option>
-                </Select>
-                :
-                undefined
-            }
+                    :
+                    undefined
+                }
+            </Select>
             {
                 position !== 'detail' ?
                 <div className={styles.groupMain}>

@@ -296,6 +296,7 @@ class alertQueryManage extends Component{
       }
 
       const notifyModalProps = {
+        disableChatOps: alertQueryDetail.disableChatOps,
         isShowNotifyModal: alertQueryDetail.isShowNotifyModal,
         notifyIncident: alertQueryDetail.notifyIncident,
         notifyUsers: alertQueryDetail.notifyUsers,
