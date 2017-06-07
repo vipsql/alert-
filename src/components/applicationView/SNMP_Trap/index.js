@@ -128,7 +128,6 @@ const SNMP_Trap = (props) => {
                 const formData = form.getFieldsValue()
                 appRule.name = formData.ruleName;
                 appRule.description = formData.description;
-                appRule.classCode = formData.classCode;
                 state.filterFields.forEach( (filter) => {if (filter.key !== undefined) { appRule.filterFields.push(filter) }})
                 state.matchFields.forEach( (matchField) => {if (matchField.OID !== undefined && matchField.OID !== '' && matchField.mapper !== undefined) { 
                     Object.defineProperty(appRule.matchFields, matchField.mapper, {

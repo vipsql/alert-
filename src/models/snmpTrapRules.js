@@ -10,7 +10,6 @@ const initalState = {
   trapUrl: 'alert.uyun.cn',
   appRules: [], // 规则
   filterSource: [], // fiter选项
-  CMDBClass: [], // 绑定CMDB类
   OIDList: [], // 精确匹配时的oid类
   operateType: undefined, // 操作类型
   operateAppRules: {}, // 操作的对象
@@ -32,16 +31,12 @@ export default {
     *addRule({payload}, {select, put, call}) {
       const fields = yield call(getField);
       const source = yield call(getSource)
-      const CMDBSource = yield call(getCMDBSource)
       const OID = yield call(getOID)
       if (!fields.result) {
         yield message.error(window.__alert_appLocaleData.messages[fields.message], 3);
       }
       if (!source.result) {
         yield message.error(window.__alert_appLocaleData.messages[source.message], 3);
-      }
-      if (!CMDBSource.result) {
-        yield message.error(window.__alert_appLocaleData.messages[CMDBSource.message], 3);
       }
       if (!OID.result) {
         yield message.error(window.__alert_appLocaleData.messages[OID.message], 3);
@@ -51,7 +46,6 @@ export default {
         payload: {
           fields: fields.result ? fields.data : [],
           source: source.result ? source.data : [],
-          CMDBClass: CMDBSource.result ? CMDBSource.data : [],
           OIDList: OID.result ? OID.data : [],
           operateType: 'add'
         }
@@ -65,16 +59,12 @@ export default {
     *editRule({payload}, {select, put, call}) {
       const fields = yield call(getField);
       const source = yield call(getSource)
-      const CMDBSource = yield call(getCMDBSource)
       const OID = yield call(getOID)
       if (!fields.result) {
         yield message.error(window.__alert_appLocaleData.messages[fields.message], 3);
       }
       if (!source.result) {
         yield message.error(window.__alert_appLocaleData.messages[source.message], 3);
-      }
-      if (!CMDBSource.result) {
-        yield message.error(window.__alert_appLocaleData.messages[CMDBSource.message], 3);
       }
       if (!OID.result) {
         yield message.error(window.__alert_appLocaleData.messages[OID.message], 3);
@@ -85,7 +75,6 @@ export default {
           id: payload,
           fields: fields.result ? fields.data : [],
           source: source.result ? source.data : [],
-          CMDBClass: CMDBSource.result ? CMDBSource.data : [],
           OIDList: OID.result ? OID.data : [],
           operateType: 'edit'
         }
@@ -167,7 +156,7 @@ export default {
       return { ...state, appRules, trapUrl }
     },
     // 新增打开modal时预处理数据
-    addOperate(state, {payload: {fields, source, CMDBClass, OIDList, operateType}}) {
+    addOperate(state, {payload: {fields, source, OIDList, operateType}}) {
       return {
         ...state,
         filterSource: source,
@@ -178,12 +167,11 @@ export default {
         __identifyProps: [],
         operateAppRules: initalState.operateAppRules,
         operateType,
-        CMDBClass,
         OIDList
       }
     },
     // 编辑打开modal时预处理数据
-    editOperate(state, {payload: {id, fields, source, CMDBClass, OIDList, operateType}}) {
+    editOperate(state, {payload: {id, fields, source, OIDList, operateType}}) {
       const { appRules } = state;
       let operateAppRules = {};
       let selectedMatchFields = [];
@@ -245,7 +233,6 @@ export default {
         __identifyProps,
         operateAppRules,
         operateType,
-        CMDBClass,
         OIDList
       }
     },
