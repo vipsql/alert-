@@ -433,14 +433,6 @@ class ruleModal extends Component{
                 id: 'modal.trap.identifyKeys.message',
                 defaultMessage: '用于定位具体CI项的关键标识'
             },
-            rule_bindCMDB: {
-                id: 'modal.trap.bindCMDB',
-                defaultMessage: '绑定CMDB类'
-            },
-            rule_bindCMDB_placeholder: {
-                id: 'modal.trap.bindCMDB.placeholder',
-                defaultMessage: '请选择需要绑定的CMDB类'
-            },
             rule_severityMapper: {
                 id: 'modal.trap.severityMapper',
                 defaultMessage: '级别映射'
@@ -1063,25 +1055,6 @@ class ruleModal extends Component{
                                 )}
                             </div>
                             <span className={styles.mergeMessage}>{formatMessage({...localeMessage['rule_mergeKeys_message']})}</span>
-                        </Item>
-                        <Item
-                            {...itemLayout}
-                            label={formatMessage({...localeMessage['rule_bindCMDB']})}
-                            help={isFieldValidating('classCode') ? formatMessage({...localeMessage['modal_validating']}) : (getFieldError('classCode') || []).join(', ')}
-                        >
-                            {getFieldDecorator('classCode', {
-                                rules: [
-                                    { required: true, message: formatMessage({...localeMessage['rule_bindCMDB_placeholder']}) }
-                                ]
-                            })(
-                                <Select placeholder={formatMessage({...localeMessage['rule_bindCMDB_placeholder']})}>
-                                    {
-                                        snmpTrapRules.CMDBClass.length > 0 ? snmpTrapRules.CMDBClass.map( (item, index) => {
-                                            return <Option key={index} value={item.code}>{item.name}</Option>
-                                        }) : []
-                                    }
-                                </Select>
-                            )}
                         </Item>
                         <Item
                             {...itemLayout}
