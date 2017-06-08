@@ -177,9 +177,11 @@ export default {
       return { ...state, checkAlert: checkList }
     },
     // 删除勾选项
-    deleteCheckAlert(state, {payload: id}) {
+    deleteCheckAlert(state, {payload: arr}) {
       let { checkAlert } = state;
-      delete checkAlert[id]
+      arr.forEach( (id) => {
+        if (checkAlert[id]) delete checkAlert[id]
+      })
       return { ...state, checkAlert }
     },
     // 重置勾选状态
@@ -406,12 +408,16 @@ export default {
       return { ...state, ...payload }
     },
     // 删除告警
-    deleteIncident(state, {payload: id}) {
+    deleteIncident(state, {payload: arr}) {
       const { data, isGroup } = state;
       if (isGroup === true) {
         const newData = data.map( (group) => {
           const arr = group.children.filter( (item) => {
-            return item.id !== id;
+            let status = true;
+            arr.forEach( (id) => {
+              if (id === item.id) status = false
+            })
+            return status;
           })
           group.children = arr;
           return group;
@@ -419,7 +425,11 @@ export default {
         return { ...state, data: newData }
       } else if (isGroup === false) {
         const newData = data.filter( (item) => {
-          return item.id !== id;
+          let status = true;
+          arr.forEach( (id) => {
+            if (id === item.id) status = false
+          })
+          return status;
         })
         return { ...state, data: newData }
       }

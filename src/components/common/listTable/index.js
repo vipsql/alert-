@@ -459,7 +459,7 @@ class ListTable extends Component {
                 transitionName="fade"
                 component='tbody'
                 transitionEnterTimeout={500} 
-                transitionLeaveTimeout={300}
+                transitionLeaveTimeout={1000}
             >
               {
                 data.length > 0 ? 

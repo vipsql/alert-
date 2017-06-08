@@ -441,8 +441,8 @@ export default {
               yield put({ type: 'alertDetailOperation/afterDispatch'})
           } else {
             let stingIds = operateAlertIds.map( item => '' + item)
-            yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds[0]})
-            yield put({ type: 'alertListTable/deleteIncident', payload: stingIds[0]})
+            yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds})
+            yield put({ type: 'alertListTable/deleteIncident', payload: stingIds})
             //yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 150}})
             yield put({ type: 'alertDetail/closeTicketModal'})
           }
@@ -484,8 +484,10 @@ export default {
             })
             if (resultData.result) {
                 if (resultData.data.result) {
-                    yield put({ type: 'alertListTable/resetCheckedAlert'})
-                    yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 255}})
+                    yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds})
+                    yield put({ type: 'alertListTable/deleteIncident', payload: stingIds})
+                    // yield put({ type: 'alertListTable/resetCheckedAlert'})
+                    // yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 255}})
                     yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
                 } else {
                     yield message.error(`${resultData.data.failures}`, 3);
@@ -540,8 +542,10 @@ export default {
             })
             if (resultData.result) {
                 if (resultData.data.result) {
-                    yield put({ type: 'alertListTable/resetCheckedAlert'})
-                    yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 190}})
+                    yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds})
+                    yield put({ type: 'alertListTable/deleteIncident', payload: stingIds})
+                    // yield put({ type: 'alertListTable/resetCheckedAlert'})
+                    // yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 190}})
                     yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
                 } else {
                     yield message.error(`${resultData.data.failures}`, 3);
