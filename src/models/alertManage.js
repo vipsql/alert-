@@ -100,10 +100,10 @@ export default {
               dashbordData.forEach( (item) =>{
                 if(item.children){
                   item.children.forEach((childItem) => {
-                    childItem.fixedValue = 1
+                    childItem.fixedValue = 1 * ((item.children.length + 1) / item.children.length)
                     // 保存真实数据修复显示tip 告警数不正确bug
                     childItem.trueVal =  childItem.value
-                    item.fixedValue = (item.fixedValue ? item.fixedValue : 0) + 1
+                    item.fixedValue = (item.fixedValue ? item.fixedValue : 0) + ((item.children.length + 1) / item.children.length)
                   })
                   // item.fixedValue = item.children.length
                 }
