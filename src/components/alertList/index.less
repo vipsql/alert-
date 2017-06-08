@@ -518,148 +518,152 @@
   }
 }
 .listTimeTable{
-  width: 100%;
-  border-collapse: collapse;
-  .checkstyle{
-    text-align: center;
-  }
-  thead{
-    tr{
-      th{
-        padding-right: 10px;
-        position: relative;
-        height: 38px;
-        line-height: 38px;
-        text-align: left;
-        // --------blue-------------
-        background-color: #143355;
-        color: #4a88b6;
-        border-bottom: 1px solid #1f528b;
-        //--------------------------
-        // background: #f8fbfd;
-        // border-bottom: 1px solid #e4e7eb;
-        // border-top: 2px solid #e4e7eb;
-      }
+    width: 100%;
+    border-collapse: collapse;
+    .checkstyle{
+        text-align: center;
     }
-  }
-  tbody{
-
-    .hiddenChild{
-        display: none;
+    .fade-leave.fade-leave-active {
+        animation: leave .3s ease-in-out 1;
+        -webkit-animation: leave .3s ease-in-out 1;
+        -moz-animation: leave .3s ease-in-out 1; 
     }
-    .isSpread:nth-child(odd){
-        td{
-            background-color: #18477a;
-        }
-    }
-    .isSpread:nth-child(even){
-        td{
-            background-color: #1d5692;
-        }
-    }
-    .noSpread:nth-of-type(odd){
-        td{
-            background-color: #18477a;
-        }
-    }
-    .noSpread:nth-of-type(even){
-        td{
-            background-color: #1d5692;
-        }
-    }
-    .even{
-        td{
-            background-color: #18477a;
-        }
-    }
-    .odd{
-        td{
-            background-color: #1d5692;
-        }
-    }
-    .groupSpread{
-        td{
-            background-color: #18477a;
-        }
-    }
-    td{
-    //   max-width: 150px;
-    //   overflow: hidden;
-    //   white-space: nowrap;
-    //   text-overflow: ellipsis;
-      padding-right: 10px;
-      height: 50px;
-      line-height: 50px;
-      text-align: left;
-      color: #fff;
-      border-bottom: 1px solid #1d558f;
-      background-color: #1d5692;
-      .entityName{
-          width: 200px;
-          .text-overflow()
-      }
-      //background: white;
-      //border-bottom: 1px solid #e4e7eb;
-      &.tdBorderRight{
-        position: relative;
-        //border-right: 1px solid #e4e7eb;
-        border-right: 1px solid #0d5990;
-        cursor: pointer;
-        //color: #4082e6;
-        color: #4fb8f0;
-        
-        .relieveIcon{
-            overflow: visible;
-            position: absolute;
-            // top: 16px;
-            right: 2px;
-            cursor: pointer;
-            z-index: 12;
-        }
-        .name{
-            display: inline;
-            width: 200px;
-            .text-overflow();
-        }
-      }
-      &.tdBtn{
-        cursor: pointer;
-        color: #4082e6;
-        .relieveIcon{
+    thead{
+        tr{
+            th{
+            padding-right: 10px;
             position: relative;
-            left: 10px;
+            height: 38px;
+            line-height: 38px;
+            text-align: left;
+            // --------blue-------------
+            background-color: #143355;
+            color: #4a88b6;
+            border-bottom: 1px solid #1f528b;
+            //--------------------------
+            // background: #f8fbfd;
+            // border-bottom: 1px solid #e4e7eb;
+            // border-top: 2px solid #e4e7eb;
+            }
+        }
+    }
+    tbody{
+
+        .hiddenChild{
+            display: none;
+        }
+        .isSpread:nth-child(odd){
+            td{
+                background-color: #18477a;
+            }
+        }
+        .isSpread:nth-child(even){
+            td{
+                background-color: #1d5692;
+            }
+        }
+        .noSpread:nth-of-type(odd){
+            td{
+                background-color: #18477a;
+            }
+        }
+        .noSpread:nth-of-type(even){
+            td{
+                background-color: #1d5692;
+            }
+        }
+        .even{
+            td{
+                background-color: #18477a;
+            }
+        }
+        .odd{
+            td{
+                background-color: #1d5692;
+            }
+        }
+        .groupSpread{
+            td{
+                background-color: #18477a;
+            }
+        }
+        td{
+        //   max-width: 150px;
+        //   overflow: hidden;
+        //   white-space: nowrap;
+        //   text-overflow: ellipsis;
+            padding-right: 10px;
+            height: 50px;
+            line-height: 50px;
+            text-align: left;
+            color: #fff;
+            border-bottom: 1px solid #1d558f;
+            background-color: #1d5692;
+            .entityName{
+                width: 200px;
+                .text-overflow()
+            }
+            //background: white;
+            //border-bottom: 1px solid #e4e7eb;
+            &.tdBorderRight{
+            position: relative;
+            //border-right: 1px solid #e4e7eb;
+            border-right: 1px solid #0d5990;
             cursor: pointer;
+            //color: #4082e6;
+            color: #4fb8f0;
+            
+            .relieveIcon{
+                overflow: visible;
+                position: absolute;
+                // top: 16px;
+                right: 2px;
+                cursor: pointer;
+                z-index: 12;
+            }
+            .name{
+                display: inline;
+                width: 200px;
+                .text-overflow();
+            }
+            }
+            &.tdBtn{
+            cursor: pointer;
+            color: #4082e6;
+            .relieveIcon{
+                position: relative;
+                left: 10px;
+                cursor: pointer;
+            }
+            }
         }
-      }
-    }
-    
-    tr.trGroup{
-      td {
-        background: #143c67;
-        text-align: left;
-        .expandIcon{
-          display: inline-block;
-          margin: 18px 10px 0 12px;
-          width: 14px;
-          height: 14px;
-          line-height: 14px;
-          text-align: center;
-          background: #4082e6;
-          color: white;
-          cursor: pointer;
-          font-size: 14px;
-          font-weight: bold;
-          border-radius: 3px;
+
+        tr.trGroup{
+            td {
+            background: #143c67;
+            text-align: left;
+            .expandIcon{
+                display: inline-block;
+                margin: 18px 10px 0 12px;
+                width: 14px;
+                height: 14px;
+                line-height: 14px;
+                text-align: center;
+                background: #4082e6;
+                color: white;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 3px;
+            }
+            }
         }
-      }
-    }
-    tr.trChild{
-      td{
+        tr.trChild{
+            td{
 
-      }
+            }
+        }
     }
-
-  }
   .triangleDown {
       display: block;
       width: 0;
@@ -1301,6 +1305,12 @@
         height: 40px;
         background: rgb(57, 120, 187);
     }
+}
+
+@keyframes leave{
+    0% {opacity: 1;}
+    50% {opacity: .5;}
+    100% {opacity: 0;}
 }
 
 @keyframes pulse {

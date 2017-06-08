@@ -1,189 +1,199 @@
 @import "../../vars.less";
 
 .listTable{
-  width: 100%;
-  border-collapse: collapse;
-  .checkstyle{
-      text-align: center
-  }
-  thead{
-    tr{
-      th{
-        // --------blue-------------
-        background-color: #143355;
-        color: #4a88b6;
-        border-bottom: 1px solid #1f528b;
-        //--------------------------
+    width: 100%;
+    border-collapse: collapse;
+    .checkstyle{
+        text-align: center
+    }
+    .fade-leave.fade-leave-active {
+        animation: leave .3s ease-in-out 1;
+        -webkit-animation: leave .3s ease-in-out 1;
+        -moz-animation: leave .3s ease-in-out 1; 
+    }
+    thead{
+        tr{
+            th{
+                // --------blue-------------
+                background-color: #143355;
+                color: #4a88b6;
+                border-bottom: 1px solid #1f528b;
+                //--------------------------
+                padding-right: 10px;
+                position: relative;
+                height: 38px;
+                line-height: 38px;
+                text-align: left;
+                // background: #f8fbfd;
+                // border-bottom: 1px solid #e4e7eb;
+                // border-top: 2px solid #e4e7eb;
+                .orderTh{
+                    cursor: pointer;
+                    padding: 6px;
+                    padding-left: 0px;
+                    color: #4a88b6;
+                    //color: rgba(0, 0, 0, 0.65);
+                    &.orderTh-active{
+                        color: #4082e6;
+                    }
+                }
+                .orderTriangleDown {
+                    position: absolute;
+                    bottom: 30%;
+                    width: 0;
+                    height: 0;
+                    border-right: 4px solid transparent;
+                    border-left: 4px solid transparent;
+                    border-top: 6px solid #435776;
+                    //border-top: 6px solid #acb3bf;
+                    cursor: pointer;
+                    transition: border-top .2s ease;
+                    &:hover{
+                        border-top: 6px solid #4082e6;
+                    }
+                    &.orderTriang-active{
+                        border-top: 6px solid #4082e6;
+                    }
+                }
+                .orderTriangleUp {
+                    position: absolute;
+                    top: 30%;
+                    width: 0;
+                    height: 0;
+                    border-right: 4px solid transparent;
+                    border-left: 4px solid transparent;
+                    border-bottom: 6px solid #435776;
+                    //border-bottom: 6px solid #acb3bf;
+                    text-align: center;
+                    cursor: pointer;
+                    transition: border-bottom .2s ease;
+                    &:hover{
+                        border-bottom: 6px solid #4082e6;
+                    }
+                    &.orderTriang-active{
+                        border-bottom: 6px solid #4082e6;
+                    }
+                }
+            }
+        }
+    }
+    tbody{
+
+        .hiddenChild{
+            display: none;
+        }
+        .isSpread:nth-child(odd){
+            td{
+                background-color: #18477a;
+            }
+        }
+        .isSpread:nth-child(even){
+            td{
+                background-color: #1d5692;
+            }
+        }
+        .noSpread:nth-of-type(odd){
+            td{
+                background-color: #18477a;
+            }
+        }
+        .noSpread:nth-of-type(even){
+            td{
+                background-color: #1d5692;
+            }
+        }
+        .even{
+            td{
+                background-color: #18477a;
+            }
+        }
+        .odd{
+            td{
+                background-color: #1d5692;
+            }
+        }
+        .groupSpread{
+            td{
+                background-color: #18477a;
+            }
+        }
+        td{
+        .alertQueryIcon{
+            margin: 0px 10px 0px 15px;
+        }
+        max-width: 150px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         padding-right: 10px;
-        position: relative;
-        height: 38px;
-        line-height: 38px;
+        height: 50px;
+        line-height: 50px;
         text-align: left;
-        // background: #f8fbfd;
+        color: #fff;
+        border-bottom: 1px solid #1d558f;
+        background-color: #1d5692;
+        // ----------------------
+        // background: white;
         // border-bottom: 1px solid #e4e7eb;
-        // border-top: 2px solid #e4e7eb;
-        .orderTh{
+        &.tdBtn{
             cursor: pointer;
-            padding: 6px;
-            padding-left: 0px;
-            color: #4a88b6;
-            //color: rgba(0, 0, 0, 0.65);
-            &.orderTh-active{
-                color: #4082e6;
+            color: #4fb8f0;
+            .relieveIcon{
+                position: relative;
+                left: 10px;
+                cursor: pointer;
             }
         }
-        .orderTriangleDown {
-            position: absolute;
-            bottom: 30%;
+        .triangleDown {
+            display: block;
             width: 0;
             height: 0;
             border-right: 4px solid transparent;
             border-left: 4px solid transparent;
-            border-top: 6px solid #435776;
-            //border-top: 6px solid #acb3bf;
-            cursor: pointer;
-            transition: border-top .2s ease;
-            &:hover{
-                border-top: 6px solid #4082e6;
-            }
-            &.orderTriang-active{
-                border-top: 6px solid #4082e6;
-            }
-        }
-        .orderTriangleUp {
-            position: absolute;
-            top: 30%;
-            width: 0;
-            height: 0;
-            border-right: 4px solid transparent;
-            border-left: 4px solid transparent;
-            border-bottom: 6px solid #435776;
-            //border-bottom: 6px solid #acb3bf;
+            border-top: 6px solid #4082e6;
             text-align: center;
             cursor: pointer;
-            transition: border-bottom .2s ease;
-            &:hover{
-                border-bottom: 6px solid #4082e6;
-            }
-            &.orderTriang-active{
-                border-bottom: 6px solid #4082e6;
-            }
         }
-      }
-    }
-  }
-  tbody{
-
-    .hiddenChild{
-        display: none;
-    }
-    .isSpread:nth-child(odd){
-        td{
-            background-color: #18477a;
-        }
-    }
-    .isSpread:nth-child(even){
-        td{
-            background-color: #1d5692;
-        }
-    }
-    .noSpread:nth-of-type(odd){
-        td{
-            background-color: #18477a;
-        }
-    }
-    .noSpread:nth-of-type(even){
-        td{
-            background-color: #1d5692;
-        }
-    }
-    .even{
-        td{
-            background-color: #18477a;
-        }
-    }
-    .odd{
-        td{
-            background-color: #1d5692;
-        }
-    }
-    .groupSpread{
-        td{
-            background-color: #18477a;
-        }
-    }
-    td{
-      .alertQueryIcon{
-        margin: 0px 10px 0px 15px;
-      }
-      max-width: 150px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      padding-right: 10px;
-      height: 50px;
-      line-height: 50px;
-      text-align: left;
-      color: #fff;
-      border-bottom: 1px solid #1d558f;
-      background-color: #1d5692;
-      // ----------------------
-      // background: white;
-      // border-bottom: 1px solid #e4e7eb;
-      &.tdBtn{
-        cursor: pointer;
-        color: #4fb8f0;
-        .relieveIcon{
-            position: relative;
-            left: 10px;
+        .triangleUp {
+            display: block;
+            width: 0;
+            height: 0;
+            border-right: 4px solid transparent;
+            border-left: 4px solid transparent;
+            border-bottom: 6px solid #4082e6;
+            text-align: center;
             cursor: pointer;
         }
-      }
-      .triangleDown {
-          display: block;
-          width: 0;
-          height: 0;
-          border-right: 4px solid transparent;
-          border-left: 4px solid transparent;
-          border-top: 6px solid #4082e6;
-          text-align: center;
-          cursor: pointer;
-      }
-      .triangleUp {
-        display: block;
-        width: 0;
-        height: 0;
-        border-right: 4px solid transparent;
-        border-left: 4px solid transparent;
-        border-bottom: 6px solid #4082e6;
-        text-align: center;
-        cursor: pointer;
-      }
-    }
-    
-    tr.trGroup{
-      td {
-        background: #143c67;
-        text-align: left;
-        .expandIcon{
-          display: inline-block;
-          margin: 18px 10px 0 12px;
-          width: 14px;
-          height: 14px;
-          line-height: 14px;
-          text-align: center;
-          background: #4082e6;
-          color: white;
-          cursor: pointer;
-          font-size: 14px;
-          font-weight: bold;
-          border-radius: 3px;
         }
-      }
+        
+        tr.trGroup{
+        td {
+            background: #143c67;
+            text-align: left;
+            .expandIcon{
+            display: inline-block;
+            margin: 18px 10px 0 12px;
+            width: 14px;
+            height: 14px;
+            line-height: 14px;
+            text-align: center;
+            background: #4082e6;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 3px;
+            }
+        }
+        }
+
     }
+}
 
-  }
-
+@keyframes leave{
+    0% {opacity: 1;}
+    50% {opacity: .5;}
+    100% {opacity: 0;}
 }
 
 .loadMore{

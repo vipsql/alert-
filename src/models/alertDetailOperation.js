@@ -245,7 +245,9 @@ export default {
                 'viewDetailAlertId': state.alertListTable.viewDetailAlertId
             }
         })
-        yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: ['' + viewDetailAlertId], status: 150}})
+        yield put({ type: 'alertListTable/deleteCheckAlert', payload: '' + viewDetailAlertId})
+        yield put({ type: 'alertListTable/deleteIncident', payload: '' + viewDetailAlertId})
+        //yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: ['' + viewDetailAlertId], status: 150}})
         yield put({ type: 'alertDetail/openDetailModal'})
         yield put({ type: 'alertDetail/closeTicketModal'})
     },

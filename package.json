@@ -25,6 +25,7 @@
     "moment": "^2.18.1",
     "path-to-regexp": "^1.7.0",
     "qs": "^6.2.0",
+    "rc-animate": "^2.3.6",
     "rc-calendar": "^8.1.0",
     "rc-table": "^5.2.7",
     "react": "^15.4.1",

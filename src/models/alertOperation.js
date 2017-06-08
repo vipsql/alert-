@@ -441,8 +441,9 @@ export default {
               yield put({ type: 'alertDetailOperation/afterDispatch'})
           } else {
             let stingIds = operateAlertIds.map( item => '' + item)
-            yield put({ type: 'alertListTable/resetCheckedAlert'})
-            yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 150}})
+            yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds[0]})
+            yield put({ type: 'alertListTable/deleteIncident', payload: stingIds[0]})
+            //yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 150}})
             yield put({ type: 'alertDetail/closeTicketModal'})
           }
       },
