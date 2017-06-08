@@ -156,18 +156,18 @@ class Chart extends Component{
         updateData.forEach((item, index) => {            
             if(item.value == 0){item.noData = true}
                 if(item.children){
-                let hasZeros = 0
+                    let hasZeros = 0
                     item.children.forEach((childItem) => {
                         if(childItem.value == 0){
                             childItem.value = 1
-                        childItem.noData = true
-                        hasZeros++
-                        
+                            childItem.noData = true
+                            hasZeros++
+                            
                         }else{
-                        
-                    }
+                            
+                        }
                     })
-                item.value = hasZeros
+                    item.value = hasZeros
                 }
         })
 
@@ -310,7 +310,7 @@ class Chart extends Component{
                         const gr1 = [{key:d.parent.name, value: d.name}]
                         localStorage.setItem('__alert_visualAnalyze_gr1', JSON.stringify(gr1))
                     }
-                    window.location.hash = "#/alertManage/" + d.path;
+                    window.location.hash = "#/alertManage/alertList";
                 })
                 
                 // .on('mouseout', tip.hide)
