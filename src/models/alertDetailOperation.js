@@ -150,7 +150,9 @@ export default {
             })
             if (resultData.result) {
                 if (resultData.data.result) {
-                    yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: [stringId], status: 255}})
+                    yield put({ type: 'alertListTable/deleteCheckAlert', payload: [stringId]})
+                    yield put({ type: 'alertListTable/deleteIncident', payload: [stringId]})
+                    //yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: [stringId], status: 255}})
                     yield put({ type: 'alertDetail/openDetailModal'})
                     yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
                     yield put({ type: 'alertDetail/toggleDetailModal', payload: false})
@@ -184,7 +186,9 @@ export default {
             })
             if (resultData.result) {
                 if (resultData.data.result) {
-                    yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: [stringId], status: 190}})
+                    yield put({ type: 'alertListTable/deleteCheckAlert', payload: [stringId]})
+                    yield put({ type: 'alertListTable/deleteIncident', payload: [stringId]})
+                    //yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: [stringId], status: 190}})
                     yield put({ type: 'alertDetail/openDetailModal'})
                     yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
                     yield put({ type: 'alertDetail/toggleDetailModal', payload: false})
@@ -245,8 +249,8 @@ export default {
                 'viewDetailAlertId': state.alertListTable.viewDetailAlertId
             }
         })
-        yield put({ type: 'alertListTable/deleteCheckAlert', payload: '' + viewDetailAlertId})
-        yield put({ type: 'alertListTable/deleteIncident', payload: '' + viewDetailAlertId})
+        yield put({ type: 'alertListTable/deleteCheckAlert', payload: ['' + viewDetailAlertId]})
+        yield put({ type: 'alertListTable/deleteIncident', payload: ['' + viewDetailAlertId]})
         //yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: ['' + viewDetailAlertId], status: 150}})
         yield put({ type: 'alertDetail/openDetailModal'})
         yield put({ type: 'alertDetail/closeTicketModal'})

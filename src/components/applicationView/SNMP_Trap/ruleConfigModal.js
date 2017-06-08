@@ -1021,7 +1021,7 @@ class ruleModal extends Component{
                             <div className={styles.mergeInput}>
                                 {getFieldDecorator('mergeKey', {})(
                                     <div className={styles.composeContainer}>
-                                        <Input value={this.state.mergeKey} placeholder='$entity_name,$name' onChange={(e) => {
+                                        <Input value={this.state.mergeKey} onChange={(e) => {
                                             //TODO
                                             this.setState({ mergeKey: e.target.value })
                                         }} />
@@ -1064,7 +1064,7 @@ class ruleModal extends Component{
                             <div className={styles.mergeInput}>
                                 {getFieldDecorator('identifyKey', {})(
                                     <div className={styles.composeContainer}>
-                                        <Input value={this.state.identifyKey} placeholder='$entity_name,$entity_address' onChange={(e) => {
+                                        <Input value={this.state.identifyKey} onChange={(e) => {
                                             //TODO
                                             this.setState({ identifyKey: e.target.value })
                                         }} />
