@@ -36,7 +36,7 @@ export default {
   subscriptions: {
     init({ dispatch, history }) {
       history.listen((location, state) => {
-        if (pathToRegexp('/alertManage/:alertClassify/:alertList').test(location.pathname)) {
+        if (pathToRegexp('/alertManage/alertList').test(location.pathname)) {
           
           dispatch({
             type: 'queryVisualList',
