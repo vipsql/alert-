@@ -186,6 +186,28 @@ class Chart extends Component{
             return d.children;
         });
 
+        function wrap(d) {
+            let self = d3.select(this),
+                text;
+            if (!d.children && (d.parent.path == 'severity' || d.parent.path == 'status')) {
+                text = window[`_${d.parent.path}`][d.name]
+            } else {
+                text = d.name;
+            }
+            self.text(text);
+            let textLength =  self.node().getComputedTextLength();
+            let isShorted = false
+            
+            while (textLength > (d.dx - 2) && text.length > 0) {
+                isShorted = true;
+                text = text.slice(0, -1);
+                self.text(text + '...');
+                textLength = self.node().getComputedTextLength();
+            }
+
+            return isShorted?(text + "...") : text;
+        }
+
         // d3.json("../../../mock/alert.json", function(data) {
         if(children.length > 0){
           
@@ -230,9 +252,7 @@ class Chart extends Component{
                 })
                 .attr('font-size', '14')
                 .attr("height", headerHeight)
-                .text(function(d) {
-                    return d.name;
-                });
+                .text(wrap)
             // update transition
             var parentUpdateTransition = parentCells.transition().duration(transitionDuration);
             parentUpdateTransition.select(".cell")
@@ -256,9 +276,7 @@ class Chart extends Component{
                 })
                 .attr('font-size', '20')
                 .attr("height", 20)
-                .text(function(d) {
-                    return d.name;
-                });
+                .text(wrap);
             // remove transition
             parentCells.exit()
                 .remove();
@@ -346,10 +364,7 @@ class Chart extends Component{
                 .attr("font-size", "13")
                 .attr("text-anchor", "middle")
                 // .style("display", "none")
-                .text(function(d) {
-                    return d.name
-                })
-                .style("opacity", function(d) { d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; })
+                .text(wrap)
                 .on('mouseover', function(d){
                     return false
                     d3Tip.show(d, formatMessage({...formatMessages[selectedStatus]}))
@@ -383,9 +398,7 @@ class Chart extends Component{
                 })
                 .attr("dy", ".35em")
                 .attr("text-anchor", "middle")
-                .text(function(d) {
-                    return d.name;
-                });
+                .text(wrap);
 
             // exit transition
             childrenCells.exit()
@@ -455,7 +468,7 @@ class Chart extends Component{
             if (node != level) {
                 this.chart.selectAll(".cell.child .label")
                     // .style("display", "none");
-            }
+            } 
 
             var zoomTransition = this.chart.selectAll("g.cell").transition().duration(transitionDuration)
                 .attr("transform", (d) => {
@@ -494,13 +507,7 @@ class Chart extends Component{
                 .attr("height", function(d) {
                     return d.children ? headerHeight : Math.max(0.01, (ky * d.dy));
                 })
-                .text(function(d) {
-                    if (!d.children && (d.parent.path == 'severity' || d.parent.path == 'status')) {
-                        return window[`_${d.parent.path}`][d.name]
-                    } else {
-                        return d.name;
-                    }
-                });
+                .text(wrap);
 
             zoomTransition.select(".child .label")
                 .attr("x", function(d) {
@@ -509,7 +516,13 @@ class Chart extends Component{
                 .attr("y", function(d) {
                     return ky * d.dy / 2;
                 })
-                .style("opacity", function(d) { d.w = this.getComputedTextLength(); return kx * d.dx > d.w ? 1 : 0; })
+                .attr("font-size", "13")
+                // .attr("font-size", function(d) {
+                    
+                //     d.w = this.getComputedTextLength();
+                //     return d.dx > d.w ? 13 : 13 * d.dx / d.w;
+                // })
+                // .style("opacity", function(d) { d.w = this.getComputedTextLength(); return kx * d.dx > d.w ? 1 : 0; })
             zoomTransition.select(".parent .label")
                 .attr("x", function(d) {
                     return kx * d.dx / 2;
