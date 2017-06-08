@@ -32,7 +32,7 @@ export default function({history, app}) {
             },'alertManage')
           }
         }, {
-          path: 'alertManage/:alertClassify/:alertList',
+          path: 'alertManage/alertList',
           name: 'alertList',
           getComponent(nextState, cb) {
             nextState.params.isNeedContent = false;
