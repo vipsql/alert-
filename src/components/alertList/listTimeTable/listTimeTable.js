@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import { Button, Spin} from 'antd';
 import { connect } from 'dva'
 import { Popover } from 'antd'
+import Animate from 'rc-animate'
 import styles from '../index.less'
 import LevelIcon from '../../common/levelIcon/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
@@ -472,14 +473,19 @@ class ListTimeTable extends Component {
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <Animate
+                  transitionName="fade"
+                  component='tbody'
+                  transitionEnterTimeout={500} 
+                  transitionLeaveTimeout={300}
+              >
               {
                 data.length > 0 ? tbodyCon :
                 <tr>
                   <td colSpan="6" style={{textAlign: 'center'}}><FormattedMessage {...formatMessages['noData']} /></td>
                 </tr>
               }
-              </tbody>
+              </Animate>
             </table>
           </Spin>
           {isShowMore && <div className={styles.loadMore}><Button onClick={loadMore}><FormattedMessage {...formatMessages['showMore']} /></Button></div>}

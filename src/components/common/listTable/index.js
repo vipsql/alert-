@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { Button, Spin } from 'antd';
 import LevelIcon from '../levelIcon/index.js'
+import Animate from 'rc-animate'
 import styles from './index.less'
 import { classnames } from '../../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
@@ -454,14 +455,21 @@ class ListTable extends Component {
                 {theads}
               </tr>
             </thead>
-            <tbody>
+            <Animate
+                transitionName="fade"
+                component='tbody'
+                transitionEnterTimeout={500} 
+                transitionLeaveTimeout={300}
+            >
               {
-                data.length > 0 ? tbodyCon :
+                data.length > 0 ? 
+                tbodyCon 
+                :
                 <tr>
                   <td colSpan={columns.length + 3} style={{textAlign: 'center'}}><FormattedMessage {...formatMessages['noData']} /></td>
                 </tr>
               }
-            </tbody>
+            </Animate>
           </table>
         </Spin>
         {isShowMore && <div className={styles.loadMore}><Button onClick={loadMore}><FormattedMessage {...formatMessages['showMore']} /></Button></div>}

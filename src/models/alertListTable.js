@@ -176,6 +176,12 @@ export default {
       })
       return { ...state, checkAlert: checkList }
     },
+    // 删除勾选项
+    deleteCheckAlert(state, {payload: id}) {
+      let { checkAlert } = state;
+      delete checkAlert[id]
+      return { ...state, checkAlert }
+    },
     // 重置勾选状态
     resetCheckedAlert(state) {
       const { checkAlert } = state;
@@ -398,6 +404,25 @@ export default {
     // 排序
     toggleOrder(state, {payload}) {
       return { ...state, ...payload }
+    },
+    // 删除告警
+    deleteIncident(state, {payload: id}) {
+      const { data, isGroup } = state;
+      if (isGroup === true) {
+        const newData = data.map( (group) => {
+          const arr = group.children.filter( (item) => {
+            return item.id !== id;
+          })
+          group.children = arr;
+          return group;
+        })
+        return { ...state, data: newData }
+      } else if (isGroup === false) {
+        const newData = data.filter( (item) => {
+          return item.id !== id;
+        })
+        return { ...state, data: newData }
+      }
     },
     // 修改状态为处理中
     changeCloseState(state, {payload: {arrList, status}}) {
