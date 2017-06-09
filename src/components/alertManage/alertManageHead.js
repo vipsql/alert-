@@ -61,7 +61,8 @@ const AlertManageHead = ({
   setLayout,
   isFixed,
   isFullScreen,
-  setFullScreen
+  setFullScreen,
+  intl
 }) => {
   const setClass = classnames(
     'iconfont',
@@ -89,6 +90,8 @@ const AlertManageHead = ({
     if(target.className.indexOf('curLayout') > -1) return 
     setLayout(e)
   }
+  const {formatMessage} = intl;
+
   return (
     <div className={styles.manageHead}>
         {isFullScreen && <div className={styles.fullScreenMask}></div>}
@@ -118,12 +121,12 @@ const AlertManageHead = ({
             <Select defaultValue='lastOneHour' style={{ width: 150 }} onChange={ (value) => {
               queryByTime(value)
             }}>
-              <Option value='lastOneHour'><FormattedMessage {...formatMessages['oneHour']}/></Option>
-              <Option value='lastFourHour'><FormattedMessage {...formatMessages['fourHours']}/></Option>
-              <Option value='lastOneDay'><FormattedMessage {...formatMessages['oneDay']}/></Option>
-              <Option value='lastOneWeek'><FormattedMessage {...formatMessages['sevenDays']}/></Option>
-              <Option value='lastFifteenDay'><FormattedMessage {...formatMessages['fifteenDays']}/></Option>
-              <Option value='lastOneMonth'><FormattedMessage {...formatMessages['thirtyDays']}/></Option>
+              <Option value='lastOneHour' >{formatMessage(formatMessages['oneHour'])}</Option>
+              <Option value='lastFourHour'>{formatMessage(formatMessages['fourHours'])}</Option>
+              <Option value='lastOneDay'>{formatMessage(formatMessages['oneDay'])}</Option>
+              <Option value='lastOneWeek'>{formatMessage(formatMessages['sevenDays'])}</Option>
+              <Option value='lastFifteenDay'>{formatMessage(formatMessages['fifteenDays'])}</Option>
+              <Option value='lastOneMonth'>{formatMessage(formatMessages['thirtyDays'])}</Option>
             </Select>
             <RadioGroup className={styles.myRadioGroup} defaultValue='NEW' onChange={ (e) => {
               queryByStatus(e.target.value)
@@ -146,4 +149,4 @@ const AlertManageHead = ({
   )
 }
 
-export default AlertManageHead
+export default injectIntl(AlertManageHead)
