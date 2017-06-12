@@ -57,6 +57,7 @@ const initvalState = {
       order: true
     },{
       key: 'status',
+      order: true
     }, ],
 }
 

@@ -49,6 +49,7 @@ const initalState = {
       order: true
     }, {
       key: 'status',
+      order: true
     }, ],
 }
 

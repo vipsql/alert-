@@ -88,7 +88,7 @@ export default {
         let tags = [];
         if(payload.key == "status" && tagValues.result) {
           tags = tagValues.data.filter((tag) => {
-            return tag.value != "255"
+            return tag.value != "255" && tag.value != "40"
           })
         } else if(tagValues.result) {
           tags = tagValues.data;
