@@ -75,6 +75,33 @@ export default {
       }
     },
     /**
+     * 筛选时间
+     */
+    *selectTime({payload}, {select, put, call}) {
+      if (payload !== undefined) {
+        const filteredTags = yield select( state => state.tagListFilter.filteredTags )
+        yield put({ type: 'alertList/queryAlertBar', payload: {...filteredTags, selectedTime: payload} })
+        yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
+        yield put({ type: 'alertManage/setSelectedTime', payload: payload})
+      }
+    },
+    /**
+     * 筛选状态
+     */
+    *selectStatus({payload}, {select, put, call}) {
+      if (payload !== undefined) {
+        let status = payload === 'NEW' 
+                      ? '0' : payload === 'PROGRESSING'
+                          ? '150' : payload === 'RESOLVED'
+                              ? '190' : undefined;
+        yield put({ type: 'setStatus', payload: status})
+        const filteredTags = yield select( state => state.tagListFilter.filteredTags )
+        yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
+        yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
+        yield put({ type: 'alertManage/setSelectedStatus', payload: payload})
+      }
+    },
+    /**
      *  查询标签对应的values
      */
     *queryTagValues({payload}, {select, put, call}) {
@@ -83,14 +110,8 @@ export default {
         if (!tagValues.result) {
           yield message.error(window.__alert_appLocaleData.messages[tagValues.message], 2);
         }
-
-        // 状态过滤项，后台多返回了一个“已关闭”过滤项，前台通过下列代码将它去掉
         let tags = [];
-        if(payload.key == "status" && tagValues.result) {
-          tags = tagValues.data.filter((tag) => {
-            return tag.value != "255" && tag.value != "40"
-          })
-        } else if(tagValues.result) {
+        if(tagValues.result) {
           tags = tagValues.data;
         }
         yield put({
@@ -159,6 +180,11 @@ export default {
   },
 
   reducers: {
+    setStatus(state, {payload: status}) {
+      let {filteredTags} = state;
+      filteredTags.status = status
+      return {...state, filteredTags}
+    },
     // toggle select modal
     toggleTagsSelect(state, { payload: isShowSelectModal }) {
       return { ...state, isShowSelectModal }
@@ -181,7 +207,7 @@ export default {
         }
       })
       
-      return { ...state, shareSelectTags, originTags: filter}
+      return { ...state, shareSelectTags, originTags: filter, filteredTags: filter}
     },
     // 存储tagsKeyList
     setTagsKeyList(state, {payload: {tagsKeyList, isShowSelectModal}}) {

@@ -20,6 +20,7 @@ import ResolveModal from '../common/resolveModal/index.js'
 import SuppressModal from '../common/suppressModal/index.js'
 import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 import ManualNotifyModal from '../common/manualNotifyModal/index.js'
+import FilterHead from '../common/filterHead/index.js'
 import { classnames } from '../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -43,7 +44,7 @@ class AlertListManage extends Component{
   }
 
   render(){
-    const { alertDetail, alertListTable, alertList, dispatch, alertOperation, alertDetailOperation } = this.props;
+    const { alertDetail, alertListTable, alertList, dispatch, alertOperation, alertDetailOperation, alertManage } = this.props;
 
     const localeMessage = defineMessages({
       tab_list: {
@@ -486,6 +487,17 @@ class AlertListManage extends Component{
           
     return (
       <div style={{ position: 'relative'}}>
+        <FilterHead
+          style={{ marginBottom: '20px'}}
+          defaultTime={alertManage.selectedTime}
+          defaultStatus={alertManage.selectedStatus}
+          queryByTime={(value) => {
+            dispatch({type: 'tagListFilter/selectTime', payload: value})
+          }}
+          queryByStatus={(value) => {
+            dispatch({type: 'tagListFilter/selectStatus', payload: value})
+          }}
+        />
         <div className={alertList.isShowBar?styles.showBar:styles.hideBar}>
           <AlertTagsFilter />
           <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch {...refreshProps}/></div>
@@ -550,6 +562,7 @@ class AlertListManage extends Component{
 
 export default connect((state) => {
   return {
+    alertManage: state.alertManage,
     alertListTable: state.alertListTable,
     alertDetail: state.alertDetail,
     alertOperation: state.alertOperation,
