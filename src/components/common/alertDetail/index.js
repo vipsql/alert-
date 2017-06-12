@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { Button, Input, Form } from 'antd';
+import { Button, Input, Form, Timeline } from 'antd';
 import { connect } from 'dva'
 import styles from './index.less'
 import { classnames } from '../../../utils'
@@ -10,6 +10,7 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
 
     const { currentAlertDetail, isShowOperateForm, operateForm, isShowRemark, operateRemark, ciUrl } = extraProps;
     const { getFieldDecorator, getFieldsValue } = form;
+    const { incidentLog } = currentAlertDetail;
 
     // <div className={styles.infoBody}>
     //     <p className={styles.remarkTitle}>备注信息</p>
@@ -198,6 +199,52 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
         ciDetail: {
             id: 'alertDetail.link.ciDetail',
             defaultMessage: '查看CI详情',
+        },
+        log: {
+            id: 'alertOperate.log',
+            defaultMessage: '审计日志'
+        },
+        remark: {
+            id: 'alertDetail.remark',
+            defaultMessage: '备注'
+        },
+        operator: {
+            id: 'alertDetail.operator',
+            defaultMessage: '处理人'
+        },
+        operateType: {
+            10: {
+                id: 'alertDetail.action.t10',
+                defaultMessage: '新告警创建'
+            },
+            30: {
+                id: 'alertDetail.action.t30',
+                defaultMessage: '新告警创建'
+            },
+            50: {
+                id: 'alertDetail.action.t50',
+                defaultMessage: '新告警创建'
+            },
+            70: {
+                id: 'alertDetail.action.t70',
+                defaultMessage: '告警删除'
+            },
+            90: {
+                id: 'alertDetail.action.t90',
+                defaultMessage: '通知'
+            },
+            110: {
+                id: 'alertDetail.action.t110',
+                defaultMessage: 'chatOps群组'
+            },
+            130: {
+                id: 'alertDetail.action.t130',
+                defaultMessage: '派发工单'
+            },
+            150: {
+                id: 'alertDetail.action.t150',
+                defaultMessage: '派发cross工单'
+            }
         }
     })
 
@@ -207,6 +254,13 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
         })
         return temp.join(' / ');
     }
+    const statusType = {
+        1: window._status["0"],
+        2: window._status["40"],
+        3: window._status["150"],
+        4: window._statue["190"],
+        5: window._statue["255"]
+    },
 
     return (
         <div className={styles.main}>
@@ -306,6 +360,71 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
                     :
                     undefined
                 }
+                <div className={classnames(styles.infoBody)}>
+                    <p>{formatMessage({...localeMessage['log']})}</p>
+                    <Timeline>
+                    {
+                        incidentLog.map((log) => {
+                            const date = new Date(log.operateTime);
+                            return (
+                                <Timeline.Item key={ log.incidentId }>
+                                    <div className={ classnames(styles.timeLineLabel) }>
+                                        {
+                                            date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay()
+                                        }
+                                    </div>
+                                    <p>
+                                        { formatMessage({...localeMessage['operateType']['t' + log.operateType]}) }
+                                        <span>{ formatMessage({...localeMessage['operator']}) }:{ log.operatorName }</span>
+                                    </p>
+                                    {
+                                        log.attribute && log.attribute['new_value']?
+                                        (
+                                            <p>
+                                                { formatMessage({...localeMessage['status']}) }:{ statusType[log.attribute['new_value']] }
+                                            </p>
+                                        )
+                                        :
+                                        ''
+                                    }
+                                    {
+                                        log.attribute && log.attribute['flowNo']?
+                                        (
+                                            <p>
+                                                { formatMessage({...localeMessage['ticket']}) }:{ log.attribute['flowNo'] }
+                                            </p>
+                                        )
+                                        :
+                                        ''
+                                    }
+                                    {
+                                        log.attribute && log.attribute['flowNo']?
+                                        (
+                                            <p>
+                                                { formatMessage({...localeMessage['ticket']}) }:{ log.attribute['flowNo'] }
+                                            </p>
+                                        )
+                                        :
+                                        ''
+                                    }
+                                    {
+                                        log.attribute && log.attribute['message']?
+                                        (
+                                            <p>
+                                                { formatMessage({...localeMessage['remark']}) }:{ log.attribute['message'] }
+                                            </p>
+                                        )
+                                        :
+                                        ''
+                                    }
+                                    
+                                    { log.operatorName }
+                                </Timeline.Item>
+                            )
+                        })
+                    }
+                    </Timeline>
+                </div>
             </div>
         </div>
     )

@@ -67,7 +67,23 @@
                 font-weight: 600;
                 margin-bottom: 10px;
             }
+            
             li{
+                &:global(.ant-timeline-item){
+                    padding: 0 0 12px;
+                    margin-left: 15%;
+                    .timeLineLabel {
+                        position: absolute;
+                        right: 105%;
+                        text-align: right;
+                        color: #00c4ff;
+                        width: 15%;
+                    }
+                    &:global(.ant-timeline-tail) {
+                        margin-top: 3px;
+                    }
+                }
+                
                 position: relative;
                 line-height: 25px;
                 font-size: 13px;
