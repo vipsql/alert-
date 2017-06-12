@@ -524,7 +524,7 @@ export default {
                   col.checked = !col.checked;
               }
               if (col.checked) {
-                  if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count') {
+                  if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count' || col.id == 'status') {
                       arr.push({ key: col.id, title: col.name, order: true }) // order字段先定死
                   } else {
                       arr.push({ key: col.id, title: col.name }) // width先定死
