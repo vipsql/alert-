@@ -5,12 +5,13 @@ import styles from './index.less'
 import { classnames } from '../../../utils'
 import AlertOperation from '../alertOperation/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import Wrap from './wrap'
 
 const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTicketFlow, editForm, openForm, closeForm, openRemark, editRemark, closeRemark, intl: {formatMessage}}) => {
 
     const { currentAlertDetail, isShowOperateForm, operateForm, isShowRemark, operateRemark, ciUrl } = extraProps;
     const { getFieldDecorator, getFieldsValue } = form;
-    const { incidentLog } = currentAlertDetail;
+    const { incidentLog, ciDetail={} } = currentAlertDetail;
 
     // <div className={styles.infoBody}>
     //     <p className={styles.remarkTitle}>备注信息</p>
@@ -212,6 +213,18 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
             id: 'alertDetail.operator',
             defaultMessage: '处理人'
         },
+        itsmType: {
+            id: 'ruleEditor.itsmType',
+            defaultMessage: '工单类型'
+        },
+        recipient: {
+            id: 'alertDetail.recipient',
+            defaultMessage: '接收人'
+        },
+        roomName: {
+            id: 'modal.roomName',
+            defaultMessage: '群组名称'
+        },
         operateType: {
             10: {
                 id: 'alertDetail.action.t10',
@@ -219,11 +232,11 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
             },
             30: {
                 id: 'alertDetail.action.t30',
-                defaultMessage: '新告警创建'
+                defaultMessage: '更改状态'
             },
             50: {
                 id: 'alertDetail.action.t50',
-                defaultMessage: '新告警创建'
+                defaultMessage: '更改级别'
             },
             70: {
                 id: 'alertDetail.action.t70',
@@ -237,6 +250,10 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
                 id: 'alertDetail.action.t110',
                 defaultMessage: 'chatOps群组'
             },
+            120: {
+                id: 'alertDetail.action.t120',
+                defaultMessage: '解决'
+            },
             130: {
                 id: 'alertDetail.action.t130',
                 defaultMessage: '派发工单'
@@ -244,6 +261,10 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
             150: {
                 id: 'alertDetail.action.t150',
                 defaultMessage: '派发cross工单'
+            },
+            250: {
+                id: 'alertDetail.action.t250',
+                defaultMessage: '关闭'
             }
         }
     })
@@ -255,12 +276,12 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
         return temp.join(' / ');
     }
     const statusType = {
-        1: window._status["0"],
-        2: window._status["40"],
-        3: window._status["150"],
-        4: window._statue["190"],
-        5: window._statue["255"]
-    },
+        0: window._status["0"],
+        40: window._status["40"],
+        150: window._status["150"],
+        190: window._status["190"],
+        255: window._status["255"]
+    };
 
     return (
         <div className={styles.main}>
@@ -270,8 +291,7 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
                 <AlertOperation position="detail" {...operateProps}/>
             </div>
             <div className={styles.detailBody}>
-                <div className={styles.infoBody}>
-                    <p>{formatMessage({...localeMessage['basic']})}</p>
+                <Wrap title={formatMessage({...localeMessage['basic']})}>
                     <ul>
                         <li><span>{formatMessage({...localeMessage['name']})}:</span><span>{currentAlertDetail.name ? currentAlertDetail.name : formatMessage({...localeMessage['unknown']})}</span></li>
                         <li><span>{formatMessage({...localeMessage['entityName']})}:</span><span>{currentAlertDetail.entityName ? currentAlertDetail.entityName : formatMessage({...localeMessage['unknown']})}</span></li>
@@ -333,11 +353,10 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
                             }
                         </li>
                     </ul>
-                </div>
+                </Wrap>
                 {
                     currentAlertDetail.properties !== undefined && Array.isArray(currentAlertDetail.properties) && currentAlertDetail.properties.length !== 0 ?
-                    <div className={styles.infoBody}>
-                        <p>{formatMessage({...localeMessage['enrich']})}</p>
+                    <Wrap title={formatMessage({...localeMessage['enrich']})}>
                         <ul>
                             {
                                 currentAlertDetail.properties.map( (item, index) => {
@@ -345,86 +364,109 @@ const alertDetail = ({extraProps, operateProps, form, closeDeatilModal, clickTic
                                 })
                             }
                         </ul>
-                    </div>
+                    </Wrap>
                     :
                     undefined
                 }              
                 {
                     ciUrl !== '' ?
-                    <div className={classnames(styles.infoBody)}>
-                        <p>{formatMessage({...localeMessage['ci']})}</p>
-                        <ul>
+                    <Wrap visible={ false } title={formatMessage({...localeMessage['ci']})}>
+                        {/*<ul>
                             <li><span>{formatMessage({...localeMessage['link']})}:</span><span><a href={ciUrl} target={'_blank'}>{formatMessage({...localeMessage['ciDetail']})}</a></span></li>
+                        </ul>*/}
+                        <ul>
+                        {
+                            ciDetail.map(detail => <li><span>{detail.code}:</span><span>&nbsp;{detail.value}</span></li>)
+                        }
                         </ul>
-                    </div>
+                    </Wrap>
                     :
                     undefined
                 }
-                <div className={classnames(styles.infoBody)}>
-                    <p>{formatMessage({...localeMessage['log']})}</p>
+                <Wrap title={formatMessage({...localeMessage['log']})}>
                     <Timeline>
                     {
-                        incidentLog.map((log) => {
+                        incidentLog.map((log, index) => {
                             const date = new Date(log.operateTime);
+                            let isShowOperateDate = false;
+                            if(index == incidentLog.length - 1) {
+                                isShowOperateDate = true;
+                            } else {
+                                const nextDate = new Date(incidentLog[index + 1].operateTime);
+                                isShowOperateDate = (date.getMonth() != nextDate.getMonth() || date.getDay() != nextDate.getDay());
+                            }
                             return (
-                                <Timeline.Item key={ log.incidentId }>
+                                <Timeline.Item key={ log.incidentId + '' + index } color={ index == 0?'green' : 'blue' }>
                                     <div className={ classnames(styles.timeLineLabel) }>
                                         {
-                                            date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay()
+                                            (isShowOperateDate?(date.getMonth() + "/" +date.getDay() + ' '):'') + date.getHours() + ":" + date.getMinutes()
                                         }
                                     </div>
                                     <p>
-                                        { formatMessage({...localeMessage['operateType']['t' + log.operateType]}) }
-                                        <span>{ formatMessage({...localeMessage['operator']}) }:{ log.operatorName }</span>
+                                        <span>{ formatMessage({...localeMessage['operateType'][log.operateType]}) }</span>
+                                        {
+                                            log.operatorName?
+                                            <span className={ styles.operator_label }>{ formatMessage({...localeMessage['operator']}) }&nbsp;:&nbsp;{ log.operatorName }</span>
+                                            :
+                                            ""
+                                        }
                                     </p>
                                     {
-                                        log.attribute && log.attribute['new_value']?
+                                        log.attributes && log.attributes['flowNo']?
                                         (
                                             <p>
-                                                { formatMessage({...localeMessage['status']}) }:{ statusType[log.attribute['new_value']] }
+                                                <span>{ formatMessage({...localeMessage['ticket']}) }&nbsp;:&nbsp;{ log.attributes['flowNo'] }</span>
                                             </p>
                                         )
                                         :
                                         ''
                                     }
                                     {
-                                        log.attribute && log.attribute['flowNo']?
+                                        log.attributes && log.attributes['modalName']?
                                         (
                                             <p>
-                                                { formatMessage({...localeMessage['ticket']}) }:{ log.attribute['flowNo'] }
+                                                <span>{ formatMessage({...localeMessage['itsmType']}) }&nbsp;:&nbsp;{ log.attributes['modalName'] }</span>
                                             </p>
                                         )
                                         :
                                         ''
                                     }
                                     {
-                                        log.attribute && log.attribute['flowNo']?
+                                        log.attributes && log.attributes['roomName']?
                                         (
                                             <p>
-                                                { formatMessage({...localeMessage['ticket']}) }:{ log.attribute['flowNo'] }
+                                                <span>{ formatMessage({...localeMessage['roomName']}) }&nbsp;:&nbsp;{ log.attributes['roomName'] }</span>
                                             </p>
                                         )
                                         :
                                         ''
                                     }
                                     {
-                                        log.attribute && log.attribute['message']?
+                                        log.attributes && log.attributes['recipient']?
                                         (
                                             <p>
-                                                { formatMessage({...localeMessage['remark']}) }:{ log.attribute['message'] }
+                                                <span>{ formatMessage({...localeMessage['recipient']}) }&nbsp;:&nbsp;{ log.attributes['recipient'] }</span>
                                             </p>
                                         )
                                         :
                                         ''
                                     }
-                                    
-                                    { log.operatorName }
+                                    {
+                                        log.attributes && log.attributes['message']?
+                                        (
+                                            <p>
+                                                <span>{ formatMessage({...localeMessage['remark']}) }&nbsp;:&nbsp;{ log.attributes['message'] }</span>
+                                            </p>
+                                        )
+                                        :
+                                        ''
+                                    }
                                 </Timeline.Item>
                             )
                         })
                     }
                     </Timeline>
-                </div>
+                </Wrap>
             </div>
         </div>
     )
