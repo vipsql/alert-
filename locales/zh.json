@@ -402,6 +402,7 @@
   "ruleEditor.phBody": "",
   "ruleEditor.phTag": "请选择对应标签",
   "ruleEditor.phIpt": "值",
+  "ruleEditor.phFieldValue": "字段值",
   "ruleEditor.phOpt": "请选择运算符",
   "ruleEditor.phField": "请选择字段",
   "ruleEditor.eq": "等于",
@@ -435,7 +436,8 @@
   "visualAnalyze.groupBy": "分组",
   "visualAnalyze.incidentGroup": "只显示有故障的分组",
   "visualAnalyze.noData": "暂无数据",
-  
+  "visualAnalyze.tip": "小提示：<可视化分析>利用CMDB展现关联CI的告警状态 (以最高等级为准)，其中也包含历史发生的未关闭的告警，辅助运维人员通过CI相关性定位故障根源。",
+
   "layout.fixedLayout": "固定布局",
   "layout.autoLayout": "自动布局",
   "layout.fullScreen": "全屏",
