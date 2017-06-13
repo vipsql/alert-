@@ -190,7 +190,7 @@ class Condition extends Component {
                 </Select>
                 {
                     /severity|status|duration|source/.test(_key) &&
-                    <Select onChange={changeConditionContent.bind(_this, node, index, 'value')} className={styles.value} style={{ width: 150 }} value={value} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phTag']}>
+                    <Select onChange={changeConditionContent.bind(_this, node, index, 'value')} className={styles.value} style={{ width: 150 }} value={value} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phFieldValue']}>
                         {
                             valueList[_key] &&
                             valueList[_key].map(item => {
@@ -201,7 +201,7 @@ class Condition extends Component {
                 }
                 {
                     !/severity|status|duration|source/.test(_key) &&
-                    <Input placeholder={window.__alert_appLocaleData.messages['ruleEditor.phIpt']} style={{ width: 130 }} onBlur={changeConditionContent.bind(_this, node, index, 'value')} defaultValue={value} />
+                    <Input placeholder={window.__alert_appLocaleData.messages['ruleEditor.phFieldValue']} style={{ width: 130 }} onBlur={changeConditionContent.bind(_this, node, index, 'value')} defaultValue={value} />
                 }
                 <i className={styles.delete} onClick={deleteLine.bind(_this, node, level, index)}>X</i>
             </div>
