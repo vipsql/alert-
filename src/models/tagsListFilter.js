@@ -201,7 +201,7 @@ export default {
           filter[key] = originTags[key]['values']
           if (key === 'severity') {
             shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: originTags[key]['values'].split(',') })
-          } else {
+          } else if (key !== 'status') {
             shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: [originTags[key]['values']] })
           }
         }
