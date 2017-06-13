@@ -263,8 +263,6 @@ export default {
                     type: 'setChatOpsRoom',
                     payload: options.data || [],
                 })
-            } else {
-                yield message.error(`${options.message}`, 2);
             }
             yield put({
                 type: 'toggleChatOpsModal',
