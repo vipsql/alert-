@@ -315,7 +315,7 @@ class ListTable extends Component {
     // 生成子告警行
     const genchildTrs = (childItem, childIndex, keys, item, isGroup) => {
       
-      const trKey = 'chTd' + childIndex
+      const trKey = childItem.id || 'chTd' + childIndex
       const childTds = getChildTds(childItem, keys)
       
       return (
@@ -361,7 +361,7 @@ class ListTable extends Component {
               </td>
             </tr>)
 
-          item.children !== undefined && item.children.forEach( (childItem, index) => {
+          item.children !== undefined && item.children.forEach( (childItem, itemIndex) => {
             
             const tds = getTds(childItem, keys)
 
@@ -378,8 +378,8 @@ class ListTable extends Component {
               childs = null
             }
 
-            const trKey = 'td' + index
-            const tdKey = 'td' + index
+            const trKey = childItem.id || `tr_${index}_${itemIndex}`
+            const tdKey = childItem.id || `td_${index}_${itemIndex}`
             childtrs.push(
                 <tr key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread ? styles.hiddenChild : styles.groupSpread}>
                   {
