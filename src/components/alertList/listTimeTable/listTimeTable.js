@@ -314,8 +314,9 @@ class ListTimeTable extends Component {
         const childDots = childDotsInfo.dots
         const childLineDotW = childDotsInfo.lineDotW
         const childLineDotLeft = childDotsInfo.lineDotLeft
+        const trKey = childItem.id || 'chTd' + childIndex
         return (
-          <tr key={childIndex} className={!item.isSpread ? styles.hiddenChild : !isGroup ? styles.noSpread : styles.groupSpread}>
+          <tr key={trKey} className={!item.isSpread ? styles.hiddenChild : !isGroup ? styles.noSpread : styles.groupSpread}>
             <td key="checkbox"></td>
             {childTds}
             <td key="timeDot">
@@ -344,6 +345,9 @@ class ListTimeTable extends Component {
                   groupBy && groupBy == 'status' ?
                   window['_status'][groupItem.classify]
                   :
+                  groupBy && groupBy == 'severity' ? 
+                  window['_severity'][groupItem.classify]
+                  :
                   groupItem.classify ? groupItem.classify : <FormattedMessage {...formatMessages['Unknown']} />
                 }
             </td>
@@ -356,6 +360,9 @@ class ListTimeTable extends Component {
                   groupBy && groupBy == 'status' ?
                   window['_status'][groupItem.classify]
                   :
+                  groupBy && groupBy == 'severity' ? 
+                  window['_severity'][groupItem.classify]
+                  :
                   groupItem.classify ? groupItem.classify : <FormattedMessage {...formatMessages['Unknown']} />
                 }
             </td>
@@ -363,7 +370,7 @@ class ListTimeTable extends Component {
           
           if (groupItem.children !== undefined) {
             
-            groupItem.children.forEach( (item, index) => {
+            groupItem.children.forEach( (item, itemIndex) => {
 
               const tds = genTds(item, keys)
               const dotsInfo = genDots(item.timeLine, keys)
@@ -381,8 +388,11 @@ class ListTimeTable extends Component {
                 childTrs = null
               }
 
+              let trKey = item.id || `tr_${index}_`
+              let tdKey = item.id || `td_${index}_`
+
               commonTrs.push(
-                <tr key={index} className={groupItem.isGroupSpread !== undefined && !groupItem.isGroupSpread ? styles.hiddenChild : styles.groupSpread}>
+                <tr key={trKey} className={groupItem.isGroupSpread !== undefined && !groupItem.isGroupSpread ? styles.hiddenChild : styles.groupSpread}>
                   <td key="checkbox" className={styles.checkstyle}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
                   {tds}
                   <td key="timeDot">
@@ -439,9 +449,9 @@ class ListTimeTable extends Component {
             }else{
               childTrs = null
             }
-            
+            let trKey = item.id || `tr_${index}`
             tbodyCon.push(
-              <tr key={index} className={styles.noSpread}>
+              <tr key={trKey} className={styles.noSpread}>
                 {tdCheck}
                 {tds}
                 <td key="timeDot">

@@ -503,7 +503,7 @@ class AlertListManage extends Component{
           <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch {...refreshProps}/></div>
           <AlertBar />
         </div>
-        <Button className={classnames(styles.toggleBarButton, zhankaiClass)} onClick={toggleBarButtonClick} size="small"><i className={ alertList.isShowBar?shouqiClass:zhankaiClass }/></Button>
+        <Button className={classnames(styles.toggleBarButton, zhankaiClass)} onClick={toggleBarButtonClick} size="small"><i className={ classnames(alertList.isShowBar?shouqiClass:zhankaiClass, styles.toggleBarButtonIcon) }/></Button>
         <div className={styles.alertListPage + " " + (alertList.isShowBar?'':styles.marginTop0)}>
           <Tabs>
             <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key={1}>
