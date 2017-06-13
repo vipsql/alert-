@@ -403,6 +403,7 @@
   "ruleEditor.phBody": "",
   "ruleEditor.phTag": "Select relational Tag",
   "ruleEditor.phIpt": "Value",
+  "ruleEditor.phFieldValue": "Field Value",
   "ruleEditor.phOpt": "Operator",
   "ruleEditor.phField": "Select Field",
   "ruleEditor.eq": "equal",
@@ -437,6 +438,7 @@
   "visualAnalyze.groupBy": "Groupby",
   "visualAnalyze.incidentGroup": "Display alert groups only",
   "visualAnalyze.noData": "No Data",
+  "visualAnalyze.tip": "Tips: Visualizer is a cool feature based on CMDB, by visualizing the status of related CI( determined by the highest serverity , unclosed alerts in history also included ) to help techinians to find the root cause.",
 
   "layout.fixedLayout": "FixedLayout",
   "layout.autoLayout": "AutoLayout",
