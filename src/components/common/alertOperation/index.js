@@ -233,7 +233,7 @@ const alertOperation = ({position,
                 :
                 undefined
             }
-            <Select style={{width: '100px'}} className={styles.selectSingle} allowClear placeholder={formatMessage({...localeMessage['suppress']})} onChange={ (min) => {
+            <Select getPopupContainer={() =>document.getElementById("content")} style={{width: '100px'}} className={styles.selectSingle} allowClear placeholder={formatMessage({...localeMessage['suppress']})} onChange={ (min) => {
                 // 以分钟计 --> 100 customer
                 if (min) {
                     if(min !== '100') 
@@ -247,7 +247,7 @@ const alertOperation = ({position,
                 <Option value="30"><FormattedMessage {...localeMessage['suppress_halfHour']} /></Option>
                 <Option value="100"><FormattedMessage {...localeMessage['suppress_customer']} /></Option>
             </Select>
-            <Select className={styles.showChatOps} style={{width: '100px'}} allowClear placeholder={formatMessage({...localeMessage['moreOperate']})} onChange={ (operate) => {
+            <Select getPopupContainer={() =>document.getElementById("content")} className={styles.showChatOps} style={{width: '100px'}} allowClear placeholder={formatMessage({...localeMessage['moreOperate']})} onChange={ (operate) => {
                 switch (operate) {
                     case 'ChatOps':
                         showChatOpsFunc(position)
@@ -271,7 +271,7 @@ const alertOperation = ({position,
             {
                 position !== 'detail' ?
                 <div className={styles.groupMain}>
-                    <Select className={classnames(styles.setGroup, styles.selectSingle)} placeholder={formatMessage({...localeMessage['groupBy']})} value={selectGroup} onChange={ (value) => {
+                    <Select getPopupContainer={() =>document.getElementById("content")} className={classnames(styles.setGroup, styles.selectSingle)} placeholder={formatMessage({...localeMessage['groupBy']})} value={selectGroup} onChange={ (value) => {
                         groupFunc(value)
                     }}>
                         <Option key={'severity'} className={styles.menuItem} value="severity"><FormattedMessage {...localeMessage['groupBySeverity']} /></Option>

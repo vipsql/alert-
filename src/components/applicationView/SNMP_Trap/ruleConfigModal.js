@@ -474,7 +474,7 @@ class ruleModal extends Component{
             
             return (
                 <li key={index}>
-                    <Select value={filter.key} onChange={ (value) => {
+                    <Select getPopupContainer={() =>document.getElementById("content")} value={filter.key} onChange={ (value) => {
                         //TODO
                         let data = this.replaceFunc(this.state.filterFields, index, 'key', value)
                         this.setState({ filterFields: [ ...data ] })
@@ -485,7 +485,7 @@ class ruleModal extends Component{
                             }) : []
                         }
                     </Select>
-                    <Select value={`${filter.ruleMatch}`} onChange={ (value) => {
+                    <Select getPopupContainer={() =>document.getElementById("content")} value={`${filter.ruleMatch}`} onChange={ (value) => {
                         //TODO
                         let data = this.replaceFunc(this.state.filterFields, index, 'ruleMatch', value)
                         this.setState({ filterFields: [ ...data ] })
@@ -497,7 +497,7 @@ class ruleModal extends Component{
                     </Select>
                     {
                         this.state.filterFields[index]['ruleMatch'] === "3" && this.state.filterFields[index]['key'] === "Snmp TrapOID" ?
-                        <Select mode='combobox' style={{width: '30%'}} value={filter.value} onChange={ (value) => {
+                        <Select getPopupContainer={() =>document.getElementById("content")} mode='combobox' style={{width: '30%'}} value={filter.value} onChange={ (value) => {
                             //TODO
                             let data = this.replaceFunc(this.state.filterFields, index, 'value', value)
                             this.setState({ filterFields: [ ...data ] })
@@ -644,7 +644,7 @@ class ruleModal extends Component{
                                                 enitable ?
                                                 (
                                                     this.haveOIDChildrenList ?
-                                                    <Select mode='combobox' value={text} onChange={ (value) => {
+                                                    <Select getPopupContainer={() =>document.getElementById("content")} mode='combobox' value={text} onChange={ (value) => {
                                                         //TODO
                                                         var temp = value.split('_')
                                                         if (temp[0] !== undefined) {
@@ -685,7 +685,7 @@ class ruleModal extends Component{
                                             let { mapper, enitable } = this.state.matchFields[index];
                                             return (
                                                 enitable ?
-                                                <Select showSearch optionFilterProp="children" notFoundContent='Not Found' filterOption={ (input, option) => {
+                                                <Select getPopupContainer={() =>document.getElementById("content")} showSearch optionFilterProp="children" notFoundContent='Not Found' filterOption={ (input, option) => {
                                                     return option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                                 }} value={text} onChange={(value) => {
                                                     //TODO
@@ -766,7 +766,7 @@ class ruleModal extends Component{
                                                 enitable ?
                                                 (
                                                     this.haveOIDChildrenList ?
-                                                    <Select mode='combobox' value={text} onChange={ (value) => {
+                                                    <Select getPopupContainer={() =>document.getElementById("content")} mode='combobox' value={text} onChange={ (value) => {
                                                         //TODO
                                                         var temp = value.split('_')
                                                         if (temp[0] !== undefined) {
@@ -901,7 +901,7 @@ class ruleModal extends Component{
                                             let { enitable } = this.state.groupFieldsList[index];
                                             return (
                                                 enitable ?
-                                                <Select showSearch optionFilterProp="children" notFoundContent='Not Found' filterOption={ (input, option) => {
+                                                <Select getPopupContainer={() =>document.getElementById("content")} showSearch optionFilterProp="children" notFoundContent='Not Found' filterOption={ (input, option) => {
                                                     return option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                                 }} value={text} onChange={(value) => {
                                                     //TODO
@@ -1111,7 +1111,7 @@ class ruleModal extends Component{
                                         { required: true, message: formatMessage({...localeMessage['rule_severityMapper_placeholder']}) }
                                     ]
                                 })(
-                                    <Select placeholder={formatMessage({...localeMessage['rule_severityMapper_placeholder']})}>
+                                    <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['rule_severityMapper_placeholder']})}>
                                         <Option value="0">{window['_severity']['0']}</Option>
                                         <Option value="1">{window['_severity']['1']}</Option>
                                         <Option value="2">{window['_severity']['2']}</Option>
@@ -1161,7 +1161,7 @@ class ruleModal extends Component{
                                                 let { severity, enitable } = this.state.levelList[index];
                                                 return (
                                                     enitable ?
-                                                    <Select notFoundContent='Not Found' value={text} onChange={(value) => {
+                                                    <Select getPopupContainer={() =>document.getElementById("content")} notFoundContent='Not Found' value={text} onChange={(value) => {
                                                         //TODO
                                                         let data = this.replaceFunc(this.state.levelList, index, 'severity', value)
                                                         this.setState({ levelList: [ ...data ] })

@@ -13,6 +13,7 @@ import SuppressModal from '../common/suppressModal/index.js'
 import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import $ from 'jquery'
 
 const Item = Form.Item;
 const RangePicker = DatePicker.RangePicker;
@@ -27,8 +28,6 @@ class alertQueryManage extends Component{
     componentDidMount() {
       const {dispatch} = this.props;
       window.addEventListener('message', (e) => {
-        console.log(e.data)
-        console.log(e.data.creatTicket)
         if(e.data.creatTicket !== undefined && e.data.creatTicket === 'success') {
           dispatch({
             type: 'alertQueryDetail/afterDispatch', 
@@ -615,7 +614,7 @@ class alertQueryManage extends Component{
                     {getFieldDecorator('source', {
                       initialValue: ''
                     })(
-                        <Select>
+                        <Select getPopupContainer={() =>document.getElementById("content")}>
                             <Option value=''><FormattedMessage {...localeMessage['allSource']} /></Option>
                           {
                             sourceOptions.map( (item, index) => {
@@ -634,7 +633,7 @@ class alertQueryManage extends Component{
                     {getFieldDecorator('severity', {
                       
                     })(
-                        <Select placeholder={formatMessage({...localeMessage['severity_placeholder']})}>
+                        <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['severity_placeholder']})}>
                           <Option value="3">{window['_severity']['3']}</Option>
                           <Option value="2">{window['_severity']['2']}</Option>
                           <Option value="1">{window['_severity']['1']}</Option>
@@ -666,7 +665,7 @@ class alertQueryManage extends Component{
                     {getFieldDecorator('status', {
                       initialValue: ''
                     })(
-                        <Select>
+                        <Select getPopupContainer={() =>document.getElementById("content")}>
                           <Option value=""><FormattedMessage {...localeMessage['allStatus']} /></Option>
                           <Option value="0">{window['_status']['0']}</Option>
                           <Option value="150">{window['_status']['150']}</Option>
@@ -684,7 +683,7 @@ class alertQueryManage extends Component{
                     {getFieldDecorator('duration', {
                       
                     })(
-                        <Select placeholder={formatMessage({...localeMessage['duration_placeholder']})}>
+                        <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['duration_placeholder']})}>
                           <Option value="1">{`< 15 min`}</Option>
                           <Option value="2">{`15 ~ 30 min`}</Option>
                           <Option value="3">{`30 ~ 60 min`}</Option>
@@ -702,7 +701,7 @@ class alertQueryManage extends Component{
                     {getFieldDecorator('count', {
                       
                     })(
-                        <Select placeholder={formatMessage({...localeMessage['count_placeholder']})}>
+                        <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['count_placeholder']})}>
                           <Option value="1">{`> 5`}</Option>
                           <Option value="2">{`> 10`}</Option>
                           <Option value="3">{`> 20`}</Option>
@@ -721,7 +720,7 @@ class alertQueryManage extends Component{
                     {getFieldDecorator('isNotify', {
                       
                     })(
-                        <Select placeholder={formatMessage({...localeMessage['notifyList_placeholder']})}>
+                        <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['notifyList_placeholder']})}>
                           <Option value='true'>{formatMessage({...localeMessage['notifyList_yes']})}</Option>
                           <Option value='false'>{formatMessage({...localeMessage['notifyList_no']})}</Option>
                         </Select>
@@ -737,7 +736,7 @@ class alertQueryManage extends Component{
                     {getFieldDecorator('keyWordsType', {
                       initialValue: JSON.stringify({'keyWordsType': '1'})
                     })(
-                      <Select size='large'>
+                      <Select getPopupContainer={() =>document.getElementById("content")} size='large'>
                         <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '1'})}><FormattedMessage {...localeMessage['entityName']} /></Option>
                         <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '3'})}><FormattedMessage {...localeMessage['tags']} /></Option>
                         <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '2'})}><FormattedMessage {...localeMessage['description']} /></Option>
@@ -782,7 +781,7 @@ class alertQueryManage extends Component{
                   
                 </div>
                 <div className={styles.groupMain}>
-                    <Select className={classnames(styles.setGroup, styles.selectSingle)} placeholder={formatMessage({...localeMessage['groupBy']})} value={selectGroup} onChange={ (value) => {
+                    <Select getPopupContainer={() =>document.getElementById("content")} className={classnames(styles.setGroup, styles.selectSingle)} placeholder={formatMessage({...localeMessage['groupBy']})} value={selectGroup} onChange={ (value) => {
                         dispatch({
                             type: 'alertQueryDetail/groupView',
                             payload: value,

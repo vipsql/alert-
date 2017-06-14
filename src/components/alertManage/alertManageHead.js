@@ -118,7 +118,7 @@ const AlertManageHead = ({
         </div>
         {isSetAlert &&
           <div>
-            <Select defaultValue='lastOneHour' style={{ width: 150 }} onChange={ (value) => {
+            <Select getPopupContainer={() =>document.getElementById("content")} defaultValue='lastOneHour' style={{ width: 150 }} onChange={ (value) => {
               queryByTime(value)
             }}>
               <Option value='lastOneHour' >{formatMessage(formatMessages['oneHour'])}</Option>

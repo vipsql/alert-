@@ -78,7 +78,7 @@ const chatOpsModal = ({currentData, closeChatOpsModal, onOk, onCancal, form, int
                                 { required: true, message: formatMessage({...localeMessage['modal_noRoomName']}) }
                             ]
                         })(
-                            <Select style={{width: '90%'}} placeholder={formatMessage({...localeMessage['modal_noRoomName']})}>
+                            <Select getPopupContainer={() =>document.getElementById("content")} style={{width: '90%'}} placeholder={formatMessage({...localeMessage['modal_noRoomName']})}>
                                 {
                                     chatOpsRooms.map( (item, index) => {
                                         return <Option className={styles.menuItem} key={item._id} value={JSON.stringify({id: item['_id'], roomName: item.topic})}>{item.topic}</Option>

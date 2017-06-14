@@ -253,7 +253,7 @@ class VisualAnalyze extends Component {
                     {
                      tagsLevel > 1 &&    
                         <div style={{display: 'inline-block'}}>
-                            <FormattedMessage {...formatMessages['groupBy']} />：<Select disabled = {isShowFouth ? true : false } defaultValue={gr2State != '' ? gr2State : tags[0]} onChange={gr2ChangeOverride} className={styles.visualGroup}  >
+                            <FormattedMessage {...formatMessages['groupBy']} />：<Select getPopupContainer={() =>document.getElementById("content")}  disabled = {isShowFouth ? true : false } defaultValue={gr2State != '' ? gr2State : tags[0]} onChange={gr2ChangeOverride} className={styles.visualGroup}  >
                                 {tagsComponent}
                             </Select>
                         </div>
@@ -264,7 +264,7 @@ class VisualAnalyze extends Component {
                      tagsLevel > 2 &&    
                         <div style={{display: 'inline-block'}} id="visualGr2">
                             <span className={styles.levelArrow} >></span>
-                            <Select disabled = {isShowFouth ? true : false } defaultValue={gr3State != '' ? gr3State : tags[1]} onChange={gr3ChangeOverride} className={styles.visualGroup}  >
+                            <Select getPopupContainer={() =>document.getElementById("content")} disabled = {isShowFouth ? true : false } defaultValue={gr3State != '' ? gr3State : tags[1]} onChange={gr3ChangeOverride} className={styles.visualGroup}  >
                                 {tagsComponent}
                             </Select>
                         </div>
@@ -276,7 +276,7 @@ class VisualAnalyze extends Component {
                             <p>{tasgFitler}</p>
                             <i className={tagsFilter}></i>
                         </div>
-                        {tags.length > 0 && <Select disabled={!isShowFouth ? true : false}  defaultValue={gr4State != '' ? gr4State : tags[0]} onChange={gr4ChangeOverride} className={styles.visualGroup}  >
+                        {tags.length > 0 && <Select getPopupContainer={() =>document.getElementById("content")}  disabled={!isShowFouth ? true : false}  defaultValue={gr4State != '' ? gr4State : tags[0]} onChange={gr4ChangeOverride} className={styles.visualGroup}  >
                             {tagsComponent}
                         </Select>}
                     </div>
