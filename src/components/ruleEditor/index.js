@@ -656,83 +656,83 @@ class RuleEditor extends Component {
                         </TabPane>
                         {/* 升级告警 */}
                         {
-                            // this.state.target === 1 &&
-                            // <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.alertUpgrade']} key="2">
-                            //     <div>
-                            //         {
-                            //             action.actionUpgrade.notificationGroupings.map((item, index) => {
-                            //                 if (item) {
-                            //                     return (
-                            //                         // 此处可能有BUG：数据的key值不是唯一
-                            //                         <div key={index} className={styles.reclist}>
-                            //                             <Input style={{ width: 50 }} defaultValue={item.delay} onBlur={this.changeUpgrade.bind(this, index)} />
-                            //                             <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word6']}</span>
-                            //                             <Select
-                            //                                 // mode="multiple"
-                            //                                 style={{ width: 180 }}
-                            //                                 placeholder={window.__alert_appLocaleData.messages['ruleEditor.word8']}
-                            //                                 className={styles.recipients}
-                            //                                 onChange={this.changeUpgradeMode.bind(this, index)}
-                            //                                 value={(() => {
-                            //                                     if (item.status.length === 2) {
-                            //                                         return 0;
-                            //                                     } else if (item.status.length === 1) {
-                            //                                         return item.status[0] === 255 ? 2 : 1;
-                            //                                     } else {
-                            //                                         return undefined;
-                            //                                     }
-                            //                                 })()}
-                            //                             >
-                            //                                 <Option value={0}>{window.__alert_appLocaleData.messages['ruleEditor.s1']}</Option>
-                            //                                 <Option value={1}>{window.__alert_appLocaleData.messages['ruleEditor.s3']}</Option>
-                            //                                 <Option value={2}>{window.__alert_appLocaleData.messages['ruleEditor.s5']}</Option>
-                            //                                 {/* <Option value={255}>{window.__alert_appLocaleData.messages['ruleEditor.s4']}</Option> */}
-                            //                             </Select>
-                            //                             <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word7']}</span>
-                            //                             {/* <Select style={{ width: 100 }} placeholder="动作类型">
-                            //                                 <Option key="1">123</Option>
-                            //                                 <Option key="2">321</Option>
-                            //                             </Select>
-                            //                             <span className={styles.label}>，并通知</span> */}
-                            //                             <Select
-                            //                                 style={{ width: 250 }}
-                            //                                 mode="multiple"
-                            //                                 placeholder={window.__alert_appLocaleData.messages['ruleEditor.notifySelectObj']}
-                            //                                 onChange={this.changeUpgradeRecipients.bind(this, index)}
-                            //                                 className={styles.recipients}
-                            //                                 value={item.recipients.map(item => item.userId)}
-                            //                             >
-                            //                                 {
-                            //                                     this.props.alertAssociationRules.users.map((item, index) => <Option key={item.userId} value={item.userId}>{item.realName}</Option>)
-                            //                                 }
-                            //                             </Select>
-                            //                             {
-                            //                                 index === 0
-                            //                                     ? <i className={styles.addUper} onClick={this.addNotificationGroup.bind(this)}>+</i>
-                            //                                     : <i className={styles.delUper} onClick={this.delNotificationGroup.bind(this, index)}>X</i>
-                            //                             }
-                            //                         </div>
-                            //                     );
-                            //                 } else {
-                            //                     return null;
-                            //                 }
+                            this.state.target === 0 &&
+                            <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.alertUpgrade']} key="2">
+                                <div>
+                                    {
+                                        action.actionUpgrade.notificationGroupings.map((item, index) => {
+                                            if (item) {
+                                                return (
+                                                    // 此处可能有BUG：数据的key值不是唯一
+                                                    <div key={index} className={styles.reclist}>
+                                                        <Input style={{ width: 50 }} defaultValue={item.delay} onBlur={this.changeUpgrade.bind(this, index)} />
+                                                        <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word6']}</span>
+                                                        <Select
+                                                            // mode="multiple"
+                                                            style={{ width: 180 }}
+                                                            placeholder={window.__alert_appLocaleData.messages['ruleEditor.word8']}
+                                                            className={styles.recipients}
+                                                            onChange={this.changeUpgradeMode.bind(this, index)}
+                                                            value={(() => {
+                                                                if (item.status.length === 2) {
+                                                                    return 0;
+                                                                } else if (item.status.length === 1) {
+                                                                    return item.status[0] === 255 ? 2 : 1;
+                                                                } else {
+                                                                    return undefined;
+                                                                }
+                                                            })()}
+                                                        >
+                                                            <Option value={0}>{window.__alert_appLocaleData.messages['ruleEditor.s1']}</Option>
+                                                            <Option value={1}>{window.__alert_appLocaleData.messages['ruleEditor.s3']}</Option>
+                                                            <Option value={2}>{window.__alert_appLocaleData.messages['ruleEditor.s5']}</Option>
+                                                            {/* <Option value={255}>{window.__alert_appLocaleData.messages['ruleEditor.s4']}</Option> */}
+                                                        </Select>
+                                                        <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word7']}</span>
+                                                        {/* <Select style={{ width: 100 }} placeholder="动作类型">
+                                                            <Option key="1">123</Option>
+                                                            <Option key="2">321</Option>
+                                                        </Select>
+                                                        <span className={styles.label}>，并通知</span> */}
+                                                        <Select
+                                                            style={{ width: 250 }}
+                                                            mode="multiple"
+                                                            placeholder={window.__alert_appLocaleData.messages['ruleEditor.notifySelectObj']}
+                                                            onChange={this.changeUpgradeRecipients.bind(this, index)}
+                                                            className={styles.recipients}
+                                                            value={item.recipients.map(item => item.userId)}
+                                                        >
+                                                            {
+                                                                this.props.alertAssociationRules.users.map((item, index) => <Option key={item.userId} value={item.userId}>{item.realName}</Option>)
+                                                            }
+                                                        </Select>
+                                                        {
+                                                            index === 0
+                                                                ? <i className={styles.addUper} onClick={this.addNotificationGroup.bind(this)}>+</i>
+                                                                : <i className={styles.delUper} onClick={this.delNotificationGroup.bind(this, index)}>X</i>
+                                                        }
+                                                    </div>
+                                                );
+                                            } else {
+                                                return null;
+                                            }
 
-                            //             })
-                            //         }
+                                        })
+                                    }
 
-                            //         <div className={styles.NotificationListWrap}>
-                            //             <div className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.notifyMode']}</div>
-                            //             <NotificationList
-                            //                 checkedState={checkedState}
-                            //                 changeAction={this.changeAction.bind(this)}
-                            //                 action={action}
-                            //                 smsVarContent={this.smsVarContent}
-                            //                 emailVarContent={this.emailVarContent}
-                            //                 alertAssociationRules={this.props.alertAssociationRules}
-                            //             />
-                            //         </div>
-                            //     </div>
-                            // </TabPane>
+                                    <div className={styles.NotificationListWrap}>
+                                        <div className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.notifyMode']}</div>
+                                        <NotificationList
+                                            checkedState={checkedState}
+                                            changeAction={this.changeAction.bind(this)}
+                                            action={action}
+                                            smsVarContent={this.smsVarContent}
+                                            emailVarContent={this.emailVarContent}
+                                            alertAssociationRules={this.props.alertAssociationRules}
+                                        />
+                                    </div>
+                                </div>
+                            </TabPane>
                         }
                         {/* 告警通知 */}
                         <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.notify']} key="3" className={styles.actionNotification}>

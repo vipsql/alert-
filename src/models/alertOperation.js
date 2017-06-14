@@ -228,18 +228,21 @@ export default {
           // 触发筛选
           yield put({ type: 'alertListTable/filterCheckAlert'})
           const relieveAlert = yield select( state => state.alertListTable.selectedAlertIds)
-
           if (relieveAlert !== undefined && relieveAlert.length === 1) {
-              yield put({
-                  type: 'setRelieveAlert',
-                  payload: relieveAlert[0] || {}
-              })
-              yield put({
-                  type: 'toggleRelieveModal',
-                  payload: true
-              })
+              if (relieve.hasChild) {
+                yield put({
+                    type: 'setRelieveAlert',
+                    payload: relieveAlert[0] || {}
+                })
+                yield put({
+                    type: 'toggleRelieveModal',
+                    payload: true
+                })
+              } else {
+                  yield message.warn(window.__alert_appLocaleData.messages['incident.no.child'], 2)
+              }
           } else {
-              yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 2);
+              yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 2);
           }
       },
       // 打开解除告警modal(点击按钮的方式)
