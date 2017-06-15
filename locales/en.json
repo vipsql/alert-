@@ -18,6 +18,7 @@
   "leftMenu.set": "Settings",
   "lefeMenu.help": "Help",
 
+  "alertManage.noAlert": "No Alert",
   "alertManage.addTags": "Edit Map",
   "alertManage.oneHour": "last 60 minutes",
   "alertManage.fourHours": "last 4 hours",

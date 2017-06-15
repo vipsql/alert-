@@ -6,7 +6,6 @@ import { message } from 'antd'
 const initalState = {
     isShowSelectModal: false, // 展开选择框
     filteredTags: {},
-    originTags: {},
     tagsKeyList: [
       // {key: 'severity', keyName: '告警等级', tagSpread: true, selectedChildren: [{ name: '3'}]}, 
       // {key: 'status', keyName: '告警状态', tagSpread: false, selectedChildren: [{ name: '150'}]}, 
@@ -53,10 +52,10 @@ export default {
           originTags: filterTags
         }
       })
-      const originTags = yield select( state => state.tagListFilter.originTags )
+      const filteredTags = yield select( state => state.tagListFilter.filteredTags )
       yield put({
         type: 'alertList/queryAlertBar',
-        payload: originTags || {}
+        payload: filteredTags || {}
       })
     },
     *openSelectModal({payload: {isShowSelectModal}}, {select, put, call}) {
@@ -199,15 +198,12 @@ export default {
           filter[key] = originTags[key]
         } else {
           filter[key] = originTags[key]['values']
-          // if (key === 'severity') {
-          //   shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: originTags[key]['values'].split(',') })
-          // } else {
-          shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: [originTags[key]['values']] })
-          // }
+          if (key !== 'status') {
+            shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: [originTags[key]['values']] })
+          }
         }
       })
-      
-      return { ...state, shareSelectTags, originTags: filter, filteredTags: filter}
+      return { ...state, shareSelectTags, filteredTags: filter}
     },
     // 存储tagsKeyList
     setTagsKeyList(state, {payload: {tagsKeyList, isShowSelectModal}}) {

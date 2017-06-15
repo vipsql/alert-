@@ -48,11 +48,12 @@ class Chart extends Component{
     }
     componentDidMount(){
         const self = this;
+        
         const severityToColor = {
-            '0': '#a5f664', // 正常
-            '1': '#fadc23', // 提醒
-            '2': '#ff9524', // 警告
-            '3': "#f45131" // 紧急
+            '0': '#4fdfbf', // 恢复
+            '1': '#f6cb03', // 提醒
+            '2': '#fa8c16', // 警告
+            '3': "#ec5437" // 紧急
         }
         this.chartWidth = document.documentElement.clientWidth - 160 - 90
         this.chartHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight) - 180
@@ -361,7 +362,7 @@ class Chart extends Component{
                     return d.dy / 2;
                 })
                 .attr("dy", ".35em")
-                .attr("fill", "#04203e")
+                .attr("fill", "#ffffff")
                 .attr("font-size", "13")
                 .attr("text-anchor", "middle")
                 // .style("display", "none")
@@ -539,7 +540,7 @@ class Chart extends Component{
                 })
                 .style("fill", d => {
                     if(!d.children && d.noData){
-                      return '#7ff5d9'
+                      return '#6dcd7c'
                      }
                   return d.children ? headerColor : this.color(d.maxSeverity);
                 } );

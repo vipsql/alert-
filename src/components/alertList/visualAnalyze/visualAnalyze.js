@@ -11,11 +11,11 @@ import Slider from 'react-slick'
 
 
 const severityToColor = {
-    '-1': '#3978bb', // 无故障
-    '0': '#a5f664', // 正常
-    '1': '#fadc23', // 提醒
-    '2': '#ff9524', // 警告
-    '3': "#f45131" // 紧急
+    '-1': '#6dcd7c', // 无故障
+    '0': '#4fdfbf', // 正常
+    '1': '#f6cb03', // 提醒
+    '2': '#fa8c16', // 警告
+    '3': "#ec5437" // 紧急
 }
 const tagsFilter = classnames(
     'iconfont',

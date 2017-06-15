@@ -13,6 +13,8 @@ const levelIcon = ({extraStyle, iconType, initalIconState, onClick, iconState}) 
                             ? classnames(styles.iconMain, extraStyle, styles.txColorIcon)
                             : iconType === 'hf' || iconType == 0 || iconType === 'Ok'
                                 ? classnames(styles.iconMain, extraStyle, styles.hfColorIcon)
+                                : iconType === 'noAlerts'
+                                    ? classnames(styles.iconMain, extraStyle, styles.noAlertsColorIcon)
                                     : false
     
     const whiteIcon = classnames(styles.whiteIcon, iconStyle)

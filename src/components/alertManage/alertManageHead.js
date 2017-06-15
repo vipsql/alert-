@@ -12,6 +12,10 @@ const formatMessages = defineMessages({
     set:{
       id: 'alertManage.addTags',
       defaultMessage: '关注设置',
+    },
+    noAlert: {
+      id: 'alertManage.noAlert',
+      defaultMessage: '无告警'
     }
 })
 
@@ -95,6 +99,7 @@ const AlertManageHead = ({
             <li><LevelIcon extraStyle={styles.extraStyle} iconType='gj' /><p>{`${window['_severity']['2']}（${levels.totalWarnCnt !== undefined ? levels.totalWarnCnt : 0}）`}</p></li>
             <li><LevelIcon extraStyle={styles.extraStyle} iconType='tx' /><p>{`${window['_severity']['1']}（${levels.totalInfoCnt !== undefined ? levels.totalInfoCnt : 0}）`}</p></li>
             <li><LevelIcon extraStyle={styles.extraStyle} iconType='hf' /><p>{`${window['_severity']['0']}（${levels.totalOkCnt !== undefined ? levels.totalOkCnt : 0}）`}</p></li>
+            <li><LevelIcon extraStyle={styles.extraStyle} iconType='noAlerts' /><p><FormattedMessage {...formatMessages['noAlert']} /></p></li>
           </ul>
         }
     </div>
