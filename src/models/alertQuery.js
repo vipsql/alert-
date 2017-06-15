@@ -23,7 +23,7 @@ const initalState = {
 
     orderBy: 'lastOccurTime',
     orderType: 0,
-    pageSize: 20,
+    pageSize: 40,
     currentPage: 1,
     
     tempListData: [], //用于临时记录列表数据，在分组时取用这块的数据（避免连续分组时的BUG）

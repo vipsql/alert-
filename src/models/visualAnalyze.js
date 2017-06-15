@@ -15,6 +15,7 @@ const initalState = {
    isShowFouth: false,
    incidentGroup: true, 
    tagsLevel: 1,
+   lessLevel: 0,
    tasgFitler: '',
    resInfo: [],
    alertList: ''
@@ -86,6 +87,7 @@ export default {
           yield put({
             type: 'updateSelect',
             payload: {
+              lessLevel: level - visualSelect.length,
               tags,
               level
             }
@@ -120,14 +122,14 @@ export default {
         const gr1 = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1"))
         const gr2key = localStorage.getItem('__alert_visualAnalyze_gr2') ? localStorage.getItem('__alert_visualAnalyze_gr2') :tags[0]
         const gr3key = localStorage.getItem('__alert_visualAnalyze_gr3') ? localStorage.getItem('__alert_visualAnalyze_gr3') :tags[1]
-        switch(level){
+        switch(level - visualSelect.length){
+          case 0:
+              val = gr1
+              break;
           case 1:
-            val = gr1
-            break;
-          case 2:
               val = gr1.concat([{key: gr2key, value: ''}])
               break;
-          case 3:
+          case 2:
               val = gr1.concat([{key: gr2key, value: ''},{key: gr3key, value: ''}]) 
               break;
         }
@@ -275,11 +277,12 @@ export default {
         groupList
       }
     },
-    updateSelect(state,{payload: {tags,level}}){
+    updateSelect(state,{payload: {tags,level,lessLevel}}){
       return {
         ...state,
         tags,
-        tagsLevel: level
+        tagsLevel: level,
+        lessLevel
       }
     },
     updateResInfo(state, {payload}){

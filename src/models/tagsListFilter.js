@@ -173,11 +173,11 @@ export default {
           filter[key] = originTags[key]
         } else {
           filter[key] = originTags[key]['values']
-          if (key === 'severity') {
-            shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: originTags[key]['values'].split(',') })
-          } else {
-            shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: [originTags[key]['values']] })
-          }
+          // if (key === 'severity') {
+          //   shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: originTags[key]['values'].split(',') })
+          // } else {
+          shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: [originTags[key]['values']] })
+          // }
         }
       })
       
@@ -287,14 +287,14 @@ export default {
     // remove select tag
     removeSelectTag(state, { payload: target }) {
       let { shareSelectTags } = state;
-      const newList = shareSelectTags.map( (item) => {
+      const newList = shareSelectTags.filter( (item) => {
         if (target.field == item.key) {
           let newValues = item.values.filter( (child) => {
             return target.name != child
           })
           item.values = newValues;
         }
-        return item;
+        return item.values.length > 0;
       })
       return { ...state, shareSelectTags: newList }
     },

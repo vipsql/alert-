@@ -186,13 +186,13 @@ class ListTimeTable extends Component {
       let tbodyCon = []
 
       // 生成列
-      const genTds = (item, keys) => {
+      const genTds = (item, keys, target = 'parent') => {
          let TDS = []
 
          keys.forEach( (key, index) => {
            // const tdKey = item.date + key
            const className = key == 'name' ? 'tdBorderRight' : ''
-           if(index == 0){
+           if(index == 0 && target === 'parent'){
              TDS.push(
                <td key='sourceAlert'>
                   {
@@ -214,7 +214,7 @@ class ListTimeTable extends Component {
             TDS.push(<td key={key} className={styles[className]} width="200" data-id={item.id} onClick={detailClick} >
               <div key = 'nameDiv' title={item[key]} className={styles['name']} data-id={item.id}>{item[key]}</div>
               {
-                item['hasChild'] === true ?
+                item['hasChild'] === true && target === 'parent'?
                 <span className={relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
                 :
                 undefined
@@ -227,31 +227,12 @@ class ListTimeTable extends Component {
            }
 
          })
-         TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
-         return TDS
-      }
-
-      // 生成子告警列
-      const getChildTds = (item, keys) => {
-         let TDS = []
-
-         keys.forEach( (key, index) => {
-           // const tdKey = item.date + key
-           const className = key == 'name' ? 'tdBorderRight' : '';
-
-           if(key == 'name') {
-             TDS.push(<td key={key} className={styles[className]} data-id={item.id} onClick={detailClick} >
-              <div key = 'nameDiv' title={item[key]} className={styles['name']} data-id={item.id}>{item[key]}</div>
-             </td>)
-           } else if (key == 'entityName') {
-             TDS.push(<td key={key} title={item[key]} className={styles[className]} width="200"><div key = 'entityNameDiv' className={styles['entityName']}>{item[key]}</div></td>)
-           } else {
-             TDS.push(<td key={key} className={styles[className]}>{item[key]}</td>)
-           }
-           
-         })
-         TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
-         TDS.unshift(<td key='space-col-td'></td>)
+         if (target === 'parent') {
+          TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
+         } else {
+          TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
+          TDS.unshift(<td key='space-col-td'></td>)
+         }
          return TDS
       }
 
@@ -309,7 +290,7 @@ class ListTimeTable extends Component {
 
       // 生成子告警行
       const genchildTrs = (childItem, childIndex, keys, item, isGroup, lineDotW, lineDotLeft) => {
-        const childTds = getChildTds(childItem, keys)
+        const childTds = genTds(childItem, keys, 'child')
         const childDotsInfo = genDots(childItem.timeLine, keys)
         const childDots = childDotsInfo.dots
         const childLineDotW = childDotsInfo.lineDotW
