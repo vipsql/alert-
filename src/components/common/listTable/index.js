@@ -143,12 +143,12 @@ class ListTable extends Component {
     }
 
     // 生成每一列的参数
-    const getTds = (item, keys) => {
+    const getTds = (item, keys, target = 'parent') => {
       let tds = [];
       keys.forEach((key, index) => {
         let data = item[key];
         let td;
-        if(sourceOrigin !== 'alertQuery' && index == 0){
+        if(sourceOrigin !== 'alertQuery' && target === 'parent' && index == 0){
           tds.push(
             <td key='sourceAlert'>
               {
@@ -220,7 +220,7 @@ class ListTable extends Component {
           td = <td key={key} title={data} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >
             {data}
             {
-              sourceOrigin !== 'alertQuery' && item['hasChild'] === true ?
+              sourceOrigin !== 'alertQuery' && item['hasChild'] === true && target === 'parent'?
               <span className={relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
               :
               undefined
@@ -239,84 +239,20 @@ class ListTable extends Component {
         }
         tds.push(td)
       })
-      tds.unshift(<td width="20" key='icon-col-td' colSpan={sourceOrigin !== 'alertQuery' ? '1' : '2'} ><LevelIcon extraStyle={sourceOrigin === 'alertQuery' && styles.alertQueryIcon} iconType={item['severity']}/></td>)
-      return tds
-    }
-
-    // 生成每一列子告警的参数
-    const getChildTds = (item, keys) => {
-      let tds = [];
-      keys.forEach((key, index) => {
-        let data = item[key];
-        let td;
-        if(key == 'notifyList'){
-          if (item['isNotify'] && data !== undefined && data.length > 0) {
-            let temp = data.map( (key) => {
-              return window.__alert_appLocaleData.messages[`alertList.notifyList.${key}`]
-            })
-            data = temp.join(' / ')
-          }
-        }
-        if(key == 'firstOccurTime'){
-          const date = new Date(data)
-          data = formatDate(data)
-        }
-        if(key == 'lastOccurTime'){
-          const date = new Date(data)
-          data = formatDate(data)
-        }
-        if(key == 'lastTime'){
-          // 如果小于1小时 显示分钟
-          const hours = 60*60*1000
-          
-          if(data < hours){
-            
-            data = `${+(data/(60*1000)).toFixed(1)}m`
-          }else{
-            data = `${+(data/hours).toFixed(1)}h`
-          }
-        }
-        if(key == 'status'){
-          switch (Number(data)) {
-            case 0:
-              data = window['_status']['0']
-              break;
-            case 40:
-              data = window['_status']['40']
-              break;
-            case 150:
-              data = window['_status']['150']
-              break;
-            case 190:
-              data = window['_status']['190']
-              break;
-            case 255:
-              data = window['_status']['255']
-              break;
-            default:
-              data
-              break;
-          }
-        }
-        if(key == 'name') {
-          td = <td key={key} title={data} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >{data}</td>
-        } else if (key == 'description' || key == 'entityName' || key =='notifyList'){
-          td = <td key={key} title={data}>{data}</td>
-        } else {
-          td = <td key={key}>{data}</td>
-        }
-        tds.push(td)
-      })
-      tds.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
-      tds.unshift(<td key='space-col-td' colSpan="2"></td>)
+      if (target === 'parent') {
+        tds.unshift(<td width="20" key='icon-col-td' colSpan={sourceOrigin !== 'alertQuery' ? '1' : '2'} ><LevelIcon extraStyle={sourceOrigin === 'alertQuery' && styles.alertQueryIcon} iconType={item['severity']}/></td>)
+      } else {
+        tds.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
+        tds.unshift(<td key='space-col-td' colSpan="2"></td>)
+      }
       return tds
     }
 
     // 生成子告警行
-    const genchildTrs = (childItem, childIndex, keys, item, isGroup) => {
+    const getchildTrs = (childItem, childIndex, keys, item, isGroup) => {
       
       const trKey = childItem.id || 'chTd' + childIndex
-      const childTds = getChildTds(childItem, keys)
+      const childTds = getTds(childItem, keys, 'child')
       
       return (
         <tr key={trKey} className={!item.isSpread ? styles.hiddenChild : !isGroup ? styles.noSpread : styles.groupSpread}>
@@ -371,13 +307,12 @@ class ListTable extends Component {
 
               childs = childItem.childrenAlert.map ( (childAlertItem, childIndex) => {
 
-                return genchildTrs(childAlertItem, childIndex, keys, childItem, isGroup)
+                return getchildTrs(childAlertItem, childIndex, keys, childItem, isGroup)
 
               })
             }else{
               childs = null
             }
-
             const trKey = childItem.id || `tr_${index}_${itemIndex}`
             const tdKey = childItem.id || `td_${index}_${itemIndex}`
             childtrs.push(
@@ -412,7 +347,7 @@ class ListTable extends Component {
 
           childs = item.childrenAlert.map ( (childItem, childIndex) => {
 
-            return genchildTrs(childItem, childIndex, keys, item, isGroup)
+            return getchildTrs(childItem, childIndex, keys, item, isGroup)
 
           })
         }else{

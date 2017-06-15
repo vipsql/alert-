@@ -89,6 +89,7 @@ class VisualAnalyze extends Component {
           resInfo,
           isShowFouth,
           tagsLevel,
+          lessLevel,
           alertList,
           tasgFitler,
           detailClick,
@@ -252,10 +253,10 @@ class VisualAnalyze extends Component {
 
         <div className={styles.visualBg}>
             <div className={styles.visualHead}>
-                {(!isShowFouth && tagsLevel > 3) && <Checkbox className={styles.showGroup} onChange={showIncidentGroup} checked={incidentGroup} ><FormattedMessage {...formatMessages['incidentGroup']} /></Checkbox>}
+                {(!isShowFouth && lessLevel > 2) && <Checkbox className={styles.showGroup} onChange={showIncidentGroup} checked={incidentGroup} ><FormattedMessage {...formatMessages['incidentGroup']} /></Checkbox>}
 
                     {
-                     tagsLevel > 1 &&
+                     lessLevel > 0 &&
                         <div style={{display: 'inline-block'}}>
                             <FormattedMessage {...formatMessages['groupBy']} />：<Select disabled = {isShowFouth ? true : false } defaultValue={gr2State != '' ? gr2State : tags[0]} onChange={gr2ChangeOverride} className={styles.visualGroup}  >
                                 {tagsComponent}
@@ -265,7 +266,7 @@ class VisualAnalyze extends Component {
 
 
                     {
-                     tagsLevel > 2 &&
+                     lessLevel > 1 &&
                         <div style={{display: 'inline-block'}} id="visualGr2">
                             <span className={styles.levelArrow} >></span>
                             <Select disabled = {isShowFouth ? true : false } defaultValue={gr3State != '' ? gr3State : tags[1]} onChange={gr3ChangeOverride} className={styles.visualGroup}  >
@@ -289,7 +290,7 @@ class VisualAnalyze extends Component {
                 </div>
 
 
-                {(tagsLevel < 4)  ?
+                {(lessLevel < 3)  ?
                 /* 表示层级小于4层时，直接请求设备故障列表*/
                 <div className={styles.visualAlert} style={{opacity: !isShowFouth ? 1 : 0}}>
                     {resInfo.length > 0 &&
@@ -310,7 +311,7 @@ class VisualAnalyze extends Component {
 
                     }
                     { resList.length > 0 ?
-                    <ul className={styles.visualAlertGroup} style={{marginRight: tagsLevel<4 ? '0' : '276px' }}>
+                    <ul className={styles.visualAlertGroup} style={{marginRight: lessLevel < 3 ? '0' : '276px' }}>
                         {resComponent}
                     </ul>
                     : <div className={styles.visualNoData}><FormattedMessage {...formatMessages['noData']} /></div>

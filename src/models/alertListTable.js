@@ -17,7 +17,7 @@ const initvalState = {
 
     orderBy: 'lastOccurTime',
     orderType: 0,
-    pageSize: 20,
+    pageSize: 40,
     currentPage: 1,
 
     levels:{}, // 告警级别
@@ -354,6 +354,7 @@ export default {
               status = true;
               item.hasChild = false;
               item.isSpread = false;
+              delete item.childrenAlert
             }
             return item;
           })
@@ -371,6 +372,7 @@ export default {
             status = true;
             item.hasChild = false;
             item.isSpread = false;
+            delete item.childrenAlert
           }
           return item;
         })
