@@ -221,20 +221,29 @@ class ListTable extends Component {
             td = <td key={key}>{window['_status'][Number(data)] || data}</td>
             break;
           case 'tags':
-            let temp = '';
             if (data && data.length > 0) {
-              data.forEach( (item, index) => {temp = temp + `${item.keyName}${item.value ? ` : ${item.value}` : undefined} / `})
               td = <td key={key} className={styles.tagsKey}>
                       <Popover placement='top' overlayClassName={styles.popover} trigger="hover" mouseEnterDelay={0.5} content={
                         <div>
                           {data.map( (item, index) => { return <p key={item.key}>{`${item.keyName}${item.value ? ` : ${item.value}` : undefined}`}</p>})}
                         </div>
                       } >
-                        {temp.slice(0, -2)}
+                        {
+                          data.map(tag => {
+                            const {key, keyName, value} = tag;
+                            if (key == 'severity' || key == 'status') {
+                                return <span key={JSON.stringify({key,value})} className={styles.tag}>{`${keyName} : ` + window[`_${key}`][value]}</span>
+                            } else if (value == '') {
+                                return <span  key={JSON.stringify({key,value})} className={styles.tag}>{keyName}</span>
+                            } else {
+                                return <span key={JSON.stringify({key,value})} className={styles.tag}>{`${keyName} : ${value}`}</span>
+                            }
+                          })
+                        }
                       </Popover>
                     </td>
             } else {
-              td = <td key={key}>{temp}</td>
+              td = <td key={key}>{data}</td>
             }
             break;
           default:

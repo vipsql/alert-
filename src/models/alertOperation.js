@@ -663,7 +663,6 @@ export default {
       // 列定制
       *checkColumn({payload}, {select, put, call}) {
           yield put({ type: 'setColumn', payload: payload })
-          yield put({ type: 'filterColumn' })
           const selectColumn = yield select(state => state.alertOperation.selectColumn)
           yield put({ type: 'alertListTable/customCols', payload: selectColumn})
       }

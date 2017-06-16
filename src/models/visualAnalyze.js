@@ -23,9 +23,10 @@ const initalState = {
 }
 
 // 保存标签分组选择
-const setGroups = (gr2, gr3) =>{
+const setGroups = (gr2, gr3, gr4) =>{
   gr2 && localStorage.setItem("__alert_visualAnalyze_gr2", gr2)
   gr3 && localStorage.setItem("__alert_visualAnalyze_gr3", gr3)
+  gr4 && localStorage.setItem("__alert_visualAnalyze_gr4", gr4)
 }
 
 
@@ -55,6 +56,7 @@ export default {
       let tags
       let gr2 //分组1
       let gr3 //分组2
+      let gr4
       
       // const isFirst = yield select(state => {
       //   return state.visualAnalyze.isFirst
@@ -95,6 +97,7 @@ export default {
             const userStore = JSON.parse(localStorage.getItem(gr1key))
             gr2 = userStore.gr2key
             gr3 = userStore.gr3key
+            gr4 = userStore.gr4key
           }else{
             // 这个是正常流程 默认取值
             gr2 = tags[0]
@@ -103,7 +106,7 @@ export default {
 
 
           // 默认选择标签
-          setGroups(gr2, gr3) 
+          setGroups(gr2, gr3, gr4) 
           yield put({
             type: 'updateSelect',
             payload: {

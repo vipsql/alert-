@@ -55,8 +55,9 @@ class VisualAnalyze extends Component {
             const userStore = JSON.parse(localStorage.getItem(gr1key))
             gr2State = userStore.gr2key
             gr3State = userStore.gr3key
+            gr4State = userStore.gr4key
         }
-        gr4State =  localStorage.getItem('__alert_visualAnalyze_gr4')     
+        //gr4State =  localStorage.getItem('__alert_visualAnalyze_gr4')     
         this.state = {
             gr2State: gr2State ? gr2State : '',
             gr3State: gr3State ? gr3State : '',

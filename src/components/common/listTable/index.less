@@ -121,9 +121,6 @@
             .alertQueryIcon{
                 margin: 0px 10px 0px 15px;
             }
-            &.tagsKey{
-                cursor: pointer
-            }
             max-width: 150px;
             overflow: hidden;
             white-space: nowrap;
@@ -135,6 +132,24 @@
             color: #fff;
             border-bottom: 1px solid #1d558f;
             background-color: #1d5692;
+            &.tagsKey{
+                cursor: pointer;
+                max-width: 200px;
+                overflow: hidden;
+                .tag {
+                    background-color: #1985c9;
+                    overflow: auto;
+                    // display: inline-block;
+                    border: 1px solid #1985c9;
+                    color: #fff;
+                    border-radius: 4px;
+                    padding: 5px;
+                    line-height: 13px;
+                    margin: 10px 10px 10px 0;
+                    max-width: 200px;
+                    float: left;
+                }
+            }
             // ----------------------
             // background: white;
             // border-bottom: 1px solid #e4e7eb;

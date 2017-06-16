@@ -42,7 +42,7 @@ export default function({history, app}) {
           },
           onLeave(){
             // 删除可视化分组的本地存储
-            localStorage.removeItem('__alert_visualAnalyze_gr4') 
+            //localStorage.removeItem('__alert_visualAnalyze_gr4')
             try{
                 // 每次离开记录从热图那边的轨迹
                 let gr1 = JSON.parse(localStorage.getItem('__alert_visualAnalyze_gr1')) || [] 
@@ -54,7 +54,8 @@ export default function({history, app}) {
                 userRecordKey = gr1keys.join()
                 const userRecordVal = {
                   gr2key: localStorage.getItem('__alert_visualAnalyze_gr2'),
-                  gr3key: localStorage.getItem('__alert_visualAnalyze_gr3')
+                  gr3key: localStorage.getItem('__alert_visualAnalyze_gr3'),
+                  gr4key: localStorage.getItem('__alert_visualAnalyze_gr4')
                 }
                 localStorage.setItem(userRecordKey, JSON.stringify(userRecordVal))
                 
