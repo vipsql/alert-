@@ -55,6 +55,8 @@ const initalState = {
                 {id: 'entityAddr', checked: false,},
                 {id: 'orderFlowNum', checked: false,},
                 {id: 'notifyList', checked: false,},
+                {id: 'classCode', checked: false},
+                {id: 'tags', checked: false},
             ]
         }
     ],

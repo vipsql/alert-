@@ -41,6 +41,8 @@
   "alertList.autoRefresh": "自动刷新",
   "alertList.selectTags": "选择标签过滤",
 
+  "alertList.title.classCode": "资源类型",
+  "alertList.title.tags": "标签",
   "alertList.title.id": "告警ID",
   "alertList.title.severity": "告警级别",
   "alertList.title.enityName": "对象",

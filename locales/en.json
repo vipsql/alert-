@@ -41,6 +41,8 @@
   "alertList.autoRefresh": "Auto Refresh",
   "alertList.selectTags": "Select Tags",
 
+  "alertList.title.classCode": "CI Class",
+  "alertList.title.tags": "Tags",
   "alertList.title.id": "ID",
   "alertList.title.severity": "Severity",
   "alertList.title.enityName": "Entity",

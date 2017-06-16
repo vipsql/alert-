@@ -392,6 +392,14 @@ class alertQueryManage extends Component{
               id: 'alertList.title.count',
               defaultMessage: '次数',
           },
+          classCode:{
+              id: 'alertList.title.classCode',
+              defaultMessage: '资源类型',
+          },
+          tags:{
+              id: 'alertList.title.tags',
+              defaultMessage: '标签',
+          },
           lastTime:{
               id: 'alertList.title.lastTime',
               defaultMessage: '持续时间',

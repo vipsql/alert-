@@ -194,7 +194,7 @@ class Condition extends Component {
                         {
                             valueList[_key] &&
                             valueList[_key].map(item => {
-                                return <Option key={item.name}>{item.name}</Option>
+                                return <Option key={_key === 'source' ? item.name : item.value}>{item.name}</Option>
                             })
                         }
                     </Select>

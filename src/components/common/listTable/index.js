@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { Button, Spin } from 'antd';
+import { Button, Spin, Popover } from 'antd';
 import LevelIcon from '../levelIcon/index.js'
 import Animate from 'rc-animate'
 import styles from './index.less'
@@ -65,6 +65,14 @@ class ListTable extends Component {
         count:{
           id: 'alertList.title.count',
           defaultMessage: '次数',
+        },
+        classCode:{
+            id: 'alertList.title.classCode',
+            defaultMessage: '资源类型',
+        },
+        tags:{
+            id: 'alertList.title.tags',
+            defaultMessage: '标签',
         },
         lastTime:{
           id: 'alertList.title.lastTime',
@@ -148,6 +156,11 @@ class ListTable extends Component {
       keys.forEach((key, index) => {
         let data = item[key];
         let td;
+        const relieveIcon = classnames(
+          'iconfont',
+          'icon-zaixian',
+          styles.relieveIcon
+        )
         if(sourceOrigin !== 'alertQuery' && target === 'parent' && index == 0){
           tds.push(
             <td key='sourceAlert'>
@@ -161,81 +174,72 @@ class ListTable extends Component {
             </td>
           )
         }
-        if(key == 'notifyList'){
-          if (item['isNotify'] && data !== undefined && data.length > 0) {
-            let temp = data.map( (key) => {
-              return window.__alert_appLocaleData.messages[`alertList.notifyList.${key}`]
-            })
-            data = temp.join(' / ')
-          }
-        }
-        if(key == 'firstOccurTime'){
-          const date = new Date(data)
-          data = formatDate(data)
-        }
-        if(key == 'lastOccurTime'){
-          const date = new Date(data)
-          data = formatDate(data)
-        }
-        if(key == 'lastTime'){
-          // 如果小于1小时 显示分钟
-          const hours = 60*60*1000
-          
-          if(data < hours){
-            
-            data = `${+(data/(60*1000)).toFixed(1)}m`
-          }else{
-            data = `${+(data/hours).toFixed(1)}h`
-          }
-        }
-        if(key == 'status'){
-          switch (Number(data)) {
-            case 0:
-              data = window['_status']['0']
-              break;
-            case 40:
-              data = window['_status']['40']
-              break;
-            case 150:
-              data = window['_status']['150']
-              break;
-            case 190:
-              data = window['_status']['190']
-              break;
-            case 255:
-              data = window['_status']['255']
-              break;
-            default:
-              data
-              break;
-          }
-        }
-        
-        const relieveIcon = classnames(
-          'iconfont',
-          'icon-zaixian',
-          styles.relieveIcon
-        )
-        if(key == 'name') {
-          td = <td key={key} title={data} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >
-            {data}
-            {
-              sourceOrigin !== 'alertQuery' && item['hasChild'] === true && target === 'parent'?
-              <span className={relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
-              :
-              undefined
+        switch (key) {
+          case 'name':
+            td = (<td key={key} title={data} className={ styles.tdBtn } data-id={item.id} onClick={detailClick} >
+                  {data}
+                  {
+                    sourceOrigin !== 'alertQuery' && item['hasChild'] === true && target === 'parent'?
+                    <span className={relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
+                    :
+                    undefined
+                  }
+                  </td>)
+            break;
+          case 'orderFlowNum':
+            if(typeof item['itsmDetailUrl'] != 'undefined') {
+              td = <td key={key} title={data}><a target='_blank' href={item['itsmDetailUrl']}>{data}</a></td>
+            } else {
+              td = <td key={key} title={data}><a href='javascript:;' onClick={orderFlowNumClick} data-flow-num={data} data-id={item['id']}>{data}</a></td>
             }
-          </td>
-        } else if (key == 'description' || key == 'entityName' || key =='notifyList'){
-          td = <td key={key} title={data}>{data}</td>
-        } else if (key == 'orderFlowNum' && data) {
-          if(typeof item['itsmDetailUrl'] != 'undefined') {
-            td = <td key={key} title={data}><a target='_blank' href={item['itsmDetailUrl']}>{data}</a></td>
-          } else {
-            td = <td key={key} title={data}><a href='javascript:;' onClick={orderFlowNumClick} data-flow-num={data} data-id={item['id']}>{data}</a></td>
-          }
-        } else {
-          td = <td key={key}>{data}</td>
+            break;
+          case 'notifyList':
+            if (item['isNotify'] && data && data.length > 0) {
+              let temp = data.map( (key) => {
+                return window.__alert_appLocaleData.messages[`alertList.notifyList.${key}`]
+              })
+              data = temp.join(' / ')
+            }
+            td = <td key={key}>{data}</td>
+            break;
+          case 'firstOccurTime':
+            td = <td key={key}>{formatDate(new Date(data))}</td>
+            break;
+          case 'lastOccurTime':
+            td = <td key={key}>{formatDate(new Date(data))}</td>
+            break;
+          case 'lastTime':
+            // 如果小于1小时 显示分钟
+            let hours = 60*60*1000
+            if(data < hours){
+              td = <td key={key}>{`${+(data/(60*1000)).toFixed(1)}m`}</td>
+            }else{
+              td = <td key={key}>{`${+(data/hours).toFixed(1)}h`}</td>
+            }
+            break;
+          case 'status':
+            td = <td key={key}>{window['_status'][Number(data)] || data}</td>
+            break;
+          case 'tags':
+            let temp = '';
+            if (data && data.length > 0) {
+              data.forEach( (item, index) => {temp = temp + `${item.keyName}${item.value ? ` : ${item.value}` : undefined} / `})
+              td = <td key={key} className={styles.tagsKey}>
+                      <Popover placement='top' overlayClassName={styles.popover} trigger="hover" mouseEnterDelay={0.5} content={
+                        <div>
+                          {data.map( (item, index) => { return <p key={item.key}>{`${item.keyName}${item.value ? ` : ${item.value}` : undefined}`}</p>})}
+                        </div>
+                      } >
+                        {temp.slice(0, -2)}
+                      </Popover>
+                    </td>
+            } else {
+              td = <td key={key}>{temp}</td>
+            }
+            break;
+          default:
+            td = <td key={key} title={data}>{data}</td>
+            break;
         }
         tds.push(td)
       })

@@ -187,30 +187,29 @@ class ListTimeTable extends Component {
 
       // 生成列
       const genTds = (item, keys, target = 'parent') => {
-         let TDS = []
-
-         keys.forEach( (key, index) => {
-           // const tdKey = item.date + key
-           const className = key == 'name' ? 'tdBorderRight' : ''
-           if(index == 0 && target === 'parent'){
-             TDS.push(
-               <td key='sourceAlert'>
-                  {
-                    item['hasChild'] === true 
-                      ? item['isSpread'] === true 
-                        ? <span className={styles.triangleUp} data-id={item.id} onClick={ noSpreadChild }></span>
-                          : <span className={styles.triangleDown} data-id={item.id} onClick={ spreadChild }></span>
-                            : undefined
-                  }
-               </td>
-             )
-           }
-            const relieveIcon = classnames(
-                'iconfont',
-                'icon-zaixian',
-                styles.relieveIcon
-              )
-           if(key == 'name') {
+        let TDS = []
+        const relieveIcon = classnames(
+            'iconfont',
+            'icon-zaixian',
+            styles.relieveIcon
+        )
+        keys.forEach( (key, index) => {
+          // const tdKey = item.date + key
+          const className = key == 'name' ? 'tdBorderRight' : ''
+          if(index == 0 && target === 'parent'){
+            TDS.push(
+              <td key='sourceAlert'>
+                {
+                  item['hasChild'] === true 
+                    ? item['isSpread'] === true 
+                      ? <span className={styles.triangleUp} data-id={item.id} onClick={ noSpreadChild }></span>
+                        : <span className={styles.triangleDown} data-id={item.id} onClick={ spreadChild }></span>
+                          : undefined
+                }
+              </td>
+            )
+          }
+          if(key == 'name') {
             TDS.push(<td key={key} className={styles[className]} width="200" data-id={item.id} onClick={detailClick} >
               <div key = 'nameDiv' title={item[key]} className={styles['name']} data-id={item.id}>{item[key]}</div>
               {
@@ -220,20 +219,20 @@ class ListTimeTable extends Component {
                 undefined
               }
             </td>)
-           } else if(key == 'entityName'){
-             TDS.push(<td key={key} title={item[key]} className={styles[className]} width="200"><div key = 'entityNameDiv' className={styles['entityName']}>{item[key]}</div></td>)
-           } else {
-             TDS.push(<td key={key} className={styles[className]}>{item[key]}</td>)
-           }
+          } else if(key == 'entityName'){
+            TDS.push(<td key={key} title={item[key]} className={styles[className]} width="200"><div key = 'entityNameDiv' className={styles['entityName']}>{item[key]}</div></td>)
+          } else {
+            TDS.push(<td key={key} className={styles[className]}>{item[key]}</td>)
+          }
 
-         })
-         if (target === 'parent') {
+        })
+        if (target === 'parent') {
           TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
-         } else {
+        } else {
           TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
           TDS.unshift(<td key='space-col-td'></td>)
-         }
-         return TDS
+        }
+        return TDS
       }
 
       //  生成时间线
@@ -266,7 +265,7 @@ class ListTimeTable extends Component {
               </div>
             );
             return (
-              <Popover content={content} overlayClassName={styles.popover} key={`dot-${idx}`} className={styles.myPopover}>
+              <Popover content={content} overlayClassName={styles.popover} key={`dot-${idx}`}>
                 <span style={{left: left  + 'px'}} className={styles[iconColor]} data-id={itemDot.id} onClick={detailClick}></span>
               </Popover>
 

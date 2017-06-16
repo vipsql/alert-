@@ -46,6 +46,8 @@ const initalState = {
                 {id: 'entityAddr', checked: false,},
                 {id: 'orderFlowNum', checked: false,},
                 {id: 'notifyList', checked: false,},
+                {id: 'classCode', checked: false},
+                {id: 'tags', checked: false},
             ]
         },
     ],
@@ -525,7 +527,7 @@ export default {
                   if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count' || col.id == 'status') {
                       arr.push({ key: col.id, title: col.name, order: true }) // order字段先定死
                   } else {
-                      arr.push({ key: col.id, title: col.name }) // width先定死
+                      arr.push({ key: col.id, title: col.name })
                   }
               }
               return col;
