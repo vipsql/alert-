@@ -134,7 +134,7 @@
 
   "modal.know": "OK, I get it",
   "modal.suppress.success": "Suppress successfully.",
-  "modal.suppress.successRemind": "Alerts will temporarily be marked as closed, please go to 'Settings - Correlations' to disable the temporary suppresssion rules if you want cancel that.",
+  "modal.suppress.successRemind": "Alerts will not be received in specified time range, please go to 'Settings - Correlations' to disable the temporary suppresssion rules if you want cancel that.",
   "modal.remind": "Don't remind me again.",
 
   "modal.close": "Close",

@@ -134,7 +134,7 @@
 
   "modal.know": "知道了",
   "modal.suppress.success": "抑制成功",
-  "modal.suppress.successRemind": "告警将临时关闭，取消抑制请移步 “设置———关联规则”，禁用或删除对应的规则",
+  "modal.suppress.successRemind": "告警将在抑制时间内不再被接收，取消抑制请移步 “设置———关联规则”，禁用或删除对应的规则",
   "modal.remind": "不再提醒",
 
   "modal.close": "关闭",
