@@ -50,7 +50,9 @@ const initalState = {
     }, {
       key: 'status',
       order: true
-    }, ],
+    }, {
+      key: 'tags'
+    }],
 }
 
 export default {

@@ -72,9 +72,9 @@ class Chart extends Component{
 
         this.timer = setInterval( () =>{
             // 全屏下不刷新
-            if(!this.props.isFullScreen){
+            //if(!this.props.isFullScreen){
                 this.props.requestFresh()
-            }
+            //}
             
         }, 60000)
 
@@ -251,7 +251,7 @@ class Chart extends Component{
                 .attr("width", function(d) {
                     return Math.max(0.01, d.dx);
                 })
-                .attr('font-size', '14')
+                .attr('font-size', '13')
                 .attr("height", headerHeight)
                 .text(wrap)
             // update transition
@@ -363,7 +363,8 @@ class Chart extends Component{
                 })
                 .attr("dy", ".35em")
                 .attr("fill", "#ffffff")
-                .attr("font-size", "13")
+                .attr("font-size", "14")
+                //.attr("font-weight", "bold")
                 .attr("text-anchor", "middle")
                 // .style("display", "none")
                 .text(wrap)
@@ -518,7 +519,8 @@ class Chart extends Component{
                 .attr("y", function(d) {
                     return ky * d.dy / 2;
                 })
-                .attr("font-size", "13")
+                .attr("font-size", "11.5pt")
+                .style("text-shadow", "1px 1px 1px #333")
                 // .attr("font-size", function(d) {
                     
                 //     d.w = this.getComputedTextLength();

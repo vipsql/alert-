@@ -223,11 +223,11 @@ class ListTable extends Component {
           case 'tags':
             if (data && data.length > 0) {
               td = <td key={key} className={styles.tagsKey}>
-                      <Popover placement='top' overlayClassName={styles.popover} trigger="hover" mouseEnterDelay={0.5} content={
+                      {/*<Popover placement='top' overlayClassName={styles.popover} trigger="hover" mouseEnterDelay={0.5} content={
                         <div>
                           {data.map( (item, index) => { return <p key={item.key}>{`${item.keyName}${item.value ? ` : ${item.value}` : undefined}`}</p>})}
                         </div>
-                      } >
+                      } >*/}
                         {
                           data.map(tag => {
                             const {key, keyName, value} = tag;
@@ -240,7 +240,7 @@ class ListTable extends Component {
                             }
                           })
                         }
-                      </Popover>
+                      {/*</Popover>*/}
                     </td>
             } else {
               td = <td key={key}>{data}</td>

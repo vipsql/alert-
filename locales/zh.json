@@ -388,7 +388,7 @@
   "ruleEditor.notifyMode": "通知方式：",
   "ruleEditor.email": "电子邮件",
   "ruleEditor.sms": "短信息",
-  "ruleEditor.chatops": "分享到ChatOps私聊窗口",
+  "ruleEditor.chatops": "分享到ChatOps",
   "ruleEditor.emailTitle": "邮件标题",
   "ruleEditor.emailCon": "邮件内容",
   "ruleEditor.smsCon": "信息内容",
