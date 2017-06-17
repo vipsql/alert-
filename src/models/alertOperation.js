@@ -672,23 +672,22 @@ export default {
   reducers: {
       // 列定制初始化
       initColumn(state, {payload: {baseCols, extend, tags}}) {
-        const { columnList } = state;
-        let newList = columnList;
-        baseCols.forEach( (column, index) => {
-            newList.forEach( (group) => {
-                group.cols.forEach( (col) => {
-                if (column.key === col.id) {
-                    col.checked = true;
-                }
-                }) 
-            })
-        })
+        let newList = JSON.parse(JSON.stringify(initalState.columnList));
         if (extend.cols.length !== 0) {
             extend.cols.forEach( (col) => {
                 col.checked = false;
             })
             newList[1] = extend;
         }
+        newList.forEach( (group) => {
+            group.cols.forEach( (col) => {
+                baseCols.forEach( (column, index) => {
+                    if (column.key === col.id) {
+                        col.checked = true;
+                    }
+                })
+            }) 
+        })
         return { ...state, columnList: newList, extendColumnList: extend.cols, extendTagsKey: tags }
       },
       // show more时需要叠加columns
@@ -740,7 +739,7 @@ export default {
             })
             return group;
         })
-        
+        localStorage.setItem('__alert_list_userColumns', JSON.stringify(arr))
         return { ...state, columnList: newList, selectColumn: arr }
       },
       // 设置合并子列表

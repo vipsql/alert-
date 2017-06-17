@@ -26,6 +26,12 @@ export default {
     pageSetUp({ dispatch, history }) {
       history.listen((location, state) => {
         if (pathToRegexp('/alertManage/alertList').test(location.pathname)) {
+          let key = localStorage.getItem('__visual_group') || '';
+          let columns = JSON.parse(localStorage.getItem(`__alert_${key}_colums`)) || []
+          dispatch({
+            type: 'alertListTable/initCustomCols',
+            payload: columns
+          })
           dispatch({
             type: 'initTagsList',
           });

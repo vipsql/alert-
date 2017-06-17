@@ -215,12 +215,20 @@ export default {
     }
   },
   effects: {
+    // beforeCustomCols
+    *initCustomCols({payload},{call, put, select}) {
+      let initColumns = JSON.parse(JSON.stringify(initalState.columns))
+      let queryColumns = JSON.parse(localStorage.getItem('__alert_query_userColumns')); 
+      let columns = queryColumns ? queryColumns : initColumns
+      yield put({type: 'customCols', payload: columns})
+    },
     /**
      * open alertQuery page operate
      * 1. clear state
      * 3. 查询告警来源的options
      */
     *alertQuerySetup({payload},{call, put, select}){
+      yield put({ type: 'initCustomCols'})
       yield put({ type: 'alertQueryDetail/toggleDetailModal', payload: false })
       yield put({ type: 'clearQuery'})
       yield put({ type: 'queryAlertList'})
