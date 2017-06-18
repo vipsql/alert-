@@ -27,8 +27,6 @@ class alertQueryManage extends Component{
     componentDidMount() {
       const {dispatch} = this.props;
       window.addEventListener('message', (e) => {
-        console.log(e.data)
-        console.log(e.data.creatTicket)
         if(e.data.creatTicket !== undefined && e.data.creatTicket === 'success') {
           dispatch({
             type: 'alertQueryDetail/afterDispatch', 
@@ -393,6 +391,14 @@ class alertQueryManage extends Component{
           count:{
               id: 'alertList.title.count',
               defaultMessage: '次数',
+          },
+          classCode:{
+              id: 'alertList.title.classCode',
+              defaultMessage: '资源类型',
+          },
+          tags:{
+              id: 'alertList.title.tags',
+              defaultMessage: '标签',
           },
           lastTime:{
               id: 'alertList.title.lastTime',

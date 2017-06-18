@@ -15,6 +15,7 @@ const initalState = {
    isShowFouth: false,
    incidentGroup: true, 
    tagsLevel: 1,
+   lessLevel: 0,
    tasgFitler: '',
    resInfo: [],
    alertList: ''
@@ -22,9 +23,10 @@ const initalState = {
 }
 
 // 保存标签分组选择
-const setGroups = (gr2, gr3) =>{
+const setGroups = (gr2, gr3, gr4) =>{
   gr2 && localStorage.setItem("__alert_visualAnalyze_gr2", gr2)
   gr3 && localStorage.setItem("__alert_visualAnalyze_gr3", gr3)
+  gr4 && localStorage.setItem("__alert_visualAnalyze_gr4", gr4)
 }
 
 
@@ -54,6 +56,7 @@ export default {
       let tags
       let gr2 //分组1
       let gr3 //分组2
+      let gr4
       
       // const isFirst = yield select(state => {
       //   return state.visualAnalyze.isFirst
@@ -94,6 +97,7 @@ export default {
             const userStore = JSON.parse(localStorage.getItem(gr1key))
             gr2 = userStore.gr2key
             gr3 = userStore.gr3key
+            gr4 = userStore.gr4key
           }else{
             // 这个是正常流程 默认取值
             gr2 = tags[0]
@@ -102,10 +106,11 @@ export default {
 
 
           // 默认选择标签
-          setGroups(gr2, gr3) 
+          setGroups(gr2, gr3, gr4) 
           yield put({
             type: 'updateSelect',
             payload: {
+              lessLevel: level - visualSelect.length,
               tags,
               level
             }
@@ -142,14 +147,14 @@ export default {
         const gr1 = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")) || [];
         const gr2key = localStorage.getItem('__alert_visualAnalyze_gr2') ? localStorage.getItem('__alert_visualAnalyze_gr2') :tags[0]
         const gr3key = localStorage.getItem('__alert_visualAnalyze_gr3') ? localStorage.getItem('__alert_visualAnalyze_gr3') :tags[1]
-        switch(level){
+        switch(level - visualSelect.length){
+          case 0:
+              val = gr1
+              break;
           case 1:
-            val = gr1
-            break;
-          case 2:
               val = gr1.concat([{key: gr2key, value: ''}])
               break;
-          case 3:
+          case 2:
               val = gr1.concat([{key: gr2key, value: ''},{key: gr3key, value: ''}]) 
               break;
         }
@@ -298,11 +303,12 @@ export default {
         groupList
       }
     },
-    updateSelect(state,{payload: {tags,level}}){
+    updateSelect(state,{payload: {tags,level,lessLevel}}){
       return {
         ...state,
         tags,
-        tagsLevel: level
+        tagsLevel: level,
+        lessLevel
       }
     },
     updateResInfo(state, {payload}){

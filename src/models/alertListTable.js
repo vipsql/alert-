@@ -17,7 +17,7 @@ const initvalState = {
 
     orderBy: 'lastOccurTime',
     orderType: 0,
-    pageSize: 20,
+    pageSize: 40,
     currentPage: 1,
 
     levels:{}, // 告警级别
@@ -57,6 +57,7 @@ const initvalState = {
       order: true
     },{
       key: 'status',
+      order: true
     }, ],
 }
 
@@ -353,6 +354,7 @@ export default {
               status = true;
               item.hasChild = false;
               item.isSpread = false;
+              delete item.childrenAlert
             }
             return item;
           })
@@ -370,6 +372,7 @@ export default {
             status = true;
             item.hasChild = false;
             item.isSpread = false;
+            delete item.childrenAlert
           }
           return item;
         })
@@ -500,7 +503,14 @@ export default {
     }
   },
   effects: {
-
+    // beforeCustomCols
+    *initCustomCols({payload: custome},{call, put, select}) {
+      let initColumns = JSON.parse(JSON.stringify(initvalState.columns))
+      let columns = custome.length > 0 ? custome : initColumns;
+      let userColumns = custome.length > 0 ? JSON.stringify(columns) : JSON.stringify(initColumns)
+      localStorage.setItem('__alert_list_userColumns', userColumns)
+      yield put({type: 'customCols', payload: columns})
+    },
     //查询告警列表
     *queryAlertList({payload},{call, put, select}){
      

@@ -19,7 +19,7 @@
 }
 
 .showBar {
-    
+
 }
 
 .hideBar {
@@ -30,7 +30,12 @@
     background-color: #1e5b97;
     width: 100%;   
     border: none;
-    font-weight: 2px;
+    height: 17px;
+}
+
+.toggleBarButtonIcon {
+    position: absolute;
+    top: -3px;
 }
 
 .toggleBarButton:hover {
@@ -90,7 +95,7 @@
             font-weight: 300;
             font-size: 14px;
         }
-        
+
         .showGroup{
             float: right;
         }
@@ -117,6 +122,10 @@
                 }
             }
         }
+        .tip {
+            margin-top: 10px;
+            margin-bottom: -20px;
+        }
     }
     .visualNoData{
         color: white;
@@ -126,7 +135,7 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            margin-right: 10px; 
+            margin-right: 10px;
             border-radius: 20px;
             //background: #4082e6;
             background: #daab1c;
@@ -135,8 +144,8 @@
             color: white;
             content: '!';
         }
-        
-        
+
+
     }
     .visualList{
         padding: 20px;
@@ -219,9 +228,9 @@
                 }
                 .tagsName{
                     position: relative;
-                    top: 50px; 
+                    top: 50px;
                 }
-                
+
 
             }
         }
@@ -242,7 +251,7 @@
                     background: #12325a;
                     color: #6ac5fe;
             }
-            .visualAlertGroupLi{ 
+            .visualAlertGroupLi{
                 position: relative;
                 min-height: 110px;
                 border-radius: 2px;
@@ -284,7 +293,7 @@
                         text-align: center;
                         color: white;
                         cursor: pointer;
-                        
+
                         .tagsRingTwo{
                             position: absolute;
                             border-radius: 40px;
@@ -316,7 +325,7 @@
                         }
                         .tagsName{
                             position: relative;
-                            top: 50px; 
+                            top: 50px;
                         }
                     }
 
@@ -376,11 +385,11 @@
                             width: 150px;
                             height: 100px;
                         }
-                        
 
 
 
-                        
+
+
                     }
                 }
             }
@@ -398,7 +407,7 @@
                         &:after{
                             content: '：';
                             display: inline-block;
-                            
+
                         }
                     }
                     span:last-child{
@@ -417,7 +426,7 @@
         background: -webkit-radial-gradient(50% 50%,#2065ac,#1c385e);
         background: -ms-radial-gradient(50% 50%,#2065ac,#1c385e);
     }
-    
+
 
 }
 
@@ -526,7 +535,7 @@
     .fade-leave.fade-leave-active {
         animation: leave 1s ease-in-out 1;
         -webkit-animation: leave 1s ease-in-out 1;
-        -moz-animation: leave 1s ease-in-out 1; 
+        -moz-animation: leave 1s ease-in-out 1;
     }
     thead{
         tr{
@@ -612,7 +621,7 @@
             cursor: pointer;
             //color: #4082e6;
             color: #4fb8f0;
-            
+
             .relieveIcon{
                 overflow: visible;
                 position: absolute;
@@ -724,16 +733,16 @@
       background: #f26d49;
       border-radius: 12px;
       &.jjLevel{
-          background-color: #f45131;
+          background-color: #ec5437;
       }
       &.hfLevel{
-          background-color: #a5f664;
+          background-color: #4fdfbf;
       }
       &.gjLevel{
-          background-color: #ff9524;
+          background-color: #fa8c16;
       }
       &.txLevel{
-          background-color: #fadc23;
+          background-color: #f6cb03;
       }
     }
   }
@@ -1255,11 +1264,11 @@
         border: none;
         width: 100%;
         height: 100%;
-        
+
     }
 }
 :global{
-  
+
   .ant-tabs-nav-container{
     margin-bottom: 0;
     overflow: inherit;
