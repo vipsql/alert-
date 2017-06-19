@@ -21,6 +21,7 @@ function AlertManage({dispatch, alertManage, isFold}){
     isFullScreen,
     isFixed,
     currentDashbordData,
+    oldDashbordDataMap,
     selectedStatus,
     selectedTime
   } = alertManage
@@ -89,8 +90,10 @@ function AlertManage({dispatch, alertManage, isFold}){
     selectedTime,
     isFold,
     currentDashbordData,
+    oldDashbordDataMap,
     isLoading,
     isFullScreen,
+    isFixed,
     setFullScreen(){
       dispatch({
         type: 'alertManage/setFullScreen'
