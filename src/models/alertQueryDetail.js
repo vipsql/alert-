@@ -46,6 +46,8 @@ const initalState = {
                 {id: 'entityAddr', checked: false,},
                 {id: 'orderFlowNum', checked: false,},
                 {id: 'notifyList', checked: false,},
+                {id: 'classCode', checked: false},
+                {id: 'tags', checked: false},
             ]
         },
     ],
@@ -390,8 +392,6 @@ export default {
                 type: 'setChatOpsRoom',
                 payload: options.data || [],
             })
-        } else {
-            yield message.error(`${options.message}`, 2);
         }
         yield put({
             type: 'toggleChatOpsModal',
@@ -466,23 +466,22 @@ export default {
   reducers: {
     // 列定制初始化
     initColumn(state, {payload: {baseCols, extend, tags}}) {
-        const { columnList } = state;
-        let newList = columnList;
-        baseCols.forEach( (column, index) => {
-            newList.forEach( (group) => {
-                group.cols.forEach( (col) => {
-                  if (column.key === col.id) {
-                      col.checked = true;
-                  }
-                }) 
-            })
-        })
+        let newList = JSON.parse(JSON.stringify(initalState.columnList));
         if (extend.cols.length !== 0) {
             extend.cols.forEach( (col) => {
                 col.checked = false;
             })
             newList[1] = extend
         }
+        newList.forEach( (group) => {
+            group.cols.forEach( (col) => {
+                baseCols.forEach( (column, index) => {
+                    if (column.key === col.id) {
+                        col.checked = true;
+                    }
+                })
+            }) 
+        })
         return { ...state, columnList: newList, extendColumnList: extend.cols, extendTagsKey: tags}
     },
     // show more时需要叠加columns
@@ -524,17 +523,17 @@ export default {
                   col.checked = !col.checked;
               }
               if (col.checked) {
-                  if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count') {
+                  if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count' || col.id == 'status') {
                       arr.push({ key: col.id, title: col.name, order: true }) // order字段先定死
                   } else {
-                      arr.push({ key: col.id, title: col.name }) // width先定死
+                      arr.push({ key: col.id, title: col.name })
                   }
               }
               return col;
           })
           return group;
       })
-      
+      localStorage.setItem('__alert_query_userColumns', JSON.stringify(arr))
       return { ...state, columnList: newList, selectColumn: arr }
     },
     // beforeOpenDetail

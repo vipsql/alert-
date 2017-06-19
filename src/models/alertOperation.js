@@ -55,6 +55,8 @@ const initalState = {
                 {id: 'entityAddr', checked: false,},
                 {id: 'orderFlowNum', checked: false,},
                 {id: 'notifyList', checked: false,},
+                {id: 'classCode', checked: false},
+                {id: 'tags', checked: false},
             ]
         }
     ],
@@ -228,18 +230,21 @@ export default {
           // 触发筛选
           yield put({ type: 'alertListTable/filterCheckAlert'})
           const relieveAlert = yield select( state => state.alertListTable.selectedAlertIds)
-
           if (relieveAlert !== undefined && relieveAlert.length === 1) {
-              yield put({
-                  type: 'setRelieveAlert',
-                  payload: relieveAlert[0] || {}
-              })
-              yield put({
-                  type: 'toggleRelieveModal',
-                  payload: true
-              })
+              if (relieve.hasChild) {
+                yield put({
+                    type: 'setRelieveAlert',
+                    payload: relieveAlert[0] || {}
+                })
+                yield put({
+                    type: 'toggleRelieveModal',
+                    payload: true
+                })
+              } else {
+                  yield message.warn(window.__alert_appLocaleData.messages['incident.no.child'], 2)
+              }
           } else {
-              yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 2);
+              yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 2);
           }
       },
       // 打开解除告警modal(点击按钮的方式)
@@ -591,8 +596,6 @@ export default {
                         type: 'setChatOpsRoom',
                         payload: options.data || [],
                     })
-                } else {
-                    yield message.error(`${options.message}`, 2);
                 }
                 yield put({
                     type: 'toggleChatOpsModal',
@@ -663,7 +666,6 @@ export default {
       // 列定制
       *checkColumn({payload}, {select, put, call}) {
           yield put({ type: 'setColumn', payload: payload })
-          yield put({ type: 'filterColumn' })
           const selectColumn = yield select(state => state.alertOperation.selectColumn)
           yield put({ type: 'alertListTable/customCols', payload: selectColumn})
       }
@@ -673,23 +675,22 @@ export default {
   reducers: {
       // 列定制初始化
       initColumn(state, {payload: {baseCols, extend, tags}}) {
-        const { columnList } = state;
-        let newList = columnList;
-        baseCols.forEach( (column, index) => {
-            newList.forEach( (group) => {
-                group.cols.forEach( (col) => {
-                if (column.key === col.id) {
-                    col.checked = true;
-                }
-                }) 
-            })
-        })
+        let newList = JSON.parse(JSON.stringify(initalState.columnList));
         if (extend.cols.length !== 0) {
             extend.cols.forEach( (col) => {
                 col.checked = false;
             })
             newList[1] = extend;
         }
+        newList.forEach( (group) => {
+            group.cols.forEach( (col) => {
+                baseCols.forEach( (column, index) => {
+                    if (column.key === col.id) {
+                        col.checked = true;
+                    }
+                })
+            }) 
+        })
         return { ...state, columnList: newList, extendColumnList: extend.cols, extendTagsKey: tags }
       },
       // show more时需要叠加columns
@@ -731,7 +732,7 @@ export default {
                     col.checked = !col.checked;
                 }
                 if (col.checked) {
-                    if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count') {
+                    if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count' || col.id == 'status') {
                         arr.push({ key: col.id, title: col.name, order: true }) // order字段先定死
                     } else {
                         arr.push({ key: col.id, title: col.name })
@@ -741,7 +742,7 @@ export default {
             })
             return group;
         })
-        
+        localStorage.setItem('__alert_list_userColumns', JSON.stringify(arr))
         return { ...state, columnList: newList, selectColumn: arr }
       },
       // 设置合并子列表

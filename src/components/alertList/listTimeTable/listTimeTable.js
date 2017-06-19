@@ -186,73 +186,53 @@ class ListTimeTable extends Component {
       let tbodyCon = []
 
       // 生成列
-      const genTds = (item, keys) => {
-         let TDS = []
-
-         keys.forEach( (key, index) => {
-           // const tdKey = item.date + key
-           const className = key == 'name' ? 'tdBorderRight' : ''
-           if(index == 0){
-             TDS.push(
-               <td key='sourceAlert'>
-                  {
-                    item['hasChild'] === true 
-                      ? item['isSpread'] === true 
-                        ? <span className={styles.triangleUp} data-id={item.id} onClick={ noSpreadChild }></span>
-                          : <span className={styles.triangleDown} data-id={item.id} onClick={ spreadChild }></span>
-                            : undefined
-                  }
-               </td>
-             )
-           }
-            const relieveIcon = classnames(
-                'iconfont',
-                'icon-zaixian',
-                styles.relieveIcon
-              )
-           if(key == 'name') {
+      const genTds = (item, keys, target = 'parent') => {
+        let TDS = []
+        const relieveIcon = classnames(
+            'iconfont',
+            'icon-zaixian',
+            styles.relieveIcon
+        )
+        keys.forEach( (key, index) => {
+          // const tdKey = item.date + key
+          const className = key == 'name' ? 'tdBorderRight' : ''
+          if(index == 0 && target === 'parent'){
+            TDS.push(
+              <td key='sourceAlert'>
+                {
+                  item['hasChild'] === true 
+                    ? item['isSpread'] === true 
+                      ? <span className={styles.triangleUp} data-id={item.id} onClick={ noSpreadChild }></span>
+                        : <span className={styles.triangleDown} data-id={item.id} onClick={ spreadChild }></span>
+                          : undefined
+                }
+              </td>
+            )
+          }
+          if(key == 'name') {
             TDS.push(<td key={key} className={styles[className]} width="200" data-id={item.id} onClick={detailClick} >
               <div key = 'nameDiv' title={item[key]} className={styles['name']} data-id={item.id}>{item[key]}</div>
               {
-                item['hasChild'] === true ?
+                item['hasChild'] === true && target === 'parent'?
                 <span className={relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
                 :
                 undefined
               }
             </td>)
-           } else if(key == 'entityName'){
-             TDS.push(<td key={key} title={item[key]} className={styles[className]} width="200"><div key = 'entityNameDiv' className={styles['entityName']}>{item[key]}</div></td>)
-           } else {
-             TDS.push(<td key={key} className={styles[className]}>{item[key]}</td>)
-           }
+          } else if(key == 'entityName'){
+            TDS.push(<td key={key} title={item[key]} className={styles[className]} width="200"><div key = 'entityNameDiv' className={styles['entityName']}>{item[key]}</div></td>)
+          } else {
+            TDS.push(<td key={key} className={styles[className]}>{item[key]}</td>)
+          }
 
-         })
-         TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
-         return TDS
-      }
-
-      // 生成子告警列
-      const getChildTds = (item, keys) => {
-         let TDS = []
-
-         keys.forEach( (key, index) => {
-           // const tdKey = item.date + key
-           const className = key == 'name' ? 'tdBorderRight' : '';
-
-           if(key == 'name') {
-             TDS.push(<td key={key} className={styles[className]} data-id={item.id} onClick={detailClick} >
-              <div key = 'nameDiv' title={item[key]} className={styles['name']} data-id={item.id}>{item[key]}</div>
-             </td>)
-           } else if (key == 'entityName') {
-             TDS.push(<td key={key} title={item[key]} className={styles[className]} width="200"><div key = 'entityNameDiv' className={styles['entityName']}>{item[key]}</div></td>)
-           } else {
-             TDS.push(<td key={key} className={styles[className]}>{item[key]}</td>)
-           }
-           
-         })
-         TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
-         TDS.unshift(<td key='space-col-td'></td>)
-         return TDS
+        })
+        if (target === 'parent') {
+          TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
+        } else {
+          TDS.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']}/></td>)
+          TDS.unshift(<td key='space-col-td'></td>)
+        }
+        return TDS
       }
 
       //  生成时间线
@@ -285,7 +265,7 @@ class ListTimeTable extends Component {
               </div>
             );
             return (
-              <Popover content={content} overlayClassName={styles.popover} key={`dot-${idx}`} className={styles.myPopover}>
+              <Popover content={content} overlayClassName={styles.popover} key={`dot-${idx}`}>
                 <span style={{left: left  + 'px'}} className={styles[iconColor]} data-id={itemDot.id} onClick={detailClick}></span>
               </Popover>
 
@@ -309,13 +289,14 @@ class ListTimeTable extends Component {
 
       // 生成子告警行
       const genchildTrs = (childItem, childIndex, keys, item, isGroup, lineDotW, lineDotLeft) => {
-        const childTds = getChildTds(childItem, keys)
+        const childTds = genTds(childItem, keys, 'child')
         const childDotsInfo = genDots(childItem.timeLine, keys)
         const childDots = childDotsInfo.dots
         const childLineDotW = childDotsInfo.lineDotW
         const childLineDotLeft = childDotsInfo.lineDotLeft
+        const trKey = childItem.id || 'chTd' + childIndex
         return (
-          <tr key={childIndex} className={!item.isSpread ? styles.hiddenChild : !isGroup ? styles.noSpread : styles.groupSpread}>
+          <tr key={trKey} className={!item.isSpread ? styles.hiddenChild : !isGroup ? styles.noSpread : styles.groupSpread}>
             <td key="checkbox"></td>
             {childTds}
             <td key="timeDot">
@@ -344,6 +325,9 @@ class ListTimeTable extends Component {
                   groupBy && groupBy == 'status' ?
                   window['_status'][groupItem.classify]
                   :
+                  groupBy && groupBy == 'severity' ? 
+                  window['_severity'][groupItem.classify]
+                  :
                   groupItem.classify ? groupItem.classify : <FormattedMessage {...formatMessages['Unknown']} />
                 }
             </td>
@@ -356,6 +340,9 @@ class ListTimeTable extends Component {
                   groupBy && groupBy == 'status' ?
                   window['_status'][groupItem.classify]
                   :
+                  groupBy && groupBy == 'severity' ? 
+                  window['_severity'][groupItem.classify]
+                  :
                   groupItem.classify ? groupItem.classify : <FormattedMessage {...formatMessages['Unknown']} />
                 }
             </td>
@@ -363,7 +350,7 @@ class ListTimeTable extends Component {
           
           if (groupItem.children !== undefined) {
             
-            groupItem.children.forEach( (item, index) => {
+            groupItem.children.forEach( (item, itemIndex) => {
 
               const tds = genTds(item, keys)
               const dotsInfo = genDots(item.timeLine, keys)
@@ -381,8 +368,11 @@ class ListTimeTable extends Component {
                 childTrs = null
               }
 
+              let trKey = item.id || `tr_${index}_`
+              let tdKey = item.id || `td_${index}_`
+
               commonTrs.push(
-                <tr key={index} className={groupItem.isGroupSpread !== undefined && !groupItem.isGroupSpread ? styles.hiddenChild : styles.groupSpread}>
+                <tr key={trKey} className={groupItem.isGroupSpread !== undefined && !groupItem.isGroupSpread ? styles.hiddenChild : styles.groupSpread}>
                   <td key="checkbox" className={styles.checkstyle}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
                   {tds}
                   <td key="timeDot">
@@ -439,9 +429,9 @@ class ListTimeTable extends Component {
             }else{
               childTrs = null
             }
-            
+            let trKey = item.id || `tr_${index}`
             tbodyCon.push(
-              <tr key={index} className={styles.noSpread}>
+              <tr key={trKey} className={styles.noSpread}>
                 {tdCheck}
                 {tds}
                 <td key="timeDot">

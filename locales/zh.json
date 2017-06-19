@@ -18,6 +18,7 @@
   "leftMenu.set": "设置",
   "lefeMenu.help": "帮助",
 
+  "alertManage.noAlert": "无告警",
   "alertManage.addTags": "关注设置",
   "alertManage.oneHour": "最近 1 小时",
   "alertManage.fourHours": "最近 4 小时",
@@ -40,6 +41,8 @@
   "alertList.autoRefresh": "自动刷新",
   "alertList.selectTags": "选择标签过滤",
 
+  "alertList.title.classCode": "资源类型",
+  "alertList.title.tags": "标签",
   "alertList.title.id": "告警ID",
   "alertList.title.severity": "告警级别",
   "alertList.title.enityName": "对象",
@@ -132,7 +135,7 @@
 
   "modal.know": "知道了",
   "modal.suppress.success": "抑制成功",
-  "modal.suppress.successRemind": "告警将临时关闭，取消抑制请移步 “设置———关联规则”，禁用或删除对应的规则",
+  "modal.suppress.successRemind": "告警将在抑制时间内不再被接收，取消抑制请移步 “设置———关联规则”，禁用或删除对应的规则",
   "modal.remind": "不再提醒",
 
   "modal.close": "关闭",
@@ -402,7 +405,7 @@
   "ruleEditor.notifyMode": "通知方式：",
   "ruleEditor.email": "电子邮件",
   "ruleEditor.sms": "短信息",
-  "ruleEditor.chatops": "分享到ChatOps私聊窗口",
+  "ruleEditor.chatops": "分享到ChatOps",
   "ruleEditor.emailTitle": "邮件标题",
   "ruleEditor.emailCon": "邮件内容",
   "ruleEditor.smsCon": "信息内容",
@@ -419,6 +422,7 @@
   "ruleEditor.phBody": "",
   "ruleEditor.phTag": "请选择对应标签",
   "ruleEditor.phIpt": "值",
+  "ruleEditor.phFieldValue": "字段值",
   "ruleEditor.phOpt": "请选择运算符",
   "ruleEditor.phField": "请选择字段",
   "ruleEditor.eq": "等于",
@@ -452,7 +456,8 @@
   "visualAnalyze.groupBy": "分组",
   "visualAnalyze.incidentGroup": "只显示有故障的分组",
   "visualAnalyze.noData": "暂无数据",
-  
+  "visualAnalyze.tip": "小提示：<可视化分析>利用CMDB展现关联CI的告警状态 (以最高等级为准)，其中也包含历史发生的未关闭的告警，辅助运维人员通过CI相关性定位故障根源。",
+
   "layout.fixedLayout": "固定布局",
   "layout.autoLayout": "自动布局",
   "layout.fullScreen": "全屏",

@@ -42,6 +42,8 @@ function AlertManage({dispatch, alertManage, isFold}){
   }
 
   const alertManageHeadProps = {
+    selectedStatus,
+    selectedTime,
     isSetAlert,
     levels,
     isFixed,

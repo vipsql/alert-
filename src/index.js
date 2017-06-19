@@ -32,7 +32,7 @@ const setLang = function(lang){
 			}
 			// 内置属性
 			window._severity = {
-			  "0": "OK",
+			  "0": "Recovery",
 			  "1": "Information",
 			  "2": "Warning",
 			  "3": "Critical"

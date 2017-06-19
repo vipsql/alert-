@@ -36,14 +36,19 @@ export default {
 
   effects: {
     *alertManageSetup({payload}, {put, call, select}) {
-
+      let { selectedTime, selectedStatus } = yield select( state => {
+        return {
+          'selectedTime': state.alertManage.selectedTime,
+          'selectedStatus': state.alertManage.selectedStatus,
+        }
+      })
       const isSet = yield isSetUserTags()
       if(isSet.result && isSet.data) {
         yield put({
           type: 'queryAlertDashbord',
           payload: {
-            selectedTime: 'lastOneHour',
-            selectedStatus: 'NEW'
+            selectedTime: selectedTime,
+            selectedStatus: selectedStatus
           }
         })
         yield put({
@@ -161,6 +166,12 @@ export default {
           })
       })
       return { ...state, oldDashbordDataMap, currentDashbordData, isLoading, selectedTime, selectedStatus}
+    },
+    setSelectedTime(state, {payload: selectedTime}) {
+      return { ...state, selectedTime}
+    },
+    setSelectedStatus(state, {payload: selectedStatus}) {
+      return { ...state, selectedStatus}
     },
     // 设置告警状态
     setLevels(state, {payload}) {

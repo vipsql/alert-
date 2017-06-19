@@ -224,12 +224,9 @@ export default {
         yield put({
           type: 'updateRooms',
           payload: {
-            data: result.data
+            data: result.data || []
           }
         });
-      } else {
-        // message.error(window.__alert_appLocaleData.messages[result.message], 3);
-        message.error(result.message);
       }
     },
 
