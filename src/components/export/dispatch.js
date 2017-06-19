@@ -82,7 +82,7 @@ class Dispatch extends Component{
                                     { required: true, message: formatMessage({...localeMessage['modal_noTicketType']}) }
                                 ]
                             })(
-                                <Select style={{width: '90%'}} placeholder={formatMessage({...localeMessage['modal_noTicketType']})}>
+                                <Select getPopupContainer={() =>document.getElementById("content")} style={{width: '90%'}} placeholder={formatMessage({...localeMessage['modal_noTicketType']})}>
                                     {
                                         formOptions.map( (item, index) => {
                                             return <Option key={item.id} value={JSON.stringify({id: item.id, name: item.name})}>{item.name}</Option>

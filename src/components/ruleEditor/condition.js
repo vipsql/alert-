@@ -174,14 +174,14 @@ class Condition extends Component {
                 styles.conditionItem,
                 `treeTag${level}`
             )}>
-                <Select onChange={changeConditionContent.bind(_this, node, index, 'key')} className={styles.key} value={_key} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phField']}>
+                <Select getPopupContainer={() =>document.getElementById("content")} onChange={changeConditionContent.bind(_this, node, index, 'key')} className={styles.key} value={_key} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phField']}>
                     {
                         keyList.map(item => (
                             <Option key={item.value}>{item.name}</Option>
                         ))
                     }
                 </Select>
-                <Select style={{ width: 150 }} onChange={changeConditionContent.bind(_this, node, index, 'opt')} className={styles.opt} value={opt} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phOpt']}>
+                <Select getPopupContainer={() =>document.getElementById("content")} style={{ width: 150 }} onChange={changeConditionContent.bind(_this, node, index, 'opt')} className={styles.opt} value={opt} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phOpt']}>
                     {
                         _optList.map(item => (
                             <Option key={item.value}>{item.name}</Option>
@@ -190,7 +190,7 @@ class Condition extends Component {
                 </Select>
                 {
                     /severity|status|duration|source/.test(_key) &&
-                    <Select onChange={changeConditionContent.bind(_this, node, index, 'value')} className={styles.value} style={{ width: 150 }} value={value} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phFieldValue']}>
+                    <Select getPopupContainer={() =>document.getElementById("content")} onChange={changeConditionContent.bind(_this, node, index, 'value')} className={styles.value} style={{ width: 150 }} value={value} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phFieldValue']}>
                         {
                             valueList[_key] &&
                             valueList[_key].map(item => {

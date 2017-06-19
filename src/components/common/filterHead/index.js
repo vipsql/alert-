@@ -49,7 +49,7 @@ const filterHead = ({queryByTime, queryByStatus, style = undefined, defaultTime,
     const {formatMessage} = intl;
     return (
         <div style={style}>
-            <Select defaultValue={defaultTime} style={{ width: 150 }} onChange={ (value) => {
+            <Select defaultValue={defaultTime} getPopupContainer={() =>document.getElementById("content")} style={{ width: 150 }} onChange={ (value) => {
                 queryByTime(value)
             }}>
                 <Option value='lastOneHour' >{formatMessage(formatMessages['oneHour'])}</Option>

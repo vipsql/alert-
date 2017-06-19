@@ -81,7 +81,7 @@ const closeModal = ({currentData, onOk, onCancal, form, intl: {formatMessage}}) 
                                 { required: true, message: formatMessage({...localeMessage['modal_noCloseReason']})}
                             ]
                         })(
-                            <Select mode='combobox' placeholder={formatMessage({...localeMessage['modal_noCloseReason']})}>
+                            <Select getPopupContainer={() =>document.getElementById("content")} mode='combobox' placeholder={formatMessage({...localeMessage['modal_noCloseReason']})}>
                                 <Option value={formatMessage({...localeMessage['modal_closeReason_1']})}>{formatMessage({...localeMessage['modal_closeReason_1']})}</Option>
                                 <Option value={formatMessage({...localeMessage['modal_closeReason_2']})}>{formatMessage({...localeMessage['modal_closeReason_2']})}</Option>
                                 <Option value={formatMessage({...localeMessage['modal_closeReason_3']})}>{formatMessage({...localeMessage['modal_closeReason_3']})}</Option>

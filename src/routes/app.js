@@ -43,7 +43,7 @@ function App ({children, location, dispatch, app, isNeedContent, temp}) {
         <div className={styles.main}>
           <Bread location={location} />
           <div className={styles.container}>
-            <div className={params.isNeedContent === false?'':styles.content}>
+            <div className={params.isNeedContent === false?styles.no_content:styles.content} id="content">
               {children}
             </div>
           </div>

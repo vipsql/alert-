@@ -499,6 +499,7 @@ class RuleEditor extends Component {
                         label={window.__alert_appLocaleData.messages['ruleEditor.target']}
                     >
                         <Select
+                            getPopupContainer={() =>document.getElementById("content")}
                             style={{ width: 200 }}
                             onChange={this.changeTarget.bind(this)}
                             value={this.state.target}
@@ -615,6 +616,7 @@ class RuleEditor extends Component {
                         label={window.__alert_appLocaleData.messages['ruleEditor.source']}
                     >
                         <Select
+                            getPopupContainer={() =>document.getElementById("content")}
                             style={{ width: 200 }}
                             value={this.state.source === '' ? '' : this.state.source}
                             onChange={this.changeSource.bind(this)}
@@ -643,6 +645,7 @@ class RuleEditor extends Component {
                                 <em>{window.__alert_appLocaleData.messages['ruleEditor.word2']}</em>
                                 <span className={styles.label}>{window.__alert_appLocaleData.messages['ruleEditor.word1']}</span>
                                 <Select
+                                    getPopupContainer={() =>document.getElementById("content")}
                                     style={{ width: 150 }}
                                     value={action.actionDelOrClose ? action.actionDelOrClose.operation : undefined}
                                     placeholder={window.__alert_appLocaleData.messages['ruleEditor.phCloseOrDel']}
@@ -743,6 +746,7 @@ class RuleEditor extends Component {
                                     label={window.__alert_appLocaleData.messages['ruleEditor.notifyObj']}
                                 >
                                     <Select
+                                        getPopupContainer={() =>document.getElementById("content")}
                                         mode="multiple"
                                         style={{ width: 200 }}
                                         placeholder={window.__alert_appLocaleData.messages['ruleEditor.notifySelectObj']}
@@ -780,6 +784,7 @@ class RuleEditor extends Component {
                                     label={window.__alert_appLocaleData.messages['ruleEditor.itsmType']}
                                 >
                                     <Select
+                                        getPopupContainer={() =>document.getElementById("content")}
                                         style={{ width: 100 }}
                                         placeholder={window.__alert_appLocaleData.messages['ruleEditor.phItsmType']}
                                         value={action.actionITSM ? action.actionITSM.itsmModelId : undefined}
@@ -820,6 +825,7 @@ class RuleEditor extends Component {
                                 <div>
                                     <span>{window.__alert_appLocaleData.messages['ruleEditor.chatopsGroup']}：</span>
                                     <Select
+                                        getPopupContainer={() =>document.getElementById("content")}
                                         style={{ width: 200 }}
                                         value={action.actionChatOps ? action.actionChatOps.chatOpsRoomId : undefined}
                                         placeholder={window.__alert_appLocaleData.messages['ruleEditor.phChatopsGroup']}
@@ -1145,7 +1151,7 @@ class RuleEditor extends Component {
         const { logic } = node;
         return (
             <div className={cls(styles.title, 'treeTag' + level)}>
-                <Select value={logic} placeholder={window.__alert_appLocaleData.messages['ruleEditor.selectLogic']} onChange={this.changeTitleLogic.bind(this, node, level)}>
+                <Select getPopupContainer={() =>document.getElementById("content")} value={logic} placeholder={window.__alert_appLocaleData.messages['ruleEditor.selectLogic']} onChange={this.changeTitleLogic.bind(this, node, level)}>
                     <Option value="and">{window.__alert_appLocaleData.messages['ruleEditor.and']}</Option>
                     <Option value="or">{window.__alert_appLocaleData.messages['ruleEditor.or']}</Option>
                     <Option value="not">{window.__alert_appLocaleData.messages['ruleEditor.not']}</Option>
