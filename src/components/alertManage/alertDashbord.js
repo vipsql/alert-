@@ -100,7 +100,7 @@ class Chart extends Component{
             return;
         }
         
-        if(this.treemap && isFixed != false) {
+        if(this.treemap) {
             this._update();
         } else {
             this._repaint();
@@ -181,10 +181,6 @@ class Chart extends Component{
         .data(children, function(d) {
             return "c-" + d.path;
         });
-
-        if(!this.props.isFixed) {
-            this._repaint();
-        }
         
         currentDashbordData.forEach((parentNode, index) => {
             parentNode.children.forEach((childNode) => {
@@ -293,6 +289,10 @@ class Chart extends Component{
                 }
             })
         })
+
+        if(!this.props.isFixed) {
+            setTimeout(() => { this._repaint(); }, 3000);
+        }
     }
     
     _repaint() {
