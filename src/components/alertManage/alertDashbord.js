@@ -60,6 +60,10 @@ class Chart extends Component{
         this.xscale = d3.scale.linear().range([0, this.chartWidth])
         this.yscale = d3.scale.linear().range([0, this.chartHeight])
         this.color = function(num){
+            // 没有数据时的颜色
+            if(num < 0) {
+                return "#7ff5d9"
+            }
             return severityToColor[num]
         }
 
@@ -207,6 +211,7 @@ class Chart extends Component{
                 if(childNode && (!oldNode || oldNode.trueVal != childNode.trueVal)) {
                     const node = this.chart.select("#" + childNode.id);
                     currentNode[0][0].__data__.trueVal = childNode.trueVal;
+                    currentNode[0][0].__data__.noData = childNode.trueVal == 0;
                     node.data(childNode);
                     const svg = d3.select("#" + childNode.id).select("svg");
                     svg
