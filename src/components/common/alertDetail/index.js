@@ -41,7 +41,7 @@ class alertDetail extends Component {
         const {extraProps, operateProps, form, closeDeatilModal, clickTicketFlow, editForm, openForm, closeForm, openRemark, editRemark, closeRemark, intl: {formatMessage}} = this.props;
         const { currentAlertDetail, isShowOperateForm, operateForm, isShowRemark, operateRemark, ciUrl } = extraProps;
         const { getFieldDecorator, getFieldsValue } = form;
-        const { incidentLog, ciDetail=[] } = currentAlertDetail;
+        const { incidentLog=[], ciDetail=[] } = currentAlertDetail;
 
         // <div className={styles.infoBody}>
         //     <p className={styles.remarkTitle}>备注信息</p>
@@ -425,90 +425,98 @@ class alertDetail extends Component {
                         :
                         undefined
                     }
-                    <Wrap title={formatMessage({...localeMessage['log']})}>
-                        <Timeline>
-                        {
-                            incidentLog.map((log, index) => {
-                                const date = new Date(log.operateTime);
-                                let isShowOperateDate = false;
-                                if(index == incidentLog.length - 1) {
-                                    isShowOperateDate = true;
-                                } else {
-                                    const nextDate = new Date(incidentLog[index + 1].operateTime);
-                                    isShowOperateDate = (date.getMonth() != nextDate.getMonth() || date.getDay() != nextDate.getDay());
+                    {
+                        incidentLog.length > 0?
+                        (
+                            <Wrap title={formatMessage({...localeMessage['log']})}>
+                                <Timeline>
+                                {
+                                    incidentLog.map((log, index) => {
+                                        const date = new Date(log.operateTime);
+                                        let isShowOperateDate = false;
+                                        if(index == incidentLog.length - 1) {
+                                            isShowOperateDate = true;
+                                        } else {
+                                            const nextDate = new Date(incidentLog[index + 1].operateTime);
+                                            isShowOperateDate = (date.getMonth() != nextDate.getMonth() || date.getDay() != nextDate.getDay());
+                                        }
+                                        return (
+                                            <Timeline.Item key={ log.incidentId + '' + index } color={ index == 0?'green' : 'blue' }>
+                                                <div className={ classnames(styles.timeLineLabel) }>
+                                                    {
+                                                        (isShowOperateDate?(date.getMonth() + "/" +date.getDay() + ' '):'') + date.getHours() + ":" + date.getMinutes()
+                                                    }
+                                                </div>
+                                                <p>
+                                                    <span>{ formatMessage({...localeMessage['operateType'][log.operateType]}) }</span>
+                                                    {
+                                                        log.operatorName?
+                                                        <span className={ styles.operator_label }>{ formatMessage({...localeMessage['operator']}) }&nbsp;:&nbsp;{ log.operatorName }</span>
+                                                        :
+                                                        ""
+                                                    }
+                                                </p>
+                                                {
+                                                    log.attributes && log.attributes['flowNo']?
+                                                    (
+                                                        <p>
+                                                            <span>{ formatMessage({...localeMessage['ticket']}) }&nbsp;:&nbsp;{ log.attributes['flowNo'] }</span>
+                                                        </p>
+                                                    )
+                                                    :
+                                                    ''
+                                                }
+                                                {
+                                                    log.attributes && log.attributes['modalName']?
+                                                    (
+                                                        <p>
+                                                            <span>{ formatMessage({...localeMessage['itsmType']}) }&nbsp;:&nbsp;{ log.attributes['modalName'] }</span>
+                                                        </p>
+                                                    )
+                                                    :
+                                                    ''
+                                                }
+                                                {
+                                                    log.attributes && log.attributes['roomName']?
+                                                    (
+                                                        <p>
+                                                            <span>{ formatMessage({...localeMessage['roomName']}) }&nbsp;:&nbsp;{ log.attributes['roomName'] }</span>
+                                                        </p>
+                                                    )
+                                                    :
+                                                    ''
+                                                }
+                                                {
+                                                    log.attributes && log.attributes['recipient']?
+                                                    (
+                                                        <p>
+                                                            <span>{ formatMessage({...localeMessage['recipient']}) }&nbsp;:&nbsp;{ log.attributes['recipient'] }</span>
+                                                        </p>
+                                                    )
+                                                    :
+                                                    ''
+                                                }
+                                                {
+                                                    log.attributes && log.attributes['message']?
+                                                    (
+                                                        <p>
+                                                            <span>{ formatMessage({...localeMessage['remark']}) }&nbsp;:&nbsp;{ log.attributes['message'] }</span>
+                                                        </p>
+                                                    )
+                                                    :
+                                                    ''
+                                                }
+                                            </Timeline.Item>
+                                        )
+                                    })
                                 }
-                                return (
-                                    <Timeline.Item key={ log.incidentId + '' + index } color={ index == 0?'green' : 'blue' }>
-                                        <div className={ classnames(styles.timeLineLabel) }>
-                                            {
-                                                (isShowOperateDate?(date.getMonth() + "/" +date.getDay() + ' '):'') + date.getHours() + ":" + date.getMinutes()
-                                            }
-                                        </div>
-                                        <p>
-                                            <span>{ formatMessage({...localeMessage['operateType'][log.operateType]}) }</span>
-                                            {
-                                                log.operatorName?
-                                                <span className={ styles.operator_label }>{ formatMessage({...localeMessage['operator']}) }&nbsp;:&nbsp;{ log.operatorName }</span>
-                                                :
-                                                ""
-                                            }
-                                        </p>
-                                        {
-                                            log.attributes && log.attributes['flowNo']?
-                                            (
-                                                <p>
-                                                    <span>{ formatMessage({...localeMessage['ticket']}) }&nbsp;:&nbsp;{ log.attributes['flowNo'] }</span>
-                                                </p>
-                                            )
-                                            :
-                                            ''
-                                        }
-                                        {
-                                            log.attributes && log.attributes['modalName']?
-                                            (
-                                                <p>
-                                                    <span>{ formatMessage({...localeMessage['itsmType']}) }&nbsp;:&nbsp;{ log.attributes['modalName'] }</span>
-                                                </p>
-                                            )
-                                            :
-                                            ''
-                                        }
-                                        {
-                                            log.attributes && log.attributes['roomName']?
-                                            (
-                                                <p>
-                                                    <span>{ formatMessage({...localeMessage['roomName']}) }&nbsp;:&nbsp;{ log.attributes['roomName'] }</span>
-                                                </p>
-                                            )
-                                            :
-                                            ''
-                                        }
-                                        {
-                                            log.attributes && log.attributes['recipient']?
-                                            (
-                                                <p>
-                                                    <span>{ formatMessage({...localeMessage['recipient']}) }&nbsp;:&nbsp;{ log.attributes['recipient'] }</span>
-                                                </p>
-                                            )
-                                            :
-                                            ''
-                                        }
-                                        {
-                                            log.attributes && log.attributes['message']?
-                                            (
-                                                <p>
-                                                    <span>{ formatMessage({...localeMessage['remark']}) }&nbsp;:&nbsp;{ log.attributes['message'] }</span>
-                                                </p>
-                                            )
-                                            :
-                                            ''
-                                        }
-                                    </Timeline.Item>
-                                )
-                            })
-                        }
-                        </Timeline>
-                    </Wrap>              
+                                </Timeline>
+                            </Wrap> 
+                        )
+                        :
+                        undefined
+                    }
+                                 
                 </div>
             </div>
         )
