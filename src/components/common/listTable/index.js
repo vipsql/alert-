@@ -406,8 +406,8 @@ class ListTable extends Component {
             <Animate
                 transitionName="fade"
                 component='tbody'
-                transitionEnterTimeout={500} 
-                transitionLeaveTimeout={1000}
+                transitionEnterTimeout={300} 
+                transitionLeaveTimeout={300}
             >
               {
                 data.length > 0 ? 

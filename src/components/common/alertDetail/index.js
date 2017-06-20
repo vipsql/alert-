@@ -19,7 +19,7 @@ class alertDetail extends Component {
 
     // 设置当鼠标点击不处于本区域时隐藏右侧滑动栏的全局事件
     _setAutoHide() {
-        $(window.document.body).on("click", (e) => {
+        $(window.document.body).on("click.detail", (e) => {
             const $target = $(e.target);
             const $toCloseSlider = $target.closest("div#alertDetailSlider");
             const $toCloseModal = $target.closest(".ant-modal-wrap ");
@@ -33,7 +33,7 @@ class alertDetail extends Component {
 
     // 接触当鼠标点击不处于本区域时隐藏右侧滑动栏的全局事件
     _cancelAutoHide() {
-        $(window.document.body).unbind("click");
+        $(window.document.body).off("click.detail");
     }
 
     render() {
