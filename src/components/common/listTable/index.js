@@ -30,6 +30,7 @@ class ListTable extends Component {
       toggleSelectedAll,
       relieveClick,
       orderFlowNumClick,
+      showAlertOrigin,
       isLoading,
       orderUp,
       orderDown,
@@ -245,6 +246,9 @@ class ListTable extends Component {
             } else {
               td = <td key={key}>{data}</td>
             }
+            break;
+          case 'count':
+            td = <td key={key} title={data}><a href="javascript:;" data-id={ item.id } data-name={ item.name } onClick={ showAlertOrigin }>{ data }</a></td>
             break;
           default:
             td = <td key={key} title={data}>{data}</td>

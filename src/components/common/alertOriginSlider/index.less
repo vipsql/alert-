@@ -1,0 +1,137 @@
+@import "../../vars.less";
+
+:global {
+  .ant-pagination.mini .ant-pagination-item {
+    margin: 5px;
+    background-color: #114670;
+    a {
+      color: #65a2d3
+    }
+  }
+  .ant-pagination-item-active {
+    background-color: #25517f !important;
+    a {
+      color: #FFFFFF !important
+    }
+  }
+  .ant-table-pagination {
+    position: fixed;
+    bottom: 5px;
+    right: 12px;
+    color: #65a2d3
+  }
+  .ant-pagination-prev {
+    background-color: #114670;
+    a {
+      color: #65a2d3
+    }
+  }
+  .ant-pagination-next {
+    background-color: #114670;
+    a {
+      color: #65a2d3
+    }
+  }
+  .ant-pagination-options-quick-jumper {
+    input {
+      color: #FFFFFF;
+      background-color: #114670
+    }
+  }
+  .ant-table {
+    .ant-table-thead > tr > th {
+      background-color: #143355;
+      color: #4a88b6;
+      border-bottom: 1px solid #1f528b;
+      //--------------------------
+      padding-right: 10px;
+      position: relative;
+      height: 38px;
+      line-height: 20px;
+    }
+    .ant-table-tbody > tr > td {
+      color: #FFFFFF;
+      height: 50px;
+    }
+    .ant-table-placeholder {
+      background-color: #4a88b6;
+      span {
+        color: #FFFFFF
+      }
+    }
+    tbody{
+      tr:nth-child(even){
+          td{
+              background-color: #18477a;
+              border: none
+          }
+      }
+      tr:nth-child(odd){
+          td{
+              background-color: #1d5692;
+              border: none
+          }
+      }
+    }
+  }
+}
+
+.alertOriginSlider {
+  position: fixed;
+  width: 40%;
+  top: 25px;
+  right: 13px;
+  bottom: 20px;
+  transition: transform .3s ease-out;
+  overflow: hidden;
+  transform: translate(105%);
+  //background: #fff;
+  background: #1d6aa7;
+  z-index: 999;
+  //box-shadow: #d7dce4 0px 0px 30px;
+  box-shadow: #163b64 0px 0px 30px;
+  border-radius: 4px;
+  &.show{
+    transform: translate(0);
+  }
+  .main {
+    .header {
+      min-height: 30px;
+      position: relative;
+      margin: 12px 12px 10px 18px;
+      p{
+          font-size: 14px;
+          //color: #4c5159;
+          color: #fff;
+          //text-shadow: 0px 0px 1px #cfd0d1;
+      }
+      .close {
+        position: absolute;
+        top: -2px;
+        right: 10px;
+        cursor: pointer;
+        color: #5bb1ef
+      }
+    }
+    hr.line {
+      border-color: #245893;
+    }
+  }
+
+  .totalTip {
+    font-size: 13px;
+    margin: 12px 12px 10px 18px;
+    color: #65a2d3;
+    span.totalNum {
+      color: #FFFFFF
+    }
+  }
+  
+  .tableContent {
+    margin: 12px 12px 10px 18px;
+    overflow-y: auto;
+    overflow-x: auto;
+    height: 80%;
+    color: #FFFFFF;
+  }
+}
