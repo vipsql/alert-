@@ -63,7 +63,7 @@ class Chart extends Component{
         this.color = function(num){
             // 没有数据时的颜色
             if(num < 0) {
-                return "#7ff5d9"
+                return "#6dcd7c"
             }
             return severityToColor[num]
         }
