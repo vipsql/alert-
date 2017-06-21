@@ -600,7 +600,7 @@
 // }
 .reclist {
     margin-bottom: 15px;
-    margin-left: 1.333%;
+    margin-left: 8.333%;
     .label {
         margin: 0 5px;
     }
@@ -659,7 +659,13 @@
     & > div {
         position: relative;
     }
-    .recipients {
+    .upgradelabel {
+        height: 45px;
+        font-size: 13px;
+        line-height: 45px;
+        margin-left: 2.333%;
+    }
+    .recipients_notify {
         width: 100% !important;
         :global {
             .ant-select-selection__choice__remove {
@@ -669,7 +675,7 @@
     }
 }
 
-.recipients {
+.recipients, .recipients_notify{
     color: #FFFFFF;
 
     :global {

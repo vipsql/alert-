@@ -6,10 +6,11 @@
     .checkstyle{
         text-align: center
     }
-    .fade-leave.fade-leave-active {
-        animation: leave 1s ease-in-out 1;
-        -webkit-animation: leave 1s ease-in-out 1;
-        -moz-animation: leave 1s ease-in-out 1; 
+    :global{
+        .fade-leave.fade-leave-active {
+            opacity: 0;
+            transition: opacity .3s ease-in-out; 
+        }
     }
     thead{
         tr{
@@ -189,51 +190,23 @@
             background: #143c67;
             text-align: left;
             .expandIcon{
-            display: inline-block;
-            margin: 18px 10px 0 12px;
-            width: 14px;
-            height: 14px;
-            line-height: 14px;
-            text-align: center;
-            background: #4082e6;
-            color: white;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 3px;
+                display: inline-block;
+                margin: 18px 10px 0 12px;
+                width: 14px;
+                height: 14px;
+                line-height: 14px;
+                text-align: center;
+                background: #4082e6;
+                color: white;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 3px;
             }
         }
         }
 
     }
-}
-
-// .popover{
-//     :global{
-//         .ant-popover-content{
-//             .ant-popover-arrow{
-//                 border-top-color: #226eaf;
-//                 border-bottom-color: #226eaf;
-//             }
-//             .ant-popover-arrow::after{
-//                 border-top-color: #226eaf;
-//                 border-bottom-color: #226eaf;
-//             }
-//             .ant-popover-inner{
-//                 background-color: #226eaf;
-//                 p{
-//                     color: #fff;
-//                     margin: 5px;
-//                 }
-//             }
-//         }
-//     }
-// }
-
-@keyframes leave{
-    0% {opacity: 1;}
-    50% {opacity: .5;}
-    100% {opacity: 0;}
 }
 
 .loadMore{

@@ -1,6 +1,7 @@
 import offset from 'document-offset'
 import * as d3 from 'd3'
 import {event as currentEvent} from 'd3'
+import {assign} from 'es6-object-assign';
 /**
  * Tip element.
  */
@@ -25,7 +26,7 @@ export default class Tip {
    */
 
   constructor(config) {
-    Object.assign(this, config)
+    assign(this, config)
   }
 
   /**
