@@ -64,6 +64,7 @@
   "alertList.notifyList.4": "ChatOps群组",
   "alertList.title.basic": "常规",
   "alertList.title.additional": "扩展",
+  "alertList.detailHistory.alertTimesDescription": "累计发生告警{ times }次",
 
   "alertList.noListData": "暂无数据",
   "alertList.showMore": "显示更多",
@@ -451,7 +452,6 @@
   "ruleEditor.nLevelUp": "当且仅当告警级别提高时再次提醒",
 
   "server.notStarted": "服务不可用",
-  "itsm.not.found": "ITSM服务不可用",
 
   "visualAnalyze.groupBy": "分组",
   "visualAnalyze.incidentGroup": "只显示有故障的分组",
