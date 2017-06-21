@@ -8,6 +8,7 @@ const initialState = {
     hideAlertSetTip: true, // 设置提示false有提示
     modalVisible: false,
     currentDashbordData: undefined,
+    oldDashbordDataMap: undefined,
     isLoading: true, //加载
     selectedTime: 'lastOneHour', // 选择的最近时间
     selectedStatus: 'NEW', // 选择的过滤状态
@@ -96,26 +97,29 @@ export default {
 
       if (treemapData.result) {
         let filterData = [];
+        let index = 0;
         if (treemapData.data && treemapData.data.picList && treemapData.data.picList.length !== 0) {
           let dashbordData = treemapData.data.picList
-          if(isFixed){
-              // 使用JSON方法进行深克隆
-              dashbordData = JSON.parse(JSON.stringify(dashbordData))
-             
-              dashbordData.forEach( (item) =>{
-                if(item.children){
-                  item.children.forEach((childItem) => {
-                    childItem.fixedValue = 1 * ((item.children.length + 1) / item.children.length)
-                    // 保存真实数据修复显示tip 告警数不正确bug
-                    childItem.trueVal =  childItem.value
-                    item.fixedValue = (item.fixedValue ? item.fixedValue : 0) + ((item.children.length + 1) / item.children.length)
-                  })
-                  // item.fixedValue = item.children.length
+          // 使用JSON方法进行深克隆
+          dashbordData = JSON.parse(JSON.stringify(dashbordData))
+          
+          dashbordData.forEach( (item) =>{
+            if(item.children){
+              item.children.forEach((childItem) => {
+                if(isFixed) {
+                  childItem.fixedValue = 1 * ((item.children.length + 1) / item.children.length)
+                  item.fixedValue = (item.fixedValue ? item.fixedValue : 0) + ((item.children.length + 1) / item.children.length)
                 }
-              
-            })
+                // 保存真实数据修复显示tip 告警数不正确bug
+                childItem.trueVal =  childItem.value
+                childItem.id = "label_" + index;
+                index ++;
+              })
+              // item.fixedValue = item.children.length
+            }
+          
+          })
             
-          }
           filterData = yield dashbordData.filter( item => item['path'] != 'status' )
         }
 
@@ -154,7 +158,14 @@ export default {
     },
     // 显示treemap
     setCurrentTreemap(state, { payload: {currentDashbordData, isLoading, selectedTime, selectedStatus} }){
-      return { ...state, currentDashbordData, isLoading, selectedTime, selectedStatus}
+      const oldDashbordData = state.currentDashbordData || [];
+      let oldDashbordDataMap = {};
+      oldDashbordData.forEach((parentNode, index) => {
+          parentNode.children.forEach((childNode) => {
+              oldDashbordDataMap[childNode.id] = childNode;
+          })
+      })
+      return { ...state, oldDashbordDataMap, currentDashbordData, isLoading, selectedTime, selectedStatus}
     },
     setSelectedTime(state, {payload: selectedTime}) {
       return { ...state, selectedTime}

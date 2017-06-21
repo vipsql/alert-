@@ -5,6 +5,7 @@ import * as d3 from 'd3'
 import {event as currentEvent} from 'd3'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import Tip from './d3Tip'
+import $ from 'jquery'
 const d3Tip = new Tip
 
 const formatMessages = defineMessages({
@@ -60,6 +61,10 @@ class Chart extends Component{
         this.xscale = d3.scale.linear().range([0, this.chartWidth])
         this.yscale = d3.scale.linear().range([0, this.chartHeight])
         this.color = function(num){
+            // 没有数据时的颜色
+            if(num < 0) {
+                return "#7ff5d9"
+            }
             return severityToColor[num]
         }
 
@@ -76,7 +81,7 @@ class Chart extends Component{
                 this.props.requestFresh()
             //}
             
-        }, 60000)
+        }, 10000)
 
         // 监听ESC
         document.addEventListener('keyup',(e) =>{
@@ -87,13 +92,225 @@ class Chart extends Component{
             }
         },false)
     }
-    componentDidUpdate(){
-        let { intl: {formatMessage}, selectedStatus } = this.props;
 
+    componentWillReceiveProps(newProps) {
         
+    }
+    
+    componentDidUpdate(nextProps){
+        const { oldDashbordDataMap, isFixed } = this.props;
+
+        if(this.props.isFixed != nextProps.isFixed || this.props.isFullScreen != nextProps.isFullScreen) {
+            this._repaint();
+            return;
+        }
+        
+        if(this.treemap) {
+            this._update();
+        } else {
+            this._repaint();
+        }
+        
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timer)
+    }
+
+    // 根据窗口大小重新设置每一块的大小
+    _resize() {
+
+    }
+
+    // 全屏
+    _fullScreen() {
+        const childCells = d3.select(".cell.child");
+        const parentCells = d3.select(".cell.parent");
+        
+    }
+
+    _idealTextColor(bgColor) {
+        var nThreshold = 105;
+        var components = this._getRGBComponents(bgColor);
+        var bgDelta = (components.R * 0.299) + (components.G * 0.587) + (components.B * 0.114);
+        return ((255 - bgDelta) < nThreshold) ? "#000000" : "#ffffff";
+    }
+
+    _getRGBComponents(color) {
+        var r = color.substring(1, 3);
+        var g = color.substring(3, 5);
+        var b = color.substring(5, 7);
+        return {
+            R: parseInt(r, 16),
+            G: parseInt(g, 16),
+            B: parseInt(b, 16)
+        };
+    }
+
+    _wrap(d) {
+        let self = d3.select(this),
+            text;
+        const originText = self.text();
+        const originFontSize = self.attr("font-size");
+        if (!d.children && (d.parent.path == 'severity' || d.parent.path == 'status')) {
+            text = window[`_${d.parent.path}`][d.name]
+        } else {
+            text = d.name;
+        }
+
+        self.text(text);
+        self.attr("font-size", "13");
+        let textLength =  self.node().getComputedTextLength();
+        let isShorted = false
+        
+        while (textLength > (d.dx - 2) && text.length > 0) {
+            isShorted = true;
+            text = text.slice(0, -1);
+            self.text(text + '...');
+            textLength = self.node().getComputedTextLength();
+        }
+
+        self.text(originText);
+        self.attr("font-size", originFontSize);
+
+        return isShorted?(text + "...") : text;
+    }
+
+    _update() {
+        const { oldDashbordDataMap, currentDashbordData } = this.props;
+        var children = currentDashbordData.filter(function(d) {
+            return !d.children;
+        });
+        const childrenCells = d3.selectAll("g.cell.child");
+        childrenCells
+        .data(children, function(d) {
+            return "c-" + d.path;
+        });
+        
+        currentDashbordData.forEach((parentNode, index) => {
+            parentNode.children.forEach((childNode) => {
+                const oldNode = oldDashbordDataMap[childNode.id];
+                const wrap = this._wrap;
+                const currentNode = d3.select("#" + childNode.id);
+
+                // 最高级别警告发生变化时呈现的动画
+                if((childNode && oldNode) && childNode.maxSeverity != oldNode.maxSeverity) {
+                    const svg = currentNode.select("svg");
+                    if(currentNode[0] && currentNode[0][0]) {
+                        currentNode[0][0].__data__.maxSeverity = childNode.maxSeverity;
+                    }
+                    svg
+                    .select("rect")
+                    .transition()
+                    .duration(2000) 
+                    .style("fill", (d) => {
+                        return this.color(childNode.maxSeverity)
+                    })
+                }
+
+                // 告警数发生变化时呈现的动画
+                if(childNode && (!oldNode || oldNode.trueVal != childNode.trueVal)) {
+                    const node = this.chart.select("#" + childNode.id);
+                    currentNode[0][0].__data__.trueVal = childNode.trueVal;
+                    currentNode[0][0].__data__.noData = childNode.trueVal == 0;
+                    node.data(childNode);
+                    const svg = d3.select("#" + childNode.id).select("svg");
+                    svg
+                    .select("text.label")
+                    .transition()
+                    .duration(500)
+                    .style("opacity", "0")
+                    .transition()
+                    .delay(2000)
+                    .transition()
+                    .duration(500)
+                    .style("opacity", "1")
+
+                    const text = svg
+                    .append("text")
+                    .attr("class", "tipLabel")
+                    .attr('x', function(d) {
+                        return d.dx / 2;
+                    })
+                    .attr("dy", ".35em")
+                    .attr("fill", "#04203e")
+                    .attr("font-size", "13")
+                    .attr("text-anchor", "middle")
+                    .text((oldNode.trueVal > childNode.trueVal?('-' + (oldNode.trueVal - childNode.trueVal)):'+' + (childNode.trueVal - oldNode.trueVal)))
+                    .style("color", "red")
+                    .attr('font-size', function(d) {
+                        const self = d3.select(this);
+                        const originFontSize = self.attr("font-size");
+                        const originStyle = document.defaultView.getComputedStyle(self.node())
+                        const textLength = self.node().getComputedTextLength();
+                        const fontSizeTimesDx = d.dx / textLength;
+                        const fontSizeTimesDy = d.dy / originStyle.lineHeight;
+                        let targetFontSize = 13 * (fontSizeTimesDx > fontSizeTimesDy?fontSizeTimesDy:fontSizeTimesDx) * 0.8;
+                        
+                        if(targetFontSize > 30) {
+                            targetFontSize = 30
+                        }
+                        return targetFontSize;
+                    })
+
+                    // 若告警数减少则数字从上往下移动，否则从下往上移动
+                    if(oldNode.trueVal < childNode.trueVal) {
+                        text
+                        .attr('y', function(d) {
+                            return d.dy;
+                        })
+                        .transition()
+                        .duration(1000)
+                        .attr('y', function(d) {
+                            return d.dy / 2;
+                        })
+                        .transition()
+                        .duration(1000)
+                        .attr('y', function(d) {
+                            return -10;
+                        })
+                    } else {
+                        text
+                        .attr('y', function(d) {
+                            return 0;
+                        })
+                        .transition()
+                        .duration(1000)
+                        .attr('y', function(d) {
+                            return d.dy / 2;
+                        })
+                        .transition()
+                        .duration(1000)
+                        .attr('y', function(d) {
+                            return d.dy + 10;
+                        })
+                    }
+                    
+                    text
+                    .transition()
+                    .delay(2000) 
+                    .style("display", "none")
+                    .text(wrap)
+                    .remove();
+                }
+            })
+        })
+
+        if(!this.props.isFixed) {
+            setTimeout(() => { this._repaint(); }, 3000);
+        }
+    }
+    
+    _repaint() {
+        let { intl: {formatMessage}, selectedStatus } = this.props;
 
         // 如果全屏
         const treemapNode = document.querySelector('#treemap')
+
+        // 去掉所有动画
+        $("text.label").css("opacity", "1");
+        $("text.tipLabel").remove();
+
         if(this.props.isFullScreen){
              //这里是为了遮住头部的那段空白 用了下面hack
             //  高度添加40px(headerHeight为40)
@@ -183,7 +400,6 @@ class Chart extends Component{
             return !d.children;
         });
         var parents = nodes.filter(function(d) {
-
             return d.children;
         });
 
@@ -253,7 +469,7 @@ class Chart extends Component{
                 })
                 .attr('font-size', '13')
                 .attr("height", headerHeight)
-                .text(wrap)
+                .text(this._wrap)
             // update transition
             var parentUpdateTransition = parentCells.transition().duration(transitionDuration);
             parentUpdateTransition.select(".cell")
@@ -291,6 +507,9 @@ class Chart extends Component{
             var childEnterTransition = childrenCells.enter()
                 .append("g")
                 .attr("class", "cell child")
+                .attr("id", function(d) {
+                    return d.id
+                })
                 .on("contextmenu", (d, e) => {
                     zoom.call(this, node === d.parent ? root : d.parent)
                     d3Tip.hide()
@@ -434,25 +653,6 @@ class Chart extends Component{
             return (ky * d.dy) / headerHeight;
         }
 
-        function getRGBComponents(color) {
-            var r = color.substring(1, 3);
-            var g = color.substring(3, 5);
-            var b = color.substring(5, 7);
-            return {
-                R: parseInt(r, 16),
-                G: parseInt(g, 16),
-                B: parseInt(b, 16)
-            };
-        }
-
-
-        function idealTextColor(bgColor) {
-            var nThreshold = 105;
-            var components = getRGBComponents(bgColor);
-            var bgDelta = (components.R * 0.299) + (components.G * 0.587) + (components.B * 0.114);
-            return ((255 - bgDelta) < nThreshold) ? "#000000" : "#ffffff";
-        }
-
 
         function zoom(d) {
 
@@ -490,7 +690,7 @@ class Chart extends Component{
                             .select(".label")
                             .style("display", "")
                             .style("fill", (d) => {
-                              return idealTextColor(color(d.maxSeverity));
+                              return this._idealTextColor(color(d.maxSeverity));
                             });
                     }
                   })
@@ -555,12 +755,8 @@ class Chart extends Component{
             }
         }
         }
-
     }
 
-    componentWillUnmount() {
-        clearInterval(this.timer)
-    }
 
     render(){
         

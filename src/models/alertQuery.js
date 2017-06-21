@@ -64,8 +64,12 @@ export default {
     alertQuerySetup({dispatch, history}) {
       history.listen((location) => {
         if (location.pathname === '/alertQuery') {
+          const query = location.query || {};
           dispatch({
-            type: 'alertQuerySetup'
+            type: 'alertQuerySetup',
+            payload: {
+              resObjectId: query.resObjectId,
+            }
           })
         }
       })
@@ -232,8 +236,9 @@ export default {
     *alertQuerySetup({payload},{call, put, select}){
       yield put({ type: 'initCustomCols'})
       yield put({ type: 'alertQueryDetail/toggleDetailModal', payload: false })
-      yield put({ type: 'clearQuery'})
-      yield put({ type: 'queryAlertList'})
+      yield put({ type: 'clearQuery' })
+      yield put({ type: 'setCurrentQuery', payload: { resObjectId: payload.resObjectId } })
+      yield put({ type: 'queryAlertList', payload: { resObjectId: payload.resObjectId } })
 
       // 查询来源和扩展标签
       const sourceOptions = yield call(querySource)
