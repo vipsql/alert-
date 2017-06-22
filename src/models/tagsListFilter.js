@@ -4,7 +4,6 @@ import { getAllTagsKey, getTagValues} from '../services/alertListTags.js'
 import { message } from 'antd'
 
 const initalState = {
-    isShowSelectModal: false, // 展开选择框
     filteredTags: {},
     tagsKeyList: [
       // {key: 'severity', keyName: '告警等级', tagSpread: true, selectedChildren: [{ name: '3'}]}, 
@@ -45,13 +44,9 @@ export default {
   },
 
   effects: {
-    /**
-     *  初始化面板的数据
-     */
+    // 初始化
     *initTagsList({payload}, {select, put, call}) {
-
       const filterTags = yield JSON.parse(localStorage.getItem('alertListPath'));
-
       yield put({
         type: 'initalshareSelectTags',
         payload: {
@@ -64,7 +59,8 @@ export default {
         payload: filteredTags || {}
       })
     },
-    *openSelectModal({payload: {isShowSelectModal}}, {select, put, call}) {
+    // 打开维度选择
+    *openSelectModal({payload: callback}, {select, put, call}) {
       const tagKeysList = yield getAllTagsKey();
 
       if (tagKeysList.result && tagKeysList.data.length !== 0) {
@@ -72,16 +68,14 @@ export default {
           type: 'setTagsKeyList',
           payload: {
             tagsKeyList: tagKeysList.data || [],
-            isShowSelectModal
           }
         })
+        yield callback()
       } else {
         yield message.error(window.__alert_appLocaleData.messages[tagKeysList.message], 3);
       }
     },
-    /**
-     * 筛选时间
-     */
+    // 时间过滤
     *selectTime({payload}, {select, put, call}) {
       if (payload !== undefined) {
         const filteredTags = yield select( state => state.tagListFilter.filteredTags )
@@ -90,9 +84,7 @@ export default {
         yield put({ type: 'alertManage/setSelectedTime', payload: payload})
       }
     },
-    /**
-     * 筛选状态
-     */
+    // 状态过滤
     *selectStatus({payload}, {select, put, call}) {
       if (payload !== undefined) {
         let status = payload === 'NEW' 
@@ -106,9 +98,7 @@ export default {
         yield put({ type: 'alertManage/setSelectedStatus', payload: payload})
       }
     },
-    /**
-     *  查询标签对应的values
-     */
+    // 查询标签对应的值
     *queryTagValues({payload}, {select, put, call}) {
       if (payload !== undefined && payload.key !== undefined && payload.value !== undefined) {
         const tagValues = yield call(getTagValues, payload);
@@ -130,39 +120,10 @@ export default {
         console.error('query params type error')
       }
     },
-    *addSelectedItem({payload}, {select, put, call}) {
-      const { tagsKeyList } = yield select( state => {
-        return {
-          'tagsKeyList': state.tagListFilter.tagsKeyList
-        }
-      })
-      let newList = tagsKeyList.map( (group, index) => {
-        if (group.key === payload.field) {
-          let status = true;
-          group.selectedChildren.forEach( (child, itemIndex) => {
-            if (child.name === payload.item.value) {
-              message.error(window.__alert_appLocaleData.messages['modal.tag.repeat'], 3)
-              status = false;
-            }
-          })
-          if (status) {
-            group.selectedChildren.push({id: payload.item.id, name: payload.item.value});
-          }
-        }
-        return group
-      })
-      yield put({
-        type: 'addItem',
-        payload: newList
-      })
-    },
-    /**
-     *  查询时间线和列表 + 将shareSelectTags更改
-     */
-    *saveFilterTags({payload}, {select, put, call}) {
-      yield put({ type: 'saveSelectTag' })
+    // 查询时间线和列表 + 将shareSelectTags更改
+    *addTag({payload}, {select, put, call}) {
+      yield put({ type: 'saveSelectTag', payload: {key: payload.field, target: payload.item}})
       yield put({ type: 'filterTags'})
-      yield put({ type: 'toggleTagsSelect', payload: false})
       const filteredTags = yield select( state => state.tagListFilter.filteredTags )
       yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
       yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
@@ -174,9 +135,7 @@ export default {
       yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
       yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
     },
-    /**
-     *  自动刷新
-     */
+    //自动刷新
     *refresh({payload}, {select, put, call}) {
       yield put({ type: 'filterTags'})
       const filteredTags = yield select( state => state.tagListFilter.filteredTags )
@@ -185,15 +144,6 @@ export default {
   },
 
   reducers: {
-    setStatus(state, {payload: status}) {
-      let {filteredTags} = state;
-      filteredTags.status = status
-      return {...state, filteredTags}
-    },
-    // toggle select modal
-    toggleTagsSelect(state, { payload: isShowSelectModal }) {
-      return { ...state, isShowSelectModal }
-    },
     // 初始化数据
     initalshareSelectTags(state, { payload: {originTags}}) {
       let filter = {};
@@ -205,96 +155,79 @@ export default {
         } else {
           filter[key] = originTags[key]['values']
           if (key !== 'status') {
-            shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: [originTags[key]['values']] })
+            shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: [originTags[key]['values']], visible: false })
           }
         }
       })
       return { ...state, shareSelectTags, filteredTags: filter}
     },
+    // 修改状态
+    setStatus(state, {payload: status}) {
+      let {filteredTags} = state;
+      filteredTags.status = status
+      return {...state, filteredTags}
+    },
+    // 维度变化
+    changeTags(state, {payload: filter}) {
+      let {shareSelectTags, tagsKeyList} = state;
+      tagsKeyList.forEach( (item) => {
+        if (item.key === filter.key) {
+          item.checked = !filter.checked;
+        }
+      })
+      if (filter.checked) {
+        shareSelectTags = shareSelectTags.filter( item => item.key !== filter.key )
+      } else {
+        shareSelectTags.push({
+          key: filter.key,
+          keyName: filter.keyName,
+          values: [],
+          visible: false
+        })
+      }
+      return {...state, shareSelectTags, tagsKeyList}
+    },
     // 存储tagsKeyList
-    setTagsKeyList(state, {payload: {tagsKeyList, isShowSelectModal}}) {
+    setTagsKeyList(state, {payload: {tagsKeyList}}) {
       const { shareSelectTags } = state;
       tagsKeyList.length > 0 && tagsKeyList.forEach( (tagkey, index) => {
-        tagkey.tagSpread = false
-        tagkey.selectedChildren = []
+        tagkey.checked = false;
         shareSelectTags.length > 0 && shareSelectTags.forEach( (tag, itemIndex) => {
           if (tagkey.key === tag.key) {
-              tag.values.forEach( (val, childIndex) => {
-                tagkey.selectedChildren.push({name: val})
-              })
+              tagkey.checked = true;
           }
         })
       })
-      return { ...state, tagsKeyList, isShowSelectModal }
+      return { ...state, tagsKeyList }
     },
-    closeOneItem(state, {payload: target}) {
-      const { tagsKeyList } = state;
-      let newList = tagsKeyList.map( (group, index) => {
-        if (group.key === target.field) {
-          let children = group.selectedChildren.filter( (child, itemIndex) => {
-            return target.name != child.name
-          })
-          group.selectedChildren = children;
-          //group.tagSpread = false;
-        }
-        return group
-      })
-      return { ...state, tagsKeyList: newList }
-    },
-    closeAllItem(state, {payload: target}) {
-      const { tagsKeyList } = state;
-      let newList = tagsKeyList.map( (group, index) => {
-        if (group.key === target.field) {
-          group.selectedChildren = [];
-          //group.tagSpread = false;
-        }
-        return group
-      })
-      return { ...state, tagsKeyList: newList }
-    },
-    mouseLeave(state, {payload: target}) {
-      const { tagsKeyList } = state;
-      let newList = tagsKeyList.map( (group, index) => {
-        if (group.key === target.field) {
-          group.tagSpread = false;
-        }
-        return group
-      })
-      return { ...state, tagsKeyList: newList }
-    },
-    deleteItemByKeyboard(state, {payload: target}) {
-      const { tagsKeyList } = state;
-      let newList = tagsKeyList.map( (group, index) => {
-        if (group.key === target.field) {
-          group.selectedChildren = group.selectedChildren.slice(0, group.selectedChildren.length - 1)
-        }
-        return group
-      })
-      return { ...state, tagsKeyList: newList }
-    },
-    addItem(state, {payload: newList}) {
-      return { ...state, tagsKeyList: newList }
-    },
-    saveSelectTag(state) {
-      const { tagsKeyList } = state;
-      let shareSelectTags = []
-      tagsKeyList.length > 0 && tagsKeyList.filter( item => item.selectedChildren.length > 0 ).forEach( (tagkey, index) => {
-        shareSelectTags.push({key: tagkey['key'], keyName: tagkey['keyName']})
-        tagkey.selectedChildren.forEach( (tag, itemIndex) => {
-          if (shareSelectTags[index]['values']) {
-            shareSelectTags[index]['values'].push(tag.name)
+    // 保存选择的标签
+    saveSelectTag(state, {payload: {key, target}}) {
+      const { selectList, shareSelectTags } = state;
+      shareSelectTags.forEach( (item) => {
+        if(item.key === key) {
+          if(item.values.includes(target.value)) {
+            item.values = item.values.filter( item => item !== target.value )
           } else {
-            shareSelectTags[index]['values'] = [tag.name]
+            item.values.push(target.value)
           }
-        })
+        }
       })
-      return { ...state, shareSelectTags }
+      selectList.forEach( (item) => {
+        if(item.value === target.value) {
+          if(typeof item.checked === 'undefined') {
+            item.checked = true;
+          } else {
+            delete item.checked
+          }
+        }
+      })
+      return { ...state, shareSelectTags, selectList }
     },
-    // filter tags
+    // 过滤数据给后台
     filterTags(state) {
       const { shareSelectTags } = state;
       let source = {};
-      shareSelectTags.forEach( (item) => {
+      let result = shareSelectTags.filter( (item) => {
         item.values !== undefined && item.values.forEach( (tag) => {
             if ( source[item.key] ) {
               source[item.key] = source[item.key] + ',' + tag;
@@ -302,8 +235,9 @@ export default {
               source[item.key] = tag;
             }
         })
+        return item.values.length > 0;
       })
-      let __alert_visualAnalyze_gr1 = shareSelectTags.filter( item => item.key !== 'severity' && item.key !== 'status' && item.key !== 'source').map( (item) => {
+      let __alert_visualAnalyze_gr1 = result.filter( item => item.key !== 'severity' && item.key !== 'status' && item.key !== 'source').map( (item) => {
         let child = {};
         child['key'] = item['key']
         child['value'] = item.values.join(',')
@@ -312,30 +246,43 @@ export default {
       localStorage.setItem('__alert_visualAnalyze_gr1', JSON.stringify(__alert_visualAnalyze_gr1))
       return { ...state, filteredTags: source }
     },
-    // remove select tag
+    // 移除标签值
     removeSelectTag(state, { payload: target }) {
-      let { shareSelectTags } = state;
-      const newList = shareSelectTags.filter( (item) => {
+      let { shareSelectTags, selectList} = state;
+      const newList = shareSelectTags.map( (item) => {
         if (target.field == item.key) {
           let newValues = item.values.filter( (child) => {
             return target.name != child
           })
           item.values = newValues;
         }
-        return item.values.length > 0;
+        return item;
       })
-      return { ...state, shareSelectTags: newList }
-    },
-    setSelectList(state, {payload: {selectList, targetKey}}) {
-      const { tagsKeyList } = state;
-      let newList = tagsKeyList.map( (group, index) => {
-        group.tagSpread = false; // 其他key-value的可选标签都隐藏掉
-        if (group.key === targetKey) {
-          group.tagSpread = true;
+      selectList.forEach( (item) => {
+        if(item.value === target.name) {
+          delete item.checked
         }
-        return group
       })
-      return { ...state, tagsKeyList: newList, selectList }
+      return { ...state, shareSelectTags: newList, selectList }
+    },
+    // 在查询values时和已选择内容做匹配
+    setSelectList(state, {payload: {selectList, targetKey}}) {
+      const { tagsKeyList, shareSelectTags } = state;
+      let newList = shareSelectTags.map( (tag, index) => {
+        tag.visible = false;
+        if (tag.key === targetKey) {
+          tag.visible = true;
+          tag.values.forEach( (val) => {
+            selectList.forEach( (select) => {
+              if (select.value == val) {
+                select.checked = true;
+              }
+            })
+          })
+        }
+        return tag
+      })
+      return { ...state, shareSelectTags: newList, selectList }
     },
   }
 }

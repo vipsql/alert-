@@ -12,6 +12,7 @@ import ResolveModal from '../common/resolveModal/index.js'
 import SuppressModal from '../common/suppressModal/index.js'
 import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
+import AlertOriginSlider from '../common/AlertOriginSlider/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import $ from 'jquery'
 
@@ -37,7 +38,7 @@ class alertQueryManage extends Component{
     }
 
     render() {
-      const {dispatch, form, alertQuery, alertQueryDetail, intl: {formatMessage}} = this.props;
+      const {dispatch, form, alertQuery, alertQueryDetail, alertOrigin, intl: {formatMessage}} = this.props;
 
       const { haveQuery, sourceOptions, propertyOptions, queryCount } = alertQuery;
       
@@ -360,6 +361,36 @@ class alertQueryManage extends Component{
         }
       }
 
+      const alertOriginSliderProps = { 
+        intl: {formatMessage},
+        onClose: () => {
+          dispatch({
+            type: 'alertOrigin/toggleVisible',
+            payload: {
+              visible: false
+            }
+          })
+        },
+        onPageChange: (pagination, filters, sorter) => {
+          const pageIsObj = typeof pagination === 'object';
+          dispatch({
+            type: 'alertOrigin/changePage',
+            payload: {
+              pagination: {
+                pageNo: pageIsObj?pagination.current:pagination
+              },
+              sorter: {
+                sortKey: sorter?sorter.field:undefined,
+                sortType: sorter?(sorter.order == "descend"?0:1):undefined
+              }
+            }
+          })
+        },
+        visible: alertOrigin.visible,
+        loading: alertOrigin.loading,
+        alertOrigin
+      }
+
       const localeMessage = defineMessages({
           occurTime: {
               id: 'alertList.title.occurTime',
@@ -480,10 +511,6 @@ class alertQueryManage extends Component{
           notifyList_no: {
               id: 'alertQuery.label.notifyList.no',
               defaultMessage: '否',
-          },
-          tags: {
-              id: 'alertQuery.label.tags',
-              defaultMessage: '标签',
           },
           allSource: {
               id: 'alertQuery.label.allSource',
@@ -848,6 +875,7 @@ class alertQueryManage extends Component{
             <SuppressModal {...suppressModalProps}/>
             <SuppressTimeSlider {...timeSliderProps} />
             <ManualNotifyModal {...notifyModalProps} />
+            <AlertOriginSlider { ...alertOriginSliderProps }/>
           </div>
       )
     }
@@ -857,7 +885,8 @@ export default injectIntl(Form.create()(
   connect((state) => {
     return {
       alertQuery: state.alertQuery,
-      alertQueryDetail: state.alertQueryDetail
+      alertQueryDetail: state.alertQueryDetail,
+      alertOrigin: state.alertOrigin
     }
   })(alertQueryManage)
 ))

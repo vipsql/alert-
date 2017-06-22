@@ -64,6 +64,7 @@
   "alertList.notifyList.4": "ChatOps群组",
   "alertList.title.basic": "常规",
   "alertList.title.additional": "扩展",
+  "alertList.detailHistory.alertTimesDescription": "累计发生告警{ times }次",
 
   "alertList.noListData": "暂无数据",
   "alertList.showMore": "显示更多",
@@ -393,6 +394,7 @@
   "ruleEditor.or": "满足任意",
   "ruleEditor.not": "都不满足",
   "ruleEditor.closeOrDel": "告警关闭/删除",
+  "ruleEditor.upgradeAndNotify": "告警升级/通知",
   "ruleEditor.notify": "告警通知",
   "ruleEditor.ticket": "告警派单",
   "ruleEditor.suppress": "告警抑制",
@@ -447,12 +449,13 @@
   "ruleEditor.word5": "对符合条件的告警进行抑制动作，被抑制期间发送到Alert的告警将会被自动丢弃。",
   "ruleEditor.word6": "分钟，如果告警不是",
   "ruleEditor.word7": "，稍后通知",
+  "ruleEditor.word9": "等待",
+  "ruleEditor.upgradelabel": "当满足以下条件时，升级告警：",
   "ruleEditor.alertUpgrade": "升级告警",
   "ruleEditor.word8": "请选择告警状态",
   "ruleEditor.nLevelUp": "当且仅当告警级别提高时再次提醒",
 
   "server.notStarted": "服务不可用",
-  "itsm.not.found": "ITSM服务不可用",
 
   "visualAnalyze.groupBy": "分组",
   "visualAnalyze.incidentGroup": "只显示有故障的分组",

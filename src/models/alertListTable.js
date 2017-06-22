@@ -2,6 +2,7 @@ import { queryAlertList, queryChild, queryAlertListTime } from '../services/aler
 import { viewTicket } from '../services/alertOperation'
 import { parse } from 'qs'
 import { message } from 'antd'
+import { assign } from 'es6-object-assign';
 import { groupSort } from '../utils'
 
 const initialState = {
@@ -547,7 +548,7 @@ export default {
     // 修改data数组某一行的值
     updateDataRow(state, { payload }) {
       const { data, isGroup } = state;
-      let newData = Object.assign([], data);
+      let newData = assign([], data);
       if (isGroup) {
         newData = newData.map((tempGroup) => {
           let data = tempGroup.children.map((tempRow) => {

@@ -30,6 +30,7 @@ class ListTable extends Component {
       handleSelectAll,
       relieveClick,
       orderFlowNumClick,
+      showAlertOrigin,
       isLoading,
       orderUp,
       orderDown,
@@ -254,6 +255,9 @@ class ListTable extends Component {
               td = <td key={key}>{data}</td>
             }
             break;
+          case 'count':
+            td = <td key={key} title={data}><a href="javascript:;" data-id={ item.id } data-name={ item.name } onClick={ showAlertOrigin }>{ data }</a></td>
+            break;
           default:
             td = <td key={key} title={data}>{data}</td>
             break;
@@ -414,10 +418,10 @@ class ListTable extends Component {
               </tr>
             </thead>
             <Animate
-              transitionName="fade"
-              component='tbody'
-              transitionEnterTimeout={500}
-              transitionLeaveTimeout={1000}
+                transitionName="fade"
+                component='tbody'
+                transitionEnterTimeout={300}
+                transitionLeaveTimeout={300}
             >
               {
                 data.length > 0 ?

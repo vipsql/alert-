@@ -7,13 +7,22 @@
     //background: #fff;
     border: 1px solid #186399;
     background: #0a548a;
+    cursor: pointer;
+    &:hover{
+
+    }
     .typeName{
         position: relative;
         display: inline-block;
-        vertical-align: top;
+        //vertical-align: top;
         margin: 5px 3px 5px 3px;
         //color: #acb2be;
         color: #57a9e5;
+    }
+    .placeholder{
+        margin: 3px;
+        color: #fff;
+        padding: 3px;
     }
     div{
         position: relative;
@@ -30,8 +39,8 @@
         //box-shadow: #ebeff3 0px 0px 2px;
         border-radius: 3px;
         vertical-align: top;
-        margin-top: 3px;
         padding: 3px;
+
         p{
             position: relative;
             bottom: 2px;
@@ -47,6 +56,67 @@
             vertical-align: top;
             //color: #acb3bf
             color: #094e80;
+        }
+    }
+    :global{
+        .tags-appear.tags-appear-active {
+            opacity: 0;
+            transition: opacity .3s ease-in-out;
+        }
+        .tags-leave.tags-leave-active {
+            opacity: 0;
+            transition: opacity .3s ease-in-out; 
+        }
+    }
+    ul.tags-content{
+        max-height: 200px;
+        overflow: scroll;
+        position: absolute;
+        left: 0;
+        top: 100%;
+        margin-top: 2px;
+        padding: 5px 0;
+        width: 100%;
+        background: #095a95;
+        border: 1px solid #297ebb;
+        border-radius: 2px;
+        box-shadow: 1px 1px 3px 1px rgba(0,0,0,.1);
+        z-index: 15;
+        li{
+            input{
+                height: 20px;
+                width: 100%;
+                background: transparent;
+                border: transparent;
+                border-radius: 2px;
+                color: #fff;
+                outline: none;
+                &::-webkit-input-placeholder{
+                    color: #9dd7ff;
+                }
+                &::-ms-input-placeholder{
+                    color: #9dd7ff;
+                }
+                &::-moz-placeholder{
+                    color: #5994d6
+                }
+            }
+            position: relative;
+            cursor: pointer;
+            background: #095a95;
+            color: #fff;
+            padding: 5px 10px;
+            transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+            &:hover{
+                background: #3092d9
+            }
+            i{
+                position: absolute;
+                top: 10px;
+                right: 20px;
+                font-size: 16px;
+                line-height: 1;
+            }
         }
     }
 }
