@@ -173,3 +173,20 @@ export async function notifyOperate(params) {
         body: JSON.stringify(params)
     })
 }
+
+
+export async function takeOverService({isSuccess, alertIds}){
+  return new Promise((resolve, reject) => {
+    if(isSuccess){
+      resolve({
+        result: true,
+        data: alertIds
+      });
+    } else{
+      reject({
+        result: false,
+        data: []
+      });
+    }
+  })
+}
