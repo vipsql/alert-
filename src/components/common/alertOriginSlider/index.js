@@ -43,9 +43,13 @@ class AlertOriginSlider extends Component {
   // 动态计算表格应该占据的高度
   _computerTableContentHeight() {
     const ele = document.getElementById("alertOriginSlider");
-    const totalHeight = ele.offsetHeight;
-    const tableContentHeight = totalHeight - this.headerHeight - this.totalTipHeight - this.paginationHeight - this.thHeight;
-    return tableContentHeight;
+    if(ele) {
+      const totalHeight = ele.offsetHeight;
+      const tableContentHeight = totalHeight - this.headerHeight - this.totalTipHeight - this.paginationHeight - this.thHeight;
+      return tableContentHeight;
+    } else {
+      return 0;
+    }
   }
 
   // 设置当鼠标点击不处于本区域时隐藏右侧滑动栏的全局事件
