@@ -151,6 +151,14 @@ export default {
     clear(state) {
       return { ...state, ...initialState }
     },
+
+    // 将除了payload以外的值初始化
+    // setInitialExceptPayload(state, { payload }) {
+    //   return {
+    //     ...initialState,
+    //     ...payload
+    //   }
+    // },
     // 不分组更新
     updateAlertListToNoGroup(state, { payload: { info, isShowMore, isGroup, levels, orderBy, orderType, tempListData, currentPage } }) {
       let checkList = {};
@@ -176,24 +184,38 @@ export default {
       return { ...state, checkAlert: checkList, data: info, isShowMore, isGroup, groupBy, levels }
     },
     // 记录下原先checked数据
-    resetCheckAlert(state, { payload: { origin, newObj } }) {
-      let ids = Object.keys(origin);
+    //将loadMore取得的新数据放入checkAlert中
+    resetCheckAlert(state, { payload: { moreData } }) {
+      // let ids = Object.keys(origin);
       let checkList = {};
-      newObj.forEach((item, index) => {
-        checkList[`${item.id}`] = {
+      // newObj.forEach((item, index) => {
+      //   checkList[`${item.id}`] = {
+      //     info: item,
+      //     checked: false
+      //   }
+      //   ids.forEach((id) => {
+      //     if (item.id == id && origin[id].checked) {
+      //       checkList[`${item.id}`] = {
+      //         info: item,
+      //         checked: true
+      //       }
+      //     }
+      //   })
+      // })
+      // return { ...state, checkAlert: checkList }
+      moreData.forEach(item => {
+        checkList[item.id] = {
           info: item,
           checked: false
         }
-        ids.forEach((id) => {
-          if (item.id == id && origin[id].checked) {
-            checkList[`${item.id}`] = {
-              info: item,
-              checked: true
-            }
-          }
-        })
       })
-      return { ...state, checkAlert: checkList }
+      return {
+        ...state,
+        checkAlert: {
+          ...state.checkAlert,
+          ...checkList
+        }
+      }
     },
     // 删除勾选项
     deleteCheckAlert(state, { payload: arr }) {
@@ -210,7 +232,7 @@ export default {
       ids.forEach((id) => {
         checkAlert[id].checked = false
       })
-      return { ...state, checkAlert: checkAlert, operateAlertIds: [], selectedAlertIds: [] }
+      return { ...state, checkAlert: checkAlert, operateAlertIds: [], selectedAlertIds: [], selectedAll: false }
     },
     // 更改勾选状态
     changeCheckAlert(state, { payload: { alertInfo, alertId, checked } }) {
@@ -572,11 +594,21 @@ export default {
     },
 
     // 清空selectedAlertIds和operateAlertIds： 接手成功后要手动清除
-    deleteOperateIds(state) {
+    // deleteOperateIds(state) {
+    //   return {
+    //     ...state,
+    //     operateAlertIds: [],
+    //     selectedAlertIds: []
+    //   }
+    // },
+
+    //
+    resestCheckboxStatus(state) {
       return {
         ...state,
         operateAlertIds: [],
-        selectedAlertIds: []
+        selectedAlertIds: [],
+        selectedAll: false
       }
     }
   },
@@ -882,7 +914,8 @@ export default {
         orderBy: alertListTable.orderBy,
         orderType: alertListTable.orderType,
         pageSize: alertListTable.pageSize,
-        ...alertListTable.tagsFilter
+        ...alertListTable.tagsFilter,
+        status: 'test'
       }
 
       const listReturnData = yield call(queryAlertList, params)
@@ -894,8 +927,9 @@ export default {
         yield put({
           type: 'resetCheckAlert',
           payload: {
-            origin: alertListTable.checkAlert,
-            newObj: listData
+            // origin: alertListTable.checkAlert,
+            // newObj: listData
+            moreData: listReturnData.data.datas
           }
         })
         if (!listReturnData.data.hasNext) {
@@ -990,7 +1024,7 @@ export default {
       })
     },
 
-    // 更改全选状态
+    // 点击全选按钮
     *handleSelectAll({ payload: { checked } }, { select, put, call }) {
       const checkAlert = yield select(state => state.alertListTable.checkAlert);
       // let newStatus = !selectedAll;

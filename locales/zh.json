@@ -135,6 +135,10 @@
   "modal.validating": "检验中...",
   "modal.noTicketType": "请选择工单类型",
 
+  "modal.reassign": "转派",
+  "modal.reassignTitle": "转派指定人员",
+  "modal.specificUser": "指定人员",
+
   "modal.know": "知道了",
   "modal.suppress.success": "抑制成功",
   "modal.suppress.successRemind": "告警将在抑制时间内不再被接收，取消抑制请移步 “设置———关联规则”，禁用或删除对应的规则",

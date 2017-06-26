@@ -1,5 +1,5 @@
 import { parse } from 'qs'
-import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, notifyOperate, takeOverService } from '../services/alertOperation'
+import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, notifyOperate, takeOverService, getReassignUsers } from '../services/alertOperation'
 import { queryAlertList, queryChild, queryAlertListTime } from '../services/alertList'
 import { getUsers } from '../services/alertAssociationRules';
 import { queryCloumns } from '../services/alertQuery'
@@ -25,6 +25,7 @@ const initalState = {
   notifyIncident: {}, // 通知告警
   notifyUsers: [], // 通知用户
   disableChatOps: false,
+  isShowReassingModal: false, //转派
 
   isSelectAlert: false, // 是否选择了告警
   isSelectOrigin: false, // 是否选择了源告警
@@ -60,6 +61,7 @@ const initalState = {
       ]
     }
   ],
+  reassignUsers: [], //获取的可转派用户
 
   // 分组显示
   isGroup: false,
@@ -80,6 +82,24 @@ export default {
   state: initalState,
 
   effects: {
+
+    //打开转派告警Model
+    *openReassign({ payload: { position } }, { select, put, call }) {
+      const operateAlertIds = yield select(state => state.alertListTable.operateAlertIds);
+      const response = yield call(getReassignUsers);
+      if (response.result) {
+        yield put({
+          type: 'setReassignUsers',
+          payload: response.data
+        })
+      } else {
+        console.error('获取转派人员错误');
+      }
+      yield put({
+        type: 'toggleReassignModal',
+        payload: true
+      })
+    },
     // 打开抑制告警Modal
     *openSuppressTimeSlider({ payload: { position } }, { select, put, call }) {
       // 触发筛选
@@ -187,8 +207,11 @@ export default {
           ...payload
         })
         if (notify.result) {
-          yield put({ type: 'alertListTable/resetCheckedAlert' })
-          yield put({ type: 'alertListTable/changeCloseState', payload: { arrList: stingIds, status: 150 } })
+          // yield put({ type: 'alertListTable/resetCheckedAlert' })
+          // yield put({ type: 'alertListTable/changeCloseState', payload: { arrList: stingIds, status: 150 } })
+          yield put({ type: 'alertListTable/resestCheckboxStatus' })
+          yield put({ type: 'alertListTable/queryAlertList' });
+
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
         } else {
           yield message.error(window.__alert_appLocaleData.messages[notify.message], 3);
@@ -456,8 +479,11 @@ export default {
         yield put({ type: 'alertDetailOperation/afterDispatch' })
       } else {
         let stingIds = operateAlertIds.map(item => '' + item)
-        yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
-        yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
+        // yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
+        // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
+        yield put({ type: 'alertListTable/resestCheckboxStatus' })
+        yield put({ type: 'alertListTable/queryAlertList' });
+
         //yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 150}})
         yield put({ type: 'alertDetail/closeTicketModal' })
       }
@@ -499,8 +525,10 @@ export default {
         })
         if (resultData.result) {
           if (resultData.data.result) {
-            yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
-            yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
+            // yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
+            // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
+            yield put({ type: 'alertListTable/resestCheckboxStatus' })
+            yield put({ type: 'alertListTable/queryAlertList' });
             // yield put({ type: 'alertListTable/resetCheckedAlert'})
             // yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 255}})
             yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
@@ -557,8 +585,11 @@ export default {
         })
         if (resultData.result) {
           if (resultData.data.result) {
-            yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
-            yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
+            // yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
+            // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
+            yield put({ type: 'alertListTable/resestCheckboxStatus' })
+            yield put({ type: 'alertListTable/queryAlertList' });
+
             // yield put({ type: 'alertListTable/resetCheckedAlert'})
             // yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 190}})
             yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
@@ -636,7 +667,8 @@ export default {
           }
         });
         if (shareResult.result) {
-          yield put({ type: 'alertListTable/resetCheckedAlert' })
+          // yield put({ type: 'alertListTable/resetCheckedAlert' })
+          yield put({ type: 'alertListTable/resestCheckboxStatus' })
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 2)
         } else {
           yield message.error(`${shareResult.message}`, 2)
@@ -687,9 +719,10 @@ export default {
       const stingIds = alertIds.map(item => '' + item)
       if (response.result) {
         //这里一定要先删除告警，再删除checkAlert，因为在渲染table的时候用到了checkAlert
-        yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
-        yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
-        yield put({type: 'alertListTable/deleteOperateIds'})
+        // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
+        // yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
+        yield put({ type: 'alertListTable/resestCheckboxStatus' })
+        yield put({ type: 'alertListTable/queryAlertList' })
       }
     }
 
@@ -845,6 +878,18 @@ export default {
         dispatchDisabled: disabled,
         closeDisabled: disabled,
         resolveDisabled: disabled,
+      }
+    },
+    toggleReassignModal(state, { payload: isShowReassingModal }) {
+      return {
+        ...state,
+        isShowReassingModal
+      }
+    },
+    setReassignUsers(state, { payload: reassignUsers }) {
+      return {
+        ...state,
+        reassignUsers
       }
     }
   }

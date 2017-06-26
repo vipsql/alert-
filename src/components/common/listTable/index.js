@@ -404,9 +404,9 @@ class ListTable extends Component {
           <table className={styles.listTable}>
             <thead>
               <tr>
-                {   //checked={selectedAll}
+                {
                   sourceOrigin !== 'alertQuery' ?
-                    <th key="checkAll" width={48} className={styles.checkstyle}><input type="checkbox" onChange={handleSelectAll} /></th>
+                    <th key="checkAll" width={48} className={styles.checkstyle}><input type="checkbox" onChange={handleSelectAll} checked={selectedAll}/></th>
                     :
                     undefined
                 }

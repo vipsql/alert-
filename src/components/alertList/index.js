@@ -18,6 +18,7 @@ import RelieveModal from './relieveModal'
 import ChatOpshModal from '../common/chatOpsModal/index.js'
 import ResolveModal from '../common/resolveModal/index.js'
 import SuppressModal from '../common/suppressModal/index.js'
+import ReassignModal from '../common/ReassignModal/index.js'
 import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import FilterHead from '../common/filterHead/index.js'
@@ -169,6 +170,12 @@ class AlertListManage extends Component {
           payload: {
             position: position
           }
+        })
+      },
+      showReassiginFunc: (position) => {
+        dispatch({
+          type: 'alertOperation/openReassign',
+          payload: position
         })
       }
     }
@@ -417,6 +424,22 @@ class AlertListManage extends Component {
       }
     }
 
+    const reassignModalProps = {
+      isShowReassingModal: alertOperation.isShowReassingModal,
+      reassignUsers: alertOperation.reassignUsers,
+      handleOk: function(){
+        dispatch({
+
+        })
+      },
+      handleCancel: function(){
+        dispatch({
+          type: 'alertOperation/toggleReassignModal',
+          payload: false
+        })
+      }
+    }
+
     const refreshProps = {
       onChange(checked) {
 
@@ -569,6 +592,7 @@ class AlertListManage extends Component {
         <SuppressModal {...suppressModalProps} />
         <SuppressTimeSlider {...timeSliderProps} />
         <ManualNotifyModal {...notifyModalProps} />
+        <ReassignModal {...reassignModalProps} />
       </div>
     )
   }

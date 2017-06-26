@@ -32,6 +32,7 @@ const alertOperation = ({ position,
   notifyDisabled,
   shareDisabled,
   showNotifyFunc,
+  showReassiginFunc,
   intl: { formatMessage } }) => {
 
   const localeMessage = defineMessages({
@@ -237,7 +238,10 @@ const alertOperation = ({ position,
   // )
 
   const reassign = (
-    <Menu onClick={() => { }}>
+    <Menu onClick={() => {
+      console.log("showReassiginFunc");
+      showReassiginFunc(position);
+    }}>
       <Menu.Item key="1" className={styles.menuItem}><FormattedMessage {...localeMessage['operate_reassign']} /></Menu.Item>
     </Menu>
   )
@@ -289,6 +293,7 @@ const alertOperation = ({ position,
     </Menu>
   );
 
+
   return (
     <div className={styles.operateMain}>
 
@@ -312,9 +317,9 @@ const alertOperation = ({ position,
         <FormattedMessage {...localeMessage['operate_resolve']} />
       </Button>
 
-      <DropdownButton className={styles.myDropdown} overlay={menu} trigger={['click']} >
-        <FormattedMessage {...localeMessage['moreOperate']} />
-      </DropdownButton>
+      <Dropdown overlay={menu} >
+        <span className={styles.moreOperateDropdown}>{formatMessage({ ...localeMessage['moreOperate'] })}<Icon type="down" /></span>
+      </Dropdown>
 
       {/*<Dropdown overlay={menu} trigger={['click']} >
         <span className={styles.moreActionDropdown}>{formatMessage({ ...localeMessage['moreOperate'] })}<Icon type="down" /></span>
@@ -437,6 +442,7 @@ alertOperation.defaultProps = {
   showNotifyFunc: () => { },
   suppressIncidents: () => { },
   showSuppressTimeSlider: () => { },
+  showReassiginFunc: () => {}
   // takeOverDisabled: true,
   // dispatchDisabled: true,
   // closeDisabled: true,

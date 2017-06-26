@@ -133,6 +133,10 @@
   "modal.validating": "Validating...",
   "modal.noTicketType": "Please select ticket type",
 
+  "modal.reassign": "Reassign",
+  "modal.reassignTitle": "Reassign Specific User",
+  "modal.specificUser": "Select User",
+
   "modal.know": "OK, I get it",
   "modal.suppress.success": "Suppress successfully.",
   "modal.suppress.successRemind": "Alerts will not be received in specified time range, please go to 'Settings - Correlations' to disable the temporary suppresssion rules if you want cancel that.",
