@@ -90,7 +90,8 @@ export default {
         let status = payload === 'NEW' 
                       ? '0' : payload === 'PROGRESSING'
                           ? '150' : payload === 'RESOLVED'
-                              ? '190' : undefined;
+                              ? '190' : payload === 'EXCEPTCLOSE' 
+                                ? '0,40,150,190' : undefined;
         yield put({ type: 'setStatus', payload: status})
         const filteredTags = yield select( state => state.tagListFilter.filteredTags )
         yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
@@ -163,7 +164,7 @@ export default {
     },
     // 修改状态
     setStatus(state, {payload: status}) {
-      let {filteredTags} = state;
+      let { filteredTags } = state;
       filteredTags.status = status
       return {...state, filteredTags}
     },

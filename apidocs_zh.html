@@ -47,7 +47,7 @@
 				<td>消息头参数(header)</td>
 				<td>
 					api_key* (必须)<br>
-					app_Key* (必须) (告警来源系统)
+					app_key* (必须) (告警来源系统)
 				</td>
 			</tr>
 			<tr>
@@ -103,7 +103,6 @@ curl -H "Content-type: application/json;charset=utf-8" -X POST -d '[
 			\"occur_time\":1490251916807,
 			\"entity_name\":\"PC20151218\",
 			\"entity_addr\":\"10.1.113.28\",
-			\"source\":\"Monitor\",
 			\"merge_key\":\"entity_name,name\",
 			\"identify_key\":\"entity_name,entity_addr\",
 			\"properties\":[{\"val\": \"派出所\",\"code\": \"belong\",\"name\": \"所属单位\"}]

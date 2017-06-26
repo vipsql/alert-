@@ -256,6 +256,52 @@
             }
         }
         .modalTable{
+            .regex{
+                font-size: 12px;
+                line-height: 1;
+                padding: 5px 8px;
+                background: #13456d;
+                color: #76c5f6;
+                border-radius: 4px;
+                margin: 5px;
+                cursor: pointer;
+                &:hover{
+                  color: #94d1fc;
+                  transition: all .5s ease-in-out;
+                }
+            }
+            .extends{
+              margin-top: 10px;
+              .clear{
+                  font-size: 12px;
+                  line-height: 1;
+                  text-decoration: underline;
+                  color: #76c5f6;
+                  margin-left: 12px;
+                  cursor: pointer;
+              }
+            }
+            .ghostBtn{
+              color: #fff;
+              background-color: #108ee9;
+              border-color: #108ee9;
+              &:hover{
+                  color: #fff;
+                  background-color: #49a9ee;
+                  border-color: #49a9ee;
+              }
+              &.btnSpace{
+                margin-left: 40px;
+              }
+              &.btnAbsoulte{
+                position: absolute;
+                top: 0px;
+                right: 90px;
+              }
+            }
+            .result{
+              color: #fe704b;
+            }
             .expression{
                 color: #fff;
             }
@@ -377,6 +423,7 @@
                 position: relative;
                 bottom: 1px;
                 font-size: 13px;
+                line-height: 1;
             }
             button > span:before{
                 position: relative;

@@ -10,8 +10,8 @@ import '../components/layout/common.less'
 function App ({children, location, dispatch, app, isNeedContent, temp}) {
   const {isShowMask, isFold} = app
   // params.isNeedContent确定需不需要content这个容器
-  const {params} = children.props || {};
-  
+  const {params} = children && children.props || {};
+
   const LeftMenuProps = {
     isFold,
     location,
@@ -43,7 +43,7 @@ function App ({children, location, dispatch, app, isNeedContent, temp}) {
         <div className={styles.main}>
           <Bread location={location} />
           <div className={styles.container}>
-            <div className={params.isNeedContent === false?styles.no_content:styles.content} id="content">
+            <div className={params && params.isNeedContent === false?styles.no_content:styles.content} id="content">
               {children}
             </div>
           </div>

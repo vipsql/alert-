@@ -47,7 +47,7 @@
 				<td>Params(header)</td>
 				<td>
 					api_key* (required)<br>
-					app_Key* (required) (Created in first step, identify a source from which the alert was sent. )
+					app_key* (required) (Created in first step, identify a source from which the alert was sent. )
 				</td>
 			</tr>
 			<tr>
@@ -103,7 +103,6 @@ curl -H "Content-type: application/json;charset=utf-8" -X POST -d '[
 			\"occur_time\":1490251916807,
 			\"entity_name\":\"PC20151218\",
 			\"entity_addr\":\"10.1.113.28\",
-			\"source\":\"Monitor\",
 			\"merge_key\":\"entity_name,name\",
 			\"identify_key\":\"entity_name,entity_addr\",
 			\"properties\":[{\"val\": \"Financial\",\"code\": \"belong\",\"name\": \"Department\"}]

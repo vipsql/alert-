@@ -49,7 +49,7 @@ class Chart extends Component{
     }
     componentDidMount(){
         const self = this;
-        
+
         const severityToColor = {
             '0': '#4fdfbf', // 恢复
             '1': '#f6cb03', // 提醒
@@ -73,15 +73,15 @@ class Chart extends Component{
             .attr("width", this.chartWidth)
             .attr("height", this.chartHeight)
             .append("svg:g")
-        
+
 
         this.timer = setInterval( () =>{
             // 全屏下不刷新
             //if(!this.props.isFullScreen){
                 this.props.requestFresh()
             //}
-            
-        }, 10000)
+
+        }, 60000)
 
         // 监听ESC
         document.addEventListener('keyup',(e) =>{
@@ -94,9 +94,9 @@ class Chart extends Component{
     }
 
     componentWillReceiveProps(newProps) {
-        
+
     }
-    
+
     componentDidUpdate(nextProps){
         const { oldDashbordDataMap, isFixed } = this.props;
 
@@ -104,13 +104,13 @@ class Chart extends Component{
             this._repaint();
             return;
         }
-        
+
         if(this.treemap) {
             this._update();
         } else {
             this._repaint();
         }
-        
+
     }
 
     componentWillUnmount() {
@@ -126,7 +126,7 @@ class Chart extends Component{
     _fullScreen() {
         const childCells = d3.select(".cell.child");
         const parentCells = d3.select(".cell.parent");
-        
+
     }
 
     _idealTextColor(bgColor) {
@@ -162,7 +162,7 @@ class Chart extends Component{
         self.attr("font-size", "13");
         let textLength =  self.node().getComputedTextLength();
         let isShorted = false
-        
+
         while (textLength > (d.dx - 2) && text.length > 0) {
             isShorted = true;
             text = text.slice(0, -1);
@@ -186,7 +186,7 @@ class Chart extends Component{
         .data(children, function(d) {
             return "c-" + d.path;
         });
-        
+
         currentDashbordData.forEach((parentNode, index) => {
             parentNode.children.forEach((childNode) => {
                 const oldNode = oldDashbordDataMap[childNode.id];
@@ -202,7 +202,7 @@ class Chart extends Component{
                     svg
                     .select("rect")
                     .transition()
-                    .duration(2000) 
+                    .duration(2000)
                     .style("fill", (d) => {
                         return this.color(childNode.maxSeverity)
                     })
@@ -246,7 +246,7 @@ class Chart extends Component{
                         const fontSizeTimesDx = d.dx / textLength;
                         const fontSizeTimesDy = d.dy / originStyle.lineHeight;
                         let targetFontSize = 13 * (fontSizeTimesDx > fontSizeTimesDy?fontSizeTimesDy:fontSizeTimesDx) * 0.8;
-                        
+
                         if(targetFontSize > 30) {
                             targetFontSize = 30
                         }
@@ -285,10 +285,10 @@ class Chart extends Component{
                             return d.dy + 10;
                         })
                     }
-                    
+
                     text
                     .transition()
-                    .delay(2000) 
+                    .delay(2000)
                     .style("display", "none")
                     .text(wrap)
                     .remove();
@@ -300,7 +300,7 @@ class Chart extends Component{
             setTimeout(() => { this._repaint(); }, 3000);
         }
     }
-    
+
     _repaint() {
         let { intl: {formatMessage}, selectedStatus } = this.props;
 
@@ -318,7 +318,7 @@ class Chart extends Component{
             this.chartWidth = window.innerWidth
             this.chartHeight = window.innerHeight
             treemapNode.style.cssText = 'position:fixed;top:-20px;left:0'
-            
+
         }else{
             if (this.props.isFold) {
                 this.chartWidth = document.documentElement.clientWidth - 140;
@@ -328,7 +328,7 @@ class Chart extends Component{
             this.chartHeight = window.innerHeight - 180
             treemapNode.style.cssText = 'position:absolute;'
         }
-        
+
 
         this.xscale = d3.scale.linear().range([0, this.chartWidth]);
         this.yscale = d3.scale.linear().range([0, this.chartHeight]);
@@ -337,13 +337,13 @@ class Chart extends Component{
             .select('svg')
             .attr("width", this.chartWidth)
             .attr("height", this.chartHeight)
-        
+
         // 计算总的告警数 主要是为了当告警数很小时 区域无法显示 给一个最小的区域快大小
         let sumAlerts = 0
         this.props.currentDashbordData.forEach( (item)=>{
             sumAlerts += item.value
-        })    
-        
+        })
+
 
         this.treemap = d3.layout.treemap()
           .round(false)
@@ -355,7 +355,7 @@ class Chart extends Component{
               }else{
                 return d.value
               }
-              
+
           });
         var headerHeight = 40;
         var headerColor = "#0d3158";
@@ -371,7 +371,7 @@ class Chart extends Component{
         }
 
         let updateData = deepCopy(this.props.currentDashbordData)
-        updateData.forEach((item, index) => {            
+        updateData.forEach((item, index) => {
             if(item.value == 0){item.noData = true}
                 if(item.children){
                     let hasZeros = 0
@@ -380,9 +380,9 @@ class Chart extends Component{
                             childItem.value = 1
                             childItem.noData = true
                             hasZeros++
-                            
+
                         }else{
-                            
+
                         }
                     })
                     item.value = hasZeros
@@ -395,7 +395,7 @@ class Chart extends Component{
         };
 
         var nodes = this.treemap.nodes(root)
-        
+
         var children = nodes.filter(function(d) {
             return !d.children;
         });
@@ -414,7 +414,7 @@ class Chart extends Component{
             self.text(text);
             let textLength =  self.node().getComputedTextLength();
             let isShorted = false
-            
+
             while (textLength > (d.dx - 2) && text.length > 0) {
                 isShorted = true;
                 text = text.slice(0, -1);
@@ -427,7 +427,7 @@ class Chart extends Component{
 
         // d3.json("../../../mock/alert.json", function(data) {
         if(children.length > 0){
-          
+
             // create parent cells
             var parentCells = this.chart.selectAll("g.cell.parent")
                 .data(parents.slice(1), function(d) {
@@ -523,7 +523,7 @@ class Chart extends Component{
                         let temp = pathArr[0];
                         // if ( pathArr[0] == 'severity' || pathArr[0] == 'status') {
                         //     alertListPath[temp] = {key: pathArr[0], keyName: d.parent.name, values: pathArr[1]};
-                        // } else 
+                        // } else
                         if (pathArr[0] == 'source') {
                             alertListPath[temp] = {key: pathArr[0], keyName: d.parent.name, values: d.name};
                         } else if (pathArr[0] != 'severity') {
@@ -536,10 +536,11 @@ class Chart extends Component{
                     //                                     ? {key: 'severity', keyName: window.__alert_appLocaleData.messages['constants.severity'], values: '2,1,0'} : d.maxSeverity == 3
                     //                                         ? {key: 'severity', keyName: window.__alert_appLocaleData.messages['constants.severity'], values: '3,2,1,0'}
                     //                                         : {key: 'severity', keyName: window.__alert_appLocaleData.messages['constants.severity'], values: '3,2,1,0'}
-                    alertListPath.status = this.props.selectedStatus === 'NEW' 
+                    alertListPath.status = this.props.selectedStatus === 'NEW'
                                                 ? {key: 'status', keyName: window.__alert_appLocaleData.messages['constants.state'], values: '0'} : this.props.selectedStatus === 'PROGRESSING'
                                                     ? {key: 'status', keyName: window.__alert_appLocaleData.messages['constants.state'], values: '150'} : this.props.selectedStatus === 'RESOLVED'
-                                                        ? {key: 'status', keyName: window.__alert_appLocaleData.messages['constants.state'], values: '190'} : undefined;
+                                                        ? {key: 'status', keyName: window.__alert_appLocaleData.messages['constants.state'], values: '190'} : this.props.selectedStatus === 'EXCEPTCLOSE'
+                                                          ? {key: 'status', keyName: window.__alert_appLocaleData.messages['constants.state'], values: '0,40,150,190'} : undefined;
                     alertListPath.selectedTime = this.props.selectedTime;
                     localStorage.setItem('alertListPath', JSON.stringify(alertListPath))
 
@@ -551,12 +552,12 @@ class Chart extends Component{
                     }
                     window.location.hash = "#/alertManage/alertList";
                 })
-                
+
                 // .on('mouseout', tip.hide)
 
                 .append("svg")
                 .attr("class", "clip")
-                
+
             childEnterTransition.append("rect")
                 .classed("background", true)
                 // .attr('filter',"url(#inset-shadow)")
@@ -671,7 +672,7 @@ class Chart extends Component{
             if (node != level) {
                 this.chart.selectAll(".cell.child .label")
                     // .style("display", "none");
-            } 
+            }
 
             var zoomTransition = this.chart.selectAll("g.cell").transition().duration(transitionDuration)
                 .attr("transform", (d) => {
@@ -722,7 +723,7 @@ class Chart extends Component{
                 .attr("font-size", "11.5pt")
                 .style("text-shadow", "1px 1px 1px #333")
                 // .attr("font-size", function(d) {
-                    
+
                 //     d.w = this.getComputedTextLength();
                 //     return d.dx > d.w ? 13 : 13 * d.dx / d.w;
                 // })
@@ -731,7 +732,7 @@ class Chart extends Component{
                 .attr("x", function(d) {
                     return kx * d.dx / 2;
                 })
-                
+
 
             zoomTransition.select("rect")
                 .attr("width", function(d) {
@@ -747,7 +748,7 @@ class Chart extends Component{
                   return d.children ? headerColor : this.color(d.maxSeverity);
                 } );
 
-            
+
             node = d;
 
             if (d3.event) {
@@ -759,18 +760,18 @@ class Chart extends Component{
 
 
     render(){
-        
+
         const hasData = Array.isArray(this.props.currentDashbordData) && this.props.currentDashbordData.length > 0
-        
+
         // 下面分开判断主要是为了没数据居中显示
         return (
             <div>
-            
+
             <div className={styles.loadingWrap}>
                 <Spin spinning= {this.props.isLoading}>
-                    <div id="treemap" className={styles.treemap + ' ' + (this.props.isFullScreen?styles.maxTreemap:'')}> 
-                    
-                    </div> 
+                    <div id="treemap" className={styles.treemap + ' ' + (this.props.isFullScreen?styles.maxTreemap:'')}>
+
+                    </div>
                 </Spin>
             </div>
             { !hasData && <div className={styles.alertNoData}><FormattedMessage {...formatMessages['noData']} /></div>}

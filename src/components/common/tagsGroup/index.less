@@ -9,7 +9,8 @@
     background: #0a548a;
     cursor: pointer;
     &:hover{
-
+      border: 1px solid #2bb4f4;
+      transition: border .5s ease-in-out;
     }
     .typeName{
         position: relative;
@@ -73,12 +74,12 @@
         overflow: scroll;
         position: absolute;
         left: 0;
-        top: 100%;
+        top: e("calc(100% + 6px)");
         margin-top: 2px;
         padding: 5px 0;
         width: 100%;
         background: #095a95;
-        border: 1px solid #297ebb;
+        border: 1px solid #2bb4f4;
         border-radius: 2px;
         box-shadow: 1px 1px 3px 1px rgba(0,0,0,.1);
         z-index: 15;
@@ -89,7 +90,7 @@
                 background: transparent;
                 border: transparent;
                 border-radius: 2px;
-                color: #fff;
+                color: #96d0f9;
                 outline: none;
                 &::-webkit-input-placeholder{
                     color: #9dd7ff;

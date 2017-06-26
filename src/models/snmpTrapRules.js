@@ -1,5 +1,5 @@
 import {parse} from 'qs'
-import { getField, getSource, getCMDBSource, getOID } from '../services/alertConfig'
+import { getField, getSource, getCMDBSource, getOID, get16Data, getValidateRegex } from '../services/alertConfig'
 import { message } from 'antd';
 import { getUUID } from '../utils'
 
@@ -13,12 +13,9 @@ const initalState = {
   OIDList: [], // 精确匹配时的oid类
   operateType: undefined, // 操作类型
   operateAppRules: {}, // 操作的对象
-  __matchProps: [], // 全量，不可重复
-  __groupFieldProps: [], // 全量，不可重复
-  __groupComposeProps: [], // 已映射字段 + 新字段名
-  __mergeProps: [], // 如果选择entityName或者name + 新字段名
-  __identifyProps: [], // 如果选择entityName或者entityAddr + 新字段名
-
+  matchProps: [], // 全量的后台返回字段名
+  dataToString: {}, // 16进制转String
+  validateResult: {} // 校验结果
 }
 
 export default {
@@ -135,14 +132,63 @@ export default {
         payload: false
       })
     },
-    // 取消保存 --> 点击取消
-    *cancelSave({payload}, {select, put, call}) {
-
-    }
+    // 16进制转换成string
+    *toggle16Radix({payload: hex }, {select, put, call}) {
+      if (hex && hex.hexType && hex.hexValue) {
+        const type = hex.type
+        const toggleData = yield call(get16Data, {
+          hexType: hex.hexType,
+          hexValue: hex.hexValue
+        })
+        if (toggleData.result) {
+          yield put({
+            type: 'set16ToString',
+            payload: {
+              type: type,
+              data: toggleData.data
+            }
+          })
+        } else {
+          yield message.error(window.__alert_appLocaleData.messages[toggleData.message], 3);
+        }
+      } else {
+        console.error('hex type error')
+      }
+    },
+    *validateRadix({payload: params }, {select, put, call}) {
+      if (params && params.value && params.regex) {
+        const type = params.type
+        const validateData = yield call(getValidateRegex, {
+          value: params.value,
+          regex: params.regex
+        })
+        if (validateData.result) {
+          yield put({
+            type: 'setValidateResult',
+            payload: {
+              type: type,
+              data: validateData.data
+            }
+          })
+        } else {
+          yield message.error(window.__alert_appLocaleData.messages[validateData.message], 3);
+        }
+      } else {
+        console.error('validate data error')
+      }
+    },
 
   },
 
   reducers: {
+    // 检验
+    setValidateResult(state, {payload: data}) {
+      return { ...state, validateResult: data }
+    },
+    // 16进制 --> string
+    set16ToString(state, {payload: data}) {
+      return { ...state, dataToString: data }
+    },
     // 转换关闭弹窗状态，以及注入删除对象
     toggleTrapDeleteModal(state, {payload: {status, rule ={} }}) {
       return { ...state, isShowTrapDeleteModal: status, operateDeleteRule: rule }
@@ -160,11 +206,7 @@ export default {
       return {
         ...state,
         filterSource: source,
-        __matchProps: fields,
-        __groupFieldProps: fields,
-        __groupComposeProps: [],
-        __mergeProps: [],
-        __identifyProps: [],
+        matchProps: fields,
         operateAppRules: initalState.operateAppRules,
         operateType,
         OIDList
@@ -174,63 +216,23 @@ export default {
     editOperate(state, {payload: {id, fields, source, OIDList, operateType}}) {
       const { appRules } = state;
       let operateAppRules = {};
-      let selectedMatchFields = [];
-      let selectedGroupFields = [];
-      let codeProperties = [];
-      let __matchProps = [].concat(fields);
-      let __groupFieldProps = [].concat(fields);
-      let __groupComposeProps = [];
-      let __mergeProps = [];
-      let __identifyProps = [];
+      let matchProps = [].concat(fields);
+
       appRules.forEach( (rule, index) => {
         if (rule.id == id) {
           operateAppRules = rule;
+          operateAppRules.matchAttributes.length > 0 && operateAppRules.matchAttributes.forEach( item => item.isSpread = false )
+          operateAppRules.properties.length > 0 && operateAppRules.properties.forEach( item => item.isSpread = false )
           if (rule.dataSource === 2) {
-            __matchProps.push('severity');
-            __groupFieldProps.push('severity');
+            matchProps.push('severity');
           }
-          selectedMatchFields = Object.keys(operateAppRules.matchFields);
-          selectedGroupFields = Object.keys(operateAppRules.groupFields);
-          codeProperties = operateAppRules.properties;
         }
-      })
-      selectedMatchFields.length > 0 && selectedMatchFields.forEach( (field, index) => {
-         if (field === 'name' || field === 'entityName') {
-           __mergeProps.push(field)
-         }
-         if (field === 'entityAddr' || field === 'entityName') {
-           __identifyProps.push(field)
-         }
-         __groupComposeProps.push(field);
-         if (__matchProps.includes(field)) {
-           __matchProps = __matchProps.filter( match => match !== field )
-         }
-      })
-      selectedGroupFields.length > 0 && selectedGroupFields.forEach( (field, index) => {
-         if ((field === 'name' || field === 'entityName') && !__mergeProps.includes(field)) {
-           __mergeProps.push(field);
-         }
-         if ((field === 'entityAddr' || field === 'entityName') && !__identifyProps.includes(field)) {
-           __identifyProps.push(field);
-         }
-         if (__groupFieldProps.includes(field)) {
-           __groupFieldProps = __groupFieldProps.filter( match => match !== field )
-         }
-      })
-      codeProperties.length > 0 && codeProperties.forEach( (property, index) => {
-         __groupComposeProps.push(property.code);
-         __mergeProps.push(property.code);
-         __identifyProps.push(property.code);
       })
 
       return {
         ...state,
         filterSource: source,
-        __matchProps,
-        __groupFieldProps,
-        __groupComposeProps,
-        __mergeProps,
-        __identifyProps,
+        matchProps,
         operateAppRules,
         operateType,
         OIDList

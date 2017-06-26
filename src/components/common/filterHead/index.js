@@ -42,6 +42,10 @@ const formatMessages = defineMessages({
     resolvedIncident: {
       id: 'alertManage.resolvedIncident',
       defaultMessage: '已解决告警'
+    },
+    exceptCloseIncident: {
+      id: 'alertManage.exceptCloseIncident',
+      defaultMessage: '所有未关闭'
     }
 })
 
@@ -65,6 +69,7 @@ const filterHead = ({queryByTime, queryByStatus, style = undefined, defaultTime,
                 <Radio value='NEW'><FormattedMessage {...formatMessages['newIncident']}/></Radio>
                 <Radio value='PROGRESSING'><FormattedMessage {...formatMessages['assignedIncident']}/></Radio>
                 <Radio value='RESOLVED'><FormattedMessage {...formatMessages['resolvedIncident']}/></Radio>
+                <Radio value='EXCEPTCLOSE'><FormattedMessage {...formatMessages['exceptCloseIncident']}/></Radio>
             </RadioGroup>
         </div>
     )

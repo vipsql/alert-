@@ -132,3 +132,29 @@ export async function getTrapUrl() {
       }
   })
 }
+
+// 16 --> string
+export async function get16Data(params) {
+  const options = {
+    body: JSON.stringify(params),
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    method: 'POST'
+  }
+
+  return request('/applyRule/hexValue', options)
+}
+
+// 检验正则
+export async function getValidateRegex(params) {
+  const options = {
+    body: JSON.stringify(params),
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    method: 'POST'
+  }
+
+  return request('/applyRule/regexValue', options)
+}
