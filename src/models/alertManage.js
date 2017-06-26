@@ -104,6 +104,8 @@ export default {
           dashbordData = JSON.parse(JSON.stringify(dashbordData))
           
           dashbordData.forEach( (item) =>{
+            item.id = "label_" + index;
+            index ++;
             if(item.children){
               item.children.forEach((childItem) => {
                 if(isFixed) {
