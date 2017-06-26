@@ -704,7 +704,6 @@ class Chart extends Component{
 
             if(parentD.parent) {
                 parentD.children.forEach((childD) => {
-                    this._finishTransition(childD);
                     childD.kx = kx;
                     childD.ky = ky;
                 })
