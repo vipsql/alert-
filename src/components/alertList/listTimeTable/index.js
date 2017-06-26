@@ -15,7 +15,7 @@ const  ListTimeTableWrap = ({dispatch, alertListTable, selectedTime}) => {
         type: 'alertListTable/loadMore'
       })
     },
-    
+
     setTimeLineWidth(gridWidth, minuteToWidth, lineW){
       dispatch({
         type: 'alertListTable/setTimeLineWidth',
@@ -28,11 +28,23 @@ const  ListTimeTableWrap = ({dispatch, alertListTable, selectedTime}) => {
     },
 
     checkAlertFunc(e){
-      const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
+      // const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
 
+      // dispatch({
+      //   type: 'alertListTable/changeCheckAlert',
+      //   payload: alertInfo
+      // })
+
+      const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
+      const alertId = e.target.getAttribute('data-id');
+      const checked = e.target.checked;
       dispatch({
-        type: 'alertListTable/changeCheckAlert',
-        payload: alertInfo
+        type: 'alertListTable/handleCheckboxClick',
+        payload: {
+          alertId,
+          checked,
+          alertInfo
+        }
       })
     },
     detailClick(e) {
@@ -63,7 +75,7 @@ const  ListTimeTableWrap = ({dispatch, alertListTable, selectedTime}) => {
     // 分组展开
     spreadGroup(e) {
       const groupClassify = e.target.getAttribute('data-classify')
-      
+
       dispatch({
         type: 'alertListTable/spreadGroup',
         payload: groupClassify
@@ -71,7 +83,7 @@ const  ListTimeTableWrap = ({dispatch, alertListTable, selectedTime}) => {
     },
     noSpreadGroup(e) {
       const groupClassify = e.target.getAttribute('data-classify')
-      
+
       dispatch({
         type: 'alertListTable/noSpreadGroup',
         payload: groupClassify

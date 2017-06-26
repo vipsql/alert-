@@ -8,6 +8,10 @@ export async function isSetUserTags() {
             'Content-Type': 'application/json',
         }
     })
+    // return Promise.resolve({
+    //   result: true,
+    //   data: true
+    // })
 }
 
 export async function getTagsByUser() {

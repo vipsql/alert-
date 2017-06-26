@@ -86,6 +86,7 @@
   "alertQuery.reset": "Reset",
   "alertQuery.result": "{total} results found. (Critical {critical}, Warning {warning}, Informaiton {informaiton}, Recovery {ok})",
 
+  "alertOperate.takeOver": "Take Over",
   "alertOperate.dispatch": "Create Ticket",
   "alertOperate.close": "Close",
   "alertOperate.resolve": "Resolve",
@@ -131,6 +132,10 @@
   "modal.ticketType": "Ticket Type",
   "modal.validating": "Validating...",
   "modal.noTicketType": "Please select ticket type",
+
+  "modal.reassign": "Reassign",
+  "modal.reassignTitle": "Reassign Specific User",
+  "modal.specificUser": "Select User",
 
   "modal.know": "OK, I get it",
   "modal.suppress.success": "Suppress successfully.",

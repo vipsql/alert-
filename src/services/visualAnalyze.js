@@ -9,6 +9,10 @@ export async function queryTags(params) {
         'Content-Type': 'application/json',
     }
   })
+  // return Promise.resolve({
+  //   result: true,
+  //   data: {"level":4,"keys":["派出所","层次","街道"]}
+  // })
 }
 
 
@@ -20,6 +24,10 @@ export async function queryVisual (params) {
           'Content-Type': 'application/json',
       }
   })
+  // return Promise.resolve({
+  //   result: true,
+  //   data: [{"tagValue":"西湖派出所","severity":3,"values":[{"value":"动环设备","severity":3},{"value":"网络设备","severity":3},{"value":"摄像机","severity":3}]}]
+  // })
 }
 // 获取资源列表（根据标签）
 export async function queryVisualRes(params) {

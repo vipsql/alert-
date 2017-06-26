@@ -1,58 +1,58 @@
-import { querySource, queryAlertList, queryCount, queryProperty} from '../services/alertQuery'
+import { querySource, queryAlertList, queryCount, queryProperty } from '../services/alertQuery'
 import { viewTicket } from '../services/alertOperation'
 import { groupSort } from '../utils'
 import { message } from 'antd'
-import {parse} from 'qs'
-import { injectIntl, formatMessage, defineMessages, IntlProvider} from 'react-intl';
+import { parse } from 'qs'
+import { injectIntl, formatMessage, defineMessages, IntlProvider } from 'react-intl';
 
 const initalState = {
 
-    haveQuery: false, // 是否包含查询条件
-    sourceOptions: [], // 来源
-    propertyOptions: [], // 扩展
-    queryCount: {}, // 查询数量结果
-    currentQuery: {}, // 当前的查询条件
+  haveQuery: false, // 是否包含查询条件
+  sourceOptions: [], // 来源
+  propertyOptions: [], // 扩展
+  queryCount: {}, // 查询数量结果
+  currentQuery: {}, // 当前的查询条件
 
-    isGroup: false,
-    groupBy: 'source',
+  isGroup: false,
+  groupBy: 'source',
 
-    viewDetailAlertId: false, // 查看详细告警ID
+  viewDetailAlertId: false, // 查看详细告警ID
 
-    isShowMore: false,
-    isLoading: false,
+  isShowMore: false,
+  isLoading: false,
 
-    orderBy: 'lastOccurTime',
-    orderType: 0,
-    pageSize: 40,
-    currentPage: 1,
-    
-    tempListData: [], //用于临时记录列表数据，在分组时取用这块的数据（避免连续分组时的BUG）
-    data: [],
+  orderBy: 'lastOccurTime',
+  orderType: 0,
+  pageSize: 40,
+  currentPage: 1,
 
-    columns: [{
-      key: 'entityName',
-    }, {
-      key: 'name',
-    }, {
-      key: 'source',
-      order: true
-    },{
-      key: 'description',
-    }, {
-      key: 'count',
-      order: true
-    }, {
-      key: 'lastTime',
-      order: true
-    }, {
-      key: 'lastOccurTime',
-      order: true
-    }, {
-      key: 'status',
-      order: true
-    }, {
-      key: 'tags'
-    }],
+  tempListData: [], //用于临时记录列表数据，在分组时取用这块的数据（避免连续分组时的BUG）
+  data: [],
+
+  columns: [{
+    key: 'entityName',
+  }, {
+    key: 'name',
+  }, {
+    key: 'source',
+    order: true
+  }, {
+    key: 'description',
+  }, {
+    key: 'count',
+    order: true
+  }, {
+    key: 'lastTime',
+    order: true
+  }, {
+    key: 'lastOccurTime',
+    order: true
+  }, {
+    key: 'status',
+    order: true
+  }, {
+    key: 'tags'
+  }],
 }
 
 export default {
@@ -61,7 +61,7 @@ export default {
   state: initalState,
 
   subscriptions: {
-    alertQuerySetup({dispatch, history}) {
+    alertQuerySetup({ dispatch, history }) {
       history.listen((location) => {
         if (location.pathname === '/alertQuery') {
           const query = location.query || {};
@@ -79,15 +79,15 @@ export default {
 
   reducers: {
     // 更新查询条件
-    setCurrentQuery(state, {payload: currentQuery}) {
+    setCurrentQuery(state, { payload: currentQuery }) {
       return { ...state, currentQuery }
     },
     // 更新data数据
-    updateAlertListData(state, {payload: {data, tempListData}}) {
+    updateAlertListData(state, { payload: { data, tempListData } }) {
       return { ...state, data, tempListData }
     },
     // 存放告警来源的options
-    setOptions(state, { payload: {sourceOptions, propertyOptions}}) {
+    setOptions(state, { payload: { sourceOptions, propertyOptions } }) {
       return { ...state, sourceOptions, propertyOptions }
     },
     // 用来一次性结构状态，避免过度渲染
@@ -99,14 +99,14 @@ export default {
       return { ...state, isLoading }
     },
     // 更新显示更多字段
-    updateShowMore(state,{payload: isShowMore}){
+    updateShowMore(state, { payload: isShowMore }) {
       return {
         ...state,
         isShowMore
       }
     },
     // 点击查看更多
-    setMore(state, { payload: currentPage }){
+    setMore(state, { payload: currentPage }) {
 
       return {
         ...state,
@@ -114,26 +114,33 @@ export default {
       }
     },
     // 设置viewDetailAlertId
-    toggleDetailAlertId(state, {payload: viewDetailAlertId}) {
+    toggleDetailAlertId(state, { payload: viewDetailAlertId }) {
       return { ...state, viewDetailAlertId }
     },
     // 初始化data
     clearQuery(state) {
-      return { ...state, data: initalState.data, currentPage: initalState.currentPage, queryCount: initalState.queryCount, isShowMore: initalState.isShowMore }
+      return {
+        ...state,
+        data: initalState.data,
+        currentPage: initalState.currentPage,
+        queryCount: initalState.queryCount,
+        isShowMore: initalState.isShowMore,
+        currentQuery: initalState.currentQuery
+      }
     },
     // 不分组更新
-    updateAlertListToNoGroup(state, {payload: {info, tempListData, isShowMore, isGroup, orderBy, orderType, queryCount, currentPage}}) {
-      
-      return { ...state, data: info, tempListData, isShowMore, isGroup, orderBy, orderType, queryCount, currentPage}
+    updateAlertListToNoGroup(state, { payload: { info, tempListData, isShowMore, isGroup, orderBy, orderType, queryCount, currentPage } }) {
+
+      return { ...state, data: info, tempListData, isShowMore, isGroup, orderBy, orderType, queryCount, currentPage }
     },
     // 分组时更新
-    updateAlertListToGroup(state, {payload: {info, isShowMore, isGroup, groupBy, queryCount}}) {
-      
-      return { ...state, data: info, isShowMore, isGroup, groupBy, queryCount}
+    updateAlertListToGroup(state, { payload: { info, isShowMore, isGroup, groupBy, queryCount } }) {
+
+      return { ...state, data: info, isShowMore, isGroup, groupBy, queryCount }
     },
-    
+
     // 自定义列
-    customCols(state, {payload: columns}){
+    customCols(state, { payload: columns }) {
       return {
         ...state,
         columns
@@ -142,7 +149,7 @@ export default {
     // 手动添加分组展开状态
     addGroupSpread(state, { payload }) {
       const { data } = state;
-      const newData = data.map( (group) => {
+      const newData = data.map((group) => {
         if (group.classify == payload) {
           group.isGroupSpread = false;
         }
@@ -153,7 +160,7 @@ export default {
     // 转换分组的展开状态
     toggleGroupSpread(state, { payload }) {
       const { data } = state;
-      const newData = data.map( (group) => {
+      const newData = data.map((group) => {
         if (group.classify == payload) {
           group.isGroupSpread = !group.isGroupSpread;
         }
@@ -162,19 +169,19 @@ export default {
       return { ...state, data: newData }
     },
     // 排序
-    toggleOrder(state, {payload}) {
+    toggleOrder(state, { payload }) {
       return { ...state, ...payload }
     },
     // 修改状态为处理中
-    changeCloseState(state, {payload: {arrList, status}}) {
+    changeCloseState(state, { payload: { arrList, status } }) {
       const { data, isGroup } = state;
       if (isGroup === true) {
-        const newData = data.map( (group) => {
-          const arr = group.children.map( (item) => {
-            arrList.forEach( (id) => {
+        const newData = data.map((group) => {
+          const arr = group.children.map((item) => {
+            arrList.forEach((id) => {
               if (item.id == id) {
                 item['status'] = status; // 手动变为150 -> 已解决
-              } 
+              }
             })
             return item;
           })
@@ -183,11 +190,11 @@ export default {
         })
         return { ...state, data: newData }
       } else if (isGroup === false) {
-        const newData = data.map( (item, index) => {
-          arrList.forEach( (id) => {
+        const newData = data.map((item, index) => {
+          arrList.forEach((id) => {
             if (item.id == id) {
               item['status'] = status; // 手动变为150 -> 已解决
-            } 
+            }
           })
           return item;
         })
@@ -195,14 +202,14 @@ export default {
       }
     },
     // 修改data数组某一行的值
-    updateDataRow(state, {payload}) {
+    updateDataRow(state, { payload }) {
       const { data, isGroup } = state;
       let newData = assign([], data);
       if (isGroup) {
         newData = newData.map((tempGroup) => {
-          let data = tempGroup.children.map( (tempRow) => {
-            if(tempRow['id'] == payload['id']) {
-              tempRow = {...tempRow, ...payload};
+          let data = tempGroup.children.map((tempRow) => {
+            if (tempRow['id'] == payload['id']) {
+              tempRow = { ...tempRow, ...payload };
             }
             return tempRow
           })
@@ -211,30 +218,30 @@ export default {
         });
       } else {
         newData = newData.map((tempRow) => {
-          if(tempRow['id'] == payload['id']) {
-            tempRow = {...tempRow, ...payload};
+          if (tempRow['id'] == payload['id']) {
+            tempRow = { ...tempRow, ...payload };
           }
           return tempRow;
         });
       }
-      return {...state, data: newData};
+      return { ...state, data: newData };
     }
   },
   effects: {
     // beforeCustomCols
-    *initCustomCols({payload},{call, put, select}) {
+    *initCustomCols({ payload }, { call, put, select }) {
       let initColumns = JSON.parse(JSON.stringify(initalState.columns))
-      let queryColumns = JSON.parse(localStorage.getItem('__alert_query_userColumns')); 
+      let queryColumns = JSON.parse(localStorage.getItem('__alert_query_userColumns'));
       let columns = queryColumns ? queryColumns : initColumns
-      yield put({type: 'customCols', payload: columns})
+      yield put({ type: 'customCols', payload: columns })
     },
     /**
      * open alertQuery page operate
      * 1. clear state
      * 3. 查询告警来源的options
      */
-    *alertQuerySetup({payload},{call, put, select}){
-      yield put({ type: 'initCustomCols'})
+    *alertQuerySetup({ payload }, { call, put, select }) {
+      yield put({ type: 'initCustomCols' })
       yield put({ type: 'alertQueryDetail/toggleDetailModal', payload: false })
       yield put({ type: 'clearQuery' })
       yield put({ type: 'setCurrentQuery', payload: { resObjectId: payload.resObjectId } })
@@ -243,7 +250,7 @@ export default {
       // 查询来源和扩展标签
       const sourceOptions = yield call(querySource)
       const propertyOptions = yield call(queryProperty)
-      
+
       if (!sourceOptions.result) {
         yield message.error(window.__alert_appLocaleData.messages[sourceOptions.message], 3)
       }
@@ -260,15 +267,15 @@ export default {
     },
 
     // 点击查找
-    *queryBefore({payload},{call, put, select}) {
+    *queryBefore({ payload }, { call, put, select }) {
       yield put({ type: 'setCurrentQuery', payload: payload })
-      yield put({ type: 'queryAlertList'})
-      yield put({ type: 'alertQueryDetail/removeGroupType'})
+      yield put({ type: 'queryAlertList' })
+      yield put({ type: 'alertQueryDetail/removeGroupType' })
     },
 
     //查询告警列表
-    *queryAlertList({payload},{call, put, select}){
-      
+    *queryAlertList({ payload }, { call, put, select }) {
+
       // payload为空时是有内置的查询条件的
       yield put({
         type: 'changeState',
@@ -287,21 +294,21 @@ export default {
         currentQuery,
         columns
       } = yield select(state => {
-        const alertQuery = state.alertQuery
+          const alertQuery = state.alertQuery
 
-        return {
-          isGroup: alertQuery.isGroup,
-          groupBy: alertQuery.groupBy,
-          pageSize: alertQuery.pageSize,
-          orderBy: alertQuery.orderBy,
-          orderType: alertQuery.orderType,
-          currentQuery: alertQuery.currentQuery,
-          columns: alertQuery.columns
-        }
-      })
+          return {
+            isGroup: alertQuery.isGroup,
+            groupBy: alertQuery.groupBy,
+            pageSize: alertQuery.pageSize,
+            orderBy: alertQuery.orderBy,
+            orderType: alertQuery.orderType,
+            currentQuery: alertQuery.currentQuery,
+            columns: alertQuery.columns
+          }
+        })
       var extraParams = {};
 
-      if(payload !== undefined && payload.isGroup !== undefined) {
+      if (payload !== undefined && payload.isGroup !== undefined) {
         isGroup = payload.isGroup;
         groupBy = payload.groupBy;
         orderBy = payload.orderBy;
@@ -324,55 +331,55 @@ export default {
       const countData = yield call(queryCount, {
         ...currentQuery
       })
-      
-      if(listData.result){
-          yield put({
-            type: 'updateAlertListToNoGroup',
-            payload: {
-              info: listData.data.data,
-              tempListData: listData.data.data,
-              isShowMore: listData.data.hasNext,
-              isGroup: false,
-              orderBy: orderBy,
-              orderType: orderType,
-              currentPage: 1,
-              queryCount: countData.result ? countData.data : {}
-            }
-          })
-          yield put({
-            type: 'toggleLoading',
-            payload: false
-          })
-          yield put({
-            type: 'alertQueryDetail/initColumn',
-            payload: {
-              baseCols: columns, 
-              extend: listData.data.properties,
-              tags: listData.data.tagKeys
-            }
-          })
+
+      if (listData.result) {
+        yield put({
+          type: 'updateAlertListToNoGroup',
+          payload: {
+            info: listData.data.data,
+            tempListData: listData.data.data,
+            isShowMore: listData.data.hasNext,
+            isGroup: false,
+            orderBy: orderBy,
+            orderType: orderType,
+            currentPage: 1,
+            queryCount: countData.result ? countData.data : {}
+          }
+        })
+        yield put({
+          type: 'toggleLoading',
+          payload: false
+        })
+        yield put({
+          type: 'alertQueryDetail/initColumn',
+          payload: {
+            baseCols: columns,
+            extend: listData.data.properties,
+            tags: listData.data.tagKeys
+          }
+        })
 
       } else {
         yield message.error(window.__alert_appLocaleData.messages[listData.message], 2)
       }
     },
     // 展开组
-    *spreadGroup({payload},{call, put, select}) {
+    *spreadGroup({ payload }, { call, put, select }) {
       yield put({ type: 'toggleGroupSpread', payload: payload })
     },
     // 合拢组
-    *noSpreadGroup({payload},{call, put, select}) {
+    *noSpreadGroup({ payload }, { call, put, select }) {
       yield put({ type: 'addGroupSpread', payload: payload })
     },
     // ------------------------------------------------------------------------------------------------
 
     // 点击分组时触发
-    *setGroup({payload}, {select, put, call}) {
-      const { tempListData, queryCount }=  yield select(state => {
-         return {
-           'tempListData': state.alertQuery.tempListData,
-           'queryCount': state.alertQuery.queryCount
-         }
+    *setGroup({ payload }, { select, put, call }) {
+      const { tempListData, queryCount } = yield select(state => {
+        return {
+          'tempListData': state.alertQuery.tempListData,
+          'queryCount': state.alertQuery.queryCount
+        }
       })
       if (payload.isGroup) {
         yield put({
@@ -381,7 +388,7 @@ export default {
         })
         const groupList = yield groupSort()(tempListData, payload.group)
         if (payload.group !== undefined && payload.group === 'severity') {
-          groupList.sort( (prev, next) => {
+          groupList.sort((prev, next) => {
             return Number(next.classify) - Number(prev.classify);
           })
         }
@@ -399,33 +406,33 @@ export default {
           type: 'toggleLoading',
           payload: false
         })
-        //yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, groupBy: payload.group } })   
+        //yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, groupBy: payload.group } })
       } else {
         yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, orderBy: undefined, orderType: undefined } })
       }
     },
     // 点击展开详情
-    *clickDetail({payload}, {select, put, call}) {
+    *clickDetail({ payload }, { select, put, call }) {
       yield put({ type: 'toggleDetailAlertId', payload: payload })
-      yield put({ type: 'alertQueryDetail/openDetailModal'})
+      yield put({ type: 'alertQueryDetail/openDetailModal' })
     },
     // show more
-    *loadMore({}, {call, put, select}){
+    *loadMore({ }, { call, put, select }) {
 
       yield put({
         type: 'toggleLoading',
         payload: true
       })
-      
-      let { currentPage, listData, alertQuery }=  yield select(state => {
-         return {
-           'currentPage': state.alertQuery.currentPage,
-           'listData': state.alertQuery.data,
-           'alertQuery': state.alertQuery
-         }
+
+      let { currentPage, listData, alertQuery } = yield select(state => {
+        return {
+          'currentPage': state.alertQuery.currentPage,
+          'listData': state.alertQuery.data,
+          'alertQuery': state.alertQuery
+        }
       })
 
-      currentPage =  currentPage + 1
+      currentPage = currentPage + 1
       const params = {
         currentPage: currentPage,
         orderBy: alertQuery.orderBy,
@@ -439,7 +446,7 @@ export default {
       if (listReturnData.result) {
 
         listData = listData.concat(listReturnData.data.data);
-        
+
         if (!listReturnData.data.hasNext) {
           yield put({
             type: 'updateShowMore',
@@ -471,38 +478,38 @@ export default {
       } else {
         yield message.error(window.__alert_appLocaleData.messages[listReturnData.message], 2)
       }
-      
+
     },
     //orderList排序
-    *orderList({payload}, {select, put, call}) {
-      yield put({ type: 'queryAlertList', payload: { isGroup: false, orderBy: payload.orderBy, orderType: payload.orderType } })   
+    *orderList({ payload }, { select, put, call }) {
+      yield put({ type: 'queryAlertList', payload: { isGroup: false, orderBy: payload.orderBy, orderType: payload.orderType } })
     },
     //orderByTittle
-    *orderByTittle({payload}, {select, put, call}) {
-      const { orderType } = yield select( state => {
+    *orderByTittle({ payload }, { select, put, call }) {
+      const { orderType } = yield select(state => {
         return {
           'orderType': state.alertQuery.orderType,
         }
-      } )
+      })
       if (payload !== undefined) {
-        yield put({ 
-          type: 'toggleOrder', 
+        yield put({
+          type: 'toggleOrder',
           payload: {
             orderBy: payload,
             orderType: orderType === undefined || orderType === 1 ? 0 : 1,
-          } 
+          }
         })
-        yield put({ type: 'queryAlertList' })   
+        yield put({ type: 'queryAlertList' })
       } else {
         console.error('orderBy error')
       }
     },
     // 工单号点击后跳转到工单详情页面并保留工单详情地址
-    *orderFlowNumClick({payload: {orderFlowNum, id}}, {select, put, call}) {
+    *orderFlowNumClick({ payload: { orderFlowNum, id } }, { select, put, call }) {
       const itsmDetailUrlData = yield call(viewTicket, orderFlowNum);
       if (itsmDetailUrlData.result) {
         const itsmDetailUrl = itsmDetailUrlData.data.url;
-        yield put({ type: 'updateDataRow', payload: {itsmDetailUrl, id}})
+        yield put({ type: 'updateDataRow', payload: { itsmDetailUrl, id } })
         window.open(itsmDetailUrl);
       } else {
         yield message.error(window.__alert_appLocaleData.messages[itsmDetailUrlData.message], 2)

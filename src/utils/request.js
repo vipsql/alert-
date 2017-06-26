@@ -14,7 +14,7 @@ function isApiUrl(url) {
     //return `http://${url}`
     return url;
   }
-  
+
   return `${ROOT_PATH}${url}`;
 }
 // $.ajax({
