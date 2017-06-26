@@ -1,4 +1,5 @@
 import menu from './menu'
+import bottomMenus from './bottomMenu'
 import request from './request'
 import classnames from 'classnames'
 import {color} from './theme'
@@ -93,6 +94,7 @@ function groupSort() {
 
 module.exports = {
   menu,
+  bottomMenus,
   packURL,
   request,
   color,

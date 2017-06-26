@@ -43,7 +43,7 @@ export default {
                 'viewDetailAlertId': state.alertListTable.viewDetailAlertId
             }
         })
-        
+
         if (viewDetailAlertId && time !== undefined) {
             let stringId = '' + viewDetailAlertId;
             const suppressData = yield suppress({
@@ -141,7 +141,7 @@ export default {
                 'viewDetailAlertId': state.alertListTable.viewDetailAlertId
             }
         })
-        
+
         if ( viewDetailAlertId ) {
             let stringId = '' + viewDetailAlertId;
             const resultData = yield close({
@@ -177,7 +177,7 @@ export default {
                 'viewDetailAlertId': state.alertListTable.viewDetailAlertId
             }
         })
-        
+
         if ( viewDetailAlertId ) {
             let stringId = '' + viewDetailAlertId;
             const resultData = yield resolve({
@@ -222,8 +222,8 @@ export default {
             })
             if(data.result){
                 //window.open(data.data.url)
-                yield put({ 
-                    type: 'alertDetail/toggleTicketModal', 
+                yield put({
+                    type: 'alertDetail/toggleTicketModal',
                     payload: {
                         isShowTicketModal: true,
                         ticketUrl: data.data.url
@@ -232,7 +232,7 @@ export default {
             } else {
                 yield message.error(window.__alert_appLocaleData.messages[data.message], 3);
             }
-            
+
         }else{
             console.error('selectedAlertIds error');
         }
@@ -286,7 +286,7 @@ export default {
                         ...currentAlertDetail,
                         severityDesc: window['_severity'][currentAlertDetail['severity']],
                         status: window['_status'][currentAlertDetail['status']]
-                    }  
+                    }
                 }
             });
             if (shareResult.result) {

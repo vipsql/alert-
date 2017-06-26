@@ -77,6 +77,24 @@ const  ListTableWrap = ({dispatch, alertQuery}) => {
         type: 'alertQuery/orderFlowNumClick',
         payload: {orderFlowNum, id}
       })
+    },
+    showAlertOrigin(e) {
+      const alertId = e.target.getAttribute('data-id');
+      const alertName = e.target.getAttribute('data-name');
+      dispatch({
+        type: 'alertOrigin/toggleVisible',
+        payload: {
+          visible: true
+        }
+      })
+
+      dispatch({
+        type: 'alertOrigin/queryAlertOrigin',
+        payload: {
+          alertId,
+          alertName
+        }
+      })
     }
   }
 

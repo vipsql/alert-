@@ -18,6 +18,7 @@ import RelieveModal from './relieveModal'
 import ChatOpshModal from '../common/chatOpsModal/index.js'
 import ResolveModal from '../common/resolveModal/index.js'
 import SuppressModal from '../common/suppressModal/index.js'
+import ReassignModal from '../common/ReassignModal/index.js'
 import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import FilterHead from '../common/filterHead/index.js'
@@ -26,16 +27,16 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const TabPane = Tabs.TabPane
 
-class AlertListManage extends Component{
-  constructor(props){
+class AlertListManage extends Component {
+  constructor(props) {
     super(props)
   }
 
   componentDidMount() {
-    const {dispatch} = this.props;
-    
+    const { dispatch } = this.props;
+
     window.addEventListener('message', (e) => {
-		  if(e.data.creatTicket !== undefined && e.data.creatTicket === 'success') {
+      if (e.data.creatTicket !== undefined && e.data.creatTicket === 'success') {
         dispatch({
           type: 'alertOperation/afterDispatch'
         })
@@ -43,7 +44,7 @@ class AlertListManage extends Component{
     }, false)
   }
 
-  render(){
+  render() {
     const { alertDetail, alertListTable, alertList, dispatch, alertOperation, alertDetailOperation, alertManage } = this.props;
 
     const localeMessage = defineMessages({
@@ -68,64 +69,78 @@ class AlertListManage extends Component{
         defaultMessage: '自动刷新'
       }
     })
-    
+
     const { levels } = alertListTable;
     const { alertOperateModalOrigin } = alertList
-    
+
     const operateProps = {
       selectGroup: alertOperation.selectGroup,
       columnList: alertOperation.columnList,
       extendColumnList: alertOperation.extendColumnList,
       extendTagsKey: alertOperation.extendTagsKey,
+
+      takeOverDisabled: alertOperation.takeOverDisabled,
+      dispatchDisabled: alertOperation.dispatchDisabled,
+      closeDisabled: alertOperation.closeDisabled,
+      resolveDisabled: alertOperation.resolveDisabled,
+      notifyDisabled: alertOperation.notifyDisabled,
+      shareDisabled: alertOperation.shareDisabled,
+
       checkCloumFunc: (e) => {
         dispatch({
-            type: 'alertOperation/checkColumn',
-            payload: e.target.value,
+          type: 'alertOperation/checkColumn',
+          payload: e.target.value,
         })
       },
       relieveFunc: () => {
         dispatch({
-            type: 'alertOperation/openRelieveModal',
+          type: 'alertOperation/openRelieveModal',
+        })
+      },
+      takeOverFunc: (position) => {
+        console.log(position)
+        dispatch({
+          type: 'alertOperation/takeOver'
         })
       },
       dispatchFunc: (position) => {
         dispatch({
-            type: 'alertOperation/openFormModal',
-            payload: position
+          type: 'alertOperation/openFormModal',
+          payload: position
         })
       },
       closeFunc: (position) => {
         dispatch({
-            type: 'alertOperation/openCloseModal',
-            payload: {
-                state: true,
-                origin: position
-            }
+          type: 'alertOperation/openCloseModal',
+          payload: {
+            state: true,
+            origin: position
+          }
         })
       },
       resolveFunc: (position) => {
         dispatch({
-            type: 'alertOperation/openResolveModal',
-            payload: {
-                state: true,
-                origin: position
-            }
+          type: 'alertOperation/openResolveModal',
+          payload: {
+            state: true,
+            origin: position
+          }
         })
       },
       mergeFunc: () => {
         dispatch({
-            type: 'alertOperation/openMergeModal',
+          type: 'alertOperation/openMergeModal',
         })
       },
       groupFunc: (value) => {
         dispatch({
-            type: 'alertOperation/groupView',
-            payload: value,
+          type: 'alertOperation/groupView',
+          payload: value,
         })
       },
       noGroupFunc: () => {
         dispatch({
-            type: 'alertOperation/noGroupView',
+          type: 'alertOperation/noGroupView',
         })
       },
       showChatOpsFunc: (position) => {
@@ -156,6 +171,12 @@ class AlertListManage extends Component{
             position: position
           }
         })
+      },
+      showReassiginFunc: (position) => {
+        dispatch({
+          type: 'alertOperation/openReassign',
+          payload: position
+        })
       }
     }
 
@@ -169,10 +190,10 @@ class AlertListManage extends Component{
     }
     const alertDeatilProps = {
       extraProps: {
-        currentAlertDetail, 
-        isShowOperateForm: alertDetail.isShowOperateForm, 
-        operateForm: alertDetail.operateForm, 
-        isShowRemark: alertDetail.isShowRemark, 
+        currentAlertDetail,
+        isShowOperateForm: alertDetail.isShowOperateForm,
+        operateForm: alertDetail.operateForm,
+        isShowRemark: alertDetail.isShowRemark,
         operateRemark: alertDetail.operateRemark,
         ciUrl: alertDetail.ciUrl
       },
@@ -192,59 +213,59 @@ class AlertListManage extends Component{
       clickTicketFlow: (operateForm) => {
         if (operateForm !== undefined && operateForm !== '') {
           dispatch({
-              type: 'alertDetail/viewTicketDetail',
-              payload: operateForm
+            type: 'alertDetail/viewTicketDetail',
+            payload: operateForm
           })
         }
       },
       closeDeatilModal: () => {
         dispatch({
-            type: 'alertDetail/closeDetailModal',
-            payload: false
+          type: 'alertDetail/closeDetailModal',
+          payload: false
         })
       },
       openForm: () => {
         dispatch({
-            type: 'alertDetail/toggleFormModal',
-            payload: true
+          type: 'alertDetail/toggleFormModal',
+          payload: true
         })
       },
       editForm: (formData) => {
         dispatch({
-            type: 'alertDetail/changeTicketFlow',
-            payload: formData.formContent
+          type: 'alertDetail/changeTicketFlow',
+          payload: formData.formContent
         })
         dispatch({
-            type: 'alertDetail/toggleFormModal',
-            payload: false
+          type: 'alertDetail/toggleFormModal',
+          payload: false
         })
       },
       closeForm: () => {
         dispatch({
-            type: 'alertDetail/toggleFormModal',
-            payload: false
+          type: 'alertDetail/toggleFormModal',
+          payload: false
         })
       },
       openRemark: () => {
         dispatch({
-            type: 'alertDetail/toggleRemarkModal',
-            payload: true
+          type: 'alertDetail/toggleRemarkModal',
+          payload: true
         })
       },
       editRemark: (formData) => {
         dispatch({
-            type: 'alertDetail/setRemarkData',
-            payload: formData.remark
+          type: 'alertDetail/setRemarkData',
+          payload: formData.remark
         })
         dispatch({
-            type: 'alertDetail/toggleRemarkModal',
-            payload: false
+          type: 'alertDetail/toggleRemarkModal',
+          payload: false
         })
       },
       closeRemark: () => {
         dispatch({
-            type: 'alertDetail/toggleRemarkModal',
-            payload: false
+          type: 'alertDetail/toggleRemarkModal',
+          payload: false
         })
       }
     }
@@ -253,23 +274,23 @@ class AlertListManage extends Component{
       currentData: alertOperateModalOrigin === 'detail' ? alertDetailOperation : alertOperation,
 
       onOk: (form) => {
-        form.validateFieldsAndScroll( (errors, values) => {
-            if (!!errors) {
-                return;
-            }
-            const formData = form.getFieldsValue()
-            
-            dispatch({
-                type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/closeAlert' : 'alertOperation/closeAlert',
-                payload: formData.closeMessage
-            })
-            form.resetFields();
+        form.validateFieldsAndScroll((errors, values) => {
+          if (!!errors) {
+            return;
+          }
+          const formData = form.getFieldsValue()
+
+          dispatch({
+            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/closeAlert' : 'alertOperation/closeAlert',
+            payload: formData.closeMessage
+          })
+          form.resetFields();
         })
       },
       onCancal: (form) => {
         dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleCloseModal' : 'alertOperation/toggleCloseModal',
-            payload: false
+          type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleCloseModal' : 'alertOperation/toggleCloseModal',
+          payload: false
         })
         form.resetFields();
       }
@@ -279,23 +300,23 @@ class AlertListManage extends Component{
       currentData: alertOperateModalOrigin === 'detail' ? alertDetailOperation : alertOperation,
 
       onOk: (form) => {
-        form.validateFieldsAndScroll( (errors, values) => {
-            if (!!errors) {
-                return;
-            }
-            const formData = form.getFieldsValue()
-            
-            dispatch({
-                type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/resolveAlert' : 'alertOperation/resolveAlert',
-                payload: formData.resolveMessage
-            })
-            form.resetFields();
+        form.validateFieldsAndScroll((errors, values) => {
+          if (!!errors) {
+            return;
+          }
+          const formData = form.getFieldsValue()
+
+          dispatch({
+            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/resolveAlert' : 'alertOperation/resolveAlert',
+            payload: formData.resolveMessage
+          })
+          form.resetFields();
         })
       },
       onCancal: (form) => {
         dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleResolveModal' : 'alertOperation/toggleResolveModal',
-            payload: false
+          type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleResolveModal' : 'alertOperation/toggleResolveModal',
+          payload: false
         })
         form.resetFields();
       }
@@ -306,20 +327,20 @@ class AlertListManage extends Component{
 
       closeDispatchModal: () => {
         dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleFormModal' : 'alertOperation/toggleFormModal',
-            payload: false
+          type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleFormModal' : 'alertOperation/toggleFormModal',
+          payload: false
         })
       },
       onOk: (value) => {
         dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/dispatchForm' : 'alertOperation/dispatchForm',
-            payload: value
+          type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/dispatchForm' : 'alertOperation/dispatchForm',
+          payload: value
         })
       },
       onCancal: () => {
         dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleFormModal' : 'alertOperation/toggleFormModal',
-            payload: false
+          type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleFormModal' : 'alertOperation/toggleFormModal',
+          payload: false
         })
       }
     }
@@ -329,20 +350,20 @@ class AlertListManage extends Component{
 
       closeChatOpsModal: () => {
         dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleChatOpsModal' : 'alertOperation/toggleChatOpsModal',
-            payload: false
+          type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleChatOpsModal' : 'alertOperation/toggleChatOpsModal',
+          payload: false
         })
       },
       onOk: (value) => {
         dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/shareChatOps' : 'alertOperation/shareChatOps',
-            payload: value
+          type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/shareChatOps' : 'alertOperation/shareChatOps',
+          payload: value
         })
       },
       onCancal: () => {
         dispatch({
-            type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleChatOpsModal' : 'alertOperation/toggleChatOpsModal',
-            payload: false
+          type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleChatOpsModal' : 'alertOperation/toggleChatOpsModal',
+          payload: false
         })
       }
     }
@@ -402,19 +423,35 @@ class AlertListManage extends Component{
         })
       }
     }
-    
+
+    const reassignModalProps = {
+      isShowReassingModal: alertOperation.isShowReassingModal,
+      reassignUsers: alertOperation.reassignUsers,
+      handleOk: function(){
+        dispatch({
+
+        })
+      },
+      handleCancel: function(){
+        dispatch({
+          type: 'alertOperation/toggleReassignModal',
+          payload: false
+        })
+      }
+    }
+
     const refreshProps = {
-      onChange(checked){
-        
-        localStorage.setItem('__alert_refresh',checked)
-        if(!checked){
+      onChange(checked) {
+
+        localStorage.setItem('__alert_refresh', checked)
+        if (!checked) {
           window.__alert_refresh_timer && clearInterval(window.__alert_refresh_timer)
           window.__alert_refresh_timer = undefined
-          
-        }else{
-          if(!window.__alert_refresh_timer){
-            
-            window.__alert_refresh_timer = setInterval(function(){
+
+        } else {
+          if (!window.__alert_refresh_timer) {
+
+            window.__alert_refresh_timer = setInterval(function () {
               dispatch({
                 type: 'tagListFilter/refresh',
               })
@@ -427,14 +464,14 @@ class AlertListManage extends Component{
     const ticketModalProps = {
       isShowTicketModal: alertDetail.isShowTicketModal,
       ticketUrl: alertDetail.ticketUrl,
-      onCloseTicketModal(){
+      onCloseTicketModal() {
         dispatch({
           type: 'alertDetail/closeTicketModal'
         })
       }
     }
 
-    
+
     const tabList = classnames(
       'iconfont',
       'icon-liebiao',
@@ -464,7 +501,7 @@ class AlertListManage extends Component{
     )
     // 转数字匹配等级，并作排序
     let levels_wapper = {};
-    Object.keys(levels).length !== 0 && Object.keys(levels).forEach( (severity) => {
+    Object.keys(levels).length !== 0 && Object.keys(levels).forEach((severity) => {
       switch (severity) {
         case 'Critical':
           levels_wapper['3'] = levels['Critical']
@@ -483,48 +520,48 @@ class AlertListManage extends Component{
       }
     })
     const groupName = localStorage.getItem('__visual_group'),
-          isShowVisualTab = !(groupName == 'source' || groupName == 'status'  || groupName == 'severity' )
-          
+      isShowVisualTab = !(groupName == 'source' || groupName == 'status' || groupName == 'severity')
+
     return (
-      <div style={{ position: 'relative'}}>
+      <div style={{ position: 'relative' }}>
         <FilterHead
-          style={{ marginBottom: '20px'}}
+          style={{ marginBottom: '20px' }}
           defaultTime={alertManage.selectedTime}
           defaultStatus={alertManage.selectedStatus}
           queryByTime={(value) => {
-            dispatch({type: 'tagListFilter/selectTime', payload: value})
+            dispatch({ type: 'tagListFilter/selectTime', payload: value })
           }}
           queryByStatus={(value) => {
-            dispatch({type: 'tagListFilter/selectStatus', payload: value})
+            dispatch({ type: 'tagListFilter/selectStatus', payload: value })
           }}
         />
-        <div className={alertList.isShowBar?styles.showBar:styles.hideBar}>
+        <div className={alertList.isShowBar ? styles.showBar : styles.hideBar}>
           <AlertTagsFilter />
-          <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch {...refreshProps}/></div>
+          <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch {...refreshProps} /></div>
           <AlertBar />
         </div>
-        <Button className={classnames(styles.toggleBarButton, zhankaiClass)} onClick={toggleBarButtonClick} size="small"><i className={ classnames(alertList.isShowBar?shouqiClass:zhankaiClass, styles.toggleBarButtonIcon) }/></Button>
-        <div className={styles.alertListPage + " " + (alertList.isShowBar?'':styles.marginTop0)}>
+        <Button className={classnames(styles.toggleBarButton, zhankaiClass)} onClick={toggleBarButtonClick} size="small"><i className={classnames(alertList.isShowBar ? shouqiClass : zhankaiClass, styles.toggleBarButtonIcon)} /></Button>
+        <div className={styles.alertListPage + " " + (alertList.isShowBar ? '' : styles.marginTop0)}>
           <Tabs>
             <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key={1}>
-              <AlertOperation position='list' {...operateProps}/>
+              <AlertOperation position='list' {...operateProps} />
               <ListTableWrap />
             </TabPane>
-            <TabPane tab={<span className={tabLine} ><FormattedMessage {...localeMessage['tab_time']} /></span>}  key={2}>
-              <AlertOperation position='timeAxis' {...operateProps}/>
+            <TabPane tab={<span className={tabLine} ><FormattedMessage {...localeMessage['tab_time']} /></span>} key={2}>
+              <AlertOperation position='timeAxis' {...operateProps} />
               <ListTimeTableWrap />
             </TabPane>
-            { isShowVisualTab && 
-           <TabPane tab={<span  className={tabVisual}><FormattedMessage {...localeMessage['tab_visual']} /></span>}  key={3}>
-                <VisualAnalyzeWrap key={new Date().getTime()}/>
-            </TabPane>
+            {isShowVisualTab &&
+              <TabPane tab={<span className={tabVisual}><FormattedMessage {...localeMessage['tab_visual']} /></span>} key={3}>
+                <VisualAnalyzeWrap key={new Date().getTime()} />
+              </TabPane>
             }
           </Tabs>
           <ul className={styles.levelBar}>
             {
               Object.keys(levels_wapper).length !== 0 && Object.keys(levels_wapper).sort((prev, next) => {
                 return Number(next) - Number(prev);
-              }).map( (key, index) => {
+              }).map((key, index) => {
                 return (<li key={index}><LevelIcon extraStyle={styles.extraStyle} iconType={key} /><p>{`${window['_severity'][key]}（${levels_wapper[key]}）`}</p></li>)
               })
             }
@@ -532,29 +569,30 @@ class AlertListManage extends Component{
         </div>
         {
           Object.keys(alertDetail).length !== 0 && alertDetail.currentAlertDetail !== undefined && Object.keys(alertDetail.currentAlertDetail).length !== 0 ?
-          <div className={ alertDetail.isShowDetail ? classnames(styles.alertDetailModal, styles.show) : styles.alertDetailModal }>
-            <AlertDetail {...alertDeatilProps}/>
-          </div>
-          :
-          undefined
-        }
-        <div className={ticketModalProps.isShowTicketModal ?  classnames(styles.ticketModal, styles.show) : styles.ticketModal }>
-          <div className={styles.detailHead}>
-                <p><FormattedMessage {...localeMessage['assign_ticket']}/></p> 
-                <i className={classnames(styles.shanChu, shanchuClass)} onClick={ticketModalProps.onCloseTicketModal}></i>
+            <div className={alertDetail.isShowDetail ? classnames(styles.alertDetailModal, styles.show) : styles.alertDetailModal}>
+              <AlertDetail {...alertDeatilProps} />
             </div>
+            :
+            undefined
+        }
+        <div className={ticketModalProps.isShowTicketModal ? classnames(styles.ticketModal, styles.show) : styles.ticketModal}>
+          <div className={styles.detailHead}>
+            <p><FormattedMessage {...localeMessage['assign_ticket']} /></p>
+            <i className={classnames(styles.shanChu, shanchuClass)} onClick={ticketModalProps.onCloseTicketModal}></i>
+          </div>
           <iframe src={ticketModalProps.ticketUrl}>
           </iframe>
         </div>
         <MergeModal />
-        <CloseModal {...closeModalProps}/>
-        <DispatchModal {...dispatchModalProps}/>
-        <ChatOpshModal {...chatOpsModalProps}/>
-        <ResolveModal {...resolveModalProps}/>
+        <CloseModal {...closeModalProps} />
+        <DispatchModal {...dispatchModalProps} />
+        <ChatOpshModal {...chatOpsModalProps} />
+        <ResolveModal {...resolveModalProps} />
         <RelieveModal />
-        <SuppressModal {...suppressModalProps}/>
+        <SuppressModal {...suppressModalProps} />
         <SuppressTimeSlider {...timeSliderProps} />
         <ManualNotifyModal {...notifyModalProps} />
+        <ReassignModal {...reassignModalProps} />
       </div>
     )
   }

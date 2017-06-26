@@ -4,15 +4,15 @@ import { connect } from 'dva'
 import ListTable from '../../common/listTable'
 
 // function ListTimeTableWrap({dispatch, alertListTimeTable}){
-const  ListTableWrap = ({dispatch, alertListTable}) => {
+const ListTableWrap = ({ dispatch, alertListTable }) => {
   const props = {
     ...alertListTable,
-    loadMore(){
+    loadMore() {
       dispatch({
         type: 'alertListTable/loadMore'
       })
     },
-    setTimeLineWidth(gridWidth, minuteToWidth){
+    setTimeLineWidth(gridWidth, minuteToWidth) {
       dispatch({
         type: 'alertListTable/setTimeLineWidth',
         payload: {
@@ -21,12 +21,22 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
         }
       })
     },
-    checkAlertFunc(e){
+    checkAlertFunc(e) {
       const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
+      const alertId = e.target.getAttribute('data-id');
+      const checked = e.target.checked;
 
+      // dispatch({
+      //   type: 'alertListTable/changeCheckAlert',
+      //   payload: alertInfo
+      // })
       dispatch({
-        type: 'alertListTable/changeCheckAlert',
-        payload: alertInfo
+        type: 'alertListTable/handleCheckboxClick',
+        payload: {
+          alertId,
+          checked,
+          alertInfo
+        }
       })
     },
     detailClick(e) {
@@ -57,7 +67,7 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
     // 分组展开
     spreadGroup(e) {
       const groupClassify = e.target.getAttribute('data-classify')
-      
+
       dispatch({
         type: 'alertListTable/spreadGroup',
         payload: groupClassify
@@ -65,22 +75,24 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
     },
     noSpreadGroup(e) {
       const groupClassify = e.target.getAttribute('data-classify')
-      
+
       dispatch({
         type: 'alertListTable/noSpreadGroup',
         payload: groupClassify
       })
     },
-    toggleSelectedAll(e) {
+    handleSelectAll(e) {
+      const checked = e.target.checked;
       dispatch({
-        type: 'alertListTable/toggleSelectedAll'
-      })
+        type: 'alertListTable/handleSelectAll',
+        payload: { checked }
+      });
     },
     // 解除告警
     relieveClick(e) {
       e.stopPropagation();
       const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
-      
+
       dispatch({
         type: 'alertOperation/openRelieveModalByButton',
         payload: alertInfo
@@ -89,7 +101,7 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
     // 升序
     orderUp(e) {
       const orderKey = e.target.getAttribute('data-key');
-      
+
       dispatch({
         type: 'alertListTable/orderList',
         payload: {
@@ -101,7 +113,7 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
     // 降序
     orderDown(e) {
       const orderKey = e.target.getAttribute('data-key');
-      
+
       dispatch({
         type: 'alertListTable/orderList',
         payload: {
@@ -123,7 +135,7 @@ const  ListTableWrap = ({dispatch, alertListTable}) => {
       const id = e.target.getAttribute('data-id');
       dispatch({
         type: 'alertListTable/orderFlowNumClick',
-        payload: {orderFlowNum, id}
+        payload: { orderFlowNum, id }
       })
     }
   }

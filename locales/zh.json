@@ -65,6 +65,7 @@
   "alertList.notifyList.4": "ChatOps群组",
   "alertList.title.basic": "常规",
   "alertList.title.additional": "扩展",
+  "alertList.detailHistory.alertTimesDescription": "累计发生告警{ times }次",
 
   "alertList.noListData": "暂无数据",
   "alertList.showMore": "显示更多",
@@ -87,19 +88,20 @@
   "alertQuery.reset": "重置",
   "alertQuery.result": "共{total}个结果（紧急{critical}个，警告{warning}个，提醒{informaiton}个，恢复{ok}个）",
 
+  "alertOperate.takeOver": "接手",
   "alertOperate.dispatch": "派单",
   "alertOperate.close": "关闭",
   "alertOperate.resolve": "解决",
-  "alertOperate.suppress": "抑制",
+  "alertOperate.suppress": "抑制告警",
   "alertOperate.suppress.five": "5分钟",
   "alertOperate.suppress.ten": "10分钟",
   "alertOperate.suppress.halfHour": "半小时",
   "alertOperate.suppress.customer": "自定义时间",
-  "alertOperate.merge": "合并",
+  "alertOperate.merge": "合并告警",
   "alertOperate.relieve": "解除合并",
-  "alertOperate.moreAcitons": "更多",
+  "alertOperate.moreAcitons": "更多操作",
   "alertOperate.shareChatOps": "分享到ChatOps",
-  "alertOperate.manualNotify": "手工通知",
+  "alertOperate.manualNotify": "告警通知",
   "alertOperate.columns": "列定制",
   "alertOperate.groupBy": "分组显示",
   "alertOperate.groupBySeverity": "按级别",
@@ -133,6 +135,12 @@
   "modal.ticketType": "工单类型",
   "modal.validating": "检验中...",
   "modal.noTicketType": "请选择工单类型",
+  "modal.leaveNotice": "你还有数据未保存，确定要离开此页面吗？",
+  "modal.leave": "离开",
+
+  "modal.reassign": "转派",
+  "modal.reassignTitle": "转派指定人员",
+  "modal.specificUser": "指定人员",
 
   "modal.know": "知道了",
   "modal.suppress.success": "抑制成功",
@@ -472,7 +480,6 @@
   "ruleEditor.nLevelUp": "当且仅当告警级别提高时再次提醒",
 
   "server.notStarted": "服务不可用",
-  "itsm.not.found": "ITSM服务不可用",
 
   "visualAnalyze.groupBy": "分组",
   "visualAnalyze.incidentGroup": "只显示有故障的分组",

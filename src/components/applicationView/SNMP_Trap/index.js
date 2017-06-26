@@ -7,6 +7,7 @@ import { classnames, getUUID } from '../../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import RuleModal from './ruleConfigModal'
 import TrapDeleteModal from './trapDeleteModal'
+import LeaveNotifyModal from '../../common/leaveNotifyModal/index'
 
 const Item = Form.Item;
 const SNMP_Trap = (props) => {
@@ -303,6 +304,7 @@ const SNMP_Trap = (props) => {
             </div>
             <RuleModal {...ruleModalProps}/>
             <TrapDeleteModal {...deleteProps}/>
+            <LeaveNotifyModal route={ props.route }/>
         </div>
     )
 }

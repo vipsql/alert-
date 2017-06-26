@@ -63,7 +63,7 @@ class Chart extends Component{
         this.color = function(num){
             // 没有数据时的颜色
             if(num < 0) {
-                return "#7ff5d9"
+                return "#6dcd7c"
             }
             return severityToColor[num]
         }
@@ -147,8 +147,24 @@ class Chart extends Component{
         };
     }
 
-    _wrap(d) {
-        let self = d3.select(this),
+    // 单元格内容变化
+    _textTransition(selector, isFullScreen) {
+        const cells = d3.select(selector);
+        // cells.selectAll("*").interrupt();
+        const textTransition = cells.select("svg").select(".label")
+        .attr("isFullScreen", isFullScreen)
+        .text((d) => this._wrap(d, isFullScreen?this.chartWidth / d.parent.dx * d.dx : d.dx))
+        .transition();
+        
+        if(isFullScreen) {
+            textTransition.each("end", function(d) {
+                textTransition.attr("isFullScreen", isFullScreen);
+            })
+        }
+    }
+
+    _wrap(d, actualWidth) {
+        let self = d3.select("#" + d.id + "> svg > .label"),
             text;
         const originText = self.text();
         const originFontSize = self.attr("font-size");
@@ -159,11 +175,13 @@ class Chart extends Component{
         }
 
         self.text(text);
-        self.attr("font-size", "13");
+        self.attr("font-size", "11.3pt");
         let textLength =  self.node().getComputedTextLength();
         let isShorted = false
 
-        while (textLength > (d.dx - 2) && text.length > 0) {
+        const width = actualWidth || d.dx;
+        
+        while (textLength > (width - 5) && text.length > 0) {
             isShorted = true;
             text = text.slice(0, -1);
             self.text(text + '...');
@@ -230,7 +248,11 @@ class Chart extends Component{
                     .append("text")
                     .attr("class", "tipLabel")
                     .attr('x', function(d) {
-                        return d.dx / 2;
+                        if(d.kx) {
+                            return d.kx * d.dx / 2;
+                        } else {
+                            return d.dx / 2;
+                        }
                     })
                     .attr("dy", ".35em")
                     .attr("fill", "#04203e")
@@ -257,12 +279,20 @@ class Chart extends Component{
                     if(oldNode.trueVal < childNode.trueVal) {
                         text
                         .attr('y', function(d) {
-                            return d.dy;
+                            if(d.ky) {
+                                return d.ky * d.dy;
+                            } else {
+                                return d.dy;
+                            }
                         })
                         .transition()
                         .duration(1000)
                         .attr('y', function(d) {
-                            return d.dy / 2;
+                            if(d.ky) {
+                                return d.ky * d.dy / 2
+                            } else {
+                                return d.dy / 2;
+                            }
                         })
                         .transition()
                         .duration(1000)
@@ -277,12 +307,20 @@ class Chart extends Component{
                         .transition()
                         .duration(1000)
                         .attr('y', function(d) {
-                            return d.dy / 2;
+                            if(d.ky) {
+                                return d.ky * d.dy / 2
+                            } else {
+                                return d.dy / 2;
+                            }
                         })
                         .transition()
                         .duration(1000)
                         .attr('y', function(d) {
-                            return d.dy + 10;
+                            if(d.ky) {
+                                return d.ky * d.dy + 10
+                            } else {
+                                return d.dy + 10;
+                            }
                         })
                     }
 
@@ -290,7 +328,7 @@ class Chart extends Component{
                     .transition()
                     .delay(2000)
                     .style("display", "none")
-                    .text(wrap)
+                    .text((d) => this._wrap(d))
                     .remove();
                 }
             })
@@ -403,28 +441,6 @@ class Chart extends Component{
             return d.children;
         });
 
-        function wrap(d) {
-            let self = d3.select(this),
-                text;
-            if (!d.children && (d.parent.path == 'severity' || d.parent.path == 'status')) {
-                text = window[`_${d.parent.path}`][d.name]
-            } else {
-                text = d.name;
-            }
-            self.text(text);
-            let textLength =  self.node().getComputedTextLength();
-            let isShorted = false
-
-            while (textLength > (d.dx - 2) && text.length > 0) {
-                isShorted = true;
-                text = text.slice(0, -1);
-                self.text(text + '...');
-                textLength = self.node().getComputedTextLength();
-            }
-
-            return isShorted?(text + "...") : text;
-        }
-
         // d3.json("../../../mock/alert.json", function(data) {
         if(children.length > 0){
 
@@ -439,6 +455,10 @@ class Chart extends Component{
                 .attr("class", "cell parent")
                 .on("click", d => {
 
+                })
+
+                .attr("id", function(d) {
+                    return d.id
                 })
 
                 .append("svg")
@@ -469,7 +489,7 @@ class Chart extends Component{
                 })
                 .attr('font-size', '13')
                 .attr("height", headerHeight)
-                .text(this._wrap)
+                .text((d) => this._wrap(d))
             // update transition
             var parentUpdateTransition = parentCells.transition().duration(transitionDuration);
             parentUpdateTransition.select(".cell")
@@ -493,7 +513,7 @@ class Chart extends Component{
                 })
                 .attr('font-size', '20')
                 .attr("height", 20)
-                .text(wrap);
+                .text((d) => this._wrap(d));
             // remove transition
             parentCells.exit()
                 .remove();
@@ -511,7 +531,14 @@ class Chart extends Component{
                     return d.id
                 })
                 .on("contextmenu", (d, e) => {
-                    zoom.call(this, node === d.parent ? root : d.parent)
+                    const parentD = node === d.parent ? root : d.parent;
+                    zoom.call(this, node === d.parent ? root : d.parent, d.parent)
+                    // this._textTransition("#" + parentNode.id + " > .child");
+                    if(parentD.parent) {
+                        parentD.children.forEach((childD) => {
+                            childD.isFullScreen = true;
+                        })
+                    }
                     d3Tip.hide()
                     currentEvent.preventDefault()
                   })
@@ -587,7 +614,7 @@ class Chart extends Component{
                 //.attr("font-weight", "bold")
                 .attr("text-anchor", "middle")
                 // .style("display", "none")
-                .text(wrap)
+                .text((d) => this._wrap(d))
                 .on('mouseover', function(d){
                     return false
                     d3Tip.show(d, formatMessage({...formatMessages[selectedStatus]}))
@@ -621,7 +648,7 @@ class Chart extends Component{
                 })
                 .attr("dy", ".35em")
                 .attr("text-anchor", "middle")
-                .text(wrap);
+                .text((d) => this._wrap(d));
 
             // exit transition
             childrenCells.exit()
@@ -655,7 +682,7 @@ class Chart extends Component{
         }
 
 
-        function zoom(d) {
+        function zoom(d, cellD) {
 
             this.treemap
                 .padding([headerHeight / (this.chartHeight / d.dy), 0, 0, 0])
@@ -674,6 +701,23 @@ class Chart extends Component{
                     // .style("display", "none");
             }
 
+            
+            const parentD = d;
+
+            if(parentD.parent) {
+                parentD.children.forEach((childD) => {
+                    childD.kx = kx;
+                    childD.ky = ky;
+                })
+            } else if(cellD) {
+                cellD.children.forEach((childD) => {
+                    childD.kx = undefined;
+                    childD.ky = undefined;
+                })
+            }
+
+            // const kxTransition = d3.select("#" + d.id).attr("kx", kx);
+
             var zoomTransition = this.chart.selectAll("g.cell").transition().duration(transitionDuration)
                 .attr("transform", (d) => {
                   return "translate(" + this.xscale(d.x) + "," + this.yscale(d.y) + ")";
@@ -684,17 +728,27 @@ class Chart extends Component{
                 })
                 .each("end", (d, i) => {
                    if (!i && (level !== self.root)) {
-                        this.chart.selectAll(".cell.child")
-                            .filter(function(d) {
-                                return d.parent === self.node; // only get the children for selected group
-                            })
-                            .select(".label")
-                            .style("display", "")
-                            .style("fill", (d) => {
-                              return this._idealTextColor(color(d.maxSeverity));
-                            });
+                        const tempNode = d3.select("#" + d.id);
+                        parentD.children.forEach((childD) => {
+                            d3.select("#" + childD.id).select('.label').text((d) => this._wrap(d));
+                        })
+                        // this.chart.selectAll(".cell.child")
+                        //     .filter(function(d) {
+                        //         return d.parent === self.node; // only get the children for selected group
+                        //     })
+                        //     .select(".label")
+                        //     .style("display", "")
+                        //     .text(this._wrap)
+                        //     .style("fill", (d) => {
+                        //       return this._idealTextColor(color(d.maxSeverity));
+                        //     });
                     }
-                  })
+
+                    const matchD = parentD.children.filter((childD) => childD.id == d.id);
+                    if(matchD && matchD.length > 0 && level.depth == 1) {
+                        this._textTransition("#" + matchD[0].id, true);
+                    }
+                })
 
             zoomTransition.select(".clip")
                 .attr("width", function(d) {
@@ -711,7 +765,7 @@ class Chart extends Component{
                 .attr("height", function(d) {
                     return d.children ? headerHeight : Math.max(0.01, (ky * d.dy));
                 })
-                .text(wrap);
+                .text((d) => this._wrap(d));
 
             zoomTransition.select(".child .label")
                 .attr("x", function(d) {

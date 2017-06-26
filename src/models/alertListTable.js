@@ -1,86 +1,86 @@
 import { queryAlertList, queryChild, queryAlertListTime } from '../services/alertList'
 import { viewTicket } from '../services/alertOperation'
-import {parse} from 'qs'
+import { parse } from 'qs'
 import { message } from 'antd'
 import { assign } from 'es6-object-assign';
 import { groupSort } from '../utils'
 
-const initvalState = {
-    isGroup: false,
-    groupBy: 'source',
+const initialState = {
+  isGroup: false,
+  groupBy: 'source',
 
-    selectedAlertIds: [], //选中的告警(合并告警)
-    operateAlertIds: [], //选中的告警(派发 关闭)
-    viewDetailAlertId: false, // 查看详细告警ID
-    isResize: false, //是否折叠
-    isShowMore: false,
-    isLoading: false,
+  selectedAlertIds: [], //选中的告警(合并告警)
+  operateAlertIds: [], //选中的告警(派发 关闭)
+  viewDetailAlertId: false, // 查看详细告警ID
+  isResize: false, //是否折叠
+  isShowMore: false,
+  isLoading: false,
 
-    orderBy: 'lastOccurTime',
-    orderType: 0,
-    pageSize: 40,
-    currentPage: 1,
+  orderBy: 'lastOccurTime',
+  orderType: 0,
+  pageSize: 40,
+  currentPage: 1,
 
-    levels:{}, // 告警级别
+  levels: {}, // 告警级别
 
-    begin: 0,
-    end: 0,
+  begin: 0,
+  end: 0,
 
-    tagsFilter: {}, // 过滤标签
-    selectedAll: false,
+  tagsFilter: {}, // 过滤标签
+  selectedAll: false,
 
-    checkAlert: {}, //此对象将alertId作为属性，用来过滤checked的alert
+  checkAlert: {}, //此对象将alertId作为属性，用来过滤checked的alert
 
-    lineW: 800, //时间线长度
-    gridWidth: 100,
-    minuteToWidth: 5, //以分钟单位计算间隔
-    
-    tempListData: [], //用于临时记录列表数据，在分组时取用这块的数据（避免连续分组时的BUG）
-    data: [],
+  lineW: 800, //时间线长度
+  gridWidth: 100,
+  minuteToWidth: 5, //以分钟单位计算间隔
 
-    columns: [{
-      key: 'entityName',
-    }, {
-      key: 'name',
-    }, {
-      key: 'source',
-      order: true
-    }, {
-      key: 'description',
-    }, {
-      key: 'count',
-      order: true
-    }, {
-      key: 'lastTime',
-      order: true
-    }, {
-      key: 'lastOccurTime',
-      order: true
-    },{
-      key: 'status',
-      order: true
-    }, ],
+  tempListData: [], //用于临时记录列表数据，在分组时取用这块的数据（避免连续分组时的BUG）
+  data: [],
+
+  columns: [{
+    key: 'entityName',
+  }, {
+    key: 'name',
+  }, {
+    key: 'source',
+    order: true
+  }, {
+    key: 'description',
+  }, {
+    key: 'count',
+    order: true
+  }, {
+    key: 'lastTime',
+    order: true
+  }, {
+    key: 'lastOccurTime',
+    order: true
+  }, {
+    key: 'status',
+    order: true
+  },],
 }
 
 export default {
   namespace: 'alertListTable',
-  state: initvalState,
+  state: initialState,
   subscriptions: {
-    setup({dispatch}) {
+    setup({ dispatch }) {
 
 
     }
   },
   reducers: {
     // 更新时间线每分钟占宽
-    updateMinToWidth(state, {payload: payload}){
+    updateMinToWidth(state, { payload: payload }) {
       return {
         ...state,
         ...payload
       }
     },
     // 折叠状态
-    updateResize(state, { payload: isResize }){
+    updateResize(state, { payload: isResize }) {
       return {
         ...state,
         ...isResize
@@ -90,32 +90,49 @@ export default {
     toggleLoading(state, { payload: isLoading }) {
       return { ...state, isLoading }
     },
-    // 更改全选状态
-    toggleSelectedAll(state, {payload}) {
-      const { selectedAll, checkAlert } = state;
-      let newStatus = !selectedAll;
-      let ids = Object.keys(checkAlert);
-      ids.forEach( (id) => {
-        checkAlert[id].checked = newStatus;
-      })
-      return { ...state, selectedAll: newStatus, checkAlert: checkAlert }
+    // // 更改全选状态
+    toggleSelectedAll(state, { payload }) {
+      // const { checkAlert } = state;
+      // // let newStatus = !selectedAll;
+      // let ids = Object.keys(checkAlert);
+
+      // let newOperateAlertIds = [];
+      // let newSelectedAlertIds = [];
+      // if (checked) {
+      //   newOperateAlertIds = ids;
+      //   newSelectedAlertIds = ids.map(id => checkAlert[id].info);
+      // } else {
+      //   newOperateAlertIds = [];
+      //   newSelectedAlertIds = [];
+      // }
+      // ids.forEach((id) => {
+      //   checkAlert[id].checked = checked;
+      // });
+      const { selectedAll, checkAlert, operateAlertIds, selectedAlertIds } = payload;
+      return {
+        ...state,
+        selectedAll,
+        checkAlert,
+        operateAlertIds,
+        selectedAlertIds
+      }
     },
     // 更新分组字段
-    updateGroup(state,{ payload }){
+    updateGroup(state, { payload }) {
       return {
         ...state,
         ...payload
       }
     },
     // 更新显示更多字段
-    updateShowMore(state,{payload: isShowMore}){
+    updateShowMore(state, { payload: isShowMore }) {
       return {
         ...state,
         isShowMore
       }
     },
     // 点击查看更多
-    setMore(state, { payload: currentPage }){
+    setMore(state, { payload: currentPage }) {
 
       return {
         ...state,
@@ -127,61 +144,83 @@ export default {
       return { ...state, ...payload }
     },
     // 设置viewDetailAlertId
-    toggleDetailAlertId(state, {payload: viewDetailAlertId}) {
+    toggleDetailAlertId(state, { payload: viewDetailAlertId }) {
       return { ...state, viewDetailAlertId }
     },
     // 初始化
     clear(state) {
-      return { ...state, ...initvalState }
+      return { ...state, ...initialState }
     },
+
+    // 将除了payload以外的值初始化
+    // setInitialExceptPayload(state, { payload }) {
+    //   return {
+    //     ...initialState,
+    //     ...payload
+    //   }
+    // },
     // 不分组更新
-    updateAlertListToNoGroup(state, {payload: {info, isShowMore, isGroup, levels, orderBy, orderType, tempListData, currentPage}}) {
+    updateAlertListToNoGroup(state, { payload: { info, isShowMore, isGroup, levels, orderBy, orderType, tempListData, currentPage } }) {
       let checkList = {};
-      info.forEach( (item, index) => {
+      info.forEach((item, index) => {
         checkList[`${item.id}`] = {
           info: item,
           checked: false
         }
       })
-      return { ...state, checkAlert: checkList, data: info, tempListData, isShowMore, isGroup, levels, orderBy, orderType, currentPage}
+      return { ...state, checkAlert: checkList, data: info, tempListData, isShowMore, isGroup, levels, orderBy, orderType, currentPage }
     },
     // 分组时更新
-    updateAlertListToGroup(state, {payload: {info, isShowMore, isGroup, groupBy, levels}}) {
+    updateAlertListToGroup(state, { payload: { info, isShowMore, isGroup, groupBy, levels } }) {
       let checkList = {};
-      info.forEach( (group, index) => {
-        group.children.forEach( (item) => {
+      info.forEach((group, index) => {
+        group.children.forEach((item) => {
           checkList[`${item.id}`] = {
             info: item,
             checked: false
           }
         })
       })
-      return { ...state, checkAlert: checkList, data: info, isShowMore, isGroup, groupBy, levels}
+      return { ...state, checkAlert: checkList, data: info, isShowMore, isGroup, groupBy, levels }
     },
     // 记录下原先checked数据
-    resetCheckAlert(state, { payload: { origin, newObj } }) {
-      let ids = Object.keys(origin);
+    //将loadMore取得的新数据放入checkAlert中
+    resetCheckAlert(state, { payload: { moreData } }) {
+      // let ids = Object.keys(origin);
       let checkList = {};
-      newObj.forEach( (item, index) => {
-        checkList[`${item.id}`] = {
+      // newObj.forEach((item, index) => {
+      //   checkList[`${item.id}`] = {
+      //     info: item,
+      //     checked: false
+      //   }
+      //   ids.forEach((id) => {
+      //     if (item.id == id && origin[id].checked) {
+      //       checkList[`${item.id}`] = {
+      //         info: item,
+      //         checked: true
+      //       }
+      //     }
+      //   })
+      // })
+      // return { ...state, checkAlert: checkList }
+      moreData.forEach(item => {
+        checkList[item.id] = {
           info: item,
           checked: false
         }
-        ids.forEach( (id) => {
-          if (item.id == id && origin[id].checked) {
-            checkList[`${item.id}`] = {
-              info: item,
-              checked: true
-            }
-          }
-        })
       })
-      return { ...state, checkAlert: checkList }
+      return {
+        ...state,
+        checkAlert: {
+          ...state.checkAlert,
+          ...checkList
+        }
+      }
     },
     // 删除勾选项
-    deleteCheckAlert(state, {payload: arr}) {
+    deleteCheckAlert(state, { payload: arr }) {
       let { checkAlert } = state;
-      arr.forEach( (id) => {
+      arr.forEach((id) => {
         if (checkAlert[id]) delete checkAlert[id]
       })
       return { ...state, checkAlert }
@@ -190,38 +229,76 @@ export default {
     resetCheckedAlert(state) {
       const { checkAlert } = state;
       let ids = Object.keys(checkAlert);
-      ids.forEach( (id) => {
+      ids.forEach((id) => {
         checkAlert[id].checked = false
       })
-      return { ...state, checkAlert: checkAlert }
+      return { ...state, checkAlert: checkAlert, operateAlertIds: [], selectedAlertIds: [], selectedAll: false }
     },
     // 更改勾选状态
-    changeCheckAlert(state, { payload: alertInfo }) {
+    changeCheckAlert(state, { payload: { alertInfo, alertId, checked } }) {
       const { checkAlert } = state;
-      if (checkAlert[alertInfo.id] !== undefined) {
-        checkAlert[alertInfo.id].checked = !checkAlert[alertInfo.id].checked
-        return { ...state, checkAlert: checkAlert }
+      let newOperateAlertIds = [];
+      let newSelectedAlertIds = [];
+      let newCheckAlert = {
+        ...state.checkAlert,
+        [alertId]: {
+          ...state.checkAlert[alertId],
+          checked
+        }
+      };
+      if (checked) {
+        newOperateAlertIds = [
+          ...state.operateAlertIds,
+          alertId
+        ];
+        newSelectedAlertIds = [
+          ...state.selectedAlertIds,
+          checkAlert[alertId].info
+        ];
       } else {
-        return { ...state }
+        let index = state.operateAlertIds.indexOf(alertId);
+        //index逻辑上来说不可能出现小于-1的情况，但还是判断一下吧
+        if (index > -1) {
+          newOperateAlertIds = [
+            ...state.operateAlertIds.slice(0, index),
+            ...state.operateAlertIds.slice(index + 1)
+          ];
+          newSelectedAlertIds = [
+            ...state.selectedAlertIds.slice(0, index),
+            ...state.selectedAlertIds.slice(index + 1)
+          ];
+        }
       }
+      return {
+        ...state,
+        operateAlertIds: newOperateAlertIds,
+        selectedAlertIds: newSelectedAlertIds,
+        checkAlert: newCheckAlert
+      }
+      // if (checkAlert[alertInfo.id] !== undefined) {
+      //   checkAlert[alertInfo.id].checked = !checkAlert[alertInfo.id].checked
+      //   return { ...state, checkAlert: checkAlert }
+      // } else {
+      //   return { ...state }
+      // }
     },
     // 在点击操作时进行过滤处理
-    filterCheckAlert(state) {
-      const { checkAlert } = state;
-      let operateAlertIds = [], selectedAlertIds = [];
-      let keyArr = Object.keys(checkAlert) || [];
-      keyArr.forEach( (id) => {
-        if (checkAlert[id].checked) {
-          operateAlertIds.push(id);
-          selectedAlertIds.push(checkAlert[id].info)
-        }
-      })
-      return { ...state, operateAlertIds: operateAlertIds, selectedAlertIds: selectedAlertIds }
-    },
+    // filterCheckAlert(state) {
+    //   const { checkAlert } = state;
+    //   let operateAlertIds = [], selectedAlertIds = [];
+    //   let keyArr = Object.keys(checkAlert) || [];
+    //   keyArr.forEach((id) => {
+    //     if (checkAlert[id].checked) {
+    //       operateAlertIds.push(id);
+    //       // selectedAlertIds.push(checkAlert[id].info)
+    //     }
+    //   })
+    //   return { ...state, operateAlertIds: operateAlertIds, selectedAlertIds: selectedAlertIds }
+    // },
     // ----------------------------------------------------------------------------------------------
-    setTimeLineWidth(state,{payload: {gridWidth,minuteToWidth, lineW}}){
-    
-      return{
+    setTimeLineWidth(state, { payload: { gridWidth, minuteToWidth, lineW } }) {
+
+      return {
         ...state,
         gridWidth,
         minuteToWidth,
@@ -229,7 +306,7 @@ export default {
       }
     },
     // 自定义列
-    customCols(state, {payload: columns}){
+    customCols(state, { payload: columns }) {
       return {
         ...state,
         columns
@@ -237,20 +314,20 @@ export default {
 
     },
     // 更新告警列表
-    updateAlertListData(state, {payload: { data, newLevels, tempListData }}){
+    updateAlertListData(state, { payload: { data, newLevels, tempListData } }) {
       let { levels } = state;
       let keys = Object.keys(newLevels);
-      keys.forEach( (key) => {
+      keys.forEach((key) => {
         levels[key] = typeof levels[key] !== 'undefined' ? levels[key] + newLevels[key] : newLevels[key]
       })
       return { ...state, data, tempListData, levels: levels }
     },
     // 手动添加子告警
-    addChild(state, { payload: {children, parentId, isGroup} }) {
+    addChild(state, { payload: { children, parentId, isGroup } }) {
       const { data } = state;
       if (isGroup === true) {
-        const newData = data.map( (group) => {
-          group.children.map( (item) => {
+        const newData = data.map((group) => {
+          group.children.map((item) => {
             if (item.id == parentId) {
               item.childrenAlert = children;
               item.isSpread = true
@@ -261,7 +338,7 @@ export default {
         })
         return { ...state, data: newData }
       } else if (isGroup === false) {
-        const newData = data.map( (item, index) => {
+        const newData = data.map((item, index) => {
           if (item.id == parentId) {
             item.childrenAlert = children;
             item.isSpread = true
@@ -273,11 +350,11 @@ export default {
       return { ...state }
     },
     // 收拢子告警
-    toggleSpreadChild(state, { payload: { parentId, isGroup} }) {
+    toggleSpreadChild(state, { payload: { parentId, isGroup } }) {
       const { data } = state;
       if (isGroup === true) {
-        const newData = data.map( (group) => {
-          group.children.map( (item) => {
+        const newData = data.map((group) => {
+          group.children.map((item) => {
             if (item.id == parentId) {
               item.isSpread = !item.isSpread
             }
@@ -287,7 +364,7 @@ export default {
         })
         return { ...state, data: newData }
       } else if (isGroup === false) {
-        const newData = data.map( (item, index) => {
+        const newData = data.map((item, index) => {
           if (item.id == parentId) {
             item.isSpread = !item.isSpread
           }
@@ -298,20 +375,20 @@ export default {
       return { ...state }
     },
     // 合并告警
-    mergeChildrenAlert(state, { payload: { parentId, childItems, isGroup, relieveItem}}) {
+    mergeChildrenAlert(state, { payload: { parentId, childItems, isGroup, relieveItem } }) {
       const { data, checkAlert } = state;
-      const childIds = childItems.map( item => item.id )
+      const childIds = childItems.map(item => item.id)
       let childsItem = [];
       if (isGroup === true) {
-        const newData = data.map( (group) => {
-          const arr = group.children.filter( (item) => {
+        const newData = data.map((group) => {
+          const arr = group.children.filter((item) => {
             let status = true;
             if (item.id == parentId) {
               item.hasChild = true;
               item.isSpread = true;
               item.childrenAlert = childItems;
             }
-            childIds.forEach( (child) => {
+            childIds.forEach((child) => {
               if (child == item.id) {
                 status = false;
               }
@@ -321,17 +398,17 @@ export default {
           group.children = arr.concat(relieveItem);
           return group
         })
-        relieveItem.length !== 0 && relieveItem.forEach( (item) => { checkAlert[item.id] = { info: item, checked: false } })
+        relieveItem.length !== 0 && relieveItem.forEach((item) => { checkAlert[item.id] = { info: item, checked: false } })
         return { ...state, data: newData, checkAlert: checkAlert }
       } else if (isGroup === false) {
-        const newData = data.filter( (item) => {
+        const newData = data.filter((item) => {
           let status = true;
           if (item.id == parentId) {
             item.hasChild = true;
             item.isSpread = true;
             item.childrenAlert = childItems;
           }
-          childIds.forEach( (child) => {
+          childIds.forEach((child) => {
             if (child == item.id) {
               status = false;
             }
@@ -339,18 +416,18 @@ export default {
           return status;
         })
         newData.push(...relieveItem)
-        relieveItem.length !== 0 && relieveItem.forEach( (item) => { checkAlert[item.id] = { info: item, checked: false } })
+        relieveItem.length !== 0 && relieveItem.forEach((item) => { checkAlert[item.id] = { info: item, checked: false } })
         return { ...state, data: newData, checkAlert: checkAlert }
       }
       return { ...state }
     },
     // addParent再没展开过的情况下去解除告警
-    addParent(state, { payload: { addItem, parentId, isGroup}}) {
+    addParent(state, { payload: { addItem, parentId, isGroup } }) {
       const { data, checkAlert } = state;
       if (isGroup === true) {
-        const newData = data.map( (group) => {
+        const newData = data.map((group) => {
           let status = false;
-          group.children.map( (item) => {
+          group.children.map((item) => {
             if (item.id == parentId) {
               status = true;
               item.hasChild = false;
@@ -361,14 +438,14 @@ export default {
           })
           if (status) {
             group.children.push(...addItem);
-            addItem.forEach( (item) => { checkAlert[item.id] = { info: item, checked: false } })
+            addItem.forEach((item) => { checkAlert[item.id] = { info: item, checked: false } })
           }
           return group;
         })
-        return { ...state, data: newData, checkAlert: checkAlert}
+        return { ...state, data: newData, checkAlert: checkAlert }
       } else if (isGroup === false) {
         let status = false;
-        const newData = data.map( (item, index) => {
+        const newData = data.map((item, index) => {
           if (item.id == parentId) {
             status = true;
             item.hasChild = false;
@@ -379,7 +456,7 @@ export default {
         })
         if (status) {
           newData.push(...addItem);
-          addItem.forEach( (item) => { checkAlert[item.id] = { info: item, checked: false } })
+          addItem.forEach((item) => { checkAlert[item.id] = { info: item, checked: false } })
         }
         return { ...state, data: newData, checkAlert: checkAlert }
       }
@@ -388,7 +465,7 @@ export default {
     // 手动添加分组展开状态
     addGroupSpread(state, { payload }) {
       const { data } = state;
-      const newData = data.map( (group) => {
+      const newData = data.map((group) => {
         if (group.classify == payload) {
           group.isGroupSpread = false;
         }
@@ -399,7 +476,7 @@ export default {
     // 转换分组的展开状态
     toggleGroupSpread(state, { payload }) {
       const { data } = state;
-      const newData = data.map( (group) => {
+      const newData = data.map((group) => {
         if (group.classify == payload) {
           group.isGroupSpread = !group.isGroupSpread;
         }
@@ -408,48 +485,61 @@ export default {
       return { ...state, data: newData }
     },
     // 排序
-    toggleOrder(state, {payload}) {
+    toggleOrder(state, { payload }) {
       return { ...state, ...payload }
     },
     // 删除告警
-    deleteIncident(state, {payload: arr}) {
+    deleteIncident(state, { payload: arr }) {
       const { data, isGroup } = state;
       if (isGroup === true) {
-        const newData = data.map( (group) => {
-          const arr = group.children.filter( (item) => {
+        const newData = data.map((group) => {
+          const children = group.children.filter((item) => {
             let status = true;
-            arr.forEach( (id) => {
-              if (id === item.id) status = false
-            })
+            // arr.forEach((id) => {
+            //   if (id === item.id) status = false
+            // })
+            for (let i = 0, len = arr.length; i < len; i++) {
+              if (arr[i] === item.id) {
+                status = false;
+                break;
+              }
+            }
             return status;
           })
-          group.children = arr;
+          group.children = children;
           return group;
         })
         return { ...state, data: newData }
       } else if (isGroup === false) {
-        const newData = data.filter( (item) => {
+        const newData = data.filter((item) => {
           let status = true;
-          arr.forEach( (id) => {
-            if (id === item.id) status = false
-          })
+          // arr.forEach((id) => {
+          //   if (id === item.id) status = false
+          // })
+          for (let i = 0, len = arr.length; i < len; i++) {
+            if (arr[i] === item.id) {
+              status = false;
+              break;
+            }
+          }
           return status;
         })
         return { ...state, data: newData }
       }
     },
+
     // 修改状态为处理中
-    changeCloseState(state, {payload: {arrList, status}}) {
+    changeCloseState(state, { payload: { arrList, status } }) {
       const { data, isGroup } = state;
       if (isGroup === true) {
-        const newData = data.map( (group) => {
-          const arr = group.children.map( (item) => {
-            arrList.forEach( (id) => {
+        const newData = data.map((group) => {
+          const arr = group.children.map((item) => {
+            arrList.forEach((id) => {
               if (item.id == id) {
                 item['status'] = status; // 手动变为150 -> 已解决
               }
               if (item.childrenAlert !== undefined) {
-                item.childrenAlert.forEach( (childItem) => {
+                item.childrenAlert.forEach((childItem) => {
                   childItem['status'] = status; // 子告警也变为已解决
                 })
               }
@@ -461,13 +551,13 @@ export default {
         })
         return { ...state, data: newData }
       } else if (isGroup === false) {
-        const newData = data.map( (item, index) => {
-          arrList.forEach( (id) => {
+        const newData = data.map((item, index) => {
+          arrList.forEach((id) => {
             if (item.id == id) {
               item['status'] = status; // 手动变为150 -> 已解决
             }
             if (item.childrenAlert !== undefined) {
-              item.childrenAlert.forEach( (childItem) => {
+              item.childrenAlert.forEach((childItem) => {
                 childItem['status'] = status; // 子告警也变为已解决
               })
             }
@@ -478,14 +568,14 @@ export default {
       }
     },
     // 修改data数组某一行的值
-    updateDataRow(state, {payload}) {
+    updateDataRow(state, { payload }) {
       const { data, isGroup } = state;
       let newData = assign([], data);
       if (isGroup) {
         newData = newData.map((tempGroup) => {
-          let data = tempGroup.children.map( (tempRow) => {
-            if(tempRow['id'] == payload['id']) {
-              tempRow = {...tempRow, ...payload};
+          let data = tempGroup.children.map((tempRow) => {
+            if (tempRow['id'] == payload['id']) {
+              tempRow = { ...tempRow, ...payload };
             }
             return tempRow
           })
@@ -494,27 +584,53 @@ export default {
         });
       } else {
         newData = newData.map((tempRow) => {
-          if(tempRow['id'] == payload['id']) {
-            tempRow = {...tempRow, ...payload};
+          if (tempRow['id'] == payload['id']) {
+            tempRow = { ...tempRow, ...payload };
           }
           return tempRow;
         });
       }
-      return {...state, data: newData};
+      return { ...state, data: newData };
+    },
+
+    // 清空selectedAlertIds和operateAlertIds： 接手成功后要手动清除
+    // deleteOperateIds(state) {
+    //   return {
+    //     ...state,
+    //     operateAlertIds: [],
+    //     selectedAlertIds: []
+    //   }
+    // },
+
+    //
+    resestCheckboxStatus(state) {
+      return {
+        ...state,
+        operateAlertIds: [],
+        selectedAlertIds: [],
+        selectedAll: false
+      }
     }
   },
+
+
+
+
+
+
+
   effects: {
     // beforeCustomCols
-    *initCustomCols({payload: custome},{call, put, select}) {
-      let initColumns = JSON.parse(JSON.stringify(initvalState.columns))
+    *initCustomCols({ payload: custome }, { call, put, select }) {
+      let initColumns = JSON.parse(JSON.stringify(initialState.columns))
       let columns = custome.length > 0 ? custome : initColumns;
       let userColumns = custome.length > 0 ? JSON.stringify(columns) : JSON.stringify(initColumns)
       localStorage.setItem('__alert_list_userColumns', userColumns)
-      yield put({type: 'customCols', payload: columns})
+      yield put({ type: 'customCols', payload: columns })
     },
     //查询告警列表
-    *queryAlertList({payload},{call, put, select}){
-     
+    *queryAlertList({ payload }, { call, put, select }) {
+
       // console.log(linew)
       yield put({
         type: 'toggleLoading',
@@ -532,20 +648,20 @@ export default {
         orderType,
         columns,
       } = yield select(state => {
-        const alertListTable = state.alertListTable
-        return {
-          isGroup: alertListTable.isGroup,
-          groupBy: alertListTable.groupBy,
-          begin: alertListTable.begin,
-          end: alertListTable.end,
-          lineW: alertListTable.lineW,
-          pageSize: alertListTable.pageSize,
-          orderBy: alertListTable.orderBy,
-          orderType: alertListTable.orderType,
-          columns: alertListTable.columns,
-        }
-      })
-      
+          const alertListTable = state.alertListTable
+          return {
+            isGroup: alertListTable.isGroup,
+            groupBy: alertListTable.groupBy,
+            begin: alertListTable.begin,
+            end: alertListTable.end,
+            lineW: alertListTable.lineW,
+            pageSize: alertListTable.pageSize,
+            orderBy: alertListTable.orderBy,
+            orderType: alertListTable.orderType,
+            columns: alertListTable.columns,
+          }
+        })
+
       // 更新每分钟占宽
       const countMins = (end - begin) / (60 * 1000)
       const minuteToWidth = lineW / countMins
@@ -559,15 +675,15 @@ export default {
       })
 
       var extraParams = {};
-      
-      if(payload !== undefined && payload.isGroup !== undefined) {
+
+      if (payload !== undefined && payload.isGroup !== undefined) {
         isGroup = payload.isGroup;
         groupBy = payload.groupBy;
         orderBy = payload.orderBy;
         orderType = payload.orderType;
       }
 
-      const tagsFilter = yield select( state => {
+      const tagsFilter = yield select(state => {
 
         return {
           ...state.alertListTable.tagsFilter,
@@ -576,7 +692,7 @@ export default {
         }
       })
 
-      
+
       // 这里触发时currentPage始终为1，如果从common取在分组转分页时会有问题
       extraParams = {
         pageSize: pageSize,
@@ -590,59 +706,59 @@ export default {
         ...extraParams
       })
 
-      if(listData.result){
-          yield put({
-            type: 'updateAlertListToNoGroup',
-            payload: {
-              info: listData.data.datas,
-              tempListData: listData.data.datas,
-              isShowMore: listData.data.hasNext,
-              currentPage: 1,
-              isGroup: false,
-              orderBy: orderBy,
-              orderType: orderType,
-              levels: listData.data.levels
-            }
-          })
-          yield put({
-            type: 'toggleLoading',
-            payload: false
-          })
-          yield put({
-            type: 'alertOperation/initColumn',
-            payload: {
-              baseCols: columns, 
-              extend: listData.data.properties,
-              tags: listData.data.tagKeys
-            }
-          })
+      if (listData.result) {
+        yield put({
+          type: 'updateAlertListToNoGroup',
+          payload: {
+            info: listData.data.datas,
+            tempListData: listData.data.datas,
+            isShowMore: listData.data.hasNext,
+            currentPage: 1,
+            isGroup: false,
+            orderBy: orderBy,
+            orderType: orderType,
+            levels: listData.data.levels
+          }
+        })
+        yield put({
+          type: 'toggleLoading',
+          payload: false
+        })
+        yield put({
+          type: 'alertOperation/initColumn',
+          payload: {
+            baseCols: columns,
+            extend: listData.data.properties,
+            tags: listData.data.tagKeys
+          }
+        })
 
       } else {
         yield message.error(window.__alert_appLocaleData.messages[listData.message], 2)
       }
     },
     // 展开子告警
-    *spreadChild({payload},{call, put, select}) {
+    *spreadChild({ payload }, { call, put, select }) {
       let haveChild;
-      const {data, isGroup, begin, end} = yield select( state => {
+      const { data, isGroup, begin, end } = yield select(state => {
         return {
           'isGroup': state.alertListTable.isGroup,
           'data': state.alertListTable.data,
           'begin': state.alertListTable.begin,
           'end': state.alertListTable.end
         }
-      } )
+      })
       // 先看下有没有子告警，没有就查询 有就隐藏
       if (isGroup === true) {
-        data.forEach( (group) => {
-          group.children.forEach( (item) => {
+        data.forEach((group) => {
+          group.children.forEach((item) => {
             if (item.id == payload) {
               haveChild = !(typeof item.childrenAlert === 'undefined')
             }
           })
         })
       } else if (isGroup === false) {
-        data.forEach( (item, index) => {
+        data.forEach((item, index) => {
           if (item.id == payload) {
             haveChild = !(typeof item.childrenAlert === 'undefined')
           }
@@ -650,41 +766,41 @@ export default {
       }
 
       if (typeof haveChild !== undefined && !haveChild) {
-        const childResult = yield call(queryChild, {incidentId: payload, begin: begin, end: end})
+        const childResult = yield call(queryChild, { incidentId: payload, begin: begin, end: end })
         if (childResult.result) {
-          yield put( { type: 'addChild', payload: { children: childResult.data, parentId: payload, isGroup: isGroup } })
+          yield put({ type: 'addChild', payload: { children: childResult.data, parentId: payload, isGroup: isGroup } })
 
         } else {
           yield message.error(window.__alert_appLocaleData.messages[childResult.message], 2)
         }
-      } else if (typeof haveChild !== undefined && haveChild){
-        yield put( { type: 'toggleSpreadChild', payload: { parentId: payload, isGroup: isGroup} })
+      } else if (typeof haveChild !== undefined && haveChild) {
+        yield put({ type: 'toggleSpreadChild', payload: { parentId: payload, isGroup: isGroup } })
       } else {
         console.error('haveChild is undefined')
       }
     },
     // 收拢子告警
-    *noSpreadChild({payload},{call, put, select}) {
-      const {isGroup} = yield select( state => {
+    *noSpreadChild({ payload }, { call, put, select }) {
+      const { isGroup } = yield select(state => {
         return {
           'isGroup': state.alertListTable.isGroup,
         }
-      } )
+      })
 
-      yield put( { type: 'toggleSpreadChild', payload: { parentId: payload, isGroup: isGroup} })
+      yield put({ type: 'toggleSpreadChild', payload: { parentId: payload, isGroup: isGroup } })
     },
     // 合并告警
-    *mergeChildAlert({payload},{call, put, select}) {
-      let {totalItems, pId, cItems} = payload;
+    *mergeChildAlert({ payload }, { call, put, select }) {
+      let { totalItems, pId, cItems } = payload;
       let relieveItem = []; // 需要释放的子告警
-      const {data, isGroup, begin, end} = yield select( state => {
+      const { data, isGroup, begin, end } = yield select(state => {
         return {
           'isGroup': state.alertListTable.isGroup,
           'data': state.alertListTable.data,
           'begin': state.alertListTable.begin,
           'end': state.alertListTable.end
         }
-      } )
+      })
       // 处理合并的告警之前有子告警的情况，先释放子告警，再合并
       for (let item of totalItems) {
         // 先判断有没有子告警
@@ -692,13 +808,13 @@ export default {
           // 有子告警后判断是否需要通过查询得到子告警
           let haveChild = !(typeof item.childrenAlert === 'undefined')
           if (typeof haveChild !== undefined && !haveChild) {
-            const childResult = yield queryChild({incidentId: item.id, begin: begin, end: end})
+            const childResult = yield queryChild({ incidentId: item.id, begin: begin, end: end })
             if (childResult.result) {
               yield relieveItem.push(...childResult.data)
             } else {
               yield message.error(window.__alert_appLocaleData.messages[childResult.message], 2)
             }
-          } else if (typeof haveChild !== undefined && haveChild){
+          } else if (typeof haveChild !== undefined && haveChild) {
             relieveItem.push(...item.childrenAlert)
           } else {
             console.error('haveChild is undefined')
@@ -706,39 +822,39 @@ export default {
         }
       }
       // push childrenAlert/ remove parent/ hasChild -> true/ isSpread -> true
-      yield put({ type: 'mergeChildrenAlert', payload: { parentId: pId, childItems: cItems, isGroup: isGroup, relieveItem: relieveItem}})
+      yield put({ type: 'mergeChildrenAlert', payload: { parentId: pId, childItems: cItems, isGroup: isGroup, relieveItem: relieveItem } })
     },
     // 解除告警
-    *relieveChildAlert({payload},{call, put, select}) {
+    *relieveChildAlert({ payload }, { call, put, select }) {
 
-      const {isGroup, begin, end} = yield select( state => {
+      const { isGroup, begin, end } = yield select(state => {
         return {
           'isGroup': state.alertListTable.isGroup,
         }
-      } )
+      })
 
-      yield put( { type: 'addParent', payload: { addItem: payload.childs, parentId: payload.relieveId, isGroup: isGroup} })
+      yield put({ type: 'addParent', payload: { addItem: payload.childs, parentId: payload.relieveId, isGroup: isGroup } })
 
     },
     // 展开组
-    *spreadGroup({payload},{call, put, select}) {
+    *spreadGroup({ payload }, { call, put, select }) {
       yield put({ type: 'toggleGroupSpread', payload: payload })
     },
     // 合拢组
-    *noSpreadGroup({payload},{call, put, select}) {
+    *noSpreadGroup({ payload }, { call, put, select }) {
       yield put({ type: 'addGroupSpread', payload: payload })
     },
     // ------------------------------------------------------------------------------------------------
 
     // 点击分组时触发
-    *setGroup({payload}, {select, put, call}) {
-      const { tempListData, levels }=  yield select(state => {
-         return {
-           'tempListData': state.alertListTable.tempListData,
-           'levels': state.alertListTable.levels
-         }
+    *setGroup({ payload }, { select, put, call }) {
+      const { tempListData, levels } = yield select(state => {
+        return {
+          'tempListData': state.alertListTable.tempListData,
+          'levels': state.alertListTable.levels
+        }
       })
-      
+
       if (payload.isGroup) {
         yield put({
           type: 'toggleLoading',
@@ -746,7 +862,7 @@ export default {
         })
         const groupList = yield groupSort()(tempListData, payload.group)
         if (payload.group !== undefined && payload.group === 'severity') {
-          groupList.sort( (prev, next) => {
+          groupList.sort((prev, next) => {
             return Number(next.classify) - Number(prev.classify);
           })
         }
@@ -770,27 +886,27 @@ export default {
       }
     },
     // 点击展开详情
-    *clickDetail({payload}, {select, put, call}) {
+    *clickDetail({ payload }, { select, put, call }) {
       yield put({ type: 'toggleDetailAlertId', payload: payload })
-      yield put({ type: 'alertDetail/openDetailModal'})
+      yield put({ type: 'alertDetail/openDetailModal' })
     },
     // show more
-    *loadMore({}, {call, put, select}){
+    *loadMore({ }, { call, put, select }) {
 
       yield put({
         type: 'toggleLoading',
         payload: true
       })
 
-      let { currentPage, listData, alertListTable }=  yield select(state => {
-         return {
-           'currentPage': state.alertListTable.currentPage,
-           'listData': state.alertListTable.data,
-           'alertListTable': state.alertListTable
-         }
+      let { currentPage, listData, alertListTable } = yield select(state => {
+        return {
+          'currentPage': state.alertListTable.currentPage,
+          'listData': state.alertListTable.data,
+          'alertListTable': state.alertListTable
+        }
       })
 
-      currentPage =  currentPage + 1
+      currentPage = currentPage + 1
       const params = {
         currentPage: currentPage,
         begin: alertListTable.begin,
@@ -798,7 +914,8 @@ export default {
         orderBy: alertListTable.orderBy,
         orderType: alertListTable.orderType,
         pageSize: alertListTable.pageSize,
-        ...alertListTable.tagsFilter
+        ...alertListTable.tagsFilter,
+        status: 'test'
       }
 
       const listReturnData = yield call(queryAlertList, params)
@@ -810,8 +927,9 @@ export default {
         yield put({
           type: 'resetCheckAlert',
           payload: {
-            origin: alertListTable.checkAlert,
-            newObj: listData
+            // origin: alertListTable.checkAlert,
+            // newObj: listData
+            moreData: listReturnData.data.datas
           }
         })
         if (!listReturnData.data.hasNext) {
@@ -840,7 +958,7 @@ export default {
           type: 'alertOperation/addProperties',
           payload: {
             properties: listReturnData.data.properties,
-            tags: listReturnData.data.tagKeys 
+            tags: listReturnData.data.tagKeys
           }
         })
       } else {
@@ -849,17 +967,17 @@ export default {
 
     },
     //orderList排序
-    *orderList({payload}, {select, put, call}) {
+    *orderList({ payload }, { select, put, call }) {
       //yield put({ type: 'toggleOrder', payload: payload })
       yield put({ type: 'queryAlertList', payload: { isGroup: false, orderBy: payload.orderBy, orderType: payload.orderType } })
     },
     //orderByTittle
-    *orderByTittle({payload}, {select, put, call}) {
-      const { orderType } = yield select( state => {
+    *orderByTittle({ payload }, { select, put, call }) {
+      const { orderType } = yield select(state => {
         return {
           'orderType': state.alertListTable.orderType,
         }
-      } )
+      })
       if (payload !== undefined) {
         yield put({
           type: 'toggleOrder',
@@ -873,17 +991,72 @@ export default {
         console.error('orderBy error')
       }
     },
-    *orderFlowNumClick({payload: {orderFlowNum, id}}, {select, put, call}) {
+    *orderFlowNumClick({ payload: { orderFlowNum, id } }, { select, put, call }) {
       const itsmDetailUrlData = yield call(viewTicket, orderFlowNum);
       if (itsmDetailUrlData.result) {
         const itsmDetailUrl = itsmDetailUrlData.data.url;
-        yield put({ type: 'updateDataRow', payload: {itsmDetailUrl, id}})
+        yield put({ type: 'updateDataRow', payload: { itsmDetailUrl, id } })
         window.open(itsmDetailUrl);
       } else {
         yield message.error(window.__alert_appLocaleData.messages[itsmDetailUrlData.message], 2)
       }
+    },
+
+    // 响应列表项的选中状态
+    *handleCheckboxClick({ payload: { alertId, checked, alertInfo } }, { select, put, call }) {
+
+      yield put({ type: 'changeCheckAlert', payload: { alertId, checked, alertInfo } });
+
+      //这里用selectedAlertIds更好
+      const { operateAlertIds, checkAlert } = yield select(state => {
+        return {
+          operateAlertIds: state.alertListTable.operateAlertIds,
+          checkAlert: state.alertListTable.checkAlert
+        }
+      });
+      // 如果列表为空，或者其中有一个未接手的，disabled都为true
+      const disabled = operateAlertIds.length === 0 || operateAlertIds.some(id => {
+        return checkAlert[id].info.status === 0
+      })
+      yield put({
+        type: 'alertOperation/setButtonsDisable',
+        payload: disabled
+      })
+    },
+
+    // 点击全选按钮
+    *handleSelectAll({ payload: { checked } }, { select, put, call }) {
+      const checkAlert = yield select(state => state.alertListTable.checkAlert);
+      // let newStatus = !selectedAll;
+      let ids = Object.keys(checkAlert);
+
+      let newOperateAlertIds = [];
+      let newSelectedAlertIds = [];
+      if (checked) {
+        newOperateAlertIds = ids;
+        newSelectedAlertIds = ids.map(id => checkAlert[id].info);
+      } else {
+        newOperateAlertIds = [];
+        newSelectedAlertIds = [];
+      }
+      ids.forEach((id) => {
+        //这里不应该直接改变这个对象，应该重新生成一个新的对象
+        checkAlert[id].checked = checked;
+      });
+      yield put({
+        type: 'toggleSelectedAll',
+        payload: {
+          selectedAll: checked,
+          checkAlert,
+          operateAlertIds: newOperateAlertIds,
+          selectedAlertIds: newSelectedAlertIds
+        }
+      });
+      const disabled = newSelectedAlertIds.length === 0 || newSelectedAlertIds.some(item => item.status === 0);
+      yield put({
+        type: 'alertOperation/setButtonsDisable',
+        payload: disabled
+      })
     }
   },
-
-
 }

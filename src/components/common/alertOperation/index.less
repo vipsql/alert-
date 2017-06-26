@@ -1,38 +1,33 @@
 @import "../../vars.less";
-
 // alertOperation style on local
-.operateMain{
+.operateMain {
     position: relative;
-    padding: 16px 12px 16px 18px;
-    //background-color: #fff;
+    padding: 16px 12px 16px 18px; //background-color: #fff;
     background-color: #164779;
     border-radius: 3px;
-    .groupMain{
+    .groupMain {
         display: inline-block;
         position: relative;
         float: right;
-        .switch{
+        .switch {
             position: absolute;
             left: 75px;
-            top: 4px;
-            //color: #acb3bf;
+            top: 4px; //color: #acb3bf;
             color: #9dd7ff;
             visibility: hidden;
         }
-        &:hover .switch{
+        &:hover .switch {
             visibility: visible;
         }
-    }
-
-    // cover ant-design Select style on local
-    .showChatOps{
-        &:global.ant-select{
+    } // cover ant-design Select style on local
+    .showChatOps {
+        &:global.ant-select {
             //color: #6c7480;
             font-size: 13px;
             font-weight: normal;
-            :global .ant-select-selection--single {
+             :global .ant-select-selection--single {
                 height: 30px;
-                :global .ant-select-selection__rendered{
+                 :global .ant-select-selection__rendered {
                     line-height: 28px;
                     margin-left: 10px;
                     margin-right: 10px;
@@ -41,19 +36,19 @@
             }
         }
     }
-    .selectSingle{
+    .selectSingle {
         margin-right: 10px;
-        &.setGroup{
+        &.setGroup {
             float: right;
             width: 100px;
         }
-        &:global.ant-select{
+        &:global.ant-select {
             //color: #6c7480;
             font-size: 13px;
             font-weight: normal;
-            :global .ant-select-selection--single {
+             :global .ant-select-selection--single {
                 height: 30px;
-                :global .ant-select-selection__rendered{
+                 :global .ant-select-selection__rendered {
                     line-height: 28px;
                     margin-left: 10px;
                     margin-right: 10px;
@@ -61,83 +56,101 @@
                 }
             }
         }
-    }
-
-    // cover ant-design Dropdown style on local
-    .myDropdown{
-        &:global.ant-btn-group{
+    } // cover ant-design Dropdown style on local
+    .myDropdown {
+        &:global.ant-btn-group {
             margin-right: 10px;
             height: 30px;
-            :global .ant-btn{
+             :global .ant-btn {
                 font-size: 13px;
                 font-weight: normal;
-                padding: 4px 10px;
-                //background: white;
+                padding: 4px 10px; //background: white;
                 background-color: #0d5990;
                 border: 1px solid #297ebb;
                 color: #9dd7ff;
-                &:hover{
+                &:hover {
                     border-color: #2bb4f4;
                 }
             }
         }
-        button:last-child{
+        button:last-child {
             //background: #f5f9fc;
             background-color: #0d5990;
             border: 1px solid #297ebb;
             color: #9dd7ff;
-            &:hover{
+            &:hover {
                 border-color: #2bb4f4;
             }
         }
     }
-
-    // cover ant-design Button style on local
-    .myButton{
-        &:global.ant-btn{
+    .moreOperateDropdown {
+        &:global(.ant-dropdown-trigger) {
+            width: 102px;
+            display: inline-block;
+            height: 28px;
             margin-right: 10px;
-            line-height: 1.45;
+            line-height: 1.4;
             font-weight: normal;
-            font-size: 13px;
-            //color: #6c7480;
+            font-size: 13px; //color: #6c7480;
             //background-color: white;
             border: 1px solid #297ebb;
             color: #9dd7ff;
             background-color: #0d5990;
             transition: all .3s ease-in-out;
-            &:hover{
+            padding: 4px 10px;
+            border-radius: 3px;
+            &:hover {
+                background-color: #2d98db;
+                color: #fff;
+            }
+        }
+         :global(.anticon-down) {
+            margin-left: 15px;
+        }
+    } // cover ant-design Button style on local
+    .myButton {
+        &:global.ant-btn {
+            margin-right: 10px;
+            line-height: 1.45;
+            font-weight: normal;
+            font-size: 13px; //color: #6c7480;
+            //background-color: white;
+            border: 1px solid #297ebb;
+            color: #9dd7ff;
+            background-color: #0d5990;
+            transition: all .3s ease-in-out;
+            &:hover {
                 //border-color: #2bb4f4;
                 background-color: #2d98db;
                 color: #fff;
             }
         }
     }
-    .myButton[disabled]{
+    .myButton[disabled] {
         opacity: 0.5;
     }
-
-    .button{
+    .button {
         position: relative;
         height: 30px;
         display: inline-block;
-        border-radius: 3px;
-        // border: 1px solid #d5ddeb;
+        border-radius: 3px; // border: 1px solid #d5ddeb;
         // background-color: #fff;
         background-color: #0d5990;
         border: 1px solid #297ebb;
         margin-right: 10px;
         cursor: pointer;
         transition: border .2s;
-        &:hover{
+        &:hover {
             background-color: #2d98db;
-            span, i{
+            span,
+            i {
                 color: #fff;
             }
         }
-        &.rightBtn{
+        &.rightBtn {
             float: right;
         }
-        p{
+        p {
             position: relative;
             display: inline-block;
             padding: 4px 10px;
@@ -145,11 +158,11 @@
             font-weight: normal;
             text-align: center;
             color: #9dd7ff;
-            &.col{
+            &.col {
                 padding-left: 5px;
             }
         }
-        .setCol{
+        .setCol {
             position: relative;
             display: inline-block;
             top: 2px;
@@ -159,30 +172,29 @@
     }
 }
 
-.popover{
-    :global{
-        .ant-popover-content{
-            .ant-popover-arrow{
+.popover {
+     :global {
+        .ant-popover-content {
+            .ant-popover-arrow {
                 border-bottom-color: #226eaf;
             }
-            .ant-popover-arrow::after{
+            .ant-popover-arrow::after {
                 border-bottom-color: #226eaf;
             }
-            .ant-popover-inner{
+            .ant-popover-inner {
                 background-color: #226eaf;
             }
         }
-    }
-    // popover card
-    .popoverMain{
+    } // popover card
+    .popoverMain {
         position: relative;
-        div:last-child{
+        div:last-child {
             margin-bottom: 5px;
         }
-        .colGroup{
+        .colGroup {
             margin: 10px 10px 15px 10px;
             width: 200px;
-            & > p{
+            &>p {
                 color: #9dd7ff;
                 font-size: 13px;
                 font-weight: 600;
@@ -201,8 +213,9 @@
                 display: inline-block;
                 width: 100px;
                 padding-bottom: 5px;
-                :global{
-                    .ant-checkbox-wrapper + span, .ant-checkbox + span{
+                 :global {
+                    .ant-checkbox-wrapper+span,
+                    .ant-checkbox+span {
                         display: inline-block;
                         white-space: nowrap;
                         max-width: 80px;
@@ -216,23 +229,41 @@
     }
 }
 
-
 // cover menuitem
-.menuItem{
-    &:global.ant-dropdown-menu-item{
+.menuItem {
+    &:global.ant-dropdown-menu-item {
         font-size: 13px;
         font-weight: normal;
         width: 103px;
         background-color: #1d6aa7;
         color: #6ac5fe;
     }
-    &:global.ant-select-dropdown-menu-item{
+    &:global.ant-select-dropdown-menu-item {
         font-size: 13px;
         font-weight: normal;
         background-color: #1d6aa7;
         color: #6ac5fe;
     }
-    &:hover{
+    &:global.ant-dropdown-menu-submenu {
+        font-size: 13px;
+        font-weight: normal;
+        background-color: #1d6aa7;
+        .ant-dropdown-menu-submenu-title {
+            color: #6ac5fe;
+            &:after{
+              color: #6ac5fe;
+            }
+            &:hover{
+              background-color: #3092d9;
+              color:#ffffff;
+              &:after{
+                color: #ffffff;
+              }
+            }
+        }
+    }
+    &:hover {
         background-color: #3092d9;
+        color:#ffffff;
     }
 }

@@ -14,7 +14,8 @@ function LeftWrap ({isFold, handleFoldMenu, location}) {
   // foldBar props
   const foldBarProps = {
     isFold,
-    handleFoldMenu
+    handleFoldMenu,
+    location
   }
 
   return (

@@ -115,6 +115,8 @@ app.model(require('./models/alertAssociationRules'))
 app.model(require('./models/watchManage'))
 // 可视化分析
 app.model(require('./models/visualAnalyze'))
+// 告警发生历史
+app.model(require('./models/alertOrigin'))
 // 3. Router
 app.router(require('./router'))
 
