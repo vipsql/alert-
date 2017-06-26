@@ -4,11 +4,12 @@ import styles from './index.less'
 import { Row, Col, Button, Input, Form} from 'antd'
 import { classnames } from '../../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import LeaveNotifyModal from '../../common/leaveNotifyModal/index'
 
 const Item = Form.Item;
 const UYUN_Alert_REST = (props) => {
 
-    const { builtIn, appkey, url, form, onOk, keyCreate, intl: {formatMessage}} = props;
+    const { builtIn, appkey, url, form, onOk, keyCreate, route, intl: {formatMessage}} = props;
     
     const { getFieldDecorator, getFieldsValue } = form;
 
@@ -104,6 +105,7 @@ const UYUN_Alert_REST = (props) => {
                 { builtIn !== undefined && builtIn == 1 ? <span className={styles.stepLine}></span> : undefined }
                 <Button type="primary" htmlType='submit' onClick={(e) => {onOk(e, form)}}>{formatMessage({...localeMessage['save']})}</Button>
             </div>
+            <LeaveNotifyModal route={ props.route }/>
         </div>
     )
 }

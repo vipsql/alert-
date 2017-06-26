@@ -20,6 +20,7 @@ import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
 import Condition from './condition';
 import NotificationList from './notificationList';
 import TimeSlider from './timeSlider';
+import LeaveNotifyModal from '../common/leaveNotifyModal/index'
 
 import styles from './index.less';
 import '../../../node_modules/rc-calendar/assets/index.css';
@@ -303,7 +304,7 @@ class RuleEditor extends Component {
 
     }
     componentDidMount() {
-
+        
     }
     componentWillReceiveProps(nextProps, nextState) {
         const {
@@ -829,6 +830,7 @@ class RuleEditor extends Component {
                                 </div>
                             </TabPane>
                         }
+                        <LeaveNotifyModal route={ this.props.route }/>
                         {/* 分享到ChatOps */}
                         {
                             window.__alert_appLocaleData.locale === 'zh-cn' &&
@@ -1333,7 +1335,6 @@ class RuleEditor extends Component {
 
     // 删除条件
     deleteLine(item, level, index, event) {
-        console.log(this);
         const _condition = _.cloneDeep(this.state.condition);
         this.treeControl('deleteLine', _condition, item, index);
         this.setState({
@@ -1374,7 +1375,6 @@ class RuleEditor extends Component {
 
     // 更改时间周期
     changeTimeCycle(name, options) {
-        console.log(options);
         const _time = _.cloneDeep(this.state.time);
         _.remove(options, item => item === '');
         _time[name] = _.uniq(options).sort((pre, next) => pre - next).join(',');
@@ -1515,7 +1515,6 @@ class RuleEditor extends Component {
                 actionUpgrade: _actionUpgrade
             }
         };
-        console.log({...params})
         dispatch({
             type: 'alertAssociationRules/createRule',
             payload: {

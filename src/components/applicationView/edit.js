@@ -31,6 +31,7 @@ function Edit(props){
             case 'UYUN Alert REST API':
                 targetApplication = 
                     <AlertREST 
+                        route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}
@@ -54,6 +55,7 @@ function Edit(props){
             case 'UYUN Monitor':
                 targetApplication = 
                     <Monitor 
+                        route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}
@@ -77,6 +79,7 @@ function Edit(props){
             case 'UYUN NetWork':
                 targetApplication = 
                     <NetWork 
+                        route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}
@@ -100,6 +103,7 @@ function Edit(props){
             case 'SNMPTrap':
                 targetApplication = 
                     <Trap 
+                        route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}
@@ -123,6 +127,7 @@ function Edit(props){
             case 'UYUN VideoMon':
                 targetApplication = 
                     <VideoMON 
+                        route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}
@@ -146,6 +151,7 @@ function Edit(props){
             case 'UYUN ITSM':
                 targetApplication = 
                     <Itsm 
+                        route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         onOk={(e, form) => {
@@ -167,6 +173,7 @@ function Edit(props){
             case 'UYUN ChatOps':
                 targetApplication = 
                     <ChatOps 
+                        route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         onOk={(e, form) => {
@@ -188,6 +195,7 @@ function Edit(props){
             default:
                 targetApplication = 
                     <AlertREST 
+                        route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}

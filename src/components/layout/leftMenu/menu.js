@@ -52,11 +52,16 @@ const createMenus = (menus, isFold) => {
 
 function Menus ({ isFold, location,  handleClickNavMenu, className }) {
   const menuItems = createMenus(menu, isFold)
+  const pathname = location.pathname;
+  const selectedMenus = menu.filter((singleMenu) => pathname.indexOf(singleMenu.key) >= 0);
+  const selectedMenuKeys = selectedMenus.map((singleMenu) => singleMenu.key);
+
   return (
     <Menu
       className={className}
       mode={isFold ? 'vertical' : 'inline'}
       onClick={handleClickNavMenu}
+      selectedKeys={ selectedMenuKeys }
       defaultSelectedKeys={[location.pathname.split('/')[location.pathname.split('/').length - 1] || 'alertManage']}>
       {menuItems}
     </Menu>

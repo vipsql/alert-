@@ -134,6 +134,8 @@
   "modal.ticketType": "工单类型",
   "modal.validating": "检验中...",
   "modal.noTicketType": "请选择工单类型",
+  "modal.leaveNotice": "你还有数据未保存，确定要离开此页面吗？",
+  "modal.leave": "离开",
 
   "modal.reassign": "转派",
   "modal.reassignTitle": "转派指定人员",

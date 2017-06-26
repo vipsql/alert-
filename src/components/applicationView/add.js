@@ -31,6 +31,7 @@ function Add(props){
             case 'UYUN Alert REST API':
                 targetApplication = 
                     <AlertREST 
+                        route={ props.route }
                         appkey={UUID}
                         builtIn={1}
                         displayName={currentDisplayName}
@@ -65,6 +66,7 @@ function Add(props){
             case 'UYUN Monitor':
                 targetApplication = 
                     <Monitor 
+                        route={ props.route }
                         appkey={UUID}
                         displayName={currentDisplayName}
                         builtIn={1}
@@ -98,6 +100,7 @@ function Add(props){
             case 'UYUN NetWork':
                 targetApplication = 
                     <NetWork 
+                        route={ props.route }
                         appkey={UUID}
                         displayName={currentDisplayName}
                         builtIn={1}
@@ -131,6 +134,7 @@ function Add(props){
             case 'SNMPTrap':
                 targetApplication = 
                     <Trap
+                        route={ props.route }
                         dispatch={dispatch}
                         appkey={UUID}
                         displayName={currentDisplayName}
@@ -165,6 +169,7 @@ function Add(props){
             case 'UYUN VideoMon':
                 targetApplication = 
                     <VideoMON 
+                        route={ props.route }
                         appkey={UUID}
                         displayName={currentDisplayName}
                         builtIn={1}
@@ -198,6 +203,7 @@ function Add(props){
             case 'UYUN ITSM':
                 targetApplication = 
                     <Itsm 
+                        route={ props.route }
                         appkey={UUID}
                         displayName={currentDisplayName}
                         onOk={(e, form) => {
@@ -229,6 +235,7 @@ function Add(props){
             case 'UYUN ChatOps':
                 targetApplication = 
                     <ChatOps 
+                        route={ props.route }
                         appkey={UUID}
                         displayName={currentDisplayName}
                         onOk={(e, form) => {
@@ -260,6 +267,7 @@ function Add(props){
             default:
                 targetApplication = 
                     <AlertREST 
+                        route={ props.route }
                         appkey={UUID}
                         builtIn={1}
                         displayName={currentDisplayName}

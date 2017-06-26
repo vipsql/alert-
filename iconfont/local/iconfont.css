@@ -78,3 +78,5 @@
 .icon-Alert:before { content: "\e8cf"; }
 
 .icon-chatops:before { content: "\e8d0"; }
+
+.icon-warn:before { content: '\e927' }
