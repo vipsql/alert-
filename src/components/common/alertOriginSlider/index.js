@@ -7,6 +7,7 @@ import $ from 'jquery'
 
 class AlertOriginSlider extends Component {
   componentWillMount() {
+    this.unmounted = false;
     this.headerHeight = 30;
     this.totalTipHeight = 31;
     this.paginationHeight = 51;
@@ -27,12 +28,17 @@ class AlertOriginSlider extends Component {
     this._cancelAutoHide();
   }
 
+  componentWillUnmount() {
+    this.unmounted = true;
+  }
+
   // 窗口改变大小后自动设置Table可视高度
   _setAutoTableHeight() {
     $(window).resize(() => {
-      console.log("onresize")
       this.tableContentHeight = this._computerTableContentHeight();
-      this.setState({});
+      if(!this.unmounted) {
+        this.setState({});
+      }
     })
   }
 

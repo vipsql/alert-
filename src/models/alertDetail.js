@@ -5,6 +5,7 @@ import { message } from 'antd'
 
 const initalState = {
   isShowDetail: false, // 是否显示detail
+  isLoading: false, // 是否处于加载中状态
 
   currentAlertDetail: {
     
@@ -72,6 +73,11 @@ export default {
       } else {
         console.error('viewDetailAlertId type error')
       }
+
+      // 内容获取后取消加载状态
+      yield put({
+          type: 'afterOpenDetail',
+      });
     },
     // 编辑工单流水号
     *changeTicketFlow({payload}, {select, put, call}) {
@@ -139,7 +145,11 @@ export default {
   reducers: {
     // beforeOpenDetail
     beforeOpenDetail(state, {payload}) {
-        return { ...state, operateForm: initalState.operateForm, ciUrl: initalState.ciUrl}
+        return { ...state, operateForm: initalState.operateForm, ciUrl: initalState.ciUrl, isShowDetail: true, isLoading: true}
+    },
+    // 显示modal后取消加载中状态
+    afterOpenDetail(state, {payload}) {
+        return { ...state, isLoading: false }
     },
     // 初始化operateForm
     initalFormData(state) {

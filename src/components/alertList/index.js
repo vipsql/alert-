@@ -98,7 +98,6 @@ class AlertListManage extends Component {
         })
       },
       takeOverFunc: (position) => {
-        console.log(position)
         dispatch({
           type: 'alertOperation/takeOver'
         })
@@ -195,7 +194,8 @@ class AlertListManage extends Component {
         operateForm: alertDetail.operateForm,
         isShowRemark: alertDetail.isShowRemark,
         operateRemark: alertDetail.operateRemark,
-        ciUrl: alertDetail.ciUrl
+        ciUrl: alertDetail.ciUrl,
+        isLoading: alertDetail.isLoading
       },
       operateProps: {
         ...operateProps,

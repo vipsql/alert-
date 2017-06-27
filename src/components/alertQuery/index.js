@@ -119,7 +119,8 @@ class alertQueryManage extends Component{
           operateForm: alertQueryDetail.operateForm, 
           isShowRemark: alertQueryDetail.isShowRemark, 
           operateRemark: alertQueryDetail.operateRemark,
-          ciUrl: alertQueryDetail.ciUrl
+          ciUrl: alertQueryDetail.ciUrl,
+          isLoading: alertQueryDetail.isLoading
         },
         operateProps: {
           ...operateProps,

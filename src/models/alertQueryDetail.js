@@ -8,6 +8,7 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const initalState = {
     isShowDetail: false, // 是否显示detail
+    isLoading: false, // 是否处于加载中状态
     selectGroup: window['_groupBy'], // 默认是分组设置
 
     isShowFormModal: false, // 派发工单modal
@@ -223,7 +224,7 @@ export default {
     // 点击展开detail时的操作
     *openDetailModal({payload}, {select, put, call}) {
       const viewDetailAlertId = yield select( state => state.alertQuery.viewDetailAlertId )
-      // 去除上一次的orderFlowNum和ciUrl地址
+      // 去除上一次的orderFlowNum和ciUrl地址，并且设置加载中的状态
       yield put({
           type: 'beforeOpenDetail',
       })
@@ -256,6 +257,11 @@ export default {
       } else {
         console.error('viewDetailAlertId type error')
       }
+
+      // 内容获取后取消加载状态
+      yield put({
+          type: 'afterOpenDetail',
+      });
     },
     // 编辑工单流水号
     *changeTicketFlow({payload}, {select, put, call}) {
@@ -538,7 +544,11 @@ export default {
     },
     // beforeOpenDetail
     beforeOpenDetail(state, {payload}) {
-        return { ...state, operateForm: initalState.operateForm, ciUrl: initalState.ciUrl}
+        return { ...state, operateForm: initalState.operateForm, ciUrl: initalState.ciUrl, isShowDetail: true, isLoading: true}
+    },
+    // 显示modal后取消加载中状态
+    afterOpenDetail(state, {payload}) {
+        return { ...state, isLoading: false }
     },
     // 设置分组显示的类型
     setGroupType(state, {payload: selectGroup}) {

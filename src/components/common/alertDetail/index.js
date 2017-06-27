@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import { Link } from 'dva/router'
-import { Button, Input, Form, Timeline } from 'antd';
+import { Button, Input, Form, Timeline, Spin } from 'antd';
 import { connect } from 'dva'
 import styles from './index.less'
 import { classnames } from '../../../utils'
@@ -32,7 +32,7 @@ class alertDetail extends Component {
         })
     }
 
-    // 接触当鼠标点击不处于本区域时隐藏右侧滑动栏的全局事件
+    // 取消当鼠标点击不处于本区域时隐藏右侧滑动栏的全局事件
     _cancelAutoHide() {
         $(window.document.body).off("click.detail");
     }
@@ -329,6 +329,7 @@ class alertDetail extends Component {
 
         return (
             <div id="alertDetailSlider" className={styles.main}>
+                <Spin spinning={ extraProps.isLoading }>
                 <div className={styles.detailHead}>
                     <p>{currentAlertDetail.name ? currentAlertDetail.name : formatMessage({...localeMessage['unknown']}) }</p>
                     <i className={classnames(styles.shanChu, shanchuClass)} onClick={closeDeatilModal}></i>
@@ -520,6 +521,7 @@ class alertDetail extends Component {
                     }
                                  
                 </div>
+                </Spin>
             </div>
         )
     }
