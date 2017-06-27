@@ -2,6 +2,12 @@
 
 .main{
     height: 97%;
+    :global .ant-spin-container {
+        height: 100%;
+    }
+    :global .ant-spin-nested-loading {
+        height: 100%;
+    }
     .detailHead{
         position: relative;
         margin: 12px 12px 10px 18px;
@@ -27,11 +33,13 @@
     }
 
     .detailBody{
+        position: absolute;
         margin-top: 15px;
         margin-right: 10px;
         overflow-y: auto;
         overflow-x: auto;
         height: 80%;
+        width: 100%;
         &::-webkit-scrollbar-thumb {
             width: 7px;
             //background-color: #d3d4d6;

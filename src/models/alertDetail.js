@@ -44,6 +44,11 @@ export default {
       yield put({
           type: 'beforeOpenDetail',
       })
+      // 点击后马上显示，减少卡顿感
+      yield put({
+        type: 'toggleDetailModal',
+        payload: true
+      })
       if (viewDetailAlertId) {
         const detailResult = yield queryDetail(viewDetailAlertId);
         if ( detailResult.result ) {
@@ -63,10 +68,6 @@ export default {
               payload: detailResult.data.ciUrl
             })
           }
-          yield put({
-            type: 'toggleDetailModal',
-            payload: true
-          })
         } else {
           yield message.error(window.__alert_appLocaleData.messages[detailResult.message], 3);
         }
