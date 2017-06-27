@@ -619,12 +619,12 @@ class Chart extends Component{
                 .attr("text-anchor", "middle")
                 // .style("display", "none")
                 .text((d) => this._wrap(d))
-                .on('mouseover', function(d){
-                    d3Tip.show(d, formatMessage({...formatMessages[selectedStatus]}))
+                .on('mouseover', (d) => {
+                    d3Tip.show(d, formatMessage({...formatMessages[this.props.selectedStatus]}))
                     return false
                 })
-                .on('mouseout', function(d){
-                    d3Tip.show(d, formatMessage({...formatMessages[selectedStatus]}))
+                .on('mouseout', (d) => {
+                    d3Tip.show(d, formatMessage({...formatMessages[this.prop.selectedStatus]}))
                     return false
                 })
             // update transition
