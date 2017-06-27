@@ -118,6 +118,7 @@ class Chart extends Component{
     }
 
     componentWillUnmount() {
+        d3Tip.hide();
         clearInterval(this.timer)
     }
 
