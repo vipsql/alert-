@@ -25,12 +25,16 @@ export default class Wrap extends Component {
         'icon-xialasanjiao'
     )
     return (
-      <div className={ classnames(styles.infoBody)  }>
-        <p  onClick={toggleVisible || (() => {this.toggleVisible()})}>{ title } <Button ghost className={ styles.setVisibleIcon } onClick={toggleVisible || (() => {this.toggleVisible()})}><i href="javascript:;" className={ (this.state.visible?xialaClass : shanglaClass) + ' ' }/></Button></p>
-        <div className={ this.state.visible?styles.showInfo:styles.hideInfo }>
-        {
-          children
-        }
+      <div className={ styles.info }>
+        <div className={ styles.infoTitle }>
+          <p onClick={toggleVisible || (() => {this.toggleVisible()})}>{ title } <Button ghost className={ styles.setVisibleIcon } onClick={toggleVisible || (() => {this.toggleVisible()})}><i href="javascript:;" className={ (this.state.visible?xialaClass : shanglaClass) + ' ' }/></Button></p>
+        </div>
+        <div className={ classnames(styles.infoBody)  }>
+          <div className={ this.state.visible?styles.showInfo:styles.hideInfo }>
+          {
+            children
+          }
+          </div>
         </div>
       </div>
     )
