@@ -25,6 +25,10 @@ const formatMessages = defineMessages({
         id: 'treemap.resolvedAlerts',
         defaultMessage: '已解决告警',
     },
+    EXCEPTCLOSE: {
+        id: 'treemap.exceptClosed',
+        defaultMessage: '所有未关闭告警',
+    }
 })
 const deepCopy= (soruce) => {
      return JSON.parse(JSON.stringify(soruce));
@@ -155,7 +159,7 @@ class Chart extends Component{
         .attr("isFullScreen", isFullScreen)
         .text((d) => this._wrap(d, isFullScreen?this.chartWidth / d.parent.dx * d.dx : d.dx))
         .transition();
-        
+
         if(isFullScreen) {
             textTransition.each("end", function(d) {
                 textTransition.attr("isFullScreen", isFullScreen);
@@ -180,7 +184,7 @@ class Chart extends Component{
         let isShorted = false
 
         const width = actualWidth || d.dx;
-        
+
         while (textLength > (width - 5) && text.length > 0) {
             isShorted = true;
             text = text.slice(0, -1);
@@ -616,12 +620,12 @@ class Chart extends Component{
                 // .style("display", "none")
                 .text((d) => this._wrap(d))
                 .on('mouseover', function(d){
-                    return false
                     d3Tip.show(d, formatMessage({...formatMessages[selectedStatus]}))
+                    return false
                 })
                 .on('mouseout', function(d){
-                    return false
                     d3Tip.show(d, formatMessage({...formatMessages[selectedStatus]}))
+                    return false
                 })
             // update transition
             var childUpdateTransition = childrenCells.transition().duration(transitionDuration);
@@ -701,7 +705,7 @@ class Chart extends Component{
                     // .style("display", "none");
             }
 
-            
+
             const parentD = d;
 
             if(parentD.parent) {

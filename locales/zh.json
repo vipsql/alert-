@@ -373,6 +373,7 @@
   "treemap.activeAlerts": "未接手告警",
   "treemap.assignedAlerts": "处理中告警",
   "treemap.resolvedAlerts": "已解决告警",
+  "treemap.exceptClosed": "所有未关闭告警",
 
   "unknown.Error": "未知错误",
 
