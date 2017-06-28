@@ -239,7 +239,6 @@ const alertOperation = ({ position,
 
   const reassign = (
     <Menu onClick={() => {
-      console.log("showReassiginFunc");
       showReassiginFunc(position);
     }}>
       <Menu.Item key="1" className={styles.menuItem}><FormattedMessage {...localeMessage['operate_reassign']} /></Menu.Item>
@@ -275,9 +274,12 @@ const alertOperation = ({ position,
         }
       }}
     >
-      <Menu.Item key="merge" className={styles.menuItem}>
-        <FormattedMessage {...localeMessage['operate_merge']} />
-      </Menu.Item>
+      {
+        position !== 'detail' &&
+        <Menu.Item key="merge" className={styles.menuItem}>
+          <FormattedMessage {...localeMessage['operate_merge']} />
+        </Menu.Item>
+      }
       <SubMenu title={formatMessage({ ...localeMessage['suppress'] })} className={styles.menuItem}>
         <Menu.Item key="5" className={styles.menuItem}><FormattedMessage {...localeMessage['suppress_five']} /></Menu.Item>
         <Menu.Item key="10" className={styles.menuItem}><FormattedMessage {...localeMessage['suppress_ten']} /></Menu.Item>
@@ -442,7 +444,7 @@ alertOperation.defaultProps = {
   showNotifyFunc: () => { },
   suppressIncidents: () => { },
   showSuppressTimeSlider: () => { },
-  showReassiginFunc: () => {}
+  showReassiginFunc: () => { }
   // takeOverDisabled: true,
   // dispatchDisabled: true,
   // closeDisabled: true,

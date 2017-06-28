@@ -29,7 +29,7 @@ const TabPane = Tabs.TabPane
 
 class AlertListManage extends Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   componentDidMount() {
@@ -98,9 +98,9 @@ class AlertListManage extends Component {
         })
       },
       takeOverFunc: (position) => {
-        console.log(position)
         dispatch({
-          type: 'alertOperation/takeOver'
+          type: position !== 'detail' ? 'alertOperation/takeOver' : 'alertDetailOperation/takeOver',
+          payload: position
         })
       },
       dispatchFunc: (position) => {
@@ -199,16 +199,21 @@ class AlertListManage extends Component {
       },
       operateProps: {
         ...operateProps,
-        // 子告警不能派发、已关闭的不能派发
-        dispatchDisabled: currentAlertDetail['parentId'] || currentAlertDetail['status'] == 255,
-        // 子告警不能关闭、处理中和已关闭的不能关闭
-        closeDisabled: currentAlertDetail['parentId'] || currentAlertDetail['status'] == 255 || currentAlertDetail['status'] == 40,
-        // 子告警不能解决、已解决和已关闭的不能解决
-        resolveDisabled: currentAlertDetail['parentId'] || currentAlertDetail['status'] == 255 || currentAlertDetail['status'] == 190,
-        // 子告警不能通知、只有未接手和处理中的告警能通知
-        notifyDisabled: currentAlertDetail['parentId'] || !(currentAlertDetail['status'] == 0 || currentAlertDetail['status'] == 150),
-        // 子告警不能分享
-        shareDisabled: currentAlertDetail['parentId']
+        dispatchDisabled: alertDetailOperation.dispatchDisabled,
+        closeDisabled: alertDetailOperation.closeDisabled,
+        resolveDisabled: alertDetailOperation.resolveDisabled,
+        notifyDisabled: alertDetailOperation.notifyDisabled,
+        shareDisabled: alertDetailOperation.shareDisabled
+        // // 子告警不能派发、已关闭的不能派发、未接手的不能派发
+        // dispatchDisabled: currentAlertDetail['parentId'] || currentAlertDetail['status'] == 255 || currentAlertDetail['status'] === 0,
+        // // 子告警不能关闭、处理中和已关闭的不能关闭
+        // closeDisabled: currentAlertDetail['parentId'] || currentAlertDetail['status'] == 255 || currentAlertDetail['status'] == 40,
+        // // 子告警不能解决、已解决和已关闭的不能解决
+        // resolveDisabled: currentAlertDetail['parentId'] || currentAlertDetail['status'] == 255 || currentAlertDetail['status'] == 190,
+        // // 子告警不能通知、只有未接手和处理中的告警能通知
+        // notifyDisabled: currentAlertDetail['parentId'] || !(currentAlertDetail['status'] == 0 || currentAlertDetail['status'] == 150),
+        // // 子告警不能分享
+        // shareDisabled: currentAlertDetail['parentId']
       },
       clickTicketFlow: (operateForm) => {
         if (operateForm !== undefined && operateForm !== '') {
@@ -425,16 +430,19 @@ class AlertListManage extends Component {
     }
 
     const reassignModalProps = {
-      isShowReassingModal: alertOperation.isShowReassingModal,
-      reassignUsers: alertOperation.reassignUsers,
-      handleOk: function(){
+      isShowReassingModal: alertOperateModalOrigin === 'detail' ? alertDetailOperation.isShowReassingModal : alertOperation.isShowReassingModal,
+      users: alertOperation.users,
+      onOk: (selectedUser) => {
         dispatch({
-
+          type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/submitReassign' : 'alertOperation/submitReassign',
+          payload: {
+            toWho: selectedUser
+          }
         })
       },
-      handleCancel: function(){
+      onCancel: () => {
         dispatch({
-          type: 'alertOperation/toggleReassignModal',
+          type: alertOperateModalOrigin === 'detail' ? 'alertDetailOperation/toggleReassignModal' : 'alertOperation/toggleReassignModal',
           payload: false
         })
       }
@@ -542,17 +550,17 @@ class AlertListManage extends Component {
         </div>
         <Button className={classnames(styles.toggleBarButton, zhankaiClass)} onClick={toggleBarButtonClick} size="small"><i className={classnames(alertList.isShowBar ? shouqiClass : zhankaiClass, styles.toggleBarButtonIcon)} /></Button>
         <div className={styles.alertListPage + " " + (alertList.isShowBar ? '' : styles.marginTop0)}>
-          <Tabs>
-            <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key={1}>
+          <Tabs defaultActiveKey="1">
+            <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key='1'>
               <AlertOperation position='list' {...operateProps} />
               <ListTableWrap />
             </TabPane>
-            <TabPane tab={<span className={tabLine} ><FormattedMessage {...localeMessage['tab_time']} /></span>} key={2}>
+            <TabPane tab={<span className={tabLine} ><FormattedMessage {...localeMessage['tab_time']} /></span>} key='2'>
               <AlertOperation position='timeAxis' {...operateProps} />
               <ListTimeTableWrap />
             </TabPane>
             {isShowVisualTab &&
-              <TabPane tab={<span className={tabVisual}><FormattedMessage {...localeMessage['tab_visual']} /></span>} key={3}>
+              <TabPane tab={<span className={tabVisual}><FormattedMessage {...localeMessage['tab_visual']} /></span>} key='3'>
                 <VisualAnalyzeWrap key={new Date().getTime()} />
               </TabPane>
             }

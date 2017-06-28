@@ -23,18 +23,9 @@ const ListTableWrap = ({ dispatch, alertListTable }) => {
     },
     checkAlertFunc(e) {
       const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
-      const alertId = e.target.getAttribute('data-id');
-      const checked = e.target.checked;
-
-      // dispatch({
-      //   type: 'alertListTable/changeCheckAlert',
-      //   payload: alertInfo
-      // })
       dispatch({
         type: 'alertListTable/handleCheckboxClick',
         payload: {
-          alertId,
-          checked,
           alertInfo
         }
       })

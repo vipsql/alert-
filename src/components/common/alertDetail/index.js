@@ -13,7 +13,7 @@ class alertDetail extends Component {
     componentDidMount() {
         this._setAutoHide();
     }
-    
+
     componentWillUnmount() {
         this._cancelAutoHide();
     }
@@ -77,7 +77,7 @@ class alertDetail extends Component {
 
         // <li><span>{formatMessage({...localeMessage['owner']})}:</span><span>{currentAlertDetail.responsiblePerson ? currentAlertDetail.responsiblePerson : formatMessage({...localeMessage['unknown']})}</span></li>
         // <li><span>{formatMessage({...localeMessage['department']})}:</span><span>{currentAlertDetail.responsibleDepartment ? currentAlertDetail.responsibleDepartment : formatMessage({...localeMessage['unknown']})}</span></li>
-        
+
         const dateTransfer = (begin, end) => {
             let date = {};
             let beginTime = new Date(+begin);
@@ -91,7 +91,7 @@ class alertDetail extends Component {
 
         const durationFunc = (duration) => {
             if(duration > 3600000){
-                return (duration / 3600000).toFixed(1)     
+                return (duration / 3600000).toFixed(1)
             }else{
                 return (duration / 60000).toFixed(1)
             }
@@ -113,9 +113,9 @@ class alertDetail extends Component {
         )
 
         // 根据severity选择不同的颜色
-        const severityColor = currentAlertDetail.severity == 3 ? styles.jjLevel 
-                                : currentAlertDetail.severity == 2 ? styles.gjLevel 
-                                    : currentAlertDetail.severity == 1 ? styles.txLevel 
+        const severityColor = currentAlertDetail.severity == 3 ? styles.jjLevel
+                                : currentAlertDetail.severity == 2 ? styles.gjLevel
+                                    : currentAlertDetail.severity == 1 ? styles.txLevel
                                         : currentAlertDetail.severity == 0 ? styles.hfLevel : false
 
         const localeMessage = defineMessages({
@@ -304,6 +304,10 @@ class alertDetail extends Component {
                     id: 'alertDetail.action.t150',
                     defaultMessage: '派发cross工单'
                 },
+                170: {
+                  id: 'alertDetail.action.t170',
+                  defaultMessage: '临时加的'
+                },
                 250: {
                     id: 'alertDetail.action.t250',
                     defaultMessage: '关闭'
@@ -354,7 +358,7 @@ class alertDetail extends Component {
                                             } else {
                                                 return <span title={`${tag.keyName} : ${tag.value}`} key={index} className={styles.tag}>{`${tag.keyName} : ${tag.value}`}</span>
                                             }
-                                            
+
                                         })
                                     }
                                 </li>
@@ -409,7 +413,7 @@ class alertDetail extends Component {
                         </Wrap>
                         :
                         undefined
-                    }              
+                    }
                     {
                         ciDetail.length > 0 ||  currentAlertDetail.ci?
                         <Wrap visible={ false } title={<span> {formatMessage({...localeMessage['ci']})} &nbsp;&nbsp;&nbsp;&nbsp;<Link to="/alertQuery" query={{ resObjectId: currentAlertDetail.ciId }}>{formatMessage({...localeMessage['ciHistoryLink']})}</Link></span>}>
@@ -511,12 +515,12 @@ class alertDetail extends Component {
                                     })
                                 }
                                 </Timeline>
-                            </Wrap> 
+                            </Wrap>
                         )
                         :
                         undefined
                     }
-                                 
+
                 </div>
             </div>
         )
@@ -524,19 +528,19 @@ class alertDetail extends Component {
 }
 
 alertDetail.defaultProps = {
-    extraProps: {}, 
+    extraProps: {},
     closeDeatilModal: () => {},
     clickTicketFlow: () => {},
-    editForm: () => {}, 
-    openForm: () => {}, 
-    closeForm: () => {}, 
-    openRemark: () => {}, 
-    editRemark: () => {}, 
+    editForm: () => {},
+    openForm: () => {},
+    closeForm: () => {},
+    openRemark: () => {},
+    editRemark: () => {},
     closeRemark: () => {}
 }
 
 alertDetail.propTypes = {
-    
+
 }
 
 export default injectIntl(Form.create()(alertDetail))
