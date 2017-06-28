@@ -355,6 +355,7 @@
   "treemap.activeAlerts": "New Alerts",
   "treemap.assignedAlerts": "Assigned Alerts",
   "treemap.resolvedAlerts": "Resolved Alerts",
+  "treemap.exceptClosed": "所有未关闭告警",
 
   "unknown.Error": "Unknown.Error",
 

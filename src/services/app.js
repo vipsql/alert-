@@ -25,3 +25,13 @@ export async function getUserInformation() {
       }
   })
 }
+
+// 获取所有用户信息
+export async function getUsers() {
+  return request(`/common/getUsers`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}

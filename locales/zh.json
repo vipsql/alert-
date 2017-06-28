@@ -83,6 +83,9 @@
   "alertQuery.label.tags": "标签",
   "alertQuery.label.allSource": "所有来源",
   "alertQuery.label.allStatus": "所有状态",
+  "alertQuery.label.allOwners": "所有负责人",
+  "alertQuery.label.firstOccurTime": "首次发生",
+  "alertQuery.label.lastOccurTime": "最后发生",
   "alertQuery.noQueryData": "暂无数据，请先选择查询条件",
   "alertQuery.search": "搜索",
   "alertQuery.reset": "重置",
@@ -374,6 +377,7 @@
   "treemap.activeAlerts": "未接手告警",
   "treemap.assignedAlerts": "处理中告警",
   "treemap.resolvedAlerts": "已解决告警",
+  "treemap.exceptClosed": "所有未关闭告警",
 
   "unknown.Error": "未知错误",
 

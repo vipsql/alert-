@@ -5,6 +5,7 @@ import { message } from 'antd'
 
 const initalState = {
   isShowDetail: false, // 是否显示detail
+  isLoading: false, // 是否处于加载中状态
 
   currentAlertDetail: {
 
@@ -43,6 +44,11 @@ export default {
       yield put({
         type: 'beforeOpenDetail',
       })
+      // 点击后马上显示，减少卡顿感
+      yield put({
+        type: 'toggleDetailModal',
+        payload: true
+      })
       if (viewDetailAlertId) {
         const detailResult = yield queryDetail(viewDetailAlertId);
         if (detailResult.result) {
@@ -66,16 +72,17 @@ export default {
               payload: detailResult.data.ciUrl
             })
           }
-          yield put({
-            type: 'toggleDetailModal',
-            payload: true
-          })
         } else {
           yield message.error(window.__alert_appLocaleData.messages[detailResult.message], 3);
         }
       } else {
         console.error('viewDetailAlertId type error')
       }
+
+      // 内容获取后取消加载状态
+      yield put({
+          type: 'afterOpenDetail',
+      });
     },
     // 编辑工单流水号
     *changeTicketFlow({ payload }, { select, put, call }) {
@@ -142,8 +149,12 @@ export default {
 
   reducers: {
     // beforeOpenDetail
-    beforeOpenDetail(state, { payload }) {
-      return { ...state, operateForm: initalState.operateForm, ciUrl: initalState.ciUrl }
+    beforeOpenDetail(state, {payload}) {
+        return { ...state, operateForm: initalState.operateForm, ciUrl: initalState.ciUrl, isShowDetail: true, isLoading: true}
+    },
+    // 显示modal后取消加载中状态
+    afterOpenDetail(state, {payload}) {
+        return { ...state, isLoading: false }
     },
     // 初始化operateForm
     initalFormData(state) {

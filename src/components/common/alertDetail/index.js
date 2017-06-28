@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import { Link } from 'dva/router'
-import { Button, Input, Form, Timeline } from 'antd';
+import { Button, Input, Form, Timeline, Spin } from 'antd';
 import { connect } from 'dva'
 import styles from './index.less'
 import { classnames } from '../../../utils'
@@ -32,7 +32,7 @@ class alertDetail extends Component {
         })
     }
 
-    // 接触当鼠标点击不处于本区域时隐藏右侧滑动栏的全局事件
+    // 取消当鼠标点击不处于本区域时隐藏右侧滑动栏的全局事件
     _cancelAutoHide() {
         $(window.document.body).off("click.detail");
     }
@@ -41,7 +41,9 @@ class alertDetail extends Component {
         const {extraProps, operateProps, form, closeDeatilModal, clickTicketFlow, editForm, openForm, closeForm, openRemark, editRemark, closeRemark, intl: {formatMessage}} = this.props;
         const { currentAlertDetail, isShowOperateForm, operateForm, isShowRemark, operateRemark, ciUrl } = extraProps;
         const { getFieldDecorator, getFieldsValue } = form;
-        const { incidentLog=[], ciDetail=[] } = currentAlertDetail;
+        const { incidentLog=[], ci=[] } = currentAlertDetail;
+        const ciIds = ci.filter(({ code, value }) => code == 'ciId');
+        const ciId = ciIds.length > 0?ciIds[0]:undefined
 
         // <div className={styles.infoBody}>
         //     <p className={styles.remarkTitle}>备注信息</p>
@@ -331,6 +333,7 @@ class alertDetail extends Component {
 
         return (
             <div id="alertDetailSlider" className={styles.main}>
+                <Spin spinning={ extraProps.isLoading }>
                 <div className={styles.detailHead}>
                     <p>{currentAlertDetail.name ? currentAlertDetail.name : formatMessage({...localeMessage['unknown']}) }</p>
                     <i className={classnames(styles.shanChu, shanchuClass)} onClick={closeDeatilModal}></i>
@@ -415,14 +418,14 @@ class alertDetail extends Component {
                         undefined
                     }
                     {
-                        ciDetail.length > 0 ||  currentAlertDetail.ci?
-                        <Wrap visible={ false } title={<span> {formatMessage({...localeMessage['ci']})} &nbsp;&nbsp;&nbsp;&nbsp;<Link to="/alertQuery" query={{ resObjectId: currentAlertDetail.ciId }}>{formatMessage({...localeMessage['ciHistoryLink']})}</Link></span>}>
+                        ci.length > 0?
+                        <Wrap visible={ false } title={<span> {formatMessage({...localeMessage['ci']})} &nbsp;&nbsp;<Link to="/alertQuery" query={{ resObjectId: ciId.value }}><span className={ styles.ciDetailLink }>{formatMessage({...localeMessage['ciHistoryLink']})}</span></Link></span>}>
                             {/*<ul>
                                 <li><span>{formatMessage({...localeMessage['link']})}:</span><span><a href={ciUrl} target={'_blank'}>{formatMessage({...localeMessage['ciDetail']})}</a></span></li>
                             </ul>*/}
                             <ul>
                             {
-                                ciDetail.map((detail, index) => <li key={index}><span>{detail.code}:</span><span>&nbsp;{detail.value}</span></li>)
+                                ci.map((detail, index) => <li key={index}><span>{detail.code}:</span><span>&nbsp;{detail.value}</span></li>)
                             }
                             </ul>
                         </Wrap>
@@ -522,6 +525,7 @@ class alertDetail extends Component {
                     }
 
                 </div>
+                </Spin>
             </div>
         )
     }

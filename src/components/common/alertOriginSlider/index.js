@@ -7,6 +7,7 @@ import $ from 'jquery'
 
 class AlertOriginSlider extends Component {
   componentWillMount() {
+    this.unmounted = false;
     this.headerHeight = 30;
     this.totalTipHeight = 31;
     this.paginationHeight = 51;
@@ -21,18 +22,28 @@ class AlertOriginSlider extends Component {
 
   componentWillReceiveProps() {
     this.tableContentHeight = this._computerTableContentHeight();
+    // $("th.ant-table-column-sort").bind('click', function() {
+    //   console.log("click");
+    //   const $this = $(this).closest("th.ant-table-column-sort");
+    //   $this.find("span > .ant-table-column-sorter").children('span.off').trigger("click");
+    // })
   }
   
   componentWillUnmount() {
     this._cancelAutoHide();
   }
 
+  componentWillUnmount() {
+    this.unmounted = true;
+  }
+
   // 窗口改变大小后自动设置Table可视高度
   _setAutoTableHeight() {
     $(window).resize(() => {
-      console.log("onresize")
       this.tableContentHeight = this._computerTableContentHeight();
-      this.setState({});
+      if(!this.unmounted) {
+        this.setState({});
+      }
     })
   }
 
@@ -113,12 +124,12 @@ class AlertOriginSlider extends Component {
         title: formatMessage({ ...localeMessage['occurTime'] }),
         dataIndex: 'occurTime',
         key: 'occurTime',
-        // sorter: () => {
-        //   onPageChange(undefined, undefined, { sortKey: 'occurTime', sortType: sorter.sortType == undefined?1:(sorter.sortType > 0?0:1)})
-        // },
         sorter: true,
         sortOrder: sorter.sortKey == 'occurTime'?(sorter.sortType > 0?'ascend':'descend'):true,
-        width: "25%"
+        width: "25%",
+        // onCellClick: function(record, e) {
+        //   console.log("cellClick");
+        // }
       },
       {
         title: formatMessage({ ...localeMessage['entityName'] }),
@@ -140,6 +151,8 @@ class AlertOriginSlider extends Component {
       },
     ]
 
+    // console.log(loading, "loading");
+
     return (
       <div id="alertOriginSlider" className={ classnames(styles.alertOriginSlider, visible?styles.show:'') }>
         <div className={ styles.main }>
@@ -152,19 +165,18 @@ class AlertOriginSlider extends Component {
             <p> 
               <FormattedMessage {...localeMessage['alertTimesDescription'] } 
                   values={{
-                    times: <span className={styles.totalNum}><b>{times}</b></span>
+                    times: <span className={styles.totalNum}><b>{times || '-'}</b></span>
                   }}
               /> 
             </p>
           </div>
           <div className={ styles.tableContent }>
-            <Table size="middle" scroll={{y: this.tableContentHeight}} columns={ columns } dataSource={ records } onChange={onPageChange} pagination={{
+            <Table size="middle" scroll={{y: this.tableContentHeight}} loading={ loading } columns={ columns } dataSource={ records } onChange={onPageChange} pagination={{
               showQuickJumper: true,
               current: pagination.pageNo,
               pageSize: pagination.pageSize,
               total: pagination.total,
-              loading: loading
-            }}/>
+            }}/> 
           </div>
         </div>
       </div>

@@ -84,7 +84,8 @@ const  ListTableWrap = ({dispatch, alertQuery}) => {
       dispatch({
         type: 'alertOrigin/toggleVisible',
         payload: {
-          visible: true
+          visible: true,
+          alertName
         }
       })
 
