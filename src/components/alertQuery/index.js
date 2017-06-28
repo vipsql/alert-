@@ -40,7 +40,7 @@ class alertQueryManage extends Component{
     render() {
       const {dispatch, form, alertQuery, alertQueryDetail, alertOrigin, intl: {formatMessage}} = this.props;
 
-      const { haveQuery, sourceOptions, propertyOptions, queryCount } = alertQuery;
+      const { haveQuery, sourceOptions, propertyOptions, ownerOptions, queryCount, isShowBar } = alertQuery;
       
       const { selectGroup, columnList, extendColumnList, extendTagsKey, } = alertQueryDetail
 
@@ -67,6 +67,24 @@ class alertQueryManage extends Component{
         'iconfont',
         'icon-shanchux'
       )
+
+      const zhankaiClass = classnames(
+        'iconfont',
+        'icon-xialasanjiao'
+      )
+
+      const shouqiClass = classnames(
+        'iconfont',
+        'icon-xialasanjiao-copy'
+      )
+
+      const toggleBarButtonClick = (e) => {
+        const isShowAlertBar = !alertQuery.isShowBar;
+        dispatch({
+          type: 'alertQuery/toggleBar',
+          payload: isShowAlertBar,
+        })
+      }
 
       const operateProps = {
 
@@ -393,6 +411,10 @@ class alertQueryManage extends Component{
       }
 
       const localeMessage = defineMessages({
+          owner: {
+            id: 'alertDetail.owner',
+            defaultMessage: '负责人'
+          },
           occurTime: {
               id: 'alertList.title.occurTime',
               defaultMessage: '发生时间',
@@ -438,11 +460,11 @@ class alertQueryManage extends Component{
               defaultMessage: '持续时间',
           },
           lastOccurTime:{
-              id: 'alertList.title.lastOccurTime',
-              defaultMessage: '最后发送时间',
+              id: 'alertQuery.label.lastOccurTime',
+              defaultMessage: '最后发生时间',
           },
           firstOccurTime:{
-              id: 'alertList.title.firstOccurTime',
+              id: 'alertQuery.label.firstOccurTime',
               defaultMessage: '首次发生时间',
           },
           entityAddr:{
@@ -524,6 +546,10 @@ class alertQueryManage extends Component{
           allStatus: {
               id: 'alertQuery.label.allStatus',
               defaultMessage: '所有状态',
+          },
+          allOwners: {
+            id: 'alertQuery.label.allOwners',
+            defaultMessage: '所有负责人'
           },
           duration: {
               id: 'alertQuery.label.duration',
@@ -623,6 +649,25 @@ class alertQueryManage extends Component{
               delete formData.dateTime
             }
 
+            if (formData.lastOccurTime !== undefined && formData.lastOccurTime.length !== 0) {
+              //   开始时间统一处理为当前日期的0点时间戳
+              const _begin = formData.lastOccurTime[0].toDate()
+              const _end = formData.lastOccurTime[1].toDate()
+              _begin.setHours(0)
+              _begin.setMinutes(0)
+              _begin.setSeconds(0)
+              _begin.setMilliseconds(0)
+              // _end.setHours(0)
+              // _end.setMinutes(0)
+              // _end.setSeconds(0)
+              // _end.setMilliseconds(0)
+
+              formData.lastBegin = _begin.getTime()
+              formData.lastEnd = _end.getTime();
+              
+              delete formData.lastOccurTime
+            }
+
             // 修复选择时间后删掉时间重新搜索 参数不对bug
             if(formData.dateTime && formData.dateTime.length == 0){
               delete formData.dateTime
@@ -640,167 +685,204 @@ class alertQueryManage extends Component{
       
       return (
           <div>
-            <Form>
-              <Row>
-                <Col span={8}>
-                  <Item
-                    {...formItemLayout}
-                    label={<FormattedMessage {...localeMessage['source']} />}
-                  >
-                    {getFieldDecorator('source', {
-                      initialValue: ''
-                    })(
-                        <Select getPopupContainer={() =>document.getElementById("content")}>
-                            <Option value=''><FormattedMessage {...localeMessage['allSource']} /></Option>
+            <div className={ classnames(styles.searchBar, isShowBar?'':styles.hideBar) }>
+              <Form>
+                <Row>
+                  <Col span={8}>
+                    <Item
+                      {...formItemLayout}
+                      label={<FormattedMessage {...localeMessage['source']} />}
+                    >
+                      {getFieldDecorator('source', {
+                        initialValue: ''
+                      })(
+                          <Select getPopupContainer={() =>document.getElementById("content")}>
+                              <Option value=''><FormattedMessage {...localeMessage['allSource']} /></Option>
+                            {
+                              sourceOptions.map( (item, index) => {
+                                return <Option key={index} value={item.key}>{item.value}</Option>
+                              })
+                            }
+                          </Select>
+                      )}
+                    </Item>
+                  </Col>
+                  <Col span={8}>
+                    <Item
+                      {...formItemLayout}
+                      label={<FormattedMessage {...localeMessage['severity']} />}
+                    >
+                      {getFieldDecorator('severity', {
+                        
+                      })(
+                          <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['severity_placeholder']})}>
+                            <Option value="3">{window['_severity']['3']}</Option>
+                            <Option value="2">{window['_severity']['2']}</Option>
+                            <Option value="1">{window['_severity']['1']}</Option>
+                            <Option value="0">{window['_severity']['0']}</Option>
+                          </Select>
+                      )}
+                    </Item>
+                  </Col>
+                  <Col span={8}>
+                    <Item
+                      {...formItemLayout}
+                      label={<FormattedMessage {...localeMessage['firstOccurTime']} />}
+                      wrapperCol={{span: 14}}
+                    >
+                      {getFieldDecorator('dateTime', {
+                        
+                      })(
+                          <RangePicker />
+                      )}
+                    </Item>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8}>
+                    <Item
+                      {...formItemLayout}
+                      label={<FormattedMessage {...localeMessage['lastOccurTime']} />}
+                      wrapperCol={{span: 14}}
+                    >
+                      {getFieldDecorator('lastOccurTime', {
+                        
+                      })(
+                          <RangePicker />
+                      )}
+                    </Item>
+                  </Col>
+                  <Col span={8}>
+                    <Item
+                      {...formItemLayout}
+                      label={<FormattedMessage {...localeMessage['status']} />}
+                    >
+                      {getFieldDecorator('status', {
+                        initialValue: ''
+                      })(
+                          <Select getPopupContainer={() =>document.getElementById("content")}>
+                            <Option value=""><FormattedMessage {...localeMessage['allStatus']} /></Option>
+                            <Option value="0">{window['_status']['0']}</Option>
+                            <Option value="150">{window['_status']['150']}</Option>
+                            <Option value="190">{window['_status']['190']}</Option>
+                            <Option value="255">{window['_status']['255']}</Option>
+                          </Select>
+                      )}
+                    </Item>
+                  </Col>
+                  <Col span={8}>
+                    <Item
+                      {...formItemLayout}
+                      label={<FormattedMessage {...localeMessage['duration']} />}
+                    >
+                      {getFieldDecorator('duration', {
+                        
+                      })(
+                          <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['duration_placeholder']})}>
+                            <Option value="1">{`< 15 min`}</Option>
+                            <Option value="2">{`15 ~ 30 min`}</Option>
+                            <Option value="3">{`30 ~ 60 min`}</Option>
+                            <Option value="4">{`1 ~ 4 h`}</Option>
+                            <Option value="5">{`> 4 h`}</Option>
+                          </Select>
+                      )}
+                    </Item>
+                  </Col>
+                </Row>
+                <Row className={styles.rowStyle}>
+                  <Col span={8}>
+                    <Item
+                      {...formItemLayout}
+                      label={<FormattedMessage {...localeMessage['count']} />}
+                    >
+                      {getFieldDecorator('count', {
+                        
+                      })(
+                          <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['count_placeholder']})}>
+                            <Option value="1">{`> 5`}</Option>
+                            <Option value="2">{`> 10`}</Option>
+                            <Option value="3">{`> 20`}</Option>
+                            <Option value="4">{`> 30`}</Option>
+                          </Select>
+                      )}
+                    </Item>
+                  </Col>
+                  <Col span={8}>
+                    <Item
+                      {...formItemLayout}
+                      label={<FormattedMessage {...localeMessage['notifyList']} />}
+                    >
+                      {getFieldDecorator('isNotify', {
+                        
+                      })(
+                          <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['notifyList_placeholder']})}>
+                            <Option value='true'>{formatMessage({...localeMessage['notifyList_yes']})}</Option>
+                            <Option value='false'>{formatMessage({...localeMessage['notifyList_no']})}</Option>
+                          </Select>
+                      )}
+                    </Item>
+                  </Col>
+                  <Col span={8}>
+                    <Item
+                      {...formItemLayout}
+                      label={<FormattedMessage {...localeMessage['owner']} />}
+                    >
+                      {getFieldDecorator('ownerId', {
+                        initialValue: ''
+                      })(
+                          <Select getPopupContainer={() =>document.getElementById("content")} >
+                            <Option value="">{ formatMessage({...localeMessage['allOwners']}) }</Option>
+                            {
+                              ownerOptions.map((owner, index) => <Option key={ index } value={ owner.userId }>{ owner.realName }</Option>)
+                            }
+                          </Select>
+                      )}
+                    </Item>
+                  </Col>
+                </Row>
+                <Row className={styles.rowStyle}>
+                  <Col span={8} className={styles.colStyle}>
+                    <Item
+                      {...formItemLayout}
+                      wrapperCol={{span: 10}}
+                      label={<FormattedMessage {...localeMessage['keyWords']} />}
+                    > 
+                      {getFieldDecorator('keyWordsType', {
+                        initialValue: JSON.stringify({'keyWordsType': '1'})
+                      })(
+                        <Select getPopupContainer={() =>document.getElementById("content")} size='large'>
+                          <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '1'})}><FormattedMessage {...localeMessage['entityName']} /></Option>
+                          <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '3'})}><FormattedMessage {...localeMessage['tags']} /></Option>
+                          <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '2'})}><FormattedMessage {...localeMessage['description']} /></Option>
+                          <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '4'})}><FormattedMessage {...localeMessage['name']} /></Option>
+                          <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '5'})}><FormattedMessage {...localeMessage['IP_address']} /></Option>
+                          <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '6'})}><FormattedMessage {...localeMessage['orderFlowNum']} /></Option>
+                          <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '7'})}><FormattedMessage {...localeMessage['classCode']} /></Option>
                           {
-                            sourceOptions.map( (item, index) => {
-                              return <Option key={index} value={item.key}>{item.value}</Option>
-                            })
+                            propertyOptions.length > 0 ? propertyOptions.map( (item, index) => {
+                              return <Option key={item.code} className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '100', 'keyName': item.code})}>{item.name}</Option>
+                            }) : []
                           }
                         </Select>
-                    )}
-                  </Item>
-                </Col>
-                <Col span={8}>
-                  <Item
-                    {...formItemLayout}
-                    label={<FormattedMessage {...localeMessage['severity']} />}
-                  >
-                    {getFieldDecorator('severity', {
-                      
-                    })(
-                        <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['severity_placeholder']})}>
-                          <Option value="3">{window['_severity']['3']}</Option>
-                          <Option value="2">{window['_severity']['2']}</Option>
-                          <Option value="1">{window['_severity']['1']}</Option>
-                          <Option value="0">{window['_severity']['0']}</Option>
-                        </Select>
-                    )}
-                  </Item>
-                </Col>
-                <Col span={8}>
-                  <Item
-                    {...formItemLayout}
-                    label={<FormattedMessage {...localeMessage['occurTime']} />}
-                    wrapperCol={{span: 14}}
-                  >
-                    {getFieldDecorator('dateTime', {
-                      
-                    })(
-                        <RangePicker />
-                    )}
-                  </Item>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={8}>
-                  <Item
-                    {...formItemLayout}
-                    label={<FormattedMessage {...localeMessage['status']} />}
-                  >
-                    {getFieldDecorator('status', {
-                      initialValue: ''
-                    })(
-                        <Select getPopupContainer={() =>document.getElementById("content")}>
-                          <Option value=""><FormattedMessage {...localeMessage['allStatus']} /></Option>
-                          <Option value="0">{window['_status']['0']}</Option>
-                          <Option value="150">{window['_status']['150']}</Option>
-                          <Option value="190">{window['_status']['190']}</Option>
-                          <Option value="255">{window['_status']['255']}</Option>
-                        </Select>
-                    )}
-                  </Item>
-                </Col>
-                <Col span={8}>
-                  <Item
-                    {...formItemLayout}
-                    label={<FormattedMessage {...localeMessage['duration']} />}
-                  >
-                    {getFieldDecorator('duration', {
-                      
-                    })(
-                        <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['duration_placeholder']})}>
-                          <Option value="1">{`< 15 min`}</Option>
-                          <Option value="2">{`15 ~ 30 min`}</Option>
-                          <Option value="3">{`30 ~ 60 min`}</Option>
-                          <Option value="4">{`1 ~ 4 h`}</Option>
-                          <Option value="5">{`> 4 h`}</Option>
-                        </Select>
-                    )}
-                  </Item>
-                </Col>
-                <Col span={8}>
-                  <Item
-                    {...formItemLayout}
-                    label={<FormattedMessage {...localeMessage['count']} />}
-                  >
-                    {getFieldDecorator('count', {
-                      
-                    })(
-                        <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['count_placeholder']})}>
-                          <Option value="1">{`> 5`}</Option>
-                          <Option value="2">{`> 10`}</Option>
-                          <Option value="3">{`> 20`}</Option>
-                          <Option value="4">{`> 30`}</Option>
-                        </Select>
-                    )}
-                  </Item>
-                </Col>
-              </Row>
-              <Row className={styles.rowStyle}>
-                <Col span={8}>
-                  <Item
-                    {...formItemLayout}
-                    label={<FormattedMessage {...localeMessage['notifyList']} />}
-                  >
-                    {getFieldDecorator('isNotify', {
-                      
-                    })(
-                        <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['notifyList_placeholder']})}>
-                          <Option value='true'>{formatMessage({...localeMessage['notifyList_yes']})}</Option>
-                          <Option value='false'>{formatMessage({...localeMessage['notifyList_no']})}</Option>
-                        </Select>
-                    )}
-                  </Item>
-                </Col>
-                <Col span={8} className={styles.colStyle}>
-                  <Item
-                    {...formItemLayout}
-                    wrapperCol={{span: 10}}
-                    label={<FormattedMessage {...localeMessage['keyWords']} />}
-                  > 
-                    {getFieldDecorator('keyWordsType', {
-                      initialValue: JSON.stringify({'keyWordsType': '1'})
-                    })(
-                      <Select getPopupContainer={() =>document.getElementById("content")} size='large'>
-                        <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '1'})}><FormattedMessage {...localeMessage['entityName']} /></Option>
-                        <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '3'})}><FormattedMessage {...localeMessage['tags']} /></Option>
-                        <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '2'})}><FormattedMessage {...localeMessage['description']} /></Option>
-                        <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '4'})}><FormattedMessage {...localeMessage['name']} /></Option>
-                        <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '5'})}><FormattedMessage {...localeMessage['IP_address']} /></Option>
-                        <Option className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '6'})}><FormattedMessage {...localeMessage['orderFlowNum']} /></Option>
-                        {
-                          propertyOptions.length > 0 ? propertyOptions.map( (item, index) => {
-                            return <Option key={item.code} className={styles.keywordsMenuItem} value={JSON.stringify({'keyWordsType': '100', 'keyName': item.code})}>{item.name}</Option>
-                          }) : []
-                        }
-                      </Select>
-                    )}    
-                  </Item>
-                  <Item
-                    wrapperCol={{span: 8, offset: 10}}
-                  >
-                    {getFieldDecorator('keyWords', {
-                      
-                    })(
-                      <Input placeholder={formatMessage({...localeMessage['keyWords_placeholder']})} />
-                    )}
-                  </Item>
-                </Col>
-                <Button type="primary" size="large" htmlType="submit" onClick={ (e) => {onOk(e, form)} }><FormattedMessage {...localeMessage['search']} /></Button>
-                <Button type="primary" size="large" onClick={ () => {form.resetFields()} }><FormattedMessage {...localeMessage['reset']} /></Button>
-              </Row>
-            </Form>
+                      )}    
+                    </Item>
+                    <Item
+                      wrapperCol={{span: 8, offset: 10}}
+                      className={ styles.keywordArea }
+                    >
+                      {getFieldDecorator('keyWords', {
+                        
+                      })(
+                        <Input placeholder={formatMessage({...localeMessage['keyWords_placeholder']})} />
+                      )}
+                    </Item>
+                  </Col>
+                  <Button type="primary" size="large" htmlType="submit" onClick={ (e) => {onOk(e, form)} }><FormattedMessage {...localeMessage['search']} /></Button>
+                  <Button type="primary" size="large" onClick={ () => {form.resetFields()} }><FormattedMessage {...localeMessage['reset']} /></Button>
+                </Row>
+              </Form>
+            </div>
+            <Button className={classnames(styles.toggleBarButton, zhankaiClass)} onClick={toggleBarButtonClick} size="small"><i className={classnames(alertQuery.isShowBar ? shouqiClass : zhankaiClass, styles.toggleBarButtonIcon)} /></Button>
             {!haveQuery ? <div className={styles.alertListInfo}><FormattedMessage {...localeMessage['noQueryData']} /></div> :
             <div>
               <div className={styles.queryOperate}>

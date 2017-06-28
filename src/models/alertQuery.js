@@ -1,4 +1,5 @@
 import { querySource, queryAlertList, queryCount, queryProperty } from '../services/alertQuery'
+import { getUsers } from '../services/app.js'
 import { viewTicket } from '../services/alertOperation'
 import { groupSort } from '../utils'
 import { message } from 'antd'
@@ -9,9 +10,12 @@ const initalState = {
 
   haveQuery: false, // 是否包含查询条件
   sourceOptions: [], // 来源
+  ownerOptions: [], // 负责人
   propertyOptions: [], // 扩展
   queryCount: {}, // 查询数量结果
   currentQuery: {}, // 当前的查询条件
+
+  isShowBar: true, // 是否显示搜索项
 
   isGroup: false,
   groupBy: 'source',
@@ -43,6 +47,9 @@ const initalState = {
     order: true
   }, {
     key: 'lastTime',
+    order: true
+  }, {
+    key: 'firstOccurTime',
     order: true
   }, {
     key: 'lastOccurTime',
@@ -87,8 +94,8 @@ export default {
       return { ...state, data, tempListData }
     },
     // 存放告警来源的options
-    setOptions(state, { payload: { sourceOptions, propertyOptions } }) {
-      return { ...state, sourceOptions, propertyOptions }
+    setOptions(state, { payload: { sourceOptions, propertyOptions, ownerOptions } }) {
+      return { ...state, sourceOptions, propertyOptions, ownerOptions }
     },
     // 用来一次性结构状态，避免过度渲染
     changeState(state, { payload }) {
@@ -172,6 +179,10 @@ export default {
     toggleOrder(state, { payload }) {
       return { ...state, ...payload }
     },
+    // 显示或隐藏搜索项
+    toggleBar(state, { payload: isShowBar }) {
+      return { ...state, isShowBar }
+    },
     // 修改状态为处理中
     changeCloseState(state, { payload: { arrList, status } }) {
       const { data, isGroup } = state;
@@ -250,6 +261,7 @@ export default {
       // 查询来源和扩展标签
       const sourceOptions = yield call(querySource)
       const propertyOptions = yield call(queryProperty)
+      const ownerOptions = yield call(getUsers);
 
       if (!sourceOptions.result) {
         yield message.error(window.__alert_appLocaleData.messages[sourceOptions.message], 3)
@@ -257,11 +269,15 @@ export default {
       if (!propertyOptions.result) {
         yield message.error(window.__alert_appLocaleData.messages[propertyOptions.message], 3)
       }
+      if (!ownerOptions.result) {
+        yield message.error(window.__alert_appLocaleData.messages[ownerOptions.message], 3)
+      }
       yield put({
         type: 'setOptions',
         payload: {
           sourceOptions: sourceOptions.result ? sourceOptions.data : [],
           propertyOptions: propertyOptions.result ? propertyOptions.data : [],
+          ownerOptions: ownerOptions.result ? ownerOptions.data : [],
         }
       })
     },
