@@ -42,10 +42,10 @@ export default {
         incidentIds: [viewDetailAlertId]
       });
       if (response.result) {
-        const { success, failed } = response.data;
+        const { success, failed, lang } = response.data;
         if (Array.isArray(success) && success.length > 0) {
           yield put({ type: 'alertListTable/queryAlertList' })
-          const successMsg = success.map(item => `${item.name}: ${item.msg}`).join('\n');
+          const successMsg = success.map(item => `${item.name}: ${item['msg_' + lang]}`).join('\n');
           message.success(successMsg, 3);
           yield put({
             type: 'toggleReassignModal',
@@ -54,7 +54,7 @@ export default {
           yield put({ type: 'alertDetail/toggleDetailModal', payload: false });
           // yield put({ type: 'alertDetail/openDetailModal' })
         } else if (Array.isArray(failed) && failed.length > 0) {
-          const failedMsg = failed.map(item => `${item.name}: ${item.msg}`).join('\n');
+          const failedMsg = failed.map(item => `${item.name}: ${item['msg_' + lang]}`).join('\n');
           message.error(failedMsg, 3);
         }
       } else {
@@ -345,16 +345,16 @@ export default {
       if (viewDetailAlertId) {
         const response = yield call(takeOverService, { alertIds: [viewDetailAlertId] });
         if (response.result) {
-          const { success, failed } = response.data;
+          const { success, failed, lang } = response.data;
           if (Array.isArray(success) && success.length > 0) {
             // yield put({ type: 'alertListTable/resetCheckboxStatus' })
             yield put({ type: 'alertListTable/queryAlertList' })
-            const successMsg = success.map(item => `${item.name}: ${item.msg}`).join('\n');
+            const successMsg = success.map(item => `${item.name}: ${item['msg_' + lang]}`).join('\n');
             message.success(successMsg, 3);
             // yield put({ type: 'alertDetail/toggleDetailModal', payload: false });
             yield put({ type: 'alertDetail/openDetailModal' })
           } else if (Array.isArray(failed) && failed.length > 0) {
-            const failedMsg = failed.map(item => `${item.name}: ${item.msg}`).join('\n');
+            const failedMsg = failed.map(item => `${item.name}: ${item['msg_' + lang]}`).join('\n');
             message.error(failedMsg, 3);
           }
         } else {
