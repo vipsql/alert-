@@ -18,18 +18,17 @@ class ListTimeTable extends Component {
       // 500                                                                                                                                                                  表格左侧宽度
       // 100 是最后一点预留位置
       const lineW = width - 500 - 80
-     
+
       timeLine.style.width = lineW + 'px'
       const gridWidth = lineW / 10
       const countMins = (end - begin) / (60 * 1000)
       const minuteToWidth = lineW / countMins
-      
+
       setTimeLineWidth(gridWidth, minuteToWidth, lineW)
 
     }
-   
+
     render(){
-      
       const {
         isGroup,
         groupBy,
@@ -49,12 +48,13 @@ class ListTimeTable extends Component {
         spreadGroup,
         noSpreadGroup,
         selectedAll,
-        toggleSelectedAll,
+        // toggleSelectedAll,
         relieveClick,
         isLoading,
-        selectedTime
+        selectedTime,
+        handleSelectAll
       } = this.props
-      
+
       let colsKey = []
       const formatMessages = defineMessages({
           entityName:{
@@ -93,10 +93,6 @@ class ListTimeTable extends Component {
             id: 'alertList.title.id',
             defaultMessage: '告警ID',
           },
-          name: {
-            id: 'alertList.title.name',
-            defaultMessage: '告警名称',
-          },
           severity: {
             id: 'alertList.title.severity',
             defaultMessage: '告警级别',
@@ -118,7 +114,7 @@ class ListTimeTable extends Component {
       const gridTime = (end - begin) / defaultShowNums //间隔时间戳
 
       let timeTH = []
-      
+
       const formatDate = function(date){
         const d = new Date(date)
         let month = d.getMonth() + 1;
@@ -143,14 +139,14 @@ class ListTimeTable extends Component {
           case 'lastOneMonth':
             result = month + '-' + dates;
             break;
-          default: 
+          default:
             break;
         }
 
         return result;
       }
       for(let i = 0; i < defaultShowNums; i++){
-        
+
         const timstamp = begin + gridTime * i
         const date = formatDate(timstamp)
         const left = gridWidth * i
@@ -176,8 +172,8 @@ class ListTimeTable extends Component {
               </span>
             </div>
           )
-          
-          
+
+
         }
 
       }
@@ -200,8 +196,8 @@ class ListTimeTable extends Component {
             TDS.push(
               <td key='sourceAlert'>
                 {
-                  item['hasChild'] === true 
-                    ? item['isSpread'] === true 
+                  item['hasChild'] === true
+                    ? item['isSpread'] === true
                       ? <span className={styles.triangleUp} data-id={item.id} onClick={ noSpreadChild }></span>
                         : <span className={styles.triangleDown} data-id={item.id} onClick={ spreadChild }></span>
                           : undefined
@@ -241,15 +237,15 @@ class ListTimeTable extends Component {
         let dotsLine = []
         let lineDotLeft = 0
         let lineDotW = 0
-        
+
         if (item !== undefined && item.length !== 0) {
           lineDotLeft = (item[0].occurTime - begin) / (60 * 1000) * minuteToWidth
           const len = item.length
           lineDotW = (item[len-1]['occurTime'] - item[0]['occurTime']) / (60 * 1000) * minuteToWidth
-          
+
           dots =  item.map( (itemDot, idx) => {
             const left = (itemDot.occurTime - begin) / (60 * 1000) * minuteToWidth
-            const iconColor = itemDot['severity'] == 3 ? 
+            const iconColor = itemDot['severity'] == 3 ?
                                 'jjLevel' : itemDot['severity'] == 2 ?
                                     'gjLevel' : itemDot['severity'] == 1 ?
                                         'txLevel' : itemDot['severity'] == 0 ?
@@ -271,7 +267,7 @@ class ListTimeTable extends Component {
 
             )
           })
-        
+
           return {
             dots,
             lineDotW,
@@ -325,7 +321,7 @@ class ListTimeTable extends Component {
                   groupBy && groupBy == 'status' ?
                   window['_status'][groupItem.classify]
                   :
-                  groupBy && groupBy == 'severity' ? 
+                  groupBy && groupBy == 'severity' ?
                   window['_severity'][groupItem.classify]
                   :
                   groupItem.classify ? groupItem.classify : <FormattedMessage {...formatMessages['Unknown']} />
@@ -340,16 +336,16 @@ class ListTimeTable extends Component {
                   groupBy && groupBy == 'status' ?
                   window['_status'][groupItem.classify]
                   :
-                  groupBy && groupBy == 'severity' ? 
+                  groupBy && groupBy == 'severity' ?
                   window['_severity'][groupItem.classify]
                   :
                   groupItem.classify ? groupItem.classify : <FormattedMessage {...formatMessages['Unknown']} />
                 }
             </td>
           </tr>)
-          
+
           if (groupItem.children !== undefined) {
-            
+
             groupItem.children.forEach( (item, itemIndex) => {
 
               const tds = genTds(item, keys)
@@ -387,7 +383,7 @@ class ListTimeTable extends Component {
 
 
             })
-            
+
           }
           tbodyCon.push(
             groupTr,
@@ -405,10 +401,10 @@ class ListTimeTable extends Component {
           data.forEach( (item, index) => {
 
             let keys = colsKey;
-            
-            const tdCheck = Object.keys(checkAlert).length !== 0 ? 
-              <td key="checkbox" className={styles.checkstyle}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td> 
-              : 
+
+            const tdCheck = Object.keys(checkAlert).length !== 0 ?
+              <td key="checkbox" className={styles.checkstyle}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
+              :
               undefined
             const tds = genTds(item, keys)
             const dotsInfo = genDots(item.timeLine, keys)
@@ -454,7 +450,7 @@ class ListTimeTable extends Component {
             <table width='100%' id="listTimeTable" className={styles.listTimeTable}>
               <thead>
                 <tr>
-                  <th key="checkAll" width='48' className={styles.checkstyle}><input type="checkbox" checked={selectedAll} onChange={toggleSelectedAll}/></th>
+                  <th key="checkAll" width='48' className={styles.checkstyle}><input type="checkbox" checked={selectedAll} onChange={handleSelectAll}/></th>
                   <th width="20" key='space-col'></th>
                   <th width='10'></th>
                   {theads}
@@ -466,7 +462,7 @@ class ListTimeTable extends Component {
               <Animate
                   transitionName="fade"
                   component='tbody'
-                  transitionEnterTimeout={500} 
+                  transitionEnterTimeout={500}
                   transitionLeaveTimeout={1000}
               >
               {
@@ -484,4 +480,3 @@ class ListTimeTable extends Component {
     }
 }
 export default ListTimeTable
-     

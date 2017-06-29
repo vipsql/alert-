@@ -1,5 +1,5 @@
 import { parse } from 'qs'
-import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, notifyOperate, takeOverService, getReassignUsers } from '../services/alertOperation'
+import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, notifyOperate, takeOverService, getAllUsers, reassignAlert } from '../services/alertOperation'
 import { queryAlertList, queryChild, queryAlertListTime } from '../services/alertList'
 import { getUsers } from '../services/alertAssociationRules';
 import { queryCloumns } from '../services/alertQuery'
@@ -61,7 +61,7 @@ const initalState = {
       ]
     }
   ],
-  reassignUsers: [], //获取的可转派用户
+  users: [], //获取的可转派用户
 
   // 分组显示
   isGroup: false,
@@ -84,21 +84,82 @@ export default {
   effects: {
 
     //打开转派告警Model
-    *openReassign({ payload: { position } }, { select, put, call }) {
-      const operateAlertIds = yield select(state => state.alertListTable.operateAlertIds);
-      const response = yield call(getReassignUsers);
-      if (response.result) {
-        yield put({
-          type: 'setReassignUsers',
-          payload: response.data
-        })
-      } else {
-        console.error('获取转派人员错误');
-      }
+    *openReassign({ payload: position }, { select, put, call }) {
       yield put({
-        type: 'toggleReassignModal',
-        payload: true
+        type: 'alertList/toggleModalOrigin',
+        payload: position
+      });
+      const { operateAlertIds, users } = yield select(state => ({
+        operateAlertIds: state.alertListTable.operateAlertIds,
+        users: state.alertOperation.users
+      }));
+
+      if (position === 'detail') {
+        if (users.length === 0) {
+          const response = yield call(getAllUsers);
+          if (response.result) {
+            yield put({
+              type: 'receiveAllUsers',
+              payload: response.data
+            });
+          } else {
+            message.error(response.message, 2);
+          }
+        }
+        yield put({
+          type: 'alertDetailOperation/toggleReassignModal',
+          payload: true
+        });
+      } else {
+        if (operateAlertIds.length === 0) {
+          message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
+        } else {
+          if (users.length === 0) {
+            const response = yield call(getAllUsers);
+            if (response.result) {
+              yield put({
+                type: 'receiveAllUsers',
+                payload: response.data
+              });
+            } else {
+              message.error(response.message, 2);
+            }
+          }
+          yield put({
+            type: 'toggleReassignModal',
+            payload: true
+          });
+        }
+      }
+    },
+
+    //转派
+    *submitReassign({ payload: { toWho } }, { select, put, call }) {
+      const { operateAlertIds } = yield select(state => ({
+        operateAlertIds: state.alertListTable.operateAlertIds
+      }));
+      const response = yield call(reassignAlert, {
+        toWho,
+        incidentIds: operateAlertIds
       })
+      if (response.result) {
+        const { success, failed } = response.data;
+        if (Array.isArray(success) && success.length > 0) {
+          yield put({ type: 'alertListTable/resetCheckboxStatus' })
+          yield put({ type: 'alertListTable/queryAlertList' })
+          const successMsg = success.map(item => `${item.name}: ${item.msg}`).join('\n');
+          message.success(successMsg, 3);
+          yield put({
+            type: 'toggleReassignModal',
+            payload: false
+          });
+        } else if (Array.isArray(failed) && failed.length > 0) {
+          const failedMsg = failed.map(item => `${item.name}: ${item.msg}`).join('\n');
+          message.error(failedMsg, 3);
+        }
+      } else {
+        message.error(response.message, 2);
+      }
     },
     // 打开抑制告警Modal
     *openSuppressTimeSlider({ payload: { position } }, { select, put, call }) {
@@ -209,7 +270,7 @@ export default {
         if (notify.result) {
           // yield put({ type: 'alertListTable/resetCheckedAlert' })
           // yield put({ type: 'alertListTable/changeCloseState', payload: { arrList: stingIds, status: 150 } })
-          yield put({ type: 'alertListTable/resestCheckboxStatus' })
+          yield put({ type: 'alertListTable/resetCheckboxStatus' })
           yield put({ type: 'alertListTable/queryAlertList' });
 
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
@@ -481,7 +542,7 @@ export default {
         let stingIds = operateAlertIds.map(item => '' + item)
         // yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
         // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
-        yield put({ type: 'alertListTable/resestCheckboxStatus' })
+        yield put({ type: 'alertListTable/resetCheckboxStatus' })
         yield put({ type: 'alertListTable/queryAlertList' });
 
         //yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 150}})
@@ -527,7 +588,7 @@ export default {
           if (resultData.data.result) {
             // yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
             // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
-            yield put({ type: 'alertListTable/resestCheckboxStatus' })
+            yield put({ type: 'alertListTable/resetCheckboxStatus' })
             yield put({ type: 'alertListTable/queryAlertList' });
             // yield put({ type: 'alertListTable/resetCheckedAlert'})
             // yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 255}})
@@ -562,6 +623,7 @@ export default {
       })
       if (payload.origin === 'detail') {
         yield put({ type: 'alertDetailOperation/toggleResolveModal', payload: payload.state })
+        // debugger
       } else {
         if (operateAlertIds.length === 0) {
           yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
@@ -579,6 +641,7 @@ export default {
       })
       if (operateAlertIds !== undefined) {
         let stingIds = operateAlertIds.map(item => '' + item)
+        // debugger
         const resultData = yield resolve({
           incidentIds: stingIds,
           resolveMessage: payload
@@ -587,7 +650,7 @@ export default {
           if (resultData.data.result) {
             // yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
             // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
-            yield put({ type: 'alertListTable/resestCheckboxStatus' })
+            yield put({ type: 'alertListTable/resetCheckboxStatus' })
             yield put({ type: 'alertListTable/queryAlertList' });
 
             // yield put({ type: 'alertListTable/resetCheckedAlert'})
@@ -668,7 +731,7 @@ export default {
         });
         if (shareResult.result) {
           // yield put({ type: 'alertListTable/resetCheckedAlert' })
-          yield put({ type: 'alertListTable/resestCheckboxStatus' })
+          yield put({ type: 'alertListTable/resetCheckboxStatus' })
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 2)
         } else {
           yield message.error(`${shareResult.message}`, 2)
@@ -713,16 +776,31 @@ export default {
     },
 
 
-    *takeOver({ payload }, { select, put, call }) {
+    //接手
+    *takeOver({ payload: position }, { select, put, call }) {
       const alertIds = yield select(state => state.alertListTable.operateAlertIds)
-      const response = yield call(takeOverService, { isSuccess: true, alertIds });
-      const stingIds = alertIds.map(item => '' + item)
-      if (response.result) {
-        //这里一定要先删除告警，再删除checkAlert，因为在渲染table的时候用到了checkAlert
-        // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
-        // yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
-        yield put({ type: 'alertListTable/resestCheckboxStatus' })
-        yield put({ type: 'alertListTable/queryAlertList' })
+      if (alertIds.length === 0) {
+        yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
+      } else {
+        const response = yield call(takeOverService, { alertIds });
+        const stingIds = alertIds.map(item => '' + item)
+        if (response.result) {
+          const { success, failed } = response.data;
+          if (Array.isArray(success) && success.length > 0) {
+            //这里一定要先删除告警，再删除checkAlert，因为在渲染table的时候用到了checkAlert
+            // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
+            // yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
+            yield put({ type: 'alertListTable/resetCheckboxStatus' })
+            yield put({ type: 'alertListTable/queryAlertList' })
+            const successMsg = success.map(item => `${item.name}: ${item.msg}`).join('\n');
+            message.success(successMsg, 3);
+          } else if (Array.isArray(failed) && failed.length > 0) {
+            const failedMsg = failed.map(item => `${item.name}: ${item.msg}`).join('\n');
+            message.error(failedMsg, 3);
+          }
+        } else {
+          message.error(`${response.message}`, 2)
+        }
       }
     }
 
@@ -886,10 +964,10 @@ export default {
         isShowReassingModal
       }
     },
-    setReassignUsers(state, { payload: reassignUsers }) {
+    receiveAllUsers(state, { payload: users }) {
       return {
         ...state,
-        reassignUsers
+        users
       }
     }
   }

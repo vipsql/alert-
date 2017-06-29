@@ -13,7 +13,7 @@ class alertDetail extends Component {
     componentDidMount() {
         this._setAutoHide();
     }
-    
+
     componentWillUnmount() {
         this._cancelAutoHide();
     }
@@ -79,7 +79,7 @@ class alertDetail extends Component {
 
         // <li><span>{formatMessage({...localeMessage['owner']})}:</span><span>{currentAlertDetail.responsiblePerson ? currentAlertDetail.responsiblePerson : formatMessage({...localeMessage['unknown']})}</span></li>
         // <li><span>{formatMessage({...localeMessage['department']})}:</span><span>{currentAlertDetail.responsibleDepartment ? currentAlertDetail.responsibleDepartment : formatMessage({...localeMessage['unknown']})}</span></li>
-        
+
         const dateTransfer = (begin, end) => {
             let date = {};
             let beginTime = new Date(+begin);
@@ -93,7 +93,7 @@ class alertDetail extends Component {
 
         const durationFunc = (duration) => {
             if(duration > 3600000){
-                return (duration / 3600000).toFixed(1)     
+                return (duration / 3600000).toFixed(1)
             }else{
                 return (duration / 60000).toFixed(1)
             }
@@ -115,9 +115,9 @@ class alertDetail extends Component {
         )
 
         // 根据severity选择不同的颜色
-        const severityColor = currentAlertDetail.severity == 3 ? styles.jjLevel 
-                                : currentAlertDetail.severity == 2 ? styles.gjLevel 
-                                    : currentAlertDetail.severity == 1 ? styles.txLevel 
+        const severityColor = currentAlertDetail.severity == 3 ? styles.jjLevel
+                                : currentAlertDetail.severity == 2 ? styles.gjLevel
+                                    : currentAlertDetail.severity == 1 ? styles.txLevel
                                         : currentAlertDetail.severity == 0 ? styles.hfLevel : false
 
         const localeMessage = defineMessages({
@@ -361,7 +361,7 @@ class alertDetail extends Component {
                                             } else {
                                                 return <span title={`${tag.keyName} : ${tag.value}`} key={index} className={styles.tag}>{`${tag.keyName} : ${tag.value}`}</span>
                                             }
-                                            
+
                                         })
                                     }
                                 </li>
@@ -416,7 +416,7 @@ class alertDetail extends Component {
                         </Wrap>
                         :
                         undefined
-                    }              
+                    }
                     {
                         ci.length > 0?
                         <Wrap visible={ false } title={<span> {formatMessage({...localeMessage['ci']})} &nbsp;&nbsp;<Link to="/alertQuery" query={{ resObjectId: ciId.value }}><span className={ styles.ciDetailLink }>{formatMessage({...localeMessage['ciHistoryLink']})}</span></Link></span>}>
@@ -526,12 +526,12 @@ class alertDetail extends Component {
                                     })
                                 }
                                 </Timeline>
-                            </Wrap> 
+                            </Wrap>
                         )
                         :
                         undefined
                     }
-                                 
+
                 </div>
                 </Spin>
             </div>
@@ -540,19 +540,19 @@ class alertDetail extends Component {
 }
 
 alertDetail.defaultProps = {
-    extraProps: {}, 
+    extraProps: {},
     closeDeatilModal: () => {},
     clickTicketFlow: () => {},
-    editForm: () => {}, 
-    openForm: () => {}, 
-    closeForm: () => {}, 
-    openRemark: () => {}, 
-    editRemark: () => {}, 
+    editForm: () => {},
+    openForm: () => {},
+    closeForm: () => {},
+    openRemark: () => {},
+    editRemark: () => {},
     closeRemark: () => {}
 }
 
 alertDetail.propTypes = {
-    
+
 }
 
 export default injectIntl(Form.create()(alertDetail))

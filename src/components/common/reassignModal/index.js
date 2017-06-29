@@ -3,6 +3,7 @@ import { Modal, Button, Checkbox, Form, Input, Select, Row, Col } from 'antd';
 import styles from './index.less'
 import { classnames } from '../../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import { message } from 'antd';
 
 const localMessage = defineMessages({
   modal_cancel: {
@@ -20,57 +21,73 @@ const localMessage = defineMessages({
   modal_specificUser: {
     id: 'modal.specificUser',
     defaultMessage: '指定人员'
+  },
+  modal_mustSelectAnUser: {
+    id: 'modal.mustSelectAnUser',
+    defaultMessage: '必须指定一个转派的用户'
   }
 
 })
+const Option = Select.Option;
+
 class ReassignModal extends Component {
-
   constructor(props) {
-    super(props)
-
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleOk = this.handleOk.bind(this);
+    this.state = {
+      selectedUser: ''
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    //关闭时清空掉selectedUser
+    if (this.props.isShowReassingModal === true && nextProps.isShowReassingModal === false) {
+      this.setState({ selectedUser: '' })
+    }
+  }
+  handleChange(value) {
+    this.setState({ selectedUser: value })
+  }
+  handleOk() {
+    const { onOk, intl: { formatMessage } } = this.props;
+    const { selectedUser } = this.state;
+    if (selectedUser) {
+      onOk(this.state.selectedUser);
+    } else {
+      message.info(formatMessage(localMessage['modal_mustSelectAnUser']))
+    }
   }
 
   render() {
-    const { isShowReassingModal, handleOk, handleCancel, reassignUsers, intl: { formatMessage } } = this.props;
+    const { isShowReassingModal, onOk, onCancel, users, intl: { formatMessage } } = this.props;
     const footer = (
       <div className={styles.footer}>
-        <Button type="primary" onClick={handleOk}><FormattedMessage {...localMessage['modal_reassign']} /></Button>
-        <Button type="primary" onClick={handleCancel}><FormattedMessage {...localMessage['modal_cancel']} /></Button>
+        <Button type="primary" onClick={this.handleOk}><FormattedMessage {...localMessage['modal_reassign']} /></Button>
+        <Button type="primary" onClick={onCancel}><FormattedMessage {...localMessage['modal_cancel']} /></Button>
       </div>
     )
-    // const itemProps = {
-    //   label: formatMessage({ ...localMessage['modal_specificUser'] }),
-    //   labelCol: { span: 4 },
-    //   wrapperCol: { span: 20 }
-    // }
     const selectProps = {
-      // mode: 'tags',
       size: 'large',
-      style: {width: '100%'}
+      style: { width: '100%' },
+      value: this.state.selectedUser,
+      onChange: this.handleChange
     }
-    const users = reassignUsers.map(user => {
-      return (
-        <Select.Option key={user.id}>{user.name}</Select.Option>
-      )
-    })
 
     return (
       <Modal
-        title={formatMessage({ ...localMessage['modal_reassignTitle'] })}
+        title={formatMessage(localMessage['modal_reassignTitle'])}
         visible={isShowReassingModal}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        onOk={this.handleOk}
+        onCancel={onCancel}
         footer={footer}
+        wrapClassName={styles.reassignModal}
       >
-        {/*<Form>
-          <Form.Item {...itemProps}>
-            <Input />
-          </Form.Item>
-        </Form>*/}
         <Row>
-          <Col span='4' style={{lineHeight: '32px'}}>{formatMessage({ ...localMessage['modal_specificUser'] }) + ': '}</Col>
+          <Col span='4' style={{ lineHeight: '32px' }}>{formatMessage(localMessage['modal_specificUser']) + ': '}</Col>
           <Col span='20'>
-            <Select {...selectProps}>{users}</Select>
+            <Select {...selectProps}>
+              {users.map(user => (<Option key={user.userId}>{user.realName}</Option>))}
+            </Select>
           </Col>
         </Row>
 

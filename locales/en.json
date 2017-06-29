@@ -88,6 +88,7 @@
   "alertQuery.result": "{total} results found. (Critical {critical}, Warning {warning}, Informaiton {informaiton}, Recovery {ok})",
 
   "alertOperate.takeOver": "Take Over",
+  "alertOperate.reassign": "Reassign",
   "alertOperate.dispatch": "Create Ticket",
   "alertOperate.close": "Close",
   "alertOperate.resolve": "Resolve",
