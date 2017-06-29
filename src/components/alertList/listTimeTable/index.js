@@ -6,17 +6,17 @@ import styles from '../index.less'
 
 
 // function ListTimeTableWrap({dispatch, alertListTimeTable}){
-const  ListTimeTableWrap = ({dispatch, alertListTable, selectedTime}) => {
+const ListTimeTableWrap = ({ dispatch, alertListTable, selectedTime }) => {
   const props = {
     ...alertListTable,
     selectedTime,
-    loadMore(){
+    loadMore() {
       dispatch({
         type: 'alertListTable/loadMore'
       })
     },
 
-    setTimeLineWidth(gridWidth, minuteToWidth, lineW){
+    setTimeLineWidth(gridWidth, minuteToWidth, lineW) {
       dispatch({
         type: 'alertListTable/setTimeLineWidth',
         payload: {
@@ -27,7 +27,7 @@ const  ListTimeTableWrap = ({dispatch, alertListTable, selectedTime}) => {
       })
     },
 
-    checkAlertFunc(e){
+    checkAlertFunc(e) {
       // const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
 
       // dispatch({
@@ -36,15 +36,9 @@ const  ListTimeTableWrap = ({dispatch, alertListTable, selectedTime}) => {
       // })
 
       const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
-      const alertId = e.target.getAttribute('data-id');
-      const checked = e.target.checked;
       dispatch({
         type: 'alertListTable/handleCheckboxClick',
-        payload: {
-          alertId,
-          checked,
-          alertInfo
-        }
+        payload: { alertInfo }
       })
     },
     detailClick(e) {
@@ -89,10 +83,17 @@ const  ListTimeTableWrap = ({dispatch, alertListTable, selectedTime}) => {
         payload: groupClassify
       })
     },
-    toggleSelectedAll(e) {
+    // toggleSelectedAll(e) {
+    //   dispatch({
+    //     type: 'alertListTable/toggleSelectedAll'
+    //   })
+    // },
+    handleSelectAll(e) {
+      const checked = e.target.checked;
       dispatch({
-        type: 'alertListTable/toggleSelectedAll'
-      })
+        type: 'alertListTable/handleSelectAll',
+        payload: { checked }
+      });
     },
     // 解除告警
     relieveClick(e) {

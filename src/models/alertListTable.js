@@ -235,25 +235,26 @@ export default {
       return { ...state, checkAlert: checkAlert, operateAlertIds: [], selectedAlertIds: [], selectedAll: false }
     },
     // 更改勾选状态
-    changeCheckAlert(state, { payload: { alertInfo, alertId, checked } }) {
-      const { checkAlert } = state;
+    changeCheckAlert(state, { payload: { alertInfo } }) {
+      const alertId = alertInfo.id;
+      const previousChecked = state.checkAlert[alertId].checked
       let newOperateAlertIds = [];
       let newSelectedAlertIds = [];
       let newCheckAlert = {
         ...state.checkAlert,
         [alertId]: {
           ...state.checkAlert[alertId],
-          checked
+          checked: !previousChecked
         }
       };
-      if (checked) {
+      if (!previousChecked) {
         newOperateAlertIds = [
           ...state.operateAlertIds,
           alertId
         ];
         newSelectedAlertIds = [
           ...state.selectedAlertIds,
-          checkAlert[alertId].info
+          state.checkAlert[alertId].info
         ];
       } else {
         let index = state.operateAlertIds.indexOf(alertId);
@@ -603,7 +604,7 @@ export default {
     // },
 
     //
-    resestCheckboxStatus(state) {
+    resetCheckboxStatus(state) {
       return {
         ...state,
         operateAlertIds: [],
@@ -915,7 +916,6 @@ export default {
         orderType: alertListTable.orderType,
         pageSize: alertListTable.pageSize,
         ...alertListTable.tagsFilter,
-        status: 'test'
       }
       
       const listReturnData = yield call(queryAlertList, params)
@@ -1003,20 +1003,14 @@ export default {
     },
 
     // 响应列表项的选中状态
-    *handleCheckboxClick({ payload: { alertId, checked, alertInfo } }, { select, put, call }) {
+    *handleCheckboxClick({ payload: { alertInfo } }, { select, put, call }) {
 
-      yield put({ type: 'changeCheckAlert', payload: { alertId, checked, alertInfo } });
+      yield put({ type: 'changeCheckAlert', payload: { alertInfo } });
 
-      //这里用selectedAlertIds更好
-      const { operateAlertIds, checkAlert } = yield select(state => {
-        return {
-          operateAlertIds: state.alertListTable.operateAlertIds,
-          checkAlert: state.alertListTable.checkAlert
-        }
-      });
+      const selectedAlertIds = yield select(state => state.alertListTable.selectedAlertIds)
       // 如果列表为空，或者其中有一个未接手的，disabled都为true
-      const disabled = operateAlertIds.length === 0 || operateAlertIds.some(id => {
-        return checkAlert[id].info.status === 0
+      const disabled = selectedAlertIds.length === 0 || selectedAlertIds.some(item => {
+        return item.status === 0
       })
       yield put({
         type: 'alertOperation/setButtonsDisable',
@@ -1052,7 +1046,7 @@ export default {
           selectedAlertIds: newSelectedAlertIds
         }
       });
-      const disabled = newSelectedAlertIds.length === 0 || newSelectedAlertIds.some(item => item.status === 0);
+      const disabled = newSelectedAlertIds.length === 0 || newSelectedAlertIds.some(item => parseInt(item.status) === 0);
       yield put({
         type: 'alertOperation/setButtonsDisable',
         payload: disabled

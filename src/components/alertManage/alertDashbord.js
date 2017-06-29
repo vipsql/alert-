@@ -118,6 +118,7 @@ class Chart extends Component{
     }
 
     componentWillUnmount() {
+        d3Tip.hide();
         clearInterval(this.timer)
     }
 
@@ -624,7 +625,7 @@ class Chart extends Component{
                     return false
                 })
                 .on('mouseout', (d) => {
-                    d3Tip.show(d, formatMessage({...formatMessages[this.prop.selectedStatus]}))
+                    d3Tip.show(d, formatMessage({...formatMessages[this.props.selectedStatus]}))
                     return false
                 })
             // update transition

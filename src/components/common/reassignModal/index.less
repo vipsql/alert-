@@ -1,3 +1,17 @@
-.footer{
-  text-align: center;
+.reassignModal {
+  .footer {
+    text-align: center;
+  }
+   :global(.ant-modal) {
+    top: 250px;
+     :global(.ant-modal-body) {
+      position: relative;
+      height: 164px;
+       :global(.ant-row) {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
 }

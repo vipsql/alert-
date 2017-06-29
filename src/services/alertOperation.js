@@ -94,11 +94,11 @@ export async function dispatchForm(param) {
 
 export async function close(param) {
   return request(`/incident/close`, {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(param)
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(param)
   })
   // return Promise.resolve({
   //   result: true,
@@ -120,11 +120,11 @@ export async function resolve(param) {
 
 export async function merge(param) {
   return request(`/incident/merge`, {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(param)
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(param)
   })
   // return Promise.resolve({
   //   result: true,
@@ -184,34 +184,71 @@ export async function notifyOperate(params) {
 }
 
 
-export async function takeOverService({ isSuccess, alertIds }) {
-  return new Promise((resolve, reject) => {
-    if (isSuccess) {
-      resolve({
-        result: true,
-        data: alertIds
-      });
-    } else {
-      reject({
-        result: false,
-        data: []
-      });
-    }
+export async function takeOverService({ alertIds }) {
+  return request('/incident/receive', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ incidentIds: alertIds })
   })
+  // return new Promise((resolve, reject) => {
+  //   if (isSuccess) {
+  //     resolve({
+  //       result: true,
+  //       data: alertIds
+  //     });
+  //   } else {
+  //     reject({
+  //       result: false,
+  //       data: []
+  //     });
+  //   }
+  // })
 }
 
-export async function getReassignUsers() {
-  return Promise.resolve({
-    result: true,
-    data: [
-      {
-        id: 1,
-        name: '张三'
-      },
-      {
-        id: 2,
-        name: '李四'
-      }
-    ]
+export async function getAllUsers() {
+  return request('/common/getUsers', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  // return Promise.resolve({
+  //   result: true,
+  //   data: [
+  //     {
+  //       "apiKeys": [
+  //         "e10adc394fdfa56e057f20f88dd",
+  //         "e10adc39gggadadsddddddd88dd"
+  //       ],
+  //       "email": "xulj@broada.com",
+  //       "realName": "ljtest",
+  //       "root": false,
+  //       "tenantId": "e10adc3949ba59abbe56e057f20f88dd",
+  //       "userId": "322783deed3342d79ff9123f00b72118"
+  //     },
+  //     {
+  //       "apiKeys": [
+  //         "e10adc394fdfa56e057f20f88dd",
+  //         "e10adc39gggadadsddddddd88dd"
+  //       ],
+  //       "email": "tuyg@uyunsoft.cn",
+  //       "realName": "tuyg",
+  //       "root": false,
+  //       "tenantId": "e10adc3949ba59abbe56e057f20f88dd",
+  //       "userId": "19f571b53f264ac89d9d7dd1c71499b1"
+  //     }
+  //   ]
+  // })
+}
+
+export async function reassignAlert({ toWho, incidentIds }) {
+  return request('/incident/shift', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ toWho, incidentIds })
   })
 }

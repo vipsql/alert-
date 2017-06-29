@@ -4,7 +4,7 @@ import { message } from 'antd'
 export default {
   namespace: 'alertOrigin',
   state: {
-    loading: true,
+    loading: false,
     visible: false,
     alertName: '',
     times: 0,
@@ -13,7 +13,7 @@ export default {
     sorter: { sortKey:'occurTime', sortType: 1 },
   },
   reducers: {
-    toggleLoading(state, { payload: { isRefresh }}) {
+    toggleLoading(state, { payload: { loading }}) {
       return { ...state, loading};
     },
 
@@ -21,15 +21,15 @@ export default {
       return { ...state, ...payload }
     },
 
-    toggleVisible(state, { payload: { visible } }) {
-      return { ...state, visible };
+    toggleVisible(state, { payload: { visible, alertName } }) {
+      return { ...state, visible, alertName };
     }
   },
 
   effects: {
     // 查询
     *queryAlertOrigin({payload}, {call, put, select}) {
-      put({
+      yield put({
         type: 'toggleLoading',
         payload: {
           loading: true
@@ -40,6 +40,13 @@ export default {
       payload.sorter = { ...oldAlertOrigin.sorter,  ...payload.sorter};
       const newAlertOrigin = { ...oldAlertOrigin,  ...payload}
       const response = yield queryAlertOrigin({ pagination: newAlertOrigin.pagination, sorter: newAlertOrigin.sorter, alertId: newAlertOrigin.alertId })
+      // 请求无论成功还是失败都停止“记载中”状态
+      yield put({
+        type: 'toggleLoading',
+        payload: {
+          loading: false
+        }
+      })
       if(!response.result) {
         yield message.error(window.__alert_appLocaleData.messages[response.message], 2);
         return;
@@ -50,11 +57,11 @@ export default {
         const occurTime = time.getMonth() + "/" + time.getDay() + " " + time.getHours() + ":" + time.getMinutes()
         return {...row, key: index, occurTime}}
       )
-      const newPayload = { 
+      const newPayload = {
         ...newAlertOrigin,
         pagination: {
-          pageNo: responseData.pageNo, 
-          pageSize: responseData.pageSize, 
+          pageNo: responseData.pageNo,
+          pageSize: responseData.pageSize,
           totalPage: responseData.totalPage,
           total: responseData.total,
         },
