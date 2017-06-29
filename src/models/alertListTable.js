@@ -916,7 +916,6 @@ export default {
         orderType: alertListTable.orderType,
         pageSize: alertListTable.pageSize,
         ...alertListTable.tagsFilter,
-        status: 'test'
       }
 
       const listReturnData = yield call(queryAlertList, params)
