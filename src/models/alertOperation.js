@@ -310,6 +310,7 @@ export default {
             yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
           }
           yield put({ type: 'alertListTable/resetCheckedAlert' })
+          yield put({ type: 'alertOrigin/queryAlertOrigin' })
         } else {
           yield message.error(window.__alert_appLocaleData.messages[suppressData.message], 3);
         }
