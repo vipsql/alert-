@@ -99,6 +99,7 @@ class LeaveNotifyModal extends Component {
         onCancel={ () => { this._onCancel() } }
         visible={ visible }
         footer={ [buttons] }
+        width={ 400 }
       >
         <div className={ styles.leaveNotifyModal }>
           <div className={ styles.tishiDiv }> <i className={ warnClasses }/> </div>
