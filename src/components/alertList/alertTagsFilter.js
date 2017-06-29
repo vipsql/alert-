@@ -21,7 +21,7 @@ class alertTagsFilter extends Component{
     $(window.document.body).on("click.tags", (e) => {
         const $target = $(e.target);
         const $toClose = $target.closest("div#tagsContainer");
-        
+
         if($toClose.length == 0) {
             this.setState({
               mouseEnter: false,
@@ -103,9 +103,7 @@ class alertTagsFilter extends Component{
     })
   }
 
-  changefun(e) {
-    e.stopPropagation();
-    let target = JSON.parse(e.currentTarget.getAttribute('data-id'));
+  changefun(target) {
     this.props.dispatch({
       type: 'tagListFilter/addTag',
       payload: target
@@ -139,14 +137,14 @@ class alertTagsFilter extends Component{
       const wancheng = classnames(
         'icon',
         'iconfont',
-        'icon-wancheng'
+        'icon-dui'
       )
 
       const tagsGroup = shareSelectTags.map( (item, index) => {
         return (
-          <TagsGroup 
-            key={ item.key } 
-            haveTags={typeof item.values !== 'undefined' && item.values.length !== 0 ? true : false} 
+          <TagsGroup
+            key={ item.key }
+            haveTags={typeof item.values !== 'undefined' && item.values.length !== 0 ? true : false}
             className={classnames(tagsStyles.tagsGroupMain, styles.tagsGroup)}
             setVisible={this.setVisible.bind(this, ...arguments)}
             content={ item }
@@ -165,16 +163,16 @@ class alertTagsFilter extends Component{
                   <div className={classnames(arrClass, styles.iconDiv)}></div>
                   <Animate
                       transitionName="tags"
-                      transitionEnterTimeout={300} 
+                      transitionEnterTimeout={300}
                       transitionLeaveTimeout={300}
                   >
-                    {this.state.mouseEnter && 
+                    {this.state.mouseEnter &&
                         <ul className={styles.content}>
                           {
                             tagsKeyList.map( (item) => {
                               return <li
-                                key={item.key} 
-                                data-key={JSON.stringify(item)} 
+                                key={item.key}
+                                data-key={JSON.stringify(item)}
                                 onClick={this.select.bind(this, ...arguments, dispatch)}
                               >{item.keyName}{item.checked && <i className={wancheng}></i>}</li>
                             })

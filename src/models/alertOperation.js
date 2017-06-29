@@ -950,7 +950,7 @@ export default {
     },
 
     //修改 “派单” “关闭” “解决” 三个按钮的状态
-    setButtonsDisable(state, { payload: disabled }) {
+    setButtonsDisable(state, { payload: disabled = true }) {
       return {
         ...state,
         dispatchDisabled: disabled,

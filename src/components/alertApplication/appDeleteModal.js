@@ -26,11 +26,11 @@ const appDeleteModal = ({alertConfig, dispatch}) => {
             id: 'alertApplication.modal.deleteMessage',
             defaultMessage: '您确定要删除{message}应用吗',
             values: {
-                message: Object.keys(currentDeleteApp).length !== 0 ? currentDeleteApp['applyType']['name'] : '' 
+                message: Object.keys(currentDeleteApp).length !== 0 ? currentDeleteApp['applyType']['name'] : ''
             }
         }
     })
-    
+
     const closeDeleteModal = () => {
         dispatch({
             type: 'alertConfig/toggleDeleteModal',
@@ -42,7 +42,7 @@ const appDeleteModal = ({alertConfig, dispatch}) => {
     }
 
     const modalFooter = []
-    modalFooter.push(<div key={1} className={styles.modalFooter}>
+    modalFooter.push(<div key={1} className={styles.modalFooter} key={ 1 }>
       <Button type="primary" onClick={ () => {
         dispatch({
             type: 'alertConfig/deleteApp'

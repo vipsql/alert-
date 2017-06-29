@@ -8,7 +8,7 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 const Item = Form.Item;
 const Option = Select.Option;
 const closeModal = ({currentData, onOk, onCancal, form, intl: {formatMessage}}) => {
-    
+
     const localeMessage = defineMessages({
         modal_cancel: {
             id: 'modal.cancel',
@@ -52,7 +52,7 @@ const closeModal = ({currentData, onOk, onCancal, form, intl: {formatMessage}}) 
     const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
 
     const modalFooter = []
-    modalFooter.push(<div className={styles.modalFooter}>
+    modalFooter.push(<div className={styles.modalFooter} key={ 1 }>
       <Button type="primary" onClick={ () => {
         onOk(form)
       }} ><FormattedMessage {...localeMessage['modal_close']} /></Button>
@@ -95,8 +95,8 @@ const closeModal = ({currentData, onOk, onCancal, form, intl: {formatMessage}}) 
 }
 
 closeModal.defaultProps = {
-    currentData: {}, 
-    onOk: () => {}, 
+    currentData: {},
+    onOk: () => {},
     onCancal: () => {},
 }
 

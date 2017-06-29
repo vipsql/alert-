@@ -111,7 +111,7 @@ const Regex = ({changeValue, toggle16Radix, validateRadix, saveRegex, clear, typ
           {...itemLayout}
           label={formatMessage({ ...localeMessage['regex_afterToggle'] })}
         >
-            <Input onBlur={ (e) => {
+            <Input value={hex.value} onChange={ (e) => {
               changeValue(type, e.target.value, 'value')
             }}></Input>
         </Item>
@@ -126,8 +126,17 @@ const Regex = ({changeValue, toggle16Radix, validateRadix, saveRegex, clear, typ
             }}></Input>
         </Item>
         <Button className={classnames(styles.ghostBtn, styles.btnAbsoulte)} type='ghost' onClick={ () => {
-          if (hex.value !== undefined && hex.value !== '' && hex.regex !== undefined && hex.regex !== '') {
-              validateRadix(hex.value, hex.regex)
+          switch (hex.hexType) {
+            case 2:
+              if (hex.value !== undefined && hex.value !== '' && hex.regex !== undefined && hex.regex !== '') {
+                  validateRadix(hex.value, hex.regex)
+              }
+              break;
+            default:
+              if (hex.hexValue !== undefined && hex.hexValue !== '' && hex.regex !== undefined && hex.regex !== '') {
+                  validateRadix(hex.hexValue, hex.regex)
+              }
+              break;
           }
         }}>{formatMessage({ ...localeMessage['regex_validate'] })}</Button>
       </Row>

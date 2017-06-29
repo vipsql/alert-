@@ -35,12 +35,12 @@ const dispatchModal = ({currentData, closeDispatchModal, onOk, onCancal, form, i
             defaultMessage: '请输选择工单类型'
         },
     })
-    
+
     const { isShowFormModal, formOptions } = currentData;
     const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
-    
+
     const modalFooter = []
-    modalFooter.push(<div className={styles.modalFooter}>
+    modalFooter.push(<div className={styles.modalFooter} key={ 1 }>
       <Button type="primary" onClick={ () => {
         form.validateFieldsAndScroll( (errors, values) => {
             if (!!errors) {
@@ -94,9 +94,9 @@ const dispatchModal = ({currentData, closeDispatchModal, onOk, onCancal, form, i
 }
 
 dispatchModal.defaultProps = {
-    currentData: {}, 
-    closeDispatchModal: () => {}, 
-    onOk: () => {}, 
+    currentData: {},
+    closeDispatchModal: () => {},
+    onOk: () => {},
     onCancal: () => {}
 }
 

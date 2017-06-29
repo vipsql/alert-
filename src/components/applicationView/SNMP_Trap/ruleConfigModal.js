@@ -42,7 +42,6 @@ class ruleModal extends Component {
       dataSource: 1,
       mergeKey: '',
       identifyKey: '',
-      matchProps: props.snmpTrapRules.matchProps || [],
       _fields: [],
       __groupComposeProps: [],
       __mergeProps: [],
@@ -63,7 +62,6 @@ class ruleModal extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.snmpTrapRules.operateAppRules !== this.props.snmpTrapRules.operateAppRules) {
-      //console.log(nextProps.snmpTrapRules.levelList)
       let operate = nextProps.snmpTrapRules.operateAppRules;
       this.setState({
         dataSource: operate.dataSource || 1,
@@ -74,7 +72,6 @@ class ruleModal extends Component {
         levelList: nextProps.snmpTrapRules.levelList.length !== 0 ? nextProps.snmpTrapRules.levelList : initalState.levelList,
         mergeKey: operate.mergeKey || '',
         identifyKey: operate.identifyKey || '',
-        matchProps: nextProps.snmpTrapRules.matchProps || [],
         _fields: [],
         __groupComposeProps: [],
         __mergeProps: [],
@@ -280,7 +277,8 @@ class ruleModal extends Component {
         }
         this.setState({
           matchFields: _rule.matchFields,
-          matchRegexIndex: false
+          matchRegexIndex: false,
+          matchRegex: initalState.matchRegex
         })
         break;
       case 'properties':
@@ -291,7 +289,8 @@ class ruleModal extends Component {
         }
         this.setState({
           properties: _rule.properties,
-          enrichRegexIndex: false
+          enrichRegexIndex: false,
+          propertyRegex: initalState.propertyRegex
         })
         break;
       default:
@@ -316,7 +315,7 @@ class ruleModal extends Component {
         validateRadix={ (value, regex) => {
           dispatch({
             type: 'snmpTrapRules/validateRadix',
-            payload: { type, value, regex }
+            payload: { type, value: value, regex }
           })
         }}
         saveRegex={this.regexSave.bind(this)}
@@ -599,7 +598,7 @@ class ruleModal extends Component {
     })
 
     const modalFooter = []
-    modalFooter.push(<div className={styles.modalFooter}>
+    modalFooter.push(<div className={styles.modalFooter} key={ 1 }>
       <Button type="primary" onClick={() => {
         okRule(this.state, form)
       } } ><FormattedMessage {...localeMessage['modal_ok']} /></Button>
@@ -802,7 +801,7 @@ class ruleModal extends Component {
                         data: this.state.matchFields,
                         field: 'matchProp',
                         targetIndex: index,
-                        origin: this.state.matchProps
+                        origin: this.props.snmpTrapRules.matchProps
                       }
                       let children = (
                         <Select getPopupContainer={() => document.getElementById("content")} showSearch optionFilterProp="children" notFoundContent='Not Found' filterOption={(input, option) => {
@@ -977,7 +976,7 @@ class ruleModal extends Component {
                         data: this.state.groupFieldsList,
                         field: 'field',
                         targetIndex: index,
-                        origin: this.state.matchProps
+                        origin: this.props.snmpTrapRules.matchProps
                       }
                       return (
                         <Select getPopupContainer={() => document.getElementById("content")} showSearch optionFilterProp="children" notFoundContent='Not Found' filterOption={(input, option) => {

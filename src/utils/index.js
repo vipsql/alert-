@@ -45,6 +45,32 @@ function packURL(url, params){
   return url + queryString
 }
 
+/**
+ * Return Browser type
+ */
+function browser() {
+  var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+  var isIE = -[1,];
+  if (userAgent.indexOf("Opera") > -1) {
+    return "Opera"
+  } //判断是否Opera浏览器
+  if (userAgent.indexOf("Firefox") > -1) {
+    return "Firefox";
+  } //判断是否Firefox浏览器
+  if (userAgent.indexOf("Chrome") > -1) {
+    return "Chrome";
+  }
+  if (userAgent.indexOf("Safari") > -1) {
+    return "Safari";
+  } //判断是否Safari浏览器
+  if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera) {
+    return "IE";
+  } //判断是否IE浏览器
+  if (isIE) {
+    return 'IE';
+  }
+}
+
 // 日期格式化
 Date.prototype.format = function (format) {
   var o = {
@@ -100,5 +126,6 @@ module.exports = {
   color,
   classnames,
   getUUID,
-  groupSort
+  groupSort,
+  browser
 }

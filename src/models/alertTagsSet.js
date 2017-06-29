@@ -8,8 +8,8 @@ const initialState = {
   modalVisible: false,
   commitTagIds: [], // 保存时的Ids
   tagsKeyList: [
-    // {key: 'severity', keyName: '告警等级', tagSpread: true, selectedChildren: [{id: '1', name: '3'}]}, 
-    // {key: 'status', keyName: '告警状态', tagSpread: false, selectedChildren: [{id: '2', name: '150'}]}, 
+    // {key: 'severity', keyName: '告警等级', tagSpread: true, selectedChildren: [{id: '1', name: '3'}]},
+    // {key: 'status', keyName: '告警状态', tagSpread: false, selectedChildren: [{id: '2', name: '150'}]},
     // {key: 'source', keyName: '来源', tagSpread: false, selectedChildren: [{id: '3', name: '青山湖'}]}
   ], // 打开Modal时查询所有的key
   currentSelectTags: [/*{key: 'severity', value: '3'}, {key: 'status', value: '2'}, {key: 'source', value: '青山湖'}*/], // 已经选择的标签
@@ -74,38 +74,7 @@ export default {
         console.error('query params type error')
       }
     },
-    /**
-     *  选择标签时触发
-     */
-    *addSelectedItem({payload}, {select, put, call}) {
-      const { tagsKeyList } = yield select( state => {
-        return {
-          'tagsKeyList': state.alertTagsSet.tagsKeyList
-        }
-      })
-      let newList = tagsKeyList.map( (group, index) => {
-        if (group.key === payload.field) {
-          let status = true;
-          group.selectedChildren.forEach( (child, itemIndex) => {
-            if (child.id === payload.item.id) {
-              message.error(window.__alert_appLocaleData.messages['modal.tag.repeat'], 3)
-              status = false;
-            }
-          })
-          if (status) {
-            group.selectedChildren.push({id: payload.item.id, name: payload.item.value});
-          }
-        }
-        return group
-      })
-      yield put({
-        type: 'addItem',
-        payload: newList
-      })
-    },
-    /**
-     *  保存标签 + 查询面板
-     */
+    // 保存标签 + 查询面板
     *addAlertTags ({payload}, {select, put, call}) {
       yield put({
         type: 'filterCommitTagsByTagList'
@@ -214,8 +183,29 @@ export default {
       })
       return { ...state, tagsKeyList: newList }
     },
-    addItem(state, {payload: newList}) {
-      return { ...state, tagsKeyList: newList }
+    // 改变标签选择状态
+    changeSelectedItem(state, {payload: {key, item}}) {
+      const { tagsKeyList, selectList } = state;
+      tagsKeyList.forEach( (group) => {
+        if(group.key === key) {
+          let compare = group.selectedChildren.map( i => i.name )
+          if(compare.includes(item.value)) {
+            group.selectedChildren = group.selectedChildren.filter( i => i.name !== item.value )
+          } else {
+            group.selectedChildren.push({ 'id': item.id, 'name': item.value })
+          }
+        }
+      })
+      selectList.forEach( (it) => {
+        if(it.value === item.value) {
+          if(typeof it.checked === 'undefined') {
+            it.checked = true;
+          } else {
+            delete it.checked
+          }
+        }
+      })
+      return { ...state, tagsKeyList, selectList }
     },
     setSelectList(state, {payload: {selectList, targetKey}}) {
       const { tagsKeyList } = state;
@@ -223,6 +213,13 @@ export default {
         group.tagSpread = false; // 其他key-value的可选标签都隐藏掉
         if (group.key === targetKey) {
           group.tagSpread = true;
+          group.selectedChildren.forEach( (val) => {
+            selectList.forEach( (select) => {
+              if (select.value == val.name) {
+                select.checked = true;
+              }
+            })
+          })
         }
         return group
       })

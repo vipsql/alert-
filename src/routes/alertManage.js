@@ -8,7 +8,7 @@ import AlertTagsSet from '../components/alertManage/alertTagsSet'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 
-function AlertManage({dispatch, alertManage, isFold}){
+function AlertManage({dispatch, alertManage, isFold, tagSetModalVisible}){
 
   const {
     isSetAlert,
@@ -73,7 +73,7 @@ function AlertManage({dispatch, alertManage, isFold}){
     setFullScreen(){
       dispatch({
         type: 'alertManage/setFullScreen',
-        payload: !isFullScreen 
+        payload: !isFullScreen
       })
     },
     setLayout(e){
@@ -109,9 +109,8 @@ function AlertManage({dispatch, alertManage, isFold}){
   }
 
   return (
-
     <div>
-      <AlertTagsSet  />
+      {tagSetModalVisible && <AlertTagsSet  />}
       <AlertManageHead {...alertManageHeadProps} />
       {isSetAlert ?
         <Chart {...chartProps} /> :
@@ -129,6 +128,7 @@ AlertManage.propTypes = {
 export default connect((state) => {
   return {
     alertManage: state.alertManage,
-    isFold: state.app.isFold
+    isFold: state.app.isFold,
+    tagSetModalVisible: state.alertTagsSet.modalVisible
   }
 })(AlertManage)

@@ -1,33 +1,49 @@
 import React, { PropTypes, Component } from 'react'
+import { findDOMNode } from 'react-dom';
 import styles from './index.less'
 import { Modal, Button, Form, Select, Row, Col, Input, Table, Popover, Radio} from 'antd';
+import Animate from 'rc-animate'
+import KeyCode from 'rc-util/lib/KeyCode';
 import { classnames } from '../../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import DOMWrap from './Domwrap.js'
 
 const Item = Form.Item;
 class TagsQuery extends Component{
 
     constructor(props) {
-        super(props)
+        super(props);
+        this.timer = null;
+    }
+
+    contentLeave(tagGroup) {
+      this.props.mouseLeave(JSON.stringify({field: tagGroup.key}))
+      this.refs[`input_${tagGroup.key}`].blur();
+    }
+
+    selectHandler(tagGroup, e) {
+      e.stopPropagation();
+      let target = JSON.parse(e.currentTarget.getAttribute('data-id'));
+      this.props.changeHandler({
+        key: tagGroup.key,
+        item: target
+      })
+      this.refs[`input_${tagGroup.key}`]['value'] = '';
     }
 
     render() {
 
-        const { 
-            form, 
-            origin, 
-            tagsKeyList, 
-            selectList, 
-            closeOneItem, 
-            closeAllItem, 
-            mouseLeave, 
-            deleteItemByKeyboard, 
-            queryTagValues, 
-            addItem,
+        const {
+            form,
+            tagsKeyList,
+            selectList,
+            closeOneItem,
+            closeAllItem,
+            deleteItemByKeyboard,
+            queryTagValues,
             intl: {formatMessage}
         } = this.props;
 
-        let timer = null;
         const removeClass = classnames(
             'icon',
             'iconfont',
@@ -53,14 +69,14 @@ class TagsQuery extends Component{
                 return name
             }
         }
-        
+
         return (
             <div className={styles.tags_container}>
                 <Form>
                     {
                         tagsKeyList.length > 0 ? tagsKeyList.map( (tagGroup, index) => {
                             return (
-                                <Item 
+                                <Item
                                     {...itemLayout}
                                     key={index}
                                     label={tagGroup.keyName}
@@ -73,9 +89,9 @@ class TagsQuery extends Component{
                                                         <li key={itemIndex}>
                                                             <span className={styles.tags_tag}>
                                                                 {renderName(tagGroup.key, child.name)}
-                                                                <i 
-                                                                    className={classnames(removeClass, styles.tags_remove)} 
-                                                                    data-id={origin === 'set' ? JSON.stringify({field: tagGroup.key, id: child.id}) : JSON.stringify({field: tagGroup.key, name: child.name})} 
+                                                                <i
+                                                                    className={classnames(removeClass, styles.tags_remove)}
+                                                                    data-id={JSON.stringify({field: tagGroup.key, id: child.id})}
                                                                     onClick={(e) => { closeOneItem(e) }}>
                                                                 </i>
                                                             </span>
@@ -87,51 +103,52 @@ class TagsQuery extends Component{
                                                 <div className={styles.tags_input}>
                                                     <input ref={`input_${tagGroup.key}`} type={'text'} placeholder={formatMessage(localeMessage['placeholder'], {name: `${tagGroup.keyName}`})} onChange={ (e) => {
                                                         e.persist();
-                                                        clearTimeout(timer)
-                                                        
-                                                        timer = setTimeout( () => {
+                                                        clearTimeout(this.timer)
+
+                                                        this.timer = setTimeout( () => {
                                                             queryTagValues(tagGroup.key, e.target.value)
                                                         }, 500)
-                                                    }} onKeyDown={ (e) => {
-                                                        if (e.keyCode === 8 && e.target.value == '') {
+                                                    }} onKeyDown={ (event) => {
+                                                        if (event.keyCode === KeyCode.BACKSPACE && event.target.value == '') {
                                                             deleteItemByKeyboard(JSON.stringify({field: tagGroup.key}))
                                                         }
                                                     }} onFocus={ () => { queryTagValues(tagGroup.key, '') }}/>
-                                                    
+
                                                 </div>
                                             </li>
                                             {
                                                 tagGroup.selectedChildren.length > 0 ?
-                                                <i 
-                                                    className={classnames(removeClass, styles.tags_removeAll)} 
-                                                    data-id={JSON.stringify({field: tagGroup.key})} 
+                                                <i
+                                                    className={classnames(removeClass, styles.tags_removeAll)}
+                                                    data-id={JSON.stringify({field: tagGroup.key})}
                                                     onClick={(e) => { closeAllItem(e) }}></i>
                                                 :
                                                 undefined
                                             }
                                         </ul>
+                                        <Animate
+                                            transitionName="tags"
+                                            transitionEnterTimeout={300}
+                                            transitionLeaveTimeout={300}
+                                        >
                                         {
                                             tagGroup.tagSpread ?
-                                            <ul className={styles.tags_query_content} onMouseLeave={ () => {
-                                                mouseLeave(JSON.stringify({field: tagGroup.key}))
-                                                this.refs[`input_${tagGroup.key}`].blur();
-                                            }}>
-                                                {
-                                                    selectList.length > 0 ? selectList.map( (item, itemIndex) => {
-                                                        return (
-                                                            <li key={itemIndex} className={styles.tags_query_item} data-id={JSON.stringify({field: tagGroup.key, item: item})} onClick={ (e) => {
-                                                                addItem(e)
-                                                                this.refs[`input_${tagGroup.key}`]['value'] = '';
-                                                            }}>
-                                                                {renderName(item.key, item.value)}
-                                                            </li>
-                                                        )
-                                                    }): <li className={styles.tags_query_item}>Not Found</li>
-                                                }
-                                            </ul>
+                                            <DOMWrap
+                                              tag='ul'
+                                              onMouseLeave={this.contentLeave.bind(this, tagGroup)}
+                                              selectList={this.props.selectList}
+                                              selectHandler={this.selectHandler.bind(this, tagGroup)}
+                                              onkeyEnter={(item) => {
+                                                this.props.changeHandler({
+                                                  key: tagGroup['key'],
+                                                  item: item
+                                                })
+                                              }}
+                                            />
                                             :
                                             undefined
-                                        }    
+                                        }
+                                        </Animate>
                                     </div>
                                 </Item>
                             )
@@ -145,7 +162,7 @@ class TagsQuery extends Component{
 }
 
 TagsQuery.defaultProps = {
-    
+
 }
 
 TagsQuery.propTypes = {

@@ -201,6 +201,7 @@
   "alertDetail.action.t120": "接手",
   "alertDetail.action.t130": "派发工单",
   "alertDetail.action.t150": "派发cross工单",
+  "alertDetall.action.t170": "解决",
   "alertDetail.action.t250": "关闭",
 
   "alertConfig.integrations": "第三方应用集成",

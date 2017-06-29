@@ -35,12 +35,12 @@ const chatOpsModal = ({currentData, closeChatOpsModal, onOk, onCancal, form, int
             defaultMessage: '请选择群组'
         },
     })
-    
+
     const { isShowChatOpsModal, chatOpsRooms } = currentData;
     const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
-    
+
     const modalFooter = []
-    modalFooter.push(<div className={styles.modalFooter}>
+    modalFooter.push(<div className={styles.modalFooter} key={ 1 }>
       <Button type="primary" onClick={ () => {
         form.validateFieldsAndScroll( (errors, values) => {
             if (!!errors) {
@@ -94,9 +94,9 @@ const chatOpsModal = ({currentData, closeChatOpsModal, onOk, onCancal, form, int
 }
 
 chatOpsModal.defaultProps = {
-    currentData: {}, 
-    closeChatOpsModal: () => {}, 
-    onOk: () => {}, 
+    currentData: {},
+    closeChatOpsModal: () => {},
+    onOk: () => {},
     onCancal: () => {}
 }
 

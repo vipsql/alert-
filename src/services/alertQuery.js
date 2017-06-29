@@ -48,7 +48,7 @@ export async function queryCloumns() {
 }
 
 export async function queryAlertOrigin({ pagination: {pageNo, pageSize} = {}, sorter: {sortKey, sortType} = {}, alertId }) {
-    return request(`/alert/query/` + alertId, {
+    return request(`/alert/queryOriginalAlert/` + alertId, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

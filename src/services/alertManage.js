@@ -3,7 +3,7 @@ let i = 10;
 
 export async function queryDashbord(parmas) {
 
-    return request(`/incident/getLastOneHourIncidentData`, {
+    return request(`/treeMap/getData`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

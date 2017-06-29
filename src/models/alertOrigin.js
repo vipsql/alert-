@@ -40,7 +40,6 @@ export default {
       payload.sorter = { ...oldAlertOrigin.sorter,  ...payload.sorter};
       const newAlertOrigin = { ...oldAlertOrigin,  ...payload}
       const response = yield queryAlertOrigin({ pagination: newAlertOrigin.pagination, sorter: newAlertOrigin.sorter, alertId: newAlertOrigin.alertId })
-      console.log(response, "response");
       // 请求无论成功还是失败都停止“记载中”状态
       yield put({
         type: 'toggleLoading',
@@ -58,11 +57,11 @@ export default {
         const occurTime = time.getMonth() + "/" + time.getDay() + " " + time.getHours() + ":" + time.getMinutes()
         return {...row, key: index, occurTime}}
       )
-      const newPayload = { 
+      const newPayload = {
         ...newAlertOrigin,
         pagination: {
-          pageNo: responseData.pageNo, 
-          pageSize: responseData.pageSize, 
+          pageNo: responseData.pageNo,
+          pageSize: responseData.pageSize,
           totalPage: responseData.totalPage,
           total: responseData.total,
         },

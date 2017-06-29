@@ -25,7 +25,7 @@ const relieveModal = ({alertOperation, dispatch}) => {
                 name: relieveAlert.name
             }
         },
-        
+
     })
 
     const closeRelieveModal = () => {
@@ -36,7 +36,7 @@ const relieveModal = ({alertOperation, dispatch}) => {
     }
 
     const modalFooter = []
-    modalFooter.push(<div className={styles.modalFooter}>
+    modalFooter.push(<div className={styles.modalFooter} key={ 1 }>
       <Button type="primary" onClick={ () => {
         dispatch({
             type: 'alertOperation/relieveAlert'

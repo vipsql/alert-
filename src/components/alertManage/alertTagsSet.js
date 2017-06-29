@@ -37,7 +37,6 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
     }
 
     const tagsQueryProps = {
-      origin: 'set',
       tagsKeyList,
       selectList,
       closeOneItem: (e) => {
@@ -79,19 +78,16 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
           }
         })
       },
-      addItem: (e) => {
-        e.stopPropagation();
-
-        let tagrget = JSON.parse(e.target.getAttribute('data-id'));
+      changeHandler: (target) => {
         dispatch({
-          type: 'alertTagsSet/addSelectedItem',
-          payload: tagrget
+          type: 'alertTagsSet/changeSelectedItem',
+          payload: target
         })
       }
     }
 
     const modalFooter = []
-    modalFooter.push(<div key={'0'} className={styles.modalFooter}>
+    modalFooter.push(<div key={'0'} className={styles.modalFooter} key={ 1 }>
       <Button type="primary" onClick={ () => {
         dispatch({
           type: 'alertTagsSet/addAlertTags'
