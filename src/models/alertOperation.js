@@ -623,7 +623,7 @@ export default {
       })
       if (payload.origin === 'detail') {
         yield put({ type: 'alertDetailOperation/toggleResolveModal', payload: payload.state })
-        debugger
+        // debugger
       } else {
         if (operateAlertIds.length === 0) {
           yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
@@ -641,7 +641,7 @@ export default {
       })
       if (operateAlertIds !== undefined) {
         let stingIds = operateAlertIds.map(item => '' + item)
-        debugger
+        // debugger
         const resultData = yield resolve({
           incidentIds: stingIds,
           resolveMessage: payload
