@@ -306,6 +306,10 @@ class alertDetail extends Component {
                     id: 'alertDetail.action.t150',
                     defaultMessage: '派发cross工单'
                 },
+                170: {
+                    id: 'alertDetail.action.t170',
+                    defaultMessage: '解决'
+                },
                 250: {
                     id: 'alertDetail.action.t250',
                     defaultMessage: '关闭'
@@ -498,6 +502,14 @@ class alertDetail extends Component {
                                                     )
                                                     :
                                                     ''
+                                                }
+                                                {
+                                                    log.attributes && log.attributes['old_value'] && log.attributes['new_value']?
+                                                    <p>
+                                                        <span>{ window._status[log.attributes['old_value']] }&nbsp;:&nbsp;->&nbsp;:&nbsp;{log.attributes['new_value']}</span>
+                                                    </p>
+                                                    :
+                                                    undefined
                                                 }
                                                 {
                                                     log.attributes && log.attributes['message']?
