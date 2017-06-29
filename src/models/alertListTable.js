@@ -917,7 +917,7 @@ export default {
         ...alertListTable.tagsFilter,
         status: 'test'
       }
-
+      
       const listReturnData = yield call(queryAlertList, params)
 
       if (listReturnData.result) {

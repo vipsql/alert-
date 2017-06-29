@@ -37,7 +37,6 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
     }
 
     const tagsQueryProps = {
-      origin: 'set',
       tagsKeyList,
       selectList,
       closeOneItem: (e) => {
@@ -79,13 +78,10 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
           }
         })
       },
-      addItem: (e) => {
-        e.stopPropagation();
-
-        let tagrget = JSON.parse(e.target.getAttribute('data-id'));
+      changeHandler: (target) => {
         dispatch({
-          type: 'alertTagsSet/addSelectedItem',
-          payload: tagrget
+          type: 'alertTagsSet/changeSelectedItem',
+          payload: target
         })
       }
     }

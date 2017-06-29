@@ -6,8 +6,8 @@ import { message } from 'antd'
 const initalState = {
     filteredTags: {},
     tagsKeyList: [
-      // {key: 'severity', keyName: '告警等级', tagSpread: true, selectedChildren: [{ name: '3'}]}, 
-      // {key: 'status', keyName: '告警状态', tagSpread: false, selectedChildren: [{ name: '150'}]}, 
+      // {key: 'severity', keyName: '告警等级', tagSpread: true, selectedChildren: [{ name: '3'}]},
+      // {key: 'status', keyName: '告警状态', tagSpread: false, selectedChildren: [{ name: '150'}]},
       // {key: 'source', keyName: '来源', tagSpread: false, selectedChildren: [{name: '青山湖'}]}
     ], // modal中的数据集合
     selectList: [/*{id: '11', key: 'aa', value: '标签1'}, {id: '21', key: 'aa', value: '标签2'}, {id: '31', key: 'aa', value: '标签3'}*/], // 模糊查询所匹配的内容
@@ -82,21 +82,23 @@ export default {
         yield put({ type: 'alertList/queryAlertBar', payload: {...filteredTags, selectedTime: payload} })
         yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
         yield put({ type: 'alertManage/setSelectedTime', payload: payload})
+        yield put({ type: 'alertOperation/setButtonsDisable'})
       }
     },
     // 状态过滤
     *selectStatus({payload}, {select, put, call}) {
       if (payload !== undefined) {
-        let status = payload === 'NEW' 
+        let status = payload === 'NEW'
                       ? '0' : payload === 'PROGRESSING'
                           ? '150' : payload === 'RESOLVED'
-                              ? '190' : payload === 'EXCEPTCLOSE' 
+                              ? '190' : payload === 'EXCEPTCLOSE'
                                 ? '0,40,150,190' : undefined;
         yield put({ type: 'setStatus', payload: status})
         const filteredTags = yield select( state => state.tagListFilter.filteredTags )
         yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
         yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
         yield put({ type: 'alertManage/setSelectedStatus', payload: payload})
+        yield put({ type: 'alertOperation/setButtonsDisable'})
       }
     },
     // 查询标签对应的值
@@ -128,6 +130,7 @@ export default {
       const filteredTags = yield select( state => state.tagListFilter.filteredTags )
       yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
       yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
+      yield put({ type: 'alertOperation/setButtonsDisable'})
     },
     *removeTag({payload}, {select, put, call}) {
       yield put({ type: 'removeSelectTag', payload: payload })
@@ -135,6 +138,7 @@ export default {
       const filteredTags = yield select( state => state.tagListFilter.filteredTags )
       yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
       yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
+      yield put({ type: 'alertOperation/setButtonsDisable'})
     },
     //自动刷新
     *refresh({payload}, {select, put, call}) {
@@ -268,7 +272,7 @@ export default {
     },
     // 在查询values时和已选择内容做匹配
     setSelectList(state, {payload: {selectList, targetKey}}) {
-      const { tagsKeyList, shareSelectTags } = state;
+      const { shareSelectTags } = state;
       let newList = shareSelectTags.map( (tag, index) => {
         tag.visible = false;
         if (tag.key === targetKey) {

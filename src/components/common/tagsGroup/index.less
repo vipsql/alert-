@@ -25,7 +25,7 @@
         color: #fff;
         padding: 3px;
     }
-    div{
+    .mark{
         position: relative;
         display: inline-block;
         margin: 3px;
@@ -41,7 +41,6 @@
         border-radius: 3px;
         vertical-align: top;
         padding: 3px;
-
         p{
             position: relative;
             bottom: 2px;
@@ -66,58 +65,91 @@
         }
         .tags-leave.tags-leave-active {
             opacity: 0;
-            transition: opacity .3s ease-in-out; 
+            transition: opacity .3s ease-in-out;
         }
     }
-    ul.tags-content{
-        max-height: 200px;
-        overflow: scroll;
+    .tagsContent{
         position: absolute;
         left: 0;
-        top: e("calc(100% + 6px)");
-        margin-top: 2px;
-        padding: 5px 0;
-        width: 100%;
-        background: #095a95;
-        border: 1px solid #2bb4f4;
-        border-radius: 2px;
-        box-shadow: 1px 1px 3px 1px rgba(0,0,0,.1);
+        top: 100%;
         z-index: 15;
-        li{
-            input{
-                height: 20px;
-                width: 100%;
-                background: transparent;
-                border: transparent;
-                border-radius: 2px;
-                color: #96d0f9;
-                outline: none;
-                &::-webkit-input-placeholder{
-                    color: #9dd7ff;
-                }
-                &::-ms-input-placeholder{
-                    color: #9dd7ff;
-                }
-                &::-moz-placeholder{
-                    color: #5994d6
-                }
-            }
-            position: relative;
-            cursor: pointer;
-            background: #095a95;
+        width: 100%;
+        .query{
+          position: relative;
+          margin-top: 8px;
+          background: #095a95;
+          padding: 5px 5px 5px 5px;
+          border: 1px solid #2bb4f4;
+          border-top-left-radius: 2px;
+          border-top-right-radius: 2px;
+          border-bottom: none;
+          .sousuo{
+            position: absolute;
+            top: 12px;
+            left: 10px;
+            color: #9dd6ff;
+            font-size: 16px;
+            line-height: 1;
+            width: 16px;
+          }
+          input{
+            height: 28px;
+            width: 100%;
+            padding-left: 22px;
+            padding-right: 5px;
+            background: #1c77b8;
+            border: 1px solid #2bb4f4;
+
             color: #fff;
-            padding: 5px 10px;
-            transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-            &:hover{
-                background: #3092d9
+            outline: none;
+            &::-webkit-input-placeholder{
+                color: #fff;
             }
-            i{
-                position: absolute;
-                top: 10px;
-                right: 20px;
-                font-size: 16px;
-                line-height: 1;
+            &::-ms-input-placeholder{
+                color: #fff;
             }
+            &::-moz-placeholder{
+                color: #fff;
+            }
+          }
+        }
+        ul{
+          max-height: 200px;
+          overflow: scroll;
+          background: #095a95;
+          border: 1px solid #2bb4f4;
+          border-top: none;
+          border-bottom-left-radius: 2px;
+          border-bottom-right-radius: 2px;
+          box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.1);
+          li{
+              position: relative;
+              cursor: pointer;
+              background: #095a95;
+              color: #96d0f9;
+              padding: 8px 10px;
+              white-space: nowrap;
+              transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+              p{
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+              &.active{
+                  background-color: #3092d9;
+                  color: #fff;
+              }
+              &:hover{
+                  background-color: #3092d9;
+                  color: #fff;
+              }
+              i{
+                  position: absolute;
+                  top: 10px;
+                  right: 10px;
+                  font-size: 16px;
+                  line-height: 1;
+              }
+          }
         }
     }
 }
