@@ -49,7 +49,7 @@ class SuppressTimeSlider extends Component {
         })
 
         const modalFooter = []
-        modalFooter.push(<div key={1} className={styles.modalFooter}>
+        modalFooter.push(<div key={1} className={styles.modalFooter} key={ 1 }>
         <Button type="primary" onClick={ () => {
             let mins = this.state.time * 60
             onOk(mins)

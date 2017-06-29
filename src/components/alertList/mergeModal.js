@@ -53,7 +53,7 @@ const mergeModal = ({alertOperation, dispatch}) => {
     })
 
     const { isShowMergeModal, mergeInfoList, originAlert } = alertOperation;
-    
+
     const closeMergeModal = () => {
         dispatch({
             type: 'alertOperation/toggleMergeModal',
@@ -62,11 +62,11 @@ const mergeModal = ({alertOperation, dispatch}) => {
     }
 
     const modalFooter = []
-    modalFooter.push(<div className={styles.modalFooter}>
+    modalFooter.push(<div className={styles.modalFooter} key={ 1 }>
       <Button type="primary" disabled={
-        originAlert !== undefined 
-          && originAlert.length == 0 
-            || (mergeInfoList !== undefined 
+        originAlert !== undefined
+          && originAlert.length == 0
+            || (mergeInfoList !== undefined
                 && mergeInfoList.length < 2)
                     ? true : false } onClick={ () => {
         dispatch({
@@ -114,7 +114,7 @@ const mergeModal = ({alertOperation, dispatch}) => {
                             key: 'icon',
                             dataIndex: 'severity',
                             render: (text, record, index) => {
-                                return <LevelIcon key={index} iconType={text} /> 
+                                return <LevelIcon key={index} iconType={text} />
                             }
                         },
                         {
