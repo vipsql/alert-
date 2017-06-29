@@ -5,6 +5,8 @@ import { classnames } from '../../../utils'
 import Animate from 'rc-animate'
 import KeyCode from 'rc-util/lib/KeyCode';
 import scrollIntoView from 'dom-scroll-into-view';
+import DOMWrap from './Domwrap.js'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import $ from 'jquery'
 
 class tagsGroup extends Component{
@@ -49,8 +51,8 @@ class tagsGroup extends Component{
             default:
               break;
           }
-          if (this.refs[`menu_${currentIndex}`]) {
-            scrollIntoView(this.refs[`menu_${currentIndex}`], findDOMNode(this.content), {
+          if (this.refs.domWrap.getInnerMenu(currentIndex)) {
+            scrollIntoView(this.refs.domWrap.getInnerMenu(currentIndex), findDOMNode(this.refs.domWrap), {
               onlyScrollIfNeeded: true,
             })
           }
@@ -106,12 +108,7 @@ class tagsGroup extends Component{
         }
     }
 
-    renderQueryContent(content) {
-        const wancheng = classnames(
-            'icon',
-            'iconfont',
-            'icon-dui'
-        )
+    renderQueryContent(content, formatMessage, localeMessage) {
         const sousuo = classnames(
             'icon',
             'iconfont',
@@ -121,35 +118,51 @@ class tagsGroup extends Component{
           <div className={styles.tagsContent} ref={node => this.containerNode = node} >
             <div className={styles.query}>
               <i className={classnames(sousuo, styles.sousuo)} />
-              <input ref={node => this.inputNode = node} type='text' placeholder={'请输入关键字搜索'} onChange={ (e) => {
+              <input ref={node => this.inputNode = node} type='text' placeholder={formatMessage(localeMessage['keyword'])} onChange={ (e) => {
                   e.persist();
                   clearTimeout(this.timer)
-
                   this.timer = setTimeout( () => {
                       this.props.queryTagValues(content.key, e.target.value)
                   }, 500)
-              }} onFocus={ () => {this.props.queryTagValues(content.key, '') }} />
+              }} onFocus={ (e) => {
+                e.stopPropagation();
+                this.props.queryTagValues(content.key, '')
+              }} />
             </div>
-            <ul ref={content => this.content = content} >
-                {
-                    this.props.selectList.length > 0 ? this.props.selectList.map( (item, index) => {
-                        return (
-                          <li className={this.state.currentIndex === index && styles.active} ref={`menu_${index}`} key={item.id} data-id={JSON.stringify({field: content.key, item: item})} onClick={ (e) => {
-                              e.stopPropagation();
-                              let target = JSON.parse(e.currentTarget.getAttribute('data-id'));
-                              this.props.changeHandler(target)
-                              this.inputNode.value = '';
-                          }}>{this.renderName(item.key, item.value)}{item.checked && <i className={wancheng}></i>}</li>
-                        )
-                    }) : <li>Not Found</li>
-                }
-            </ul>
+            <DOMWrap
+              tag='ul'
+              ref='domWrap'
+              selectList={this.props.selectList}
+              currentIndex={this.state.currentIndex}
+              changeHandler={(target) => {
+                this.props.changeHandler({
+                  field: content.key,
+                  item: target
+                })
+                this.inputNode.value = '';
+              }}
+              loadMore={ () => {
+                this.props.loadMore(content.key, this.inputNode.value)
+              }}
+            />
           </div>
         )
     }
 
     render() {
-        let {className, removeHandler, content, haveTags} = this.props;
+        let {className, removeHandler, content, haveTags, intl: {formatMessage}} = this.props;
+
+        const localeMessage = defineMessages({
+          placeholder: {
+              id: 'modal.tag.select',
+              defaultMessage: '请选择{name}'
+          },
+          keyword: {
+              id: 'modal.tag.keywords',
+              defaultMessage: '请输入关键字搜索'
+          }
+        })
+
         const switchClass = classnames(
             'icon',
             'iconfont',
@@ -176,18 +189,18 @@ class tagsGroup extends Component{
                     transitionName="tags"
                     transitionLeaveTimeout={300}
                 >
-                {content.visible && this.renderQueryContent(content)}
+                {content.visible && this.renderQueryContent(content, formatMessage, localeMessage)}
                 </Animate>
             </div>
             :
             <div className={className} onClick={this.visible.bind(this, ...arguments, content)}>
                 <p className={styles.typeName}>{`${ content.keyName }:`}</p>
-                <span className={styles.placeholder}>请选择{`${content.keyName}`}</span>
+                <span className={styles.placeholder}>{formatMessage(localeMessage['placeholder'], {name: `${content.keyName}`})}</span>
                 <Animate
                     transitionName="tags"
                     transitionLeaveTimeout={300}
                 >
-                {content.visible && this.renderQueryContent(content)}
+                {content.visible && this.renderQueryContent(content, formatMessage, localeMessage)}
                 </Animate>
             </div>
         )
@@ -209,4 +222,4 @@ tagsGroup.propTypes = {
     setVisible: React.PropTypes.func.isRequired
 }
 
-export default tagsGroup
+export default injectIntl(tagsGroup);

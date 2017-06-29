@@ -83,6 +83,15 @@ const AlertSetModal = ({dispatch, alertTagsSet}) => {
           type: 'alertTagsSet/changeSelectedItem',
           payload: target
         })
+      },
+      loadMore: (key, message) => {
+        dispatch({
+          type: 'alertTagsSet/loadMore',
+          payload: {
+            key: key,
+            value: message
+          }
+        })
       }
     }
 

@@ -13,7 +13,10 @@ const initialState = {
     // {key: 'source', keyName: '来源', tagSpread: false, selectedChildren: [{id: '3', name: '青山湖'}]}
   ], // 打开Modal时查询所有的key
   currentSelectTags: [/*{key: 'severity', value: '3'}, {key: 'status', value: '2'}, {key: 'source', value: '青山湖'}*/], // 已经选择的标签
-  selectList: [/*{id: '11', key: 'aa', value: '标签1'}, {id: '21', key: 'aa', value: '标签2'}, {id: '31', key: 'aa', value: '标签3'}*/] // 模糊查询所匹配的内容
+  selectList: [/*{id: '11', key: 'aa', value: '标签1'}, {id: '21', key: 'aa', value: '标签2'}, {id: '31', key: 'aa', value: '标签3'}*/], // 模糊查询所匹配的内容
+  currentPage: 1, // 当前页
+  pageSize: 10 // 条数
+
 }
 
 export default {
@@ -58,8 +61,13 @@ export default {
      *  查询标签对应的values
      */
     *queryTagValues({payload}, {select, put, call}) {
+      const pageSize = yield select( state => state.alertTagsSet.pageSize );
       if (payload !== undefined && payload.key !== undefined && payload.value !== undefined) {
-        const tagValues = yield call(getTagValues, payload);
+        const tagValues = yield call(getTagValues, {
+          ...payload,
+          currentPage: 1,
+          pageSize
+        });
         if (!tagValues.result) {
           yield message.error(window.__alert_appLocaleData.messages[tagValues.message], 2);
         }
@@ -67,7 +75,38 @@ export default {
           type: 'setSelectList',
           payload: {
             selectList: tagValues.result ? tagValues.data : [],
-            targetKey: payload.key
+            targetKey: payload.key,
+            currentPage: 1
+          }
+        })
+      } else {
+        console.error('query params type error')
+      }
+    },
+    // loadMore，滚动时加载更多
+    *loadMore({payload}, {select, put, call}) {
+      let { currentPage, pageSize } = yield select( state => {
+        return {
+          'currentPage': state.alertTagsSet.currentPage,
+          'pageSize': state.alertTagsSet.pageSize
+        }
+      });
+      currentPage = currentPage + 1;
+      if (payload !== undefined && payload.key !== undefined && payload.value !== undefined) {
+        const tagValues = yield call(getTagValues, {
+          ...payload,
+          currentPage,
+          pageSize
+        });
+        if (!tagValues.result) {
+          yield message.error(window.__alert_appLocaleData.messages[tagValues.message], 2);
+        }
+        yield put({
+          type: 'loadMoreSelectList',
+          payload: {
+            selectList: tagValues.result ? tagValues.data : [],
+            targetKey: payload.key,
+            currentPage
           }
         })
       } else {
@@ -207,7 +246,26 @@ export default {
       })
       return { ...state, tagsKeyList, selectList }
     },
-    setSelectList(state, {payload: {selectList, targetKey}}) {
+    loadMoreSelectList(state, {payload: {selectList, targetKey, currentPage}}) {
+      let { tagsKeyList, selectList: prevList } = state;
+      let newList = tagsKeyList.map( (group, index) => {
+        group.tagSpread = false; // 其他key-value的可选标签都隐藏掉
+        if (group.key === targetKey) {
+          group.tagSpread = true;
+          group.selectedChildren.forEach( (val) => {
+            selectList.forEach( (select) => {
+              if (select.value == val.name) {
+                select.checked = true;
+              }
+            })
+          })
+        }
+        return group
+      })
+      prevList.push(...selectList)
+      return { ...state, tagsKeyList: newList, selectList: prevList, currentPage }
+    },
+    setSelectList(state, {payload: {selectList, targetKey, currentPage}}) {
       const { tagsKeyList } = state;
       let newList = tagsKeyList.map( (group, index) => {
         group.tagSpread = false; // 其他key-value的可选标签都隐藏掉
@@ -223,7 +281,7 @@ export default {
         }
         return group
       })
-      return { ...state, tagsKeyList: newList, selectList }
+      return { ...state, tagsKeyList: newList, selectList, currentPage }
     },
     toggleTagsModal(state, { payload: modalVisible }){
       return { ...state, modalVisible }

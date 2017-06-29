@@ -118,6 +118,15 @@ class alertTagsFilter extends Component{
       payload: target
     })
   }
+  loadMore(key, message) {
+    this.props.dispatch({
+      type: 'tagListFilter/loadMore',
+      payload: {
+        key: key,
+        value: message
+      }
+    })
+  }
 
   render() {
       const {dispatch, tagListFilter} = this.props
@@ -152,6 +161,7 @@ class alertTagsFilter extends Component{
             removeHandler={this.removefun.bind(this)}
             queryTagValues={this.queryTagValues.bind(this, ...arguments)}
             selectList={selectList}
+            loadMore={this.loadMore.bind(this)}
           />
         )
       })
