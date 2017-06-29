@@ -137,15 +137,15 @@ export default {
       if (hex && hex.hexType && hex.hexValue) {
         const type = hex.type
         const toggleData = yield call(get16Data, {
-          hexType: hex.hexType,
-          hexValue: hex.hexValue
+          hexType: '16',
+          value: hex.hexValue
         })
         if (toggleData.result) {
           yield put({
             type: 'set16ToString',
             payload: {
               type: type,
-              data: toggleData.data
+              data: toggleData.data.data
             }
           })
         } else {
@@ -167,7 +167,7 @@ export default {
             type: 'setValidateResult',
             payload: {
               type: type,
-              data: validateData.data
+              data: validateData.data.data
             }
           })
         } else {

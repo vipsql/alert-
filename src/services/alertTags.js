@@ -2,7 +2,7 @@ import { request, packURL } from '../utils'
 import {stringify} from 'qs'
 
 export async function isSetUserTags() {
-    return request(`/incident/tags/isSet`, {
+    return request(`/treeMap/tags/isSet`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -15,7 +15,7 @@ export async function isSetUserTags() {
 }
 
 export async function getTagsByUser() {
-    return request(`/incident/tags/chosen`, {
+    return request(`/treeMap/tags/chosen`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -24,7 +24,7 @@ export async function getTagsByUser() {
 }
 
 export async function setUserTags(tagObject) {
-    return request(`/incident/tags`, {
+    return request(`/treeMap/tags`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export async function setUserTags(tagObject) {
 
 // 查询所有的Tags的Key
 export async function getAllTagsKey() {
-    return request(`/incident/tags/allKeys`, {
+    return request(`/treeMap/tags/allKeys`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ export async function getAllTagsKey() {
 }
 
 export async function getTagValues(param) {
-    return request(`/incident/tags/getTagValues?${stringify(param)}`, {
+    return request(`/treeMap/tags/getTagValues?${stringify(param)}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
