@@ -236,105 +236,121 @@ class Chart extends Component{
                     const node = this.chart.select("#" + childNode.id);
                     currentNode[0][0].__data__.trueVal = childNode.trueVal;
                     currentNode[0][0].__data__.noData = childNode.trueVal == 0;
+                    childNode.isInAction = true;
                     node.data(childNode);
                     const svg = d3.select("#" + childNode.id).select("svg");
-                    svg
+                    let isInAction = false;
+                    const labelTransition = svg
                     .select("text.label")
                     .transition()
-                    .duration(500)
-                    .style("opacity", "0")
-                    .transition()
-                    .delay(2000)
-                    .transition()
-                    .duration(500)
-                    .style("opacity", "1")
+                    .each("start", function(d) {
+                      if(d.isInAction) {
+                        isInAction = true
+                      } else {
+                        d.isInAction = true;
+                      }
+                    });
 
-                    const text = svg
-                    .append("text")
-                    .attr("class", "tipLabel")
-                    .attr('x', function(d) {
-                        if(d.kx) {
-                            return d.kx * d.dx / 2;
-                        } else {
-                            return d.dx / 2;
-                        }
-                    })
-                    .attr("dy", ".35em")
-                    .attr("fill", "#04203e")
-                    .attr("font-size", "13")
-                    .attr("text-anchor", "middle")
-                    .text((oldNode.trueVal > childNode.trueVal?('-' + (oldNode.trueVal - childNode.trueVal)):'+' + (childNode.trueVal - oldNode.trueVal)))
-                    .style("color", "red")
-                    .attr('font-size', function(d) {
-                        const self = d3.select(this);
-                        const originFontSize = self.attr("font-size");
-                        const originStyle = document.defaultView.getComputedStyle(self.node())
-                        const textLength = self.node().getComputedTextLength();
-                        const fontSizeTimesDx = d.dx / textLength;
-                        const fontSizeTimesDy = d.dy / originStyle.lineHeight;
-                        let targetFontSize = 13 * (fontSizeTimesDx > fontSizeTimesDy?fontSizeTimesDy:fontSizeTimesDx) * 0.8;
+                    if(!isInAction) {
+                      labelTransition
+                      .duration(500)
+                      .style("opacity", "0")
+                      .transition()
+                      .delay(2000)
+                      .transition()
+                      .duration(500)
+                      .style("opacity", "1")
+                      .each("end", function(d) {
+                        d.isInAction = false;
+                      })
 
-                        if(targetFontSize > 30) {
-                            targetFontSize = 30
-                        }
-                        return targetFontSize;
-                    })
+                      const text = svg
+                      .append("text")
+                      .attr("class", "tipLabel")
+                      .attr('x', function(d) {
+                          if(d.kx) {
+                              return d.kx * d.dx / 2;
+                          } else {
+                              return d.dx / 2;
+                          }
+                      })
+                      .attr("dy", ".35em")
+                      .attr("fill", "#04203e")
+                      .attr("font-size", "13")
+                      .attr("text-anchor", "middle")
+                      .text((oldNode.trueVal > childNode.trueVal?('-' + (oldNode.trueVal - childNode.trueVal)):'+' + (childNode.trueVal - oldNode.trueVal)))
+                      .style("color", "red")
+                      .attr('font-size', function(d) {
+                          const self = d3.select(this);
+                          const originFontSize = self.attr("font-size");
+                          const originStyle = document.defaultView.getComputedStyle(self.node())
+                          const textLength = self.node().getComputedTextLength();
+                          const fontSizeTimesDx = d.dx / textLength;
+                          const fontSizeTimesDy = d.dy / originStyle.lineHeight;
+                          let targetFontSize = 13 * (fontSizeTimesDx > fontSizeTimesDy?fontSizeTimesDy:fontSizeTimesDx) * 0.8;
 
-                    // 若告警数减少则数字从上往下移动，否则从下往上移动
-                    if(oldNode.trueVal < childNode.trueVal) {
-                        text
-                        .attr('y', function(d) {
-                            if(d.ky) {
-                                return d.ky * d.dy;
-                            } else {
-                                return d.dy;
-                            }
-                        })
-                        .transition()
-                        .duration(1000)
-                        .attr('y', function(d) {
-                            if(d.ky) {
-                                return d.ky * d.dy / 2
-                            } else {
-                                return d.dy / 2;
-                            }
-                        })
-                        .transition()
-                        .duration(1000)
-                        .attr('y', function(d) {
-                            return -10;
-                        })
-                    } else {
-                        text
-                        .attr('y', function(d) {
-                            return 0;
-                        })
-                        .transition()
-                        .duration(1000)
-                        .attr('y', function(d) {
-                            if(d.ky) {
-                                return d.ky * d.dy / 2
-                            } else {
-                                return d.dy / 2;
-                            }
-                        })
-                        .transition()
-                        .duration(1000)
-                        .attr('y', function(d) {
-                            if(d.ky) {
-                                return d.ky * d.dy + 10
-                            } else {
-                                return d.dy + 10;
-                            }
-                        })
+                          if(targetFontSize > 30) {
+                              targetFontSize = 30
+                          }
+                          return targetFontSize;
+                      })
+
+                      // 若告警数减少则数字从上往下移动，否则从下往上移动
+                      if(oldNode.trueVal < childNode.trueVal) {
+                          text
+                          .attr('y', function(d) {
+                              if(d.ky) {
+                                  return d.ky * d.dy;
+                              } else {
+                                  return d.dy;
+                              }
+                          })
+                          .transition()
+                          .duration(1000)
+                          .attr('y', function(d) {
+                              if(d.ky) {
+                                  return d.ky * d.dy / 2
+                              } else {
+                                  return d.dy / 2;
+                              }
+                          })
+                          .transition()
+                          .duration(1000)
+                          .attr('y', function(d) {
+                              return -10;
+                          })
+                      } else {
+                          text
+                          .attr('y', function(d) {
+                              return 0;
+                          })
+                          .transition()
+                          .duration(1000)
+                          .attr('y', function(d) {
+                              if(d.ky) {
+                                  return d.ky * d.dy / 2
+                              } else {
+                                  return d.dy / 2;
+                              }
+                          })
+                          .transition()
+                          .duration(1000)
+                          .attr('y', function(d) {
+                              if(d.ky) {
+                                  return d.ky * d.dy + 10
+                              } else {
+                                  return d.dy + 10;
+                              }
+                          })
+                      }
+
+                      text
+                      .transition()
+                      .delay(2000)
+                      .style("display", "none")
+                      .text((d) => this._wrap(d))
+                      .remove();
                     }
-
-                    text
-                    .transition()
-                    .delay(2000)
-                    .style("display", "none")
-                    .text((d) => this._wrap(d))
-                    .remove();
                 }
             })
         })
@@ -537,6 +553,12 @@ class Chart extends Component{
                 })
                 .on("contextmenu", (d, e) => {
                     const parentD = node === d.parent ? root : d.parent;
+                    // 如果该节点已处于动画当中，则不执行此次动画
+                    if(d.isInAction) {
+                      currentEvent.preventDefault();
+                      return;
+                    }
+                    d.isInAction = true;
                     zoom.call(this, node === d.parent ? root : d.parent, d.parent)
                     // this._textTransition("#" + parentNode.id + " > .child");
                     if(parentD.parent) {
@@ -689,6 +711,8 @@ class Chart extends Component{
 
         function zoom(d, cellD) {
 
+            d.isInAction = true;
+
             this.treemap
                 .padding([headerHeight / (this.chartHeight / d.dy), 0, 0, 0])
                 .nodes(d);
@@ -733,6 +757,7 @@ class Chart extends Component{
                 })
                 .each("end", (d, i) => {
                    if (!i && (level !== self.root)) {
+                        d.isInAction = false;
                         const tempNode = d3.select("#" + d.id);
                         parentD.children.forEach((childD) => {
                             d3.select("#" + childD.id).select('.label').text((d) => this._wrap(d));
