@@ -7,16 +7,6 @@ export async function queryAlertDashbord () {
   })
 }
 
-export async function login(userName) {
-  
-  return request(`/incident/getUserId/${userName}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  })
-}
-
 export async function getUserInformation() {
   return request(`/dataService/getUserInfo`, {
       method: 'GET',
