@@ -32,7 +32,7 @@ const trapDeleteModal = ({snmpTrapRules, onOk, onCancel, dispatch}) => {
     })
 
     const modalFooter = []
-    modalFooter.push(<div key={1} className={styles.modalFooter}>
+    modalFooter.push(<div key={1} className={styles.modalFooter} key={ 1 }>
       <Button type="primary" onClick={ () => {
         onOk()
       }} ><FormattedMessage {...localeMessage['delete']} /></Button>

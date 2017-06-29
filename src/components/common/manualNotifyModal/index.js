@@ -104,7 +104,7 @@ class notifyModal extends Component {
         const {isShowNotifyModal, notifyIncident, notifyUsers, onOk, onCancel, intl: {formatMessage}} = this.props;
         const { email, sms, chatops, recipients } = this.state;
 
-        const checkedState = { 
+        const checkedState = {
             email, sms, chatops
         };
         const localeMessage = defineMessages({
@@ -123,7 +123,7 @@ class notifyModal extends Component {
         })
 
         const modalFooter = []
-        modalFooter.push(<div className={styles.modalFooter}>
+        modalFooter.push(<div className={styles.modalFooter} key={ 1 }>
         <Button type="primary" onClick={ () => {
             let data = {
                 actionNotification: this.state.actionNotification
@@ -159,7 +159,7 @@ class notifyModal extends Component {
 }
 
 notifyModal.defaultProps = {
-    
+
 }
 
 notifyModal.propTypes = {

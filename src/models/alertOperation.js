@@ -143,18 +143,18 @@ export default {
         incidentIds: operateAlertIds
       })
       if (response.result) {
-        const { success, failed } = response.data;
+        const { success, failed, lang } = response.data;
         if (Array.isArray(success) && success.length > 0) {
           yield put({ type: 'alertListTable/resetCheckboxStatus' })
           yield put({ type: 'alertListTable/queryAlertList' })
-          const successMsg = success.map(item => `${item.name}: ${item.msg}`).join('\n');
+          const successMsg = success.map(item => `${item.name}: ${item['msg_' + lang]}`).join('\n');
           message.success(successMsg, 3);
           yield put({
             type: 'toggleReassignModal',
             payload: false
           });
         } else if (Array.isArray(failed) && failed.length > 0) {
-          const failedMsg = failed.map(item => `${item.name}: ${item.msg}`).join('\n');
+          const failedMsg = failed.map(item => `${item.name}: ${item['msg_' + lang]}`).join('\n');
           message.error(failedMsg, 3);
         }
       } else {
@@ -310,6 +310,7 @@ export default {
             yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
           }
           yield put({ type: 'alertListTable/resetCheckedAlert' })
+          yield put({ type: 'alertOrigin/queryAlertOrigin' })
         } else {
           yield message.error(window.__alert_appLocaleData.messages[suppressData.message], 3);
         }
@@ -785,17 +786,17 @@ export default {
         const response = yield call(takeOverService, { alertIds });
         const stingIds = alertIds.map(item => '' + item)
         if (response.result) {
-          const { success, failed } = response.data;
+          const { success, failed, lang } = response.data;
           if (Array.isArray(success) && success.length > 0) {
             //这里一定要先删除告警，再删除checkAlert，因为在渲染table的时候用到了checkAlert
             // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
             // yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
             yield put({ type: 'alertListTable/resetCheckboxStatus' })
             yield put({ type: 'alertListTable/queryAlertList' })
-            const successMsg = success.map(item => `${item.name}: ${item.msg}`).join('\n');
+            const successMsg = success.map(item => `${item.name}: ${item['msg_' + lang]}`).join('\n');
             message.success(successMsg, 3);
           } else if (Array.isArray(failed) && failed.length > 0) {
-            const failedMsg = failed.map(item => `${item.name}: ${item.msg}`).join('\n');
+            const failedMsg = failed.map(item => `${item.name}: ${item['msg_' + lang]}`).join('\n');
             message.error(failedMsg, 3);
           }
         } else {

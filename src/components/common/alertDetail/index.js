@@ -24,9 +24,10 @@ class alertDetail extends Component {
       const $target = $(e.target);
       const $toCloseSlider = $target.closest("div#alertDetailSlider");
       const $toCloseModal = $target.closest(".ant-modal-wrap ");
+      const $toCloseLi = $target.closest("li");
 
       // 如果点击的组件补上下拉框选项或者不在弹出框上或者不在右侧滑动栏上，则隐藏右侧滑动栏
-      if ($target.attr("role") != 'menuitem' && $toCloseSlider.length == 0 && $toCloseModal.length == 0) {
+      if ($target.attr("role") != 'menuitem' && $toCloseLi.attr("role") != 'menuitem' && $toCloseSlider.length == 0 && $toCloseModal.length == 0) {
         this.props.closeDeatilModal();
       }
     })
@@ -269,6 +270,14 @@ class alertDetail extends Component {
         id: 'modal.roomName',
         defaultMessage: '群组名称'
       },
+      suppressionMessage: {
+        id: 'alertDetail.suppressionMessage',
+        defaultMessage: '抑制{ minutes }分钟'
+      },
+      reassignMessage: {
+        id: 'alertDetail.reassignMessage',
+        defaultMessage: '转派给'
+      },
       operateType: {
         10: {
           id: 'alertDetail.action.t10',
@@ -309,6 +318,18 @@ class alertDetail extends Component {
         170: {
           id: 'alertDetail.action.t170',
           defaultMessage: '解决'
+        },
+        200: {
+          id: 'alertDetail.action.t200',
+          defaultMessage: '接手'
+        },
+        210: {
+          id: 'alertDetail.action.t210',
+          defaultMessage: '转派'
+        },
+        220: {
+          id: 'alertDetail.action.t220',
+          defaultMessage: '抑制'
         },
         250: {
           id: 'alertDetail.action.t250',
@@ -445,13 +466,14 @@ class alertDetail extends Component {
                             isShowOperateDate = true;
                           } else {
                             const nextDate = new Date(incidentLog[index + 1].operateTime);
-                            isShowOperateDate = (date.getMonth() != nextDate.getMonth() || date.getDay() != nextDate.getDay());
+                            isShowOperateDate = (date.getMonth() != nextDate.getMonth() || date.getDate() != nextDate.getDate());
                           }
+                          console.log(log.operatorName);
                           return (
                             <Timeline.Item key={log.incidentId + '' + index} color={index == 0 ? 'green' : 'blue'}>
                               <div className={classnames(styles.timeLineLabel)}>
                                 {
-                                  (isShowOperateDate ? (date.getMonth() + "/" + date.getDay() + ' ') : '') + date.getHours() + ":" + date.getMinutes()
+                                  (isShowOperateDate ? ((date.getMonth() + 1) + "/" + date.getDate() + ' ') : '') + date.getHours() + ":" + date.getMinutes()
                                 }
                               </div>
                               <p>
@@ -510,6 +532,26 @@ class alertDetail extends Component {
                                   </p>
                                   :
                                   undefined
+                              }
+                              {
+                                log.attributes && log.attributes['toUser'] ?
+                                  (
+                                    <p>
+                                      <span>{formatMessage({ ...localeMessage['reassignMessage'] })}&nbsp;:&nbsp;{log.attributes['toUser']}</span>
+                                    </p>
+                                  )
+                                  :
+                                  ''
+                              }
+                              {
+                                log.attributes && log.attributes['suppressionTime'] ?
+                                  (
+                                    <p>
+                                      <span><FormattedMessage { ...localeMessage['suppressionMessage'] } values={{ minutes: log.attributes['suppressionTime'] }}/></span>
+                                    </p>
+                                  )
+                                  :
+                                  ''
                               }
                               {
                                 log.attributes && log.attributes['message'] ?

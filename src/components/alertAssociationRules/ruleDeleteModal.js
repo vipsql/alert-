@@ -26,11 +26,11 @@ const ruleDeleteModal = ({alertAssociationRules, dispatch}) => {
             id: 'modal.rule.deleteMessage',
             defaultMessage: '您确定要删除{message}规则吗',
             values: {
-                message: Object.keys(currentDeleteRule).length !== 0 ? currentDeleteRule['name'] : '' 
+                message: Object.keys(currentDeleteRule).length !== 0 ? currentDeleteRule['name'] : ''
             }
         }
     })
-    
+
     const closeDeleteModal = () => {
         dispatch({
             type: 'alertAssociationRules/toggleDeleteModal',
@@ -42,7 +42,7 @@ const ruleDeleteModal = ({alertAssociationRules, dispatch}) => {
     }
 
     const modalFooter = []
-    modalFooter.push(<div key={1} className={styles.modalFooter}>
+    modalFooter.push(<div key={1} className={styles.modalFooter} key={ 1 }>
       <Button type="primary" onClick={ () => {
         dispatch({
             type: 'alertAssociationRules/deleteRule'

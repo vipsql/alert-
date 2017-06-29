@@ -598,7 +598,7 @@ class ruleModal extends Component {
     })
 
     const modalFooter = []
-    modalFooter.push(<div className={styles.modalFooter}>
+    modalFooter.push(<div className={styles.modalFooter} key={ 1 }>
       <Button type="primary" onClick={() => {
         okRule(this.state, form)
       } } ><FormattedMessage {...localeMessage['modal_ok']} /></Button>

@@ -203,7 +203,12 @@
   "alertDetail.action.t130": "派发工单",
   "alertDetail.action.t150": "派发cross工单",
   "alertDetall.action.t170": "解决",
+  "alertDetail.action.t200": "接手",
+  "alertDetail.action.t210": "转派",
+  "alertDetail.action.t220": "抑制",
   "alertDetail.action.t250": "关闭",
+  "alertDetail.suppressionMessage": "抑制{ minutes }分钟",
+  "alertDetail.reassignMessage": "转派给",
 
   "alertConfig.integrations": "第三方应用集成",
   "alertConfig.integrations.message": "接入第三方应用，如网络、服务器和应用监控工具、帮助台和客户支持、聊天协同等应用",
