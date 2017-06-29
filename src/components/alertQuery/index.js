@@ -31,7 +31,7 @@ class alertQueryManage extends Component{
       window.addEventListener('message', (e) => {
         if(e.data.creatTicket !== undefined && e.data.creatTicket === 'success') {
           dispatch({
-            type: 'alertQueryDetail/afterDispatch', 
+            type: 'alertQueryDetail/afterDispatch',
           })
         }
       }, false)
@@ -41,7 +41,7 @@ class alertQueryManage extends Component{
       const {dispatch, form, alertQuery, alertQueryDetail, alertOrigin, intl: {formatMessage}} = this.props;
 
       const { haveQuery, sourceOptions, propertyOptions, ownerOptions, queryCount, isShowBar } = alertQuery;
-      
+
       const { selectGroup, columnList, extendColumnList, extendTagsKey, } = alertQueryDetail
 
       const { getFieldDecorator, getFieldsValue } = form;
@@ -62,7 +62,7 @@ class alertQueryManage extends Component{
           'iconfont',
           'icon-bushu'
       )
-      
+
       const shanchuClass = classnames(
         'iconfont',
         'icon-shanchux'
@@ -132,10 +132,10 @@ class alertQueryManage extends Component{
       const currentAlertDetail = alertQueryDetail['currentAlertDetail'] || {};
       const alertDeatilProps = {
         extraProps: {
-          currentAlertDetail: alertQueryDetail.currentAlertDetail, 
-          isShowOperateForm: alertQueryDetail.isShowOperateForm, 
-          operateForm: alertQueryDetail.operateForm, 
-          isShowRemark: alertQueryDetail.isShowRemark, 
+          currentAlertDetail: alertQueryDetail.currentAlertDetail,
+          isShowOperateForm: alertQueryDetail.isShowOperateForm,
+          operateForm: alertQueryDetail.operateForm,
+          isShowRemark: alertQueryDetail.isShowRemark,
           operateRemark: alertQueryDetail.operateRemark,
           ciUrl: alertQueryDetail.ciUrl,
           isLoading: alertQueryDetail.isLoading
@@ -223,7 +223,7 @@ class alertQueryManage extends Component{
                   return;
               }
               const formData = form.getFieldsValue()
-              
+
               dispatch({
                   type: 'alertQueryDetail/closeAlert',
                   payload: formData.closeMessage
@@ -250,7 +250,7 @@ class alertQueryManage extends Component{
                   return;
               }
               const formData = form.getFieldsValue()
-              
+
               dispatch({
                   type: 'alertQueryDetail/resolveAlert',
                   payload: formData.resolveMessage
@@ -380,7 +380,7 @@ class alertQueryManage extends Component{
         }
       }
 
-      const alertOriginSliderProps = { 
+      const alertOriginSliderProps = {
         intl: {formatMessage},
         onClose: () => {
           dispatch({
@@ -619,7 +619,7 @@ class alertQueryManage extends Component{
 
       const onOk = (e, form) => {
         e.preventDefault();
-        
+
         form.validateFieldsAndScroll( (errors, values) => {
             if (!!errors) {
                 return;
@@ -629,7 +629,7 @@ class alertQueryManage extends Component{
             let keyWords = JSON.parse(formData.keyWordsType);
             formData.keyName = keyWords.keyName;
             formData.keyWordsType = keyWords.keyWordsType;
-            
+
             if (formData.dateTime !== undefined && formData.dateTime.length !== 0) {
               //   开始时间统一处理为当前日期的0点时间戳
               const _begin = formData.dateTime[0].toDate()
@@ -645,7 +645,7 @@ class alertQueryManage extends Component{
 
               formData.begin = _begin.getTime()
               formData.end = _end.getTime();
-              
+
               delete formData.dateTime
             }
 
@@ -664,7 +664,7 @@ class alertQueryManage extends Component{
 
               formData.lastBegin = _begin.getTime()
               formData.lastEnd = _end.getTime();
-              
+
               delete formData.lastOccurTime
             }
 
@@ -672,17 +672,17 @@ class alertQueryManage extends Component{
             if(formData.dateTime && formData.dateTime.length == 0){
               delete formData.dateTime
             }
-            
-            
+
+
             dispatch({
               type: 'alertQuery/queryBefore',
               payload: formData
             })
-            
+
         })
       }
 
-      
+
       return (
           <div>
             <div className={ classnames(styles.searchBar, isShowBar?'':styles.hideBar) }>
@@ -713,7 +713,7 @@ class alertQueryManage extends Component{
                       label={<FormattedMessage {...localeMessage['severity']} />}
                     >
                       {getFieldDecorator('severity', {
-                        
+
                       })(
                           <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['severity_placeholder']})}>
                             <Option value="3">{window['_severity']['3']}</Option>
@@ -731,9 +731,9 @@ class alertQueryManage extends Component{
                       wrapperCol={{span: 14}}
                     >
                       {getFieldDecorator('dateTime', {
-                        
+
                       })(
-                          <RangePicker />
+                          <RangePicker showTime />
                       )}
                     </Item>
                   </Col>
@@ -746,9 +746,9 @@ class alertQueryManage extends Component{
                       wrapperCol={{span: 14}}
                     >
                       {getFieldDecorator('lastOccurTime', {
-                        
+
                       })(
-                          <RangePicker />
+                          <RangePicker showTime />
                       )}
                     </Item>
                   </Col>
@@ -776,7 +776,7 @@ class alertQueryManage extends Component{
                       label={<FormattedMessage {...localeMessage['duration']} />}
                     >
                       {getFieldDecorator('duration', {
-                        
+
                       })(
                           <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['duration_placeholder']})}>
                             <Option value="1">{`< 15 min`}</Option>
@@ -796,7 +796,7 @@ class alertQueryManage extends Component{
                       label={<FormattedMessage {...localeMessage['count']} />}
                     >
                       {getFieldDecorator('count', {
-                        
+
                       })(
                           <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['count_placeholder']})}>
                             <Option value="1">{`> 5`}</Option>
@@ -813,7 +813,7 @@ class alertQueryManage extends Component{
                       label={<FormattedMessage {...localeMessage['notifyList']} />}
                     >
                       {getFieldDecorator('isNotify', {
-                        
+
                       })(
                           <Select getPopupContainer={() =>document.getElementById("content")} placeholder={formatMessage({...localeMessage['notifyList_placeholder']})}>
                             <Option value='true'>{formatMessage({...localeMessage['notifyList_yes']})}</Option>
@@ -846,7 +846,7 @@ class alertQueryManage extends Component{
                       {...formItemLayout}
                       wrapperCol={{span: 10}}
                       label={<FormattedMessage {...localeMessage['keyWords']} />}
-                    > 
+                    >
                       {getFieldDecorator('keyWordsType', {
                         initialValue: JSON.stringify({'keyWordsType': '1'})
                       })(
@@ -864,14 +864,14 @@ class alertQueryManage extends Component{
                             }) : []
                           }
                         </Select>
-                      )}    
+                      )}
                     </Item>
                     <Item
                       wrapperCol={{span: 8, offset: 10}}
                       className={ styles.keywordArea }
                     >
                       {getFieldDecorator('keyWords', {
-                        
+
                       })(
                         <Input placeholder={formatMessage({...localeMessage['keyWords_placeholder']})} />
                       )}
@@ -887,7 +887,7 @@ class alertQueryManage extends Component{
             <div>
               <div className={styles.queryOperate}>
                 <div className={styles.count}>
-                  <FormattedMessage {...localeMessage['result']} 
+                  <FormattedMessage {...localeMessage['result']}
                     values= {{
                       total: queryCount.total !== undefined ?'' + queryCount.total : 0,
                       critical: queryCount.critical !== undefined ?'' +  queryCount.critical : 0,
@@ -896,7 +896,7 @@ class alertQueryManage extends Component{
                       ok: queryCount.ok !== undefined ?'' +  queryCount.ok : 0
                     }}
                   />
-                  
+
                 </div>
                 <div className={styles.groupMain}>
                     <Select getPopupContainer={() =>document.getElementById("content")} className={classnames(styles.setGroup, styles.selectSingle)} placeholder={formatMessage({...localeMessage['groupBy']})} value={selectGroup} onChange={ (value) => {
@@ -945,7 +945,7 @@ class alertQueryManage extends Component{
             }
             <div className={ticketModalProps.isShowTicketModal ?  classnames(styles.ticketModal, styles.show) : styles.ticketModal }>
               <div className={styles.detailHead}>
-                  <p><FormattedMessage {...localeMessage['assign_ticket']}/></p> 
+                  <p><FormattedMessage {...localeMessage['assign_ticket']}/></p>
                   <i className={classnames(styles.shanChu, shanchuClass)} onClick={ticketModalProps.onCloseTicketModal}></i>
               </div>
               <iframe src={ticketModalProps.ticketUrl}>
