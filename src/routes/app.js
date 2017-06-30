@@ -7,15 +7,15 @@ import { Spin } from 'antd'
 import { classnames } from '../utils'
 import '../components/layout/common.less'
 
-function App ({children, location, dispatch, app, isNeedContent, temp}) {
-  const {isShowMask, isFold} = app
+function App({ children, location, dispatch, app, isNeedContent, temp }) {
+  const { isShowMask, isFold } = app
   // params.isNeedContent确定需不需要content这个容器
-  const {params} = children && children.props || {};
+  const { params } = children && children.props || {};
 
   const LeftMenuProps = {
     isFold,
     location,
-    handleFoldMenu(){
+    handleFoldMenu() {
       dispatch({
         type: 'app/handleFoldMenu'
       })
@@ -29,21 +29,27 @@ function App ({children, location, dispatch, app, isNeedContent, temp}) {
         type: 'alertListTable/updateResize',
         payload: !isFold
       })
-      dispatch({
-        type: 'alertManage/queryAlertDashbord'
-      })
+      if (location.pathname === '/alertManage' || location.pathname === '/') {
+        dispatch({
+          type: 'alertManage/queryAlertDashbord',
+          payload: {
+            isNeedRepaint: true
+          }
+        })
+      }
+
     }
   }
 
   return (
     <div>
       {isShowMask && <div className={styles.layer}></div>}
-      <div className={classnames(styles.layout,!isFold ? '' : styles.fold)}>
+      <div className={classnames(styles.layout, !isFold ? '' : styles.fold)}>
         <LeftMenu {...LeftMenuProps} />
         <div className={styles.main}>
           <Bread location={location} />
           <div className={styles.container}>
-            <div className={params && params.isNeedContent === false?styles.no_content:styles.content} id="content">
+            <div className={params && params.isNeedContent === false ? styles.no_content : styles.content} id="content">
               {children}
             </div>
           </div>
@@ -60,4 +66,4 @@ App.propTypes = {
   isFold: PropTypes.bool
 }
 
-export default connect(({app}) => ({app}))(App)
+export default connect(({ app }) => ({ app }))(App)
