@@ -407,6 +407,7 @@ class AlertListManage extends Component {
           type: alertOperateModalOrigin === 'detail' ? "alertDetailOperation/toggleRemindModal" : "alertOperation/toggleRemindModal",
           payload: false
         })
+        alertOperateModalOrigin === 'detail' && dispatch({type: 'alertDetail/openDetailModal'})
       }
     }
 
@@ -481,7 +482,7 @@ class AlertListManage extends Component {
       }
     }
 
-    const alertOriginSliderProps = { 
+    const alertOriginSliderProps = {
       intl: {formatMessage},
       onClose: () => {
         dispatch({

@@ -400,6 +400,7 @@ class alertQueryManage extends Component {
           type: "alertQueryDetail/toggleRemindModal",
           payload: false
         })
+        dispatch({type: 'alertQueryDetail/openDetailModal'})
       }
     }
 
