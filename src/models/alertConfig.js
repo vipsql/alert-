@@ -1,5 +1,4 @@
 import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery, add, update, view, getTrapUrl} from '../services/alertConfig'
-import { getUserInformation } from '../services/app'
 import {parse} from 'qs'
 import { message } from 'antd'
 import pathToRegexp from 'path-to-regexp';
@@ -89,14 +88,13 @@ export default {
   effects: {
     // 通过modal进入详情页
     *addApplicationView({payload}, {select, put, call}) {
+      const app = yield select(state => state.app)
+      const local = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
       if (payload !== undefined) {
-        const infoResult = yield getUserInformation()
-        if (infoResult.result) {
-          yield put({
-            type: 'setApiKeys',
-            payload: infoResult.data.apiKeys[0] || undefined
-          })
-        }
+        yield put({
+          type: 'setApiKeys',
+          payload: app.userInfo.apiKeys[0] || local.apiKeys[0] || undefined
+        })
         yield put({ type: 'initalAddAppView', payload: {isShowTypeModal: false, appTypeId: payload, UUID: undefined}}) // isShowTypeModal -> false, currentOperateAppType -> Object
         const { currentOperateAppType } = yield select( state => {
           return {
@@ -122,20 +120,19 @@ export default {
     },
     // 通过编辑进入详情页
     *editApplicationView({payload}, {select, put, call}) {
+      const app = yield select(state => state.app)
+      const local = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
       if (payload !== undefined) {
         const viewResult = yield call(view, payload)
-        const infoResult = yield getUserInformation()
         if (viewResult.result) {
           yield put({
             type: 'setCurrent',
             payload: viewResult.data || {}
           })
-          if (infoResult.result) {
-            yield put({
-              type: 'setApiKeys',
-              payload: infoResult.data.apiKeys[0] || undefined
-            })
-          }
+          yield put({
+            type: 'setApiKeys',
+            payload: app.userInfo.apiKeys[0] || local.apiKeys[0] || undefined
+          })
           if (viewResult.data.applyType !== undefined) {
             switch(viewResult.data.applyType.name) {
               case 'SNMPTrap':

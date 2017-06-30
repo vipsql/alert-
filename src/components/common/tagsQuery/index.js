@@ -31,6 +31,10 @@ class TagsQuery extends Component{
       this.refs[`input_${tagGroup.key}`]['value'] = '';
     }
 
+    loadMore(tagGroup) {
+      this.props.loadMore(tagGroup.key, this.refs[`input_${tagGroup.key}`]['value'])
+    }
+
     render() {
 
         const {
@@ -138,6 +142,7 @@ class TagsQuery extends Component{
                                               onMouseLeave={this.contentLeave.bind(this, tagGroup)}
                                               selectList={this.props.selectList}
                                               selectHandler={this.selectHandler.bind(this, tagGroup)}
+                                              loadMore={this.loadMore.bind(this, tagGroup)}
                                               onkeyEnter={(item) => {
                                                 this.props.changeHandler({
                                                   key: tagGroup['key'],

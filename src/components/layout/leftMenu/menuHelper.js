@@ -10,18 +10,13 @@ const formatMessages = defineMessages({
       id: 'leftMenu.set',
       defaultMessage: '设置',
     },
-    set:{
-      id: 'leftMenu.set',
-      defaultMessage: '设置',
-    },
-    
     help: {
       id: 'lefeMenu.help',
       defaultMessage: '帮助',
     }
 })
 
-const createMenus = (menus, isFold) => {
+const createMenus = (menus, isFold, isRoot) => {
   return menus.map(item => {
     const path = '/';
     const iconName = `icon-${item.icon}`
@@ -33,7 +28,7 @@ const createMenus = (menus, isFold) => {
     )
 
     return (
-      <Menu.Item key={item.key}>
+      isRoot && <Menu.Item key={item.key}>
         <Link to={path + item.key}>
           <i className={className}></i>
 
@@ -44,7 +39,7 @@ const createMenus = (menus, isFold) => {
   })
 }
 
-function FoldBar({ isFold, handleFoldMenu, handleClickNavMenu, className }){
+function FoldBar({ isFold, handleFoldMenu, handleClickNavMenu, isRoot, className }){
   // const handleFoldMenu = () => {
   //   const isExpand = isFold ? true : fasle
   //   handleFoldMenu(isExpand)
@@ -66,7 +61,7 @@ function FoldBar({ isFold, handleFoldMenu, handleClickNavMenu, className }){
     'icon-bangzhu'
   )
 
-  const menuItems = createMenus(bottomMenus, isFold);
+  const menuItems = createMenus(bottomMenus, isFold, isRoot);
   const pathname = location.pathname;
   const hash = location.hash;
   const selectedMenus = bottomMenus.filter((singleMenu) => pathname.indexOf(singleMenu.key) >= 0 || hash.indexOf(singleMenu.key) > 0);
@@ -86,7 +81,7 @@ function FoldBar({ isFold, handleFoldMenu, handleClickNavMenu, className }){
         defaultSelectedKeys={[location.pathname.split('/')[location.pathname.split('/').length - 1] || 'alertManage']}>
         {menuItems}
       </Menu>
-      
+
       {/*<div className={styles.menuHelp}><a href="#alertHelp"><i className={helpClass}></i>{!isFold ? <FormattedMessage {...formatMessages['help']} /> : ''}</a></div>*/}
     </div>
   )

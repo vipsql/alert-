@@ -102,7 +102,7 @@ const SNMP_Trap = (props) => {
             && snmpTrapRules.operateAppRules.level !== undefined
                 && Object.keys(snmpTrapRules.operateAppRules.level).length !== 0
                     && Object.keys(snmpTrapRules.operateAppRules.level).forEach( (trap, index) => {
-                        levelList.push({ 'severity': snmpTrapRules.operateAppRules.level[trap], 'trap': trap })
+                        levelList.push({ 'severity': String(snmpTrapRules.operateAppRules.level[trap]), 'trap': trap })
                     })
 
     const ruleModalProps = {
