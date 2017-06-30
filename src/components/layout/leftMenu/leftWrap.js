@@ -4,7 +4,7 @@ import styles from '../main.less'
 import Menus from './menu'
 import FoldBar from './menuHelper'
 
-function LeftWrap ({isFold, handleFoldMenu, location}) {
+function LeftWrap ({isFold, handleFoldMenu, isRoot, location}) {
   // menu props
   const menuProps = {
     isFold,
@@ -15,7 +15,8 @@ function LeftWrap ({isFold, handleFoldMenu, location}) {
   const foldBarProps = {
     isFold,
     handleFoldMenu,
-    location
+    location,
+    isRoot
   }
 
   return (
@@ -25,4 +26,8 @@ function LeftWrap ({isFold, handleFoldMenu, location}) {
     </div>
   )
 }
-export default connect()(LeftWrap)
+export default connect( state => {
+  return {
+    isRoot: state.app.userInfo.root
+  }
+})(LeftWrap)

@@ -1,6 +1,6 @@
 import {parse} from 'qs'
 import pathToRegexp from 'path-to-regexp';
-import { getAllTagsKey, getTagValues} from '../services/alertListTags.js'
+import { getAllTagsKey, getTagValues} from '../services/alertTags.js'
 import { message } from 'antd'
 
 const initalState = {
@@ -13,7 +13,9 @@ const initalState = {
     selectList: [/*{id: '11', key: 'aa', value: '标签1'}, {id: '21', key: 'aa', value: '标签2'}, {id: '31', key: 'aa', value: '标签3'}*/], // 模糊查询所匹配的内容
     shareSelectTags: [
       //{key: 'severity', keyName: '告警等级', values: [3,2,1,0]}
-    ]
+    ],
+    currentPage: 1, // 当前页
+    pageSize: 10 // 条数
 }
 
 export default {
@@ -103,8 +105,13 @@ export default {
     },
     // 查询标签对应的值
     *queryTagValues({payload}, {select, put, call}) {
+      const pageSize = yield select( state => state.tagListFilter.pageSize );
       if (payload !== undefined && payload.key !== undefined && payload.value !== undefined) {
-        const tagValues = yield call(getTagValues, payload);
+        const tagValues = yield call(getTagValues, {
+          ...payload,
+          currentPage: 1,
+          pageSize
+        });
         if (!tagValues.result) {
           yield message.error(window.__alert_appLocaleData.messages[tagValues.message], 2);
         }
@@ -116,7 +123,38 @@ export default {
           type: 'setSelectList',
           payload: {
             selectList: tags,
-            targetKey: payload.key
+            targetKey: payload.key,
+            currentPage: 1
+          }
+        })
+      } else {
+        console.error('query params type error')
+      }
+    },
+    // loadMore，滚动时加载更多
+    *loadMore({payload}, {select, put, call}) {
+      let { currentPage, pageSize } = yield select( state => {
+        return {
+          'currentPage': state.tagListFilter.currentPage,
+          'pageSize': state.tagListFilter.pageSize
+        }
+      });
+      currentPage = currentPage + 1;
+      if (payload !== undefined && payload.key !== undefined && payload.value !== undefined) {
+        const tagValues = yield call(getTagValues, {
+          ...payload,
+          currentPage,
+          pageSize
+        });
+        if (!tagValues.result) {
+          yield message.error(window.__alert_appLocaleData.messages[tagValues.message], 2);
+        }
+        yield put({
+          type: 'loadMoreSelectList',
+          payload: {
+            selectList: tagValues.result ? tagValues.data : [],
+            targetKey: payload.key,
+            currentPage
           }
         })
       } else {
@@ -271,7 +309,7 @@ export default {
       return { ...state, shareSelectTags: newList, selectList }
     },
     // 在查询values时和已选择内容做匹配
-    setSelectList(state, {payload: {selectList, targetKey}}) {
+    setSelectList(state, {payload: {selectList, targetKey, currentPage}}) {
       const { shareSelectTags } = state;
       let newList = shareSelectTags.map( (tag, index) => {
         tag.visible = false;
@@ -287,7 +325,24 @@ export default {
         }
         return tag
       })
-      return { ...state, shareSelectTags: newList, selectList }
+      return { ...state, shareSelectTags: newList, selectList, currentPage }
     },
+    loadMoreSelectList(state, {payload: {selectList, targetKey, currentPage}}) {
+      let { shareSelectTags, selectList: prevList } = state;
+      let newList = shareSelectTags.map( (tag, index) => {
+        if (tag.key === targetKey) {
+          tag.values.forEach( (val) => {
+            selectList.forEach( (select) => {
+              if (select.value == val) {
+                select.checked = true;
+              }
+            })
+          })
+        }
+        return tag
+      })
+      prevList.push(...selectList)
+      return { ...state, shareSelectTags: newList, selectList: prevList, currentPage }
+    }
   }
 }

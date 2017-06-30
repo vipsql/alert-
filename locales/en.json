@@ -111,6 +111,7 @@
   "alertOperate.groupByOther": "{other}",
 
   "modal.tag.select": "Please enter {name}",
+  "modal.tag.keywords": "请输入关键字搜索",
   "modal.tag.repeat": "Tag has been selected",
 
   "modal.operate.infoTip1": "Please select an alert",

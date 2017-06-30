@@ -122,6 +122,7 @@
   "modal.operate.allowRollUp": "只允许新告警才能派发工单",
 
   "modal.tag.select": "请选择{name}",
+  "modal.tag.keywords": "请输入关键字搜素",
   "modal.tag.repeat": "该标签已选择",
 
   "modal.shareChatOps": "分享到ChatOps",
@@ -201,7 +202,7 @@
   "alertDetail.action.t120": "接手",
   "alertDetail.action.t130": "派发工单",
   "alertDetail.action.t150": "派发cross工单",
-  "alertDetall.action.t170": "解决",
+  "alertDetail.action.t170": "解决",
   "alertDetail.action.t200": "接手",
   "alertDetail.action.t210": "转派",
   "alertDetail.action.t220": "抑制",

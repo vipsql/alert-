@@ -3,7 +3,7 @@ import { findDOMNode } from 'react-dom';
 import styles from './index.less'
 import KeyCode from 'rc-util/lib/KeyCode';
 import scrollIntoView from 'dom-scroll-into-view';
-import { classnames } from '../../../utils'
+import { classnames, browser } from '../../../utils'
 
 class DOMWrap extends Component {
   constructor(props) {
@@ -12,7 +12,33 @@ class DOMWrap extends Component {
       current: props.selectList || [], // 当前数组行
       currentIndex: 0 // 当前活跃行
     }
+    this.scrollTimer = null;
     this.changeBykeyBoard = this.changeBykeyBoard.bind(this)
+    this.scrollLoadMore = this.scrollLoadMore.bind(this)
+  }
+
+  scrollLoadMore(event) {
+    let scrollTop = 0
+        , scrollHeight = 0
+        , offsetHeight = 0
+        , bro = browser();
+    if (bro === 'Firefox') {
+      scrollTop = event.target.scrollTop
+      scrollHeight = event.target.scrollHeight
+      offsetHeight = event.target.offsetHeight
+    } else {
+      scrollTop = event.srcElement.scrollTop
+      scrollHeight = event.srcElement.scrollHeight
+      offsetHeight = event.srcElement.offsetHeight
+    }
+
+    clearTimeout(this.scrollTimer);
+    //console.log(scrollTop + '==>' + scrollHeight + '==>' + offsetHeight)
+    this.scrollTimer = setTimeout(() => {
+      if (scrollTop + 30 > scrollHeight - offsetHeight) {
+        this.props.loadMore()
+      }
+    }, 50)
   }
 
   changeBykeyBoard(event) {
@@ -51,6 +77,7 @@ class DOMWrap extends Component {
   }
 
   componentDidMount() {
+    this.content.addEventListener('scroll', this.scrollLoadMore, false)
     document.addEventListener('keydown', this.changeBykeyBoard, false)
   }
 
@@ -64,6 +91,7 @@ class DOMWrap extends Component {
   }
 
   componentWillUnmount() {
+    this.content.removeEventListener('scroll', this.scrollLoadMore, false)
     document.removeEventListener('keydown', this.changeBykeyBoard, false)
   }
 
