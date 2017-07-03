@@ -72,7 +72,14 @@ var data = {
                 ],
                 "emailTitle": "emailTitle",
                 "emailMessage": "emailmesage",
-                "smsMessage": "smsMessage"
+                "smsMessage": "smsMessage",
+                "webNotification": {
+                  "title":"title",
+                  "message":"内容",
+                  "playTimeType": "ONECE", // {string} ONECE --> 一次， TENSEC --> 10s，TIMEOUT --> 直到超时
+                  "timeOut": 30, // (s)
+                  "voiceType": "3" // {string} 3 --> 紧急， 2 --> 警告， 1 --> 提醒， 0 --> 恢复
+                }
             },
             "type": 3
         },

@@ -233,10 +233,21 @@ const formatMessages = defineMessages({
         id: 'ruleEditor.source',
         defaultMessage: '告警来源'
     },
-
-
 })
 
+const initalNotificationMode = {
+    notificationMode: [],
+    emailTitle: '${entityName}:${name}',
+    emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
+    smsMessage: '${severity},${entityName},${firstOccurTime},${description}',
+    webNotification: {
+      title: '${name}',
+      message: '${severity},${entityName},${description}',
+      playTimeType: 'ONECE', // {string} ONECE --> 一次， TENSEC --> 10s，TIMEOUT --> 直到超时
+      voiceType: '3', // {string} 3 --> 紧急， 2 --> 警告， 1 --> 提醒， 0 --> 恢复
+      timeOut: 30 // {number} 秒记，上限 30 分钟
+    }
+}
 
 class RuleEditor extends Component {
     constructor(props) {
@@ -258,27 +269,12 @@ class RuleEditor extends Component {
             email: false,
             sms: false,
             chatops: false,
+            audio: false,
             recipients: [],
             ITSMParam: '',
             /* 适用范围 */
             target: props.target,
         };
-
-        if (!this.state.action.actionUpgrade) {
-            this.state.action.actionUpgrade = {
-                notificationGroupings: [{
-                    delay: 15,
-                    status: [],
-                    recipients: []
-                }],
-                notificationMode: {
-                    notificationMode: [],
-                    emailTitle: '${entityName}:${name}',
-                    emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
-                    smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
-                }
-            }
-        }
     }
     componentWillMount() {
         const { dispatch } = this.props;
@@ -300,11 +296,9 @@ class RuleEditor extends Component {
         dispatch({
             type: 'alertAssociationRules/getWos'
         });
-
-
     }
     componentDidMount() {
-        
+
     }
     componentWillReceiveProps(nextProps, nextState) {
         const {
@@ -343,7 +337,7 @@ class RuleEditor extends Component {
 
             if(_actionType.includes(3)) {
                 _actionType = [3] // 告警升级 + 告警通知
-                if(!nextProps.action.actionUpgrade) {
+                if(!_action.actionUpgrade) {
                     _action.actionUpgrade.notificationGroupings = [{
                         delay: 15,
                         status: [],
@@ -355,12 +349,7 @@ class RuleEditor extends Component {
                 _action.actionNotification = {
                     recipients: [],
                     notifyWhenLevelUp: true,
-                    notificationMode: {
-                        notificationMode: [],
-                        emailTitle: '${entityName}:${name}',
-                        emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
-                        smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
-                    }
+                    notificationMode: initalNotificationMode
                 };
                 _action.actionUpgrade = {
                     notificationGroupings: [{
@@ -370,27 +359,7 @@ class RuleEditor extends Component {
                     }]
                 }
             }
-            // if (nextProps.action.actionUpgrade) {
-            //     _action.actionNotification = {
-            //         notificationMode: _action.actionUpgrade.notificationMode,
-            //         notifyWhenLevelUp: false,
-            //         recipients: _action.actionNotification.recipients
-            //     };
-            // } else {
-            //     _action.actionUpgrade = {
-            //         notificationGroupings: [{
-            //             delay: 15,
-            //             status: [],
-            //             recipients: []
-            //         }],
-            //         notificationMode: {
-            //             notificationMode: [],
-            //             emailTitle: '${entityName}:${name}',
-            //             emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
-            //             smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
-            //         }
-            //     };
-            // }
+
             this.setState({
                 name: nextProps.name,
                 time: {
@@ -433,7 +402,7 @@ class RuleEditor extends Component {
 
     render() {
         conditionsDom = []; // 重置，防止重复 render
-        const { time, timeStart, timeEnd, source, condition, action, email, sms, chatops, target } = this.state;
+        const { time, timeStart, timeEnd, source, condition, action, email, sms, chatops, audio, target } = this.state;
         const itemLayout = {
             labelCol: { span: 2 },
             wrapperCol: { span: 4 }
@@ -448,7 +417,7 @@ class RuleEditor extends Component {
         };
 
         const checkedState = { // 通知方式勾选状态
-            email, sms, chatops
+            email, sms, chatops, audio
         };
 
         // 时间选择器选择之后的文字信息反馈，用'、'号隔开，同类信息用','隔开
@@ -506,6 +475,7 @@ class RuleEditor extends Component {
 
         this.emailVarContent = this.vars('emailMessage');
         this.smsVarContent = this.vars('smsMessage');
+        this.audioVarContent = this.vars('webAudioMessage')
 
         return (
             <Form id="RuleEditor" onSubmit={this.submit} hideRequiredMark={false}>
@@ -690,6 +660,7 @@ class RuleEditor extends Component {
                         </TabPane>
                         {/* 告警升级/通知 */}
                         <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.upgradeAndNotify']} key="3" className={styles.actionNotification}>
+                            {/*通知*/}
                             <div>
                                 <FormItem
                                     {...desLayout}
@@ -714,17 +685,20 @@ class RuleEditor extends Component {
                                     <NotificationList
                                         checkedState={checkedState}
                                         changeAction={this.changeAction.bind(this)}
+                                        changeActionByAudio={this.changeActionByAudio.bind(this)}
                                         action={action}
                                         smsVarContent={this.smsVarContent}
                                         emailVarContent={this.emailVarContent}
+                                        audioVarContent={this.audioVarContent}
                                         alertAssociationRules={this.props.alertAssociationRules}
                                     />
                                 </div>
                                 {
-                                    this.state.target === 0 && 
+                                    this.state.target === 0 &&
                                     <Checkbox className={styles.nLevelUp} checked={action.actionNotification && action.actionNotification.notifyWhenLevelUp} onChange={this.changeNotifyLevelUp.bind(this)}>{window.__alert_appLocaleData.messages['ruleEditor.nLevelUp']}</Checkbox>
                                 }
                             </div>
+                            {/*升级*/}
                             {
                                 this.state.target === 0 &&
                                 <div>
@@ -830,7 +804,6 @@ class RuleEditor extends Component {
                                 </div>
                             </TabPane>
                         }
-                        <LeaveNotifyModal route={ this.props.route }/>
                         {/* 分享到ChatOps */}
                         {
                             window.__alert_appLocaleData.locale === 'zh-cn' &&
@@ -853,6 +826,7 @@ class RuleEditor extends Component {
                         }
                     </Tabs>
                 </div>
+                {/*<LeaveNotifyModal route={ this.props.route }/>*/}
                 <span onClick={this.handleSubmit.bind(this)} className={styles.submit}>{window.__alert_appLocaleData.messages['ruleEditor.submit']}</span>
             </Form>
         );
@@ -863,26 +837,14 @@ class RuleEditor extends Component {
         let email = false;
         let sms = false;
         let chatops = false;
+        let audio = false;
         let recipients = [];
         if (!_action.actionNotification) {
-            if (_action.actionUpgrade) {
-                _action.actionNotification = {
-                    recipients: [],
-                    notifyWhenLevelUp: false,
-                    notificationMode: _action.actionUpgrade.notificationMode
-                }
-            } else {
-                _action.actionNotification = {
-                    recipients: [],
-                    notifyWhenLevelUp: false,
-                    notificationMode: {
-                        notificationMode: [],
-                        emailTitle: '${entityName}:${name}',
-                        emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
-                        smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
-                    }
-                };
-            }
+            _action.actionNotification = {
+                recipients: [],
+                notifyWhenLevelUp: false,
+                notificationMode: initalNotificationMode
+            };
         }
 
         const mode = _action.actionNotification.notificationMode.notificationMode;
@@ -896,6 +858,9 @@ class RuleEditor extends Component {
             if (mode[i] === 3) {
                 chatops = true;
             }
+            if (mode[i] === 4) {
+                audio = true
+            }
         }
 
         recipients = _action.actionNotification.recipients.map(item => item.userId);
@@ -903,6 +868,7 @@ class RuleEditor extends Component {
             email: email,
             sms: sms,
             chatops: chatops,
+            audio: audio,
             recipients: recipients
         });
     }
@@ -931,16 +897,18 @@ class RuleEditor extends Component {
         if (!_action.actionNotification) {
             _action.actionNotification = {
                 recipients: [],
-                notificationMode: {
-                    notificationMode: [],
-                    emailTitle: '${entityName}:${name}',
-                    emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
-                    smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
-                }
+                notificationMode: initalNotificationMode
             };
         }
         let mode = _action.actionNotification.notificationMode;
-        mode[type] += '${' + item + '}';
+        switch (type) {
+          case 'webAudioMessage':
+            mode['webNotification']['message'] += '${' + item + '}';
+            break;
+          default:
+            mode[type] += '${' + item + '}';
+            break;
+        }
         _action.actionNotification.notificationMode.notificationMode = mode.notificationMode;
         this.setState({
             action: _action
@@ -1050,6 +1018,22 @@ class RuleEditor extends Component {
             }
         }
     }
+    changeActionByAudio(type, value) {
+        const { dispatch } = this.props;
+        const _action = _.cloneDeep(this.state.action);
+        if (!_action.actionNotification) {
+            _action.actionNotification = {
+                recipients: [],
+                notificationMode: initalNotificationMode
+            };
+        }
+        let mode = _action.actionNotification.notificationMode;
+        mode.webNotification[type] = value;
+        _action.actionNotification.notificationMode.notificationMode = mode.notificationMode;
+        this.setState({
+          action: _action
+        })
+    }
     changeAction(type, value) {
         // console.info('changeAction', this);
         const { dispatch } = this.props;
@@ -1067,12 +1051,7 @@ class RuleEditor extends Component {
                 if (!_action.actionNotification) {
                     _action.actionNotification = {
                         recipients: [],
-                        notificationMode: {
-                            notificationMode: [],
-                            emailTitle: '${entityName}:${name}',
-                            emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
-                            smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
-                        }
+                        notificationMode: initalNotificationMode
                     };
                 }
                 let mode = _action.actionNotification.notificationMode;
@@ -1109,7 +1088,17 @@ class RuleEditor extends Component {
                         });
                     }
                 } else { // 文本
-                    mode[value.target.id] = value.target.value;
+                    switch (value.target.id) {
+                      case 'audioTitle':
+                        mode['webNotification']['title'] = value.target.value;
+                        break;
+                      case 'audioMessage':
+                        mode['webNotification']['message'] = value.target.value;
+                        break;
+                      default:
+                        mode[value.target.id] = value.target.value;
+                        break;
+                    }
                 }
                 _action.actionNotification.notificationMode.notificationMode = mode.notificationMode;
                 break;
@@ -1462,10 +1451,15 @@ class RuleEditor extends Component {
             case 3:
                 // 告警通知和升级合并
                 if (!Number(target)) {
+                    let upgradeNotificationMode = _.cloneDeep(action.actionNotification.notificationMode)
+                    delete upgradeNotificationMode.webNotification
                     _actionNotification = action.actionNotification;
                     // ---------------------------------------------
                     _actionUpgrade = action.actionUpgrade;
-                    _actionUpgrade.notificationMode = action.actionNotification.notificationMode;
+                    _actionUpgrade.notificationMode = {
+                      ...upgradeNotificationMode,
+                      notificationMode: upgradeNotificationMode.notificationMode.filter( item => item != 4 ), // 除去webNotification
+                    };
                     _actionUpgrade.notificationGroupings = action.actionUpgrade.notificationGroupings.filter(item => item);
                     _actionType = [2, 3] // 升级type
                 } else {
@@ -1570,12 +1564,7 @@ RuleEditor.defaultProps = {
         actionNotification: {
             notifyWhenLevelUp: true,
             recipients: [],
-            notificationMode: {
-                notificationMode: [],
-                emailTitle: '${entityName}:${name}',
-                emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
-                smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
-            }
+            notificationMode: initalNotificationMode
         },
         actionITSM: {
             itsmModelId: undefined,
@@ -1598,7 +1587,6 @@ RuleEditor.defaultProps = {
             }
         }
     },
-    insertVars: []
 };
 
 RuleEditor.propTypes = {
@@ -1656,11 +1644,18 @@ RuleEditor.propTypes = {
             notifyWhenLevelUp: PropTypes.bool,
             recipients: PropTypes.array.isRequired,
             notificationMode: PropTypes.shape({
-                // EMAIL(1，"电子邮件")，SMS(2，"短信")，CHATOPS_PRIVATE(3，"Chatops私聊")，多选
+                // EMAIL(1，"电子邮件")，SMS(2，"短信")，CHATOPS_PRIVATE(3，"Chatops私聊")，webNotification(4, '声音通知') 多选
                 notificationMode: PropTypes.array.isRequired,
                 emailTitle: PropTypes.string.isRequired,
                 emailMessage: PropTypes.string.isRequired,
-                smsMessage: PropTypes.string.isRequired
+                smsMessage: PropTypes.string.isRequired,
+                webNotification: PropTypes.shape({
+                  title: PropTypes.string.isRequired,
+                  message: PropTypes.string.isRequired,
+                  playTimeType: PropTypes.string.isRequired,
+                  timeOut: PropTypes.number.isRequired,
+                  voiceType: PropTypes.string.isRequired,
+                })
             })
         }),
         actionITSM: PropTypes.shape({
@@ -1684,16 +1679,3 @@ RuleEditor.propTypes = {
 };
 
 export default RuleEditor;
-// export default Form.create()(RuleEditor);
-// export default Form.create({
-//   mapPropsToFields: (props) => {
-//     return {
-//       name: {
-//         value: props.name
-//       },
-//       description: {
-//         value: props.description
-//       }
-//     }
-//   }
-// })(RuleEditor);

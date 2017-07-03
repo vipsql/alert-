@@ -58,19 +58,49 @@
         // top: -5px;
         // }
     }
-
-    .mailTitle {
+    .msgType{
+        position: relative;
+        color: #82d3fb;
+        margin-bottom: 10px;
+        width: 100%;
+        font-size: 13px;
+        line-height: 1;
+        &::after{
+          position: absolute;
+          top: 50%;
+          left: 4%;
+          display: block;
+          content: ' ';
+          height: 1px;
+          background: rgba(130, 211, 251, 0.28);
+          width: 60%;
+        }
+    }
+    .msgTitle {
         :global {
             .ant-form-item-control-wrapper {
                 width: 40%;
             }
         }
     }
-
     .msgContent {
         :global {
             .ant-form-item-control-wrapper {
                 width: 60%;
+            }
+        }
+    }
+    .playerTime, .timeOut {
+        :global {
+            .ant-form-item-control-wrapper {
+                width: 60%;
+            }
+        }
+    }
+    .playerType{
+        :global {
+            .ant-form-item-control-wrapper {
+                width: 72%;
             }
         }
     }

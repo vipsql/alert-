@@ -25,3 +25,13 @@ export async function getUsers() {
       }
   })
 }
+
+// web notification
+export async function getWebNotification() {
+  return request(`/common/getWebNotification`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}

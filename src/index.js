@@ -78,10 +78,11 @@ const setLang = function(lang){
 	return appLocaleData
 }
 
+// inital before Alert
 const appLocale = setLang();
-
-
 addLocaleData(appLocale.data);
+
+window.__Alert_WebNotification = null; // setInterval with webnotification
 
 
 // 1. Initialize
