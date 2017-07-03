@@ -1,17 +1,19 @@
 import { queryAlertOrigin } from '../services/alertQuery.js'
 import { message } from 'antd'
 
+const initState = {
+  loading: false,
+  visible: false,
+  alertName: '',
+  times: 0,
+  records: [],
+  pagination:{ pageNo:1, pageSize:10 },
+  sorter: { sortKey:'occurTime', sortType: 1 },
+}
+
 export default {
   namespace: 'alertOrigin',
-  state: {
-    loading: false,
-    visible: false,
-    alertName: '',
-    times: 0,
-    records: [],
-    pagination:{ pageNo:1, pageSize:10 },
-    sorter: { sortKey:'occurTime', sortType: 1 },
-  },
+  state: initState,
   reducers: {
     toggleLoading(state, { payload: { loading }}) {
       return { ...state, loading};
@@ -23,6 +25,10 @@ export default {
 
     toggleVisible(state, { payload: { visible, alertName } }) {
       return { ...state, visible, alertName };
+    },
+
+    initPage(state, { payload }) {
+      return { ...state, pagination: initState.pagination }
     }
   },
 
