@@ -22,6 +22,9 @@ function isApiUrl(url) {
     // 这边是直接对接chatOps接口
     return url;
   }
+  if(url.substring(0, 12) === '#localAsset#'){
+    return url.substring(12)
+  }
   return `${ROOT_PATH}${url}`;
 }
 
