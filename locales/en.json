@@ -91,8 +91,8 @@
   "alertQuery.reset": "Reset",
   "alertQuery.result": "{total} results found. (Critical {critical}, Warning {warning}, Informaiton {informaiton}, Recovery {ok})",
 
-  "alertOperate.takeOver": "Take Over",
-  "alertOperate.reassign": "Reassign",
+  "alertOperate.takeOver": "接手",
+  "alertOperate.reassign": "转派",
   "alertOperate.dispatch": "Create Ticket",
   "alertOperate.close": "Close",
   "alertOperate.resolve": "Resolve",
@@ -143,9 +143,9 @@
   "modal.leaveNotice": "你还有数据未保存，确定要离开此页面吗？",
   "modal.leave": "离开",
 
-  "modal.reassign": "Reassign",
-  "modal.reassignTitle": "Reassign Specific User",
-  "modal.specificUser": "Select User",
+  "modal.reassign": "转派",
+  "modal.reassignTitle": "转派指定人员",
+  "modal.specificUser": "指定人员",
 
   "modal.know": "OK, I get it",
   "modal.suppress.success": "Suppress successfully.",

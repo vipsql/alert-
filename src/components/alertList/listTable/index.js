@@ -141,6 +141,10 @@ const ListTableWrap = ({ dispatch, alertListTable }) => {
       })
 
       dispatch({
+        type: 'alertOrigin/initPage'
+      })
+
+      dispatch({
         type: 'alertOrigin/queryAlertOrigin',
         payload: {
           alertId,

@@ -23,7 +23,8 @@ function AlertManage({dispatch, alertManage, isFold, tagSetModalVisible}){
     currentDashbordData,
     oldDashbordDataMap,
     selectedStatus,
-    selectedTime
+    selectedTime,
+    isNeedRepaint
   } = alertManage
 
   const alertSetProps = {
@@ -93,6 +94,7 @@ function AlertManage({dispatch, alertManage, isFold, tagSetModalVisible}){
     isFold,
     currentDashbordData,
     oldDashbordDataMap,
+    isNeedRepaint,
     isLoading,
     isFullScreen,
     isFixed,

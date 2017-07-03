@@ -15,7 +15,7 @@ const  ListTableWrap = ({dispatch, alertQuery}) => {
 
     detailClick(e) {
       const alertId = e.target.getAttribute('data-id');
-      
+
       dispatch({
         type: 'alertQuery/clickDetail',
         payload: alertId
@@ -24,7 +24,7 @@ const  ListTableWrap = ({dispatch, alertQuery}) => {
     // 分组展开
     spreadGroup(e) {
       const groupClassify = e.target.getAttribute('data-classify')
-      
+
       dispatch({
         type: 'alertQuery/spreadGroup',
         payload: groupClassify
@@ -32,7 +32,7 @@ const  ListTableWrap = ({dispatch, alertQuery}) => {
     },
     noSpreadGroup(e) {
       const groupClassify = e.target.getAttribute('data-classify')
-      
+
       dispatch({
         type: 'alertQuery/noSpreadGroup',
         payload: groupClassify
@@ -41,7 +41,7 @@ const  ListTableWrap = ({dispatch, alertQuery}) => {
     // 升序
     orderUp(e) {
       const orderKey = e.target.getAttribute('data-key');
-      
+
       dispatch({
         type: 'alertQuery/orderList',
         payload: {
@@ -53,7 +53,7 @@ const  ListTableWrap = ({dispatch, alertQuery}) => {
     // 降序
     orderDown(e) {
       const orderKey = e.target.getAttribute('data-key');
-      
+
       dispatch({
         type: 'alertQuery/orderList',
         payload: {
@@ -64,7 +64,7 @@ const  ListTableWrap = ({dispatch, alertQuery}) => {
     },
     orderByTittle(e) {
       const orderKey = e.target.getAttribute('data-key');
-      
+
       dispatch({
         type: 'alertQuery/orderByTittle',
         payload: orderKey
@@ -87,6 +87,10 @@ const  ListTableWrap = ({dispatch, alertQuery}) => {
           visible: true,
           alertName
         }
+      })
+
+      dispatch({
+        type: 'alertOrigin/initPage'
       })
 
       dispatch({

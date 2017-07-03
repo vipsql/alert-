@@ -9,6 +9,7 @@ const initialState = {
     modalVisible: false,
     currentDashbordData: undefined,
     oldDashbordDataMap: undefined,
+    isNeedRepaint: true, // 是否需要重绘
     isLoading: true, //加载
     selectedTime: 'lastOneHour', // 选择的最近时间
     selectedStatus: 'NEW', // 选择的过滤状态
@@ -55,9 +56,9 @@ export default {
           type: 'toggleAlertSetTip',
           payload: true
         })
-        yield put({ 
-          type: 'toggleAlertSet', 
-          payload: true 
+        yield put({
+          type: 'toggleAlertSet',
+          payload: true
         })
       } else {
         yield put({
@@ -69,7 +70,7 @@ export default {
           payload: false
         })
       }
-    }, 
+    },
     *queryAlertDashbord({payload}, {call, put, select}) {
 
       let { selectedTime, selectedStatus, isFixed } = yield select( state => {
@@ -92,7 +93,7 @@ export default {
         timeBucket: selectedTime,
         status: selectedStatus
       }
-      
+
       const treemapData = yield queryDashbord(params)
 
       if (treemapData.result) {
@@ -102,9 +103,9 @@ export default {
           let dashbordData = treemapData.data.picList
           // 使用JSON方法进行深克隆
           dashbordData = JSON.parse(JSON.stringify(dashbordData))
-          
+
           dashbordData.forEach( (item) =>{
-            item.id = "label_" + index;
+            // item.id = "label_" + index;
             index ++;
             if(item.children){
               item.children.forEach((childItem) => {
@@ -114,14 +115,14 @@ export default {
                 }
                 // 保存真实数据修复显示tip 告警数不正确bug
                 childItem.trueVal =  childItem.value
-                childItem.id = "label_" + index;
+                // childItem.id = "label_" + index;
                 index ++;
               })
               // item.fixedValue = item.children.length
             }
-          
+
           })
-            
+
           filterData = yield dashbordData.filter( item => item['path'] != 'status' )
         }
 
@@ -131,7 +132,8 @@ export default {
             currentDashbordData: filterData || [],
             isLoading: false,
             selectedTime: selectedTime,
-            selectedStatus: selectedStatus
+            selectedStatus: selectedStatus,
+            isNeedRepaint: payload && payload.isNeedRepaint
           }
         })
 
@@ -159,15 +161,39 @@ export default {
       return { ...state, isSetAlert }
     },
     // 显示treemap
-    setCurrentTreemap(state, { payload: {currentDashbordData, isLoading, selectedTime, selectedStatus} }){
+    setCurrentTreemap(state, { payload: {currentDashbordData, isLoading, selectedTime, selectedStatus, isNeedRepaint} }){
       const oldDashbordData = state.currentDashbordData || [];
       let oldDashbordDataMap = {};
+      let newDashbordDataMap = {};
       oldDashbordData.forEach((parentNode, index) => {
           parentNode.children.forEach((childNode) => {
               oldDashbordDataMap[childNode.id] = childNode;
           })
       })
-      return { ...state, oldDashbordDataMap, currentDashbordData, isLoading, selectedTime, selectedStatus}
+      currentDashbordData.forEach((parentNode, index) => {
+          parentNode.children.forEach((childNode) => {
+              newDashbordDataMap[childNode.id] = childNode;
+          })
+      })
+      // 判断标签是否发生变化，是否需要重绘
+      if(typeof isNeedRepaint === 'undefined') {
+        currentDashbordData.forEach((parentNode, index) => {
+            parentNode.children.forEach((childNode) => {
+                if(!oldDashbordDataMap[childNode.id]) {
+                  isNeedRepaint = true;
+                }
+            })
+        })
+        oldDashbordData.forEach((parentNode, index) => {
+            parentNode.children.forEach((childNode) => {
+                if(!newDashbordDataMap[childNode.id]) {
+                  isNeedRepaint = true;
+                }
+            })
+        })
+      }
+
+      return { ...state, oldDashbordDataMap, isNeedRepaint, currentDashbordData, isLoading, selectedTime, selectedStatus}
     },
     setSelectedTime(state, {payload: selectedTime}) {
       return { ...state, selectedTime}
@@ -190,7 +216,7 @@ export default {
     // 设置布局（固定大小和自动布局）
     setLayout(state,{payload: isFixed}){
       const cloneData = JSON.parse(JSON.stringify(state.currentDashbordData))
-      
+
       if(isFixed == '0'){
           cloneData.forEach( (item) =>{
             if(item.children){
@@ -202,7 +228,7 @@ export default {
               })
               // item.fixedValue = item.children.length
             }
-          
+
         })
       }else{
         cloneData.forEach( (item) =>{
@@ -214,9 +240,9 @@ export default {
           delete item.fixedValue
         })
       }
-      
+
       return {...state, currentDashbordData: cloneData, isFixed: isFixed == '0' ? true : false}
-      
+
     }
   }
 
