@@ -19,7 +19,11 @@ async function getMessages(lang) {
   } else {
     messages = await request('#localAsset#../locales/zh.json', { method: 'GET' });
   }
-  return messages.data;
+  if (messages.result) {
+    return messages.data;
+  } else {
+    console.error('can\'t resovle local asset file')
+  }
 }
 
 async function setLang(lang) {

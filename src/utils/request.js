@@ -22,6 +22,7 @@ function isApiUrl(url) {
     // 这边是直接对接chatOps接口
     return url;
   }
+  //请求本地资源文件时以"#localAsset#"开头
   if(url.substring(0, 12) === '#localAsset#'){
     return url.substring(12)
   }
