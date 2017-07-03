@@ -767,7 +767,7 @@ class alertQueryManage extends Component {
                   {getFieldDecorator('dateTime', {
 
                   })(
-                    <RangePicker showTime />
+                    <RangePicker showTime style={{ width: '100%' }} />
                     )}
                 </Item>
               </Col>
@@ -782,7 +782,7 @@ class alertQueryManage extends Component {
                   {getFieldDecorator('lastOccurTime', {
 
                   })(
-                    <RangePicker showTime />
+                    <RangePicker showTime style={{ width: '100%' }} />
                     )}
                 </Item>
               </Col>
