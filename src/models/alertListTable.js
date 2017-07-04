@@ -893,6 +893,10 @@ export default {
     },
     // show more
     *loadMore({ }, { call, put, select }) {
+      const isLoading = yield select((state) => state.alertListTable.isLoading);
+      if(isLoading) {
+        return;
+      }
 
       yield put({
         type: 'toggleLoading',
@@ -917,7 +921,7 @@ export default {
         pageSize: alertListTable.pageSize,
         ...alertListTable.tagsFilter,
       }
-      
+
       const listReturnData = yield call(queryAlertList, params)
 
       if (listReturnData.result) {
