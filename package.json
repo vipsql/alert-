@@ -77,5 +77,6 @@
       "location",
       "localStorage"
     ]
-  }
+  },
+  "theme": "./theme.js"
 }

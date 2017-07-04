@@ -6,7 +6,7 @@ export async function queryTags(params) {
     method: 'post',
     body: JSON.stringify(params),
     headers: {
-        'Content-Type': 'application/json',
+      'Content-Type': 'application/json',
     }
   })
   // return Promise.resolve({
@@ -16,13 +16,13 @@ export async function queryTags(params) {
 }
 
 
-export async function queryVisual (params) {
+export async function queryVisual(params) {
   return request('/visual/tagValuesInfo', {
     method: 'post',
     body: JSON.stringify(params),
     headers: {
-          'Content-Type': 'application/json',
-      }
+      'Content-Type': 'application/json',
+    }
   })
   // return Promise.resolve({
   //   result: true,
@@ -35,7 +35,7 @@ export async function queryVisualRes(params) {
     method: 'post',
     body: JSON.stringify(params),
     headers: {
-        'Content-Type': 'application/json',
+      'Content-Type': 'application/json',
     }
   })
 }
