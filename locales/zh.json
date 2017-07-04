@@ -501,6 +501,8 @@
   "layout.fixedLayout": "固定布局",
   "layout.autoLayout": "自动布局",
   "layout.fullScreen": "全屏",
-  "layout.initialize": "还原"
+  "layout.initialize": "还原",
+
+  "go_top.tip": "返回顶部"
 
 }
