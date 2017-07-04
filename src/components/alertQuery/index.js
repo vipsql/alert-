@@ -14,6 +14,7 @@ import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import ReassignModal from '../common/ReassignModal/index.js'
 import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 import AlertOriginSlider from '../common/AlertOriginSlider/index.js'
+import ScrollTopButton from '../common/scrollTopButton/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import $ from 'jquery'
 
@@ -985,6 +986,7 @@ class alertQueryManage extends Component {
           <iframe src={ticketModalProps.ticketUrl}>
           </iframe>
         </div>
+        <ScrollTopButton />
         <CloseModal {...closeModalProps} />
         <DispatchModal {...dispatchModalProps} />
         <ChatOpshModal {...chatOpsModalProps} />

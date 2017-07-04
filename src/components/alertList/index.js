@@ -23,6 +23,7 @@ import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import AlertOriginSlider from '../common/AlertOriginSlider/index.js'
 import FilterHead from '../common/filterHead/index.js'
+import ScrollTopButton from '../common/scrollTopButton/index'
 import { classnames } from '../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -635,6 +636,7 @@ class AlertListManage extends Component {
         <ManualNotifyModal {...notifyModalProps} />
         <ReassignModal {...reassignModalProps} />
         <AlertOriginSlider { ...alertOriginSliderProps }/>
+        <ScrollTopButton />
       </div>
     )
   }
