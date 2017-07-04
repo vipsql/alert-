@@ -115,9 +115,7 @@ const ListTimeTableWrap = ({ dispatch, alertListTable, selectedTime }) => {
 export default connect(
   (state) => {
     return {
-      alertListTable: {
-        ...state.alertListTable,
-      },
+      alertListTable: state.alertListTable,
       selectedTime: state.alertList.selectedTime
     }
   }

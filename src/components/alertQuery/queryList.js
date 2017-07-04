@@ -110,9 +110,7 @@ const  ListTableWrap = ({dispatch, alertQuery}) => {
 export default connect(
   (state) => {
     return {
-      alertQuery: {
-        ...state.alertQuery,
-      }
+      alertQuery: state.alertQuery
     }
   }
 )(ListTableWrap)
