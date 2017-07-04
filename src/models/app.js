@@ -1,7 +1,7 @@
-import { getUserInformation, getWebNotification} from '../services/app'
+import { getUserInformation, getWebNotification } from '../services/app'
 import { isSetUserTags } from '../services/alertTags.js'
-import { loopWebNotification } from '../utils/index.js'
-import {parse} from 'qs'
+import { loopWebNotification as loop } from '../utils/index.js'
+import { parse } from 'qs'
 import { message } from 'antd'
 
 
@@ -18,11 +18,14 @@ export default {
   state: initialState,
 
   subscriptions: {
-    loginSetup({dispatch, history}) {
+    loginSetup({ dispatch, history }) {
       history.listen((location) => {
         if (location.pathname === '/alertManage' || location.pathname === '/') {
           dispatch({
             type: 'beforeHomePage'
+          })
+          loop(function() {
+            dispatch({type: 'getNotifies'})
           })
         }
       })
@@ -30,7 +33,7 @@ export default {
   },
 
   effects: {
-    *beforeHomePage({payload}, {put, call, select}) {
+    *beforeHomePage({ payload }, { put, call, select }) {
       const userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
       if (!userInfo) {
         const infoResult = yield getUserInformation()
@@ -40,13 +43,8 @@ export default {
         }
       }
       yield put({ type: 'isSetTags' })
-      yield loopWebNotification(function() {
-        dispatch({
-          type: 'loopWebNotification'
-        })
-      })
     },
-    *loopWebNotification({payload}, {put, call, select}) {
+    *getNotifies({ payload }, { put, call, select }) {
       const loop = yield call(getWebNotification)
       if (loop.result) {
         yield put({ type: 'setWebNotification', payload: loop.data || [] })
@@ -54,10 +52,9 @@ export default {
         yield message.error(window.__alert_appLocaleData.messages[loop.message], 2)
       }
     },
-    *isSetTags({payload}, {put, call, select}) {
-
+    *isSetTags({ payload }, { put, call, select }) {
       const isSet = yield isSetUserTags()
-      if(isSet.result && isSet.data) {
+      if (isSet.result && isSet.data) {
         yield put({
           type: 'showMask',
           payload: false
@@ -74,18 +71,18 @@ export default {
   },
   reducers: {
     // 声音通知
-    setWebNotification(state, {payload, notifies}) {
+    setWebNotification(state, { payload, notifies }) {
       return { ...state, notifies }
     },
     // 转化alertManage面板显示(通过设置isShowMask)
-    showMask(state, {payload: isShowMask}){
+    showMask(state, { payload: isShowMask }) {
       return { ...state, isShowMask }
     },
-    setUserInfo(state, {payload: userInfo}) {
+    setUserInfo(state, { payload: userInfo }) {
       return { ...state, userInfo }
     },
     // 转换导航栏的展开
-    handleFoldMenu(state){
+    handleFoldMenu(state) {
       return { ...state, isFold: !state.isFold }
     },
     clear(state) {
