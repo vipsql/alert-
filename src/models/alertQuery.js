@@ -435,6 +435,12 @@ export default {
     // show more
     *loadMore({ }, { call, put, select }) {
 
+      // 防止同时多次加载更多
+      const isLoading = yield select((state) => state.alertQuery.isLoading);
+      if(isLoading) {
+        return;
+      }
+
       yield put({
         type: 'toggleLoading',
         payload: true
