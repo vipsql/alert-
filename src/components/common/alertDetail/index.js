@@ -303,10 +303,6 @@ class alertDetail extends Component {
           id: 'alertDetail.action.t110',
           defaultMessage: 'chatOps群组'
         },
-        120: {
-          id: 'alertDetail.action.t120',
-          defaultMessage: '解决'
-        },
         130: {
           id: 'alertDetail.action.t130',
           defaultMessage: '派发工单'
@@ -371,7 +367,7 @@ class alertDetail extends Component {
                 <li><span>{formatMessage({ ...localeMessage['severity'] })}:</span><span className={classnames(severityColor, styles.icon)} /><span>{window['_severity'][currentAlertDetail.severity]}</span></li>
                 <li><span>{formatMessage({ ...localeMessage['source'] })}:</span><span>{currentAlertDetail.source ? currentAlertDetail.source : formatMessage({ ...localeMessage['unknown'] })}</span></li>
                 {
-                  currentAlertDetail.tags !== null && currentAlertDetail.tags.length !== 0 ?
+                  currentAlertDetail.tags && currentAlertDetail.tags.length !== 0 ?
                     <li><span>{formatMessage({ ...localeMessage['tags'] })}:</span>
                       {
                         currentAlertDetail.tags.map((tag, index) => {
@@ -468,7 +464,6 @@ class alertDetail extends Component {
                             const nextDate = new Date(incidentLog[index + 1].operateTime);
                             isShowOperateDate = (date.getMonth() != nextDate.getMonth() || date.getDate() != nextDate.getDate());
                           }
-                          console.log(log.operatorName);
                           return (
                             <Timeline.Item key={log.incidentId + '' + index} color={index == 0 ? 'green' : 'blue'}>
                               <div className={classnames(styles.timeLineLabel)}>
@@ -582,6 +577,7 @@ class alertDetail extends Component {
 }
 
 alertDetail.defaultProps = {
+  visible: false,
   extraProps: {},
   closeDeatilModal: () => { },
   clickTicketFlow: () => { },
