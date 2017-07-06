@@ -56,7 +56,23 @@ module.exports = function (webpackConfig, env) {
       {
         from: __dirname + '/guideTip_en.png',
         to: __dirname + '/dist/'
-      }
+      },
+      {
+        from: __dirname + '/Critical.wav',
+        to: __dirname + '/dist/'
+      },
+      {
+        from: __dirname + '/Information.wav',
+        to: __dirname + '/dist/'
+      },
+      {
+        from: __dirname + '/Recovery.wav',
+        to: __dirname + '/dist/'
+      },
+      {
+        from: __dirname + '/Warning.wav',
+        to: __dirname + '/dist/'
+      },
     ]),
     new HtmlWebpackPlugin({
       title: 'Alert',
