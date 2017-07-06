@@ -9,19 +9,6 @@
   }
 
   .tags_query_container {
-     :global {
-      .tags-appear.tags-appear-active {
-        opacity: 0;
-      }
-      .tags-enter.tags-enter-active {
-        opacity: 1;
-        transition: opacity .3s ease-in-out;
-      }
-      .tags-leave.tags-leave-active {
-        opacity: 0;
-        transition: opacity .3s ease-in-out;
-      }
-    }
     position: relative;
     width: auto;
     border: 1px solid #297ebb;
@@ -93,7 +80,21 @@
         line-height: 24px
       }
     }
+    :global {
+      .appear,
+      .enter {
+        opacity: 0;
+      }
+      .enter.enterActive,
+      .appear.appearActive {
+        opacity: 1;
+      }
+      .leave.leaveActive {
+        opacity: 0;
+      }
+    }
     ul.tags_query_content {
+      transition: all .3s ease-in-out;
       opacity: 1;
       max-height: 200px;
       overflow: scroll;

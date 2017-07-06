@@ -54,7 +54,30 @@
           &::-webkit-input-placeholder {
             color: #9dd7ff;
           }
-        } //--------Select---------
+        }
+        //--------InputNumber---------
+        .ant-input-number {
+          background-color: #0d5990;
+          border: 1px solid #297ebb;
+          color: #fff;
+          .ant-input-number-handler-wrap{
+            background-color: #0d5990;
+            border-color: #297ebb;
+            .ant-input-number-handler:active, .ant-input-number-handler-down, .ant-input-number-handler-up{
+              border: 1px solid #297ebb;
+              background-color: #0d5990;
+              color: #297ebb;
+            }
+            .ant-input-number-handler-up-inner, .ant-input-number-handler-down-inner {
+              color: #297ebb;
+            }
+          }
+          input{
+            background-color: #0d5990;
+            color: #fff;
+          }
+        }
+        //--------Select---------
         .ant-select-combobox .ant-select-search__field {
           color: #fff;
         }

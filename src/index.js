@@ -87,6 +87,7 @@ async function setLang(lang) {
 async function init() {
   const appLocale = await setLang();
   addLocaleData(appLocale.data);
+  window.__Alert_WebNotification = null; // setInterval with webnotification
   // 1. Initialize
   const app = dva()
   const root = document.querySelector('#root')

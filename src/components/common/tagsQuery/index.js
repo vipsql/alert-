@@ -131,9 +131,14 @@ class TagsQuery extends Component{
                                             }
                                         </ul>
                                         <Animate
-                                            transitionName="tags"
-                                            transitionEnterTimeout={300}
-                                            transitionLeaveTimeout={300}
+                                            transitionName={{
+                                              enter: 'enter',
+                                              enterActive: 'enterActive',
+                                              leave: 'leave',
+                                              leaveActive: 'leaveActive',
+                                              appear: 'appear',
+                                              appearActive: 'appearActive'
+                                            }}
                                         >
                                         {
                                             tagGroup.tagSpread ?

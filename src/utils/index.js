@@ -6,7 +6,7 @@ import {color} from './theme'
 
 /**
  * Return random getUUID
- *  
+ *
  * @param {Number} len
  * @return {String}
  * @api private
@@ -18,14 +18,14 @@ function getUUID(len) {
 
   for (var i = 0; i < len; ++i) {
     buf.push(chars[getRandomInt(0, charlen - 1)]);
-  } 
+  }
 
   return buf.join('');
 }
 
 /**
  * Return a random Number
- * 
+ *
  * @param {Number} min
  * @param {Number} max
  * @return {Number}
@@ -118,6 +118,23 @@ function groupSort() {
   }
 }
 
+/**
+ * webnotification loop rate
+ * @param {Number} loop time
+ * @param {Function} callback to loop server
+ */
+const _loopRate = 30000 // min sec
+function loopWebNotification( callback = () => {}, loopTime) {
+  const secs = loopTime || _loopRate
+  if (window.__Alert_WebNotification) {
+    clearInterval(window.__Alert_WebNotification)
+    window.__Alert_WebNotification = null;
+  }
+  window.__Alert_WebNotification = setInterval( () => {
+    callback()
+  }, secs)
+}
+
 module.exports = {
   menu,
   bottomMenus,
@@ -127,5 +144,6 @@ module.exports = {
   classnames,
   getUUID,
   groupSort,
-  browser
+  browser,
+  loopWebNotification
 }
