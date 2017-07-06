@@ -1,7 +1,7 @@
 import { parse } from 'qs'
-import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, notifyOperate, takeOverService, getAllUsers, reassignAlert } from '../services/alertOperation'
+import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, notifyOperate, takeOverService, reassignAlert } from '../services/alertOperation'
 import { queryAlertList, queryChild, queryAlertListTime } from '../services/alertList'
-import { getUsers } from '../services/alertAssociationRules';
+import { getUsers } from '../services/app.js';
 import { queryCloumns } from '../services/alertQuery'
 import { message } from 'antd';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
@@ -96,7 +96,7 @@ export default {
 
       if (position === 'detail') {
         if (users.length === 0) {
-          const response = yield call(getAllUsers);
+          const response = yield call(getUsers);
           if (response.result) {
             yield put({
               type: 'receiveAllUsers',
@@ -115,7 +115,7 @@ export default {
           message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
         } else {
           if (users.length === 0) {
-            const response = yield call(getAllUsers);
+            const response = yield call(getUsers);
             if (response.result) {
               yield put({
                 type: 'receiveAllUsers',

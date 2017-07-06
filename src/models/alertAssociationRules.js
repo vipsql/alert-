@@ -8,12 +8,14 @@ import {
   deleteRule,
   viewRule,
   createRule,
-  getUsers,
   getWos,
   getField,
   queryAttributes,
   getshowITSMParam,
 } from '../services/alertAssociationRules';
+import {
+  getUsers
+} from '../services/app.js'
 import {
   querySource
 } from '../services/alertQuery';
