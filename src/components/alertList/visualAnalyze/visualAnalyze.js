@@ -193,14 +193,18 @@ class VisualAnalyze extends Component {
       )
     })
 
+
+
     const resComponent = resList.length > 0 && resList.map((item, index) => {
+      //referrerPolicy="no-referrer"
       const resList = item.resources.map((childItem, childIndex) => {
+        const iconImage = <img src={childItem.iconUrl} style={{ width: '70%', marginTop: '15%' }} />
         return (
           <Popover key={childIndex} content={AlertListContent} >
             <li key={childIndex} data-id={childItem.resId} onMouseLeave={cancelShowAlertList} onMouseEnter={(e) => { showAlertList(e) }}>
 
               <div className={childItem['severity'] > -1 ? styles.tagsRingTwo : styles.tagsRingTwo2} style={{ background: severityToColor[childItem['severity']] }}>
-                {childItem['severity'] <= -1 && <img src={childItem.iconUrl} referrerPolicy="no-referrer" style={{ width: '70%', marginTop: '15%' }} />}
+                {childItem['severity'] <= -1 && iconImage}
               </div>
               {
                 childItem['severity'] > -1 && <div className={styles.tagsRingOne} style={{
@@ -208,7 +212,7 @@ class VisualAnalyze extends Component {
                   //backgroundImage: `url("${childItem.iconUrl}")`,
                   backgroundColor: severityToColor[childItem['severity']]
                 }}>
-                  <img src={childItem.iconUrl} referrerPolicy="no-referrer" style={{ width: '70%', marginTop: '15%' }} />
+                  {iconImage}
                 </div>
               }
 
