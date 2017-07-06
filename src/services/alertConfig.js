@@ -158,3 +158,13 @@ export async function getValidateRegex(params) {
 
   return request('/applyRule/regexValue', options)
 }
+
+// 当前用户是否可以新建接入应用
+export async function checkPayType() {
+  return request(`/application/checkPayType`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}
