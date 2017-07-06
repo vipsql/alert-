@@ -61,7 +61,7 @@ class ReassignModal extends Component {
   render() {
     const { isShowReassingModal, onOk, onCancel, users, intl: { formatMessage } } = this.props;
     const footer = (
-      <div className={styles.footer}>
+      <div className={styles.modalFooter}>
         <Button type="primary" onClick={this.handleOk}><FormattedMessage {...localMessage['modal_reassign']} /></Button>
         <Button type="primary" onClick={onCancel}><FormattedMessage {...localMessage['modal_cancel']} /></Button>
       </div>
@@ -80,17 +80,18 @@ class ReassignModal extends Component {
         onOk={this.handleOk}
         onCancel={onCancel}
         footer={footer}
-        wrapClassName={styles.reassignModal}
+      //wrapClassName={styles.reassignModal}
       >
-        <Row>
-          <Col span='4' style={{ lineHeight: '32px' }}>{formatMessage(localMessage['modal_specificUser']) + ': '}</Col>
-          <Col span='20'>
-            <Select {...selectProps}>
-              {users.map(user => (<Option key={user.userId}>{user.realName}</Option>))}
-            </Select>
-          </Col>
-        </Row>
-
+        <div className={styles.reassignModalMain}>
+          <Row>
+            <Col span='5' style={{ lineHeight: '32px' }} className={styles.specificUser}>{formatMessage(localMessage['modal_specificUser']) + ': '}</Col>
+            <Col span='19'>
+              <Select {...selectProps}>
+                {users.map(user => (<Option key={user.userId}>{user.realName}</Option>))}
+              </Select>
+            </Col>
+          </Row>
+        </div>
       </Modal>
     )
   }

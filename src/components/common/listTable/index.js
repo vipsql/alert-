@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { Button, Spin, Popover } from 'antd';
+import { Button, Spin, Popover, Checkbox  } from 'antd';
 import LevelIcon from '../levelIcon/index.js'
 import Animate from 'rc-animate'
 import styles from './index.less'
@@ -389,8 +389,9 @@ class ListTable extends Component {
           childtrs.push(
             <tr key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread ? styles.hiddenChild : styles.groupSpread}>
               {
+                //<input type="checkbox" checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc} />
                 sourceOrigin !== 'alertQuery' ?
-                  <td key={tdKey} className={styles.checkstyle}><input type="checkbox" checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc} /></td>
+                  <td key={tdKey} className={styles.checkstyle}><Checkbox checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc} /></td>
                   :
                   undefined
               }
@@ -427,9 +428,10 @@ class ListTable extends Component {
         commonTrs.push(
           <tr key={item.id} className={styles.noSpread}>
             {
+              //<input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc} />
               sourceOrigin !== 'alertQuery' && Object.keys(checkAlert).length !== 0 ?
                 <td key={index} className={styles.checkstyle}>
-                  <input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc} />
+                  <Checkbox checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc} />
                 </td>
                 :
                 undefined
@@ -452,8 +454,9 @@ class ListTable extends Component {
             <thead>
               <tr>
                 {
+                  //<input type="checkbox" onClick={handleSelectAll} checked={selectedAll} />
                   sourceOrigin !== 'alertQuery' ?
-                    <th key="checkAll" width={48} className={styles.checkstyle}><input type="checkbox" onClick={handleSelectAll} checked={selectedAll} /></th>
+                    <th key="checkAll" width={48} className={styles.checkstyle}><Checkbox onClick={handleSelectAll} checked={selectedAll} /></th>
                     :
                     undefined
                 }

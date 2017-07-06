@@ -1,8 +1,8 @@
 import { parse } from 'qs'
 import { queryDetail } from '../services/alertDetail'
 import { queryCloumns } from '../services/alertQuery'
-import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, changeTicket, viewTicket, notifyOperate, takeOverService, getAllUsers, reassignAlert } from '../services/alertOperation'
-import { getUsers } from '../services/alertAssociationRules';
+import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, changeTicket, viewTicket, notifyOperate, takeOverService, reassignAlert } from '../services/alertOperation'
+import { getUsers } from '../services/app.js';
 import { message } from 'antd'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -514,7 +514,7 @@ export default {
     *openReassign({ payload: position }, { select, put, call }) {
       const users = yield select(state => state.alertDetail.users);
       if (users.length === 0) {
-        const response = yield call(getAllUsers);
+        const response = yield call(getUsers);
         if (response.result) {
           yield put({
             type: 'receiveAllUsers',

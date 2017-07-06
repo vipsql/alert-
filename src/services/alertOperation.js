@@ -207,42 +207,6 @@ export async function takeOverService({ alertIds }) {
   // })
 }
 
-export async function getAllUsers() {
-  return request('/common/getUsers', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-  // return Promise.resolve({
-  //   result: true,
-  //   data: [
-  //     {
-  //       "apiKeys": [
-  //         "e10adc394fdfa56e057f20f88dd",
-  //         "e10adc39gggadadsddddddd88dd"
-  //       ],
-  //       "email": "xulj@broada.com",
-  //       "realName": "ljtest",
-  //       "root": false,
-  //       "tenantId": "e10adc3949ba59abbe56e057f20f88dd",
-  //       "userId": "322783deed3342d79ff9123f00b72118"
-  //     },
-  //     {
-  //       "apiKeys": [
-  //         "e10adc394fdfa56e057f20f88dd",
-  //         "e10adc39gggadadsddddddd88dd"
-  //       ],
-  //       "email": "tuyg@uyunsoft.cn",
-  //       "realName": "tuyg",
-  //       "root": false,
-  //       "tenantId": "e10adc3949ba59abbe56e057f20f88dd",
-  //       "userId": "19f571b53f264ac89d9d7dd1c71499b1"
-  //     }
-  //   ]
-  // })
-}
-
 export async function reassignAlert({ toWho, incidentIds }) {
   return request('/incident/shift', {
     method: 'POST',

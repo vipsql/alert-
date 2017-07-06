@@ -198,10 +198,9 @@
   "alertDetail.action.t50": "更改级别",
   "alertDetail.action.t70": "告警删除",
   "alertDetail.action.t90": "通知",
-  "alertDetail.action.t110": "chatOps群组",
-  "alertDetail.action.t120": "接手",
+  "alertDetail.action.t110": "ChatOps群组",
   "alertDetail.action.t130": "派发工单",
-  "alertDetail.action.t150": "派发cross工单",
+  "alertDetail.action.t150": "派发COSS工单",
   "alertDetail.action.t170": "解决",
   "alertDetail.action.t200": "接手",
   "alertDetail.action.t210": "转派",
@@ -215,6 +214,7 @@
   "alertConfig.correlation": "告警关联配置",
   "alertConfig.correlation.message": "设置告警关联规则",
 
+  "alertApplication.incomingTotal.numberWarn": "免费租户只能创建5个接入应用",
   "alertApplication.newApplication": "添加应用",
   "alertApplication.incoming": "接入",
   "alertApplication.outgoing": "转出",
@@ -312,9 +312,6 @@
   "modal.trap.regex.noResult": "暂无结果",
   "modal.trap.regex.ok": "完成",
   "modal.trap.regex.goBack": "返回",
-
-  "modal.trap.deleteTitle": "删除规则",
-  "modal.trap.deleteMessage": "您确定要删除{message}规则吗？",
 
   "modal.rule.deleteTitle": "删除规则",
   "modal.rule.deleteMessage": "您确定要删除{message}规则吗？",
@@ -445,6 +442,18 @@
   "ruleEditor.email": "电子邮件",
   "ruleEditor.sms": "短信息",
   "ruleEditor.chatops": "分享到ChatOps",
+  "ruleEditor.audio": "弹窗声音提醒",
+  "ruleEditor.audioTitle": "标题",
+  "ruleEditor.audioCon": "内容",
+  "ruleEditor.tipInfo": "弹窗信息",
+  "ruleEditor.audioInfo": "声音提醒",
+  "ruleEditor.audition": "试听",
+  "ruleEditor.playTimeType": "播放时间",
+  "ruleEditor.playTimeOut": "超时时间",
+  "ruleEditor.voiceType": "播放声音",
+  "ruleEditor.playTime.once": "一次",
+  "ruleEditor.playTime.ten": "持续10s",
+  "ruleEditor.playTime.out": "直到超时",
   "ruleEditor.emailTitle": "邮件标题",
   "ruleEditor.emailCon": "邮件内容",
   "ruleEditor.smsCon": "信息内容",
@@ -490,19 +499,18 @@
   "ruleEditor.alertUpgrade": "升级告警",
   "ruleEditor.word8": "请选择告警状态",
   "ruleEditor.nLevelUp": "当且仅当告警级别提高时再次提醒",
+  "ruleEditor.isShareUpgrade": "是否开启告警升级",
 
   "server.notStarted": "服务不可用",
 
   "visualAnalyze.groupBy": "分组",
   "visualAnalyze.incidentGroup": "只显示有故障的分组",
   "visualAnalyze.noData": "暂无数据",
-  "visualAnalyze.tip": "小提示：<可视化分析>利用CMDB展现关联CI的告警状态 (以最高等级为准)，其中也包含历史发生的未关闭的告警，辅助运维人员通过CI相关性定位故障根源。",
+  "visualAnalyze.tip": "提示：【可视化分析】利用CMDB展现含共同标签CI的告警状态 (未关闭、最高等级告警)，通过标签分组辅助运维人员判断故障可能的根源。",
 
   "layout.fixedLayout": "固定布局",
   "layout.autoLayout": "自动布局",
   "layout.fullScreen": "全屏",
   "layout.initialize": "还原",
-
   "go_top.tip": "返回顶部"
-
 }
