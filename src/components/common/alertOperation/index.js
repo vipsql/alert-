@@ -319,7 +319,7 @@ const alertOperation = ({ position,
         <FormattedMessage {...localeMessage['operate_resolve']} />
       </Button>
 
-      <Dropdown overlay={menu} trigger={['click']}>
+      <Dropdown overlay={menu}>
         <span className={styles.moreOperateDropdown}>{formatMessage({ ...localeMessage['moreOperate'] })}<Icon type="down" /></span>
       </Dropdown>
 

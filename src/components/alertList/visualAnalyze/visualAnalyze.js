@@ -76,7 +76,7 @@ class VisualAnalyze extends Component {
 
   render() {
     const {
-          handleExpand,
+      handleExpand,
       gr2Change,
       gr3Change,
       gr4Change,
@@ -154,7 +154,9 @@ class VisualAnalyze extends Component {
         alertList.map((item, index) => {
           return (
             <div key={index}>
-              <a data-id={item.id} data-isLoaded={false} data-list={alertList} onClick={(e) => { detailClick(e) }}><span className="visualAlert" style={{ background: severityToColor[item['severity']] }}></span>{item.name}</a>
+              <a data-id={item.id} data-isLoaded={false} data-list={alertList} onClick={(e) => { detailClick(e) }}>
+                <span className="visualAlert" style={{ background: severityToColor[item['severity']] }}></span>{item.name}
+              </a>
             </div>
           )
         }) :
