@@ -7,10 +7,12 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import LeaveNotifyModal from '../../common/leaveNotifyModal/index'
 
 const Item = Form.Item;
+// 判断是否需要弹出离开确认框
+let isNeedLeaveCheck = true;
 const UYUN_ChatOps = (props) => {
 
     const { appkey, form, onOk, keyCreate, intl: {formatMessage}} = props;
-    
+
     const { getFieldDecorator, getFieldsValue } = form;
 
     const chatOpsClass = classnames(
@@ -72,7 +74,7 @@ const UYUN_ChatOps = (props) => {
                         </Item>
                     </Form>
                     {
-                        appkey === undefined ? 
+                        appkey === undefined ?
                         <Button type="primary" className={styles.createBtn} onClick={() => {keyCreate(form)}}>{formatMessage({...localeMessage['appKey']})}</Button>
                         :
                         <p className={styles.readOnly}>{`App key：${appkey}`}</p>
@@ -80,7 +82,9 @@ const UYUN_ChatOps = (props) => {
                 </div>
                 <Button type="primary" htmlType='submit' onClick={(e) => {onOk(e, form)}}>{formatMessage({...localeMessage['save']})}</Button>
             </div>
-            <LeaveNotifyModal route={ props.route }/>
+            <LeaveNotifyModal route={ props.route } needLeaveCheck={() => {
+              return isNeedLeaveCheck;
+            }} />
         </div>
     )
 }

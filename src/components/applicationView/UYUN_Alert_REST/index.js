@@ -7,10 +7,12 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import LeaveNotifyModal from '../../common/leaveNotifyModal/index'
 
 const Item = Form.Item;
+// 判断是否需要弹出离开确认框
+let isNeedLeaveCheck = true;
 const UYUN_Alert_REST = (props) => {
 
     const { builtIn, appkey, url, form, onOk, keyCreate, route, intl: {formatMessage}} = props;
-    
+
     const { getFieldDecorator, getFieldsValue } = form;
 
     const alertClass = classnames(
@@ -80,7 +82,7 @@ const UYUN_Alert_REST = (props) => {
                         </Item>
                     </Form>
                     {
-                        appkey === undefined ? 
+                        appkey === undefined ?
                         <Button type="primary" className={styles.createBtn} onClick={() => {keyCreate(form, (UUID) => {
                             window.frames[0].postMessage(UUID, '/')
                         })}}>{formatMessage({...localeMessage['appKey']})}</Button>
@@ -105,7 +107,9 @@ const UYUN_Alert_REST = (props) => {
                 { builtIn !== undefined && builtIn == 1 ? <span className={styles.stepLine}></span> : undefined }
                 <Button type="primary" htmlType='submit' onClick={(e) => {onOk(e, form)}}>{formatMessage({...localeMessage['save']})}</Button>
             </div>
-            <LeaveNotifyModal route={ props.route }/>
+            <LeaveNotifyModal route={ props.route } needLeaveCheck={() => {
+              return isNeedLeaveCheck;
+            }} />
         </div>
     )
 }
