@@ -303,10 +303,6 @@ class alertDetail extends Component {
           id: 'alertDetail.action.t110',
           defaultMessage: 'chatOps群组'
         },
-        120: {
-          id: 'alertDetail.action.t120',
-          defaultMessage: '解决'
-        },
         130: {
           id: 'alertDetail.action.t130',
           defaultMessage: '派发工单'
