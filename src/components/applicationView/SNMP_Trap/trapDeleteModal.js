@@ -19,11 +19,11 @@ const trapDeleteModal = ({snmpTrapRules, onOk, onCancel, dispatch}) => {
             defaultMessage: '取消'
         },
         deleteOperate: {
-            id: 'modal.trap.deleteTitle',
+            id: 'modal.rule.deleteTitle',
             defaultMessage: '删除规则'
         },
         deleteMessage: {
-            id: 'modal.trap.deleteMessage',
+            id: 'modal.rule.deleteMessage',
             defaultMessage: '您确定要删除{message}规则吗',
             values: {
                 message: operateDeleteRule.name

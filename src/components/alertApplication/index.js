@@ -27,7 +27,7 @@ const alertApplication = ({dispatch, alertConfig, intl: {formatMessage}}) => {
 
     const openAppModal = (type) => {
         dispatch({
-            type: 'alertConfig/queryAplicationType',
+            type: 'alertConfig/beforeQueryApplicationType',
             payload: type
         })
     }

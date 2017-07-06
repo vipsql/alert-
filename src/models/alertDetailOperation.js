@@ -1,6 +1,6 @@
 import { parse } from 'qs'
 import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, notifyOperate, takeOverService, reassignAlert } from '../services/alertOperation'
-import { getUsers } from '../services/alertAssociationRules';
+import { getUsers } from '../services/app.js';
 import { message } from 'antd';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 

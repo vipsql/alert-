@@ -1,4 +1,4 @@
-import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery, add, update, view, getTrapUrl} from '../services/alertConfig'
+import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery, add, update, view, getTrapUrl, checkPayType} from '../services/alertConfig'
 import {parse} from 'qs'
 import { message } from 'antd'
 import pathToRegexp from 'path-to-regexp';
@@ -245,7 +245,7 @@ export default {
     *queryAplication({payload}, {select, put, call}) {
 
       yield put({ type: 'toggleLoading', payload: true })
-      
+
       var { type, orderBy, orderType } = yield select( state => {
         return {
           'type': state.alertConfig.applicationType,
@@ -283,7 +283,22 @@ export default {
 
       yield put({ type: 'toggleLoading', payload: false })
     },
-    // 查询配置种类
+    *beforeQueryApplicationType({payload}, {select, put, call}) {
+      if (payload !== undefined && payload == 0) {
+        const isRoot = yield call(checkPayType)
+        if (isRoot.result) {
+          if (!isRoot.data) {
+            yield message.warn(window.__alert_appLocaleData.messages['alertApplication.incomingTotal.numberWarn'], 2)
+            return false
+          }
+        } else {
+          yield message.error(window.__alert_appLocaleData.messages[isRoot.message], 2)
+          return false
+        }
+      }
+      yield put({ type: 'queryAplicationType', payload: payload })
+    },
+    // 查询配置种类 --> 接入在判断前先查询是否有资格，免费用户只有5个名额
     *queryAplicationType({payload}, {select, put, call}) {
       if (payload !== undefined) {
         yield put({ type: 'toggleTypeModal', payload: true })
@@ -307,8 +322,8 @@ export default {
       if (payload !== undefined && payload.id !== undefined && payload.status !== undefined) {
         const statusResult = yield call(changeAppStatus, payload)
         if (statusResult.result) {
-          yield put({ 
-            type: 'changeAppStatus', 
+          yield put({
+            type: 'changeAppStatus',
             payload: {
               id: payload.id,
               status: payload.status
@@ -331,8 +346,8 @@ export default {
       if (Object.keys(currentDeleteApp).length !== 0 && currentDeleteApp.id !== undefined) {
         const deleteResult = yield call(deleteApp, currentDeleteApp.id)
         if (deleteResult.result) {
-          yield put({ 
-            type: 'deleteApplication', 
+          yield put({
+            type: 'deleteApplication',
             payload: currentDeleteApp.id
           })
         } else {
@@ -340,7 +355,7 @@ export default {
         }
       } else {
         console.error('application is null')
-      } 
+      }
     },
     //orderList排序
     *orderList({payload}, {select, put, call}) {
@@ -435,7 +450,7 @@ export default {
       const { applicationData } = state;
       const newData = applicationData.map( (item) => {
         if (item.id == id) {
-          item.status = + status 
+          item.status = + status
         }
         return item;
       })

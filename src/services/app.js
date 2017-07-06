@@ -1,12 +1,6 @@
 import { request } from '../utils'
 import {stringify} from 'qs'
 
-export async function queryAlertDashbord () {
-  return request('/mock/app.json', {
-    method: 'get'
-  })
-}
-
 export async function getUserInformation() {
   return request(`/dataService/getUserInfo`, {
       method: 'GET',
