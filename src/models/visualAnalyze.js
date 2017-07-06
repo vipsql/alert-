@@ -142,6 +142,7 @@ export default {
       // 如果标签层级小于指定层级
       // 这里的3是前面2层分组加上设备的1层分组
       // visualSelect 是热图以及tagsFileter选择的条件 如果选择了2个维度就是 最终的层级为2 + 3
+      // 如果选择的标签比较多，那么就直接查询resource
       if (level < visualSelect.length + 3) {
         let val
         const gr1 = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")) || [];
