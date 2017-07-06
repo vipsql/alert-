@@ -29,8 +29,8 @@ function Edit(props){
         console.log(currentEditApp.applyType.name)
         switch (currentEditApp.applyType.name) {
             case 'UYUN Alert REST API':
-                targetApplication = 
-                    <AlertREST 
+                targetApplication =
+                    <AlertREST
                         route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
@@ -38,7 +38,7 @@ function Edit(props){
                         url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
                         onOk={(e, form) => {
                             e.preventDefault();
-                            
+
                             form.validateFieldsAndScroll( (errors, values) => {
                                 if (!!errors) {
                                     return;
@@ -53,8 +53,8 @@ function Edit(props){
                     />
                 break;
             case 'UYUN Monitor':
-                targetApplication = 
-                    <Monitor 
+                targetApplication =
+                    <Monitor
                         route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
@@ -62,7 +62,7 @@ function Edit(props){
                         url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
                         onOk={(e, form) => {
                             e.preventDefault();
-                            
+
                             form.validateFieldsAndScroll( (errors, values) => {
                                 if (!!errors) {
                                     return;
@@ -77,18 +77,19 @@ function Edit(props){
                     />
                 break;
             case 'UYUN NetWork':
-                targetApplication = 
-                    <NetWork 
+                targetApplication =
+                    <NetWork
                         route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}
                         url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
-                        onOk={(e, form) => {
+                        onOk={(e, form, resolve) => {
                             e.preventDefault();
-                            
+
                             form.validateFieldsAndScroll( (errors, values) => {
                                 if (!!errors) {
+                                    resolve(false);
                                     return;
                                 }
                                 const formData = form.getFieldsValue()
@@ -96,23 +97,25 @@ function Edit(props){
                                     type: 'alertConfig/editApplication',
                                     payload: formData
                                 })
+                                resolve(true);
                             })
                         }}
                     />
                 break;
             case 'SNMPTrap':
-                targetApplication = 
-                    <Trap 
+                targetApplication =
+                    <Trap
                         route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         builtIn={currentEditApp.builtIn}
                         url={hostUrl}
-                        onOk={(e, form) => {
+                        onOk={(e, form, resolve) => {
                             e.preventDefault();
-                            
+
                             form.validateFieldsAndScroll( (errors, values) => {
                                 if (!!errors) {
+                                    resolve(false);
                                     return;
                                 }
                                 const formData = form.getFieldsValue()
@@ -120,13 +123,14 @@ function Edit(props){
                                     type: 'alertConfig/editApplication',
                                     payload: formData
                                 })
+                                resolve(true);
                             })
                         }}
                     />
                 break;
             case 'UYUN VideoMon':
-                targetApplication = 
-                    <VideoMON 
+                targetApplication =
+                    <VideoMON
                         route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
@@ -134,7 +138,7 @@ function Edit(props){
                         url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
                         onOk={(e, form) => {
                             e.preventDefault();
-                            
+
                             form.validateFieldsAndScroll( (errors, values) => {
                                 if (!!errors) {
                                     return;
@@ -149,14 +153,14 @@ function Edit(props){
                     />
                 break;
             case 'UYUN ITSM':
-                targetApplication = 
-                    <Itsm 
+                targetApplication =
+                    <Itsm
                         route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         onOk={(e, form) => {
                             e.preventDefault();
-                            
+
                             form.validateFieldsAndScroll( (errors, values) => {
                                 if (!!errors) {
                                     return;
@@ -171,14 +175,14 @@ function Edit(props){
                     />
                 break;
             case 'UYUN ChatOps':
-                targetApplication = 
-                    <ChatOps 
+                targetApplication =
+                    <ChatOps
                         route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
                         onOk={(e, form) => {
                             e.preventDefault();
-                            
+
                             form.validateFieldsAndScroll( (errors, values) => {
                                 if (!!errors) {
                                     return;
@@ -193,8 +197,8 @@ function Edit(props){
                     />
                 break;
             default:
-                targetApplication = 
-                    <AlertREST 
+                targetApplication =
+                    <AlertREST
                         route={ props.route }
                         appkey={currentEditApp.appKey}
                         displayName={currentEditApp.displayName}
@@ -202,7 +206,7 @@ function Edit(props){
                         url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
                         onOk={(e, form) => {
                             e.preventDefault();
-                            
+
                             form.validateFieldsAndScroll( (errors, values) => {
                                 if (!!errors) {
                                     return;
@@ -225,7 +229,7 @@ function Edit(props){
     } else {
         return false;
     }
-    
+
 }
 Edit.propTypes = {
   dispatch: PropTypes.func

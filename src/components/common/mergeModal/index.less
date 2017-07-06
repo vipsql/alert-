@@ -1,0 +1,63 @@
+@import "../../vars.less";
+
+.mergeTable{
+    .title{
+        font-size: 13px;
+        //color: #828b99;
+        color: #9ad0f7;
+        margin-bottom: 10px;
+    }
+    :global{
+        .ant-table-thead{
+            tr {
+                border-bottom: 2px solid #1f72b4;
+            }
+            tr > th{
+                background: #164f7d;
+                color: #70c3fb
+            }
+        }
+        .ant-table-tbody > tr:hover{
+            background: #164f7d;
+        }
+        .ant-table-tbody > tr > td {
+            color: #fff;
+            border-bottom: 1px solid #1d6aa7;
+            background: #195d93;
+            position: relative;
+        }
+    }
+    .remove{
+        color: #fff;
+    }
+}
+
+// common modal footer
+.modalFooter{
+    height: 60px;
+    line-height: 60px;
+    margin: -10px -16px -10px -10px;
+    //background: #f2f7fc;
+    background: #145e99;
+    text-align: center;
+    :global{
+        .ant-btn-primary[disabled]{
+            background: #18659f;
+            color: #a8bcd3;
+            border: 1px solid #18659f;
+        }
+    }
+    button{
+        width: 82px;
+    }
+    .ghostBtn{
+        color: #fff;
+        background-color: #108ee9;
+        border-color: #108ee9;
+        &:hover{
+            color: #fff;
+            background-color: #49a9ee;
+            border-color: #49a9ee;
+        }
+    }
+}

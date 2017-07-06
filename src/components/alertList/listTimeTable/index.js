@@ -38,7 +38,17 @@ const ListTimeTableWrap = ({ dispatch, alertListTable, selectedTime }) => {
       const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
       dispatch({
         type: 'alertListTable/handleCheckboxClick',
-        payload: { alertInfo }
+        payload: { alertInfo, resolve: function(response) {
+          if(response && response.result) {
+            dispatch({
+              type: 'alertOperation/setOperateAlertIdsAndSelectedAlertIds',
+              payload: {
+                operateAlertIds: response.operateAlertIds,
+                selectedAlertIds: response.selectedAlertIds,
+              }
+            })
+          }
+        } }
       })
     },
     detailClick(e) {
