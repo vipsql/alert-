@@ -1,10 +1,47 @@
 import React, { Component } from 'react'
 import Notification from './notification'
 
-let defaultThreshold = 100 // 上限100条
+let defaultThreshold = 10 // 上限100条
 let defaultPlacement = 'topRight';
+let defaultPrefix = 'alert-notification';
+let defaultTop = 24;
+let defaultBottom = 24;
 let defaultGetContainer
 const notificationInstance = {}
+
+function getPlacementStyle(placement) {
+  let style;
+  switch (placement) {
+    case 'topLeft':
+      style = {
+        left: 0,
+        top: defaultTop,
+        bottom: 'auto',
+      };
+      break;
+    case 'bottomLeft':
+      style = {
+        left: 0,
+        top: 'auto',
+        bottom: defaultBottom,
+      };
+      break;
+    case 'bottomRight':
+      style = {
+        right: 0,
+        top: 'auto',
+        bottom: defaultBottom,
+      };
+      break;
+    default:
+      style = {
+        right: 0,
+        top: defaultTop,
+        bottom: 'auto',
+      };
+  }
+  return style
+}
 
 function getNotificationInstance(args) {
   if (notificationInstance[defaultPlacement]) {
@@ -19,8 +56,9 @@ const api = {
   config(args) {
     defaultPlacement = args.placement || defaultPlacement
     getNotificationInstance({
-      ...args,
       threshold: args.threshold || defaultThreshold,
+      style: getPlacementStyle(defaultPlacement),
+      prefix: args.prefix || defaultPrefix
     })
   },
   // update when have new notices
@@ -34,8 +72,8 @@ const api = {
     Object.keys(notificationInstance).forEach(key => {
       notificationInstance[key].destroy();
       delete notificationInstance[key];
-    });
+    })
   }
-}
+};
 
-export default api as NotificationApi;
+export default api

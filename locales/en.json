@@ -503,6 +503,7 @@
   "ruleEditor.alertUpgrade": "escalate",
   "ruleEditor.word8": "",
   "ruleEditor.nLevelUp": "Remind the recipients again if and only if the severity has been changed",
+  "ruleEditor.isShareUpgrade": "是否开启告警升级",
 
 
   "server.notStarted": "Service Unavailable",

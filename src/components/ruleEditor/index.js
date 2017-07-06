@@ -13,7 +13,9 @@ import {
     Select,
     Tabs,
     Popover,
-    Checkbox
+    Checkbox,
+    Row,
+    Col
 } from 'antd';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
@@ -266,6 +268,7 @@ class RuleEditor extends Component {
             condition: makeCondition(_.cloneDeep(props.condition)),
             /* 动作 */
             action: props.action,
+            isShareUpgrade: false,
             email: false,
             sms: false,
             chatops: false,
@@ -332,6 +335,7 @@ class RuleEditor extends Component {
         }
         if (nextProps.name) {
             let _action = undefined;
+            let isShareUpgrade = false;
             _action = _.cloneDeep(nextProps.action);
             let _actionType = _action.type;
 
@@ -343,6 +347,8 @@ class RuleEditor extends Component {
                         status: [],
                         recipients: []
                     }]
+                } else {
+                    isShareUpgrade = true
                 }
                 _action.type = _actionType
             } else {
@@ -377,6 +383,7 @@ class RuleEditor extends Component {
                 source: nextProps.source,
                 condition: makeCondition(_.cloneDeep(nextProps.condition)),
                 action: _action || nextProps.action,
+                isShareUpgrade,
                 ITSMParam: nextProps.action.actionITSM
                     ? JSON.stringify(JSON.parse(nextProps.action.actionITSM.param), null, 2)
                     : '',
@@ -402,7 +409,7 @@ class RuleEditor extends Component {
 
     render() {
         conditionsDom = []; // 重置，防止重复 render
-        const { time, timeStart, timeEnd, source, condition, action, email, sms, chatops, audio, target } = this.state;
+        const { time, timeStart, timeEnd, source, condition, action, email, sms, chatops, audio, target, isShareUpgrade } = this.state;
         const itemLayout = {
             labelCol: { span: 2 },
             wrapperCol: { span: 4 }
@@ -695,12 +702,15 @@ class RuleEditor extends Component {
                                 </div>
                                 {
                                     this.state.target === 0 &&
-                                    <Checkbox className={styles.nLevelUp} checked={action.actionNotification && action.actionNotification.notifyWhenLevelUp} onChange={this.changeNotifyLevelUp.bind(this)}>{window.__alert_appLocaleData.messages['ruleEditor.nLevelUp']}</Checkbox>
+                                    <div>
+                                      <Checkbox className={styles.nLevelUp} checked={action.actionNotification && action.actionNotification.notifyWhenLevelUp} onChange={this.changeNotifyLevelUp.bind(this, 3)}>{window.__alert_appLocaleData.messages['ruleEditor.nLevelUp']}</Checkbox>
+                                      <Checkbox className={styles.shareUpgrade} checked={isShareUpgrade} onChange={this.changeShareUpgrade.bind(this)}>{window.__alert_appLocaleData.messages['ruleEditor.isShareUpgrade']}</Checkbox>
+                                    </div>
                                 }
                             </div>
                             {/*升级*/}
                             {
-                                this.state.target === 0 &&
+                                this.state.target === 0 && isShareUpgrade &&
                                 <div>
                                     <div className={styles.upgradelabel}>{window.__alert_appLocaleData.messages['ruleEditor.upgradelabel']}</div>
                                     {
@@ -792,7 +802,14 @@ class RuleEditor extends Component {
                                         value={this.state.ITSMParam}
                                         type="textarea" placeholder={window.__alert_appLocaleData.messages['ruleEditor.fm']} />
                                 </FormItem>
-
+                                {
+                                    this.state.target === 0 &&
+                                    <Row>
+                                      <Col offset={3}>
+                                        <Checkbox className={styles.nLevelUp} checked={action.actionITSM && action.actionITSM.notifyWhenLevelUp} onChange={this.changeNotifyLevelUp.bind(this, 4)}>{window.__alert_appLocaleData.messages['ruleEditor.nLevelUp']}</Checkbox>
+                                      </Col>
+                                    </Row>
+                                }
                             </div>
                         </TabPane>
                         {/* 抑制告警 */}
@@ -808,7 +825,7 @@ class RuleEditor extends Component {
                         {
                             window.__alert_appLocaleData.locale === 'zh-cn' &&
                             <TabPane disabled={this.props.alertAssociationRules.rooms.length === 0 ? true : false} tab={window.__alert_appLocaleData.messages['ruleEditor.shareChatOps']} key="6">
-                                <div>
+                                <div style={{marginBottom: '20px'}}>
                                     <span>{window.__alert_appLocaleData.messages['ruleEditor.chatopsGroup']}：</span>
                                     <Select
                                         getPopupContainer={() =>document.getElementById("content")}
@@ -822,6 +839,12 @@ class RuleEditor extends Component {
                                         }
                                     </Select>
                                 </div>
+                                {
+                                    this.state.target === 0 &&
+                                    <Row>
+                                      <Checkbox className={styles.nLevelUp} style={{left: '0px'}} checked={action.actionChatOps && action.actionChatOps.notifyWhenLevelUp} onChange={this.changeNotifyLevelUp.bind(this, 6)}>{window.__alert_appLocaleData.messages['ruleEditor.nLevelUp']}</Checkbox>
+                                    </Row>
+                                }
                             </TabPane>
                         }
                     </Tabs>
@@ -873,9 +896,28 @@ class RuleEditor extends Component {
         });
     }
 
-    changeNotifyLevelUp(event) {
+    // 是否需要告警升级
+    changeShareUpgrade(event) {
+      this.setState({
+          isShareUpgrade: event.target.checked
+      });
+    }
+
+    changeNotifyLevelUp(type, event) {
         const _action = _.cloneDeep(this.state.action);
-        _action.actionNotification.notifyWhenLevelUp = event.target.checked;
+        switch (type) {
+          case 3:
+            _action.actionNotification.notifyWhenLevelUp = event.target.checked;
+            break;
+          case 4:
+            _action.actionITSM.notifyWhenLevelUp = event.target.checked;
+            break;
+          case 6:
+            _action.actionChatOps.notifyWhenLevelUp = event.target.checked;
+            break;
+          default:
+            break;
+        }
         this.setState({
             action: _action
         });
@@ -1107,7 +1149,8 @@ class RuleEditor extends Component {
                     _action.actionITSM = {
                         itsmModelId: undefined,
                         itsmModelName: undefined,
-                        param: undefined
+                        param: undefined,
+                        notifyWhenLevelUp: true
                     };
                 }
                 if (value.target) {
@@ -1405,7 +1448,7 @@ class RuleEditor extends Component {
 
     handleSubmit(event) {
         const { dispatch, form, alertAssociationRules } = this.props;
-        const { name, description, type, source, condition, time, timeStart, timeEnd, action, target } = this.state;
+        const { name, description, type, source, condition, time, timeStart, timeEnd, action, target, isShareUpgrade } = this.state;
         event.preventDefault();
         let _time = {};
         let hmStart = `${moment(this.cycleTimeStart, 'H:mm').format("HH:mm")}`;
@@ -1450,7 +1493,7 @@ class RuleEditor extends Component {
                 break;
             case 3:
                 // 告警通知和升级合并
-                if (!Number(target)) {
+                if (!Number(target) && isShareUpgrade) {
                     let upgradeNotificationMode = _.cloneDeep(action.actionNotification.notificationMode)
                     delete upgradeNotificationMode.webNotification
                     _actionNotification = action.actionNotification;
@@ -1567,10 +1610,12 @@ RuleEditor.defaultProps = {
             notificationMode: initalNotificationMode
         },
         actionITSM: {
+            notifyWhenLevelUp: true,
             itsmModelId: undefined,
             param: ''
         },
         actionChatOps: {
+            notifyWhenLevelUp: true,
             chatOpsRoomId: undefined
         },
         actionUpgrade: {
@@ -1659,10 +1704,12 @@ RuleEditor.propTypes = {
             })
         }),
         actionITSM: PropTypes.shape({
+            notifyWhenLevelUp: PropTypes.bool,
             itsmModelId: PropTypes.string,
             param: PropTypes.string
         }),
         actionChatOps: PropTypes.shape({
+            notifyWhenLevelUp: PropTypes.bool,
             chatOpsRoomId: PropTypes.string
         }),
         // 动作升级

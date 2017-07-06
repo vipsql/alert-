@@ -84,6 +84,7 @@ var data = {
             "type": 3
         },
         "actionITSM": {
+            notifyWhenLevelUp: true,
             "itsmModelId": "changed",
             "param": {
                 "cesjo": "cesj"
@@ -91,6 +92,7 @@ var data = {
             "type": 4
         },
         "actionChatOps": {
+            notifyWhenLevelUp: true,
             "chatOpsRoomId": "chatanfakj32us232j",
             "type": 6
         },

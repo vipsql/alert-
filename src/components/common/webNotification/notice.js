@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import classNames from 'classnames';
-import styles from './index.less'
+import classnames from 'classnames';
+import { Button } from 'antd'
+import styles from './index.less';
+import LevelIcon from '../levelIcon/index.js'
 
 function switchVideoSouce(type = '3') {
     let _source = 'Recovery.wav';
@@ -23,64 +25,100 @@ function switchVideoSouce(type = '3') {
     return _source;
 }
 
-export default class Notice extends Component {
+function isLoopVideo(type = 'ONCE') {
+  if(type === 'ONCE') {
+    return false
+  }
+  return true
+}
+
+function saveref(name, component) {
+    this[name] = component
+}
+
+class Notice extends Component {
   constructor(props) {
     super(props)
     this.closeTimer = null // duration timeOut
+    this.pauseTimer = null // duration voice play some Secs
     this.close = this.close.bind(this)
-    this.clearCloseTimer = this.clearCloseTimer.bind(this)
+    this.clearTimer = this.clearTimer.bind(this)
     this.switchVideoSouce = switchVideoSouce.bind(this)
+    this.isLoopVideo = isLoopVideo.bind(this)
+    this.saveAudioRef = saveref.bind(this, 'audioInstance')
   }
 
   static propTypes = {
-    duration: React.PropTypes.number,
-    audioCount: React.PropTypes.number,
+    timeOut: React.PropTypes.number,
     onClose: React.PropTypes.func,
     children: React.PropTypes.any
   }
   static defaultProps = {
     onClose: () => {},
-    audioCount: 0, // when audio player one time
-    duration: 0 // when audio player loop duration time
+    timeOut: 0 // when audio player loop duration time
   }
 
-  clearCloseTimer() {
-    if (this.closeTimer) {
+  clearTimer() {
+    if (this.closeTimer || this.pauseTimer) {
       clearTimeout(this.closeTimer)
+      clearTimeout(this.pauseTimer)
       this.closeTimer = null;
-    } 
+      this.pauseTimer = null;
+    }
   }
 
   close() {
-    this.clearCloseTimer();
+    this.clearTimer();
     this.props.onClose();
   }
 
   componentDidMount() {
-    if (this.props.duration) {
+    if (this.props.timeOut) {
       this.closeTimer = setTimeout(() => {
         this.close();
-      }, this.props.duration * 1000);
+      }, this.props.timeOut * 1000);
+    }
+    if (this.props.playTimeType && this.props.playTimeType === 'TENSEC') {
+      this.pauseTimer = setTimeout(() => {
+        if (this.audioInstance) {
+          this.audioInstance.pause()
+        }
+      }, 10 * 1000)
     }
   }
 
   componentWillUnmount() {
-    this.clearCloseTimer();
+    this.clearTimer();
   }
 
   render() {
     const props = this.props;
+    const noticeCls = [
+      styles[`${props.prefix}-notice`]
+    ]
+    const contentCls = [
+      styles[`${props.prefix}-content`]
+    ]
     return (
-      <div>
-        <div className={styles.content}>
-          <div></div>
+      <div className={classnames(...noticeCls)}>
+          <div className={classnames(...contentCls)}>
+            <p className={styles.title}>{props.title}</p>
+            <div><LevelIcon extraStyle={styles.icon} iconType={props.severity}/>{`${window['_severity'][props.severity]}`}</div>
+            <p className={styles.message}>{props.message}</p>
+            <div className={styles.ok}><Button type="primary" onClick={this.close}>{window.__alert_appLocaleData.messages['modal.ok']}</Button></div>
+          </div>
+          <a tabIndex="0" onClick={this.close} className={styles[`${props.prefix}-close`]}>
+            <span className={styles[`${props.prefix}-close-x`]}></span>
+          </a>
           {React.cloneElement(<audio />, {
+            ref: this.saveAudioRef,
             src: this.switchVideoSouce(props.voiceType),
-            loop: props.duration || false,
+            loop: this.isLoopVideo(props.playTimeType),
             autoPlay: true
           })}
-        </div>
       </div>
     )
   }
 }
+
+export default Notice

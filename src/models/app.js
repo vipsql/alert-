@@ -26,7 +26,7 @@ export default {
           })
           loop(function() {
             dispatch({type: 'getNotifies'})
-          })
+          }, 30000) // 默认半分钟轮询一次
         }
       })
     },
@@ -45,7 +45,9 @@ export default {
       yield put({ type: 'isSetTags' })
     },
     *getNotifies({ payload }, { put, call, select }) {
-      const loop = yield call(getWebNotification)
+      const loop = yield call(getWebNotification, {
+        size: 10 // 接收的告警上限
+      })
       if (loop.result) {
         yield put({ type: 'setWebNotification', payload: loop.data || [] })
       } else {
@@ -71,7 +73,7 @@ export default {
   },
   reducers: {
     // 声音通知
-    setWebNotification(state, { payload, notifies }) {
+    setWebNotification(state, { payload: notifies }) {
       return { ...state, notifies }
     },
     // 转化alertManage面板显示(通过设置isShowMask)

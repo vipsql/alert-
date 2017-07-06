@@ -239,11 +239,12 @@ class NotificationList extends Component {
                                   value={action.actionNotification ? action.actionNotification.notificationMode.webNotification.timeOut : 30}
                                   onChange={this.changeAction.bind(this, 'timeOut')}
                                 />
+                                <span style={{fontSize: '13px'}}>s</span>
                               </FormItem>
                             </Col>
                         </Row>
                         <Row>
-                            <Col span={5}>
+                            <Col span={6}>
                               <FormItem
                                   label={window.__alert_appLocaleData.messages['ruleEditor.voiceType']}
                                   className={styles.playerType}
@@ -261,10 +262,8 @@ class NotificationList extends Component {
                                   </Select>
                               </FormItem>
                             </Col>
-                            <Col span={5}>
-                              <Button type="primary" onClick={ this.createVideo.bind(this) }>{window.__alert_appLocaleData.messages['ruleEditor.audition']}</Button>
-                              { this.state._audio }
-                            </Col>
+                            <Button type="primary" onClick={ this.createVideo.bind(this) }>{window.__alert_appLocaleData.messages['ruleEditor.audition']}</Button>
+                            { this.state._audio }
                         </Row>
                     </div>
                 </TabPane>

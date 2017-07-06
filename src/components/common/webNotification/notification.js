@@ -54,7 +54,7 @@ class Notification extends Component {
   // when trigger loop return
   update(notices) {
     if (this.state.notices && notices.length > 0) {
-      const less = this.threshold - this.state.notices
+      const less = Number(this.threshold) - this.state.notices.length
       const equal = notices.length - less;
       if (equal < 0) {
         // should not remove notices
@@ -66,11 +66,11 @@ class Notification extends Component {
         while(count > 0) {
           let operate = _notices.shift()
           typeof operate !== 'undefined' && setTimeout(() => {
-            this.remove(operate)
+            this.remove(operate.key)
           }, 30 * count)
           count--
         }
-        this.batchAdd(notices)
+        this.batchAdd(notices.slice(0, less))
       }
     }
   }
@@ -84,15 +84,26 @@ class Notification extends Component {
         <Notice
           {...notice}
           onClose={onClose}
+          prefix={props.prefix}
         />
       )
     })
     if (this.state.notices.length <= 1) {
       animateProps.component = '';
     }
+    const className = [
+      styles[props.prefix]
+    ]
     return (
-      <div>
-        <Animate transitionName='fade' {...animateProps}>{noticeNodes}</Animate>
+      <div className={classnames(...className)} style={props.style}>
+        <Animate transitionName={{
+          enter: 'enter',
+          enterActive: 'enterActive',
+          leave: 'leave',
+          leaveActive: 'leaveActive',
+          appear: 'appear',
+          appearActive: 'appearActive'
+        }} {...animateProps}>{noticeNodes}</Animate>
       </div>
     )
   }

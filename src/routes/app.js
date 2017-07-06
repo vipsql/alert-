@@ -3,6 +3,7 @@ import { connect } from 'dva'
 import LeftMenu from '../components/layout/leftMenu/leftWrap'
 import styles from '../components/layout/main.less'
 import Bread from '../components/layout/bread/index'
+import NotificationApi from '../components/common/webNotification/index.js'
 import { Spin } from 'antd'
 import { classnames } from '../utils'
 import '../components/layout/common.less'
@@ -10,11 +11,28 @@ import '../components/layout/common.less'
 class App extends Component {
 
   componentDidMount() {
+    NotificationApi.config({
+      placement: 'toopRight',
+      threshold: 10
+    })
+    //NotificationApi.update(this.props.app.notifies)
+  }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.app.notifies !== this.props.app.notifies) {
+      NotificationApi.update(nextProps.app.notifies)
+    }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.app.notifies !== this.props.app.notifies) {
+      return false
+    }
+    return true
   }
 
   componentWillUnmount() {
-
+    NotificationApi.destroy();
   }
 
   render() {
