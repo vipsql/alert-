@@ -88,7 +88,7 @@ async function init() {
   const appLocale = await setLang();
   addLocaleData(appLocale.data);
   // 1. Initialize
-  const app = dva()
+  const app = dva();
   const root = document.querySelector('#root')
   // 2. Model
 
@@ -99,7 +99,7 @@ async function init() {
   app.model(require('./models/alertOperation'))
   app.model(require('./models/alertDetailOperation'))
   app.model(require('./models/tagsListFilter'))
-  app.model(require('./models/alertDetail'))
+  // app.model(require('./models/alertDetail'))
 
   app.model(require('./models/alertList'))
   app.model(require('./models/alertListTable'))
