@@ -1,269 +1,274 @@
 @import "../../vars.less";
 // alertOperation style on local
 .operateMain {
+  position: relative;
+  padding: 16px 12px 16px 18px; //background-color: #fff;
+  background-color: #164779;
+  border-radius: 3px;
+  .groupMain {
+    display: inline-block;
     position: relative;
-    padding: 16px 12px 16px 18px; //background-color: #fff;
-    background-color: #164779;
-    border-radius: 3px;
-    .groupMain {
-        display: inline-block;
-        position: relative;
-        float: right;
-        .switch {
-            position: absolute;
-            left: 75px;
-            top: 4px; //color: #acb3bf;
-            color: #9dd7ff;
-            visibility: hidden;
-        }
-        &:hover .switch {
-            visibility: visible;
-        }
-    } // cover ant-design Select style on local
-    .showChatOps {
-        &:global.ant-select {
-            //color: #6c7480;
-            font-size: 13px;
-            font-weight: normal;
-             :global .ant-select-selection--single {
-                height: 30px;
-                 :global .ant-select-selection__rendered {
-                    line-height: 28px;
-                    margin-left: 10px;
-                    margin-right: 10px;
-                    padding-right: 10px;
-                }
-            }
-        }
+    float: right;
+    .switch {
+      position: absolute;
+      left: 75px;
+      top: 4px; //color: #acb3bf;
+      color: #9dd7ff;
+      visibility: hidden;
     }
-    .selectSingle {
-        margin-right: 10px;
-        &.setGroup {
-            float: right;
-            width: 100px;
-        }
-        &:global.ant-select {
-            //color: #6c7480;
-            font-size: 13px;
-            font-weight: normal;
-             :global .ant-select-selection--single {
-                height: 30px;
-                 :global .ant-select-selection__rendered {
-                    line-height: 28px;
-                    margin-left: 10px;
-                    margin-right: 10px;
-                    padding-right: 10px;
-                }
-            }
-        }
-    } // cover ant-design Dropdown style on local
-    .myDropdown {
-        &:global.ant-btn-group {
-            margin-right: 10px;
-            height: 30px;
-             :global .ant-btn {
-                font-size: 13px;
-                font-weight: normal;
-                padding: 4px 10px; //background: white;
-                background-color: #0d5990;
-                border: 1px solid #297ebb;
-                color: #9dd7ff;
-                &:hover {
-                    border-color: #2bb4f4;
-                }
-            }
-        }
-        button:last-child {
-            //background: #f5f9fc;
-            background-color: #0d5990;
-            border: 1px solid #297ebb;
-            color: #9dd7ff;
-            &:hover {
-                border-color: #2bb4f4;
-            }
-        }
+    &:hover .switch {
+      visibility: visible;
     }
-    .moreOperateDropdown {
-        &:global(.ant-dropdown-trigger) {
-            width: 102px;
-            display: inline-block;
-            height: 28px;
-            margin-right: 10px;
-            line-height: 1.4;
-            font-weight: normal;
-            font-size: 13px; //color: #6c7480;
-            //background-color: white;
-            border: 1px solid #297ebb;
-            color: #9dd7ff;
-            background-color: #0d5990;
-            transition: all .3s ease-in-out;
-            padding: 4px 10px;
-            border-radius: 3px;
-            &:hover {
-                background-color: #2d98db;
-                color: #fff;
-            }
-        }
-         :global(.anticon-down) {
-            margin-left: 15px;
-        }
-    } // cover ant-design Button style on local
-    .myButton {
-        &:global.ant-btn {
-            margin-right: 10px;
-            line-height: 1.45;
-            font-weight: normal;
-            font-size: 13px; //color: #6c7480;
-            //background-color: white;
-            border: 1px solid #297ebb;
-            color: #9dd7ff;
-            background-color: #0d5990;
-            transition: all .3s ease-in-out;
-            &:hover {
-                //border-color: #2bb4f4;
-                background-color: #2d98db;
-                color: #fff;
-            }
-        }
-    }
-    .myButton[disabled] {
-        opacity: 0.5;
-    }
-    .button {
-        position: relative;
+  } // cover ant-design Select style on local
+  .showChatOps {
+    &:global.ant-select {
+      //color: #6c7480;
+      font-size: 13px;
+      font-weight: normal;
+       :global .ant-select-selection--single {
         height: 30px;
-        display: inline-block;
-        border-radius: 3px; // border: 1px solid #d5ddeb;
-        // background-color: #fff;
+         :global .ant-select-selection__rendered {
+          line-height: 28px;
+          margin-left: 10px;
+          margin-right: 10px;
+          padding-right: 10px;
+        }
+      }
+    }
+  }
+  .selectSingle {
+    margin-right: 10px;
+    &.setGroup {
+      float: right;
+      width: 100px;
+    }
+    &:global.ant-select {
+      //color: #6c7480;
+      font-size: 13px;
+      font-weight: normal;
+       :global .ant-select-selection--single {
+        height: 30px;
+         :global .ant-select-selection__rendered {
+          line-height: 28px;
+          margin-left: 10px;
+          margin-right: 10px;
+          padding-right: 10px;
+        }
+      }
+    }
+  } // cover ant-design Dropdown style on local
+  .myDropdown {
+    &:global.ant-btn-group {
+      margin-right: 10px;
+      height: 30px;
+       :global .ant-btn {
+        font-size: 13px;
+        font-weight: normal;
+        padding: 4px 10px; //background: white;
         background-color: #0d5990;
         border: 1px solid #297ebb;
-        margin-right: 10px;
-        cursor: pointer;
-        transition: border .2s;
+        color: #9dd7ff;
         &:hover {
-            background-color: #2d98db;
-            span,
-            i {
-                color: #fff;
-            }
+          border-color: #2bb4f4;
         }
-        &.rightBtn {
-            float: right;
-        }
-        p {
-            position: relative;
-            display: inline-block;
-            padding: 4px 10px;
-            font-size: 13px;
-            font-weight: normal;
-            text-align: center;
-            color: #9dd7ff;
-            &.col {
-                padding-left: 5px;
-            }
-        }
-        .setCol {
-            position: relative;
-            display: inline-block;
-            top: 2px;
-            padding-left: 8px;
-            color: #7dbae6;
-        }
+      }
     }
+    button:last-child {
+      //background: #f5f9fc;
+      background-color: #0d5990;
+      border: 1px solid #297ebb;
+      color: #9dd7ff;
+      &:hover {
+        border-color: #2bb4f4;
+      }
+    }
+  }
+  .moreOperateDropdown {
+    &:global(.ant-dropdown-trigger) {
+      width: 115px;
+      display: inline-block;
+      height: 28px;
+      margin-right: 10px;
+      line-height: 1.4;
+      font-weight: normal;
+      font-size: 13px; //color: #6c7480;
+      //background-color: white;
+      border: 1px solid #297ebb;
+      color: #9dd7ff;
+      background-color: #0d5990;
+      transition: all .3s ease-in-out;
+      padding: 4px 10px;
+      border-radius: 3px;
+      &:hover {
+        background-color: #2d98db;
+        color: #fff;
+      }
+    }
+     :global(.anticon-down) {
+      margin-left: 28px;
+    }
+  } // cover ant-design Button style on local
+  .myButton {
+    &:global.ant-btn {
+      margin-right: 10px;
+      line-height: 1.45;
+      font-weight: normal;
+      font-size: 13px; //color: #6c7480;
+      //background-color: white;
+      border: 1px solid #297ebb;
+      color: #9dd7ff;
+      background-color: #0d5990;
+      transition: all .3s ease-in-out;
+      &:hover {
+        //border-color: #2bb4f4;
+        background-color: #2d98db;
+        color: #fff;
+      }
+    }
+  }
+  .myButton[disabled] {
+    opacity: 0.5;
+  }
+  .myButton[disabled]:hover {
+    background-color: #0d5990;
+    color: #9dd7ff;
+  }
+  .button {
+    position: relative;
+    height: 30px;
+    display: inline-block;
+    border-radius: 3px; // border: 1px solid #d5ddeb;
+    // background-color: #fff;
+    background-color: #0d5990;
+    border: 1px solid #297ebb;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: border .2s;
+    &:hover {
+      background-color: #2d98db;
+      span,
+      i {
+        color: #fff;
+      }
+    }
+    &.rightBtn {
+      float: right;
+    }
+    p {
+      position: relative;
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: normal;
+      text-align: center;
+      color: #9dd7ff;
+      &.col {
+        padding-left: 5px;
+      }
+    }
+    .setCol {
+      position: relative;
+      display: inline-block;
+      top: 2px;
+      padding-left: 8px;
+      color: #7dbae6;
+    }
+  }
 }
 
 .popover {
-     :global {
-        .ant-popover-content {
-            .ant-popover-arrow {
-                border-bottom-color: #226eaf;
-            }
-            .ant-popover-arrow::after {
-                border-bottom-color: #226eaf;
-            }
-            .ant-popover-inner {
-                background-color: #226eaf;
-            }
-        }
-    } // popover card
-    .popoverMain {
-        position: relative;
-        div:last-child {
-            margin-bottom: 5px;
-        }
-        .colGroup {
-            margin: 10px 10px 15px 10px;
-            width: 200px;
-            &>p {
-                color: #9dd7ff;
-                font-size: 13px;
-                font-weight: 600;
-                margin-bottom: 4px;
-                line-height: 10px;
-                &:after {
-                    position: relative;
-                    content: " ";
-                    display: inline-block;
-                    height: 1px;
-                    width: 90%;
-                    background: #5994d6;
-                }
-            }
-            .inlineItem {
-                display: inline-block;
-                width: 100px;
-                padding-bottom: 5px;
-                 :global {
-                    .ant-checkbox-wrapper+span,
-                    .ant-checkbox+span {
-                        display: inline-block;
-                        white-space: nowrap;
-                        max-width: 80px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        vertical-align: middle;
-                    }
-                }
-            }
-        }
+   :global {
+    .ant-popover-content {
+      .ant-popover-arrow {
+        border-bottom-color: #226eaf;
+      }
+      .ant-popover-arrow::after {
+        border-bottom-color: #226eaf;
+      }
+      .ant-popover-inner {
+        background-color: #226eaf;
+      }
     }
+  } // popover card
+  .popoverMain {
+    position: relative;
+    div:last-child {
+      margin-bottom: 5px;
+    }
+    .colGroup {
+      margin: 10px 10px 15px 10px;
+      width: 200px;
+      &>p {
+        color: #9dd7ff;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        line-height: 10px;
+        &:after {
+          position: relative;
+          content: " ";
+          display: inline-block;
+          height: 1px;
+          width: 90%;
+          background: #5994d6;
+        }
+      }
+      .inlineItem {
+        display: inline-block;
+        width: 100px;
+        padding-bottom: 5px;
+         :global {
+          .ant-checkbox-wrapper+span,
+          .ant-checkbox+span {
+            display: inline-block;
+            white-space: nowrap;
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+  }
 }
 
 // cover menuitem
 .menuItem {
-    &:global.ant-dropdown-menu-item {
-        font-size: 13px;
-        font-weight: normal;
-        width: 103px;
-        background-color: #1d6aa7;
+  &:global.ant-dropdown-menu-item {
+    font-size: 13px;
+    font-weight: normal;
+    width: 115px;
+    background-color: #1d6aa7;
+    color: #6ac5fe;
+  }
+  &:global.ant-select-dropdown-menu-item {
+    font-size: 13px;
+    font-weight: normal;
+    background-color: #1d6aa7;
+    color: #6ac5fe;
+  }
+  &:global.ant-dropdown-menu-submenu {
+    font-size: 13px;
+    font-weight: normal;
+    background-color: #1d6aa7;
+    .ant-dropdown-menu-submenu-title {
+      font-size: 13px;
+      color: #6ac5fe;
+      &:after {
         color: #6ac5fe;
-    }
-    &:global.ant-select-dropdown-menu-item {
-        font-size: 13px;
-        font-weight: normal;
-        background-color: #1d6aa7;
-        color: #6ac5fe;
-    }
-    &:global.ant-dropdown-menu-submenu {
-        font-size: 13px;
-        font-weight: normal;
-        background-color: #1d6aa7;
-        .ant-dropdown-menu-submenu-title {
-            color: #6ac5fe;
-            &:after{
-              color: #6ac5fe;
-            }
-            &:hover{
-              background-color: #3092d9;
-              color:#ffffff;
-              &:after{
-                color: #ffffff;
-              }
-            }
-        }
-    }
-    &:hover {
+      }
+      &:hover {
         background-color: #3092d9;
-        color:#ffffff;
+        color: #ffffff;
+        &:after {
+          color: #ffffff;
+        }
+      }
     }
+  }
+  &:hover {
+    background-color: #3092d9;
+    color: #ffffff;
+  }
 }

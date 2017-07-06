@@ -3,6 +3,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const StringReplacePlugin = require("string-replace-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require("path")
+// const fs = require("fs")
 
 module.exports = function (webpackConfig, env) {
   webpackConfig.babel.plugins.push('transform-runtime')
@@ -88,7 +89,7 @@ module.exports = function (webpackConfig, env) {
       inject: true,
       chunks: []
     })
-   );
+  );
 
   // Don't extract common.js and common.css
   webpackConfig.plugins = webpackConfig.plugins.filter(function (plugin) {
@@ -117,6 +118,17 @@ module.exports = function (webpackConfig, env) {
   })
 
 
+  // const config = JSON.stringify(webpackConfig, function (key, value) {
+  //   if (value instanceof RegExp) return value.toString();
+  //   else return value;
+  // })
+  // fs.writeFile('test.json', config, 'utf-8', (err) => {
+  //   if (err) {
+  //     console.log(err)
+  //   } else {
+  //     console.log('成功')
+  //   }
+  // })
 
 
   return webpackConfig
