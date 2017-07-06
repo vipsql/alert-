@@ -74,7 +74,7 @@ class App extends Component {
         {isShowMask && <div className={styles.layer}></div>}
         <div className={classnames(styles.layout, !isFold ? '' : styles.fold)}>
           <LeftMenu {...LeftMenuProps} />
-          <div className={styles.main}>
+          <div id="topMain" className={styles.main}>
             <Bread location={location} />
             <div className={styles.container}>
               <div className={params && params.isNeedContent === false ? styles.no_content : styles.content} id="content">

@@ -105,7 +105,6 @@ export default {
           dashbordData = JSON.parse(JSON.stringify(dashbordData))
 
           dashbordData.forEach( (item) =>{
-            // item.id = "label_" + index;
             index ++;
             if(item.children){
               item.children.forEach((childItem) => {
@@ -114,7 +113,9 @@ export default {
                   item.fixedValue = (item.fixedValue ? item.fixedValue : 0) + ((item.children.length + 1) / item.children.length)
                 }
                 // 保存真实数据修复显示tip 告警数不正确bug
-                childItem.trueVal =  childItem.value
+                childItem.trueVal =  childItem.value;
+                // 防止path重复（当标签对应的拼音一样可能会导致path重复，会导致一些格子不显示）
+                childItem.path = childItem.path + "_" + index;
                 // childItem.id = "label_" + index;
                 index ++;
               })

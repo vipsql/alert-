@@ -5,11 +5,41 @@ import Animate from 'rc-animate'
 import styles from './index.less'
 import { classnames } from '../../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import $ from 'jquery'
 
 class ListTable extends Component {
   constructor() {
     super()
   }
+  componentDidMount() {
+    this._getTotalScrollHeight();
+    this._setAutoLoadMore();
+    this.scrollHeight = this._getTotalScrollHeight();
+  }
+
+  componentDidUpdate() {
+    this.scrollHeight = this._getTotalScrollHeight();
+  }
+
+  _setAutoLoadMore() {
+    $(this.props.target).scroll((e) => {
+      const $target = $(e.target);
+      if ($target.scrollTop() + 10 + $target.height() > this.scrollHeight && this.props.isShowMore) {
+        this.props.loadMore();
+      }
+    })
+  }
+
+  // 获取可滚动的区域总高度
+  _getTotalScrollHeight() {
+    const $target = $(this.props.target);
+    let totalHeight = 0;
+    $target.children().each((index, ele) => {
+      totalHeight += $(ele).context.clientHeight;
+    })
+    return totalHeight;
+  }
+
   render() {
     const {
       sourceOrigin,
@@ -256,7 +286,7 @@ class ListTable extends Component {
             }
             break;
           case 'count':
-            td = <td key={key} title={data}><a href="javascript:;" data-id={ item.id } data-name={ item.name } onClick={ showAlertOrigin }>{ data }</a></td>
+            td = <td key={key} title={data}><a href="javascript:;" data-id={item.id} data-name={item.name} onClick={showAlertOrigin}>{data}</a></td>
             break;
           default:
             td = <td key={key} title={data}>{data}</td>
@@ -397,6 +427,7 @@ class ListTable extends Component {
 
     }
 
+    // const loadingIcon = classnames({})
 
     return (
       <div>
@@ -406,7 +437,7 @@ class ListTable extends Component {
               <tr>
                 {
                   sourceOrigin !== 'alertQuery' ?
-                    <th key="checkAll" width={48} className={styles.checkstyle}><input type="checkbox" onClick={handleSelectAll} checked={selectedAll}/></th>
+                    <th key="checkAll" width={48} className={styles.checkstyle}><input type="checkbox" onClick={handleSelectAll} checked={selectedAll} /></th>
                     :
                     undefined
                 }
@@ -418,10 +449,10 @@ class ListTable extends Component {
               </tr>
             </thead>
             <Animate
-                transitionName="fade"
-                component='tbody'
-                transitionEnterTimeout={300}
-                transitionLeaveTimeout={300}
+              transitionName="fade"
+              component='tbody'
+              transitionEnterTimeout={300}
+              transitionLeaveTimeout={300}
             >
               {
                 data.length > 0 ?
@@ -434,7 +465,7 @@ class ListTable extends Component {
             </Animate>
           </table>
         </Spin>
-        {isShowMore && <div className={styles.loadMore}><Button onClick={loadMore}><FormattedMessage {...formatMessages['showMore']} /></Button></div>}
+        {isShowMore && <Spin spinning={isLoading}><div className={styles.loadMore}><Button onClick={loadMore}><FormattedMessage {...formatMessages['showMore']} /></Button></div></Spin>}
       </div>
     )
   }
@@ -442,6 +473,7 @@ class ListTable extends Component {
 
 ListTable.defaultProps = {
   sourceOrigin: 'alertMange',
+  target: 'div#topMain', // 用于设置参考对象
   checkAlertFunc: () => { },
   spreadChild: () => { },
   noSpreadChild: () => { },

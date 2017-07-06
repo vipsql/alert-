@@ -6,7 +6,7 @@ export async function queryTags(params) {
     method: 'post',
     body: JSON.stringify(params),
     headers: {
-        'Content-Type': 'application/json',
+      'Content-Type': 'application/json',
     }
   })
   // return Promise.resolve({
@@ -16,13 +16,13 @@ export async function queryTags(params) {
 }
 
 
-export async function queryVisual (params) {
+export async function queryVisual(params) {
   return request('/visual/tagValuesInfo', {
     method: 'post',
     body: JSON.stringify(params),
     headers: {
-          'Content-Type': 'application/json',
-      }
+      'Content-Type': 'application/json',
+    }
   })
   // return Promise.resolve({
   //   result: true,
@@ -35,9 +35,20 @@ export async function queryVisualRes(params) {
     method: 'post',
     body: JSON.stringify(params),
     headers: {
-        'Content-Type': 'application/json',
+      'Content-Type': 'application/json',
     }
   })
+  // .then(response => ({
+  //   ...response,
+  //   data: response.data.map(item => ({
+  //     ...item,
+  //     resources: item.resources.map(res => ({
+  //       ...res,
+  //       iconUrl: 'http://10.1.50.58/cmdb/api/v3/attachments/download/593e58dbe454c73982636da1.png'
+  //       // iconUrl: 'http://images.google.com/intl/en_ALL/images/logos/images_logo_lg.gif'
+  //     }))
+  //   }))
+  // }))
 }
 // 根据资源ID查询属性信息
 export async function queryResInfo(params) {

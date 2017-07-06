@@ -21,8 +21,9 @@ import SuppressModal from '../common/suppressModal/index.js'
 import ReassignModal from '../common/ReassignModal/index.js'
 import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 import ManualNotifyModal from '../common/manualNotifyModal/index.js'
-import AlertOriginSlider from '../common/AlertOriginSlider/index.js'
+import AlertOriginSliderWrap from '../alertOriginSlider/wrap.js'
 import FilterHead from '../common/filterHead/index.js'
+import ScrollTopButton from '../common/scrollTopButton/index'
 import { classnames } from '../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -46,7 +47,7 @@ class AlertListManage extends Component {
   }
 
   render() {
-    const { alertOrigin, alertDetail, alertListTable, alertList, dispatch, alertOperation, alertDetailOperation, alertManage, intl: {formatMessage} } = this.props;
+    const { alertDetail, alertListTable, alertList, dispatch, alertOperation, alertDetailOperation, alertManage, intl: {formatMessage} } = this.props;
 
     const localeMessage = defineMessages({
       tab_list: {
@@ -482,37 +483,6 @@ class AlertListManage extends Component {
       }
     }
 
-    const alertOriginSliderProps = {
-      intl: {formatMessage},
-      onClose: () => {
-        dispatch({
-          type: 'alertOrigin/toggleVisible',
-          payload: {
-            visible: false
-          }
-        })
-      },
-      onPageChange: (pagination, filters, sorter) => {
-        const pageIsObj = typeof pagination === 'object';
-        dispatch({
-          type: 'alertOrigin/changePage',
-          payload: {
-            pagination: {
-              pageNo: pageIsObj?pagination.current:pagination
-            },
-            sorter: {
-              sortKey: sorter?sorter.field:undefined,
-              sortType: sorter?(sorter.order == "descend"?0:1):undefined
-            }
-          }
-        })
-      },
-      visible: alertOrigin.visible,
-      loading: alertOrigin.loading,
-      alertOrigin
-    }
-
-
     const tabList = classnames(
       'iconfont',
       'icon-liebiao',
@@ -634,7 +604,8 @@ class AlertListManage extends Component {
         <SuppressTimeSlider {...timeSliderProps} />
         <ManualNotifyModal {...notifyModalProps} />
         <ReassignModal {...reassignModalProps} />
-        <AlertOriginSlider { ...alertOriginSliderProps }/>
+        <AlertOriginSliderWrap />
+        <ScrollTopButton />
       </div>
     )
   }
@@ -648,6 +619,5 @@ export default injectIntl(connect((state) => {
     alertOperation: state.alertOperation,
     alertDetailOperation: state.alertDetailOperation,
     alertList: state.alertList,
-    alertOrigin: state.alertOrigin
   }
 })(AlertListManage))

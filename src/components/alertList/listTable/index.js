@@ -161,9 +161,7 @@ const ListTableWrap = ({ dispatch, alertListTable }) => {
 export default connect(
   (state) => {
     return {
-      alertListTable: {
-        ...state.alertListTable,
-      }
+      alertListTable: state.alertListTable,
     }
   }
 )(ListTableWrap)

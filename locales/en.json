@@ -517,6 +517,8 @@
   "layout.fixedLayout": "FixedLayout",
   "layout.autoLayout": "AutoLayout",
   "layout.fullScreen": "FullScreen",
-  "layout.initialize": "Initialize"
+  "layout.initialize": "Initialize",
+
+  "go_top.tip": "Go Top"
 
 }

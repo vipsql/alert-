@@ -3,6 +3,7 @@ import { connect } from 'dva'
 import styles from './index.less'
 import { Row, Col, Form, Input, Select, DatePicker, Button, Popover, Checkbox } from 'antd'
 import ListTableWrap from './queryList.js'
+import AlertOriginSliderWrap from '../alertOriginSlider/wrap'
 import { classnames } from '../../utils'
 import AlertDetail from '../common/alertDetail/index.js'
 import CloseModal from '../common/closeModal/index.js'
@@ -13,7 +14,7 @@ import SuppressModal from '../common/suppressModal/index.js'
 import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import ReassignModal from '../common/ReassignModal/index.js'
 import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
-import AlertOriginSlider from '../common/AlertOriginSlider/index.js'
+import ScrollTopButton from '../common/scrollTopButton/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import $ from 'jquery'
 
@@ -39,7 +40,7 @@ class alertQueryManage extends Component {
   }
 
   render() {
-    const { dispatch, form, alertQuery, alertQueryDetail, alertOrigin, alertOperation, intl: { formatMessage } } = this.props;
+    const { dispatch, form, alertQuery, alertQueryDetail, alertOperation, intl: { formatMessage } } = this.props;
 
     const { haveQuery, sourceOptions, propertyOptions, ownerOptions, queryCount, isShowBar } = alertQuery;
 
@@ -412,36 +413,6 @@ class alertQueryManage extends Component {
           type: 'alertQueryDetail/closeTicketModal'
         })
       }
-    }
-
-    const alertOriginSliderProps = {
-      intl: { formatMessage },
-      onClose: () => {
-        dispatch({
-          type: 'alertOrigin/toggleVisible',
-          payload: {
-            visible: false
-          }
-        })
-      },
-      onPageChange: (pagination, filters, sorter) => {
-        const pageIsObj = typeof pagination === 'object';
-        dispatch({
-          type: 'alertOrigin/changePage',
-          payload: {
-            pagination: {
-              pageNo: pageIsObj ? pagination.current : pagination
-            },
-            sorter: {
-              sortKey: sorter ? sorter.field : undefined,
-              sortType: sorter ? (sorter.order == "descend" ? 0 : 1) : undefined
-            }
-          }
-        })
-      },
-      visible: alertOrigin.visible,
-      loading: alertOrigin.loading,
-      alertOrigin
     }
 
     const localeMessage = defineMessages({
@@ -985,6 +956,7 @@ class alertQueryManage extends Component {
           <iframe src={ticketModalProps.ticketUrl}>
           </iframe>
         </div>
+        <ScrollTopButton />
         <CloseModal {...closeModalProps} />
         <DispatchModal {...dispatchModalProps} />
         <ChatOpshModal {...chatOpsModalProps} />
@@ -993,7 +965,7 @@ class alertQueryManage extends Component {
         <SuppressTimeSlider {...timeSliderProps} />
         <ManualNotifyModal {...notifyModalProps} />
         <ReassignModal {...reassignModalProps} />
-        <AlertOriginSlider { ...alertOriginSliderProps } />
+        <AlertOriginSliderWrap intl={ formatMessage }/>
       </div>
     )
   }
@@ -1004,7 +976,6 @@ export default injectIntl(Form.create()(
     return {
       alertQuery: state.alertQuery,
       alertQueryDetail: state.alertQueryDetail,
-      alertOrigin: state.alertOrigin,
       alertOperation: state.alertOperation
     }
   })(alertQueryManage)
