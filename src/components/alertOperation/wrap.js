@@ -521,7 +521,6 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch }) => {
       <ReassignModal {...reassignModalProps} />
       <RelieveModal {...relieveProps} />
       <MergeModal {...mergeProps} />
-
     </div>
   )
 }

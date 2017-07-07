@@ -508,15 +508,10 @@ export default {
       // 触发筛选
       // yield put({ type: 'alertListTable/filterCheckAlert' })
       const { operateAlertIds, data, state } = payload
-      if (payload.origin === 'detail') {
-        yield put({ type: 'alertDetailOperation/toggleResolveModal', payload: payload.state })
-        // debugger
+      if (operateAlertIds.length === 0) {
+        yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else {
-        if (operateAlertIds.length === 0) {
-          yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
-        } else {
-          yield put({ type: 'toggleResolveModal', payload: payload.state })
-        }
+        yield put({ type: 'toggleResolveModal', payload: payload.state })
       }
     },
     // 解决告警

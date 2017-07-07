@@ -13,14 +13,12 @@ import AlertDetail from '../common/alertDetail/index.js'
 import { connect } from 'dva'
 import styles from './index.less'
 import LevelIcon from '../common/levelIcon/index.js'
-import MergeModal from './mergeModal'
 import CloseModal from '../common/closeModal/index.js'
 import DispatchModal from '../common/dispatchModal/index.js'
-import RelieveModal from './relieveModal'
 import ChatOpshModal from '../common/chatOpsModal/index.js'
 import ResolveModal from '../common/resolveModal/index.js'
 import SuppressModal from '../common/suppressModal/index.js'
-import ReassignModal from '../common/ReassignModal/index.js'
+import ReassignModal from '../common/reassignModal/index.js'
 import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import AlertOriginSliderWrap from '../alertOriginSlider/wrap.js'
@@ -49,7 +47,7 @@ class AlertListManage extends Component {
   }
 
   render() {
-    const { alertDetail, alertListTable, alertList, dispatch, alertOperation, alertDetailOperation, alertManage, intl: { formatMessage } } = this.props;
+    const { alertDetail, alertListTable, alertList, dispatch, alertOperation, alertManage, intl: { formatMessage } } = this.props;
 
     const localeMessage = defineMessages({
       tab_list: {

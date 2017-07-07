@@ -98,7 +98,6 @@ async function init() {
   // 告警列表
   app.model(require('./models/alertTagsSet'))
   app.model(require('./models/alertOperation'))
-  app.model(require('./models/alertDetailOperation'))
   app.model(require('./models/tagsListFilter'))
   // app.model(require('./models/alertDetail'))
 
@@ -106,7 +105,7 @@ async function init() {
   app.model(require('./models/alertListTable'))
   // 告警查询
   app.model(require('./models/alertQuery'))
-  app.model(require('./models/alertQueryDetail'))
+  app.model(require('./models/alertDetail'))
   // 告警配置
   app.model(require('./models/alertConfig'))
   app.model(require('./models/snmpTrapRules'))

@@ -13,7 +13,7 @@ import ChatOpshModal from '../common/chatOpsModal/index.js'
 import ResolveModal from '../common/resolveModal/index.js'
 import SuppressModal from '../common/suppressModal/index.js'
 import ManualNotifyModal from '../common/manualNotifyModal/index.js'
-import ReassignModal from '../common/ReassignModal/index.js'
+import ReassignModal from '../common/reassignModal/index.js'
 import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 import ScrollTopButton from '../common/scrollTopButton/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
@@ -45,8 +45,6 @@ class alertQueryManage extends Component {
 
     const { haveQuery, sourceOptions, propertyOptions, ownerOptions, queryCount, isShowBar, selectGroup, columnList, extendColumnList, extendTagsKey } = alertQuery;
 
-    // const { selectGroup, columnList, extendColumnList, extendTagsKey, } = alertDetail
-
     const { getFieldDecorator, getFieldsValue } = form;
 
     const formItemLayout = {
@@ -66,11 +64,6 @@ class alertQueryManage extends Component {
       'icon-bushu'
     )
 
-    // const shanchuClass = classnames(
-    //   'iconfont',
-    //   'icon-shanchux'
-    // )
-
     const zhankaiClass = classnames(
       'iconfont',
       'icon-xialasanjiao'
@@ -88,333 +81,6 @@ class alertQueryManage extends Component {
         payload: isShowAlertBar,
       })
     }
-
-    // const operateProps = {
-
-    //   dispatchFunc: (position) => {
-    //     dispatch({
-    //       type: 'alertDetail/openFormModal',
-    //     })
-    //   },
-    //   closeFunc: (position) => {
-    //     dispatch({
-    //       type: 'alertDetail/openCloseModal',
-    //     })
-    //   },
-    //   resolveFunc: (position) => {
-    //     dispatch({
-    //       type: 'alertDetail/toggleResolveModal',
-    //       payload: true
-    //     })
-    //   },
-    //   showChatOpsFunc: (position) => {
-    //     dispatch({
-    //       type: 'alertDetail/openChatOps',
-    //     })
-    //   },
-    //   showNotifyFunc: (position) => {
-    //     dispatch({
-    //       type: 'alertDetail/openNotify',
-    //     })
-    //   },
-    //   suppressIncidents: (min, position) => {
-    //     dispatch({
-    //       type: 'alertDetail/suppressIncidents',
-    //       payload: {
-    //         time: min
-    //       }
-    //     })
-    //   },
-    //   showSuppressTimeSlider: (position) => {
-    //     dispatch({
-    //       type: 'alertDetail/openSuppressTimeSlider',
-    //     })
-    //   },
-    //   takeOverFunc: () => {
-    //     dispatch({
-    //       type: 'alertDetail/takeOver'
-    //     })
-    //   },
-    //   showReassiginFunc: () => {
-    //     dispatch({
-    //       type: 'alertDetail/openReassign'
-    //     })
-    //   }
-    // }
-
-    // const currentAlertDetail = alertQueryDetail['currentAlertDetail'] || {};ZZZ
-    // const alertDeatilProps = {
-    //   extraProps: {
-    //     currentAlertDetail: alertQueryDetail.currentAlertDetail,
-    //     isShowOperateForm: alertQueryDetail.isShowOperateForm,
-    //     operateForm: alertQueryDetail.operateForm,
-    //     isShowRemark: alertQueryDetail.isShowRemark,
-    //     operateRemark: alertQueryDetail.operateRemark,
-    //     ciUrl: alertQueryDetail.ciUrl,
-    //     isLoading: alertQueryDetail.isLoading
-    //   },
-    //   operateProps: {
-    //     ...operateProps,
-    //     dispatchDisabled: alertQueryDetail.dispatchDisabled,
-    //     closeDisabled: alertQueryDetail.closeDisabled,
-    //     resolveDisabled: alertQueryDetail.resolveDisabled,
-    //     notifyDisabled: alertQueryDetail.notifyDisabled,
-    //     shareDisabled: alertQueryDetail.shareDisabled
-    //     // // 子告警不能派发、已关闭的不能派发
-    //     // dispatchDisabled: currentAlertDetail['parentId'] || currentAlertDetail['status'] == 255,
-    //     // // 子告警不能关闭、处理中和已关闭的不能关闭
-    //     // closeDisabled: currentAlertDetail['parentId'] || currentAlertDetail['status'] == 255 || currentAlertDetail['status'] == 40,
-    //     // // 子告警不能解决、已解决和已关闭的不能解决
-    //     // resolveDisabled: currentAlertDetail['parentId'] || currentAlertDetail['status'] == 255 || currentAlertDetail['status'] == 190,
-    //     // // 子告警不能通知、只有未接手和处理中的告警能通知
-    //     // notifyDisabled: currentAlertDetail['parentId'] || !(currentAlertDetail['status'] == 0 || currentAlertDetail['status'] == 150),
-    //     // // 子告警不能分享
-    //     // shareDisabled: currentAlertDetail['parentId']
-    //   },
-
-    //   closeDeatilModal: () => {
-    //     dispatch({
-    //       type: 'alertDetail/closeDetailModal',
-    //       payload: false
-    //     })
-    //   },
-    //   clickTicketFlow: (operateForm) => {
-    //     if (operateForm !== undefined && operateForm !== '') {
-    //       dispatch({
-    //         type: 'alertDetail/viewTicketDetail',
-    //         payload: operateForm
-    //       })
-    //     }
-    //   },
-    //   openForm: () => {
-    //     dispatch({
-    //       type: 'alertDetail/toggleFormModal',
-    //       payload: true
-    //     })
-    //   },
-    //   editForm: (formData) => {
-    //     dispatch({
-    //       type: 'alertDetail/changeTicketFlow',
-    //       payload: formData.formContent
-    //     })
-    //     dispatch({
-    //       type: 'alertDetail/toggleFormModal',
-    //       payload: false
-    //     })
-    //   },
-    //   closeForm: () => {
-    //     dispatch({
-    //       type: 'alertDetail/toggleFormModal',
-    //       payload: false
-    //     })
-    //   },
-    //   openRemark: () => {
-    //     dispatch({
-    //       type: 'alertDetail/toggleRemarkModal',
-    //       payload: true
-    //     })
-    //   },
-    //   editRemark: (formData) => {
-    //     dispatch({
-    //       type: 'alertDetail/setRemarkData',
-    //       payload: formData.remark
-    //     })
-    //     dispatch({
-    //       type: 'alertDetail/toggleRemarkModal',
-    //       payload: false
-    //     })
-    //   },
-    //   closeRemark: () => {
-    //     dispatch({
-    //       type: 'alertDetail/toggleRemarkModal',
-    //       payload: false
-    //     })
-    //   }
-    // }
-    // const reassignModalProps = {
-    //   isShowReassingModal: alertQueryDetail.isShowReassingModal,
-    //   users: alertOperation.users,
-    //   onOk: (selectedUser) => {
-    //     dispatch({
-    //       type: 'alertDetail/submitReassign',
-    //       payload: {
-    //         toWho: selectedUser
-    //       }
-    //     })
-    //   },
-    //   onCancel: () => {
-    //     dispatch({
-    //       type: 'alertDetail/toggleReassignModal',
-    //       payload: false
-    //     })
-    //   }
-    // }
-    // const closeModalProps = {
-    //   currentData: alertQueryDetail,
-
-    //   onOk: (form) => {
-    //     form.validateFieldsAndScroll((errors, values) => {
-    //       if (!!errors) {
-    //         return;
-    //       }
-    //       const formData = form.getFieldsValue()
-
-    //       dispatch({
-    //         type: 'alertDetail/closeAlert',
-    //         payload: formData.closeMessage
-    //       })
-    //       form.resetFields();
-    //     })
-
-    //   },
-    //   onCancal: (form) => {
-    //     dispatch({
-    //       type: 'alertDetail/toggleCloseModal',
-    //       payload: false
-    //     })
-    //     form.resetFields();
-    //   }
-    // }
-
-    // const resolveModalProps = {
-    //   currentData: alertQueryDetail,
-
-    //   onOk: (form) => {
-    //     form.validateFieldsAndScroll((errors, values) => {
-    //       if (!!errors) {
-    //         return;
-    //       }
-    //       const formData = form.getFieldsValue()
-
-    //       dispatch({
-    //         type: 'alertDetail/resolveAlert',
-    //         payload: formData.resolveMessage
-    //       })
-    //       form.resetFields();
-    //     })
-
-    //   },
-    //   onCancal: (form) => {
-    //     dispatch({
-    //       type: 'alertDetail/toggleResolveModal',
-    //       payload: false
-    //     })
-    //     form.resetFields();
-    //   }
-    // }
-
-    // const dispatchModalProps = {
-    //   currentData: alertQueryDetail,
-
-    //   closeDispatchModal: () => {
-    //     dispatch({
-    //       type: 'alertDetail/toggleDispatchModal',
-    //       payload: false
-    //     })
-    //   },
-    //   onOk: (value) => {
-    //     dispatch({
-    //       type: 'alertDetail/dispatchForm',
-    //       payload: value
-    //     })
-    //   },
-    //   onCancal: () => {
-    //     dispatch({
-    //       type: 'alertDetail/toggleDispatchModal',
-    //       payload: false
-    //     })
-    //   }
-    // }
-
-    // const chatOpsModalProps = {
-    //   currentData: alertQueryDetail,
-
-    //   closeChatOpsModal: () => {
-    //     dispatch({
-    //       type: 'alertDetail/toggleChatOpsModal',
-    //       payload: false
-    //     })
-    //   },
-    //   onOk: (value) => {
-    //     dispatch({
-    //       type: 'alertDetail/shareChatOps',
-    //       payload: value
-    //     })
-    //   },
-    //   onCancal: () => {
-    //     dispatch({
-    //       type: 'alertDetail/toggleChatOpsModal',
-    //       payload: false
-    //     })
-    //   }
-    // }
-
-    // const notifyModalProps = {
-    //   disableChatOps: alertQueryDetail.disableChatOps,
-    //   isShowNotifyModal: alertQueryDetail.isShowNotifyModal,
-    //   notifyIncident: alertQueryDetail.notifyIncident,
-    //   notifyUsers: alertQueryDetail.notifyUsers,
-    //   onOk: (data) => {
-    //     dispatch({
-    //       type: "alertDetail/notyfiyIncident",
-    //       payload: data
-    //     })
-    //   },
-    //   onCancel: () => {
-    //     dispatch({
-    //       type: "alertDetail/initManualNotifyModal",
-    //       payload: {
-    //         isShowNotifyModal: false
-    //       }
-    //     })
-    //   }
-    // }
-
-    // const timeSliderProps = {
-    //   isShowTimeSliderModal: alertQueryDetail.isShowTimeSliderModal,
-    //   onOk: (time) => {
-    //     dispatch({
-    //       type: "alertDetail/suppressIncidents",
-    //       payload: {
-    //         time: time
-    //       }
-    //     })
-    //     dispatch({
-    //       type: "alertDetail/toggleSuppressTimeSliderModal",
-    //       payload: false
-    //     })
-    //   },
-    //   onCancel: () => {
-    //     dispatch({
-    //       type: "alertDetail/toggleSuppressTimeSliderModal",
-    //       payload: false
-    //     })
-    //   }
-    // }
-
-    // const suppressModalProps = {
-    //   isShowRemindModal: alertQueryDetail.isShowRemindModal,
-    //   onKnow: (checked) => {
-    //     if (checked) {
-    //       localStorage.setItem('__alert_suppress_remind', 'false')
-    //     }
-    //     dispatch({
-    //       type: "alertDetail/toggleRemindModal",
-    //       payload: false
-    //     })
-    //     dispatch({type: 'alertDetail/openDetailModal'})
-    //   }
-    // }
-
-    // const ticketModalProps = {
-    //   isShowTicketModal: alertQueryDetail.isShowTicketModal,
-    //   ticketUrl: alertQueryDetail.ticketUrl,
-    //   onCloseTicketModal() {
-    //     dispatch({
-    //       type: 'alertDetail/closeTicketModal'
-    //     })
-    //   }
-    // }
 
     const localeMessage = defineMessages({
       owner: {
@@ -959,31 +625,7 @@ class alertQueryManage extends Component {
             </div>
             <ListTableWrap />
           </div>}
-        {/*{
-          Object.keys(alertQueryDetail).length !== 0 && alertQueryDetail.currentAlertDetail !== undefined && Object.keys(alertQueryDetail.currentAlertDetail).length !== 0 ?
-            <div className={alertQueryDetail.isShowDetail ? classnames(styles.alertDetailModal, styles.show) : styles.alertDetailModal}>
-              <AlertDetail {...alertDeatilProps} />
-            </div>
-            :
-            undefined
-        }*/}
-        {/*<div className={ticketModalProps.isShowTicketModal ? classnames(styles.ticketModal, styles.show) : styles.ticketModal}>
-          <div className={styles.detailHead}>
-            <p><FormattedMessage {...localeMessage['assign_ticket']} /></p>
-            <i className={classnames(styles.shanChu, shanchuClass)} onClick={ticketModalProps.onCloseTicketModal}></i>
-          </div>
-          <iframe src={ticketModalProps.ticketUrl}>
-          </iframe>
-        </div>*/}
         <ScrollTopButton />
-        {/*<CloseModal {...closeModalProps} />
-        <DispatchModal {...dispatchModalProps} />
-        <ChatOpshModal {...chatOpsModalProps} />
-        <ResolveModal {...resolveModalProps} />
-        <SuppressModal {...suppressModalProps} />
-        <SuppressTimeSlider {...timeSliderProps} />
-        <ManualNotifyModal {...notifyModalProps} />
-        <ReassignModal {...reassignModalProps} />*/}
         <AlertOriginSliderWrap/>
         <AlertDetaiWrap { ...alertDetailWrapProps }/>
       </div>
@@ -995,7 +637,6 @@ export default injectIntl(Form.create()(
   connect((state) => {
     return {
       alertQuery: state.alertQuery,
-      alertQueryDetail: state.alertQueryDetail
     }
   })(alertQueryManage)
 ))
