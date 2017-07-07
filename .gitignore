@@ -10,3 +10,4 @@ public/
 
 npm-debug*
 yarn.lock
+dist/
