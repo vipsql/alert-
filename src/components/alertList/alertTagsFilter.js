@@ -180,8 +180,9 @@ class alertTagsFilter extends Component{
                         <ul className={styles.content}>
                           {
                             tagsKeyList.map( (item) => {
+                              console.log(item.key)
                               return <li
-                                key={item.key}
+                                key={item.key + item.keyName}
                                 data-key={JSON.stringify(item)}
                                 onClick={this.select.bind(this, ...arguments, dispatch)}
                               >{item.keyName}{item.checked && <i className={wancheng}></i>}</li>

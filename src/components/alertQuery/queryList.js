@@ -5,6 +5,7 @@ import ListTable from '../common/listTable'
 
 // function ListTimeTableWrap({dispatch, alertListTimeTable}){
 const  ListTableWrap = ({dispatch, alertQuery}) => {
+  console.log("render: ListTableWrap");
   const props = {
     ...alertQuery,
     loadMore(){
@@ -17,9 +18,16 @@ const  ListTableWrap = ({dispatch, alertQuery}) => {
       const alertId = e.target.getAttribute('data-id');
 
       dispatch({
-        type: 'alertQuery/clickDetail',
-        payload: alertId
+        type: 'alertDetail/openDetailModal',
+        payload: {
+          alertId
+        }
       })
+
+      // dispatch({
+      //   type: 'alertQuery/clickDetail',
+      //   payload: alertId
+      // })
     },
     // 分组展开
     spreadGroup(e) {

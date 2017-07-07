@@ -244,6 +244,9 @@ class VisualAnalyze extends Component {
       )
     })
 
+    // let tagsComponent
+    // if()
+
     let ImgEle
     const resInfoListComponent = resInfo.length > 0 && resInfo.map((item, index) => {
       if (item.type != 'image') {
@@ -274,7 +277,7 @@ class VisualAnalyze extends Component {
           {(!isShowFouth && lessLevel > 2) && <Checkbox className={styles.showGroup} onChange={showIncidentGroup} checked={incidentGroup} ><FormattedMessage {...formatMessages['incidentGroup']} /></Checkbox>}
 
           {
-            lessLevel > 0 &&
+            lessLevel > 0 && lessLevel !== 2 &&
             <div style={{ display: 'inline-block' }}>
               <FormattedMessage {...formatMessages['groupBy']} />：<Select getPopupContainer={() => document.getElementById("content")} disabled={isShowFouth ? true : false} defaultValue={gr2State != '' ? gr2State : tags[0]} onChange={gr2ChangeOverride} className={styles.visualGroup}  >
                 {tagsComponent}
@@ -286,7 +289,7 @@ class VisualAnalyze extends Component {
           {
             lessLevel > 1 &&
             <div style={{ display: 'inline-block' }} id="visualGr2">
-              <span className={styles.levelArrow} >></span>
+              {lessLevel !== 2 && <span className={styles.levelArrow} >></span>}
               <Select getPopupContainer={() => document.getElementById("content")} disabled={isShowFouth ? true : false} defaultValue={gr3State != '' ? gr3State : tags[1]} onChange={gr3ChangeOverride} className={styles.visualGroup}  >
                 {tagsComponent}
               </Select>
