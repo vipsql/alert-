@@ -18,16 +18,32 @@ class ListTable extends Component {
   }
 
   componentDidUpdate() {
-    this.scrollHeight = this._getTotalScrollHeight();
+    clearTimeout(this.autoLoad);
+    setTimeout(() => {
+      this.scrollHeight = this._getTotalScrollHeight();
+      this.isLoadingMore = false;
+    }, 300)
+  }
+
+  componentWillUnMount() {
+    clearTimeout(this.autoLoad);
+    this._cancelAutoLoadMore();
   }
 
   _setAutoLoadMore() {
     $(this.props.target).scroll((e) => {
       const $target = $(e.target);
-      if ($target.scrollTop() + 10 + $target.height() > this.scrollHeight && this.props.isShowMore) {
-        this.props.loadMore();
+      if ($target.scrollTop() + 10 + $target.height() > this.scrollHeight && this.props.isShowMore && !this.isLoadingMore) {
+        this.isLoadingMore = true;
+        this.autoLoad = setTimeout(() => {
+          this.props.loadMore();
+        }, 0)
       }
     })
+  }
+
+  _cancelAutoLoadMore() {
+    $(this.props.target).unbind("scroll");
   }
 
   // 获取可滚动的区域总高度
@@ -468,7 +484,7 @@ class ListTable extends Component {
             </Animate>
           </table>
         </Spin>
-        {isShowMore && <Spin spinning={isLoading}><div className={styles.loadMore}><Button onClick={loadMore}><FormattedMessage {...formatMessages['showMore']} /></Button></div></Spin>}
+        {isShowMore && <Spin size="large" spinning={isLoading}><div className={styles.loadMore}><Button onClick={loadMore}><FormattedMessage {...formatMessages['showMore']} /></Button></div></Spin>}
       </div>
     )
   }

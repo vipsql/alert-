@@ -199,6 +199,21 @@
     height: 100%;
     transition: @transition-ease-out;
     background: @blue6;
+    &::-webkit-scrollbar-thumb {
+      width: 7px; //background-color: #d3d4d6;
+      background-color: #1d6aa7;
+      border: 2px solid #153d5e;
+      border-radius: 7px;
+    }
+    &::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+      background-color: #153d5e;
+      border-radius: 7px;
+    }
+    &::-webkit-scrollbar-track {
+      width: 10px;
+    }
     .container {
       padding: 5px 24px 24px 24px;
       // height: 100%;
@@ -217,7 +232,7 @@
       .no_content {
         position: relative;
       }
-      
+
     }
 
 

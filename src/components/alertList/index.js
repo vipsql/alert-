@@ -4,6 +4,8 @@ import { Tabs, Select, Switch, Checkbox, Button } from 'antd'
 import ListTableWrap from './listTable'
 import ListTimeTableWrap from './listTimeTable'
 import VisualAnalyzeWrap from './visualAnalyze'
+import AlertDetailWrap from '../alertDetail/wrap'
+import AlertOperationWrap from '../alertOperation/wrap'
 import AlertBar from './alertBar'
 import AlertTagsFilter from './alertTagsFilter'
 import AlertOperation from '../common/alertOperation/index.js'
@@ -79,114 +81,6 @@ class AlertListManage extends Component {
     const { levels } = alertListTable;
     const { alertOperateModalOrigin } = alertList
 
-    const operateProps = {
-      selectGroup: alertOperation.selectGroup,
-      columnList: alertOperation.columnList,
-      extendColumnList: alertOperation.extendColumnList,
-      extendTagsKey: alertOperation.extendTagsKey,
-
-      takeOverDisabled: alertOperation.takeOverDisabled,
-      dispatchDisabled: alertOperation.dispatchDisabled,
-      closeDisabled: alertOperation.closeDisabled,
-      resolveDisabled: alertOperation.resolveDisabled,
-      notifyDisabled: alertOperation.notifyDisabled,
-      shareDisabled: alertOperation.shareDisabled,
-
-      checkCloumFunc: (e) => {
-        dispatch({
-          type: 'alertOperation/checkColumn',
-          payload: e.target.value,
-        })
-      },
-      relieveFunc: () => {
-        dispatch({
-          type: 'alertOperation/openRelieveModal',
-        })
-      },
-      takeOverFunc: (position) => {
-        dispatch({
-          type: position !== 'detail' ? 'alertOperation/takeOver' : 'alertDetailOperation/takeOver',
-          payload: position
-        })
-      },
-      dispatchFunc: (position) => {
-        dispatch({
-          type: 'alertOperation/openFormModal',
-          payload: position
-        })
-      },
-      closeFunc: (position) => {
-        dispatch({
-          type: 'alertOperation/openCloseModal',
-          payload: {
-            state: true,
-            origin: position
-          }
-        })
-      },
-      resolveFunc: (position) => {
-        dispatch({
-          type: 'alertOperation/openResolveModal',
-          payload: {
-            state: true,
-            origin: position
-          }
-        })
-      },
-      mergeFunc: () => {
-        dispatch({
-          type: 'alertOperation/openMergeModal',
-        })
-      },
-      groupFunc: (value) => {
-        dispatch({
-          type: 'alertOperation/groupView',
-          payload: value,
-        })
-      },
-      noGroupFunc: () => {
-        dispatch({
-          type: 'alertOperation/noGroupView',
-        })
-      },
-      showChatOpsFunc: (position) => {
-        dispatch({
-          type: 'alertOperation/openChatOps',
-          payload: position
-        })
-      },
-      showNotifyFunc: (position) => {
-        dispatch({
-          type: 'alertOperation/openNotify',
-          payload: position
-        })
-      },
-      suppressIncidents: (min, position) => {
-        dispatch({
-          type: 'alertOperation/beforeSuppressIncidents',
-          payload: {
-            time: min,
-            position: position
-          }
-        })
-      },
-      showSuppressTimeSlider: (position) => {
-        dispatch({
-          type: 'alertOperation/openSuppressTimeSlider',
-          payload: {
-            position: position
-          }
-        })
-      },
-      showReassiginFunc: (position) => {
-        dispatch({
-          type: 'alertOperation/openReassign',
-          payload: position
-        })
-      }
-    }
-
-    const currentAlertDetail = alertDetail['currentAlertDetail'] || {};
     const toggleBarButtonClick = (e) => {
       const isShowAlertBar = !alertList.isShowBar;
       dispatch({
@@ -194,6 +88,7 @@ class AlertListManage extends Component {
         payload: isShowAlertBar,
       })
     }
+<<<<<<< HEAD
     const alertDeatilProps = {
       extraProps: {
         currentAlertDetail,
@@ -455,6 +350,8 @@ class AlertListManage extends Component {
         })
       }
     }
+=======
+>>>>>>> 64c5b31cd13a159daf56731d4a604858be8a6073
 
     const refreshProps = {
       onChange(checked) {
@@ -472,18 +369,9 @@ class AlertListManage extends Component {
                 type: 'tagListFilter/refresh',
               })
             }, 60000)
+
           }
         }
-      }
-    }
-
-    const ticketModalProps = {
-      isShowTicketModal: alertDetail.isShowTicketModal,
-      ticketUrl: alertDetail.ticketUrl,
-      onCloseTicketModal() {
-        dispatch({
-          type: 'alertDetail/closeTicketModal'
-        })
       }
     }
 
@@ -559,11 +447,13 @@ class AlertListManage extends Component {
         <div className={styles.alertListPage + " " + (alertList.isShowBar ? '' : styles.marginTop0)}>
           <Tabs defaultActiveKey="1">
             <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key='1'>
-              <AlertOperation position='list' {...operateProps} />
+              {/*<AlertOperation position='list' {...operateProps} />*/}
+              <AlertOperationWrap />
               <ListTableWrap />
             </TabPane>
             <TabPane tab={<span className={tabLine} ><FormattedMessage {...localeMessage['tab_time']} /></span>} key='2'>
-              <AlertOperation position='timeAxis' {...operateProps} />
+              {/*<AlertOperation position='timeAxis' {...operateProps} />*/}
+              <AlertOperationWrap />
               <ListTimeTableWrap />
             </TabPane>
             {isShowVisualTab &&
@@ -583,32 +473,8 @@ class AlertListManage extends Component {
             <li><LevelIcon extraStyle={styles.extraStyle} iconType='noAlerts' /><p><FormattedMessage {...localeMessage['noAlert']} /></p></li>
           </ul>
         </div>
-        {
-          Object.keys(alertDetail).length !== 0 && alertDetail.currentAlertDetail !== undefined && Object.keys(alertDetail.currentAlertDetail).length !== 0 ?
-            <div className={alertDetail.isShowDetail ? classnames(styles.alertDetailModal, styles.show) : styles.alertDetailModal}>
-              <AlertDetail {...alertDeatilProps} />
-            </div>
-            :
-            undefined
-        }
-        <div className={ticketModalProps.isShowTicketModal ? classnames(styles.ticketModal, styles.show) : styles.ticketModal}>
-          <div className={styles.detailHead}>
-            <p><FormattedMessage {...localeMessage['assign_ticket']} /></p>
-            <i className={classnames(styles.shanChu, shanchuClass)} onClick={ticketModalProps.onCloseTicketModal}></i>
-          </div>
-          <iframe src={ticketModalProps.ticketUrl}>
-          </iframe>
-        </div>
-        <MergeModal />
-        <CloseModal {...closeModalProps} />
-        <DispatchModal {...dispatchModalProps} />
-        <ChatOpshModal {...chatOpsModalProps} />
-        <ResolveModal {...resolveModalProps} />
-        <RelieveModal />
-        <SuppressModal {...suppressModalProps} />
-        <SuppressTimeSlider {...timeSliderProps} />
-        <ManualNotifyModal {...notifyModalProps} />
-        <ReassignModal {...reassignModalProps} />
+
+        <AlertDetailWrap />
         <AlertOriginSliderWrap />
         <ScrollTopButton />
       </div>
@@ -620,9 +486,6 @@ export default injectIntl(connect((state) => {
   return {
     alertManage: state.alertManage,
     alertListTable: state.alertListTable,
-    alertDetail: state.alertDetail,
-    alertOperation: state.alertOperation,
-    alertDetailOperation: state.alertDetailOperation,
     alertList: state.alertList,
   }
 })(AlertListManage))

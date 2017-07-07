@@ -33,6 +33,32 @@ const initalState = {
   tempListData: [], //用于临时记录列表数据，在分组时取用这块的数据（避免连续分组时的BUG）
   data: [],
 
+  selectGroup: window['_groupBy'], // 默认是分组设置
+  selectColumn: [], // 选择的列
+  extendColumnList: [], //扩展字段
+  extendTagsKey: [], // 标签
+  columnList: [
+    {
+      type: 0, // id
+      cols: [
+        { id: 'entityName', checked: true, },
+        { id: 'name', checked: false, },
+        { id: 'source', checked: false, },
+        { id: 'description', checked: false, },
+        { id: 'count', checked: false, },
+        { id: 'lastTime', checked: false, },
+        { id: 'firstOccurTime', checked: false, },
+        { id: 'lastOccurTime', checked: false, },
+        { id: 'status', checked: false, },
+        { id: 'entityAddr', checked: false, },
+        { id: 'orderFlowNum', checked: false, },
+        { id: 'notifyList', checked: false, },
+        { id: 'classCode', checked: false },
+        { id: 'tags', checked: false },
+      ]
+    },
+  ],
+
   columns: [{
     key: 'entityName',
   }, {
@@ -85,6 +111,57 @@ export default {
   },
 
   reducers: {
+    // 列定制初始化
+    initColumn(state, { payload: { baseCols, extend, tags } }) {
+      let newList = JSON.parse(JSON.stringify(initalState.columnList));
+      if (extend.cols.length !== 0) {
+        extend.cols.forEach((col) => {
+          col.checked = false;
+        })
+        newList[1] = extend
+      }
+      newList.forEach((group) => {
+        group.cols.forEach((col) => {
+          baseCols.forEach((column, index) => {
+            if (column.key === col.id) {
+              col.checked = true;
+            }
+          })
+        })
+      })
+      return { ...state, columnList: newList, extendColumnList: extend.cols, extendTagsKey: tags }
+    },
+    // 列改变时触发
+    setColumn(state, { payload: selectCol }) {
+      const { columnList } = state;
+      let arr = []
+      const newList = columnList.map((group) => {
+        group.cols.map((col) => {
+          if (typeof selectCol !== 'undefined' && col.id === selectCol) {
+            col.checked = !col.checked;
+          }
+          if (col.checked) {
+            if (col.id == 'source' || col.id == 'lastTime' || col.id == 'firstOccurTime' || col.id == 'lastOccurTime' || col.id == 'count' || col.id == 'status') {
+              arr.push({ key: col.id, title: col.name, order: true }) // order字段先定死
+            } else {
+              arr.push({ key: col.id, title: col.name })
+            }
+          }
+          return col;
+        })
+        return group;
+      })
+      localStorage.setItem('__alert_query_userColumns', JSON.stringify(arr))
+      return { ...state, columnList: newList, selectColumn: arr }
+    },
+    // 设置分组显示的类型
+    setGroupType(state, { payload: selectGroup }) {
+      return { ...state, selectGroup }
+    },
+    // 移除分组显示的类型
+    removeGroupType(state) {
+      return { ...state, selectGroup: initalState.selectGroup }
+    },
     // 更新查询条件
     setCurrentQuery(state, { payload: currentQuery }) {
       return { ...state, currentQuery }
@@ -253,7 +330,7 @@ export default {
      */
     *alertQuerySetup({ payload }, { call, put, select }) {
       yield put({ type: 'initCustomCols' })
-      yield put({ type: 'alertQueryDetail/toggleDetailModal', payload: false })
+      yield put({ type: 'alertDetail/toggleDetailModal', payload: false })
       yield put({ type: 'clearQuery' })
       yield put({ type: 'setCurrentQuery', payload: { resObjectId: payload.resObjectId } })
       yield put({ type: 'queryAlertList', payload: { resObjectId: payload.resObjectId } })
@@ -286,7 +363,7 @@ export default {
     *queryBefore({ payload }, { call, put, select }) {
       yield put({ type: 'setCurrentQuery', payload: payload })
       yield put({ type: 'queryAlertList' })
-      yield put({ type: 'alertQueryDetail/removeGroupType' })
+      yield put({ type: 'alertDetail/removeGroupType' })
     },
 
     //查询告警列表
@@ -367,7 +444,7 @@ export default {
           payload: false
         })
         yield put({
-          type: 'alertQueryDetail/initColumn',
+          type: 'initColumn',
           payload: {
             baseCols: columns,
             extend: listData.data.properties,
@@ -378,6 +455,7 @@ export default {
       } else {
         yield message.error(window.__alert_appLocaleData.messages[listData.message], 2)
       }
+
     },
     // 展开组
     *spreadGroup({ payload }, { call, put, select }) {
@@ -430,7 +508,7 @@ export default {
     // 点击展开详情
     *clickDetail({ payload }, { select, put, call }) {
       yield put({ type: 'toggleDetailAlertId', payload: payload })
-      yield put({ type: 'alertQueryDetail/openDetailModal' })
+      yield put({ type: 'alertDetail/openDetailModal' })
     },
     // show more
     *loadMore({ }, { call, put, select }) {
@@ -491,7 +569,7 @@ export default {
           payload: false
         })
         yield put({
-          type: 'alertQueryDetail/addProperties',
+          type: 'alertDetail/addProperties',
           payload: {
             properties: listReturnData.data.properties,
             tags: listReturnData.data.tagKeys
@@ -536,7 +614,39 @@ export default {
       } else {
         yield message.error(window.__alert_appLocaleData.messages[itsmDetailUrlData.message], 2)
       }
-    }
+    },
+    // 分组显示
+    *groupView({ payload }, { select, put, call }) {
+      yield put({
+        type: 'setGroupType',
+        payload: payload
+      })
+      yield put({
+        type: 'setGroup',
+        payload: {
+          isGroup: true,
+          group: payload
+        }
+      })
+    },
+    // 无分组显示
+    *noGroupView({ payload }, { select, put, call }) {
+      yield put({
+        type: 'removeGroupType',
+      })
+      yield put({
+        type: 'setGroup',
+        payload: {
+          isGroup: false,
+        }
+      })
+    },
+    // 列定制
+    *checkColumn({ payload }, { select, put, call }) {
+      yield put({ type: 'setColumn', payload: payload })
+      const selectColumn = yield select(state => state.alertQuery.selectColumn)
+      yield put({ type: 'customCols', payload: selectColumn })
+    },
   },
 
 }
