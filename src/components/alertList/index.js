@@ -47,7 +47,7 @@ class AlertListManage extends Component {
   }
 
   render() {
-    const { alertDetail, alertListTable, alertList, dispatch, alertOperation, alertDetailOperation, alertManage, intl: {formatMessage} } = this.props;
+    const { alertDetail, alertListTable, alertList, dispatch, alertOperation, alertDetailOperation, alertManage, intl: { formatMessage } } = this.props;
 
     const localeMessage = defineMessages({
       tab_list: {
@@ -69,6 +69,10 @@ class AlertListManage extends Component {
       auto_refresh: {
         id: 'alertList.autoRefresh',
         defaultMessage: '自动刷新'
+      },
+      noAlert: {
+        id: 'alertManage.noAlert',
+        defaultMessage: '无告警'
       }
     })
 
@@ -408,7 +412,7 @@ class AlertListManage extends Component {
           type: alertOperateModalOrigin === 'detail' ? "alertDetailOperation/toggleRemindModal" : "alertOperation/toggleRemindModal",
           payload: false
         })
-        alertOperateModalOrigin === 'detail' && dispatch({type: 'alertDetail/openDetailModal'})
+        alertOperateModalOrigin === 'detail' && dispatch({ type: 'alertDetail/openDetailModal' })
       }
     }
 
@@ -576,6 +580,7 @@ class AlertListManage extends Component {
                 return (<li key={index}><LevelIcon extraStyle={styles.extraStyle} iconType={key} /><p>{`${window['_severity'][key]}（${levels_wapper[key]}）`}</p></li>)
               })
             }
+            <li><LevelIcon extraStyle={styles.extraStyle} iconType='noAlerts' /><p><FormattedMessage {...localeMessage['noAlert']} /></p></li>
           </ul>
         </div>
         {
