@@ -74,6 +74,10 @@ module.exports = function (webpackConfig, env) {
         from: __dirname + '/Warning.wav',
         to: __dirname + '/dist/'
       },
+      {
+        from: __dirname + '/locales/**',
+        to: __dirname + '/dist/'
+      }
     ]),
     new HtmlWebpackPlugin({
       title: 'Alert',
