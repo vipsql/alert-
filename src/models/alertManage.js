@@ -151,7 +151,7 @@ export default {
         })
 
       } else {
-        yield message.error(window.__alert_appLocaleData.messages[treemapData.message], 2)
+        yield message.error(treemapData.message, 2)
       }
     }
   },

@@ -299,8 +299,12 @@ class alertQueryManage extends Component {
         const formData = form.getFieldsValue()
 
         let keyWords = JSON.parse(formData.keyWordsType);
+        let owner = JSON.parse(formData.owner);
+
+        formData.ownerId = owner.userId;
         formData.keyName = keyWords.keyName;
         formData.keyWordsType = keyWords.keyWordsType;
+        delete formData.owner
 
         if (formData.dateTime !== undefined && formData.dateTime.length !== 0) {
           //   开始时间统一处理为当前日期的0点时间戳
@@ -310,10 +314,6 @@ class alertQueryManage extends Component {
           _begin.setMinutes(0)
           _begin.setSeconds(0)
           _begin.setMilliseconds(0)
-          // _end.setHours(0)
-          // _end.setMinutes(0)
-          // _end.setSeconds(0)
-          // _end.setMilliseconds(0)
 
           formData.begin = _begin.getTime()
           formData.end = _end.getTime();
@@ -329,10 +329,6 @@ class alertQueryManage extends Component {
           _begin.setMinutes(0)
           _begin.setSeconds(0)
           _begin.setMilliseconds(0)
-          // _end.setHours(0)
-          // _end.setMinutes(0)
-          // _end.setSeconds(0)
-          // _end.setMilliseconds(0)
 
           formData.lastBegin = _begin.getTime()
           formData.lastEnd = _end.getTime();
@@ -517,13 +513,15 @@ class alertQueryManage extends Component {
                   {...formItemLayout}
                   label={<FormattedMessage {...localeMessage['owner']} />}
                 >
-                  {getFieldDecorator('ownerId', {
-                    initialValue: ''
+                  {getFieldDecorator('owner', {
+                    initialValue: JSON.stringify({userId: '', realName: ''})
                   })(
-                    <Select getPopupContainer={() => document.getElementById("content")} >
-                      <Option value="">{formatMessage({ ...localeMessage['allOwners'] })}</Option>
+                    <Select getPopupContainer={() => document.getElementById("content")} showSearch filterOption={false} onChange={ (value) => {
+                      console.log(value)
+                    }}>
+                      <Option value={JSON.stringify({userId: '', realName: ''})}>{formatMessage({ ...localeMessage['allOwners'] })}</Option>
                       {
-                        ownerOptions.map((owner, index) => <Option key={index} value={owner.userId}>{owner.realName}</Option>)
+                        ownerOptions.map((owner, index) => <Option key={index} value={JSON.stringify(owner)}>{owner.realName}</Option>)
                       }
                     </Select>
                     )}

@@ -50,10 +50,10 @@ export default {
           })
           yield put({type: 'toggleTagsModal', payload: true})
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[selectedTags.message], 2);
+          yield message.error(selectedTags.message, 2);
         }
       } else {
-        yield message.error(window.__alert_appLocaleData.messages[allTagsKeys.message], 2);
+        yield message.error(allTagsKeys.message, 2);
       }
 
     },
@@ -69,7 +69,7 @@ export default {
           pageSize
         });
         if (!tagValues.result) {
-          yield message.error(window.__alert_appLocaleData.messages[tagValues.message], 2);
+          yield message.error(tagValues.message, 2);
         }
         yield put({
           type: 'setSelectList',
@@ -99,7 +99,7 @@ export default {
           pageSize
         });
         if (!tagValues.result) {
-          yield message.error(window.__alert_appLocaleData.messages[tagValues.message], 2);
+          yield message.error(tagValues.message, 2);
         }
         yield put({
           type: 'loadMoreSelectList',
@@ -130,7 +130,7 @@ export default {
       if (postResult.result) {
         yield message.success(window.__alert_appLocaleData.messages['constants.success'], 2);
       } else {
-        yield message.error(window.__alert_appLocaleData.messages[postResult.message], 2);
+        yield message.error(postResult.message, 2);
       }
 
       yield put({

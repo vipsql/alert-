@@ -108,7 +108,7 @@ export default {
               if (trapUrl.result) {
                 yield put({ type: 'snmpTrapRules/setAppRules', payload: {trapUrl: trapUrl.data.url, appRules: []}})
               } else {
-                yield message.error(window.__alert_appLocaleData.messages[trapUrl.message], 3)
+                yield message.error(trapUrl.message, 3)
               }
             break;
           default:
@@ -140,7 +140,7 @@ export default {
                   if (trapUrl.result) {
                     yield put({ type: 'snmpTrapRules/setAppRules', payload: {trapUrl: trapUrl.data.url, appRules: viewResult.data.appRules || []}})
                   } else {
-                    yield message.error(window.__alert_appLocaleData.messages[trapUrl.message], 3)
+                    yield message.error(trapUrl.message, 3)
                   }
                 break;
               default:
@@ -148,7 +148,7 @@ export default {
             }
           }
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[viewResult.message], 3)
+          yield message.error(viewResult.message, 3)
         }
       } else {
         console.error('appId is null')
@@ -191,7 +191,7 @@ export default {
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3)
           yield put(routerRedux.goBack());
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[addResult.message], 3)
+          yield message.error(addResult.message, 3)
         }
       } else {
         console.error('displayName is null')
@@ -235,7 +235,7 @@ export default {
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3)
           yield put(routerRedux.goBack());
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[editResult.message], 3)
+          yield message.error(editResult.message, 3)
         }
       } else {
         console.error('displayName is null')
@@ -278,7 +278,7 @@ export default {
           orderType: orderType
         }})
       } else {
-        yield message.error(window.__alert_appLocaleData.messages[appResult.message], 2)
+        yield message.error(appResult.message, 2)
       }
 
       yield put({ type: 'toggleLoading', payload: false })
@@ -292,7 +292,7 @@ export default {
             return false
           }
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[isRoot.message], 2)
+          yield message.error(isRoot.message, 2)
           return false
         }
       }
@@ -311,7 +311,7 @@ export default {
             }
           })
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[typeResult.message], 2)
+          yield message.error(typeResult.message, 2)
         }
       } else {
         console.error('application type is null')
@@ -330,7 +330,7 @@ export default {
             }
           })
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[statusResult.message], 2)
+          yield message.error(statusResult.message, 2)
         }
       } else {
         console.error('edit infomation is null')
@@ -351,7 +351,7 @@ export default {
             payload: currentDeleteApp.id
           })
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[deleteResult.message], 2)
+          yield message.error(deleteResult.message, 2)
         }
       } else {
         console.error('application is null')

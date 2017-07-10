@@ -341,13 +341,13 @@ export default {
       const ownerOptions = yield call(getUsers);
 
       if (!sourceOptions.result) {
-        yield message.error(window.__alert_appLocaleData.messages[sourceOptions.message], 3)
+        yield message.error(sourceOptions.message, 3)
       }
       if (!propertyOptions.result) {
-        yield message.error(window.__alert_appLocaleData.messages[propertyOptions.message], 3)
+        yield message.error(propertyOptions.message, 3)
       }
       if (!ownerOptions.result) {
-        yield message.error(window.__alert_appLocaleData.messages[ownerOptions.message], 3)
+        yield message.error(ownerOptions.message, 3)
       }
       yield put({
         type: 'setOptions',
@@ -453,7 +453,7 @@ export default {
         })
 
       } else {
-        yield message.error(window.__alert_appLocaleData.messages[listData.message], 2)
+        yield message.error(listData.message, 2)
       }
 
     },
@@ -576,7 +576,7 @@ export default {
           }
         })
       } else {
-        yield message.error(window.__alert_appLocaleData.messages[listReturnData.message], 2)
+        yield message.error(listReturnData.message, 2)
       }
 
     },
@@ -612,7 +612,7 @@ export default {
         yield put({ type: 'updateDataRow', payload: { itsmDetailUrl, id } })
         window.open(itsmDetailUrl);
       } else {
-        yield message.error(window.__alert_appLocaleData.messages[itsmDetailUrlData.message], 2)
+        yield message.error(itsmDetailUrlData.message, 2)
       }
     },
     // 分组显示

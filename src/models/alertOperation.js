@@ -97,7 +97,7 @@ export default {
       }));
 
       if (!operateAlertIds || operateAlertIds.length === 0) {
-        message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
+        message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else {
         if (users.length === 0) {
           const response = yield call(getUsers);
@@ -149,7 +149,7 @@ export default {
       // yield put({ type: 'alertListTable/filterCheckAlert' })
       const { operateAlertIds } = { payload };
       if (operateAlertIds.length === 0) {
-        yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
+        yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else {
         yield put({
           type: 'toggleSuppressTimeSliderModal',
@@ -178,9 +178,9 @@ export default {
       const { selectedAlertIds } = payload;
 
       if (selectedAlertIds.length === 0) {
-        yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 2);
+        yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 2);
       } else if (selectedAlertIds.length > 1) {
-        yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip2'], 2);
+        yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip2'], 2);
       } else {
         const options = yield getChatOpsOptions();
         const result = yield call(getUsers);
@@ -195,7 +195,7 @@ export default {
             }
           })
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[result.message], 3);
+          yield message.error(result.message, 3);
         }
       }
     },
@@ -213,7 +213,7 @@ export default {
 
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[notify.message], 3);
+          yield message.error(notify.message, 3);
         }
         yield put({
           type: 'initManualNotifyModal',
@@ -224,7 +224,7 @@ export default {
         payload && payload.resolve && payload.resolve(notify);
       } else {
         payload && payload.resolve && payload.resolve(false);
-        yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 2);
+        yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 2);
       }
     },
     // 抑制告警
@@ -246,12 +246,12 @@ export default {
             yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
           }
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[suppressData.message], 3);
+          yield message.error(suppressData.message, 3);
         }
         resolve && resolve(suppressData)
       } else if (operateAlertIds.length === 0) {
         resolve && resolve(false)
-        yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
+        yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       }
     },
     // 打开解除告警modal
@@ -303,10 +303,10 @@ export default {
           parentId: relieveAlert.id
         })
         if (!relieveResult.result) {
-          yield message.error(window.__alert_appLocaleData.messages[relieveResult.message], 3);
+          yield message.error(relieveResult.message, 3);
         } else if (childResult.result !== undefined && !childResult.result) {
           relieveResult.result = false;
-          yield message.error(window.__alert_appLocaleData.messages[childResult.message], 3);
+          yield message.error(childResult.message, 3);
         } else {
           relieveResult.relieveAlert = relieveAlert;
           relieveResult.childResult = childResult;
@@ -338,7 +338,7 @@ export default {
           payload: true
         })
       } else if (mergeInfoList.length < 2) {
-        yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip3'], 3);
+        yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip3'], 3);
       } else {
         console.error('roll up incident error');
       }
@@ -364,7 +364,7 @@ export default {
           result.totalItems = mergeInfoList;
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[result.message], 3);
+          yield message.error(result.message, 3);
         }
         payload && payload.resolve && payload.resolve(result);
       } else {
@@ -387,9 +387,9 @@ export default {
       })
 
       if (operateAlertIds.length === 0) {
-        yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
+        yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else if (operateAlertIds.length > 1) {
-        yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip4'], 3);
+        yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip4'], 3);
       } else {
         const options = yield getFormOptions();
         if (options.result) {
@@ -428,7 +428,7 @@ export default {
           })
         } else {
           // 500 error
-          yield message.error(window.__alert_appLocaleData.messages[data.message], 3);
+          yield message.error(data.message, 3);
         }
 
       } else {
@@ -463,7 +463,7 @@ export default {
       const { operateAlertIds } = payload;
 
       if (operateAlertIds.length === 0) {
-        yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
+        yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else {
         yield put({ type: 'toggleCloseModal', payload: payload.state })
       }
@@ -489,7 +489,7 @@ export default {
             yield message.error(`${resultData.data.failures}`, 3);
           }
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
+          yield message.error(resultData.message, 3);
         }
 
         payload && payload.resolve && payload.resolve(resultData);
@@ -509,7 +509,7 @@ export default {
       // yield put({ type: 'alertListTable/filterCheckAlert' })
       const { operateAlertIds, data, state } = payload
       if (operateAlertIds.length === 0) {
-        yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
+        yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else {
         yield put({ type: 'toggleResolveModal', payload: payload.state })
       }
@@ -537,7 +537,7 @@ export default {
             yield message.error(`${resultData.data.failures}`, 3);
           }
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
+          yield message.error(resultData.message, 3);
         }
         payload && payload.resolve && payload.resolve(resultData);
       } else {
@@ -556,9 +556,9 @@ export default {
       // yield put({ type: 'alertListTable/filterCheckAlert' })
       const { operateAlertIds } = payload
       if (operateAlertIds.length === 0) {
-        yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
+        yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else if (operateAlertIds.length > 1) {
-        yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip2'], 3);
+        yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip2'], 3);
       } else {
         const options = yield getChatOpsOptions();
         if (options.result) {
@@ -630,7 +630,7 @@ export default {
     *takeOver({ payload }, { select, put, call }) {
       const alertIds = payload.operateAlertIds;
       if (alertIds.length === 0) {
-        yield message.error(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
+        yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else {
         let response = yield call(takeOverService, { alertIds });
         const stingIds = alertIds.map(item => '' + item)

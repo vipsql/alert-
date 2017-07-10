@@ -106,7 +106,7 @@ export default {
             yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
           }
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[suppressData.message], 3);
+          yield message.error(suppressData.message, 3);
         }
         payload.resolve && payload.resolve(suppressData)
       } else {
@@ -134,7 +134,7 @@ export default {
           }
         })
       } else {
-        yield message.error(window.__alert_appLocaleData.messages[result.message], 3);
+        yield message.error(result.message, 3);
       }
     },
     *notyfiyIncident({ payload }, { select, put, call }) {
@@ -152,7 +152,7 @@ export default {
 
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[notify.message], 3);
+          yield message.error(notify.message, 3);
         }
         payload.resolve && payload.resolve(notify.result)
       } else {
@@ -204,7 +204,7 @@ export default {
             }
           })
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[data.message], 3);
+          yield message.error(data.message, 3);
         }
 
         payload && payload.resolve && payload.resolve(data);
@@ -272,7 +272,7 @@ export default {
             })
           }
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[detailResult.message], 3);
+          yield message.error(detailResult.message, 3);
         }
       } else {
         console.error('viewDetailAlertId type error')
@@ -302,7 +302,7 @@ export default {
             payload: payload
           })
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[changeResult.message], 3);
+          yield message.error(changeResult.message, 3);
         }
       } else {
         console.error('ticket flow is null')
@@ -327,7 +327,7 @@ export default {
             window.open(viewResult.data.url)
           }
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[viewResult.message], 3);
+          yield message.error(viewResult.message, 3);
         }
       } else {
         console.error('Ticket Flow is null')
@@ -360,7 +360,7 @@ export default {
             yield message.error(`${resultData.data.failures}`, 3);
           }
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
+          yield message.error(resultData.message, 3);
         }
 
         payload && payload.resolve && payload.resolve(resultData);
@@ -393,7 +393,7 @@ export default {
             yield message.error(`${resultData.data.failures}`, 3);
           }
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
+          yield message.error(resultData.message, 3);
         }
         payload && payload.resolve && payload.resolve(resultData);
       } else {
