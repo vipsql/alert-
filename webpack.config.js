@@ -77,6 +77,10 @@ module.exports = function (webpackConfig, env) {
       {
         from: __dirname + '/locales/**',
         to: __dirname + '/dist/'
+      },
+      {
+        from: __dirname + '/help/**',
+        to: __dirname + '/dist/'
       }
     ]),
     new HtmlWebpackPlugin({
