@@ -218,6 +218,15 @@ export default function({history, app}) {
               cb(null, require('./routes/export/dispatch'))
             }, 'export_dispatch')
           }
+        },
+        {
+          path: 'viewDetail/:id',
+          name: 'export_viewDetail',
+          getComponent(nextState, cb) {
+            require.ensure([], require => {
+              cb(null, require('./routes/export/viewDetail'))
+            }, 'export_viewDetail')
+          }
         }
       ]
     }

@@ -12,7 +12,6 @@ import SuppressModal from '../common/suppressModal/index.js'
 import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import ReassignModal from '../common/reassignModal/index.js'
 import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
-import ScrollTopButton from '../common/scrollTopButton/index.js'
 
 const AlertDetailWrap = ({ alertDetail, alertOperation, dispatch, afterTakeOver, afterChatOpsh, afterClose, afterDispatch, afterMunalNotify, afterReassign, afterResolve, afterSuppress }) => {
 

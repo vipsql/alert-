@@ -4,6 +4,7 @@ import { queryCloumns } from '../services/alertQuery'
 import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, changeTicket, viewTicket, notifyOperate, takeOverService, reassignAlert } from '../services/alertOperation'
 import { getUsers } from '../services/app.js';
 import { message } from 'antd'
+import pathToRegexp from 'path-to-regexp';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const initalState = {
@@ -27,8 +28,6 @@ const initalState = {
   notifyUsers: [], // 告警通知用户
   disableChatOps: false, // 是否可以私发chatops
 
-
-
   dispatchDisabled: false,
   closeDisabled: false,
   resolveDisabled: false,
@@ -37,31 +36,6 @@ const initalState = {
 
   ticketUrl: '', //工单链接
   ciUrl: '', //ci信息的链接
-
-  selectColumn: [], // 选择的列
-  extendColumnList: [], //扩展字段
-  extendTagsKey: [], // 标签
-  columnList: [
-    {
-      type: 0, // id
-      cols: [
-        { id: 'entityName', checked: true, },
-        { id: 'name', checked: false, },
-        { id: 'source', checked: false, },
-        { id: 'description', checked: false, },
-        { id: 'count', checked: false, },
-        { id: 'lastTime', checked: false, },
-        { id: 'firstOccurTime', checked: false, },
-        { id: 'lastOccurTime', checked: false, },
-        { id: 'status', checked: false, },
-        { id: 'entityAddr', checked: false, },
-        { id: 'orderFlowNum', checked: false, },
-        { id: 'notifyList', checked: false, },
-        { id: 'classCode', checked: false },
-        { id: 'tags', checked: false },
-      ]
-    },
-  ],
 
   currentAlertDetail: {},
 
@@ -76,6 +50,23 @@ export default {
   namespace: 'alertDetail',
 
   state: initalState,
+
+  subscriptions: {
+    alertExportViewDetail({dispatch, history}) {
+      history.listen((location) => {
+        if (pathToRegexp('/export/viewDetail/:id').test(location.pathname)) {
+          const match = pathToRegexp('/export/viewDetail/:id').exec(location.pathname);
+          const incidentId = match[1];
+          dispatch({
+            type: 'openDetailModal',
+            payload: {
+              alertId: incidentId
+            }
+          })
+        }
+      })
+    },
+  },
 
   effects: {
     // 打开抑制告警Modal
@@ -528,78 +519,6 @@ export default {
   },
 
   reducers: {
-    // // 列定制初始化
-    // initColumn(state, { payload: { baseCols, extend, tags } }) {
-    //   let newList = JSON.parse(JSON.stringify(initalState.columnList));
-    //   if (extend.cols.length !== 0) {
-    //     extend.cols.forEach((col) => {
-    //       col.checked = false;
-    //     })
-    //     newList[1] = extend
-    //   }
-    //   newList.forEach((group) => {
-    //     group.cols.forEach((col) => {
-    //       baseCols.forEach((column, index) => {
-    //         if (column.key === col.id) {
-    //           col.checked = true;
-    //         }
-    //       })
-    //     })
-    //   })
-    //   return { ...state, columnList: newList, extendColumnList: extend.cols, extendTagsKey: tags }
-    // },
-    // show more时需要叠加columns
-    addProperties(state, { payload: { properties, tags } }) {
-      let { columnList, extendTagsKey } = state;
-      let colIds = [];
-      let newTags = [].concat(extendTagsKey);
-      columnList.forEach((item) => {
-        if (item.type == 1) {
-          item.cols.forEach((col) => {
-            colIds.push(col.id)
-          })
-        }
-      })
-      if (properties.cols.length !== 0) {
-        properties.cols.forEach((targetCol) => {
-          if (!colIds.includes(targetCol.id)) {
-            targetCol.checked = false;
-            columnList[columnList.length - 1].cols.push(targetCol)
-          }
-        })
-      }
-      if (tags.length !== 0) {
-        tags.forEach((tag) => {
-          if (!extendTagsKey.includes(tag)) {
-            newTags.push(tag)
-          }
-        })
-      }
-      return { ...state, columnList: columnList, extendColumnList: columnList[columnList.length - 1].cols, extendTagsKey: newTags }
-    },
-    // // 列改变时触发
-    // setColumn(state, { payload: selectCol }) {
-    //   const { columnList } = state;
-    //   let arr = []
-    //   const newList = columnList.map((group) => {
-    //     group.cols.map((col) => {
-    //       if (typeof selectCol !== 'undefined' && col.id === selectCol) {
-    //         col.checked = !col.checked;
-    //       }
-    //       if (col.checked) {
-    //         if (col.id == 'source' || col.id == 'lastTime' || col.id == 'firstOccurTime' || col.id == 'lastOccurTime' || col.id == 'count' || col.id == 'status') {
-    //           arr.push({ key: col.id, title: col.name, order: true }) // order字段先定死
-    //         } else {
-    //           arr.push({ key: col.id, title: col.name })
-    //         }
-    //       }
-    //       return col;
-    //     })
-    //     return group;
-    //   })
-    //   localStorage.setItem('__alert_query_userColumns', JSON.stringify(arr))
-    //   return { ...state, columnList: newList, selectColumn: arr }
-    // },
     // beforeOpenDetail
     beforeOpenDetail(state, { payload }) {
       console.log(payload, "beforeOpenDetail")

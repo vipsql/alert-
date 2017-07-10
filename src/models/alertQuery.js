@@ -131,6 +131,35 @@ export default {
       })
       return { ...state, columnList: newList, extendColumnList: extend.cols, extendTagsKey: tags }
     },
+    // show more时需要叠加columns
+    addProperties(state, { payload: { properties, tags } }) {
+      let { columnList, extendTagsKey } = state;
+      let colIds = [];
+      let newTags = [].concat(extendTagsKey);
+      columnList.forEach((item) => {
+        if (item.type == 1) {
+          item.cols.forEach((col) => {
+            colIds.push(col.id)
+          })
+        }
+      })
+      if (properties.cols.length !== 0) {
+        properties.cols.forEach((targetCol) => {
+          if (!colIds.includes(targetCol.id)) {
+            targetCol.checked = false;
+            columnList[columnList.length - 1].cols.push(targetCol)
+          }
+        })
+      }
+      if (tags.length !== 0) {
+        tags.forEach((tag) => {
+          if (!extendTagsKey.includes(tag)) {
+            newTags.push(tag)
+          }
+        })
+      }
+      return { ...state, columnList: columnList, extendColumnList: columnList[columnList.length - 1].cols, extendTagsKey: newTags }
+    },
     // 列改变时触发
     setColumn(state, { payload: selectCol }) {
       const { columnList } = state;
@@ -569,7 +598,7 @@ export default {
           payload: false
         })
         yield put({
-          type: 'alertDetail/addProperties',
+          type: 'addProperties',
           payload: {
             properties: listReturnData.data.properties,
             tags: listReturnData.data.tagKeys

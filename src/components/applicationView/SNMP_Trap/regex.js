@@ -90,7 +90,7 @@ const Regex = ({changeValue, toggle16Radix, validateRadix, saveRegex, clear, typ
       <Row>
         <Item
           {...itemLayout}
-          label={'Building_value'}
+          label={'Binding_value'}
         >
             <Input onBlur={ (e) => {
               changeValue(type, e.target.value, 'hexValue')
