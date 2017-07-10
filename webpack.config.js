@@ -96,6 +96,9 @@ module.exports = function (webpackConfig, env) {
       template: './src/template/index.html',
       inject: true,
       chunks: []
+    }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(env)
     })
   );
 
