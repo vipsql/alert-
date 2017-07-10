@@ -15,17 +15,17 @@ global.Intl = Intl;
 async function getMessages(lang) {
   let messages;
   if (typeof lang === 'string' && lang.indexOf('en') > -1) {
-    if (process.env.NODE_ENV === 'developement') {
+    if (process.env.NODE_ENV === 'development') {
       messages = await request('#localAsset#../locales/en.json', { method: 'GET' });
     } else {
       messages = await request('#localAsset#./locales/en.json', { method: 'GET' })
     }
   } else {
-    if (process.env.NODE_ENV === 'developement') {
-      messages = await request('#localAsset#../locales/en.json', { method: 'GET' });
+    if (process.env.NODE_ENV === 'development') {
+      messages = await request('#localAsset#../locales/zh.json', { method: 'GET' });
     }
     else {
-      messages = await request('#localAsset#./locales/en.json', { method: 'GET' })
+      messages = await request('#localAsset#./locales/zh.json', { method: 'GET' })
     }
   }
   if (messages.result) {
