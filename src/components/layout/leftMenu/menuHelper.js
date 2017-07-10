@@ -17,14 +17,13 @@ const formatMessages = defineMessages({
 })
 
 const createMenus = (menus, isFold, isRoot) => {
-  return menus.map(item => {
+  return menus.filter(item => item.key !== 'help').map(item => {
     const path = '/';
     const iconName = `icon-${item.icon}`
     const className = classnames(
       'icon',
       iconName,
       'iconfont'
-
     )
 
     return (
@@ -81,8 +80,7 @@ function FoldBar({ isFold, handleFoldMenu, handleClickNavMenu, isRoot, className
         defaultSelectedKeys={[location.pathname.split('/')[location.pathname.split('/').length - 1] || 'alertManage']}>
         {menuItems}
       </Menu>
-
-      {/*<div className={styles.menuHelp}><a href="#alertHelp"><i className={helpClass}></i>{!isFold ? <FormattedMessage {...formatMessages['help']} /> : ''}</a></div>*/}
+      {<div className={styles.menuHelp}><a target="_blank" href="help/index.html"><i className={helpClass}></i>{!isFold ? <FormattedMessage {...formatMessages['help']} /> : ''}</a></div>}
     </div>
   )
 }

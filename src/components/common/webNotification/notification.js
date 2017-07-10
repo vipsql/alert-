@@ -76,8 +76,7 @@ class Notification extends Component {
   }
 
   render() {
-    const props = this.props
-    const animateProps = {}
+    const props = this.props;
     const noticeNodes = this.state.notices.map((notice) => {
       const onClose = this.remove.bind(this, notice.key)
       return (
@@ -88,9 +87,6 @@ class Notification extends Component {
         />
       )
     })
-    if (this.state.notices.length <= 1) {
-      animateProps.component = '';
-    }
     const className = [
       styles[props.prefix]
     ]
@@ -103,7 +99,7 @@ class Notification extends Component {
           leaveActive: 'leaveActive',
           appear: 'appear',
           appearActive: 'appearActive'
-        }} {...animateProps}>{noticeNodes}</Animate>
+        }}>{noticeNodes}</Animate>
       </div>
     )
   }
