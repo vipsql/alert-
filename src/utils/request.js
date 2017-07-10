@@ -81,7 +81,7 @@ function ajax(url, options){
         ...options.headers,
       },
       xhrFields: {
-        // withCredentials: true
+        withCredentials: true
       },
       // timeout: 10000
     }
