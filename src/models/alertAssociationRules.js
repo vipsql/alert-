@@ -121,7 +121,7 @@ export default {
           orderType: orderType
         }})
       } else {
-        yield message.error(window.__alert_appLocaleData.messages[ruleResult.message], 2)
+        yield message.error(ruleResult.message, 2)
       }
 
       yield put({ type: 'toggleLoading', payload: false })
@@ -137,7 +137,7 @@ export default {
             payload: viewResult.data || {}
           })
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[viewResult.message], 3)
+          yield message.error(viewResult.message, 3)
         }
       } else {
         console.error('ruleId is null')
@@ -156,7 +156,7 @@ export default {
             }
           })
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[ruleResult.message], 2)
+          yield message.error(ruleResult.message, 2)
         }
       } else {
         console.error('changeStatus infomation is null')
@@ -173,7 +173,7 @@ export default {
             payload: currentDeleteRule.id
           })
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[deleteResult.message], 2)
+          yield message.error(deleteResult.message, 2)
         }
       } else {
         console.error('deleteId is null')
@@ -246,7 +246,7 @@ export default {
           }
         });
       } else {
-        message.error(window.__alert_appLocaleData.messages[result.message], 3);
+        message.error(result.message, 3);
       }
     },
 
@@ -264,7 +264,7 @@ export default {
           }
         });
       } else {
-        message.error(window.__alert_appLocaleData.messages[result.message], 3);
+        message.error(result.message, 3);
       }
     },
 
@@ -283,7 +283,7 @@ export default {
           }
         });
       } else {
-        message.error(window.__alert_appLocaleData.messages[result.message], 3);
+        message.error(result.message, 3);
       }
     },
 
@@ -302,7 +302,7 @@ export default {
           }
         });
       } else {
-        message.error(window.__alert_appLocaleData.messages[result.message], 3);
+        message.error(result.message, 3);
       }
     },
 
@@ -320,7 +320,7 @@ export default {
           }
         });
       } else {
-        message.error(window.__alert_appLocaleData.messages[result.message], 3);
+        message.error(result.message, 3);
       }
     },
 
@@ -338,7 +338,7 @@ export default {
           }
         });
       } else {
-        message.error(window.__alert_appLocaleData.messages[result.message], 3);
+        message.error(result.message, 3);
       }
     },
 
@@ -353,7 +353,7 @@ export default {
         yield put(routerRedux.goBack());
         // yield put({type: 'clear'});
       } else {
-        message.error(window.__alert_appLocaleData.messages[result.message], 3);
+        message.error(result.message, 3);
       }
     },
   },

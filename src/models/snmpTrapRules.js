@@ -30,13 +30,13 @@ export default {
       const source = yield call(getSource)
       const OID = yield call(getOID)
       if (!fields.result) {
-        yield message.error(window.__alert_appLocaleData.messages[fields.message], 3);
+        yield message.error(fields.message, 3);
       }
       if (!source.result) {
-        yield message.error(window.__alert_appLocaleData.messages[source.message], 3);
+        yield message.error(source.message, 3);
       }
       if (!OID.result) {
-        yield message.error(window.__alert_appLocaleData.messages[OID.message], 3);
+        yield message.error(OID.message, 3);
       }
       yield put({
         type: 'addOperate',
@@ -58,13 +58,13 @@ export default {
       const source = yield call(getSource)
       const OID = yield call(getOID)
       if (!fields.result) {
-        yield message.error(window.__alert_appLocaleData.messages[fields.message], 3);
+        yield message.error(fields.message, 3);
       }
       if (!source.result) {
-        yield message.error(window.__alert_appLocaleData.messages[source.message], 3);
+        yield message.error(source.message, 3);
       }
       if (!OID.result) {
-        yield message.error(window.__alert_appLocaleData.messages[OID.message], 3);
+        yield message.error(OID.message, 3);
       }
       yield put({
         type: 'editOperate',
@@ -149,7 +149,7 @@ export default {
             }
           })
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[toggleData.message], 3);
+          yield message.error(toggleData.message, 3);
         }
       } else {
         console.error('hex type error')
@@ -171,7 +171,7 @@ export default {
             }
           })
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[validateData.message], 3);
+          yield message.error(validateData.message, 3);
         }
       } else {
         console.error('validate data error')

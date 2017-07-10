@@ -35,8 +35,14 @@ async function getMessages(lang) {
   }
 }
 
+function _readCookie(name) {
+  var result = document.cookie.match(new RegExp(name + '=([^;]+)'));
+  result && (result = JSON.parse(result[1]));
+  return result;
+}
+
 async function setLang(lang) {
-  lang = lang || localStorage.getItem('UYUN_LANGUAGE_CONSTANT') || 'zh-cn';
+  lang = lang || _readCookie('language') || 'zh_CN';
   const messages = await getMessages(lang)
   let appLocaleData
   switch (lang) {

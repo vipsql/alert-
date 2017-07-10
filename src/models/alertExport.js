@@ -76,7 +76,7 @@ export default {
                   yield message.error(`${resultData.data.failures}`, 3);
                 }
             } else {
-                yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
+                yield message.error(resultData.message, 3);
             }
         } else {
             console.error('currentIncidentId error');
@@ -102,7 +102,7 @@ export default {
                   yield message.error(`${resultData.data.failures}`, 3);
                 }
             } else {
-                yield message.error(window.__alert_appLocaleData.messages[resultData.message], 3);
+                yield message.error(resultData.message, 3);
             }
         } else {
             console.error('currentIncidentId error');
@@ -140,7 +140,7 @@ export default {
                     }
                 })
             } else {
-                yield message.error(window.__alert_appLocaleData.messages[data.message], 3);
+                yield message.error(data.message, 3);
             }
         } else {
             console.error('currentIncidentId error');

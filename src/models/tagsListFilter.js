@@ -74,7 +74,7 @@ export default {
         })
         yield callback()
       } else {
-        yield message.error(window.__alert_appLocaleData.messages[tagKeysList.message], 3);
+        yield message.error(tagKeysList.message, 3);
       }
     },
     // 时间过滤
@@ -113,7 +113,7 @@ export default {
           pageSize
         });
         if (!tagValues.result) {
-          yield message.error(window.__alert_appLocaleData.messages[tagValues.message], 2);
+          yield message.error(tagValues.message, 2);
         }
         let tags = [];
         if(tagValues.result) {
@@ -147,7 +147,7 @@ export default {
           pageSize
         });
         if (!tagValues.result) {
-          yield message.error(window.__alert_appLocaleData.messages[tagValues.message], 2);
+          yield message.error(tagValues.message, 2);
         }
         yield put({
           type: 'loadMoreSelectList',

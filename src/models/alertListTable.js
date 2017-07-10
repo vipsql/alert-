@@ -735,7 +735,7 @@ export default {
         })
 
       } else {
-        yield message.error(window.__alert_appLocaleData.messages[listData.message], 2)
+        yield message.error(listData.message, 2)
       }
     },
     // 展开子告警
@@ -772,7 +772,7 @@ export default {
           yield put({ type: 'addChild', payload: { children: childResult.data, parentId: payload, isGroup: isGroup } })
 
         } else {
-          yield message.error(window.__alert_appLocaleData.messages[childResult.message], 2)
+          yield message.error(childResult.message, 2)
         }
       } else if (typeof haveChild !== undefined && haveChild) {
         yield put({ type: 'toggleSpreadChild', payload: { parentId: payload, isGroup: isGroup } })
@@ -813,7 +813,7 @@ export default {
             if (childResult.result) {
               yield relieveItem.push(...childResult.data)
             } else {
-              yield message.error(window.__alert_appLocaleData.messages[childResult.message], 2)
+              yield message.error(childResult.message, 2)
             }
           } else if (typeof haveChild !== undefined && haveChild) {
             relieveItem.push(...item.childrenAlert)
@@ -966,7 +966,7 @@ export default {
           }
         })
       } else {
-        yield message.error(window.__alert_appLocaleData.messages[listReturnData.message], 2)
+        yield message.error(listReturnData.message, 2)
       }
 
     },
@@ -1002,7 +1002,7 @@ export default {
         yield put({ type: 'updateDataRow', payload: { itsmDetailUrl, id } })
         window.open(itsmDetailUrl);
       } else {
-        yield message.error(window.__alert_appLocaleData.messages[itsmDetailUrlData.message], 2)
+        yield message.error(itsmDetailUrlData.message, 2)
       }
     },
 

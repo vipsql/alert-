@@ -54,7 +54,7 @@ export default {
         }
       })
       if(!response.result) {
-        yield message.error(window.__alert_appLocaleData.messages[response.message], 2);
+        yield message.error(response.message, 2);
         return;
       }
       const responseData = response.data;

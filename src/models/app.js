@@ -51,7 +51,7 @@ export default {
       if (loop.result) {
         yield put({ type: 'setWebNotification', payload: loop.data || [] })
       } else {
-        yield message.error(window.__alert_appLocaleData.messages[loop.message], 2)
+        yield message.error(loop.message, 2)
       }
     },
     *isSetTags({ payload }, { put, call, select }) {
