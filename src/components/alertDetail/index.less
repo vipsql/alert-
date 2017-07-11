@@ -1,6 +1,6 @@
 @import "../vars.less";
-// 工单框
-.ticketModal {
+
+.fixed {
   position: fixed;
   width: 40%;
   top: 25px;
@@ -16,6 +16,11 @@
   &.show {
     transform: translate(0);
   }
+}
+
+// 工单框
+.ticketModal {
+  .fixed();
   .detailHead {
     position: relative;
     margin: 12px 12px 10px 18px;
@@ -39,21 +44,8 @@
 }
 
 .alertDetailModal {
-  position: fixed;
-  width: 40%;
-  top: 25px;
-  right: 13px;
-  bottom: 20px;
-  transition: transform .3s ease-out;
-  overflow: hidden;
-  transform: translate(105%); //background: #fff;
+  .fixed();
   background: #1d6aa7;
-  z-index: 999; //box-shadow: #d7dce4 0px 0px 30px;
-  box-shadow: #163b64 0px 0px 30px;
-  border-radius: 4px;
-  &.show {
-    transform: translate(0);
-  }
   &:after {
     content: ' ';
     display: inline-block;

@@ -13,7 +13,7 @@ import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import ReassignModal from '../common/reassignModal/index.js'
 import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 
-const AlertDetailWrap = ({ alertDetail, alertOperation, dispatch, afterTakeOver, afterChatOpsh, afterClose, afterDispatch, afterMunalNotify, afterReassign, afterResolve, afterSuppress }) => {
+const AlertDetailWrap = ({ alertDetail, dispatch, afterTakeOver, afterChatOpsh, afterClose, afterDispatch, afterMunalNotify, afterReassign, afterResolve, afterSuppress }) => {
 
   const localeMessage = defineMessages({
     assign_ticket: {
@@ -21,6 +21,7 @@ const AlertDetailWrap = ({ alertDetail, alertOperation, dispatch, afterTakeOver,
       defaultMessage: '派发工单'
     },
   })
+
   const reassignModalProps = {
     isShowReassingModal: alertDetail.isShowReassingModal,
     users: alertDetail.users,
@@ -398,6 +399,5 @@ AlertDetailWrap.propTypes = {
 export default injectIntl(connect((state) => {
   return {
     alertDetail: state.alertDetail,
-    alertOperation: state.alertOperation
   }
 })(AlertDetailWrap))

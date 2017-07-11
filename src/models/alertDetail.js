@@ -271,7 +271,8 @@ export default {
 
       // 内容获取后取消加载状态
       yield put({
-        type: 'afterOpenDetail',
+        type: 'toggleLoading',
+        payload: false
       });
     },
     // 编辑工单流水号
@@ -525,8 +526,8 @@ export default {
       return { ...state, operateForm: initalState.operateForm, ciUrl: initalState.ciUrl, isShowDetail: true, isLoading: true, id: payload.id }
     },
     // 显示modal后取消加载中状态
-    afterOpenDetail(state, { payload }) {
-      return { ...state, isLoading: false }
+    toggleLoading(state, { payload: isLoading }) {
+      return { ...state, isLoading }
     },
     // 设置分组显示的类型
     setGroupType(state, { payload: selectGroup }) {

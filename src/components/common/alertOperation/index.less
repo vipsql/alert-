@@ -85,6 +85,7 @@
   }
   .moreOperateDropdown {
     &:global(.ant-dropdown-trigger) {
+      position: relative;
       width: 115px;
       display: inline-block;
       height: 28px;
@@ -104,8 +105,10 @@
         color: #fff;
       }
     }
-     :global(.anticon-down) {
-      margin-left: 28px;
+    :global(.anticon-down) {
+      position: absolute;
+      right: 2px;
+      top: ~"calc(50% - 5px)";
     }
   } // cover ant-design Button style on local
   .myButton {
