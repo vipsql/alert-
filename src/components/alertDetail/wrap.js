@@ -219,7 +219,6 @@ const AlertDetailWrap = ({ alertDetail, dispatch, afterTakeOver, afterChatOpsh, 
     }
   }
   const operateProps = {
-
     dispatchFunc: (position) => {
       dispatch({
         type: 'alertDetail/openFormModal',
@@ -276,14 +275,14 @@ const AlertDetailWrap = ({ alertDetail, dispatch, afterTakeOver, afterChatOpsh, 
 
   const alertDeatilProps = {
     extraProps: {
-      ...operateProps,
       currentAlertDetail: alertDetail.currentAlertDetail,
       isShowOperateForm: alertDetail.isShowOperateForm,
       operateForm: alertDetail.operateForm,
       isShowRemark: alertDetail.isShowRemark,
       operateRemark: alertDetail.operateRemark,
       ciUrl: alertDetail.ciUrl,
-      isLoading: alertDetail.isLoading
+      isLoading: alertDetail.isLoading,
+      invokeByOutside: alertDetail.invokeByOutside
     },
     operateProps: {
       ...operateProps,
@@ -353,23 +352,41 @@ const AlertDetailWrap = ({ alertDetail, dispatch, afterTakeOver, afterChatOpsh, 
       })
     }
   }
-
-  const detailModal = Object.keys(alertDetail).length !== 0 && alertDetail.currentAlertDetail !== undefined && Object.keys(alertDetail.currentAlertDetail).length !== 0 ?
-    <div className={alertDetail.isShowDetail ? classnames(styles.alertDetailModal, styles.show) : styles.alertDetailModal}>
+  const detailModal = Object.keys(alertDetail.currentAlertDetail).length !== 0 ?
+    <div
+      className={
+        alertDetail.invokeByOutside ?
+        styles.alertDetailModalByOutside
+        :
+        alertDetail.isShowDetail ?
+        classnames(styles.alertDetailModal, styles.show)
+        :
+        styles.alertDetailModal
+      }
+    >
       <AlertDetail {...alertDeatilProps} />
     </div>
     :
     undefined
   return (
     <div>
-      <div className={ticketModalProps.isShowTicketModal ? classnames(styles.ticketModal, styles.show) : styles.ticketModal}>
+      {ticketModalProps.ticketUrl && <div
+        className={
+          alertDetail.invokeByOutside ?
+          styles.ticketModalByOutside
+          :
+          ticketModalProps.isShowTicketModal ?
+          classnames(styles.ticketModal, styles.show)
+          : styles.ticketModal
+        }
+      >
         <div className={styles.detailHead}>
           <p><FormattedMessage {...localeMessage['assign_ticket']} /></p>
           <i className={classnames(styles.shanChu, shanchuClass)} onClick={ticketModalProps.onCloseTicketModal}></i>
         </div>
         <iframe src={ticketModalProps.ticketUrl}>
         </iframe>
-      </div>
+      </div>}
       <CloseModal {...closeModalProps} />
       <DispatchModal {...dispatchModalProps} />
       <ChatOpshModal {...chatOpsModalProps} />
@@ -394,6 +411,17 @@ AlertDetailWrap.propTypes = {
   afterSuppress: PropTypes.func, // 告警抑制后的回调方法
   afterReassign: PropTypes.func, // 告警转派后的回调方法
   afterMunalNotify: PropTypes.func // 告警通知后的回调方法
+}
+
+AlertDetailWrap.defaultProps = {
+  afterTakeOver: () => {}, // 告警接手后的回调方法
+  afterClose: () => {}, // 告警关闭后的回调方法
+  afterDispatch: () => {}, // 告警派发后的回调方法
+  afterChatOpsh: () => {}, // 告警发送到ChatOps后的回调方法
+  afterResolve: () => {}, // 告警解决后的回调方法
+  afterSuppress: () => {}, // 告警抑制后的回调方法
+  afterReassign: () => {}, // 告警转派后的回调方法
+  afterMunalNotify: () => {} // 告警通知后的回调方法
 }
 
 export default injectIntl(connect((state) => {

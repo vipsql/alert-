@@ -8,7 +8,8 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 const Option = Select.Option;
 const DropdownButton = Dropdown.Button;
 const SubMenu = Menu.SubMenu;
-const alertOperation = ({ position,
+const alertOperation = ({
+  position,
   columnList,
   selectGroup,
   extendColumnList,
@@ -33,7 +34,8 @@ const alertOperation = ({ position,
   shareDisabled,
   showNotifyFunc,
   showReassiginFunc,
-  intl: { formatMessage } }) => {
+  intl: { formatMessage }
+}) => {
 
   const localeMessage = defineMessages({
     operate_takeOver: {
@@ -252,10 +254,9 @@ const alertOperation = ({ position,
         const min = parseInt(key);
         // 以分钟计 --> 100 customer
         if (min) {
-          if (min !== '100') {
+          if (min !== 100) {
             suppressIncidents(min, position)
-          }
-          else {
+          } else {
             showSuppressTimeSlider(position)
           }
         } else {

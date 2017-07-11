@@ -18,9 +18,14 @@
   }
 }
 
-// 工单框
-.ticketModal {
-  .fixed();
+.commonOutside {
+  position: absolute;
+  height: 100%;
+  right: 0px;
+  left: 0px;
+}
+
+.commonTicketStyle {
   .detailHead {
     position: relative;
     margin: 12px 12px 10px 18px;
@@ -43,9 +48,33 @@
   }
 }
 
+// 工单框
+.ticketModal {
+  .fixed();
+  .commonTicketStyle();
+}
+
+.ticketModalByOutside {
+  .commonOutside();
+  .commonTicketStyle();
+}
+
 .alertDetailModal {
   .fixed();
   background: #1d6aa7;
+  &:after {
+    content: ' ';
+    display: inline-block;
+    position: absolute;
+    top: 42px;
+    width: 120%;
+    height: 1px; //background: #d5ddeb;
+    background: #245893;
+  }
+}
+// 这套样式是给外部调用的
+.alertDetailModalByOutside {
+  .commonOutside();
   &:after {
     content: ' ';
     display: inline-block;

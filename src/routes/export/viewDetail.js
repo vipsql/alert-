@@ -10,9 +10,4 @@ function ViewDetail(props){
 ViewDetail.propTypes = {
   
 }
-export default connect((state) => {
-    console.log(state)
-    return {
-        alertDetail: state.alertDetail
-    }
-})(ViewDetail)
+export default ViewDetail

@@ -40,7 +40,7 @@ class alertDetail extends Component {
 
   render() {
     const { extraProps, operateProps, form, closeDeatilModal, clickTicketFlow, editForm, openForm, closeForm, openRemark, editRemark, closeRemark, intl: { formatMessage } } = this.props;
-    const { currentAlertDetail, isShowOperateForm, operateForm, isShowRemark, operateRemark, ciUrl } = extraProps;
+    const { currentAlertDetail, isShowOperateForm, operateForm, isShowRemark, operateRemark, ciUrl, invokeByOutside } = extraProps;
     const { getFieldDecorator, getFieldsValue } = form;
     const { incidentLog = [], ci = [] } = currentAlertDetail;
     const ciIds = ci.filter(({ code, value }) => code == 'ciId');
@@ -351,9 +351,9 @@ class alertDetail extends Component {
     return (
       <div id="alertDetailSlider" className={styles.main}>
         <Spin spinning={extraProps.isLoading}>
-          <div className={styles.detailHead}>
+          <div className={ !invokeByOutside ? styles.detailHead : styles.detailHeadByOutside}>
             <p>{currentAlertDetail.name ? currentAlertDetail.name : formatMessage({ ...localeMessage['unknown'] })}</p>
-            <i className={classnames(styles.shanChu, shanchuClass)} onClick={closeDeatilModal}></i>
+            {!invokeByOutside && <i className={classnames(styles.shanChu, shanchuClass)} onClick={closeDeatilModal}></i>}
             <AlertOperation position="detail" {...operateProps} />
           </div>
           <div className={styles.detailBody}>
@@ -413,7 +413,7 @@ class alertDetail extends Component {
                             editForm(formData)
                           }}>{formatMessage({ ...localeMessage['save'] })}</Button>
                           &nbsp;
-                                            <Button type="ghost" onClick={closeForm}>{formatMessage({ ...localeMessage['cancel'] })}</Button>
+                          <Button type="ghost" onClick={closeForm}>{formatMessage({ ...localeMessage['cancel'] })}</Button>
                         </div>
                       </Form>
                   }
