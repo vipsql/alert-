@@ -4,7 +4,7 @@ import { connect } from 'dva'
 import ListTable from '../common/listTable'
 
 // function ListTimeTableWrap({dispatch, alertListTimeTable}){
-const  ListTableWrap = ({dispatch, alertQuery}) => {
+const  ListTableWrap = ({dispatch, alertQuery, topFixArea}) => {
   console.log("render: ListTableWrap");
   const props = {
     ...alertQuery,
@@ -112,7 +112,7 @@ const  ListTableWrap = ({dispatch, alertQuery}) => {
   }
 
   return (
-    <ListTable sourceOrigin='alertQuery' {...props} />
+    <ListTable extraArea={ topFixArea } topHeight={ 407 } sourceOrigin='alertQuery' {...props} />
   )
 }
 export default connect(

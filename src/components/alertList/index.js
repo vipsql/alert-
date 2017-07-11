@@ -183,7 +183,7 @@ class AlertListManage extends Component {
             <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key='1'>
               {/*<AlertOperation position='list' {...operateProps} />*/}
               <AlertOperationWrap />
-              <ListTableWrap />
+              <ListTableWrap topFixArea={ <AlertOperationWrap /> } topHeight={ 420 } />
             </TabPane>
             <TabPane tab={<span className={tabLine} ><FormattedMessage {...localeMessage['tab_time']} /></span>} key='2'>
               {/*<AlertOperation position='timeAxis' {...operateProps} />*/}

@@ -4,9 +4,11 @@ import { connect } from 'dva'
 import ListTable from '../../common/listTable'
 
 // function ListTimeTableWrap({dispatch, alertListTimeTable}){
-const ListTableWrap = ({ dispatch, alertListTable }) => {
+const ListTableWrap = ({ dispatch, alertListTable, topHeight, topFixArea }) => {
   const props = {
     ...alertListTable,
+    topHeight,
+    extraArea: topFixArea,
     loadMore() {
       dispatch({
         type: 'alertListTable/loadMore'
