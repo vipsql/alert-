@@ -164,14 +164,16 @@ export default {
         }
       })
 
-      if (payload !== undefined && payload.displayName !== undefined) {
+      const { formData, resolve } = payload;
+
+      if (formData !== undefined && formData.displayName !== undefined) {
         if (UUID === undefined) {
           yield message.error(window.__alert_appLocaleData.messages['alertApplication.appKey.placeholder'], 3)
         }
         const params = {
           status: 1, // 默认启用
           integration: '',
-          displayName: payload.displayName,
+          displayName: formData.displayName,
           applyType:{
             ...currentOperateAppType
           },
@@ -189,11 +191,14 @@ export default {
         const addResult = yield call(add, params)
         if (addResult.result) {
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3)
+          resolve && resolve(addResult.result);
           yield put(routerRedux.goBack());
         } else {
           yield message.error(addResult.message, 3)
         }
+        resolve && resolve(addResult.result);
       } else {
+        resolve && resolve(false);
         console.error('displayName is null')
       }
     },
@@ -207,7 +212,9 @@ export default {
         }
       })
 
-      if (payload !== undefined && payload.displayName !== undefined) {
+      const { formData, resolve } = payload;
+
+      if (formData !== undefined && formData.displayName !== undefined) {
         if (UUID === undefined) {
           yield message.error(window.__alert_appLocaleData.messages['alertApplication.appKey.placeholder'], 3)
         }
@@ -215,7 +222,7 @@ export default {
           id: currentEditApp.id,
           status: currentEditApp.status,
           integration: currentEditApp.integration,
-          displayName: payload.displayName,
+          displayName: formData.displayName,
           applyType:{
             ...currentEditApp['applyType']
           },
@@ -233,11 +240,14 @@ export default {
         const editResult = yield call(update, params)
         if (editResult.result) {
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3)
+          resolve && resolve(true);
           yield put(routerRedux.goBack());
         } else {
+          resolve && resolve(false);
           yield message.error(editResult.message, 3)
         }
       } else {
+        resolve && resolve(false);
         console.error('displayName is null')
       }
     },
