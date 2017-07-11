@@ -6,10 +6,13 @@ import styles from './index.less'
 import { classnames } from '../../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import $ from 'jquery'
+import WrapableTr from './wrapableTr'
+import TopFixedArea from './topFixedArea'
 
 class ListTable extends Component {
   constructor() {
-    super()
+    super();
+    this.state = {  };
   }
   componentDidMount() {
     this._getTotalScrollHeight();
@@ -83,6 +86,8 @@ class ListTable extends Component {
       orderBy,
       orderType,
       orderByTittle,
+      extraArea,
+      topHeight,
       intl: { formatMessage }
     } = this.props
     let colsKey = []
@@ -168,7 +173,7 @@ class ListTable extends Component {
       colsKey.push(item['key'])
 
       theads.push(
-        <th key={item.key}>
+        <th key={item.key} className={item.key==='tags'?styles.tagsKey:''}>
           {
             !isGroup && isOrder ?
               <span className={orderType !== undefined ? classnames(styles.orderTh, orderTh_active) : styles.orderTh} data-key={item['key']} onClick={orderByTittle}>
@@ -187,8 +192,14 @@ class ListTable extends Component {
       )
     })
 
-    let tbodyCon = [];
+    theads.unshift(<th className={ styles.moreLittle } key="blank"></th>);
+    theads.unshift(<th className={ styles.moreLittle } key='spread'></th>);
+    if(sourceOrigin !== 'alertQuery') {
+      theads.unshift(<th key="checkAll" className={classnames(styles.checkstyle, styles.little)}><Checkbox onClick={handleSelectAll} checked={selectedAll} /></th>)
+    }
 
+    let tbodyCon = [];
+    let fixedTbodyCon = [];
     const formatDate = function (time) {
       const d = new Date(time);
       let year = d.getFullYear();
@@ -218,7 +229,7 @@ class ListTable extends Component {
         let td;
         if (sourceOrigin !== 'alertQuery' && target === 'parent' && index == 0) {
           tds.push(
-            <td key='sourceAlert'>
+            <td key='sourceAlert' className={ styles.moreLittle }>
               {
                 item['hasChild'] === true
                   ? item['isSpread'] === true
@@ -311,10 +322,10 @@ class ListTable extends Component {
         tds.push(td)
       })
       if (target === 'parent') {
-        tds.unshift(<td width="20" key='icon-col-td' colSpan={sourceOrigin !== 'alertQuery' ? '1' : '2'} ><LevelIcon extraStyle={sourceOrigin === 'alertQuery' && styles.alertQueryIcon} iconType={item['severity']} /></td>)
+        tds.unshift(<td className={ sourceOrigin !== 'alertQuery'?styles.moreLittle:styles.little } width="20" key='icon-col-td' colSpan={sourceOrigin !== 'alertQuery' ? '1' : '2'} ><LevelIcon extraStyle={sourceOrigin === 'alertQuery' && styles.alertQueryIcon} iconType={item['severity']} /></td>)
       } else {
-        tds.unshift(<td width="20" key='icon-col-td'><LevelIcon iconType={item['severity']} /></td>)
-        tds.unshift(<td key='space-col-td' colSpan="2"></td>)
+        tds.unshift(<td className={ styles.moreLittle } width="20" key='icon-col-td'><LevelIcon iconType={item['severity']} /></td>)
+        tds.unshift(<td className={ styles.moreLittle } key='space-col-td' colSpan="2"></td>)
       }
       return tds
     }
@@ -326,9 +337,9 @@ class ListTable extends Component {
       const childTds = getTds(childItem, keys, 'child')
 
       return (
-        <tr key={trKey} className={!item.isSpread ? styles.hiddenChild : !isGroup ? styles.noSpread : styles.groupSpread}>
+        <WrapableTr key={trKey} className={!item.isSpread ? styles.hiddenChild : !isGroup ? styles.noSpread : styles.groupSpread}>
           {childTds}
-        </tr>
+        </WrapableTr>
       )
     }
 
@@ -338,7 +349,7 @@ class ListTable extends Component {
         let childtrs = []
 
         let groupTitle = item.isGroupSpread === false ?
-          (<tr className={styles.trGroup} key={index}>
+          (<WrapableTr className={styles.trGroup} key={index}>
             <td colSpan={keys.length + 3}>
               <span className={styles.expandIcon} data-classify={item.classify} onClick={spreadGroup}>+</span>
               {
@@ -351,9 +362,9 @@ class ListTable extends Component {
                     item.classify ? item.classify : <FormattedMessage {...formatMessages['Unknown']} />
               }
             </td>
-          </tr>)
+          </WrapableTr>)
           :
-          (<tr className={styles.trGroup} key={index}>
+          (<WrapableTr className={styles.trGroup} key={index}>
             <td colSpan={keys.length + 3}>
               <span className={styles.expandIcon} data-classify={item.classify} onClick={noSpreadGroup}>-</span>
               {
@@ -366,7 +377,7 @@ class ListTable extends Component {
                     item.classify ? item.classify : <FormattedMessage {...formatMessages['Unknown']} />
               }
             </td>
-          </tr>)
+          </WrapableTr>)
 
         item.children !== undefined && item.children.forEach((childItem, itemIndex) => {
 
@@ -387,16 +398,16 @@ class ListTable extends Component {
           const trKey = childItem.id || `tr_${index}_${itemIndex}`
           const tdKey = childItem.id || `td_${index}_${itemIndex}`
           childtrs.push(
-            <tr key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread ? styles.hiddenChild : styles.groupSpread}>
+            <WrapableTr key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread ? styles.hiddenChild : styles.groupSpread}>
               {
                 //<input type="checkbox" checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc} />
                 sourceOrigin !== 'alertQuery' ?
-                  <td key={tdKey} className={styles.checkstyle}><Checkbox checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc} /></td>
+                  <td key={tdKey} className={classnames(styles.checkstyle, styles.little)}><Checkbox checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc} /></td>
                   :
                   undefined
               }
               {tds}
-            </tr>
+            </WrapableTr>
           )
           childtrs.push(childs)
         })
@@ -425,19 +436,20 @@ class ListTable extends Component {
         } else {
           childs = null
         }
+
         commonTrs.push(
-          <tr key={item.id} className={styles.noSpread}>
+          <WrapableTr key={item.id} className={ classnames(styles.noSpread) }>
             {
               //<input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc} />
               sourceOrigin !== 'alertQuery' && Object.keys(checkAlert).length !== 0 ?
-                <td key={index} className={styles.checkstyle}>
+                <td key={index} className={classnames(styles.checkstyle, styles.little)}>
                   <Checkbox checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc} />
                 </td>
                 :
                 undefined
             }
             {tds}
-          </tr>
+          </WrapableTr>
         )
 
         tbodyCon.push(commonTrs, childs)
@@ -450,22 +462,13 @@ class ListTable extends Component {
     return (
       <div>
         <Spin spinning={isLoading}>
+          <div className="listContainer" style={{ overflowX: 'auto' }}>
+          <TopFixedArea parentTarget="div.listContainer" theads={ theads } extraArea={ extraArea } topHeight={ topHeight }/>
           <table className={styles.listTable}>
             <thead>
-              <tr>
-                {
-                  //<input type="checkbox" onClick={handleSelectAll} checked={selectedAll} />
-                  sourceOrigin !== 'alertQuery' ?
-                    <th key="checkAll" width={48} className={styles.checkstyle}><Checkbox onClick={handleSelectAll} checked={selectedAll} /></th>
-                    :
-                    undefined
-                }
-                <th width="20" key='space-col'></th>
-
-                <th width='10'></th>
-
+              <WrapableTr>
                 {theads}
-              </tr>
+              </WrapableTr>
             </thead>
             <Animate
               transitionName="fade"
@@ -477,12 +480,13 @@ class ListTable extends Component {
                 data.length > 0 ?
                   tbodyCon
                   :
-                  <tr>
+                  <WrapableTr>
                     <td colSpan={columns.length + 3} style={{ textAlign: 'center' }}><FormattedMessage {...formatMessages['noData']} /></td>
-                  </tr>
+                  </WrapableTr>
               }
             </Animate>
           </table>
+        </div>
         </Spin>
         {isShowMore && <Spin size="large" spinning={isLoading}><div className={styles.loadMore}><Button onClick={loadMore}><FormattedMessage {...formatMessages['showMore']} /></Button></div></Spin>}
       </div>

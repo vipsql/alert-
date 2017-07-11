@@ -301,7 +301,7 @@ class RuleEditor extends Component {
         });
     }
     componentDidMount() {
-
+      this.isNeedLeaveCheck = true;
     }
     componentWillReceiveProps(nextProps, nextState) {
         const {
@@ -849,7 +849,9 @@ class RuleEditor extends Component {
                         }
                     </Tabs>
                 </div>
-                {/*<LeaveNotifyModal route={ this.props.route }/>*/}
+                <LeaveNotifyModal route={ this.props.route } needLeaveCheck={() => {
+                  return this.isNeedLeaveCheck;
+                }}/>
                 <span onClick={this.handleSubmit.bind(this)} className={styles.submit}>{window.__alert_appLocaleData.messages['ruleEditor.submit']}</span>
             </Form>
         );
@@ -1555,7 +1557,10 @@ class RuleEditor extends Component {
         dispatch({
             type: 'alertAssociationRules/createRule',
             payload: {
-                ...params
+                ...params,
+                resolve: (result) => {
+                  this.isNeedLeaveCheck = !result;
+                }
             }
         });
     }

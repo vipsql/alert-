@@ -351,7 +351,7 @@ class alertQueryManage extends Component {
     }
 
     const refreshList = (response) => {
-      if(response && response.result) {
+      if (response && response.result) {
         dispatch({
           type: 'alertQuery/queryAlertList'
         })
@@ -368,6 +368,57 @@ class alertQueryManage extends Component {
       afterReassign: refreshList, // 告警转派后的回调方法
       afterMunalNotify: refreshList // 告警通知后的回调方法
     }
+
+    const topFixArea = (
+      <div className={styles.queryOperate}>
+        <div className={styles.count}>
+          <FormattedMessage {...localeMessage['result']}
+            values={{
+              total: queryCount.total !== undefined ? '' + queryCount.total : 0,
+              critical: queryCount.critical !== undefined ? '' + queryCount.critical : 0,
+              warning: queryCount.warning !== undefined ? '' + queryCount.warning : 0,
+              informaiton: queryCount.information !== undefined ? '' + queryCount.information : 0,
+              ok: queryCount.ok !== undefined ? '' + queryCount.ok : 0
+            }}
+          />
+
+        </div>
+        <div className={styles.groupMain}>
+          <Select getPopupContainer={() => document.getElementById("content")} className={classnames(styles.setGroup, styles.selectSingle)} placeholder={formatMessage({ ...localeMessage['groupBy'] })} value={selectGroup} onChange={(value) => {
+            dispatch({
+              type: 'alertQuery/groupView',
+              payload: value,
+            })
+          }}>
+            <Option key={'severity'} className={styles.menuItem} value="severity"><FormattedMessage {...localeMessage['groupBySeverity']} /></Option>
+            <Option key={'entityName'} className={styles.menuItem} value="entityName"><FormattedMessage {...localeMessage['groupByEnityName']} /></Option>
+            <Option key={'source'} className={styles.menuItem} value="source"><FormattedMessage {...localeMessage['groupBySource']} /></Option>
+            <Option key={'status'} className={styles.menuItem} value="status"><FormattedMessage {...localeMessage['groupByStatus']} /></Option>
+            {
+              extendColumnList.length !== 0 ? extendColumnList.map((col, index) => {
+                return <Option key={col.id} className={styles.menuItem} value={col.id}><FormattedMessage {...localeMessage['groupByOther']} values={{ other: col.name }} /></Option>
+              }) : []
+            }
+            {
+              extendTagsKey.length > 0 ? extendTagsKey.map((tag, index) => {
+                return <Option key={tag} className={styles.menuItem} value={tag}><FormattedMessage {...localeMessage['groupByOther']} values={{ other: tag }} /></Option>
+              }) : []
+            }
+          </Select>
+          <i className={selectGroup !== window['_groupBy'] && classnames(switchClass, styles.switch)} onClick={() => {
+            dispatch({
+              type: 'alertDetail/noGroupView',
+            })
+          }}></i>
+        </div>
+        <Popover placement='bottomRight' overlayClassName={styles.popover} trigger="click" content={popoverContent} >
+          <div className={classnames(styles.button, styles.rightBtn)}>
+            <i className={classnames(setClass, styles.setCol)}></i>
+            <p className={styles.col}><FormattedMessage {...localeMessage['columns']} /></p>
+          </div>
+        </Popover>
+      </div>
+    )
 
     return (
       <div>
@@ -514,12 +565,12 @@ class alertQueryManage extends Component {
                   label={<FormattedMessage {...localeMessage['owner']} />}
                 >
                   {getFieldDecorator('owner', {
-                    initialValue: JSON.stringify({userId: '', realName: ''})
+                    initialValue: JSON.stringify({ userId: '', realName: '' })
                   })(
-                    <Select getPopupContainer={() => document.getElementById("content")} showSearch filterOption={false} onChange={ (value) => {
+                    <Select getPopupContainer={() => document.getElementById("content")} showSearch filterOption={false} onChange={(value) => {
                       console.log(value)
                     }}>
-                      <Option value={JSON.stringify({userId: '', realName: ''})}>{formatMessage({ ...localeMessage['allOwners'] })}</Option>
+                      <Option value={JSON.stringify({ userId: '', realName: '' })}>{formatMessage({ ...localeMessage['allOwners'] })}</Option>
                       {
                         ownerOptions.map((owner, index) => <Option key={index} value={JSON.stringify(owner)}>{owner.realName}</Option>)
                       }
@@ -573,59 +624,12 @@ class alertQueryManage extends Component {
         <Button className={classnames(styles.toggleBarButton, zhankaiClass)} onClick={toggleBarButtonClick} size="small"><i className={classnames(alertQuery.isShowBar ? shouqiClass : zhankaiClass, styles.toggleBarButtonIcon)} /></Button>
         {!haveQuery ? <div className={styles.alertListInfo}><FormattedMessage {...localeMessage['noQueryData']} /></div> :
           <div>
-            <div className={styles.queryOperate}>
-              <div className={styles.count}>
-                <FormattedMessage {...localeMessage['result']}
-                  values={{
-                    total: queryCount.total !== undefined ? '' + queryCount.total : 0,
-                    critical: queryCount.critical !== undefined ? '' + queryCount.critical : 0,
-                    warning: queryCount.warning !== undefined ? '' + queryCount.warning : 0,
-                    informaiton: queryCount.information !== undefined ? '' + queryCount.information : 0,
-                    ok: queryCount.ok !== undefined ? '' + queryCount.ok : 0
-                  }}
-                />
-
-              </div>
-              <div className={styles.groupMain}>
-                <Select getPopupContainer={() => document.getElementById("content")} className={classnames(styles.setGroup, styles.selectSingle)} placeholder={formatMessage({ ...localeMessage['groupBy'] })} value={selectGroup} onChange={(value) => {
-                  dispatch({
-                    type: 'alertQuery/groupView',
-                    payload: value,
-                  })
-                }}>
-                  <Option key={'severity'} className={styles.menuItem} value="severity"><FormattedMessage {...localeMessage['groupBySeverity']} /></Option>
-                  <Option key={'entityName'} className={styles.menuItem} value="entityName"><FormattedMessage {...localeMessage['groupByEnityName']} /></Option>
-                  <Option key={'source'} className={styles.menuItem} value="source"><FormattedMessage {...localeMessage['groupBySource']} /></Option>
-                  <Option key={'status'} className={styles.menuItem} value="status"><FormattedMessage {...localeMessage['groupByStatus']} /></Option>
-                  {
-                    extendColumnList.length !== 0 ? extendColumnList.map((col, index) => {
-                      return <Option key={col.id} className={styles.menuItem} value={col.id}><FormattedMessage {...localeMessage['groupByOther']} values={{ other: col.name }} /></Option>
-                    }) : []
-                  }
-                  {
-                    extendTagsKey.length > 0 ? extendTagsKey.map((tag, index) => {
-                      return <Option key={tag} className={styles.menuItem} value={tag}><FormattedMessage {...localeMessage['groupByOther']} values={{ other: tag }} /></Option>
-                    }) : []
-                  }
-                </Select>
-                <i className={selectGroup !== window['_groupBy'] && classnames(switchClass, styles.switch)} onClick={() => {
-                  dispatch({
-                    type: 'alertDetail/noGroupView',
-                  })
-                }}></i>
-              </div>
-              <Popover placement='bottomRight' overlayClassName={styles.popover} trigger="click" content={popoverContent} >
-                <div className={classnames(styles.button, styles.rightBtn)}>
-                  <i className={classnames(setClass, styles.setCol)}></i>
-                  <p className={styles.col}><FormattedMessage {...localeMessage['columns']} /></p>
-                </div>
-              </Popover>
-            </div>
-            <ListTableWrap />
+            { topFixArea }
+            <ListTableWrap topFixArea={ topFixArea } />
           </div>}
         <ScrollTopButton />
-        <AlertOriginSliderWrap/>
-        <AlertDetaiWrap { ...alertDetailWrapProps }/>
+        <AlertOriginSliderWrap />
+        <AlertDetaiWrap { ...alertDetailWrapProps } />
       </div>
     )
   }

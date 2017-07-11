@@ -302,13 +302,10 @@ const SNMP_Trap = (props) => {
             : undefined
         }
         {builtIn !== undefined && builtIn == 1 ? <span className={styles.stepLine}></span> : undefined}
-        <Button type="primary" htmlType='submit' onClick={(e) => { onOk(e, form, (result) => isNeedLeaveCheck = false); isNeedLeaveCheck = true }}>{formatMessage({ ...localeMessage['save'] })}</Button>
+        <Button type="primary" htmlType='submit' onClick={(e) => { onOk(e, form, (result) => isNeedLeaveCheck = !result); isNeedLeaveCheck = true }}>{formatMessage({ ...localeMessage['save'] })}</Button>
       </div>
       <RuleModal {...ruleModalProps} />
       <TrapDeleteModal {...deleteProps} />
-      <LeaveNotifyModal route={props.route} needLeaveCheck={() => {
-        return isNeedLeaveCheck;
-      }} />
     </div>
   )
 }

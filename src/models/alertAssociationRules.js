@@ -347,12 +347,14 @@ export default {
       const params = {
         ...payload
       };
-      const result = yield call(createRule ,params);
+      const result = yield call(createRule, params);
       if (result.result) {
         // message.success('保存成功');
+        params.resolve && params.resolve(true);
         yield put(routerRedux.goBack());
         // yield put({type: 'clear'});
       } else {
+        params.resolve && params.resolve(false);
         message.error(result.message, 3);
       }
     },

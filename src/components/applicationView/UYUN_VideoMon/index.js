@@ -101,9 +101,6 @@ const UYUN_VideoMON = (props) => {
                 { builtIn !== undefined && builtIn == 1 ? <span className={styles.stepLine}></span> : undefined }
                 <Button type="primary" htmlType='submit' onClick={(e) => {onOk(e, form)}}>{formatMessage({...localeMessage['save']})}</Button>
             </div>
-            <LeaveNotifyModal route={ props.route } needLeaveCheck={() => {
-              return isNeedLeaveCheck;
-            }} />
         </div>
     )
 }

@@ -82,9 +82,6 @@ const UYUN_Itsm = (props) => {
                 </div>
                 <Button type="primary" htmlType='submit' onClick={(e) => {onOk(e, form)}}>{formatMessage({...localeMessage['save']})}</Button>
             </div>
-            <LeaveNotifyModal route={ props.route } needLeaveCheck={() => {
-              return isNeedLeaveCheck;
-            }} />
         </div>
     )
 }

@@ -8,230 +8,255 @@ import ChatOps from './UYUN_ChatOps'
 import VideoMON from './UYUN_VideoMon'
 import Trap from './SNMP_Trap'
 import NetWork from './UYUN_NetWork'
+import LeaveNotifyModal from '../common/leaveNotifyModal/index'
 
-function Edit(props){
+class Edit extends Component {
+  componentDidMount() {
+    this.isNeedLeaveCheck = true;
+  }
+  render() {
+    const props = this.props;
     const { currentEditApp } = props.alertConfig;
 
-    const editApplication = ({alertConfig, dispatch}) => {
-        const { currentEditApp, apikey } = alertConfig;
-        let targetApplication;
-        let hostUrl = 'https://alert.uyun.cn';
-        let origin = window.location.protocol + '//' +window.location.host;
-        if (origin.indexOf("alert") > -1) {
-            // 域名访问
-            hostUrl = origin
-            window.__alert_restApiUrl = hostUrl + '/openapi/v2/create?' + `api_key=${apikey}` + `&app_key=${currentEditApp.appKey}`
-        } else {
-            // 顶级域名/Ip访问
-            hostUrl = origin + '/alert'
-            window.__alert_restApiUrl = hostUrl + '/openapi/v2/create?' + `api_key=${apikey}` + `&app_key=${currentEditApp.appKey}`
-        }
-        console.log(currentEditApp.applyType.name)
-        switch (currentEditApp.applyType.name) {
-            case 'UYUN Alert REST API':
-                targetApplication =
-                    <AlertREST
-                        route={ props.route }
-                        appkey={currentEditApp.appKey}
-                        displayName={currentEditApp.displayName}
-                        builtIn={currentEditApp.builtIn}
-                        url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
-                        onOk={(e, form) => {
-                            e.preventDefault();
+    const editApplication = ({ alertConfig, dispatch }) => {
+      const { currentEditApp, apikey } = alertConfig;
+      let targetApplication;
+      let hostUrl = 'https://alert.uyun.cn';
+      let origin = window.location.protocol + '//' + window.location.host;
+      if (origin.indexOf("alert") > -1) {
+        // 域名访问
+        hostUrl = origin
+        window.__alert_restApiUrl = hostUrl + '/openapi/v2/create?' + `api_key=${apikey}` + `&app_key=${currentEditApp.appKey}`
+      } else {
+        // 顶级域名/Ip访问
+        hostUrl = origin + '/alert'
+        window.__alert_restApiUrl = hostUrl + '/openapi/v2/create?' + `api_key=${apikey}` + `&app_key=${currentEditApp.appKey}`
+      }
+      console.log(currentEditApp.applyType.name)
+      switch (currentEditApp.applyType.name) {
+        case 'UYUN Alert REST API':
+          targetApplication =
+            <AlertREST
+              route={props.route}
+              appkey={currentEditApp.appKey}
+              displayName={currentEditApp.displayName}
+              builtIn={currentEditApp.builtIn}
+              url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
+              onOk={(e, form) => {
+                e.preventDefault();
 
-                            form.validateFieldsAndScroll( (errors, values) => {
-                                if (!!errors) {
-                                    return;
-                                }
-                                const formData = form.getFieldsValue()
-                                dispatch({
-                                    type: 'alertConfig/editApplication',
-                                    payload: formData
-                                })
-                            })
-                        }}
-                    />
-                break;
-            case 'UYUN Monitor':
-                targetApplication =
-                    <Monitor
-                        route={ props.route }
-                        appkey={currentEditApp.appKey}
-                        displayName={currentEditApp.displayName}
-                        builtIn={currentEditApp.builtIn}
-                        url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
-                        onOk={(e, form) => {
-                            e.preventDefault();
+                form.validateFieldsAndScroll((errors, values) => {
+                  if (!!errors) {
+                    return;
+                  }
+                  const formData = form.getFieldsValue()
+                  dispatch({
+                    type: 'alertConfig/editApplication',
+                    payload: { formData, resolve: (result) => {
+                      this.isNeedLeaveCheck = !result;
+                    }}
+                  })
+                })
+              }}
+            />
+          break;
+        case 'UYUN Monitor':
+          targetApplication =
+            <Monitor
+              route={props.route}
+              appkey={currentEditApp.appKey}
+              displayName={currentEditApp.displayName}
+              builtIn={currentEditApp.builtIn}
+              url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
+              onOk={(e, form) => {
+                e.preventDefault();
 
-                            form.validateFieldsAndScroll( (errors, values) => {
-                                if (!!errors) {
-                                    return;
-                                }
-                                const formData = form.getFieldsValue()
-                                dispatch({
-                                    type: 'alertConfig/editApplication',
-                                    payload: formData
-                                })
-                            })
-                        }}
-                    />
-                break;
-            case 'UYUN NetWork':
-                targetApplication =
-                    <NetWork
-                        route={ props.route }
-                        appkey={currentEditApp.appKey}
-                        displayName={currentEditApp.displayName}
-                        builtIn={currentEditApp.builtIn}
-                        url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
-                        onOk={(e, form, resolve) => {
-                            e.preventDefault();
+                form.validateFieldsAndScroll((errors, values) => {
+                  if (!!errors) {
+                    return;
+                  }
+                  const formData = form.getFieldsValue()
+                  dispatch({
+                    type: 'alertConfig/editApplication',
+                    payload: { formData, resolve: (result) => {
+                      this.isNeedLeaveCheck = !result;
+                    }}
+                  })
+                })
+              }}
+            />
+          break;
+        case 'UYUN NetWork':
+          targetApplication =
+            <NetWork
+              route={props.route}
+              appkey={currentEditApp.appKey}
+              displayName={currentEditApp.displayName}
+              builtIn={currentEditApp.builtIn}
+              url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
+              onOk={(e, form) => {
+                e.preventDefault();
 
-                            form.validateFieldsAndScroll( (errors, values) => {
-                                if (!!errors) {
-                                    resolve(false);
-                                    return;
-                                }
-                                const formData = form.getFieldsValue()
-                                dispatch({
-                                    type: 'alertConfig/editApplication',
-                                    payload: formData
-                                })
-                                resolve(true);
-                            })
-                        }}
-                    />
-                break;
-            case 'SNMPTrap':
-                targetApplication =
-                    <Trap
-                        route={ props.route }
-                        appkey={currentEditApp.appKey}
-                        displayName={currentEditApp.displayName}
-                        builtIn={currentEditApp.builtIn}
-                        url={hostUrl}
-                        onOk={(e, form, resolve) => {
-                            e.preventDefault();
+                form.validateFieldsAndScroll((errors, values) => {
+                  if (!!errors) {
+                    return;
+                  }
+                  const formData = form.getFieldsValue()
+                  dispatch({
+                    type: 'alertConfig/editApplication',
+                    payload: { formData, resolve: (result) => {
+                      this.isNeedLeaveCheck = !result;
+                    }}
+                  })
+                })
+              }}
+            />
+          break;
+        case 'SNMPTrap':
+          targetApplication =
+            <Trap
+              route={props.route}
+              appkey={currentEditApp.appKey}
+              displayName={currentEditApp.displayName}
+              builtIn={currentEditApp.builtIn}
+              url={hostUrl}
+              onOk={(e, form) => {
+                e.preventDefault();
 
-                            form.validateFieldsAndScroll( (errors, values) => {
-                                if (!!errors) {
-                                    resolve(false);
-                                    return;
-                                }
-                                const formData = form.getFieldsValue()
-                                dispatch({
-                                    type: 'alertConfig/editApplication',
-                                    payload: formData
-                                })
-                                resolve(true);
-                            })
-                        }}
-                    />
-                break;
-            case 'UYUN VideoMon':
-                targetApplication =
-                    <VideoMON
-                        route={ props.route }
-                        appkey={currentEditApp.appKey}
-                        displayName={currentEditApp.displayName}
-                        builtIn={currentEditApp.builtIn}
-                        url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
-                        onOk={(e, form) => {
-                            e.preventDefault();
+                form.validateFieldsAndScroll((errors, values) => {
+                  if (!!errors) {
+                    return;
+                  }
+                  const formData = form.getFieldsValue()
+                  dispatch({
+                    type: 'alertConfig/editApplication',
+                    payload: { formData, resolve: (result) => {
+                      this.isNeedLeaveCheck = !result;
+                    }}
+                  })
+                })
+              }}
+            />
+          break;
+        case 'UYUN VideoMon':
+          targetApplication =
+            <VideoMON
+              route={props.route}
+              appkey={currentEditApp.appKey}
+              displayName={currentEditApp.displayName}
+              builtIn={currentEditApp.builtIn}
+              url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
+              onOk={(e, form) => {
+                e.preventDefault();
 
-                            form.validateFieldsAndScroll( (errors, values) => {
-                                if (!!errors) {
-                                    return;
-                                }
-                                const formData = form.getFieldsValue()
-                                dispatch({
-                                    type: 'alertConfig/editApplication',
-                                    payload: formData
-                                })
-                            })
-                        }}
-                    />
-                break;
-            case 'UYUN ITSM':
-                targetApplication =
-                    <Itsm
-                        route={ props.route }
-                        appkey={currentEditApp.appKey}
-                        displayName={currentEditApp.displayName}
-                        onOk={(e, form) => {
-                            e.preventDefault();
+                form.validateFieldsAndScroll((errors, values) => {
+                  if (!!errors) {
+                    return;
+                  }
+                  const formData = form.getFieldsValue()
+                  dispatch({
+                    type: 'alertConfig/editApplication',
+                    payload: { formData, resolve: (result) => {
+                      this.isNeedLeaveCheck = !result;
+                    }}
+                  })
+                })
+              }}
+            />
+          break;
+        case 'UYUN ITSM':
+          targetApplication =
+            <Itsm
+              route={props.route}
+              appkey={currentEditApp.appKey}
+              displayName={currentEditApp.displayName}
+              onOk={(e, form) => {
+                e.preventDefault();
 
-                            form.validateFieldsAndScroll( (errors, values) => {
-                                if (!!errors) {
-                                    return;
-                                }
-                                const formData = form.getFieldsValue()
-                                dispatch({
-                                    type: 'alertConfig/editApplication',
-                                    payload: formData
-                                })
-                            })
-                        }}
-                    />
-                break;
-            case 'UYUN ChatOps':
-                targetApplication =
-                    <ChatOps
-                        route={ props.route }
-                        appkey={currentEditApp.appKey}
-                        displayName={currentEditApp.displayName}
-                        onOk={(e, form) => {
-                            e.preventDefault();
+                form.validateFieldsAndScroll((errors, values) => {
+                  if (!!errors) {
+                    return;
+                  }
+                  const formData = form.getFieldsValue()
+                  dispatch({
+                    type: 'alertConfig/editApplication',
+                    payload: { formData, resolve: (result) => {
+                      this.isNeedLeaveCheck = !result;
+                    }}
+                  })
+                })
+              }}
+            />
+          break;
+        case 'UYUN ChatOps':
+          targetApplication =
+            <ChatOps
+              route={props.route}
+              appkey={currentEditApp.appKey}
+              displayName={currentEditApp.displayName}
+              onOk={(e, form) => {
+                e.preventDefault();
 
-                            form.validateFieldsAndScroll( (errors, values) => {
-                                if (!!errors) {
-                                    return;
-                                }
-                                const formData = form.getFieldsValue()
-                                dispatch({
-                                    type: 'alertConfig/editApplication',
-                                    payload: formData
-                                })
-                            })
-                        }}
-                    />
-                break;
-            default:
-                targetApplication =
-                    <AlertREST
-                        route={ props.route }
-                        appkey={currentEditApp.appKey}
-                        displayName={currentEditApp.displayName}
-                        builtIn={currentEditApp.builtIn}
-                        url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
-                        onOk={(e, form) => {
-                            e.preventDefault();
+                form.validateFieldsAndScroll((errors, values) => {
+                  if (!!errors) {
+                    return;
+                  }
+                  const formData = form.getFieldsValue()
+                  dispatch({
+                    type: 'alertConfig/editApplication',
+                    payload: { formData, resolve: (result) => {
+                      this.isNeedLeaveCheck = !result;
+                    }}
+                  })
+                })
+              }}
+            />
+          break;
+        default:
+          targetApplication =
+            <AlertREST
+              route={props.route}
+              appkey={currentEditApp.appKey}
+              displayName={currentEditApp.displayName}
+              builtIn={currentEditApp.builtIn}
+              url={hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`}
+              onOk={(e, form) => {
+                e.preventDefault();
 
-                            form.validateFieldsAndScroll( (errors, values) => {
-                                if (!!errors) {
-                                    return;
-                                }
-                                const formData = form.getFieldsValue()
-                                dispatch({
-                                    type: 'alertConfig/editApplication',
-                                    payload: formData
-                                })
-                            })
-                        }}
-                    />
-                break;
-        }
-        return targetApplication
+                form.validateFieldsAndScroll((errors, values) => {
+                  if (!!errors) {
+                    return;
+                  }
+                  const formData = form.getFieldsValue()
+                  dispatch({
+                    type: 'alertConfig/editApplication',
+                    payload: { formData, resolve: (result) => {
+                      this.isNeedLeaveCheck = !result;
+                    }}
+                  })
+                })
+              }}
+            />
+          break;
+      }
+      return (
+        <div>
+          { targetApplication }
+          <LeaveNotifyModal route={props.route} needLeaveCheck={() => {
+            return this.isNeedLeaveCheck;
+          }} />
+        </div>
+      )
     }
 
     if (currentEditApp !== undefined && Object.keys(currentEditApp).length !== 0) {
-        return editApplication(props)
+      return editApplication(props)
     } else {
-        return false;
+      return false;
     }
-
+  }
 }
 Edit.propTypes = {
   dispatch: PropTypes.func
 }
-export default connect(({alertConfig}) => ({alertConfig}))(Edit)
+export default connect(({ alertConfig }) => ({ alertConfig }))(Edit)
