@@ -77,7 +77,7 @@ export default {
       })
     },
     // 抑制告警
-    *suppressIncidents({ payload: { time } }, { select, put, call }) {
+    *suppressIncidents({ payload: { time, resolve } }, { select, put, call }) {
       const successRemind = yield localStorage.getItem('__alert_suppress_remind')
       const viewDetailAlertId = yield select(state => state.alertDetail.id)
 
@@ -99,9 +99,9 @@ export default {
         } else {
           yield message.error(suppressData.message, 3);
         }
-        payload.resolve && payload.resolve(suppressData)
+        resolve && resolve(suppressData)
       } else {
-        payload.resolve && payload.resolve(false)
+        resolve && resolve(false)
         console.error('select incident/incident type error');
       }
     },
