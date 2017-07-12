@@ -2,7 +2,7 @@ import menu from './menu'
 import bottomMenus from './bottomMenu'
 import request from './request'
 import classnames from 'classnames'
-import {color} from './theme'
+import { color } from './theme'
 
 /**
  * Return random getUUID
@@ -36,12 +36,12 @@ function getRandomInt(min, max) {
 }
 
 // 拼接url
-function packURL(url, params){
+function packURL(url, params) {
   let queryString = url.indexOf('?') < 0 ? '?' : ''
-  for(let prop in params){
+  for (let prop in params) {
     queryString += prop + '=' + params[prop] + '&'
   }
-  queryString = queryString.substring(0,queryString.length - 1)
+  queryString = queryString.substring(0, queryString.length - 1)
   return url + queryString
 }
 
@@ -69,6 +69,26 @@ function browser() {
   if (isIE) {
     return 'IE';
   }
+}
+
+/**
+ * format Date(eq. 2017-01-01 11:00)
+ * @param {*} date
+ */
+function formatDate(date) {
+  const d = new Date(date)
+
+  let year = d.getFullYear();
+  let month = d.getMonth() + 1;
+  let day = d.getDate();
+  let hours = d.getHours();
+  let mins = d.getMinutes();
+
+  hours = hours < 10 ? '0' + hours : hours
+  mins = mins < 10 ? '0' + mins : mins
+
+
+  return year + '/' + month + '/' + day + ' ' + hours + ':' + mins
 }
 
 // 日期格式化
@@ -100,9 +120,9 @@ Date.prototype.format = function (format) {
 function groupSort() {
   var map = {};
   var count = -1;
-  return function(originArr, groupSource) {
+  return function (originArr, groupSource) {
     var targetArr = [];
-    originArr.forEach( (obj) => {
+    originArr.forEach((obj) => {
       if (!map.hasOwnProperty(obj[groupSource])) {
         map[obj[groupSource]] = {
           classify: obj[groupSource],
@@ -124,13 +144,13 @@ function groupSort() {
  * @param {Function} callback to loop server
  */
 const _loopRate = 30000 // min sec
-function loopWebNotification( callback = () => {}, loopTime) {
+function loopWebNotification(callback = () => { }, loopTime) {
   const secs = loopTime || _loopRate
   if (window.__Alert_WebNotification) {
     clearInterval(window.__Alert_WebNotification)
     window.__Alert_WebNotification = null;
   }
-  window.__Alert_WebNotification = setInterval( () => {
+  window.__Alert_WebNotification = setInterval(() => {
     callback()
   }, secs)
 }
@@ -145,5 +165,6 @@ module.exports = {
   getUUID,
   groupSort,
   browser,
-  loopWebNotification
+  loopWebNotification,
+  formatDate
 }
