@@ -16,7 +16,7 @@ class TopFixedArea extends Component {
     $(target).scroll((e) => {
       if (!this.unmount) {
         const $target = $(e.target);
-        if ($target.scrollTop() > topHeight) {
+        if ($target.scrollTop() > this.props.topHeight) {
           this.setState({ isShow: true });
         } else {
           this.setState({ isShow: false });
