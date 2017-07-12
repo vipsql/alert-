@@ -27,6 +27,7 @@ class alertQueryManage extends Component {
 
   constructor(props) {
     super(props)
+    this.ownerTimer = null
   }
 
   componentDidMount() {
@@ -567,15 +568,25 @@ class alertQueryManage extends Component {
                   {getFieldDecorator('owner', {
                     initialValue: JSON.stringify({ userId: '', realName: '' })
                   })(
-                    <Select getPopupContainer={() => document.getElementById("content")} showSearch filterOption={false} onChange={(value) => {
-                      console.log(value)
+                    <Select getPopupContainer={() => document.getElementById("content")} showSearch filterOption={false} onSearch={(value) => {
+                      if (this.ownerTimer) {
+                        clearTimeout(this.ownerTimer)
+                      }
+                      this.ownerTimer = setTimeout(() => {
+                        dispatch({
+                          type: 'alertQuery/ownerQuery',
+                          payload: {
+                            realName: value
+                          }
+                        })
+                      }, 500)
                     }}>
                       <Option value={JSON.stringify({ userId: '', realName: '' })}>{formatMessage({ ...localeMessage['allOwners'] })}</Option>
                       {
                         ownerOptions.map((owner, index) => <Option key={index} value={JSON.stringify(owner)}>{owner.realName}</Option>)
                       }
                     </Select>
-                    )}
+                  )}
                 </Item>
               </Col>
             </Row>

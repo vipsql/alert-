@@ -11,8 +11,8 @@ export async function getUserInformation() {
 }
 
 // 获取所有用户信息
-export async function getUsers() {
-  return request(`/common/getUsers`, {
+export async function getUsers(params) {
+  return request(`/common/getUsers?${stringify(params)}`, {
       method: 'GET',
       headers: {
           'Content-Type': 'application/json',
