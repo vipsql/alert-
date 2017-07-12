@@ -7,18 +7,21 @@
    :global .ant-spin-nested-loading {
     height: 100%;
   }
-  .detailHead {
+  .detailHead, .detailHeadByOutside {
     position: relative;
     margin: 12px 12px 10px 18px;
     p {
       font-size: 14px; //color: #4c5159;
       color: #fff; //text-shadow: 0px 0px 1px #cfd0d1;
     }
-    &>div {
+    & > div {
       margin-bottom: 0px;
       margin-top: 22px;
       padding-left: 0px;
       background: #1d6aa7;
+    }
+    &.detailHeadByOutside > div {
+      background: transparent;
     }
     .shanChu {
       position: absolute;

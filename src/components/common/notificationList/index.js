@@ -68,7 +68,9 @@ class NotificationList extends Component {
                     label={window.__alert_appLocaleData.messages['ruleEditor.notifyObj']}
                 >
                     <Select
-                        getPopupContainer={() =>document.getElementById("content")}
+                        getPopupContainer={() => {
+                          return document.getElementById("content") || document.body
+                        }}
                         mode="multiple"
                         placeholder={window.__alert_appLocaleData.messages['ruleEditor.notifySelectObj']}
                         onChange={this.changeAction.bind(this)}

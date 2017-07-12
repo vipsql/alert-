@@ -14,6 +14,8 @@ const initalState = {
 
   users: [], //获取的可转派用户
 
+  invokeByOutside: false, // 是否来自外部调用
+
   isShowFormModal: false, // 派发工单modal
   isShowChatOpsModal: false,
   isShowTicketModal: false, // 是否显示通知modal
@@ -60,7 +62,8 @@ export default {
           dispatch({
             type: 'openDetailModal',
             payload: {
-              alertId: incidentId
+              alertId: incidentId,
+              invokeByOutside: true
             }
           })
         }
@@ -137,8 +140,6 @@ export default {
           ...(payload.data)
         })
         if (notify.result) {
-          // yield put({ type: 'alertQuery/changeCloseState', payload: { arrList: [stringId], status: 150 } })
-          // yield put({ type: 'alertQuery/queryAlertList' })
           yield put({ type: 'openDetailModal' })
 
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
@@ -165,13 +166,13 @@ export default {
           type: 'setFormOptions',
           payload: options.data || []
         })
+        yield put({
+          type: 'toggleDispatchModal',
+          payload: true
+        })
       } else {
         yield message.error(`${options.message}`, 3)
       }
-      yield put({
-        type: 'toggleDispatchModal',
-        payload: true
-      })
     },
     // 确定派发工单
     *dispatchForm({ payload }, { select, put, call }) {
@@ -211,8 +212,6 @@ export default {
     // 派发工单成功后的操作
     *afterDispatch({ payload }, { select, put, call }) {
       const viewDetailAlertId = yield select(state => state.alertDetail.id)
-      // yield put({ type: 'alertQuery/changeCloseState', payload: { arrList: ['' + viewDetailAlertId], status: 150 } })
-      // yield put({ type: 'alertQuery/queryAlertList' })
       yield put({ type: 'openDetailModal' })
       yield put({ type: 'closeTicketModal' })
     },
@@ -221,23 +220,26 @@ export default {
       yield put({ type: 'toggleCloseModal', payload: true })
     },
     // 点击展开detail时的操作
-    *openDetailModal({ payload={} }, { select, put, call }) {
+    *openDetailModal({ payload = {} }, { select, put, call }) {
+      const { id, invokeByOutside } = yield select(state => {
+        return {
+          id: state.alertDetail.id,
+          invokeByOutside: state.alertDetail.invokeByOutside
+        }
+      });
+
       let viewDetailAlertId = payload.alertId;
       if(!viewDetailAlertId) {
-        viewDetailAlertId = yield select(state => state.alertDetail.id);
+        viewDetailAlertId = id;
       }
 
       // 去除上一次的orderFlowNum和ciUrl地址，并且设置加载中的状态
       yield put({
         type: 'beforeOpenDetail',
         payload: {
-          id: viewDetailAlertId
+          id: viewDetailAlertId,
+          invokeByOutside: payload.invokeByOutside || invokeByOutside
         }
-      })
-      // 点击后马上显示，减少卡顿感
-      yield put({
-        type: 'toggleDetailModal',
-        payload: true
       })
       if (viewDetailAlertId) {
         const detailResult = yield queryDetail(viewDetailAlertId);
@@ -344,8 +346,6 @@ export default {
         })
         if (resultData.result) {
           if (resultData.data.result) {
-            // yield put({ type: 'alertDetail/changeCloseState', payload: { arrList: [stringId], status: 255 } })
-            // yield put({ type: 'alertQuery/queryAlertList' })
             yield put({ type: 'openDetailModal' })
             yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
           } else {
@@ -450,7 +450,6 @@ export default {
         if (response.result) {
           const { success, failed, lang } = response.data;
           if (Array.isArray(success) && success.length > 0) {
-            // yield put({ type: 'alertQuery/queryAlertList' })
             const successMsg = success.map(item => `${item.name}: ${item['msg_' + lang]}`).join('\n');
             message.success(successMsg, 3);
             yield put({ type: 'openDetailModal' })
@@ -488,7 +487,7 @@ export default {
       });
     },
     //转派
-    *submitReassign({ payload: { toWho } }, { select, put, call }) {
+    *submitReassign({ payload: { toWho, resolve } }, { select, put, call }) {
       const viewDetailAlertId = yield select(state => state.alertDetail.id);
       let response = yield call(reassignAlert, {
         toWho,
@@ -497,7 +496,6 @@ export default {
       if (response.result) {
         const { success, failed, lang } = response.data;
         if (Array.isArray(success) && success.length > 0) {
-          // yield put({ type: 'alertQuery/queryAlertList' })
           const successMsg = success.map(item => `${item.name}: ${item['msg_' + lang]}`).join('\n');
           message.success(successMsg, 3);
           yield put({
@@ -514,7 +512,7 @@ export default {
         message.error(response.message, 2);
       }
 
-      payload && payload.resolve && payload.resolve(response);
+      resolve && resolve(response);
     },
 
   },
@@ -522,8 +520,15 @@ export default {
   reducers: {
     // beforeOpenDetail
     beforeOpenDetail(state, { payload }) {
-      console.log(payload, "beforeOpenDetail")
-      return { ...state, operateForm: initalState.operateForm, ciUrl: initalState.ciUrl, isShowDetail: true, isLoading: true, id: payload.id }
+      return {
+        ...state,
+        operateForm: initalState.operateForm,
+        ciUrl: initalState.ciUrl,
+        isShowDetail: true,
+        sLoading: true,
+        id: payload.id,
+        invokeByOutside: payload.invokeByOutside
+      }
     },
     // 显示modal后取消加载中状态
     toggleLoading(state, { payload: isLoading }) {
