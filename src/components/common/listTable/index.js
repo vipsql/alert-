@@ -8,6 +8,7 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import $ from 'jquery'
 import WrapableTr from './wrapableTr'
 import TopFixedArea from './topFixedArea'
+import ScrollBar from './scrollBar'
 
 class ListTable extends Component {
   constructor() {
@@ -463,6 +464,7 @@ class ListTable extends Component {
       <div>
         <Spin spinning={isLoading}>
           <div className="listContainer" style={{ overflowX: 'auto' }}>
+          <ScrollBar horizonTarget="div.listContainer" />
           <TopFixedArea parentTarget="div.listContainer" theads={ theads } extraArea={ extraArea } topHeight={ topHeight }/>
           <table className={styles.listTable}>
             <thead>

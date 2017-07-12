@@ -11,6 +11,39 @@
   .extraArea {
     position: relative
   }
+  .fixScrollBar {
+    position: absolute;
+    bottom: 2px;
+    width: 100%;
+    height: 38px;
+  }
+}
+
+// 左右滚动工具
+.scrollArea {
+  top: 0px;
+  left: 0px;
+  color: #4fb8f0;
+  .scroll {
+    position: absolute;
+    z-index: 13;
+    line-height: 38px;
+    cursor: pointer;
+    background-color: #143355;
+    top: 0px;
+  }
+  .leftScroll {
+    left: 0px;
+  }
+  .rightScroll {
+    right: 0px;
+  }
+  .show {
+    display: block;
+  }
+  .hide {
+    display: none;
+  }
 }
 
 .listTable {
@@ -41,7 +74,7 @@
   .checkstyle {
     text-align: center
   }
-   :global {
+  :global {
     .fade-leave.fade-leave-active {
       opacity: 0;
       transition: opacity .3s ease-in-out;
