@@ -201,7 +201,12 @@ export default {
     },
     // 存放告警来源的options
     setOptions(state, { payload: { sourceOptions, propertyOptions, ownerOptions } }) {
-      return { ...state, sourceOptions, propertyOptions, ownerOptions }
+      return {
+        ...state,
+        sourceOptions: sourceOptions ? sourceOptions : state.sourceOptions,
+        propertyOptions: propertyOptions ? propertyOptions : state.propertyOptions,
+        ownerOptions: ownerOptions ? ownerOptions : state.ownerOptions
+      }
     },
     // 用来一次性结构状态，避免过度渲染
     changeState(state, { payload }) {
@@ -383,6 +388,21 @@ export default {
         payload: {
           sourceOptions: sourceOptions.result ? sourceOptions.data : [],
           propertyOptions: propertyOptions.result ? propertyOptions.data : [],
+          ownerOptions: ownerOptions.result ? ownerOptions.data : [],
+        }
+      })
+    },
+    // 负责人查询过程中需要支持模糊查询
+    *ownerQuery({ payload }, { call, put, select }) {
+      const ownerOptions = yield call(getUsers, {
+        realName: payload.realName
+      });
+      if (!ownerOptions.result) {
+        yield message.error(ownerOptions.message, 3)
+      }
+      yield put({
+        type: 'setOptions',
+        payload: {
           ownerOptions: ownerOptions.result ? ownerOptions.data : [],
         }
       })

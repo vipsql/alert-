@@ -5,7 +5,6 @@ import ListTable from '../common/listTable'
 
 // function ListTimeTableWrap({dispatch, alertListTimeTable}){
 const  ListTableWrap = ({dispatch, alertQuery, topFixArea}) => {
-  console.log("render: ListTableWrap");
   const props = {
     ...alertQuery,
     loadMore(){
