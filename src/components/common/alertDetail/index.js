@@ -25,9 +25,10 @@ class alertDetail extends Component {
       const $toCloseSlider = $target.closest("div#alertDetailSlider");
       const $toCloseModal = $target.closest(".ant-modal-wrap ");
       const $toCloseLi = $target.closest("li");
+      const $toCloseContent = $target.closest("#content");
 
       // 如果点击的组件补上下拉框选项或者不在弹出框上或者不在右侧滑动栏上，则隐藏右侧滑动栏
-      if ($target.attr("role") != 'menuitem' && $toCloseLi.attr("role") != 'menuitem' && $toCloseSlider.length == 0 && $toCloseModal.length == 0) {
+      if (($toCloseContent && $toCloseContent.length != 0) && ($target.attr("role") != 'menuitem' && $toCloseLi.attr("role") != 'menuitem' && $toCloseSlider.length == 0 && $toCloseModal.length == 0)) {
         this.props.closeDeatilModal();
       }
     })

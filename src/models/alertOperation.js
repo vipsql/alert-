@@ -126,14 +126,14 @@ export default {
       if (response.result) {
         const { success, failed, lang } = response.data;
         if (Array.isArray(success) && success.length > 0) {
-          const successMsg = success.map(item => `${item.name}: ${item['msg_' + lang]}`).join('\n');
+          const successMsg = success.map(item => `${item.name}: ${item['msg']}`).join('\n');
           message.success(successMsg, 3);
           yield put({
             type: 'toggleReassignModal',
             payload: false
           });
         } else if (Array.isArray(failed) && failed.length > 0) {
-          const failedMsg = failed.map(item => `${item.name}: ${item['msg_' + lang]}`).join('\n');
+          const failedMsg = failed.map(item => `${item.name}: ${item['msg']}`).join('\n');
           message.error(failedMsg, 3);
           response.result = false;
         }
@@ -640,10 +640,10 @@ export default {
             //这里一定要先删除告警，再删除checkAlert，因为在渲染table的时候用到了checkAlert
             // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
             // yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
-            const successMsg = success.map(item => `${item.name}: ${item['msg_' + lang]}`).join('\n');
+            const successMsg = success.map(item => `${item.name}: ${item['msg']}`).join('\n');
             message.success(successMsg, 3);
           } else if (Array.isArray(failed) && failed.length > 0) {
-            const failedMsg = failed.map(item => `${item.name}: ${item['msg_' + lang]}`).join('\n');
+            const failedMsg = failed.map(item => `${item.name}: ${item['msg']}`).join('\n');
             message.error(failedMsg, 3);
             response.result = false
           }
