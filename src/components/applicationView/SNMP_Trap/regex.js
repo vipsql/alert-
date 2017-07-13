@@ -57,7 +57,7 @@ const Regex = ({changeValue, toggle16Radix, validateRadix, saveRegex, clear, typ
       },
       regex_validate_error: {
         id: 'modal.trap.regex.error',
-        defaultMessage: '正则表达式有误'
+        defaultMessage: '未匹配到结果'
       },
       regex_noValidate: {
         id: 'modal.trap.regex.noResult',

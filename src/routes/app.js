@@ -4,18 +4,10 @@ import LeftMenu from '../components/layout/leftMenu/leftWrap'
 import styles from '../components/layout/main.less'
 import Bread from '../components/layout/bread/index'
 import NotificationApi from '../components/common/webNotification/index.js'
-import { Spin, Modal } from 'antd'
 import { classnames } from '../utils'
 import '../components/layout/common.less'
 
 class App extends Component {
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      vislble: true
-    }
-  }
 
   componentDidMount() {
     NotificationApi.config({
@@ -79,7 +71,6 @@ class App extends Component {
     return (
       <div>
         {isShowMask && <div className={styles.layer}></div>}
-        <button onClick={() => {this.setState({vislble: !this.state.vislble})}} >点我</button>
         <div className={classnames(styles.layout, !isFold ? '' : styles.fold)}>
           <LeftMenu {...LeftMenuProps} />
           <div id="topMain" className={styles.main}>
@@ -91,13 +82,6 @@ class App extends Component {
             </div>
           </div>
         </div>
-        <Modal
-          title={'ceshi'}
-          visible={this.state.vislble}
-          onCancel={() => {this.setState({vislble: false})}}
-        >
-          <iframe src={'/#/export/viewDetail/6c6f21db3bbe4c419fcb39cc14962de9'} style={{height: '100%', border: 'none', width: '100%'}}/>
-        </Modal>
       </div>
     )
   }
