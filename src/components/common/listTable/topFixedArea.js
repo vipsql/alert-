@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import $ from 'jquery'
 import styles from './index.less'
 import { classnames } from '../../../utils'
+import ScrollBar from './scrollBar';
 
 
 class TopFixedArea extends Component {
@@ -15,7 +16,7 @@ class TopFixedArea extends Component {
     $(target).scroll((e) => {
       if (!this.unmount) {
         const $target = $(e.target);
-        if ($target.scrollTop() > topHeight) {
+        if ($target.scrollTop() > this.props.topHeight) {
           this.setState({ isShow: true });
         } else {
           this.setState({ isShow: false });
@@ -52,6 +53,9 @@ class TopFixedArea extends Component {
             </tr>
           </thead>
         </table>
+        <div className={ styles.fixScrollBar } style={{ left: scrollLeft }}>
+          <ScrollBar horizonTarget="div.listContainer" />
+        </div>
       </div>
     )
   }

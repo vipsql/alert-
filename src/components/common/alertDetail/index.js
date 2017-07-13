@@ -3,7 +3,7 @@ import { Link } from 'dva/router'
 import { Button, Input, Form, Timeline, Spin } from 'antd';
 import { connect } from 'dva'
 import styles from './index.less'
-import { classnames } from '../../../utils'
+import { classnames, formatDate } from '../../../utils'
 import AlertOperation from '../alertOperation/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import Wrap from './wrap'
@@ -87,8 +87,8 @@ class alertDetail extends Component {
       let endTime = new Date(+end);
 
       // date.continueTime = Math.round(((+end) - (+begin)) / 1000 / 60 / 60); // hours
-      date.begin = beginTime.getFullYear() + '/' + (beginTime.getMonth() + 1) + '/' + beginTime.getDate() + ' ' + beginTime.getHours() + ':' + beginTime.getMinutes();
-      date.end = endTime.getFullYear() + '/' + (endTime.getMonth() + 1) + '/' + endTime.getDate() + ' ' + endTime.getHours() + ':' + endTime.getMinutes();
+      date.begin = formatDate(+begin);
+      date.end = formatDate(+end);
       return date
     }
 
@@ -457,6 +457,7 @@ class alertDetail extends Component {
                       {
                         incidentLog.map((log, index) => {
                           const date = new Date(log.operateTime);
+                          const minutes = date.getMinutes() < 10?('0' + date.getMinutes()) : date.getMinutes();
                           let isShowOperateDate = false;
                           if (index == incidentLog.length - 1) {
                             isShowOperateDate = true;
@@ -468,7 +469,7 @@ class alertDetail extends Component {
                             <Timeline.Item key={log.incidentId + '' + index} color={index == 0 ? 'green' : 'blue'}>
                               <div className={classnames(styles.timeLineLabel)}>
                                 {
-                                  (isShowOperateDate ? ((date.getMonth() + 1) + "/" + date.getDate() + ' ') : '') + date.getHours() + ":" + date.getMinutes()
+                                  (isShowOperateDate ? ((date.getMonth() + 1) + "/" + date.getDate() + ' ') : '') + date.getHours() + ":" + minutes
                                 }
                               </div>
                               <p>

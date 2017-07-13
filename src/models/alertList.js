@@ -42,7 +42,7 @@ export default {
       if (data.result) {
         let barData = data.data
         let endtTime = barData[barData.length - 1]['time']
-        let startTime = barData[0]['time']
+        let startTime = barData[0]['time'] - (barData[0]['granularity'] || 0)
 
         // 更新柱状图数据
         yield put({

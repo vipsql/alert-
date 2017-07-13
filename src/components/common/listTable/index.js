@@ -8,6 +8,7 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import $ from 'jquery'
 import WrapableTr from './wrapableTr'
 import TopFixedArea from './topFixedArea'
+import ScrollBar from './scrollBar'
 
 class ListTable extends Component {
   constructor() {
@@ -242,7 +243,7 @@ class ListTable extends Component {
         }
         switch (key) {
           case 'name':
-            td = (<td key={key} title={data} className={styles.tdBtn} data-id={item.id} onClick={detailClick} >
+            td = (<td key={key} title={data} className={styles.tdBtn} data-id={item.id} data-no-need-wrap={ true } onClick={detailClick} >
               {data}
               {
                 sourceOrigin !== 'alertQuery' && item['hasChild'] === true && target === 'parent' ?
@@ -313,7 +314,7 @@ class ListTable extends Component {
             }
             break;
           case 'count':
-            td = <td key={key} title={data}><a href="javascript:;" data-id={item.id} data-name={item.name} onClick={showAlertOrigin}>{data}</a></td>
+            td = <td key={key} title={data}><a href="javascript:;" data-id={item.id} data-no-need-wrap={ true }  data-name={item.name} onClick={showAlertOrigin}>{data}</a></td>
             break;
           default:
             td = <td key={key} title={data}>{data}</td>
@@ -463,6 +464,7 @@ class ListTable extends Component {
       <div>
         <Spin spinning={isLoading}>
           <div className="listContainer" style={{ overflowX: 'auto' }}>
+          <ScrollBar horizonTarget="div.listContainer" />
           <TopFixedArea parentTarget="div.listContainer" theads={ theads } extraArea={ extraArea } topHeight={ topHeight }/>
           <table className={styles.listTable}>
             <thead>
