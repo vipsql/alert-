@@ -4,7 +4,6 @@ import LeftMenu from '../components/layout/leftMenu/leftWrap'
 import styles from '../components/layout/main.less'
 import Bread from '../components/layout/bread/index'
 import NotificationApi from '../components/common/webNotification/index.js'
-import { Spin } from 'antd'
 import { classnames } from '../utils'
 import '../components/layout/common.less'
 

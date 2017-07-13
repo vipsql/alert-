@@ -94,21 +94,19 @@
 	</table>
 	<p>Send a Test Alert</p>
 	<pre id="example">
-curl -H "Content-type: application/json;charset=utf-8" -X POST -d '[
+curl -H "Content-type: application/json;charset=utf-8" -X POST -d '
 	{
-		"body": "{
-			\"name\":\"activemq.broker.memory_pct-ActiveMQ Memery overloaded\",
-			\"severity\":3,
-			\"description\":\"ActiveMQ Memery above upper limit (3%)%\",
-			\"occur_time\":1490251916807,
-			\"entity_name\":\"PC20151218\",
-			\"entity_addr\":\"10.1.113.28\",
-			\"merge_key\":\"entity_name,name\",
-			\"identify_key\":\"entity_name,entity_addr\",
-			\"properties\":[{\"val\": \"Financial\",\"code\": \"belong\",\"name\": \"Department\"}]
-		}"
+    "name":"activemq.broker.memory_pct-ActiveMQ Memery overloaded",
+    "severity":"3",
+    "description":"ActiveMQ Memery above upper limit (3%)%",
+    "occur_time":1490251916807,
+    "entity_name":"PC20151218",
+    "entity_addr":"10.1.113.28",
+    "merge_key":"entity_name,name",
+    "identify_key":"entity_name,entity_addr",
+    "properties":[{"val": "Financial","code": "belong","name": "Department"}]
 	}
-]' </pre>
+' </pre>
 	</div>
  </body>
  <script>

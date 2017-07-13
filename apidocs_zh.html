@@ -65,7 +65,7 @@
 	"identify_key":   "entity_name,entity_addr",
 	"properties":     [
 		{
-			"val": "dataCenter_A",		
+			"val": "dataCenter_A",
 			"code": "location",
 			"name":	"Location"
 		}
@@ -94,21 +94,19 @@
 	</table>
 	<p>POST body方式</p>
 	<pre id="example">
-curl -H "Content-type: application/json;charset=utf-8" -X POST -d '[
-	{
-		"body": "{
-			\"name\":\"activemq.broker.memory_pct-ActiveMQ内存使用率\",
-			\"severity\":3,
-			\"description\":\"ActiveMQ内存使用率超过3%\",
-			\"occur_time\":1490251916807,
-			\"entity_name\":\"PC20151218\",
-			\"entity_addr\":\"10.1.113.28\",
-			\"merge_key\":\"entity_name,name\",
-			\"identify_key\":\"entity_name,entity_addr\",
-			\"properties\":[{\"val\": \"派出所\",\"code\": \"belong\",\"name\": \"所属单位\"}]
-		}"
-	}
-]' </pre>
+curl -H "Content-type: application/json;charset=utf-8" -X POST -d '
+  {
+    "name":"activemq.broker.memory_pct-ActiveMQ内存使用率",
+    "severity":"3",
+    "description":"ActiveMQ内存使用率超过3%",
+    "occur_time":1490251916807,
+    "entity_name":"PC20151218",
+    "entity_addr":"10.1.113.28",
+    "merge_key":"entity_name,name",
+    "identify_key":"entity_name,entity_addr",
+    "properties":[{"val": "派出所","code": "belong","name": "所属单位"}]
+  }
+' </pre>
 	</div>
  </body>
  <script>
