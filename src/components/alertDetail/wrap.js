@@ -156,6 +156,14 @@ const AlertDetailWrap = ({ alertDetail, dispatch, afterTakeOver, afterChatOpsh, 
     isShowNotifyModal: alertDetail.isShowNotifyModal,
     notifyIncident: alertDetail.notifyIncident,
     notifyUsers: alertDetail.notifyUsers,
+    userSearch: (value) => {
+      dispatch({
+        type: 'alertDetail/ownerQuery',
+        payload: {
+          realName: value
+        }
+      })
+    },
     onOk: (data) => {
       dispatch({
         type: "alertDetail/notyfiyIncident",

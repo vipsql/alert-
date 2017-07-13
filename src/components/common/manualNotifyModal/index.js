@@ -25,8 +25,8 @@ class notifyModal extends Component {
                 email: false,
                 sms: false,
                 chatops: false,
-                recipients: [],
-                actionNotification: {}
+                recipients: nextProps.notifyUsers !== this.props.notifyUsers ? this.state.recipients : [],
+                actionNotification: nextProps.notifyUsers !== this.props.notifyUsers && this.state.actionNotification ? this.state.actionNotification : {}
             })
         }
     }
@@ -61,11 +61,14 @@ class notifyModal extends Component {
         }
         let mode = _action.actionNotification.notificationMode;
         if (_.isArray(value)) { // 通知对象
-            let arr = [];
-            notifyUsers.forEach((item, index) => {
+            let empty = [];
+            let arr = [].concat(_action.actionNotification.recipients);
+            if (arr.length > value.length) {
+              // 删除的情况
+              arr.forEach((item, index) => {
                 for (let i = value.length; i >= 0; i -= 1) {
-                    if (value[i] === item.userId) {
-                        arr.push({
+                    if (value[i] && value[i]['key'] === item.userId ) {
+                        empty.push({
                             userId: item.userId,
                             realName: item.realName,
                             mobile: item.mobile,
@@ -73,10 +76,24 @@ class notifyModal extends Component {
                         });
                     }
                 }
-            });
-            _action.actionNotification.recipients = arr;
+              });
+            } else {
+              // 新增的情况
+              empty = [].concat(arr)
+              notifyUsers.forEach((item, index) => {
+                if (value[value.length - 1] && value[value.length - 1]['key'] === item.userId ) {
+                    empty.push({
+                        userId: item.userId,
+                        realName: item.realName,
+                        mobile: item.mobile,
+                        email: item.email
+                    });
+                }
+              })
+            }
+            _action.actionNotification.recipients = empty;
             this.setState({
-                recipients: arr.map(item => item.userId)
+                recipients: empty.map(item => ({key: item.userId, label: item.realName}))
             });
         } else if (value.target.type === 'checkbox') { // 通知方式
             if (value.target.checked) { // 选中此通知方式
@@ -101,7 +118,7 @@ class notifyModal extends Component {
     }
 
     render() {
-        const {isShowNotifyModal, notifyIncident, notifyUsers, onOk, onCancel, intl: {formatMessage}} = this.props;
+        const {isShowNotifyModal, notifyIncident, notifyUsers, onOk, onCancel, userSearch, intl: {formatMessage}} = this.props;
         const { email, sms, chatops, recipients } = this.state;
 
         const checkedState = {
@@ -152,6 +169,7 @@ class notifyModal extends Component {
                     notifyUsers={notifyUsers}
                     changeAction={this.changeAction}
                     disableChatOps={this.props.disableChatOps}
+                    userSearch={this.props.userSearch}
                 />
             </Modal>
         )

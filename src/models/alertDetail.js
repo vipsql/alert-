@@ -108,6 +108,21 @@ export default {
         console.error('select incident/incident type error');
       }
     },
+    // 用户查询
+    *ownerQuery({ payload }, { select, put, call }) {
+      const ownerOptions = yield call(getUsers, {
+        realName: payload.realName
+      });
+      if (!ownerOptions.result) {
+        yield message.error(ownerOptions.message, 3)
+      }
+      yield put({
+        type: 'setUsers',
+        payload: {
+          notifyUsers: ownerOptions.result ? ownerOptions.data : [],
+        }
+      })
+    },
     // 手工通知
     *openNotify({ payload }, { select, put, call }) {
       const options = yield getChatOpsOptions();
@@ -518,6 +533,10 @@ export default {
   },
 
   reducers: {
+    //setUsers
+    setUsers(state, { payload: {notifyUsers} }) {
+      return { ...state, notifyUsers}
+    },
     // beforeOpenDetail
     beforeOpenDetail(state, { payload }) {
       return {

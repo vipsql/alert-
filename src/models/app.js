@@ -24,9 +24,9 @@ export default {
           dispatch({
             type: 'beforeHomePage'
           })
-          // loop(function() {
-          //   dispatch({type: 'getNotifies'})
-          // }, 30000) // 默认半分钟轮询一次
+          loop(function() {
+            dispatch({type: 'getNotifies'})
+          }, 30000) // 默认半分钟轮询一次
         }
       })
     },

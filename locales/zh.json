@@ -464,7 +464,7 @@
   "ruleEditor.word9": "等待",
   "ruleEditor.upgradelabel": "当满足以下条件时，升级告警：",
   "ruleEditor.word8": "请选择告警状态",
-  "ruleEditor.nLevelUp": "当且仅当告警级别提高时再次提醒",
+  "ruleEditor.nLevelUp": "当且仅当告警级别改变时再次提醒",
   "ruleEditor.isShareUpgrade": "是否开启告警升级",
 
   "visualAnalyze.groupBy": "分组",

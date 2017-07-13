@@ -9,6 +9,7 @@ import {
     Popover,
     Checkbox
 } from 'antd';
+import _ from 'lodash'
 
 import styles from './index.less';
 
@@ -72,10 +73,17 @@ class NotificationList extends Component {
                           return document.getElementById("content") || document.body
                         }}
                         mode="multiple"
+                        labelInValue
+                        filterOption={false}
                         placeholder={window.__alert_appLocaleData.messages['ruleEditor.notifySelectObj']}
                         onChange={this.changeAction.bind(this)}
                         className={styles.recipients}
                         value={recipients}
+                        onSearch={
+                          _.debounce( (value) => {
+                            this.props.userSearch(value)
+                          }, 500)
+                        }
                     >
                         {
                             notifyUsers.map((item, index) => <Option key={item.userId} value={item.userId}>{item.realName}</Option>)
@@ -103,9 +111,9 @@ class NotificationList extends Component {
                             >
                                 <Input id="emailTitle"
                                     value={
-                                        action.actionNotification.notificationMode ? 
-                                        action.actionNotification.notificationMode.emailTitle 
-                                        : 
+                                        action.actionNotification.notificationMode ?
+                                        action.actionNotification.notificationMode.emailTitle
+                                        :
                                         `${notifyIncident.entityName}:${notifyIncident.name}`
                                     }
                                     onChange={this.changeAction.bind(this)}
@@ -119,7 +127,7 @@ class NotificationList extends Component {
                             >
                                 <Input id="emailMessage"
                                     value={
-                                        action.actionNotification.notificationMode ? 
+                                        action.actionNotification.notificationMode ?
                                         action.actionNotification.notificationMode.emailMessage
                                         :
                                         `${window['_severity'][notifyIncident.severity]}, ${notifyIncident.entityName}, ${this.formatDate(notifyIncident.firstOccurTime)}, ${notifyIncident.description}`
@@ -152,9 +160,9 @@ class NotificationList extends Component {
                             >
                                 <Input id="smsMessage"
                                     value={
-                                        action.actionNotification.notificationMode ? 
-                                        action.actionNotification.notificationMode.smsMessage 
-                                        : 
+                                        action.actionNotification.notificationMode ?
+                                        action.actionNotification.notificationMode.smsMessage
+                                        :
                                         `${window['_severity'][notifyIncident.severity]}, ${notifyIncident.entityName}, ${this.formatDate(notifyIncident.firstOccurTime)}, ${notifyIncident.description}`
                                     }
                                     onChange={this.changeAction.bind(this)}
