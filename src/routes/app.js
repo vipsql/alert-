@@ -32,6 +32,12 @@ class App extends Component {
 
   componentWillUnmount() {
     NotificationApi.destroy();
+
+    // 当页面销毁的时候清除用户信息，已防止另一个用户登录的时候仍保持上一次登录的用户信息
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'app/clear'
+    })
   }
 
   render() {
