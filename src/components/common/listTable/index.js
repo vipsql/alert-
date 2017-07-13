@@ -243,7 +243,7 @@ class ListTable extends Component {
         }
         switch (key) {
           case 'name':
-            td = (<td key={key} title={data} className={styles.tdBtn} data-id={item.id} onClick={detailClick} >
+            td = (<td key={key} title={data} className={styles.tdBtn} data-id={item.id} data-no-need-wrap={ true } onClick={detailClick} >
               {data}
               {
                 sourceOrigin !== 'alertQuery' && item['hasChild'] === true && target === 'parent' ?
@@ -314,7 +314,7 @@ class ListTable extends Component {
             }
             break;
           case 'count':
-            td = <td key={key} title={data}><a href="javascript:;" data-id={item.id} data-name={item.name} onClick={showAlertOrigin}>{data}</a></td>
+            td = <td key={key} title={data}><a href="javascript:;" data-id={item.id} data-no-need-wrap={ true }  data-name={item.name} onClick={showAlertOrigin}>{data}</a></td>
             break;
           default:
             td = <td key={key} title={data}>{data}</td>

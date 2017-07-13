@@ -7,14 +7,18 @@ class WrapableTr extends Component {
     super(props);
     this.state = { wrapped: this.props.wrapped || true };
   }
-  _toggleWrap() {
-    this.setState({ wrapped: !this.state.wrapped });
+  _toggleWrap(e) {
+    const target = e.target;
+    const noNeedWrap = target.getAttribute("data-no-need-wrap");
+    if(!noNeedWrap) {
+      this.setState({ wrapped: !this.state.wrapped });
+    }
   }
   render() {
     const { children, className, ...restProps } = this.props;
     const { wrapped } = this.state;
     return (
-      <tr {...restProps} onClick={() => { this._toggleWrap() }} className={ classnames(className, wrapped?styles.showSome:styles.showAll) }>
+      <tr {...restProps} onClick={(e) => { this._toggleWrap(e) }} className={ classnames(className, wrapped?styles.showSome:styles.showAll) }>
         { children }
       </tr>
     )
