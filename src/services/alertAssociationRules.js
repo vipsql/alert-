@@ -91,3 +91,13 @@ export async function queryAttributes(params) {
       }
   })
 }
+
+// 获取资源类型
+export async function getClasscode() {
+  return request(`/rule/getClassCode`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+}

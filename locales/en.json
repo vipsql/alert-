@@ -455,7 +455,7 @@
   "ruleEditor.v3": "Warning",
   "ruleEditor.v4": "Critical",
   "ruleEditor.s1": "Assigned or resolved",
-  "ruleEditor.s2": "Acknowledged",
+  "ruleEditor.s2": "Open",
   "ruleEditor.s3": "Assigned",
   "ruleEditor.s4": "Resolved",
   "ruleEditor.s5": "Closed",

@@ -100,21 +100,21 @@ const valueList = {
     status: [
         {
             name: window.__alert_appLocaleData.messages['ruleEditor.s1'],
+            value: '',
+        },
+        {
+            name: window.__alert_appLocaleData.messages['ruleEditor.s2'],
             value: '0',
         },
-        // {
-        //   name: window.__alert_appLocaleData.messages['ruleEditor.s2'],
-        //   value: '1',
-        // },
         {
             name: window.__alert_appLocaleData.messages['ruleEditor.s3'],
-            value: '2',
+            value: '150',
         }, {
             name: window.__alert_appLocaleData.messages['ruleEditor.s4'],
-            value: '3',
+            value: '190',
         }, {
             name: window.__alert_appLocaleData.messages['ruleEditor.s5'],
-            value: '4',
+            value: '255',
         }
     ],
     duration: [
@@ -146,9 +146,12 @@ class Condition extends Component {
     createConditionItem() {
         let keyList = [];
         let local = 'Zh';
-        const { node, source, attributes, _key, opt, value, level, index, deleteLine, changeConditionContent, _this } = this.props;
+        const { node, source, classCode, attributes, _key, opt, value, level, index, deleteLine, changeConditionContent, _this } = this.props;
         valueList.source = source.map(item => {
             return { name: item.value, value: item.key };
+        });
+        valueList.classCode = classCode.map(item => {
+            return { name: item.classCode, value: item.classCode };
         });
         if (window.__alert_appLocaleData.locale === 'en-us') {
             local = 'Us'
@@ -189,7 +192,7 @@ class Condition extends Component {
                     }
                 </Select>
                 {
-                    /severity|status|duration|source/.test(_key) &&
+                    /severity|status|duration|source|classCode/.test(_key) &&
                     <Select getPopupContainer={() =>document.getElementById("content")} onChange={changeConditionContent.bind(_this, node, index, 'value')} className={styles.value} style={{ width: 150 }} value={value} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phFieldValue']}>
                         {
                             valueList[_key] &&
@@ -200,7 +203,7 @@ class Condition extends Component {
                     </Select>
                 }
                 {
-                    !/severity|status|duration|source/.test(_key) &&
+                    !/severity|status|duration|source|classCode/.test(_key) &&
                     <Input placeholder={window.__alert_appLocaleData.messages['ruleEditor.phFieldValue']} style={{ width: 130 }} onBlur={changeConditionContent.bind(_this, node, index, 'value')} defaultValue={value} />
                 }
                 <i className={styles.delete} onClick={deleteLine.bind(_this, node, level, index)}>X</i>

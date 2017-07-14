@@ -18,6 +18,7 @@ import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 import ScrollTopButton from '../common/scrollTopButton/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import $ from 'jquery'
+import _ from 'lodash'
 
 const Item = Form.Item;
 const RangePicker = DatePicker.RangePicker;
@@ -27,7 +28,6 @@ class alertQueryManage extends Component {
 
   constructor(props) {
     super(props)
-    this.ownerTimer = null
   }
 
   componentDidMount() {
@@ -568,11 +568,8 @@ class alertQueryManage extends Component {
                   {getFieldDecorator('owner', {
                     initialValue: JSON.stringify({ userId: '', realName: '' })
                   })(
-                    <Select getPopupContainer={() => document.getElementById("content")} showSearch filterOption={false} onSearch={(value) => {
-                      if (this.ownerTimer) {
-                        clearTimeout(this.ownerTimer)
-                      }
-                      this.ownerTimer = setTimeout(() => {
+                    <Select getPopupContainer={() => document.getElementById("content")} showSearch filterOption={false} onSearch={
+                      _.debounce((value) => {
                         dispatch({
                           type: 'alertQuery/ownerQuery',
                           payload: {
@@ -580,7 +577,7 @@ class alertQueryManage extends Component {
                           }
                         })
                       }, 500)
-                    }}>
+                    }>
                       <Option value={JSON.stringify({ userId: '', realName: '' })}>{formatMessage({ ...localeMessage['allOwners'] })}</Option>
                       {
                         ownerOptions.map((owner, index) => <Option key={index} value={JSON.stringify(owner)}>{owner.realName}</Option>)
