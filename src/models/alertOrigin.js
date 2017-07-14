@@ -60,7 +60,7 @@ export default {
       const responseData = response.data;
       const records = responseData.records.map((row, index) => {
         const time = new Date(row.occurTime);
-        const occurTime = time.getMonth() + "/" + time.getDate() + " " + time.getHours() + ":" + time.getMinutes()
+        const occurTime = time.getFullYear() + "/" + (time.getMonth() + 1) + "/" + time.getDate() + " " + time.getHours() + ":" + (time.getMinutes() < 10?('0' + time.getMinutes()):time.getMinutes());
         return {...row, key: index, occurTime}}
       )
       const newPayload = {
