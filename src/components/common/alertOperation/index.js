@@ -46,6 +46,10 @@ const alertOperation = ({
       id: 'alertOperate.reassign',
       defaultMessage: '转派'
     },
+    owner: {
+      id: 'alertDetail.owner',
+      defaultMessage: '负责人'
+    },
     operate_dispatch: {
       id: 'alertOperate.dispatch',
       defaultMessage: '派发工单'
