@@ -408,7 +408,7 @@ class alertQueryManage extends Component {
           </Select>
           <i className={selectGroup !== window['_groupBy'] && classnames(switchClass, styles.switch)} onClick={() => {
             dispatch({
-              type: 'alertDetail/noGroupView',
+              type: 'alertQuery/noGroupView',
             })
           }}></i>
         </div>
