@@ -345,11 +345,13 @@ class RuleEditor extends Component {
             if(_actionType.includes(3)) {
                 _actionType = [3] // 告警升级 + 告警通知
                 if(!_action.actionUpgrade) {
-                    _action.actionUpgrade.notificationGroupings = [{
-                        delay: 15,
-                        status: [],
-                        recipients: []
-                    }]
+                    _action.actionUpgrade = {
+                        notificationGroupings: [{
+                            delay: 15,
+                            status: [],
+                            recipients: []
+                        }]
+                    }
                 } else {
                     isShareUpgrade = true
                 }
