@@ -207,7 +207,7 @@
   "alertDetail.action.t220": "Suppressed",
   "alertDetail.action.t250": "Closed",
   "alertDetail.suppressionMessage": "Suppress { minutes } minutes",
-  "alertDetail.reassignMessage": "Assign to",
+  "alertDetail.reassignMessage": "Assigned to",
 
   "alertConfig.integrations": "Integrations",
   "alertConfig.integrations.message": "Integrate with third-party applications, such as network and system monitoring tools, apm tools, collabration tools , customer supporting tools.",
