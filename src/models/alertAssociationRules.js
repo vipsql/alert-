@@ -12,6 +12,7 @@ import {
   getField,
   queryAttributes,
   getshowITSMParam,
+  getClasscode
 } from '../services/alertAssociationRules';
 import {
   getUsers
@@ -57,6 +58,7 @@ const initalState = {
   field: [], // 映射字段
   rooms: [], // chatOps 群组
   wos: [], // 工单类型
+  classCode: [], // 资源类型
   ITSMParam: '', // 映射配置
 }
 
@@ -231,7 +233,20 @@ export default {
         });
       }
     },
-
+    // 获取classcode
+    *getClassCode({payload}, {select, put, call}) {
+      const result = yield call(getClasscode);
+      if (result.result) {
+        yield put({
+          type: 'updateClassCode',
+          payload: {
+            data: result.data
+          }
+        });
+      } else {
+        message.error(result.message, 3);
+      }
+    },
     // 获取 工单类型
     *getWos({payload}, {select, put, call}) {
       const params = {
@@ -443,6 +458,9 @@ export default {
     updateRooms(state, {payload}) {
       // debugger
       return { ...state, rooms: payload.data }
+    },
+    updateClassCode(state, {payload}) {
+      return { ...state, classCode: payload.data }
     },
     updateWos(state, {payload}) {
       return { ...state, wos: payload.data }

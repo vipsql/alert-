@@ -171,10 +171,23 @@ export default {
         }
       })
     },
+    // 用户查询
+    *ownerQuery({ payload }, { select, put, call }) {
+      const ownerOptions = yield call(getUsers, {
+        realName: payload.realName
+      });
+      if (!ownerOptions.result) {
+        yield message.error(ownerOptions.message, 3)
+      }
+      yield put({
+        type: 'setUsers',
+        payload: {
+          notifyUsers: ownerOptions.result ? ownerOptions.data : [],
+        }
+      })
+    },
     // 手工通知
     *openNotify({ payload }, { select, put, call }) {
-      // 触发筛选
-      // yield put({ type: 'alertListTable/filterCheckAlert' })
       const { selectedAlertIds } = payload;
 
       if (selectedAlertIds.length === 0) {
@@ -659,6 +672,10 @@ export default {
   },
 
   reducers: {
+    //setUsers
+    setUsers(state, { payload: {notifyUsers} }) {
+      return { ...state, notifyUsers}
+    },
     // 列定制初始化
     initColumn(state, { payload: { baseCols, extend, tags } }) {
       let newList = JSON.parse(JSON.stringify(initalState.columnList));

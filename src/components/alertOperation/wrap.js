@@ -366,6 +366,14 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch }) => {
     isShowNotifyModal: alertOperation.isShowNotifyModal,
     notifyIncident: alertOperation.notifyIncident,
     notifyUsers: alertOperation.notifyUsers,
+    userSearch: (value) => {
+      dispatch({
+        type: 'alertOperation/ownerQuery',
+        payload: {
+          realName: value
+        }
+      })
+    },
     onOk: (data) => {
       dispatch({
         type: "alertOperation/notyfiyIncident",
