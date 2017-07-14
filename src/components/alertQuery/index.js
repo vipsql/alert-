@@ -408,7 +408,7 @@ class alertQueryManage extends Component {
           </Select>
           <i className={selectGroup !== window['_groupBy'] && classnames(switchClass, styles.switch)} onClick={() => {
             dispatch({
-              type: 'alertDetail/noGroupView',
+              type: 'alertQuery/noGroupView',
             })
           }}></i>
         </div>
@@ -466,7 +466,7 @@ class alertQueryManage extends Component {
                 <Item
                   {...formItemLayout}
                   label={<FormattedMessage {...localeMessage['firstOccurTime']} />}
-                  wrapperCol={{ span: 14 }}
+                  wrapperCol={{ span: 12 }}
                 >
                   {getFieldDecorator('dateTime', {
 
@@ -481,7 +481,7 @@ class alertQueryManage extends Component {
                 <Item
                   {...formItemLayout}
                   label={<FormattedMessage {...localeMessage['lastOccurTime']} />}
-                  wrapperCol={{ span: 14 }}
+                  wrapperCol={{ span: 12 }}
                 >
                   {getFieldDecorator('lastOccurTime', {
 
@@ -583,15 +583,16 @@ class alertQueryManage extends Component {
                         ownerOptions.map((owner, index) => <Option key={index} value={JSON.stringify(owner)}>{owner.realName}</Option>)
                       }
                     </Select>
-                  )}
+                    )}
                 </Item>
               </Col>
             </Row>
             <Row className={styles.rowStyle}>
-              <Col span={8} className={styles.colStyle}>
+              <Col span={16} className={styles.colStyle}>
                 <Item
                   {...formItemLayout}
-                  wrapperCol={{ span: 10 }}
+                  wrapperCol={{ span: 6 }}
+                  labelCol={{ span: 3 }}
                   label={<FormattedMessage {...localeMessage['keyWords']} />}
                 >
                   {getFieldDecorator('keyWordsType', {
@@ -614,26 +615,30 @@ class alertQueryManage extends Component {
                     )}
                 </Item>
                 <Item
-                  wrapperCol={{ span: 8, offset: 10 }}
+                  wrapperCol={{ span: 12, offset: 9 }}
                   className={styles.keywordArea}
                 >
                   {getFieldDecorator('keyWords', {
 
                   })(
-                    <Input placeholder={formatMessage({ ...localeMessage['keyWords_placeholder'] })} />
+                    <Input autoComplete={false} placeholder={formatMessage({ ...localeMessage['keyWords_placeholder'] })} />
                     )}
                 </Item>
               </Col>
-              <Button type="primary" size="large" htmlType="submit" onClick={(e) => { onOk(e, form) }}><FormattedMessage {...localeMessage['search']} /></Button>
-              <Button type="primary" size="large" onClick={() => { form.resetFields() }}><FormattedMessage {...localeMessage['reset']} /></Button>
+              <Col span={8} className={classnames(styles.colStyle, styles.operateCol)}>
+                <div>
+                  <Button type="primary" size="large" onClick={() => { form.resetFields() }}><FormattedMessage {...localeMessage['reset']} /></Button>
+                  <Button type="primary" size="large" htmlType="submit" onClick={(e) => { onOk(e, form) }}><FormattedMessage {...localeMessage['search']} /></Button>
+                </div>
+              </Col>
             </Row>
           </Form>
         </div>
         <Button className={classnames(styles.toggleBarButton, zhankaiClass)} onClick={toggleBarButtonClick} size="small"><i className={classnames(alertQuery.isShowBar ? shouqiClass : zhankaiClass, styles.toggleBarButtonIcon)} /></Button>
         {!haveQuery ? <div className={styles.alertListInfo}><FormattedMessage {...localeMessage['noQueryData']} /></div> :
           <div>
-            { topFixArea }
-            <ListTableWrap topFixArea={ topFixArea } topHeight={ alertQuery.isShowBar?407:200 } />
+            {topFixArea}
+            <ListTableWrap topFixArea={topFixArea} topHeight={alertQuery.isShowBar ? 407 : 200} />
           </div>}
         <ScrollTopButton />
         <AlertOriginSliderWrap />

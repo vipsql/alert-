@@ -11,7 +11,7 @@ const localMessage = defineMessages({
     defaultMessage: '取消'
   },
   modal_reassign: {
-    id: 'modal.reassign',
+    id: 'modal.ok',
     defaultMessage: '转派',
   },
   modal_reassignTitle: {
@@ -84,8 +84,8 @@ class ReassignModal extends Component {
       >
         <div className={styles.reassignModalMain}>
           <Row>
-            <Col span='5' style={{ lineHeight: '32px' }} className={styles.specificUser}>{formatMessage(localMessage['modal_specificUser']) + ': '}</Col>
-            <Col span='19'>
+            <Col span='7' style={{ lineHeight: '32px' }} className={styles.specificUser}>{formatMessage(localMessage['modal_specificUser']) + ': '}</Col>
+            <Col span='17'>
               <Select {...selectProps}>
                 {users.map(user => (<Option key={user.userId}>{user.realName}</Option>))}
               </Select>
