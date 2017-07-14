@@ -190,7 +190,7 @@
   "alertDetail.link.ciDetail": "CI Details",
   "alertDetail.link.ciHistory": "CI Hisitory Alerts",
   "alertDetail.link.ciHistoryLabel": "Query",
-  "alertDetail.operator": "Owner",
+  "alertDetail.operator": "Handled by",
   "alertDetail.remark": "Note",
   "alertDetail.recipient": "Recipient",
   "alertDetail.action.t10": "New Alert Created",
