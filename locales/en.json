@@ -112,6 +112,7 @@
   "alertOperate.groupByEnityName": "Enity Name",
   "alertOperate.groupBySource": "Source",
   "alertOperate.groupByStatus": "State",
+  "alertOperate.groupByIPAddress": "IP Address",
   "alertOperate.groupByOther": "{other}",
   "alertOperate.log": "审计日志",
 

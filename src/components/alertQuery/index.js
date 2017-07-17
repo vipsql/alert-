@@ -184,6 +184,10 @@ class alertQueryManage extends Component {
         id: 'alertOperate.groupBySeverity',
         defaultMessage: '按级别分组',
       },
+      groupByIPAddress: {
+        id: 'alertOperate.groupByIPAddress',
+        defaultMessage: '按IP地址分组'
+      },
       groupByOther: {
         id: 'alertOperate.groupByOther',
         defaultMessage: '按{other}分组',
@@ -395,6 +399,7 @@ class alertQueryManage extends Component {
             <Option key={'entityName'} className={styles.menuItem} value="entityName"><FormattedMessage {...localeMessage['groupByEnityName']} /></Option>
             <Option key={'source'} className={styles.menuItem} value="source"><FormattedMessage {...localeMessage['groupBySource']} /></Option>
             <Option key={'status'} className={styles.menuItem} value="status"><FormattedMessage {...localeMessage['groupByStatus']} /></Option>
+            <Option key={'IPAddress'} className={styles.menuItem} value="entityAddress"><FormattedMessage {...localeMessage['groupByIPAddress']} /></Option>
             {
               extendColumnList.length !== 0 ? extendColumnList.map((col, index) => {
                 return <Option key={col.id} className={styles.menuItem} value={col.id}><FormattedMessage {...localeMessage['groupByOther']} values={{ other: col.name }} /></Option>

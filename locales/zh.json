@@ -112,6 +112,7 @@
   "alertOperate.groupByEnityName": "按对象",
   "alertOperate.groupBySource": "按来源",
   "alertOperate.groupByStatus": "按状态",
+  "alertOperate.groupByIPAddress": "按IP地址",
   "alertOperate.groupByOther": "按{other}",
   "alertOperate.log": "审计日志",
 
