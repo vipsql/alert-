@@ -448,27 +448,23 @@ class alertQueryManage extends Component {
               <Col span={8}>
                 <Item
                   {...formItemLayout}
-                  label={<FormattedMessage {...localeMessage['severity']} />}
+                  label={<FormattedMessage {...localeMessage['firstOccurTime']} />}
+                  wrapperCol={{ span: 12 }}
                 >
-                  {getFieldDecorator('severity', {
+                  {getFieldDecorator('dateTime', {
 
                   })(
-                    <Select getPopupContainer={() => document.getElementById("content")} placeholder={formatMessage({ ...localeMessage['severity_placeholder'] })}>
-                      <Option value="3">{window['_severity']['3']}</Option>
-                      <Option value="2">{window['_severity']['2']}</Option>
-                      <Option value="1">{window['_severity']['1']}</Option>
-                      <Option value="0">{window['_severity']['0']}</Option>
-                    </Select>
+                    <RangePicker showTime style={{ width: '100%' }} />
                     )}
                 </Item>
               </Col>
               <Col span={8}>
                 <Item
                   {...formItemLayout}
-                  label={<FormattedMessage {...localeMessage['firstOccurTime']} />}
+                  label={<FormattedMessage {...localeMessage['lastOccurTime']} />}
                   wrapperCol={{ span: 12 }}
                 >
-                  {getFieldDecorator('dateTime', {
+                  {getFieldDecorator('lastOccurTime', {
 
                   })(
                     <RangePicker showTime style={{ width: '100%' }} />
@@ -480,13 +476,17 @@ class alertQueryManage extends Component {
               <Col span={8}>
                 <Item
                   {...formItemLayout}
-                  label={<FormattedMessage {...localeMessage['lastOccurTime']} />}
-                  wrapperCol={{ span: 12 }}
+                  label={<FormattedMessage {...localeMessage['severity']} />}
                 >
-                  {getFieldDecorator('lastOccurTime', {
+                  {getFieldDecorator('severity', {
 
                   })(
-                    <RangePicker showTime style={{ width: '100%' }} />
+                    <Select getPopupContainer={() => document.getElementById("content")} placeholder={formatMessage({ ...localeMessage['severity_placeholder'] })}>
+                      <Option value="3">{window['_severity']['3']}</Option>
+                      <Option value="2">{window['_severity']['2']}</Option>
+                      <Option value="1">{window['_severity']['1']}</Option>
+                      <Option value="0">{window['_severity']['0']}</Option>
+                    </Select>
                     )}
                 </Item>
               </Col>
@@ -615,7 +615,7 @@ class alertQueryManage extends Component {
                     )}
                 </Item>
                 <Item
-                  wrapperCol={{ span: 12, offset: 9 }}
+                  wrapperCol={{ span: 15, offset: 9 }}
                   className={styles.keywordArea}
                 >
                   {getFieldDecorator('keyWords', {
@@ -625,10 +625,10 @@ class alertQueryManage extends Component {
                     )}
                 </Item>
               </Col>
-              <Col span={8} className={classnames(styles.colStyle, styles.operateCol)}>
+              <Col span={5} className={classnames(styles.colStyle, styles.operateCol)}>
                 <div>
-                  <Button type="primary" size="large" onClick={() => { form.resetFields() }}><FormattedMessage {...localeMessage['reset']} /></Button>
                   <Button type="primary" size="large" htmlType="submit" onClick={(e) => { onOk(e, form) }}><FormattedMessage {...localeMessage['search']} /></Button>
+                  <Button type="primary" size="large" onClick={() => { form.resetFields() }}><FormattedMessage {...localeMessage['reset']} /></Button>
                 </div>
               </Col>
             </Row>
