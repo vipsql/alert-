@@ -182,7 +182,7 @@ class NotificationList extends Component {
                         <Checkbox
                             id="audio"
                             checked={checkedState.audio}
-                            value={4}
+                            value={5}
                             onChange={this.changeAction.bind(this, 3)}
                         />
                         <span>{window.__alert_appLocaleData.messages['ruleEditor.audio']}</span>

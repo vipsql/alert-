@@ -888,7 +888,7 @@ class RuleEditor extends Component {
             if (mode[i] === 3) {
                 chatops = true;
             }
-            if (mode[i] === 4) {
+            if (mode[i] === 5) {
                 audio = true
             }
         }
@@ -1502,15 +1502,10 @@ class RuleEditor extends Component {
             case 3:
                 // 告警通知和升级合并
                 if (!Number(target) && isShareUpgrade) {
-                    let upgradeNotificationMode = _.cloneDeep(action.actionNotification.notificationMode)
-                    delete upgradeNotificationMode.webNotification
                     _actionNotification = action.actionNotification;
                     // ---------------------------------------------
                     _actionUpgrade = action.actionUpgrade;
-                    _actionUpgrade.notificationMode = {
-                      ...upgradeNotificationMode,
-                      notificationMode: upgradeNotificationMode.notificationMode.filter( item => item != 4 ), // 除去webNotification
-                    };
+                    _actionUpgrade.notificationMode = action.actionNotification.notificationMode
                     _actionUpgrade.notificationGroupings = action.actionUpgrade.notificationGroupings.filter(item => item);
                     _actionType = [2, 3] // 升级type
                 } else {
