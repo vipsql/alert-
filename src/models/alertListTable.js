@@ -42,7 +42,10 @@ const initialState = {
     key: 'entityName',
   }, {
     key: 'name',
-  }, {
+  },{
+    key: 'owner',
+    order: true
+  },{
     key: 'source',
     order: true
   }, {

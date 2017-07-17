@@ -48,6 +48,7 @@ const initalState = {
       cols: [
         { id: 'entityName', checked: false, },
         { id: 'name', checked: false, },
+        { id: 'owner', checked: true},
         { id: 'source', checked: false, },
         { id: 'description', checked: false, },
         { id: 'count', checked: false, },
@@ -735,7 +736,7 @@ export default {
             col.checked = !col.checked;
           }
           if (col.checked) {
-            if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count' || col.id == 'status') {
+            if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count' || col.id == 'status' || col.id == 'owner') {
               arr.push({ key: col.id, title: col.name, order: true }) // order字段先定死
             } else {
               arr.push({ key: col.id, title: col.name })

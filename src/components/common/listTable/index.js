@@ -159,6 +159,10 @@ class ListTable extends Component {
         id: 'alertList.noListData',
         defaultMessage: '暂无数据',
       },
+      owner: {
+        id: 'alertDetail.owner',
+        defaultMessage: '负责人'
+      },
       Unknown: {
         id: 'alertList.unknown',
         defaultMessage: '未知',
@@ -259,6 +263,10 @@ class ListTable extends Component {
             } else {
               td = <td key={key} title={data}><a href='javascript:;' onClick={orderFlowNumClick} data-flow-num={data} data-id={item['id']}>{data}</a></td>
             }
+            break;
+          case 'owner':
+            const ownerName = item['ownerName'];
+            td = <td key={key} title={ownerName}>{ ownerName }</td>
             break;
           case 'notifyList':
             if (item['isNotify'] && data && data.length > 0) {
