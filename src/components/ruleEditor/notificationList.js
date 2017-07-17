@@ -163,7 +163,6 @@ class NotificationList extends Component {
                     </div>
                 </TabPane>
                 {
-                    window.__alert_appLocaleData.locale === 'zh-cn' &&
                     <TabPane disabled={this.props.alertAssociationRules.rooms.length === 0 ? true : false} tab={
                         <div>
                             <Checkbox

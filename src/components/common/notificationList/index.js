@@ -172,11 +172,11 @@ class NotificationList extends Component {
                             </FormItem>
                         </div>
                     </TabPane>
-                    <TabPane disabled={window.__alert_appLocaleData.locale !== 'zh-cn' || disableChatOps} tab={
+                    <TabPane disabled={disableChatOps} tab={
                         <div>
                             <Checkbox
                                 id="chatops"
-                                disabled={window.__alert_appLocaleData.locale !== 'zh-cn' || disableChatOps}
+                                disabled={disableChatOps}
                                 checked={checkedState.chatops}
                                 value={3}
                                 onChange={this.changeAction.bind(this)}

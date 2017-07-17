@@ -307,6 +307,14 @@ class RuleEditor extends Component {
       this.isNeedLeaveCheck = true;
     }
     componentWillReceiveProps(nextProps, nextState) {
+        if (nextProps.alertAssociationRules.users !== this.props.alertAssociationRules.users) {
+          let state = _.cloneDeep(this.state)
+          this.setState({
+            ...state,
+            recipients: this.state.recipients
+          })
+          return;
+        }
         const {
             dayStart = '',
             dayEnd = '',
@@ -482,8 +490,7 @@ class RuleEditor extends Component {
             }
         })();
 
-        console.info('[state]', this.state);
-        // console.info('[xx]', this.props.alertAssociationRules);
+        //console.info('[state]', this.state);
 
         this.emailVarContent = this.vars('emailMessage');
         this.smsVarContent = this.vars('smsMessage');
@@ -681,11 +688,18 @@ class RuleEditor extends Component {
                                     <Select
                                         getPopupContainer={() =>document.getElementById("content")}
                                         mode="multiple"
+                                        labelInValue
                                         style={{ width: 200 }}
+                                        filterOption={false}
                                         placeholder={window.__alert_appLocaleData.messages['ruleEditor.notifySelectObj']}
                                         onChange={this.changeAction.bind(this, 3)}
                                         className={styles.recipients_notify}
                                         value={this.state.recipients}
+                                        onSearch={
+                                          _.debounce( (value) => {
+                                            this.userSearch(value)
+                                          }, 500)
+                                        }
                                     >
                                         {
                                             this.props.alertAssociationRules.users.map((item, index) => <Option key={item.userId} value={item.userId}>{item.realName}</Option>)
@@ -752,10 +766,17 @@ class RuleEditor extends Component {
                                                         <Select
                                                             style={{ width: 250 }}
                                                             mode="multiple"
+                                                            labelInValue
+                                                            filterOption={false}
                                                             placeholder={window.__alert_appLocaleData.messages['ruleEditor.notifySelectObj']}
                                                             onChange={this.changeUpgradeRecipients.bind(this, index)}
                                                             className={styles.recipients}
-                                                            value={item.recipients.map(item => item.userId)}
+                                                            value={item.recipients.map(item => ({key: item.userId, label: item.realName}))}
+                                                            onSearch={
+                                                              _.debounce( (value) => {
+                                                                this.userSearch(value)
+                                                              }, 500)
+                                                            }
                                                         >
                                                             {
                                                                 this.props.alertAssociationRules.users.map((item, index) => <Option key={item.userId} value={item.userId}>{item.realName}</Option>)
@@ -828,7 +849,6 @@ class RuleEditor extends Component {
                         }
                         {/* 分享到ChatOps */}
                         {
-                            window.__alert_appLocaleData.locale === 'zh-cn' &&
                             <TabPane disabled={this.props.alertAssociationRules.rooms.length === 0 ? true : false} tab={window.__alert_appLocaleData.messages['ruleEditor.shareChatOps']} key="6">
                                 <div style={{marginBottom: '20px'}}>
                                     <span>{window.__alert_appLocaleData.messages['ruleEditor.chatopsGroup']}：</span>
@@ -862,6 +882,15 @@ class RuleEditor extends Component {
         );
     }
 
+    userSearch(value) {
+      this.props.dispatch({
+        type: 'alertAssociationRules/ownerQuery',
+        payload: {
+          realName: value
+        }
+      })
+    }
+
     isChecked(props) {
         const _action = _.cloneDeep(props.action);
         let email = false;
@@ -893,7 +922,7 @@ class RuleEditor extends Component {
             }
         }
 
-        recipients = _action.actionNotification.recipients.map(item => item.userId);
+        recipients = _action.actionNotification.recipients.map(item => ({key: item.userId, label: item.realName}));
         this.setState({
             email: email,
             sms: sms,
@@ -997,11 +1026,14 @@ class RuleEditor extends Component {
     changeUpgradeRecipients(index, value) {
         const _action = _.cloneDeep(this.state.action);
         const { users } = this.props.alertAssociationRules;
-        let arr = [];
-        users.forEach((item, index) => {
+        let empty = [];
+        let arr = [].concat(_action.actionUpgrade.notificationGroupings[index].recipients);
+        if (arr.length > value.length) {
+          // 删除的情况
+          arr.forEach((item) => {
             for (let i = value.length; i >= 0; i -= 1) {
-                if (value[i] === item.userId) {
-                    arr.push({
+                if (value[i] && value[i]['key'] === item.userId ) {
+                    empty.push({
                         userId: item.userId,
                         realName: item.realName,
                         mobile: item.mobile,
@@ -1009,8 +1041,22 @@ class RuleEditor extends Component {
                     });
                 }
             }
-        });
-        _action.actionUpgrade.notificationGroupings[index].recipients = arr;
+          });
+        } else {
+          // 新增的情况
+          empty = [].concat(arr)
+          users.forEach((item) => {
+            if (value[value.length - 1] && value[value.length - 1]['key'] === item.userId ) {
+                empty.push({
+                    userId: item.userId,
+                    realName: item.realName,
+                    mobile: item.mobile,
+                    email: item.email
+                });
+            }
+          })
+        }
+        _action.actionUpgrade.notificationGroupings[index].recipients = empty;
         this.setState({
             action: _action
         });
@@ -1104,13 +1150,16 @@ class RuleEditor extends Component {
                     };
                 }
                 let mode = _action.actionNotification.notificationMode;
+                const { users } = this.props.alertAssociationRules;
                 if (_.isArray(value)) { // 通知对象
-                    const { users } = this.props.alertAssociationRules;
-                    let arr = [];
-                    users.forEach((item, index) => {
+                    let empty = [];
+                    let arr = [].concat(_action.actionNotification.recipients);
+                    if (arr.length > value.length) {
+                      // 删除的情况
+                      arr.forEach((item, index) => {
                         for (let i = value.length; i >= 0; i -= 1) {
-                            if (value[i] === item.userId) {
-                                arr.push({
+                            if (value[i] && value[i]['key'] === item.userId ) {
+                                empty.push({
                                     userId: item.userId,
                                     realName: item.realName,
                                     mobile: item.mobile,
@@ -1118,10 +1167,24 @@ class RuleEditor extends Component {
                                 });
                             }
                         }
-                    });
-                    _action.actionNotification.recipients = arr;
+                      });
+                    } else {
+                      // 新增的情况
+                      empty = [].concat(arr)
+                      users.forEach((item, index) => {
+                        if (value[value.length - 1] && value[value.length - 1]['key'] === item.userId ) {
+                            empty.push({
+                                userId: item.userId,
+                                realName: item.realName,
+                                mobile: item.mobile,
+                                email: item.email
+                            });
+                        }
+                      })
+                    }
+                    _action.actionNotification.recipients = empty;
                     this.setState({
-                        recipients: arr.map(item => item.userId)
+                        recipients: empty.map(item => ({key: item.userId, label: item.realName}))
                     });
                 } else if (value.target.type === 'checkbox') { // 通知方式
                     if (value.target.checked) { // 选中此通知方式

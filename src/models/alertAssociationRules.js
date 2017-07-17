@@ -92,6 +92,21 @@ export default {
   },
 
   effects: {
+    // 用户查询
+    *ownerQuery({ payload }, { select, put, call }) {
+      const ownerOptions = yield call(getUsers, {
+        realName: payload.realName
+      });
+      if (!ownerOptions.result) {
+        yield message.error(ownerOptions.message, 3)
+      }
+      yield put({
+        type: 'setUsers',
+        payload: {
+          users: ownerOptions.result ? ownerOptions.data : [],
+        }
+      })
+    },
     *queryAssociationRules({payload}, {select, put, call}) {
       yield put({ type: 'toggleLoading', payload: true })
 
@@ -376,6 +391,10 @@ export default {
   },
 
   reducers: {
+    //setUsers
+    setUsers(state, { payload: {users} }) {
+      return { ...state, users}
+    },
     // 加载状态
     toggleLoading(state, {payload: isLoading}) {
       return { ...state, isLoading }
