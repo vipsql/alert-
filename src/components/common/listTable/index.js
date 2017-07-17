@@ -471,7 +471,7 @@ class ListTable extends Component {
     return (
       <div>
         <Spin spinning={isLoading}>
-          <div className="listContainer" style={{ overflowX: 'auto' }}>
+          <div className={"listContainer " +styles.listContainer }>
           <ScrollBar horizonTarget="div.listContainer" />
           <TopFixedArea parentTarget="div.listContainer" theads={ theads } extraArea={ extraArea } topHeight={ topHeight }/>
           <table className={styles.listTable}>
