@@ -33,7 +33,7 @@ const initalState = {
   tempListData: [], //用于临时记录列表数据，在分组时取用这块的数据（避免连续分组时的BUG）
   data: [],
 
-  selectGroup: window['_groupBy'], // 默认是分组设置
+  selectGroup: undefined, // 默认是分组设置
   selectColumn: [], // 选择的列
   extendColumnList: [], //扩展字段
   extendTagsKey: [], // 标签

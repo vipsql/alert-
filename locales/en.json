@@ -109,7 +109,7 @@
   "alertOperate.columns": "Columns",
   "alertOperate.groupBy": "Group By",
   "alertOperate.groupBySeverity": "Severity",
-  "alertOperate.groupByEnityName": "EnityName",
+  "alertOperate.groupByEnityName": "Enity Name",
   "alertOperate.groupBySource": "Source",
   "alertOperate.groupByStatus": "State",
   "alertOperate.groupByOther": "{other}",

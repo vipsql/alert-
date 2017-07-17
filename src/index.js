@@ -67,7 +67,6 @@ async function setLang(lang) {
         "190": "Resolved",
         "255": "Closed"
       }
-      window._groupBy = 'GroupBy'
       break
     default:
       appLocaleData = {
@@ -90,7 +89,6 @@ async function setLang(lang) {
         "190": "已解决",
         "255": "已关闭"
       }
-      window._groupBy = '分组显示'
 
       break
 
