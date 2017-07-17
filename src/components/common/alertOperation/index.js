@@ -414,7 +414,7 @@ const alertOperation = ({
               }) : []
             }
           </Select>
-          <i className={selectGroup !== window['_groupBy'] && classnames(switchClass, styles.switch)} onClick={noGroupFunc}></i>
+          <i className={selectGroup !== undefined && classnames(switchClass, styles.switch)} onClick={noGroupFunc}></i>
         </div>
       }
 

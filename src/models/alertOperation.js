@@ -68,7 +68,7 @@ const initalState = {
 
   // 分组显示
   isGroup: false,
-  selectGroup: window['_groupBy'], // 默认是分组设置
+  selectGroup: undefined, // 默认是分组设置
 
   //按钮是否disable
   takeOverDisabled: false,
