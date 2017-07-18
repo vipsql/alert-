@@ -458,19 +458,28 @@ class alertDetail extends Component {
                       {
                         incidentLog.map((log, index) => {
                           const date = new Date(log.operateTime);
+                          const today = new Date();
                           const minutes = date.getMinutes() < 10?('0' + date.getMinutes()) : date.getMinutes();
                           let isShowOperateDate = false;
+                          let isShowOperateYear = false;
                           if (index == incidentLog.length - 1) {
                             isShowOperateDate = true;
+                            if(date.getFullYear() != today.getFullYear()) {
+                              isShowOperateYear = true;
+                            }
                           } else {
                             const nextDate = new Date(incidentLog[index + 1].operateTime);
-                            isShowOperateDate = (date.getMonth() != nextDate.getMonth() || date.getDate() != nextDate.getDate());
+                            isShowOperateDate = (date.getFullYear() != nextDate.getFullYear() || date.getMonth() != nextDate.getMonth() || date.getDate() != nextDate.getDate());
+                            isShowOperateYear = (date.getFullYear() != nextDate.getFullYear());
+                            if(date.getFullYear() != today.getFullYear()) {
+                              isShowOperateYear = true && isShowOperateDate;
+                            }
                           }
                           return (
                             <Timeline.Item key={log.incidentId + '' + index} color={index == 0 ? 'green' : 'blue'}>
                               <div className={classnames(styles.timeLineLabel)}>
                                 {
-                                  (isShowOperateDate ? ((date.getMonth() + 1) + "/" + date.getDate() + ' ') : '') + date.getHours() + ":" + minutes
+                                  (isShowOperateYear?(date.getFullYear() + "/"):'') + (isShowOperateDate ? ((date.getMonth() + 1) + "/" + date.getDate() + ' ') : '') + date.getHours() + ":" + minutes
                                 }
                               </div>
                               <p>

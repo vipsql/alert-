@@ -626,7 +626,7 @@ class alertQueryManage extends Component {
                   {getFieldDecorator('keyWords', {
 
                   })(
-                    <Input autoComplete={false} placeholder={formatMessage({ ...localeMessage['keyWords_placeholder'] })} />
+                    <Input autoComplete="off" placeholder={formatMessage({ ...localeMessage['keyWords_placeholder'] })} />
                     )}
                 </Item>
               </Col>
