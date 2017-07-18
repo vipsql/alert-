@@ -7,14 +7,24 @@ import NotificationApi from '../components/common/webNotification/index.js'
 import { classnames } from '../utils'
 import '../components/layout/common.less'
 
+const claarLocalStorage = () => {
+  // 清除一些localstorge存储的用户操作
+  localStorage.removeItem('UYUN_Alert_USERINFO')
+  localStorage.removeItem('UYUN_Alert_MANAGEFILTER')
+}
+
 class App extends Component {
+
+  constructor(props) {
+    super(props)
+    this.claarLocalStorage = claarLocalStorage.bind(this)
+  }
 
   componentDidMount() {
     NotificationApi.config({
       placement: 'toopRight',
       threshold: 10
     })
-    //NotificationApi.update(this.props.app.notifies)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -32,12 +42,7 @@ class App extends Component {
 
   componentWillUnmount() {
     NotificationApi.destroy();
-
-    // 当页面销毁的时候清除用户信息，已防止另一个用户登录的时候仍保持上一次登录的用户信息
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'app/clear'
-    })
+    this.claarLocalStorage();
   }
 
   render() {

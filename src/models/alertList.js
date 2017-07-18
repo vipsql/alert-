@@ -12,7 +12,6 @@ export default {
     barData: [], // 最近4小时告警数据
     begin: 0, //告警开始时间(时间线)
     end: 0,  //告警结束时间(时间线)
-    selectedTime: '',
   },
   subscriptions: {
 
@@ -20,16 +19,18 @@ export default {
   effects: {
     // 查询柱状图
     *queryAlertBar({ payload }, { call, put, select }) {
-
-      let { selectedTime } = yield select(state => {
+      let { selectedTime, selectedStatus } = yield select(state => {
         return {
-          'selectedTime': state.alertList.selectedTime
+          'selectedTime': state.alertManage.selectedTime,
+          'selectedStatus': state.alertManage.selectedStatus
         }
       })
-
-      if (payload !== undefined && payload.selectedTime !== undefined) {
-        selectedTime = payload.selectedTime;
-        delete payload.selectedTime
+      if (payload !== undefined && payload.status === undefined) {
+        payload.status = selectedStatus === 'NEW'
+                          ? '0' : selectedStatus === 'PROGRESSING'
+                              ? '150' : selectedStatus === 'RESOLVED'
+                                  ? '190' : selectedStatus === 'EXCEPTCLOSE'
+                                    ? '0,40,150,190' : undefined;
       }
 
       yield put({ type: 'toggleAlertBarLoading', payload: true })
@@ -51,7 +52,6 @@ export default {
             barData: data.data,
             begin: startTime,
             end: endtTime,
-            selectedTime: selectedTime,
             isLoading: false
           }
         })
@@ -69,12 +69,6 @@ export default {
             selectedAll: false
           }
         })
-
-        // yield put({
-        //   type: 'setInitialExceptPayload',
-        //   payload: {
-        //   }
-        // })
 
         // 发起查询列表请求
         yield put({

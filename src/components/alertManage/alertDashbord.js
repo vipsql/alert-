@@ -594,18 +594,6 @@ class Chart extends Component {
               alertListPath[d.parent.name] = { key: d.parent.name, keyName: d.parent.name, values: d.name };
             }
           }
-          // alertListPath.severity = d.maxSeverity == 0
-          //                             ? {key: 'severity', keyName: window.__alert_appLocaleData.messages['constants.severity'], values: '0'} : d.maxSeverity == 1
-          //                                 ? {key: 'severity', keyName: window.__alert_appLocaleData.messages['constants.severity'], values: '1,0'} : d.maxSeverity == 2
-          //                                     ? {key: 'severity', keyName: window.__alert_appLocaleData.messages['constants.severity'], values: '2,1,0'} : d.maxSeverity == 3
-          //                                         ? {key: 'severity', keyName: window.__alert_appLocaleData.messages['constants.severity'], values: '3,2,1,0'}
-          //                                         : {key: 'severity', keyName: window.__alert_appLocaleData.messages['constants.severity'], values: '3,2,1,0'}
-          alertListPath.status = this.props.selectedStatus === 'NEW'
-            ? { key: 'status', keyName: window.__alert_appLocaleData.messages['constants.state'], values: '0' } : this.props.selectedStatus === 'PROGRESSING'
-              ? { key: 'status', keyName: window.__alert_appLocaleData.messages['constants.state'], values: '150' } : this.props.selectedStatus === 'RESOLVED'
-                ? { key: 'status', keyName: window.__alert_appLocaleData.messages['constants.state'], values: '190' } : this.props.selectedStatus === 'EXCEPTCLOSE'
-                  ? { key: 'status', keyName: window.__alert_appLocaleData.messages['constants.state'], values: '0,40,150,190' } : undefined;
-          alertListPath.selectedTime = this.props.selectedTime;
           localStorage.setItem('alertListPath', JSON.stringify(alertListPath))
 
           const path = d.parent.path
