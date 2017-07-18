@@ -828,14 +828,6 @@ class RuleEditor extends Component {
                                         value={this.state.ITSMParam}
                                         type="textarea" placeholder={window.__alert_appLocaleData.messages['ruleEditor.fm']} />
                                 </FormItem>
-                                {
-                                    this.state.target === 0 &&
-                                    <Row>
-                                      <Col offset={3}>
-                                        <Checkbox className={styles.nLevelUp} checked={action.actionITSM && action.actionITSM.notifyWhenLevelUp} onChange={this.changeNotifyLevelUp.bind(this, 4)}>{window.__alert_appLocaleData.messages['ruleEditor.nLevelUp']}</Checkbox>
-                                      </Col>
-                                    </Row>
-                                }
                             </div>
                         </TabPane>
                         {/* 抑制告警 */}
@@ -944,9 +936,6 @@ class RuleEditor extends Component {
         switch (type) {
           case 3:
             _action.actionNotification.notifyWhenLevelUp = event.target.checked;
-            break;
-          case 4:
-            _action.actionITSM.notifyWhenLevelUp = event.target.checked;
             break;
           case 6:
             _action.actionChatOps.notifyWhenLevelUp = event.target.checked;
@@ -1219,8 +1208,7 @@ class RuleEditor extends Component {
                     _action.actionITSM = {
                         itsmModelId: undefined,
                         itsmModelName: undefined,
-                        param: undefined,
-                        notifyWhenLevelUp: true
+                        param: undefined
                     };
                 }
                 if (value.target) {
@@ -1679,7 +1667,6 @@ RuleEditor.defaultProps = {
             notificationMode: initalNotificationMode
         },
         actionITSM: {
-            notifyWhenLevelUp: true,
             itsmModelId: undefined,
             param: ''
         },
@@ -1773,7 +1760,6 @@ RuleEditor.propTypes = {
             })
         }),
         actionITSM: PropTypes.shape({
-            notifyWhenLevelUp: PropTypes.bool,
             itsmModelId: PropTypes.string,
             param: PropTypes.string
         }),
