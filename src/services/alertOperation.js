@@ -216,3 +216,29 @@ export async function reassignAlert({ toWho, incidentIds }) {
     body: JSON.stringify({ toWho, incidentIds })
   })
 }
+
+// 检查批量操作是否可执行
+export async function checkOperationExecutable({ operateCode, incidentIds }) {
+  // return Promise.resolve({
+  //   result: false,
+  //   success: [{ msg: '可以接手' }],
+  //   failed: [{
+  //     msg: "此故障已被他人接手",
+  //     errorCode: 1,
+  //     entityName: "testIncident_0",
+  //     name: "entityName_0"
+  //   },{
+  //     msg: "此故障已关闭",
+  //     errorCode: 2,
+  //     entityName: "testIncident_0",
+  //     name: "entityName_0"
+  //   }]
+  // })
+  return request('/incident/verifyOperation', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ operateCode, incidentIds })
+  })
+}

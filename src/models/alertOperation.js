@@ -1,5 +1,5 @@
 import { parse } from 'qs'
-import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, notifyOperate, takeOverService, reassignAlert } from '../services/alertOperation'
+import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, notifyOperate, takeOverService, reassignAlert, checkOperationExecutable } from '../services/alertOperation'
 import { queryAlertList, queryChild, queryAlertListTime } from '../services/alertList'
 import { getUsers } from '../services/app.js';
 import { queryCloumns } from '../services/alertQuery'
@@ -48,7 +48,7 @@ const initalState = {
       cols: [
         { id: 'entityName', checked: false, },
         { id: 'name', checked: false, },
-        { id: 'owner', checked: true},
+        { id: 'owner', checked: true },
         { id: 'source', checked: false, },
         { id: 'description', checked: false, },
         { id: 'count', checked: false, },
@@ -100,6 +100,12 @@ export default {
       if (!operateAlertIds || operateAlertIds.length === 0) {
         message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else {
+        const checkResponse = yield checkOperationExecutable({ operateCode: 210, incidentIds: operateAlertIds });
+
+        if (!checkResponse.result) {
+          payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 210 });
+          return;
+        }
         if (users.length === 0) {
           const response = yield call(getUsers);
           if (response.result) {
@@ -405,6 +411,12 @@ export default {
       } else if (operateAlertIds.length > 1) {
         yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip4'], 3);
       } else {
+        const checkResponse = yield checkOperationExecutable({ operateCode: 130, incidentIds: operateAlertIds });
+
+        if (!checkResponse.result) {
+          ppayload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 130 });
+          return;
+        }
         const options = yield getFormOptions();
         if (options.result) {
           yield put({
@@ -479,6 +491,12 @@ export default {
       if (operateAlertIds.length === 0) {
         yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else {
+        const checkResponse = yield checkOperationExecutable({ operateCode: 250, incidentIds: operateAlertIds });
+
+        if (!checkResponse.result) {
+          payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 250 });
+          return;
+        }
         yield put({ type: 'toggleCloseModal', payload: payload.state })
       }
     },
@@ -525,6 +543,12 @@ export default {
       if (operateAlertIds.length === 0) {
         yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else {
+        const checkResponse = yield checkOperationExecutable({ operateCode: 170, incidentIds: operateAlertIds });
+
+        if (!checkResponse.result) {
+          payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 170 });
+          return;
+        }
         yield put({ type: 'toggleResolveModal', payload: payload.state })
       }
     },
@@ -637,7 +661,7 @@ export default {
     *checkColumn({ payload }, { select, put, call }) {
       yield put({ type: 'setColumn', payload: payload.value })
       const selectColumn = yield select(state => state.alertOperation.selectColumn)
-      payload && payload.resolve && payload.resolve({selectColumn});
+      payload && payload.resolve && payload.resolve({ selectColumn });
     },
 
     //接手
@@ -646,6 +670,12 @@ export default {
       if (alertIds.length === 0) {
         yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else {
+        // const checkResponse = yield checkOperationExecutable({  operateCode: 200,incidentIds: alertIds });
+
+        // if(!checkResponse.result) {
+        //   payload && payload.checkFailPayload && payload.checkFailPayload({checkResponse, operateCode: 200});
+        //   return;
+        // }
         let response = yield call(takeOverService, { alertIds });
         const stingIds = alertIds.map(item => '' + item)
         if (response.result) {
@@ -674,8 +704,8 @@ export default {
 
   reducers: {
     //setUsers
-    setUsers(state, { payload: {notifyUsers} }) {
-      return { ...state, notifyUsers}
+    setUsers(state, { payload: { notifyUsers } }) {
+      return { ...state, notifyUsers }
     },
     // 列定制初始化
     initColumn(state, { payload: { baseCols, extend, tags } }) {

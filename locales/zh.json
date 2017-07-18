@@ -115,6 +115,7 @@
   "alertOperate.groupByIPAddress": "按IP地址",
   "alertOperate.groupByOther": "按{other}",
   "alertOperate.log": "审计日志",
+  "alertOperate.errorMsg": "{ operate }失败。原因可能是:",
 
   "modal.operate.infoTip1": "请先选择一条告警",
   "modal.operate.infoTip2": "只允许操作一条告警",

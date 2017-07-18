@@ -1,7 +1,7 @@
 import { parse } from 'qs'
 import { queryDetail } from '../services/alertDetail'
 import { queryCloumns } from '../services/alertQuery'
-import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, changeTicket, viewTicket, notifyOperate, takeOverService, reassignAlert } from '../services/alertOperation'
+import { getFormOptions, dispatchForm, close, resolve, merge, relieve, suppress, getChatOpsOptions, shareRoom, changeTicket, viewTicket, notifyOperate, takeOverService, reassignAlert, checkOperationExecutable } from '../services/alertOperation'
 import { getUsers } from '../services/app.js';
 import { message } from 'antd'
 import pathToRegexp from 'path-to-regexp';
@@ -54,7 +54,7 @@ export default {
   state: initalState,
 
   subscriptions: {
-    alertExportViewDetail({dispatch, history}) {
+    alertExportViewDetail({ dispatch, history }) {
       history.listen((location) => {
         if (pathToRegexp('/export/viewDetail/:id').test(location.pathname)) {
           const match = pathToRegexp('/export/viewDetail/:id').exec(location.pathname);
@@ -175,6 +175,13 @@ export default {
     },
     // 打开派发工单做的相应处理
     *openFormModal({ payload }, { select, put, call }) {
+      const viewDetailAlertId = yield select(state => state.alertDetail.id);
+      const checkResponse = yield checkOperationExecutable({ operateCode: 130, incidentIds: [viewDetailAlertId] });
+
+      if (!checkResponse.result) {
+        payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 130 });
+        return;
+      }
       const options = yield getFormOptions();
       if (options.result) {
         yield put({
@@ -232,6 +239,13 @@ export default {
     },
     // 打开关闭工单
     *openCloseModal({ payload }, { select, put, call }) {
+      const viewDetailAlertId = yield select(state => state.alertDetail.id)
+      const checkResponse = yield checkOperationExecutable({ operateCode: 250, incidentIds: [viewDetailAlertId] });
+
+      if (!checkResponse.result) {
+        payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 250 });
+        return;
+      }
       yield put({ type: 'toggleCloseModal', payload: true })
     },
     // 点击展开detail时的操作
@@ -244,7 +258,7 @@ export default {
       });
 
       let viewDetailAlertId = payload.alertId;
-      if(!viewDetailAlertId) {
+      if (!viewDetailAlertId) {
         viewDetailAlertId = id;
       }
 
@@ -380,6 +394,20 @@ export default {
         payload: false
       })
     },
+    *openResolveModal({ payload }, { select, put, call }) {
+      const viewDetailAlertId = yield select(state => state.alertDetail.id);
+      const checkResponse = yield checkOperationExecutable({ operateCode: 170, incidentIds: [viewDetailAlertId] });
+
+      if (!checkResponse.result) {
+        payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 170 });
+        return;
+      }
+
+      yield put({
+        type: 'alertDetail/toggleResolveModal',
+        payload: true
+      })
+    },
     // 解决告警
     *resolveAlert({ payload }, { select, put, call }) {
       const viewDetailAlertId = yield select(state => state.alertDetail.id);
@@ -483,7 +511,14 @@ export default {
     },
 
     //打开转派告警Model
-    *openReassign({ payload: position }, { select, put, call }) {
+    *openReassign({ payload }, { select, put, call }) {
+      const viewDetailAlertId = yield select(state => state.alertDetail.id);
+      const checkResponse = yield checkOperationExecutable({ operateCode: 210, incidentIds: [viewDetailAlertId] });
+
+      if (!checkResponse.result) {
+        payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 210 });
+        return;
+      }
       const users = yield select(state => state.alertDetail.users);
       if (users.length === 0) {
         const response = yield call(getUsers);
@@ -534,8 +569,8 @@ export default {
 
   reducers: {
     //setUsers
-    setUsers(state, { payload: {notifyUsers} }) {
-      return { ...state, notifyUsers}
+    setUsers(state, { payload: { notifyUsers } }) {
+      return { ...state, notifyUsers }
     },
     // beforeOpenDetail
     beforeOpenDetail(state, { payload }) {
@@ -580,7 +615,7 @@ export default {
     },
     // 切换侧滑框的状态
     toggleDetailModal(state, { payload: isShowDetail }) {
-      return { ...state, isShowDetail, id: isShowDetail?state.id:undefined }
+      return { ...state, isShowDetail, id: isShowDetail ? state.id : undefined }
     },
     // 设置工单类型
     setFormOptions(state, { payload }) {

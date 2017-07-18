@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'dva';
+import { message } from 'antd';
 import AlertOperation from '../common/alertOperation/index'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import { classnames } from '../../utils'
@@ -15,12 +16,70 @@ import RelieveModal from '../common/relieveModal/index.js'
 import MergeModal from '../common/mergeModal/index.js'
 import styles from './index.less'
 
-const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch }) => {
+const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch, intl: { formatMessage } }) => {
   const localeMessage = defineMessages({
     assign_ticket: {
       id: 'alertDetail.ticket.assgin',
       defaultMessage: '派发工单'
     },
+    errorMsg: {
+      id: 'alertOperate.errorMsg',
+      defaultMessage: '无法{ operate }因为存在以下错误:{ errorContent }',
+    },
+    operateType: {
+      10: {
+        id: 'alertDetail.action.t10',
+        defaultMessage: '新告警创建'
+      },
+      30: {
+        id: 'alertDetail.action.t30',
+        defaultMessage: '更改状态'
+      },
+      50: {
+        id: 'alertDetail.action.t50',
+        defaultMessage: '更改级别'
+      },
+      70: {
+        id: 'alertDetail.action.t70',
+        defaultMessage: '告警删除'
+      },
+      90: {
+        id: 'alertDetail.action.t90',
+        defaultMessage: '通知'
+      },
+      110: {
+        id: 'alertDetail.action.t110',
+        defaultMessage: 'chatOps群组'
+      },
+      130: {
+        id: 'alertDetail.action.t130',
+        defaultMessage: '派发工单'
+      },
+      150: {
+        id: 'alertDetail.action.t150',
+        defaultMessage: '派发cross工单'
+      },
+      170: {
+        id: 'alertDetail.action.t170',
+        defaultMessage: '解决'
+      },
+      200: {
+        id: 'alertDetail.action.t200',
+        defaultMessage: '接手'
+      },
+      210: {
+        id: 'alertDetail.action.t210',
+        defaultMessage: '转派'
+      },
+      220: {
+        id: 'alertDetail.action.t220',
+        defaultMessage: '抑制'
+      },
+      250: {
+        id: 'alertDetail.action.t250',
+        defaultMessage: '关闭'
+      }
+    }
   })
 
   const shanchuClass = classnames(
@@ -31,6 +90,42 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch }) => {
   const refreshListAndResetCheckbox = () => {
     dispatch({ type: 'alertListTable/resetCheckboxStatus' })
     dispatch({ type: 'alertListTable/queryAlertList' })
+  }
+
+  const showErrorMessage = function ({ checkResponse, operateCode }) {
+    const errorList = checkResponse.failed || [];
+    let errorCodes = [];
+    let errorMsgs = [];
+    let errorContent = <div></div>;
+    errorList.forEach((error) => {
+      const { errorCode, msg } = error;
+      if (errorCodes.indexOf(errorCode) < 0) {
+        errorContent += (errorCodes.length > 0 ? '\\n' : '\\n') + (errorCodes.length + 1) + "." + msg
+        errorCodes.push(errorCode);
+        errorMsgs.push(msg);
+      }
+    })
+
+    message.error(
+      <span>
+        {
+          formatMessage(
+            {
+              ...(localeMessage['errorMsg']),
+            },
+            {
+              operate: formatMessage({ ...(localeMessage['operateType'][operateCode]) })
+            }
+          )
+        }
+
+        {
+          errorMsgs.map((msg, index) => (
+            <p key={ index } style={{ textAlign: 'left' }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{index + 1}.{msg}</p>
+          ))
+        }
+      </span>
+    )
   }
 
   const operateProps = {
@@ -62,7 +157,8 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch }) => {
         type: 'alertOperation/openRelieveModal',
         payload: {
           operateAlertIds: alertListTable.operateAlertIds,
-          selectedAlertIds: alertListTable.selectedAlertIds
+          selectedAlertIds: alertListTable.selectedAlertIds,
+          checkFailPayload: showErrorMessage
         }
       })
     },
@@ -86,7 +182,8 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch }) => {
         type: 'alertOperation/openFormModal',
         payload: {
           operateAlertIds: alertListTable.operateAlertIds,
-          selectedAlertIds: alertListTable.selectedAlertIds
+          selectedAlertIds: alertListTable.selectedAlertIds,
+          checkFailPayload: showErrorMessage
         }
       })
     },
@@ -97,7 +194,8 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch }) => {
           state: true,
           origin: position,
           operateAlertIds: alertListTable.operateAlertIds,
-          selectedAlertIds: alertListTable.selectedAlertIds
+          selectedAlertIds: alertListTable.selectedAlertIds,
+          checkFailPayload: showErrorMessage
         }
       })
     },
@@ -108,7 +206,8 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch }) => {
           state: true,
           origin: position,
           operateAlertIds: alertListTable.operateAlertIds,
-          selectedAlertIds: alertListTable.selectedAlertIds
+          selectedAlertIds: alertListTable.selectedAlertIds,
+          checkFailPayload: showErrorMessage
         }
       })
     },
@@ -116,7 +215,8 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch }) => {
       dispatch({
         type: 'alertOperation/openMergeModal',
         payload: {
-          selectedAlertIds: alertListTable.selectedAlertIds
+          selectedAlertIds: alertListTable.selectedAlertIds,
+          checkFailPayload: showErrorMessage
         }
       })
     },
@@ -158,7 +258,8 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch }) => {
       dispatch({
         type: 'alertOperation/openChatOps',
         payload: {
-          operateAlertIds: alertListTable.operateAlertIds
+          operateAlertIds: alertListTable.operateAlertIds,
+          checkFailPayload: showErrorMessage
         }
       })
     },
@@ -166,7 +267,8 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch }) => {
       dispatch({
         type: 'alertOperation/openNotify',
         payload: {
-          selectedAlertIds: alertListTable.selectedAlertIds
+          selectedAlertIds: alertListTable.selectedAlertIds,
+          checkFailPayload: showErrorMessage
         }
       })
     },
@@ -198,7 +300,8 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch }) => {
       dispatch({
         type: 'alertOperation/openReassign',
         payload: {
-          operateAlertIds: alertListTable.operateAlertIds
+          operateAlertIds: alertListTable.operateAlertIds,
+          checkFailPayload: showErrorMessage
         }
       })
     }

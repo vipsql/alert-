@@ -115,6 +115,7 @@
   "alertOperate.groupByIPAddress": "IP Address",
   "alertOperate.groupByOther": "{other}",
   "alertOperate.log": "审计日志",
+  "alertOperate.errorMsg": "{ operate }失败。原因可能是:",
 
   "modal.tag.select": "Please enter {name}",
   "modal.tag.keywords": "Please enter keywords",
