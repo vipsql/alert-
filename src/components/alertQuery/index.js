@@ -630,7 +630,7 @@ class alertQueryManage extends Component {
                     )}
                 </Item>
               </Col>
-              <Col span={5} className={classnames(styles.colStyle, styles.operateCol)}>
+              <Col span={8} className={classnames(styles.colStyle, styles.operateCol)}>
                 <div>
                   <Button type="primary" size="large" htmlType="submit" onClick={(e) => { onOk(e, form) }}><FormattedMessage {...localeMessage['search']} /></Button>
                   <Button type="primary" size="large" onClick={() => { form.resetFields() }}><FormattedMessage {...localeMessage['reset']} /></Button>

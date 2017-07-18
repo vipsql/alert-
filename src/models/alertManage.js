@@ -3,6 +3,11 @@ import { isSetUserTags } from '../services/alertTags.js'
 import { message } from 'antd'
 import {parse} from 'qs'
 
+const defaultFilter = {
+  selectedTime: 'lastOneHour',
+  selectedStatus: 'NEW'
+}
+
 const initialState = {
     isSetAlert: false, // 是否设置过告警标签
     hideAlertSetTip: true, // 设置提示false有提示
@@ -11,8 +16,8 @@ const initialState = {
     oldDashbordDataMap: undefined,
     isNeedRepaint: true, // 是否需要重绘
     isLoading: true, //加载
-    selectedTime: 'lastOneHour', // 选择的最近时间
-    selectedStatus: 'NEW', // 选择的过滤状态
+    selectedTime: (JSON.parse(localStorage.getItem('UYUN_Alert_MANAGEFILTER')) || defaultFilter).selectedTime, // 选择的最近时间
+    selectedStatus: (JSON.parse(localStorage.getItem('UYUN_Alert_MANAGEFILTER')) || defaultFilter).selectedStatus, // 选择的过滤状态
     isFullScreen: false, //是否全屏
     isFixed: true, //是否固定
     levels: { }
@@ -93,6 +98,10 @@ export default {
         timeBucket: selectedTime,
         status: selectedStatus
       }
+      localStorage.setItem('UYUN_Alert_MANAGEFILTER', JSON.stringify({
+        selectedTime: params.timeBucket,
+        selectedStatus: params.status
+      }))
 
       const treemapData = yield queryDashbord(params)
 

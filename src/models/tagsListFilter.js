@@ -58,7 +58,7 @@ export default {
       const filteredTags = yield select( state => state.tagListFilter.filteredTags )
       yield put({
         type: 'alertList/queryAlertBar',
-        payload: filteredTags || {}
+        payload: {...filteredTags} || {}
       })
     },
     // 打开维度选择
@@ -81,25 +81,19 @@ export default {
     *selectTime({payload}, {select, put, call}) {
       if (payload !== undefined) {
         const filteredTags = yield select( state => state.tagListFilter.filteredTags )
-        yield put({ type: 'alertList/queryAlertBar', payload: {...filteredTags, selectedTime: payload} })
-        yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
         yield put({ type: 'alertManage/setSelectedTime', payload: payload})
+        yield put({ type: 'alertList/queryAlertBar', payload: {...filteredTags} })
+        yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
         yield put({ type: 'alertOperation/setButtonsDisable'})
       }
     },
     // 状态过滤
     *selectStatus({payload}, {select, put, call}) {
       if (payload !== undefined) {
-        let status = payload === 'NEW'
-                      ? '0' : payload === 'PROGRESSING'
-                          ? '150' : payload === 'RESOLVED'
-                              ? '190' : payload === 'EXCEPTCLOSE'
-                                ? '0,40,150,190' : undefined;
-        yield put({ type: 'setStatus', payload: status})
         const filteredTags = yield select( state => state.tagListFilter.filteredTags )
-        yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
-        yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
         yield put({ type: 'alertManage/setSelectedStatus', payload: payload})
+        yield put({ type: 'alertList/queryAlertBar', payload: {...filteredTags} })
+        yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
         yield put({ type: 'alertOperation/setButtonsDisable'})
       }
     },
@@ -166,7 +160,7 @@ export default {
       yield put({ type: 'saveSelectTag', payload: {key: payload.field, target: payload.item}})
       yield put({ type: 'filterTags'})
       const filteredTags = yield select( state => state.tagListFilter.filteredTags )
-      yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
+      yield put({ type: 'alertList/queryAlertBar', payload: {...filteredTags} })
       yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
       yield put({ type: 'alertOperation/setButtonsDisable'})
     },
@@ -174,7 +168,7 @@ export default {
       yield put({ type: 'removeSelectTag', payload: payload })
       yield put({ type: 'filterTags'})
       const filteredTags = yield select( state => state.tagListFilter.filteredTags )
-      yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
+      yield put({ type: 'alertList/queryAlertBar', payload: {...filteredTags} })
       yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
       yield put({ type: 'alertOperation/setButtonsDisable'})
     },
@@ -182,7 +176,7 @@ export default {
     *refresh({payload}, {select, put, call}) {
       yield put({ type: 'filterTags'})
       const filteredTags = yield select( state => state.tagListFilter.filteredTags )
-      yield put({ type: 'alertList/queryAlertBar', payload: filteredTags })
+      yield put({ type: 'alertList/queryAlertBar', payload: {...filteredTags} })
     }
   },
 
@@ -193,22 +187,10 @@ export default {
       let shareSelectTags = [];
       let keys = Object.keys(originTags);
       keys.length > 0 && keys.forEach( (key, index) => {
-        if (key === 'selectedTime') {
-          filter[key] = originTags[key]
-        } else {
           filter[key] = originTags[key]['values']
-          if (key !== 'status') {
-            shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: [originTags[key]['values']], visible: false })
-          }
-        }
+          shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: [originTags[key]['values']], visible: false })
       })
-      return { ...state, shareSelectTags, filteredTags: filter}
-    },
-    // 修改状态
-    setStatus(state, {payload: status}) {
-      let { filteredTags } = state;
-      filteredTags.status = status
-      return {...state, filteredTags}
+      return { ...state, shareSelectTags, filteredTags: filter }
     },
     // 维度变化
     changeTags(state, {payload: filter}) {
