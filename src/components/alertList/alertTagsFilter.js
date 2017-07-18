@@ -90,6 +90,9 @@ class alertTagsFilter extends Component{
       mouseEnter: false,
       selectList: []
     })
+    if (!target.visible) {
+      this.queryTagValues(target.key, '')
+    }
   }
 
   queryTagValues(key, message) {

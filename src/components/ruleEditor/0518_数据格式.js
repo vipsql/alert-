@@ -84,7 +84,6 @@ var data = {
             "type": 3
         },
         "actionITSM": {
-            notifyWhenLevelUp: true,
             "itsmModelId": "changed",
             "param": {
                 "cesjo": "cesj"
