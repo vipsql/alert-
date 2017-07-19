@@ -128,7 +128,7 @@ export default connect(
   (state) => {
     return {
       alertListTable: state.alertListTable,
-      selectedTime: state.alertList.selectedTime
+      selectedTime: state.alertManage.selectedTime
     }
   }
 )(ListTimeTableWrap)

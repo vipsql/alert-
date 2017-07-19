@@ -66,10 +66,6 @@ class AlertListManage extends Component {
         id: 'alertList.tabs.visual',
         defaultMessage: '可视化分析'
       },
-      auto_refresh: {
-        id: 'alertList.autoRefresh',
-        defaultMessage: '自动刷新'
-      },
       noAlert: {
         id: 'alertManage.noAlert',
         defaultMessage: '无告警'
@@ -85,28 +81,6 @@ class AlertListManage extends Component {
         type: 'alertList/toggleBar',
         payload: isShowAlertBar,
       })
-    }
-
-    const refreshProps = {
-      onChange(checked) {
-
-        localStorage.setItem('__alert_refresh', checked)
-        if (!checked) {
-          window.__alert_refresh_timer && clearInterval(window.__alert_refresh_timer)
-          window.__alert_refresh_timer = undefined
-
-        } else {
-          if (!window.__alert_refresh_timer) {
-
-            window.__alert_refresh_timer = setInterval(function () {
-              dispatch({
-                type: 'tagListFilter/refresh',
-              })
-            }, 60000)
-
-          }
-        }
-      }
     }
 
     const tabList = classnames(
@@ -174,7 +148,6 @@ class AlertListManage extends Component {
         />
         <div className={alertList.isShowBar ? styles.showBar : styles.hideBar}>
           <AlertTagsFilter />
-          <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch {...refreshProps} /></div>
           <AlertBar />
         </div>
         <Button className={classnames(styles.toggleBarButton, zhankaiClass)} onClick={toggleBarButtonClick} size="small"><i className={classnames(alertList.isShowBar ? shouqiClass : zhankaiClass, styles.toggleBarButtonIcon)} /></Button>

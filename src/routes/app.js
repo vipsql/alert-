@@ -11,6 +11,7 @@ const claarLocalStorage = () => {
   // 清除一些localstorge存储的用户操作
   localStorage.removeItem('UYUN_Alert_USERINFO')
   localStorage.removeItem('UYUN_Alert_MANAGEFILTER')
+  console.log(localStorage)
 }
 
 class App extends Component {
@@ -24,6 +25,14 @@ class App extends Component {
     NotificationApi.config({
       placement: 'toopRight',
       threshold: 10
+    })
+    window.addEventListener('beforeunload', (e) => {
+      console.log('beforeunload unmount')
+      var confirmationMessage = "\o/";
+      // -------- operation ---------------
+      this.claarLocalStorage();
+      e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
+      return confirmationMessage;              // Gecko, WebKit, Chrome <34
     })
   }
 
@@ -41,6 +50,7 @@ class App extends Component {
   }
 
   componentWillUnmount() {
+    console.log('app unmount')
     NotificationApi.destroy();
     this.claarLocalStorage();
   }
