@@ -525,7 +525,7 @@ class alertDetail extends Component {
                                 log.attributes && log.attributes['recipient'] ?
                                   (
                                     <p>
-                                      <span>{formatMessage({ ...localeMessage['recipient'] })}&nbsp;:&nbsp;{log.attributes['recipient']}</span>
+                                      <span>{formatMessage({ ...localeMessage['recipient'] })}&nbsp;:&nbsp;{log.attributes['recipient'].map((recipient, index) => ((index > 0?',':'') + recipient) )}</span>
                                     </p>
                                   )
                                   :
