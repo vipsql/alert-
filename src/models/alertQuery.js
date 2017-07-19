@@ -558,11 +558,6 @@ export default {
         yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, orderBy: undefined, orderType: undefined } })
       }
     },
-    // 点击展开详情
-    *clickDetail({ payload }, { select, put, call }) {
-      yield put({ type: 'toggleDetailAlertId', payload: payload })
-      yield put({ type: 'alertDetail/openDetailModal' })
-    },
     // show more
     *loadMore({ }, { call, put, select }) {
 
