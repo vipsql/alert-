@@ -22,11 +22,6 @@ const  ListTableWrap = ({dispatch, alertQuery, topFixArea, topHeight}) => {
           alertId
         }
       })
-
-      // dispatch({
-      //   type: 'alertQuery/clickDetail',
-      //   payload: alertId
-      // })
     },
     // 分组展开
     spreadGroup(e) {

@@ -35,10 +35,6 @@ const ListTableWrap = ({ dispatch, alertListTable, topHeight, topFixArea }) => {
     detailClick(e) {
       const alertId = e.target.getAttribute('data-id');
 
-      // dispatch({
-      //   type: 'alertListTable/clickDetail',
-      //   payload: alertId
-      // })
       dispatch({
         type: 'alertDetail/openDetailModal',
         payload: {
