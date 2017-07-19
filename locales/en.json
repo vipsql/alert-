@@ -96,6 +96,7 @@
   "alertOperate.takeOver": "Assign to me",
   "alertOperate.reassign": "Assign to ...",
   "alertOperate.dispatch": "Create Ticket",
+  "alertOperate.dispatch.success": "派单成功，工单号为：{ flowNo }",
   "alertOperate.close": "Close",
   "alertOperate.resolve": "Resolve",
   "alertOperate.suppress": "Suppress",

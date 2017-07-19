@@ -96,6 +96,7 @@
   "alertOperate.takeOver": "接手",
   "alertOperate.reassign": "转派",
   "alertOperate.dispatch": "派单",
+  "alertOperate.dispatch.success": "派单成功，工单号为：{ flowNo }",
   "alertOperate.close": "关闭",
   "alertOperate.resolve": "解决",
   "alertOperate.suppress": "抑制告警",

@@ -16,11 +16,11 @@ class Dispatch extends Component{
     componentDidMount() {
       const {dispatch} = this.props;
       window.addEventListener('message', (e) => {
-        if(e.data.creatTicket !== undefined && e.data.creatTicket === 'success') {
+        if(e.data.createTicket !== undefined && e.data.createTicket === 'success') {
             $$.dialog.close()
             //window.parent.postMessage({closeModal: true}, '*');
             dispatch({
-                type: 'alertExport/closeTicketModal', 
+                type: 'alertExport/closeTicketModal',
             })
         }
       }, false)
@@ -100,7 +100,7 @@ class Dispatch extends Component{
                                                 return;
                                             }
                                             const value = form.getFieldValue('formOption')
-                                            
+
                                             dispatch({
                                                 type: 'alertExport/dispatchForm',
                                                 payload: {
@@ -127,12 +127,12 @@ class Dispatch extends Component{
                 }
             </div>
         )
-        
+
     }
 }
 
 Dispatch.defaultProps = {
-    
+
 }
 
 Dispatch.propTypes = {

@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'dva'
 import styles from './index.less'
-import { Row, Col, Form, Input, Select, DatePicker, Button, Popover, Checkbox } from 'antd'
+import { Row, Col, Form, Input, Select, DatePicker, Button, Popover, Checkbox, message } from 'antd'
 import ListTableWrap from './queryList.js'
 import AlertOriginSliderWrap from '../alertOriginSlider/wrap'
 import AlertDetaiWrap from '../alertDetail/wrap'
@@ -31,9 +31,19 @@ class alertQueryManage extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, intl: { formatMessage } } = this.props;
     window.addEventListener('message', (e) => {
-      if (e.data.creatTicket !== undefined && e.data.creatTicket === 'success') {
+      if (e.data.createTicket !== undefined && e.data.createTicket === 'success') {
+        const localeMessage = defineMessages({
+          successMsg: {
+            id: 'alertOperate.dispatch.success',
+            defaultMessage: "派单成功，工单号为：{ flowNo }",
+            values: {
+              flowNo: e.data.flowNo
+            }
+          }
+        })
+        message.success(formatMessage({ ...localeMessage['successMsg'] }));
         dispatch({
           type: 'alertDetail/afterDispatch',
         })
@@ -278,7 +288,6 @@ class alertQueryManage extends Component {
               <p>{group.type == 0 ? <FormattedMessage {...localeMessage['basic']} /> : <FormattedMessage {...localeMessage['additional']} />}</p>
               {
                 group.cols.map((item, index) => {
-                  console.log(item.id);
                   if (item.id === 'entityName' || item.id === 'name') {
                     return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={true} disabled={true} >
                       {item.name === undefined ? <FormattedMessage {...localeMessage[item.id]} /> : item.name}

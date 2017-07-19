@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 
-import { Tabs, Select, Switch, Checkbox, Button } from 'antd'
+import { Tabs, Select, Switch, Checkbox, Button, message } from 'antd'
 import ListTableWrap from './listTable'
 import ListTimeTableWrap from './listTimeTable'
 import VisualAnalyzeWrap from './visualAnalyze'
@@ -38,7 +38,17 @@ class AlertListManage extends Component {
     const { dispatch } = this.props;
 
     window.addEventListener('message', (e) => {
-      if (e.data.creatTicket !== undefined && e.data.creatTicket === 'success') {
+      if (e.data.createTicket !== undefined && e.data.createTicket === 'success') {
+        const localeMessage = defineMessages({
+          successMsg: {
+            id: 'alertOperate.dispatch.success',
+            defaultMessage: "派单成功，工单号为：{ flowNo }",
+            values: {
+              flowNo: e.data.flowNo
+            }
+          }
+        })
+        message.success(formatMessage({ ...localeMessage['successMsg'] }));
         dispatch({
           type: 'alertOperation/afterDispatch'
         })
