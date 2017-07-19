@@ -100,9 +100,9 @@ export default {
       if (!operateAlertIds || operateAlertIds.length === 0) {
         message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else {
-        const checkResponse = yield checkOperationExecutable({ operateCode: 210, incidentIds: operateAlertIds });
+        const checkResponse = (yield checkOperationExecutable({ operateCode: 210, incidentIds: operateAlertIds }) || {}).data;
 
-        if (!checkResponse.result) {
+        if (checkResponse && checkResponse.failed && checkResponse.failed.length > 0) {
           payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 210 });
           return;
         }
@@ -411,10 +411,10 @@ export default {
       } else if (operateAlertIds.length > 1) {
         yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip4'], 3);
       } else {
-        const checkResponse = yield checkOperationExecutable({ operateCode: 130, incidentIds: operateAlertIds });
+        const checkResponse = (yield checkOperationExecutable({ operateCode: 130, incidentIds: operateAlertIds }) || {}).data;
 
-        if (!checkResponse.result) {
-          ppayload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 130 });
+        if (checkResponse && checkResponse.failed && checkResponse.failed.length > 0) {
+          payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 130 });
           return;
         }
         const options = yield getFormOptions();
@@ -491,9 +491,9 @@ export default {
       if (operateAlertIds.length === 0) {
         yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else {
-        const checkResponse = yield checkOperationExecutable({ operateCode: 250, incidentIds: operateAlertIds });
+        const checkResponse = (yield checkOperationExecutable({ operateCode: 250, incidentIds: operateAlertIds }) || {}).data;
 
-        if (!checkResponse.result) {
+        if (checkResponse && checkResponse.failed && checkResponse.failed.length > 0) {
           payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 250 });
           return;
         }
@@ -543,9 +543,9 @@ export default {
       if (operateAlertIds.length === 0) {
         yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else {
-        const checkResponse = yield checkOperationExecutable({ operateCode: 170, incidentIds: operateAlertIds });
+        const checkResponse = (yield checkOperationExecutable({ operateCode: 170, incidentIds: operateAlertIds }) || {}).data;
 
-        if (!checkResponse.result) {
+        if (checkResponse && checkResponse.failed && checkResponse.failed.length > 0) {
           payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 170 });
           return;
         }

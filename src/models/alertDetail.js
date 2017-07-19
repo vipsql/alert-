@@ -176,9 +176,9 @@ export default {
     // 打开派发工单做的相应处理
     *openFormModal({ payload }, { select, put, call }) {
       const viewDetailAlertId = yield select(state => state.alertDetail.id);
-      const checkResponse = yield checkOperationExecutable({ operateCode: 130, incidentIds: [viewDetailAlertId] });
+      const checkResponse = (yield checkOperationExecutable({ operateCode: 130, incidentIds: [viewDetailAlertId] }) || {}).data;
 
-      if (!checkResponse.result) {
+      if (checkResponse && checkResponse.failed && checkResponse.failed.length > 0) {
         payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 130 });
         return;
       }
@@ -240,9 +240,9 @@ export default {
     // 打开关闭工单
     *openCloseModal({ payload }, { select, put, call }) {
       const viewDetailAlertId = yield select(state => state.alertDetail.id)
-      const checkResponse = yield checkOperationExecutable({ operateCode: 250, incidentIds: [viewDetailAlertId] });
+      const checkResponse = (yield checkOperationExecutable({ operateCode: 250, incidentIds: [viewDetailAlertId] }) || {}).data;
 
-      if (!checkResponse.result) {
+      if (checkResponse && checkResponse.failed && checkResponse.failed.length > 0) {
         payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 250 });
         return;
       }
@@ -396,9 +396,9 @@ export default {
     },
     *openResolveModal({ payload }, { select, put, call }) {
       const viewDetailAlertId = yield select(state => state.alertDetail.id);
-      const checkResponse = yield checkOperationExecutable({ operateCode: 170, incidentIds: [viewDetailAlertId] });
+      const checkResponse = (yield checkOperationExecutable({ operateCode: 170, incidentIds: [viewDetailAlertId] }) || {}).data;
 
-      if (!checkResponse.result) {
+      if (checkResponse && checkResponse.failed && checkResponse.failed.length > 0) {
         payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 170 });
         return;
       }
@@ -513,9 +513,9 @@ export default {
     //打开转派告警Model
     *openReassign({ payload }, { select, put, call }) {
       const viewDetailAlertId = yield select(state => state.alertDetail.id);
-      const checkResponse = yield checkOperationExecutable({ operateCode: 210, incidentIds: [viewDetailAlertId] });
+      const checkResponse = (yield checkOperationExecutable({ operateCode: 210, incidentIds: [viewDetailAlertId] }) || {}).data;
 
-      if (!checkResponse.result) {
+      if (checkResponse && checkResponse.failed && checkResponse.failed.length > 0) {
         payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 210 });
         return;
       }
