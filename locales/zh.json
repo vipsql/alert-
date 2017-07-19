@@ -59,6 +59,8 @@
   "alertList.title.entityAddr": "IP地址",
   "alertList.title.orderFlowNum": "关联工单",
   "alertList.title.notifyList": "是否分享",
+  "alertList.title.suppressionFlag": "是否被抑制",
+  "alertList.title.suppressionFlag.yes": "已被抑制",
   "alertList.notifyList.1": "电子邮件",
   "alertList.notifyList.2": "短信",
   "alertList.notifyList.3": "ChatOps私聊",

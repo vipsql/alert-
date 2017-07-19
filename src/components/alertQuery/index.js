@@ -160,6 +160,10 @@ class alertQueryManage extends Component {
         id: 'alertList.title.additional',
         defaultMessage: '扩展',
       },
+      suppressionFlag: {
+        id: 'alertList.title.suppressionFlag',
+        defaultMessage: '是否被抑制'
+      },
       columns: {
         id: 'alertOperate.columns',
         defaultMessage: '列定制',
@@ -274,6 +278,7 @@ class alertQueryManage extends Component {
               <p>{group.type == 0 ? <FormattedMessage {...localeMessage['basic']} /> : <FormattedMessage {...localeMessage['additional']} />}</p>
               {
                 group.cols.map((item, index) => {
+                  console.log(item.id);
                   if (item.id === 'entityName' || item.id === 'name') {
                     return <div key={index} className={styles.inlineItem}><Checkbox value={item.id} checked={true} disabled={true} >
                       {item.name === undefined ? <FormattedMessage {...localeMessage[item.id]} /> : item.name}

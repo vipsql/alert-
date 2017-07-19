@@ -151,6 +151,14 @@ class ListTable extends Component {
         id: 'alertList.title.notifyList',
         defaultMessage: '是否分享',
       },
+      suppressionFlag: {
+        id: 'alertList.title.suppressionFlag',
+        defaultMessage: '是否被抑制'
+      },
+      suppressionYesFlag: {
+        id: 'alertList.title.suppressionFlag.yes',
+        defaultMessage: '已被抑制'
+      },
       showMore: {
         id: 'alertList.showMore',
         defaultMessage: '显示更多',
@@ -323,6 +331,9 @@ class ListTable extends Component {
             break;
           case 'count':
             td = <td key={key} title={data}><a href="javascript:;" data-id={item.id} data-no-need-wrap={ true }  data-name={item.name} onClick={showAlertOrigin}>{data}</a></td>
+            break;
+          case 'suppressionFlag':
+            td = <td key={key} title={data}>{data?<FormattedMessage { ...(formatMessages['suppressionYesFlag']) }/>:''}</td>
             break;
           default:
             td = <td key={key} title={data}>{data}</td>
