@@ -18,10 +18,10 @@ class ScrollTopButton extends Component {
   }
   render() {
     const localeMessage = defineMessages({
-        goTopTip: {
-            id: 'go_top.tip',
-            defaultMessage: '返回顶部'
-        },
+      goTopTip: {
+        id: 'go_top.tip',
+        defaultMessage: '返回顶部'
+      },
     })
     const shouqiClass = classnames(
       'iconfont',
@@ -31,13 +31,22 @@ class ScrollTopButton extends Component {
     const scrollTop = function () {
       $("div#topMain").scrollTop("0px");
     }
+
+    const getCookie = function(name) {
+      var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+      if (arr = document.cookie.match(reg))
+        return unescape(arr[2]);
+      else
+        return null;
+    }
+
     return (
       <div>
-        <BackTop onMouseEnter={ () => {this._onMouseEnter()} } onMouseLeave={ () => {this._onMouseOut()} } className={ styles.scrollTopDiv } onClick={ scrollTop } target={() => document.getElementById("topMain") }>
-          <div className={ styles.backCtrl }>
-            <span className={ styles.backText } style={{ display: this.state.isHovered?'block':'none'}}><FormattedMessage {...localeMessage['goTopTip']} /></span>
-            <div className={ styles.scrollTopIconDiv } style={{ display: this.state.isHovered?'none':'block'}}>
-              <i className={ shouqiClass } />
+        <BackTop onMouseEnter={() => { this._onMouseEnter() }} onMouseLeave={() => { this._onMouseOut() }} className={styles.scrollTopDiv} onClick={scrollTop} target={() => document.getElementById("topMain")}>
+          <div className={styles.backCtrl}>
+            <span className={styles.backText} style={{ display: this.state.isHovered ? (getCookie('language') == 'en_US' ? 'inline' : 'block') : 'none' }}><FormattedMessage {...localeMessage['goTopTip']} /></span>
+            <div className={styles.scrollTopIconDiv} style={{ display: this.state.isHovered ? 'none' : 'block' }}>
+              <i className={shouqiClass} />
             </div>
           </div>
         </BackTop>
