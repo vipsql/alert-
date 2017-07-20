@@ -134,6 +134,10 @@ const alertOperation = ({
       id: 'alertList.title.additional',
       defaultMessage: '扩展',
     },
+    suppressionFlag: {
+      id: 'alertList.title.suppressionFlag',
+      defaultMessage: '是否被抑制'
+    },
     moreOperate: {
       id: 'alertOperate.moreAcitons',
       defaultMessage: '更多操作',

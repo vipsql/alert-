@@ -61,7 +61,7 @@ async function setLang(lang) {
         "3": "Critical"
       }
       window._status = {
-        "0": "Open",
+        "0": "New",
         "40": "Acknowledged",
         "150": "Assigned",
         "190": "Resolved",

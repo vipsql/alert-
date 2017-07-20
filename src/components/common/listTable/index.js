@@ -21,12 +21,17 @@ class ListTable extends Component {
     this.scrollHeight = this._getTotalScrollHeight();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(oldProps) {
     clearTimeout(this.autoLoad);
     setTimeout(() => {
       this.scrollHeight = this._getTotalScrollHeight();
       this.isLoadingMore = false;
     }, 300)
+    const { columns: newColumns } = this.props;
+    const { columns: oldColumns } = oldProps;
+    if(oldColumns && oldColumns.length > 0 && newColumns.length > oldColumns.length) {
+      $("div.listContainer").scrollLeft(10000);
+    }
   }
 
   componentWillUnMount() {
@@ -150,6 +155,14 @@ class ListTable extends Component {
       notifyList: {
         id: 'alertList.title.notifyList',
         defaultMessage: '是否分享',
+      },
+      suppressionFlag: {
+        id: 'alertList.title.suppressionFlag',
+        defaultMessage: '是否被抑制'
+      },
+      suppressionYesFlag: {
+        id: 'alertList.title.suppressionFlag.yes',
+        defaultMessage: '已被抑制'
       },
       showMore: {
         id: 'alertList.showMore',
@@ -324,6 +337,9 @@ class ListTable extends Component {
           case 'count':
             td = <td key={key} title={data}><a href="javascript:;" data-id={item.id} data-no-need-wrap={ true }  data-name={item.name} onClick={showAlertOrigin}>{data}</a></td>
             break;
+          case 'suppressionFlag':
+            td = <td key={key} title={data}>{data?<FormattedMessage { ...(formatMessages['suppressionYesFlag']) }/>:''}</td>
+            break;
           default:
             td = <td key={key} title={data}>{data}</td>
             break;
@@ -471,7 +487,7 @@ class ListTable extends Component {
     return (
       <div>
         <Spin spinning={isLoading}>
-          <div className={"listContainer " +styles.listContainer }>
+          <div className={"listContainer " + styles.listContainer }>
           <ScrollBar horizonTarget="div.listContainer" />
           <TopFixedArea parentTarget="div.listContainer" theads={ theads } extraArea={ extraArea } topHeight={ topHeight }/>
           <table className={styles.listTable}>
