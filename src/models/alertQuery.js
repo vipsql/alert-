@@ -14,6 +14,7 @@ const initalState = {
   propertyOptions: [], // 扩展
   queryCount: {}, // 查询数量结果
   currentQuery: {}, // 当前的查询条件
+  currentQueryRawData: {}, //当前查询条件的原始数据，用于回显，需要与currentQuery保持同步更新
 
   isShowBar: true, // 是否显示搜索项
 
@@ -196,8 +197,8 @@ export default {
       return { ...state, selectGroup: initalState.selectGroup }
     },
     // 更新查询条件
-    setCurrentQuery(state, { payload: currentQuery }) {
-      return { ...state, currentQuery }
+    setCurrentQuery(state, { payload }) {
+      return { ...state, ...payload }
     },
     // 更新data数据
     updateAlertListData(state, { payload: { data, tempListData } }) {
@@ -247,7 +248,8 @@ export default {
         currentPage: initalState.currentPage,
         queryCount: initalState.queryCount,
         isShowMore: initalState.isShowMore,
-        currentQuery: initalState.currentQuery
+        currentQuery: initalState.currentQuery,
+        currentQueryRawData: initalState.currentQueryRawData
       }
     },
     // 不分组更新
@@ -370,8 +372,8 @@ export default {
       yield put({ type: 'initCustomCols' })
       yield put({ type: 'alertDetail/toggleDetailModal', payload: false })
       yield put({ type: 'clearQuery' })
-      yield put({ type: 'setCurrentQuery', payload: { resObjectId: payload.resObjectId } })
-      yield put({ type: 'queryAlertList', payload: { resObjectId: payload.resObjectId } })
+      yield put({ type: 'setCurrentQuery', payload: { currentQuery: payload.resObjectId } })
+      yield put({ type: 'queryAlertList' })
 
       // 查询来源和扩展标签
       const sourceOptions = yield call(querySource)
@@ -414,7 +416,7 @@ export default {
 
     // 点击查找
     *queryBefore({ payload }, { call, put, select }) {
-      yield put({ type: 'setCurrentQuery', payload: payload })
+      yield put({ type: 'setCurrentQuery', payload: {...payload} })
       yield put({ type: 'queryAlertList' })
       yield put({ type: 'alertDetail/removeGroupType' })
     },

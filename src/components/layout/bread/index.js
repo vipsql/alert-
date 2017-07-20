@@ -3,7 +3,6 @@ import { Breadcrumb } from 'antd'
 import styles from '../main.less'
 import { connect } from 'dva'
 import { menu } from '../../../utils'
-import AutoRefresh from '../../common/autoRefresh'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const path = defineMessages({
@@ -53,7 +52,6 @@ function Bread ({ location, appTypeName }) {
   const pathname = location.pathname
   const pathDepth = pathname.split('/')
   let breads = []
-  let autoRefresh = false;
 
   if(pathname == '\/') { //首页进去时需要处理
     breads.push(
@@ -61,7 +59,6 @@ function Bread ({ location, appTypeName }) {
     )
 
   } else if(pathDepth.length > 2 && pathDepth.indexOf('alertManage') > -1){ //告警列表
-    autoRefresh = true;
     breads.push(
       <Breadcrumb.Item key="alertManage"><a href="#alertManage"><FormattedMessage {...path['alertManage']}/></a></Breadcrumb.Item>,
       <Breadcrumb.Item key="alertList"><FormattedMessage {...path['alertList']}/></Breadcrumb.Item>
@@ -95,7 +92,6 @@ function Bread ({ location, appTypeName }) {
     )
   } else {
     const key = pathDepth[1]
-    autoRefresh = key === 'alertQuery' ? true : false
     breads.push(<Breadcrumb.Item key={pathDepth[1]}><FormattedMessage {...path[key]}/></Breadcrumb.Item>)
   }
 
@@ -106,7 +102,6 @@ function Bread ({ location, appTypeName }) {
       <Breadcrumb separator=">">
         {breads}
       </Breadcrumb>
-      { autoRefresh && <AutoRefresh /> }
     </div>
   )
 }

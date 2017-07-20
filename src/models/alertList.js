@@ -4,7 +4,6 @@ import { parse } from 'qs'
 export default {
   namespace: 'alertList',
   state: {
-    isRefresh: false, //是否实时更新
     alertOperateModalOrigin: undefined, // 这个状态是用来区别那个Modal打开的 --> 对应position
     isLoading: false, // alertBar加载
     isResize: false, //是否折叠
@@ -102,6 +101,14 @@ export default {
 
       yield put({ type: 'alertOperation/removeGroupType' })
 
+    },
+    //自动刷新
+    *refresh({payload}, {select, put, call}) {
+      yield put({ type: 'tagListFilter/filterTags'})
+      const filteredTags = yield select( state => state.tagListFilter.filteredTags )
+      yield put({ type: 'queryAlertBar', payload: {...filteredTags} })
+      yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
+      yield put({ type: 'alertOperation/setButtonsDisable'})
     }
 
   },

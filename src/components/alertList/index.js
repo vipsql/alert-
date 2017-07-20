@@ -24,6 +24,7 @@ import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import AlertOriginSliderWrap from '../alertOriginSlider/wrap.js'
 import FilterHead from '../common/filterHead/index.js'
 import ScrollTopButton from '../common/scrollTopButton/index'
+import AutoRefresh from '../common/autoRefresh'
 import { classnames } from '../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -83,6 +84,12 @@ class AlertListManage extends Component {
       })
     }
 
+    const refresh = () => {
+      dispatch({
+        type: 'alertList/refresh'
+      })
+    }
+
     const tabList = classnames(
       'iconfont',
       'icon-liebiao',
@@ -135,6 +142,7 @@ class AlertListManage extends Component {
 
     return (
       <div style={{ position: 'relative' }}>
+        <AutoRefresh origin='alertList' refresh={refresh} />
         <FilterHead
           style={{ marginBottom: '20px' }}
           defaultTime={alertManage.selectedTime}

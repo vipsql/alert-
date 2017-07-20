@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { default as cls } from 'classnames';
 import { Select, Input } from 'antd';
+import { groupSort } from '../../utils/index'
 
 import styles from './condition.less';
 
@@ -153,6 +154,7 @@ class Condition extends Component {
         let keyList = [];
         let local = 'Zh';
         const { node, source, classCode, attributes, _key, opt, value, level, index, deleteLine, changeConditionContent, _this } = this.props;
+        const groupList = groupSort()(attributes, 'group')
         valueList.source = source.map(item => {
             return { name: item.value, value: item.key };
         });
@@ -162,8 +164,8 @@ class Condition extends Component {
         if (window.__alert_appLocaleData.locale === 'en-us') {
             local = 'Us'
         };
-        keyList = attributes.map(item => {
-            return item.map(child => {
+        keyList = groupList.map(item => {
+            return item.children.map(child => {
               return {
                   name: child[`name${local}`],
                   value: child['nameUs'],
