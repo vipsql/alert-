@@ -167,15 +167,19 @@ export default {
     },
     // 列改变时触发
     setColumn(state, { payload: selectCol }) {
-      const { columnList } = state;
+      const { columnList, selectColumn } = state;
       let arr = []
+      if(selectColumn.length != 0) {
+        arr = selectColumn.filter((col) => col.key != selectCol);
+      }
       const newList = columnList.map((group) => {
         group.cols.map((col) => {
           if (typeof selectCol !== 'undefined' && col.id === selectCol) {
             col.checked = !col.checked;
           }
-          if (col.checked) {
-            if (col.id == 'source' || col.id == 'lastTime' || col.id == 'firstOccurTime' || col.id == 'lastOccurTime' || col.id == 'count' || col.id == 'status' || col.id == 'owner' || col.id == 'suppressionFlag') {
+          const ifAddCondition = selectColumn.length == 0?col.checked:(col.checked && col.id === selectCol);
+          if (ifAddCondition) {
+            if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count' || col.id == 'status' || col.id == 'owner' || col.id == 'suppressionFlag') {
               arr.push({ key: col.id, title: col.name, order: true }) // order字段先定死
             } else {
               arr.push({ key: col.id, title: col.name })
