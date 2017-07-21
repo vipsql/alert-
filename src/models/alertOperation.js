@@ -8,8 +8,6 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const initalState = {
   // 操作的alertIds
-  operateAlertIds: [], // 只有合并length>1
-  selectedAlertIds: [],
   formOptions: [],
   chatOpsRooms: [],
 
@@ -155,7 +153,7 @@ export default {
     *openSuppressTimeSlider({ payload }, { select, put, call }) {
       // 触发筛选
       // yield put({ type: 'alertListTable/filterCheckAlert' })
-      const { operateAlertIds } = { payload };
+      const { operateAlertIds } = payload;
       if (operateAlertIds.length === 0) {
         yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else {
@@ -469,15 +467,7 @@ export default {
     },
     // 派发工单成功后的操作
     *afterDispatch({ payload }, { select, put, call }) {
-      const { alertOperateModalOrigin, operateAlertIds } = yield select(state => {
-        return {
-          'alertOperateModalOrigin': state.alertList.alertOperateModalOrigin,
-          'operateAlertIds': state.alertOperation.operateAlertIds
-        }
-      })
-      // let stingIds = operateAlertIds.map(item => '' + item)
-      // yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
-      // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
+
       yield put({ type: 'alertListTable/resetCheckboxStatus' })
       yield put({ type: 'alertListTable/queryAlertList' });
 
@@ -868,14 +858,6 @@ export default {
       return {
         ...state,
         users
-      }
-    },
-    // 设置操作的告警编号和选中的操作编号
-    setOperateAlertIdsAndSelectedAlertIds(state, { payload: { operateAlertIds, selectedAlertIds } }) {
-      return {
-        ...state,
-        operateAlertIds,
-        selectedAlertIds
       }
     },
     // 关闭工单
