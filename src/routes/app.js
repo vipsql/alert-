@@ -21,7 +21,11 @@ class App extends Component {
     this.claarLocalStorage = claarLocalStorage.bind(this)
   }
 
+
   componentDidMount() {
+    this.context.router.setRouteLeaveHook(this.props.route, () => {
+      console.log('Leave')
+    })
     NotificationApi.config({
       placement: 'toopRight',
       threshold: 10
@@ -108,11 +112,15 @@ class App extends Component {
   }
 }
 
+App.contextTypes = {
+  router: React.PropTypes.object
+}
 App.propTypes = {
   children: PropTypes.element.isRequired,
   location: PropTypes.object,
   dispatch: PropTypes.func,
   isFold: PropTypes.bool
 }
+
 
 export default connect(({ app }) => ({ app }))(App)

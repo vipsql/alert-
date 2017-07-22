@@ -298,6 +298,9 @@
             color: #62b9f7
           }
         } //--------checkbox---------
+        .ant-checkbox-inner:after, .ant-checkbox-checked .ant-checkbox-inner:after{
+          display: inline-block // IE11下checkbox在table下display：table有问题（勾出不来）
+        }
         .ant-checkbox-wrapper {
           .ant-checkbox-disabled .ant-checkbox-inner {
             border-color: #2276bf !important;

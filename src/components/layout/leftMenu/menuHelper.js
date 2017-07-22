@@ -16,7 +16,7 @@ const formatMessages = defineMessages({
     }
 })
 
-const createMenus = (menus, isFold, isRoot) => {
+const createMenus = (menus, isFold, supervisor) => {
   return menus.filter(item => item.key !== 'help').map(item => {
     const path = '/';
     const iconName = `icon-${item.icon}`
@@ -27,7 +27,7 @@ const createMenus = (menus, isFold, isRoot) => {
     )
 
     return (
-      isRoot && <Menu.Item key={item.key}>
+      parseInt(supervisor, 10) && <Menu.Item key={item.key}>
         <Link to={path + item.key}>
           <i className={className}></i>
 
@@ -38,7 +38,7 @@ const createMenus = (menus, isFold, isRoot) => {
   })
 }
 
-function FoldBar({ isFold, handleFoldMenu, handleClickNavMenu, isRoot, className }){
+function FoldBar({ isFold, handleFoldMenu, handleClickNavMenu, supervisor, className }){
   // const handleFoldMenu = () => {
   //   const isExpand = isFold ? true : fasle
   //   handleFoldMenu(isExpand)
@@ -60,7 +60,7 @@ function FoldBar({ isFold, handleFoldMenu, handleClickNavMenu, isRoot, className
     'icon-bangzhu'
   )
 
-  const menuItems = createMenus(bottomMenus, isFold, isRoot);
+  const menuItems = createMenus(bottomMenus, isFold, supervisor);
   const pathname = location.pathname;
   const hash = location.hash;
   const selectedMenus = bottomMenus.filter((singleMenu) => pathname.indexOf(singleMenu.key) >= 0 || hash.indexOf(singleMenu.key) > 0);
