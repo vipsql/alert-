@@ -40,8 +40,10 @@ const initialState = {
 
   columns: [{
     key: 'entityName',
+    isFixed: true
   }, {
     key: 'name',
+    isFixed: true
   },{
     key: 'owner',
     order: true
