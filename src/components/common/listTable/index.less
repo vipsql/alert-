@@ -19,6 +19,20 @@
   }
 }
 
+.leftFixedArea {
+  position: absolute;
+  left: 0px;
+
+  padding-right: 1px;
+  background-color: #153d5e;
+  .leftFixedTable {
+    z-index: 10000;
+  }
+  .topFixedArea {
+    z-index: 20;
+  }
+}
+
 // 左右滚动工具
 .scrollArea {
   top: 0px;
@@ -34,7 +48,10 @@
     opacity: 0.5
   }
   .leftScroll {
-    left: 0px;
+    left: 350px;
+  }
+  .moreLeftScroll {
+    left: 400px;
   }
   .rightScroll {
     right: 0px;

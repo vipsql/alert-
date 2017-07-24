@@ -3,6 +3,7 @@ import $ from 'jquery'
 import styles from './index.less'
 import { classnames } from '../../../utils'
 import ScrollBar from './scrollBar';
+import Theads from './theads'
 
 
 class TopFixedArea extends Component {
@@ -12,14 +13,16 @@ class TopFixedArea extends Component {
   }
 
   componentDidMount() {
-    const { target, parentTarget, topHeight } = this.props;
+    const { target, parentTarget, topHeight, onShow, onHide } = this.props;
     $(target).scroll((e) => {
       if (!this.unmount) {
         const $target = $(e.target);
         if ($target.scrollTop() > this.props.topHeight) {
           this.setState({ isShow: true });
+          onShow && onShow();
         } else {
           this.setState({ isShow: false });
+          onHide && onHide();
         }
       }
     })
@@ -39,22 +42,23 @@ class TopFixedArea extends Component {
   }
 
   render() {
-    const { theads, extraArea, topHeight, parentTarget } = this.props;
+    const { theads, extraArea, topHeight, parentTarget, isShowScrollBar } = this.props;
     const { isShow, scrollLeft } = this.state;
     return (
       <div className={classnames(styles.topFixedArea, isShow ? styles.showTopFixed : '')} style={{ top: $(this.props.target).scrollTop() - topHeight || 0 }}>
-        <div className={ styles.extraArea } style={{ left: scrollLeft }}>
+        <div className={ styles.extraArea } style={{ left: scrollLeft, minHeight: extraArea?'0px':'60px' }}>
           {extraArea}
         </div>
         <table className={classnames(styles.listTable, styles.topFixed)}>
-          <thead>
-            <tr>
-              {theads}
-            </tr>
-          </thead>
+          { theads }
         </table>
         <div className={ styles.fixScrollBar } style={{ left: scrollLeft }}>
-          <ScrollBar horizonTarget="div.listContainer" />
+          {
+            isShowScrollBar?
+            <ScrollBar horizonTarget="div.listContainer" />
+            :
+            ''
+          }
         </div>
       </div>
     )
@@ -63,7 +67,8 @@ class TopFixedArea extends Component {
 
 TopFixedArea.defaultProps = {
   target: 'div#topMain',
-  topHeight: 397
+  topHeight: 397,
+  isShowScrollBar: true
 }
 
 TopFixedArea.propTypes = {

@@ -41,8 +41,8 @@ const initalState = {
     {
       type: 0, // id
       cols: [
-        { id: 'entityName', checked: true, },
-        { id: 'name', checked: false, },
+        { id: 'entityName', checked: true, isFixed: true },
+        { id: 'name', checked: false, isFixed: true },
         { id: 'owner', checked: true},
         { id: 'source', checked: false, },
         { id: 'description', checked: false, },
@@ -63,8 +63,10 @@ const initalState = {
 
   columns: [{
     key: 'entityName',
+    isFixed: true
   }, {
     key: 'name',
+    isFixed: true
   },{
     key: 'owner',
     order: true
@@ -180,9 +182,9 @@ export default {
           const ifAddCondition = selectColumn.length == 0?col.checked:(col.checked && col.id === selectCol);
           if (ifAddCondition) {
             if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count' || col.id == 'status' || col.id == 'owner' || col.id == 'suppressionFlag') {
-              arr.push({ key: col.id, title: col.name, order: true }) // order字段先定死
+              arr.push({ key: col.id, title: col.name, order: true, isFixed: col.isFixed }) // order字段先定死
             } else {
-              arr.push({ key: col.id, title: col.name })
+              arr.push({ key: col.id, title: col.name, isFixed: col.isFixed })
             }
           }
           return col;
