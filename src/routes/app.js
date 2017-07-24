@@ -25,6 +25,7 @@ class App extends Component {
   componentDidMount() {
     this.context.router.setRouteLeaveHook(this.props.route, () => {
       console.log('Leave')
+      this.claarLocalStorage();
     })
     NotificationApi.config({
       placement: 'toopRight',
