@@ -83,13 +83,21 @@ const AlertDetailWrap = ({ alertDetail, dispatch, afterTakeOver, afterChatOpsh, 
 
   const reassignModalProps = {
     isShowReassingModal: alertDetail.isShowReassingModal,
-    users: alertDetail.users,
+    users: alertDetail.notifyUsers,
     onOk: (selectedUser) => {
       dispatch({
         type: 'alertDetail/submitReassign',
         payload: {
           toWho: selectedUser,
           resolve: afterReassign
+        }
+      })
+    },
+    ownerQuery: (value) => {
+      dispatch({
+        type: 'alertDetail/ownerQuery',
+        payload: {
+          realName: value
         }
       })
     },

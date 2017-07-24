@@ -503,7 +503,7 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch, intl: { 
 
   const reassignModalProps = {
     isShowReassingModal: alertOperation.isShowReassingModal,
-    users: alertOperation.users,
+    users: alertOperation.notifyUsers,
     onOk: (selectedUser) => {
       dispatch({
         type: 'alertOperation/submitReassign',
@@ -515,6 +515,14 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch, intl: { 
               refreshListAndResetCheckbox();
             }
           }
+        }
+      })
+    },
+    ownerQuery: (value) => {
+      dispatch({
+        type: 'alertOperation/ownerQuery',
+        payload: {
+          realName: value
         }
       })
     },

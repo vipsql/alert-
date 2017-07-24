@@ -63,7 +63,6 @@ const initalState = {
       ]
     }
   ],
-  users: [], //获取的可转派用户
 
   // 分组显示
   isGroup: false,
@@ -92,9 +91,6 @@ export default {
       // });
 
       const operateAlertIds = payload.operateAlertIds;
-      const { users } = yield select(state => ({
-        users: state.alertOperation.users
-      }));
 
       if (!operateAlertIds || operateAlertIds.length === 0) {
         message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
@@ -105,16 +101,16 @@ export default {
           payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 210 });
           return;
         }
-        if (users.length === 0) {
-          const response = yield call(getUsers);
-          if (response.result) {
-            yield put({
-              type: 'receiveAllUsers',
-              payload: response.data
-            });
-          } else {
-            message.error(response.message, 2);
-          }
+        const response = yield call(getUsers);
+        if (response.result) {
+          yield put({
+            type: 'setUsers',
+            payload: {
+              notifyUsers: response.data
+            }
+          });
+        } else {
+          message.error(response.message, 2);
         }
         yield put({
           type: 'toggleReassignModal',
@@ -852,12 +848,6 @@ export default {
       return {
         ...state,
         isShowReassingModal
-      }
-    },
-    receiveAllUsers(state, { payload: users }) {
-      return {
-        ...state,
-        users
       }
     },
     // 关闭工单
