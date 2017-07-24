@@ -678,7 +678,7 @@ class alertQueryManage extends Component {
         {!haveQuery ? <div className={styles.alertListInfo}><FormattedMessage {...localeMessage['noQueryData']} /></div> :
           <div>
             {topFixArea}
-            <ListTableWrap topFixArea={topFixArea} topHeight={alertQuery.isShowBar ? 407 : 200} />
+            <ListTableWrap topFixArea={topFixArea} topHeight={alertQuery.isShowBar ? 335 : 145} />
           </div>}
         <ScrollTopButton />
         <AlertOriginSliderWrap />

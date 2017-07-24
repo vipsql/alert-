@@ -45,7 +45,7 @@ class TopFixedArea extends Component {
     const { theads, extraArea, topHeight, parentTarget, isShowScrollBar, sourceOrigin } = this.props;
     const { isShow, scrollLeft } = this.state;
     return (
-      <div className={classnames(styles.topFixedArea, isShow ? styles.showTopFixed : '')} style={{ top: $(this.props.target).scrollTop() - topHeight || 0 }}>
+      <div className={classnames(styles.topFixedArea, isShow ? styles.showTopFixed : '')} style={{ top: $(this.props.target).scrollTop() - topHeight - 20 || 0 }}>
         <div className={ styles.extraArea } style={{ left: scrollLeft, minHeight: extraArea?'0px':'60px' }}>
           {extraArea}
         </div>
