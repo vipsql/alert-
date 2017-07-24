@@ -705,7 +705,7 @@ export default injectIntl(
     }
   })(Form.create({
     mapPropsToFields: (props) => {
-      const params = props.alertQuery.currentQueryRawData
+      const params = props.alertQuery.currentQueryRawData || {}
       return {
         source: {
           value: typeof params.source !== 'undefined' ? params.source : ''

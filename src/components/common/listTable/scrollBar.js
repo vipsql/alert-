@@ -67,12 +67,13 @@ class ScrollBar extends Component {
   render() {
 
     const { showLeftScrollBar, showRightScrollBar } = this.state;
+    const { sourceOrigin } = this.props;
 
     const leftScrollIcon = classnames(
       'iconfont',
       'icon-cebianlanshouqi',
       styles.scroll,
-      styles.leftScroll,
+      sourceOrigin=='alertQuery'?styles.leftScroll:styles.moreLeftScroll,
       showLeftScrollBar ? styles.show : styles.hide
     )
 
