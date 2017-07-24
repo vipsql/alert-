@@ -143,7 +143,7 @@ class ListTable extends Component {
               topHeight={topHeight}
             />
             </div>
-            <TopFixedArea parentTarget="div.listContainer"
+            <TopFixedArea parentTarget="div.listContainer" sourceOrigin={sourceOrigin}
               theads={
                 <Theads columns={columns}
                   sourceOrigin={sourceOrigin}

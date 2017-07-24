@@ -60,7 +60,7 @@ class LeftFixedArea extends Component {
     return (
       <div ref="leftFixedArea" className={ styles.leftFixedArea }>
         <div className={ styles.leftFixedTopArea }>
-          <TopFixedArea parentTarget="div.listContainer"
+          <TopFixedArea parentTarget="div.listContainer" sourceOrigin={sourceOrigin}
             theads={
               <Theads
                 isAffectTdWithSameKey={ false }
