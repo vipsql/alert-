@@ -12,6 +12,9 @@ export default function({history, app}) {
           cb(null, {component: require('./routes/alertManage')})
         }, 'alertManage')
       },
+      onLeave() {
+        console.log('route Leave')
+      },
       childRoutes: [
         {
           path: 'alertManage',
