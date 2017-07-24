@@ -582,24 +582,16 @@ class Chart extends Component {
         .on("click", (d) => {
           d3Tip.hide()
           let alertListPath = {};
-          let pathArr = d.path.split('/');
-          if (pathArr !== undefined && pathArr[0] !== undefined && pathArr[1] !== undefined) {
-            let temp = pathArr[0];
-            // if ( pathArr[0] == 'severity' || pathArr[0] == 'status') {
-            //     alertListPath[temp] = {key: pathArr[0], keyName: d.parent.name, values: pathArr[1]};
-            // } else
-            if (pathArr[0] == 'source') {
-              alertListPath[temp] = { key: pathArr[0], keyName: d.parent.name, values: d.name };
-            } else if (pathArr[0] != 'severity') {
-              alertListPath[d.parent.name] = { key: d.parent.name, keyName: d.parent.name, values: d.name };
-            }
+          let pName = d.parent.name
+          if (pName) {
+            alertListPath[pName] = { key: pName, keyName: pName, values: d.name }
           }
-          localStorage.setItem('alertListPath', JSON.stringify(alertListPath))
 
-          const path = d.parent.path
-          localStorage.setItem('__visual_group', path)
-          if (path != 'source' && path != 'status' && path != 'severity') {
-            const gr1 = [{ key: d.parent.name, value: d.name }]
+          localStorage.setItem('alertListPath', JSON.stringify(alertListPath))
+          localStorage.setItem('__visual_group', pName)
+
+          if (pName != 'source' && pName != 'status' && pName != 'severity') {
+            const gr1 = [{ key: pName, value: d.name }]
             localStorage.setItem('__alert_visualAnalyze_gr1', JSON.stringify(gr1))
           }
           window.location.hash = "#/alertManage/alertList";

@@ -9,7 +9,7 @@ const initialState = {
   isFold: false, //false展开
   isShowMask: false, // 遮罩层
   notifies: [], // 声音记录
-  userInfo: JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO')) || {}
+  userInfo: JSON.parse(sessionStorage.getItem('UYUN_Alert_USERINFO')) || {}
 }
 
 export default {
@@ -34,14 +34,14 @@ export default {
 
   effects: {
     *beforeHomePage({ payload }, { put, call, select }) {
-      const userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
-      if (!userInfo) {
+      // const userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
+      // if (!userInfo) {
         const infoResult = yield getUserInformation()
         if (infoResult.result) {
           yield put({ type: 'setUserInfo', payload: infoResult.data })
-          yield localStorage.setItem('UYUN_Alert_USERINFO', JSON.stringify(infoResult.data))
+          yield sessionStorage.setItem('UYUN_Alert_USERINFO', JSON.stringify(infoResult.data))
         }
-      }
+      //}
       yield put({ type: 'isSetTags' })
     },
     *getNotifies({ payload }, { put, call, select }) {

@@ -90,10 +90,10 @@ function n_minutes_interval(nmins) {
 class AlertBar extends Component{
   constructor(props){
     super(props)
-    
+
   }
 
-  shouldComponentUpdate(nextProps, nextState){   
+  shouldComponentUpdate(nextProps, nextState){
     return this.props.alertList.barData !== nextProps.alertList.barData || this.props.alertList.isResize !== nextProps.alertList.isResize
   }
   renderBar(barData, selectedTime){
@@ -101,7 +101,7 @@ class AlertBar extends Component{
     let timer = null,
         minGranularity = 2,
         format = d3.time.format('%H:%M');
-        
+
     switch(selectedTime) {
       case 'lastOneHour':
         minGranularity = 1;
@@ -124,7 +124,7 @@ class AlertBar extends Component{
         minGranularity = 12 * 60;
         format = d3.time.format('%m-%d');
         break;
-      default: 
+      default:
         break;
     }
     const startTime = barData[0]['time']
@@ -136,10 +136,10 @@ class AlertBar extends Component{
     const min5 = n_minutes_interval(minGranularity);
     const alertList = crossfilter(barData)
     const clientWidth = document.documentElement.clientWidth || document.body.clientWidth
-    
+
     const leftMenuWidth = this.props.alertList.isResize ? 50 : 160 //是否折叠
     const width = clientWidth - leftMenuWidth - 50;
-    
+
     const height = 80
     const margins = {top: 0, right: 20, bottom: 25, left: 15}
     const dim = alertList.dimension(function(d) { return d.time; })
@@ -155,12 +155,12 @@ class AlertBar extends Component{
                   .x(d3.time.scale().domain([start, end]))
                   .xUnits(min5.range)
                   .filter([start, end])
-                  
+
     this.chart.xAxis().tickSize(0).tickPadding(10).tickFormat(format)
     // this.chart.selectAll('g.tick text')
     //           .call(function (text, width) {
     //             text.each(function() {
-                  
+
     //               var text = d3.select(this);
     //               console.log(text.text())
     //               var words = text.text().split(/\s/).reverse(),
@@ -176,11 +176,11 @@ class AlertBar extends Component{
     //             })
     //           })
     this.chart.render()
-      // brush拖动选择过滤 
+      // brush拖动选择过滤
     this.chart.on('filtered', function(d, f){
-          
+
       clearTimeout(timer)
-    
+
       timer = setTimeout( () => {
         dispatch({
           type: 'alertList/editAlertBar',
@@ -191,37 +191,32 @@ class AlertBar extends Component{
         })
       }, 1000)
     })
-    
-    
-  }
-  componentWillUnmount(){
-    window.__alert_refresh_timer  && clearInterval(window.__alert_refresh_timer)
-    window.__alert_refresh_timer = null
-    localStorage.removeItem('__alert_refresh')
+
+
   }
   componentDidMount(){
     // this.chart = dc.barChart(".dc-chart")
-    const { barData, selectedTime } = this.props.alertList
+    const { alertList, selectedTime } = this.props
     const { dispatch }  = this.props
 
-    const len = barData.length
+    const len = alertList.barData.length
 
     if(len > 0) {
-        this.renderBar(barData, selectedTime)
+        this.renderBar(alertList.barData, selectedTime)
     }
 
-    
+
       // alertList.remove()
       // alertList.add(genData(new Date(2013, 10, 1, 3),new Date(2013, 10, 1, 7)))
       // chart.x(d3.time.scale().domain([new Date(2013, 10, 1, 3),new Date(2013, 10, 1, 7)]))
       //      .filter([new Date(2013, 10, 1, 4), new Date(2013, 10, 1, 7)])
       // dc.redrawAll()
-    
+
   }
   componentDidUpdate(){
-    const { barData, selectedTime } = this.props.alertList
-    this.renderBar(barData, selectedTime)
-    
+    const { alertList, selectedTime } = this.props
+    this.renderBar(alertList.barData, selectedTime)
+
   }
   render(){
 
@@ -230,7 +225,7 @@ class AlertBar extends Component{
     } = this.props.alertList
 
     const len = barData.length
-    
+
     return (
       <div>
         { len && !this.props.alertList.isLoading ?
@@ -249,4 +244,9 @@ class AlertBar extends Component{
   }
 
 }
-export default connect(({alertList}) => ({alertList}))(AlertBar)
+export default connect( state => {
+  return {
+    alertList: state.alertList,
+    selectedTime: state.alertManage.selectedTime
+  }
+})(AlertBar)

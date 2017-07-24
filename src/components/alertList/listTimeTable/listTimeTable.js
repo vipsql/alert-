@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { Button, Spin} from 'antd';
+import { Button, Spin, Checkbox} from 'antd';
 import { connect } from 'dva'
 import { Popover } from 'antd'
 import Animate from 'rc-animate'
@@ -369,7 +369,7 @@ class ListTimeTable extends Component {
 
               commonTrs.push(
                 <tr key={trKey} className={groupItem.isGroupSpread !== undefined && !groupItem.isGroupSpread ? styles.hiddenChild : styles.groupSpread}>
-                  <td key="checkbox" className={styles.checkstyle}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
+                  <td key="checkbox" className={styles.checkstyle}><Checkbox checked={checkAlert[item.id].checked} data-id={item.id} onClick={checkAlertFunc}/></td>
                   {tds}
                   <td key="timeDot">
                     <div className={styles.timeLineDot}>
@@ -403,7 +403,7 @@ class ListTimeTable extends Component {
             let keys = colsKey;
 
             const tdCheck = Object.keys(checkAlert).length !== 0 ?
-              <td key="checkbox" className={styles.checkstyle}><input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc}/></td>
+              <td key="checkbox" className={styles.checkstyle}><Checkbox checked={checkAlert[item.id].checked} data-id={item.id} onClick={checkAlertFunc}/></td>
               :
               undefined
             const tds = genTds(item, keys)
@@ -450,7 +450,7 @@ class ListTimeTable extends Component {
             <table width='100%' id="listTimeTable" className={styles.listTimeTable}>
               <thead>
                 <tr>
-                  <th key="checkAll" width='48' className={styles.checkstyle}><input type="checkbox" checked={selectedAll} onChange={handleSelectAll}/></th>
+                  <th key="checkAll" width='48' className={styles.checkstyle}><Checkbox onClick={handleSelectAll} checked={selectedAll} /></th>
                   <th width="20" key='space-col'></th>
                   <th width='10'></th>
                   {theads}

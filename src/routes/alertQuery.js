@@ -4,9 +4,7 @@ import AlertQueryManage from '../components/alertQuery'
 
 function alertQuery(dispatch){
   return (
-    <div>
       <AlertQueryManage />
-    </div>
   )
 }
 alertQuery.propTypes = {

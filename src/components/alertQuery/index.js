@@ -16,7 +16,9 @@ import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import ReassignModal from '../common/reassignModal/index.js'
 import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 import ScrollTopButton from '../common/scrollTopButton/index.js'
+import AutoRefresh from '../common/autoRefresh'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import moment from 'moment'
 import $ from 'jquery'
 import _ from 'lodash'
 
@@ -28,6 +30,7 @@ class alertQueryManage extends Component {
 
   constructor(props) {
     super(props)
+    this.queryBefore = this.queryBefore.bind(this)
   }
 
   componentDidMount() {
@@ -49,6 +52,64 @@ class alertQueryManage extends Component {
         })
       }
     }, false)
+  }
+
+  queryBefore(form) {
+
+    let query = null // 查询条件
+      , rawData = null // 用来回显的
+
+    const formData = form.getFieldsValue();
+
+    rawData = JSON.parse(JSON.stringify(formData), (key, value) => {
+      return typeof value === "string" && /^\d{4}\-\d{2}\-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{3}Z$/.test(value) ? moment(value) : value;
+    })
+    // ----------------------------------------------------
+
+    let keyWords = JSON.parse(formData.keyWordsType);
+    let owner = JSON.parse(formData.owner);
+
+    formData.ownerId = owner.userId;
+    formData.keyName = keyWords.keyName;
+    formData.keyWordsType = keyWords.keyWordsType;
+    delete formData.owner
+
+    if (formData.dateTime !== undefined && formData.dateTime.length !== 0) {
+      //   开始时间统一处理为当前日期的0点时间戳
+      const _begin = formData.dateTime[0].toDate()
+      const _end = formData.dateTime[1].toDate()
+      _begin.setHours(0)
+      _begin.setMinutes(0)
+      _begin.setSeconds(0)
+      _begin.setMilliseconds(0)
+
+      formData.begin = _begin.getTime()
+      formData.end = _end.getTime();
+    }
+    delete formData.dateTime
+
+    if (formData.lastOccurTime !== undefined && formData.lastOccurTime.length !== 0) {
+      //   开始时间统一处理为当前日期的0点时间戳
+      const _begin = formData.lastOccurTime[0].toDate()
+      const _end = formData.lastOccurTime[1].toDate()
+      _begin.setHours(0)
+      _begin.setMinutes(0)
+      _begin.setSeconds(0)
+      _begin.setMilliseconds(0)
+
+      formData.lastBegin = _begin.getTime()
+      formData.lastEnd = _end.getTime();
+    }
+    delete formData.lastOccurTime
+
+
+    // -----------------------------------------------------
+    query = JSON.parse(JSON.stringify(formData))
+
+    return {
+      currentQuery: query,
+      currentQueryRawData: rawData
+    }
   }
 
   render() {
@@ -315,55 +376,10 @@ class alertQueryManage extends Component {
         if (!!errors) {
           return;
         }
-        const formData = form.getFieldsValue()
-
-        let keyWords = JSON.parse(formData.keyWordsType);
-        let owner = JSON.parse(formData.owner);
-
-        formData.ownerId = owner.userId;
-        formData.keyName = keyWords.keyName;
-        formData.keyWordsType = keyWords.keyWordsType;
-        delete formData.owner
-
-        if (formData.dateTime !== undefined && formData.dateTime.length !== 0) {
-          //   开始时间统一处理为当前日期的0点时间戳
-          const _begin = formData.dateTime[0].toDate()
-          const _end = formData.dateTime[1].toDate()
-          _begin.setHours(0)
-          _begin.setMinutes(0)
-          _begin.setSeconds(0)
-          _begin.setMilliseconds(0)
-
-          formData.begin = _begin.getTime()
-          formData.end = _end.getTime();
-
-          delete formData.dateTime
-        }
-
-        if (formData.lastOccurTime !== undefined && formData.lastOccurTime.length !== 0) {
-          //   开始时间统一处理为当前日期的0点时间戳
-          const _begin = formData.lastOccurTime[0].toDate()
-          const _end = formData.lastOccurTime[1].toDate()
-          _begin.setHours(0)
-          _begin.setMinutes(0)
-          _begin.setSeconds(0)
-          _begin.setMilliseconds(0)
-
-          formData.lastBegin = _begin.getTime()
-          formData.lastEnd = _end.getTime();
-
-          delete formData.lastOccurTime
-        }
-
-        // 修复选择时间后删掉时间重新搜索 参数不对bug
-        if (formData.dateTime && formData.dateTime.length == 0) {
-          delete formData.dateTime
-        }
-
 
         dispatch({
           type: 'alertQuery/queryBefore',
-          payload: formData
+          payload: this.queryBefore(form) ///需要对传过去的参数和保存回显的参数做针对性处理
         })
 
       })
@@ -441,7 +457,12 @@ class alertQueryManage extends Component {
     )
 
     return (
-      <div>
+      <div style={{ position: 'relative' }}>
+        <AutoRefresh origin='alertList' top={"-50px"} refresh={() => {
+          dispatch({
+            type: 'alertQuery/queryAlertList'
+          })
+        }} />
         <div className={classnames(styles.searchBar, isShowBar ? '' : styles.hideBar)}>
           <Form>
             <Row>
@@ -667,10 +688,49 @@ class alertQueryManage extends Component {
   }
 }
 
-export default injectIntl(Form.create()(
+export default injectIntl(
   connect((state) => {
     return {
       alertQuery: state.alertQuery,
     }
-  })(alertQueryManage)
-))
+  })(Form.create({
+    mapPropsToFields: (props) => {
+      const params = props.alertQuery.currentQueryRawData || {}
+      return {
+        source: {
+          value: typeof params.source !== 'undefined' ? params.source : ''
+        },
+        dateTime: {
+          value: typeof params.dateTime !== 'undefined' ? params.dateTime : []
+        },
+        lastOccurTime: {
+          value: typeof params.lastOccurTime !== 'undefined' ? params.lastOccurTime : []
+        },
+        severity: {
+          value: typeof params.severity !== 'undefined' ? params.severity : undefined
+        },
+        status: {
+          value: typeof params.status !== 'undefined' ? params.status : ''
+        },
+        duration: {
+          value: typeof params.duration !== 'undefined' ? params.duration : undefined
+        },
+        count: {
+          value: typeof params.count !== 'undefined' ? params.count : undefined
+        },
+        isNotify: {
+          value: typeof params.isNotify !== 'undefined' ? params.isNotify : undefined
+        },
+        owner: {
+          value: typeof params.owner !== 'undefined' ? params.owner : JSON.stringify({ userId: '', realName: '' })
+        },
+        keyWordsType: {
+          value: typeof params.keyWordsType !== 'undefined' ? params.keyWordsType : JSON.stringify({ 'keyWordsType': '1' })
+        },
+        keyWords: {
+          value: typeof params.keyWords !== 'undefined' ? params.keyWords : undefined
+        }
+      }
+    }
+  })(alertQueryManage))
+)

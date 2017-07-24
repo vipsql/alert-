@@ -24,11 +24,11 @@ const ListTableWrap = ({ dispatch, alertListTable, topHeight, topFixArea }) => {
       })
     },
     checkAlertFunc(e) {
-      const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
+      const alertId = e.target.getAttribute('data-id');
       dispatch({
         type: 'alertListTable/handleCheckboxClick',
         payload: {
-          alertInfo
+          alertId
         }
       })
     },

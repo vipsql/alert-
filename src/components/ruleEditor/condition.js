@@ -1,10 +1,11 @@
 import React, { PropTypes, Component } from 'react';
 import { default as cls } from 'classnames';
 import { Select, Input } from 'antd';
+import { groupSort } from '../../utils/index'
 
 import styles from './condition.less';
 
-const Option = Select.Option;
+const {Option, OptGroup } = Select;
 
 const optList = {
     addr: [
@@ -137,6 +138,12 @@ const valueList = {
     ]
 };
 
+const attributeLabels = [
+    window.__alert_appLocaleData.messages['ruleEditor.label1'],
+    window.__alert_appLocaleData.messages['ruleEditor.label2'],
+    window.__alert_appLocaleData.messages['ruleEditor.label3']
+]
+
 class Condition extends Component {
     // 删除条件项
     // deleteLine() {
@@ -147,6 +154,7 @@ class Condition extends Component {
         let keyList = [];
         let local = 'Zh';
         const { node, source, classCode, attributes, _key, opt, value, level, index, deleteLine, changeConditionContent, _this } = this.props;
+        const groupList = groupSort()(attributes, 'group')
         valueList.source = source.map(item => {
             return { name: item.value, value: item.key };
         });
@@ -156,21 +164,25 @@ class Condition extends Component {
         if (window.__alert_appLocaleData.locale === 'en-us') {
             local = 'Us'
         };
-        keyList = attributes.map(item => {
-            return {
-                name: item[`name${local}`],
-                value: item['nameUs'],
-                type: item['type']
-            };
+        keyList = groupList.map(item => {
+            return item.children.map(child => {
+              return {
+                  name: child[`name${local}`],
+                  value: child['nameUs'],
+                  type: child['type']
+              };
+            })
         });
         let _optList = [];
         keyList.forEach(item => {
-            if (item.value === _key) {
-                _optList = optList[item.type]
-            }
-            if (_key === 'entityAddr') {
-                _optList = optList['addr']
-            }
+            item.forEach(child => {
+              if (child.value === _key) {
+                  _optList = optList[child.type]
+              }
+              if (_key === 'entityAddr') {
+                  _optList = optList['addr']
+              }
+            })
         });
         return (
             <div key={new Date().getTime() + 'level' + level} className={cls(
@@ -179,9 +191,17 @@ class Condition extends Component {
             )}>
                 <Select getPopupContainer={() =>document.getElementById("content")} onChange={changeConditionContent.bind(_this, node, index, 'key')} className={styles.key} value={_key} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phField']}>
                     {
-                        keyList.map(item => (
-                            <Option key={item.value}>{item.name}</Option>
-                        ))
+                        keyList.map((item, itemIndex) => {
+                            return (
+                              <OptGroup label={attributeLabels[itemIndex]} key={itemIndex}>
+                                {
+                                  item.map( child => (
+                                    <Option key={child.value}>{child.name}</Option>
+                                  ))
+                                }
+                              </OptGroup>
+                            )
+                        })
                     }
                 </Select>
                 <Select getPopupContainer={() =>document.getElementById("content")} style={{ width: 150 }} onChange={changeConditionContent.bind(_this, node, index, 'opt')} className={styles.opt} value={opt} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phOpt']}>

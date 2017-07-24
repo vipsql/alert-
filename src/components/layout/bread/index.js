@@ -52,7 +52,7 @@ function Bread ({ location, appTypeName }) {
   const pathname = location.pathname
   const pathDepth = pathname.split('/')
   let breads = []
-  
+
   if(pathname == '\/') { //首页进去时需要处理
     breads.push(
       <Breadcrumb.Item key='alertManage'><FormattedMessage {...path['alertManage']}/></Breadcrumb.Item>
@@ -90,7 +90,7 @@ function Bread ({ location, appTypeName }) {
       <Breadcrumb.Item key="alertApplication"><a href="#alertConfig/alertApplication"><FormattedMessage {...path['integration']}/></a></Breadcrumb.Item>,
       <Breadcrumb.Item key="applicationView">{appTypeName}</Breadcrumb.Item>
     )
-  }else{
+  } else {
     const key = pathDepth[1]
     breads.push(<Breadcrumb.Item key={pathDepth[1]}><FormattedMessage {...path[key]}/></Breadcrumb.Item>)
   }
@@ -111,9 +111,9 @@ Bread.propTypes = {
 }
 
 export default connect(({alertConfig}) => ({
-  appTypeName: alertConfig.currentOperateAppType.name !== undefined 
-    ? alertConfig.currentOperateAppType.name 
-      : alertConfig.currentEditApp.applyType !== undefined && alertConfig.currentEditApp.applyType.name !== undefined ? 
+  appTypeName: alertConfig.currentOperateAppType.name !== undefined
+    ? alertConfig.currentOperateAppType.name
+      : alertConfig.currentEditApp.applyType !== undefined && alertConfig.currentEditApp.applyType.name !== undefined ?
         alertConfig.currentEditApp.applyType.name
           : 'Integrations Config'
 }))(Bread)

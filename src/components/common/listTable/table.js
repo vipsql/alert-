@@ -190,7 +190,7 @@ class Table extends Component {
               {data}
               {
                 sourceOrigin !== 'alertQuery' && item['hasChild'] === true && target === 'parent' ?
-                  <span className={relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
+                  <span className={relieveIcon} onClick={relieveClick}></span>
                   :
                   undefined
               }
@@ -355,7 +355,7 @@ class Table extends Component {
               {
                 //<input type="checkbox" checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc} />
                 sourceOrigin !== 'alertQuery' ?
-                  <td key={tdKey} className={classnames(styles.checkstyle, styles.little)}><Checkbox checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-no-need-wrap={true} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc} /></td>
+                  <td key={tdKey} className={classnames(styles.checkstyle, styles.little)}><Checkbox checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-no-need-wrap={true} onClick={checkAlertFunc} /></td>
                   :
                   undefined
               }
@@ -396,7 +396,7 @@ class Table extends Component {
               //<input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc} />
               sourceOrigin !== 'alertQuery' && Object.keys(checkAlert).length !== 0 ?
                 <td key={index} className={classnames(styles.checkstyle, styles.little)} style={{ width: item.isFixed?'50px': undefined }}>
-                  <Checkbox checked={checkAlert[item.id].checked} data-id={item.id} data-no-need-wrap={true} data-all={JSON.stringify(item)} onClick={checkAlertFunc} />
+                  <Checkbox checked={checkAlert[item.id].checked} data-id={item.id} data-no-need-wrap={true} onClick={checkAlertFunc} />
                 </td>
                 :
                 undefined

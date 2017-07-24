@@ -238,8 +238,7 @@ export default {
       return { ...state, checkAlert: checkAlert, operateAlertIds: [], selectedAlertIds: [], selectedAll: false }
     },
     // 更改勾选状态
-    changeCheckAlert(state, { payload: { alertInfo } }) {
-      const alertId = alertInfo.id;
+    changeCheckAlert(state, { payload: { alertId } }) {
       const previousChecked = state.checkAlert[alertId].checked
       let newOperateAlertIds = [];
       let newSelectedAlertIds = [];
@@ -1005,9 +1004,9 @@ export default {
     },
 
     // 响应列表项的选中状态
-    *handleCheckboxClick({ payload: { alertInfo } }, { select, put, call }) {
+    *handleCheckboxClick({ payload: { alertId } }, { select, put, call }) {
 
-      yield put({ type: 'changeCheckAlert', payload: { alertInfo } });
+      yield put({ type: 'changeCheckAlert', payload: { alertId } });
 
       const selectedAlertIds = yield select(state => state.alertListTable.selectedAlertIds)
       // 如果列表为空，或者其中有一个未接手的，disabled都为true

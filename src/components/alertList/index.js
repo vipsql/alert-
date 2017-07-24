@@ -24,6 +24,7 @@ import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import AlertOriginSliderWrap from '../alertOriginSlider/wrap.js'
 import FilterHead from '../common/filterHead/index.js'
 import ScrollTopButton from '../common/scrollTopButton/index'
+import AutoRefresh from '../common/autoRefresh'
 import { classnames } from '../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -76,10 +77,6 @@ class AlertListManage extends Component {
         id: 'alertList.tabs.visual',
         defaultMessage: '可视化分析'
       },
-      auto_refresh: {
-        id: 'alertList.autoRefresh',
-        defaultMessage: '自动刷新'
-      },
       noAlert: {
         id: 'alertManage.noAlert',
         defaultMessage: '无告警'
@@ -97,26 +94,10 @@ class AlertListManage extends Component {
       })
     }
 
-    const refreshProps = {
-      onChange(checked) {
-
-        localStorage.setItem('__alert_refresh', checked)
-        if (!checked) {
-          window.__alert_refresh_timer && clearInterval(window.__alert_refresh_timer)
-          window.__alert_refresh_timer = undefined
-
-        } else {
-          if (!window.__alert_refresh_timer) {
-
-            window.__alert_refresh_timer = setInterval(function () {
-              dispatch({
-                type: 'tagListFilter/refresh',
-              })
-            }, 60000)
-
-          }
-        }
-      }
+    const refresh = () => {
+      dispatch({
+        type: 'alertList/refresh'
+      })
     }
 
     const tabList = classnames(
@@ -171,6 +152,7 @@ class AlertListManage extends Component {
 
     return (
       <div style={{ position: 'relative' }}>
+        <AutoRefresh origin='alertList' refresh={refresh} />
         <FilterHead
           style={{ marginBottom: '20px' }}
           defaultTime={alertManage.selectedTime}
@@ -184,7 +166,6 @@ class AlertListManage extends Component {
         />
         <div className={alertList.isShowBar ? styles.showBar : styles.hideBar}>
           <AlertTagsFilter />
-          <div className={styles.alertSwitch}><span><FormattedMessage {...localeMessage['auto_refresh']} /></span><Switch {...refreshProps} /></div>
           <AlertBar />
         </div>
         <Button className={classnames(styles.toggleBarButton, zhankaiClass)} onClick={toggleBarButtonClick} size="small"><i className={classnames(alertList.isShowBar ? shouqiClass : zhankaiClass, styles.toggleBarButtonIcon)} /></Button>
