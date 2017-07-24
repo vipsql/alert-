@@ -608,7 +608,17 @@ class alertQueryManage extends Component {
                   {getFieldDecorator('owner', {
                     initialValue: JSON.stringify({ userId: '', realName: '' })
                   })(
-                    <Select getPopupContainer={() => document.getElementById("content")} showSearch filterOption={false} onSearch={
+                    <Select getPopupContainer={() => document.getElementById("content")} onChange={ (value) => {
+                      dispatch({
+                        type: 'alertQuery/setCurrentQuery',
+                        payload: {
+                          currentQueryRawData: {
+                            ...this.props.alertQuery.currentQueryRawData,
+                            owner: value
+                          }
+                        }
+                      })
+                    }} showSearch filterOption={false} onSearch={
                       _.debounce((value) => {
                         dispatch({
                           type: 'alertQuery/ownerQuery',

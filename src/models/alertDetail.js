@@ -12,8 +12,6 @@ const initalState = {
   isShowDetail: false, // 是否显示detail
   isLoading: false, // 是否处于加载中状态
 
-  users: [], //获取的可转派用户
-
   invokeByOutside: false, // 是否来自外部调用
 
   isShowFormModal: false, // 派发工单modal
@@ -519,17 +517,16 @@ export default {
         payload && payload.checkFailPayload && payload.checkFailPayload({ checkResponse, operateCode: 210 });
         return;
       }
-      const users = yield select(state => state.alertDetail.users);
-      if (users.length === 0) {
-        const response = yield call(getUsers);
-        if (response.result) {
-          yield put({
-            type: 'receiveAllUsers',
-            payload: response.data
-          });
-        } else {
-          message.error(response.message, 2);
-        }
+      const response = yield call(getUsers);
+      if (response.result) {
+        yield put({
+          type: 'setUsers',
+          payload: {
+            notifyUsers: response.data
+          }
+        });
+      } else {
+        message.error(response.message, 2);
       }
       yield put({
         type: 'toggleReassignModal',
@@ -700,14 +697,6 @@ export default {
         shareDisabled
       }
     },
-
-    // 设置所有可分配的用户列表
-    receiveAllUsers(state, { payload: users }) {
-      return {
-        ...state,
-        users
-      }
-    }
   },
 
 }

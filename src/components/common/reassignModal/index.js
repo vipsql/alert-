@@ -4,6 +4,7 @@ import styles from './index.less'
 import { classnames } from '../../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import { message } from 'antd';
+import _ from 'lodash'
 
 const localMessage = defineMessages({
   modal_cancel: {
@@ -70,7 +71,8 @@ class ReassignModal extends Component {
       size: 'large',
       style: { width: '100%' },
       value: this.state.selectedUser,
-      onChange: this.handleChange
+      onChange: this.handleChange,
+      filterOption: false
     }
 
     return (
@@ -86,7 +88,9 @@ class ReassignModal extends Component {
           <Row>
             <Col span='7' style={{ lineHeight: '32px' }} className={styles.specificUser}>{formatMessage(localMessage['modal_specificUser']) + ': '}</Col>
             <Col span='17'>
-              <Select {...selectProps}>
+              <Select {...selectProps} showSearch onSearch={ _.debounce( (value) => {
+                this.props.ownerQuery(value)
+              }, 500)}>
                 {users.map(user => (<Option key={user.userId}>{user.realName}</Option>))}
               </Select>
             </Col>
