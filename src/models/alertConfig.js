@@ -89,7 +89,7 @@ export default {
     // 通过modal进入详情页
     *addApplicationView({payload}, {select, put, call}) {
       const app = yield select(state => state.app)
-      const local = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
+      const local = JSON.parse(sessionStorage.getItem('UYUN_Alert_USERINFO'))
       if (payload !== undefined) {
         yield put({
           type: 'setApiKeys',
@@ -121,7 +121,7 @@ export default {
     // 通过编辑进入详情页
     *editApplicationView({payload}, {select, put, call}) {
       const app = yield select(state => state.app)
-      const local = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
+      const local = JSON.parse(sessionStorage.getItem('UYUN_Alert_USERINFO'))
       if (payload !== undefined) {
         const viewResult = yield call(view, payload)
         if (viewResult.result) {
