@@ -18,27 +18,27 @@ class App extends Component {
 
   constructor(props) {
     super(props)
-    this.claarLocalStorage = claarLocalStorage.bind(this)
+    //this.claarLocalStorage = claarLocalStorage.bind(this)
   }
 
 
   componentDidMount() {
-    this.context.router.setRouteLeaveHook(this.props.route, () => {
-      console.log('Leave')
-      this.claarLocalStorage();
-    })
+    // this.context.router.setRouteLeaveHook(this.props.route, () => {
+    //   console.log('Leave')
+    //   this.claarLocalStorage();
+    // })
     NotificationApi.config({
       placement: 'toopRight',
       threshold: 10
     })
-    window.addEventListener('beforeunload', (e) => {
-      console.log('beforeunload unmount')
-      var confirmationMessage = "\o/";
-      // -------- operation ---------------
-      this.claarLocalStorage();
-      e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
-      return confirmationMessage;              // Gecko, WebKit, Chrome <34
-    })
+    // window.addEventListener('beforeunload', (e) => {
+    //   console.log('beforeunload unmount')
+    //   var confirmationMessage = "\o/";
+    //   // -------- operation ---------------
+    //   this.claarLocalStorage();
+    //   e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
+    //   return confirmationMessage;              // Gecko, WebKit, Chrome <34
+    // })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -55,7 +55,7 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    console.log('app unmount')
+    //console.log('app unmount')
     NotificationApi.destroy();
     this.claarLocalStorage();
   }
@@ -113,9 +113,9 @@ class App extends Component {
   }
 }
 
-App.contextTypes = {
-  router: React.PropTypes.object
-}
+// App.contextTypes = {
+//   router: React.PropTypes.object
+// }
 App.propTypes = {
   children: PropTypes.element.isRequired,
   location: PropTypes.object,

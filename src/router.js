@@ -12,9 +12,6 @@ export default function({history, app}) {
           cb(null, {component: require('./routes/alertManage')})
         }, 'alertManage')
       },
-      onLeave() {
-        console.log('route Leave')
-      },
       childRoutes: [
         {
           path: 'alertManage',
@@ -52,7 +49,7 @@ export default function({history, app}) {
                 // 每次离开记录从热图那边的轨迹
                 let gr1 = JSON.parse(localStorage.getItem('__alert_visualAnalyze_gr1')) || [];
                 // 用户路径记录
-                let userRecordKey 
+                let userRecordKey
                 const gr1keys = gr1.map((item) => {
                   return item.key
                 })
@@ -64,7 +61,7 @@ export default function({history, app}) {
                 }
                 localStorage.setItem(`__alert_${key}_colums`, localStorage.getItem('__alert_list_userColumns'))
                 localStorage.setItem(userRecordKey, JSON.stringify(userRecordVal))
-                
+
               }catch(e){
                 throw new Error(e)
             }
@@ -211,7 +208,7 @@ export default function({history, app}) {
               let isLoadModal = false
               app._models.forEach(function(ele) {
                 if(ele.namespace == 'alertExport'){
-                  
+
                   isLoadModal = true
                 }
               });

@@ -34,14 +34,14 @@ export default {
 
   effects: {
     *beforeHomePage({ payload }, { put, call, select }) {
-      const userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
-      if (!userInfo) {
+      // const userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
+      // if (!userInfo) {
         const infoResult = yield getUserInformation()
         if (infoResult.result) {
           yield put({ type: 'setUserInfo', payload: infoResult.data })
           yield localStorage.setItem('UYUN_Alert_USERINFO', JSON.stringify(infoResult.data))
         }
-      }
+      //}
       yield put({ type: 'isSetTags' })
     },
     *getNotifies({ payload }, { put, call, select }) {
