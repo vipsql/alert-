@@ -140,7 +140,7 @@ class AlertListManage extends Component {
         case 'Information':
           levels_wapper['1'] = levels['Information']
           break;
-        case 'OK':
+        case 'Recovery':
           levels_wapper['0'] = levels['OK']
           break;
         default:
