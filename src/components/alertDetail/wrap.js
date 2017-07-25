@@ -88,7 +88,7 @@ const AlertDetailWrap = ({ alertDetail, dispatch, afterTakeOver, afterChatOpsh, 
       dispatch({
         type: 'alertDetail/submitReassign',
         payload: {
-          toWho: selectedUser,
+          toWho: selectedUser.key,
           resolve: afterReassign
         }
       })

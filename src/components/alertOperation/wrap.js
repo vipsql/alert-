@@ -508,7 +508,7 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch, intl: { 
       dispatch({
         type: 'alertOperation/submitReassign',
         payload: {
-          toWho: selectedUser,
+          toWho: selectedUser.key,
           operateAlertIds: alertListTable.operateAlertIds,
           resolve: (response) => {
             if (response && response.result) {
