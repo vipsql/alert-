@@ -94,11 +94,32 @@ const ListTimeTableWrap = ({ dispatch, alertListTable, selectedTime }) => {
     // 解除告警
     relieveClick(e) {
       e.stopPropagation();
-      const alertInfo = JSON.parse(e.target.getAttribute('data-all'));
-
+      const obj = JSON.parse(e.target.getAttribute('data-id'));
+      let relieve = null
+      if (alertListTable.isGroup) {
+        alertListTable.data.forEach( (group) => {
+          if (group.classify == obj.classify) {
+            group.children.forEach(item => {
+              if (item.id == obj.id) {
+                relieve = {
+                  ...item
+                }
+              }
+            })
+          }
+        })
+      } else {
+          alertListTable.data.forEach(item => {
+            if (item.id == obj.id) {
+              relieve = {
+                ...item
+              }
+            }
+          })
+      }
       dispatch({
         type: 'alertOperation/openRelieveModalByButton',
-        payload: alertInfo
+        payload: relieve
       })
     }
 

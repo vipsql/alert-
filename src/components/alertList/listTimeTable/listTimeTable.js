@@ -182,7 +182,7 @@ class ListTimeTable extends Component {
       let tbodyCon = []
 
       // 生成列
-      const genTds = (item, keys, target = 'parent') => {
+      const genTds = (item, keys, target = 'parent', classify) => {
         let TDS = []
         const relieveIcon = classnames(
             'iconfont',
@@ -210,7 +210,7 @@ class ListTimeTable extends Component {
               <div key = 'nameDiv' title={item[key]} className={styles['name']} data-id={item.id}>{item[key]}</div>
               {
                 item['hasChild'] === true && target === 'parent'?
-                <span className={relieveIcon} data-all={JSON.stringify(item)} onClick={relieveClick}></span>
+                <span className={relieveIcon} data-id={classify ? JSON.stringify({id: item.id, classify: classify}) : JSON.stringify({id: item.id})} onClick={relieveClick}></span>
                 :
                 undefined
               }
@@ -348,7 +348,7 @@ class ListTimeTable extends Component {
 
             groupItem.children.forEach( (item, itemIndex) => {
 
-              const tds = genTds(item, keys)
+              const tds = genTds(item, keys, _, groupItem.classify)
               const dotsInfo = genDots(item.timeLine, keys)
               const dots = dotsInfo.dots
               const lineDotW = dotsInfo.lineDotW

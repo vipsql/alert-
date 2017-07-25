@@ -546,6 +546,7 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch, intl: { 
 
   const relieveProps = {
     isShowRelieveModal: alertOperation.isShowRelieveModal,
+    relieveObj: alertOperation.relieveAlert,
     closeRelieveModal: () => {
       dispatch({
         type: 'alertOperation/toggleRelieveModal',
