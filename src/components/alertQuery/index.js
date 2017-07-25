@@ -69,7 +69,7 @@ class alertQueryManage extends Component {
     let keyWords = JSON.parse(formData.keyWordsType);
     let owner = JSON.parse(formData.owner);
 
-    formData.ownerId = owner.userId;
+    formData.ownerId = owner.key;
     formData.keyName = keyWords.keyName;
     formData.keyWordsType = keyWords.keyWordsType;
     delete formData.owner
@@ -606,7 +606,7 @@ class alertQueryManage extends Component {
                   label={<FormattedMessage {...localeMessage['owner']} />}
                 >
                   {getFieldDecorator('owner', {
-                    initialValue: JSON.stringify({ userId: '', realName: '' })
+
                   })(
                     <Select getPopupContainer={() => document.getElementById("content")} onChange={ (value) => {
                       dispatch({
@@ -618,7 +618,7 @@ class alertQueryManage extends Component {
                           }
                         }
                       })
-                    }} showSearch filterOption={false} onSearch={
+                    }} showSearch filterOption={false} labelInValue onSearch={
                       _.debounce((value) => {
                         dispatch({
                           type: 'alertQuery/ownerQuery',
@@ -628,9 +628,9 @@ class alertQueryManage extends Component {
                         })
                       }, 500)
                     }>
-                      <Option value={JSON.stringify({ userId: '', realName: '' })}>{formatMessage({ ...localeMessage['allOwners'] })}</Option>
+                      <Option value=''>{formatMessage({ ...localeMessage['allOwners'] })}</Option>
                       {
-                        ownerOptions.map((owner, index) => <Option key={index} value={JSON.stringify(owner)}>{owner.realName}</Option>)
+                        ownerOptions.map((owner, index) => <Option key={index} value={owner.userId}>{owner.realName}</Option>)
                       }
                     </Select>
                     )}
@@ -732,7 +732,7 @@ export default injectIntl(
           value: typeof params.isNotify !== 'undefined' ? params.isNotify : undefined
         },
         owner: {
-          value: typeof params.owner !== 'undefined' ? params.owner : JSON.stringify({ userId: '', realName: '' })
+          value: typeof params.owner !== 'undefined' ? params.owner : {key: '', label: ''}
         },
         keyWordsType: {
           value: typeof params.keyWordsType !== 'undefined' ? params.keyWordsType : JSON.stringify({ 'keyWordsType': '1' })
