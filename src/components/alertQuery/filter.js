@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { connect } from 'dva'
 import { Row, Col, Form, Input, Select, DatePicker, Button, Popover, Checkbox, message } from 'antd'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import styles from './index.less'
@@ -27,9 +28,9 @@ class Filter extends Component {
     // ----------------------------------------------------
 
     let keyWords = JSON.parse(formData.keyWordsType);
-    let owner = JSON.parse(formData.owner);
+    let owner = formData.owner;
 
-    formData.ownerId = owner.userId;
+    formData.ownerId = owner.key;
     formData.keyName = keyWords.keyName;
     formData.keyWordsType = keyWords.keyWordsType;
     delete formData.owner
@@ -265,12 +266,12 @@ class Filter extends Component {
                 {getFieldDecorator('dateTime', {
 
                 })(
-                  <DatePeriodPicker placeholder={ formatMessage({...localeMessage['firstOccurTime_placeholder']}) } onChange={([startDate, endDate]) => {
+                  <DatePeriodPicker placeholder={formatMessage({ ...localeMessage['firstOccurTime_placeholder'] })} onChange={([startDate, endDate]) => {
                     form.setFieldsValue({
                       dateTime: [startDate, endDate]
                     })
                   }} />
-                )}
+                  )}
 
               </Item>
             </Col>
@@ -283,12 +284,12 @@ class Filter extends Component {
                 {getFieldDecorator('lastOccurTime', {
 
                 })(
-                  <DatePeriodPicker placeholder={ formatMessage({...localeMessage['lastOccurTime_placeholder']}) } onChange={([startDate, endDate]) => {
+                  <DatePeriodPicker placeholder={formatMessage({ ...localeMessage['lastOccurTime_placeholder'] })} onChange={([startDate, endDate]) => {
                     form.setFieldsValue({
                       lastOccurTime: [startDate, endDate]
                     })
                   }} />
-                )}
+                  )}
               </Item>
             </Col>
           </Row>
@@ -386,21 +387,33 @@ class Filter extends Component {
                 label={<FormattedMessage {...localeMessage['owner']} />}
               >
                 {getFieldDecorator('owner', {
-                  initialValue: JSON.stringify({ userId: '', realName: '' })
+
                 })(
-                  <Select getPopupContainer={() => document.getElementById("content")} showSearch filterOption={false} onSearch={
-                    _.debounce((value) => {
+                  <Select getPopupContainer={() => document.getElementById("content")} labelInValue showSearch filterOption={false}
+                    onChange={(value) => {
                       dispatch({
-                        type: 'alertQuery/ownerQuery',
+                        type: 'alertQuery/setCurrentQuery',
                         payload: {
-                          realName: value
+                          currentQueryRawData: {
+                            ...this.props.alertQuery.currentQueryRawData,
+                            owner: value
+                          }
                         }
                       })
-                    }, 500)
-                  }>
-                    <Option value={JSON.stringify({ userId: '', realName: '' })}>{formatMessage({ ...localeMessage['allOwners'] })}</Option>
+                    }}
+                    onSearch={
+                      _.debounce((value) => {
+                        dispatch({
+                          type: 'alertQuery/ownerQuery',
+                          payload: {
+                            realName: value
+                          }
+                        })
+                      }, 500)
+                    }>
+                    <Option value=''>{formatMessage({ ...localeMessage['allOwners'] })}</Option>
                     {
-                      ownerOptions.map((owner, index) => <Option key={index} value={JSON.stringify(owner)}>{owner.realName}</Option>)
+                      ownerOptions.map((owner, index) => <Option key={index} value={owner.userId}>{owner.realName}</Option>)
                     }
                   </Select>
                   )}
@@ -459,6 +472,11 @@ class Filter extends Component {
 }
 
 export default injectIntl(
+  connect((state) => {
+    return {
+      alertQuery: state.alertQuery
+    }
+  })
   (Form.create({
     mapPropsToFields: (props) => {
       const params = props.alertQuery.currentQueryRawData || {};
@@ -488,7 +506,7 @@ export default injectIntl(
           value: typeof params.isNotify !== 'undefined' ? params.isNotify : undefined
         },
         owner: {
-          value: typeof params.owner !== 'undefined' ? params.owner : JSON.stringify({ userId: '', realName: '' })
+          value: typeof params.owner !== 'undefined' ? params.owner : { key: '', label: '' }
         },
         keyWordsType: {
           value: typeof params.keyWordsType !== 'undefined' ? params.keyWordsType : JSON.stringify({ 'keyWordsType': '1' })

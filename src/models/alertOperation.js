@@ -292,11 +292,11 @@ export default {
       }
     },
     // 打开解除告警modal(点击按钮的方式)
-    *openRelieveModalByButton({ payload }, { select, put, call }) {
-      if (payload !== undefined) {
+    *openRelieveModalByButton({ payload: obj }, { select, put, call }) {
+      if (obj !== undefined) {
         yield put({
           type: 'setRelieveAlert',
-          payload: payload || {}
+          payload: obj || {}
         })
         yield put({
           type: 'toggleRelieveModal',

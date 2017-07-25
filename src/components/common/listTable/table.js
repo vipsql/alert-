@@ -161,7 +161,7 @@ class Table extends Component {
 
     // 生成每一列的参数
     // 生成一行
-    const getTds = (item, keys, target = 'parent') => {
+    const getTds = (item, keys, target = 'parent', classify) => {
       let tds = [];
       const relieveIcon = classnames(
         'iconfont',
@@ -190,7 +190,7 @@ class Table extends Component {
               {data}
               {
                 sourceOrigin !== 'alertQuery' && item['hasChild'] === true && target === 'parent' ?
-                  <span className={relieveIcon} onClick={relieveClick}></span>
+                  <span className={relieveIcon} data-id={classify ? JSON.stringify({classify: classify, id: item.id}) : JSON.stringify({id: item.id})} onClick={relieveClick}></span>
                   :
                   undefined
               }
@@ -300,7 +300,7 @@ class Table extends Component {
       data.forEach((item, index) => {
         const keys = colsKey
         let childtrs = []
-        console.log(trKey, "isGroup");
+        //console.log(trKey, "isGroup");
         let groupTitle = item.isGroupSpread === false ?
           (<WrapableTr className={styles.trGroup} key={index}>
             <td colSpan={keys.length + 3}>
@@ -334,7 +334,7 @@ class Table extends Component {
 
         item.children !== undefined && item.children.forEach((childItem, itemIndex) => {
 
-          const tds = getTds(childItem, keys)
+          const tds = getTds(childItem, keys, _, item.classify)
 
           // 如果有子告警
           let childs = []
@@ -395,7 +395,7 @@ class Table extends Component {
             {
               //<input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc} />
               sourceOrigin !== 'alertQuery' && Object.keys(checkAlert).length !== 0 ?
-                <td key={index} className={classnames(styles.checkstyle, styles.little)} style={{ width: item.isFixed?'50px': undefined }}>
+                <td className={classnames(styles.checkstyle, styles.little)} style={{ width: item.isFixed?'50px': undefined }}>
                   <Checkbox checked={checkAlert[item.id].checked} data-id={item.id} data-no-need-wrap={true} onClick={checkAlertFunc} />
                 </td>
                 :

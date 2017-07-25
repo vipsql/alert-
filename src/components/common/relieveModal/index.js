@@ -5,8 +5,7 @@ import styles from './index.less'
 import { classnames } from '../../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
-const RelieveModal = ({ isShowRelieveModal, relieveAlert, closeRelieveModal }) => {
-
+const RelieveModal = ({ isShowRelieveModal, relieveObj, relieveAlert, closeRelieveModal }) => {
     const localeMessage = defineMessages({
         modal_cancel: {
             id: 'modal.cancel',
@@ -20,7 +19,7 @@ const RelieveModal = ({ isShowRelieveModal, relieveAlert, closeRelieveModal }) =
             id: 'modal.unrollupMessage',
             defaultMessage: '解除{name}的合并告警',
             values: {
-                name: relieveAlert.name
+                name: relieveObj.name
             }
         },
 

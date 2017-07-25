@@ -37,13 +37,13 @@ class ReassignModal extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleOk = this.handleOk.bind(this);
     this.state = {
-      selectedUser: ''
+      selectedUser: {key: '', label: ''}
     }
   }
   componentWillReceiveProps(nextProps) {
     //关闭时清空掉selectedUser
     if (this.props.isShowReassingModal === true && nextProps.isShowReassingModal === false) {
-      this.setState({ selectedUser: '' })
+      this.setState({ selectedUser: {key: '', label: ''} })
     }
   }
   handleChange(value) {
@@ -88,7 +88,7 @@ class ReassignModal extends Component {
           <Row>
             <Col span='7' style={{ lineHeight: '32px' }} className={styles.specificUser}>{formatMessage(localMessage['modal_specificUser']) + ': '}</Col>
             <Col span='17'>
-              <Select {...selectProps} showSearch onSearch={ _.debounce( (value) => {
+              <Select {...selectProps} showSearch labelInValue onSearch={ _.debounce( (value) => {
                 this.props.ownerQuery(value)
               }, 500)}>
                 {users.map(user => (<Option key={user.userId}>{user.realName}</Option>))}
