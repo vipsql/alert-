@@ -67,7 +67,7 @@ class alertQueryManage extends Component {
     // ----------------------------------------------------
 
     let keyWords = JSON.parse(formData.keyWordsType);
-    let owner = JSON.parse(formData.owner);
+    let owner = formData.owner;
 
     formData.ownerId = owner.key;
     formData.keyName = keyWords.keyName;
