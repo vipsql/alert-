@@ -106,6 +106,7 @@ export default {
       history.listen((location) => {
         if (location.pathname === '/alertQuery') {
           const query = location.query || {};
+          console.log(query);
           dispatch({
             type: 'alertQuerySetup',
             payload: {
@@ -379,7 +380,7 @@ export default {
       yield put({ type: 'initCustomCols' })
       yield put({ type: 'alertDetail/toggleDetailModal', payload: false })
       yield put({ type: 'clearQuery' })
-      yield put({ type: 'setCurrentQuery', payload: { currentQuery: payload.resObjectId } })
+      yield put({ type: 'setCurrentQuery', payload: { currentQuery: {resObjectId: payload.resObjectId} } })
       yield put({ type: 'queryAlertList' })
 
       // 查询来源和扩展标签
