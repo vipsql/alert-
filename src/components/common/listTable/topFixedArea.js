@@ -52,14 +52,14 @@ class TopFixedArea extends Component {
         <table className={classnames(styles.listTable, styles.topFixed)}>
           { theads }
         </table>
-        <div className={ styles.fixScrollBar } style={{ left: scrollLeft }}>
-          {
-            isShowScrollBar?
+        {
+          isShowScrollBar?
+          <div className={ styles.fixScrollBar } style={{ left: scrollLeft }}>
             <ScrollBar sourceOrigin={sourceOrigin} horizonTarget="div.listContainer" />
-            :
-            ''
-          }
-        </div>
+          </div>
+          :
+          undefined
+        }
       </div>
     )
   }
