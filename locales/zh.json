@@ -68,6 +68,7 @@
   "alertList.title.basic": "常规",
   "alertList.title.additional": "扩展",
   "alertList.detailHistory.alertTimesDescription": "累计发生告警{ times }次",
+  "alertList.detailHistory.alertStartTime.placeholder": "请点击选择告警发生的时间范围",
 
   "alertList.noListData": "暂无数据",
   "alertList.showMore": "显示更多",

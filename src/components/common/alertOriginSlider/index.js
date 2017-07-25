@@ -4,6 +4,7 @@ import styles from './index.less'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import { classnames } from '../../../utils'
 import $ from 'jquery'
+import DatePeriodPicker from '../datePeriodPicker/index'
 
 class AlertOriginSlider extends Component {
   componentWillMount() {
@@ -28,7 +29,7 @@ class AlertOriginSlider extends Component {
     //   $this.find("span > .ant-table-column-sorter").children('span.off').trigger("click");
     // })
   }
-  
+
   componentWillUnmount() {
     this._cancelAutoHide();
   }
@@ -41,7 +42,7 @@ class AlertOriginSlider extends Component {
   _setAutoTableHeight() {
     $(window).resize(() => {
       this.tableContentHeight = this._computerTableContentHeight();
-      if(!this.unmounted) {
+      if (!this.unmounted) {
         this.setState({});
       }
     })
@@ -54,7 +55,7 @@ class AlertOriginSlider extends Component {
   // 动态计算表格应该占据的高度
   _computerTableContentHeight() {
     const ele = document.getElementById("alertOriginSlider");
-    if(ele) {
+    if (ele) {
       const totalHeight = ele.offsetHeight;
       const tableContentHeight = totalHeight - this.headerHeight - this.totalTipHeight - this.paginationHeight - this.thHeight;
       return tableContentHeight;
@@ -65,24 +66,25 @@ class AlertOriginSlider extends Component {
 
   // 设置当鼠标点击不处于本区域时隐藏右侧滑动栏的全局事件
   _setAutoHide() {
-      $(window.document.body).on("click", (e) => {
-        const $target = $(e.target);
-        const $toCloseSlider = $target.closest("div#alertOriginSlider");
+    $(window.document.body).on("click", (e) => {
+      const $target = $(e.target);
+      const $toCloseSlider = $target.closest("div#alertOriginSlider");
+      const $toClosePopover = $target.closest("div.ant-popover")
 
-        // 如果点击的组件补上下拉框选项或者不在弹出框上或者不在右侧滑动栏上，则隐藏右侧滑动栏
-        if($toCloseSlider.length == 0 && this.props.visible) {
-            this.props.onClose();
-        }
-      })
+      // 如果点击的组件补上下拉框选项或者不在弹出框上或者不在右侧滑动栏上，则隐藏右侧滑动栏
+      if ($toCloseSlider.length == 0 && $toClosePopover.length == 0 && this.props.visible) {
+        this.props.onClose();
+      }
+    })
   }
 
   // 接触当鼠标点击不处于本区域时隐藏右侧滑动栏的全局事件
   _cancelAutoHide() {
-      $(window.document.body).unbind("click");
+    $(window.document.body).unbind("click");
   }
 
   render() {
-    const { onClose, alertOrigin, currentAlertDetail={}, onPageChange, visible, loading, intl: {formatMessage} } = this.props;
+    const { onSearch, onClose, alertOrigin, currentAlertDetail = {}, onPageChange, visible, loading, intl: { formatMessage } } = this.props;
     const localeMessage = defineMessages({
       occurTime: {
         id: "alertList.title.occurTime",
@@ -103,6 +105,10 @@ class AlertOriginSlider extends Component {
       alertTimesDescription: {
         id: "alertList.detailHistory.alertTimesDescription",
         defaultMessage: "累计发生告警次数{ times }次"
+      },
+      alertStartTimePlaceholder: {
+        id: "alertList.detailHistory.alertStartTime.placeholder",
+        defaultMessage: "请点击选择告警发生的时间范围"
       }
     })
 
@@ -125,7 +131,7 @@ class AlertOriginSlider extends Component {
         dataIndex: 'occurTime',
         key: 'occurTime',
         sorter: true,
-        sortOrder: sorter.sortKey == 'occurTime'?(sorter.sortType > 0?'ascend':'descend'):true,
+        sortOrder: sorter.sortKey == 'occurTime' ? (sorter.sortType > 0 ? 'ascend' : 'descend') : true,
         width: "25%",
         // onCellClick: function(record, e) {
         //   console.log("cellClick");
@@ -154,41 +160,47 @@ class AlertOriginSlider extends Component {
     // console.log(loading, "loading");
 
     return (
-      <div id="alertOriginSlider" className={ classnames(styles.alertOriginSlider, visible?styles.show:'') }>
-        <div className={ styles.main }>
-          <div className={ styles.header }>
-            <p>{ name || '-' }</p>
-            <i onClick={ onClose } className={ shanchuClass }/>
+      <div id="alertOriginSlider" className={classnames(styles.alertOriginSlider, visible ? styles.show : '')}>
+        <div className={styles.main}>
+          <div className={styles.header}>
+            <p>{name || '-'}</p>
+            <i onClick={onClose} className={shanchuClass} />
           </div>
-          <hr className={ styles.line }/>
-          <div className={ styles.totalTip }>
-            <p> 
-              <FormattedMessage {...localeMessage['alertTimesDescription'] } 
-                  values={{
-                    times: <span className={styles.totalNum}><b>{times || '-'}</b></span>
-                  }}
-              /> 
+          <hr className={styles.line} />
+          <div className={styles.totalTip}>
+            <p>
+              <FormattedMessage {...localeMessage['alertTimesDescription']}
+                values={{
+                  times: <span className={styles.totalNum}><b>{times || '-'}</b></span>
+                }}
+              />
             </p>
+            <div className={styles.startTimePeriod}>
+              <DatePeriodPicker value={ visible?'':undefined } placeholder={ formatMessage({...localeMessage['alertStartTimePlaceholder']}) } onChange={([startTime, endTime]) => {
+                onSearch({ startTime, endTime })
+              }} />
+            </div>
           </div>
-          <div className={ styles.tableContent }>
-            <Table size="middle" scroll={{y: this.tableContentHeight}} loading={ loading } columns={ columns } dataSource={ records } onChange={onPageChange} pagination={{
+          <div className={styles.tableContent}>
+            <Table size="middle" scroll={{ y: this.tableContentHeight }} loading={loading} columns={columns} dataSource={records} onChange={onPageChange} pagination={{
               showQuickJumper: true,
               current: pagination.pageNo,
               pageSize: pagination.pageSize,
               total: pagination.total,
-            }}/> 
+            }} />
           </div>
         </div>
       </div>
-      
+
     )
   }
 }
 
 
 AlertOriginSlider.defaultProps = {
-  onClose: () => {},
-  onPageChange: () => {},
+  onClose: () => { },
+  onPageChange: () => { },
+  onSearch: () => { },
   visible: false,
   alertOrigin: {}
 }
@@ -198,12 +210,17 @@ AlertOriginSlider.PropTypes = {
   loading: PropTypes.bool,
   onClose: PropTypes.func,
   onPageChange: PropTypes.func,
+  onSearch: PropTypes.func,
   alertOrigin: PropTypes.shape({
     pagination: PropTypes.shape({
       pageNo: PropTypes.number,
       pageSize: PropTypes.number,
       totalPage: PropTypes.number,
       total: PropTypes.number,
+    }),
+    searchParam: PropTypes.shape({
+      startTime: PropTypes.number,
+      endTime: PropTypes.number
     }),
     period: PropTypes.string,
     records: PropTypes.arrayOf(PropTypes.shape({

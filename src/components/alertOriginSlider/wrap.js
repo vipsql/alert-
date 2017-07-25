@@ -14,6 +14,15 @@ const AlertOriginSliderWrap = ({ alertOrigin, intl, dispatch }) => {
         }
       })
     },
+    onSearch: (searchParam) => {
+      dispatch({
+        type: 'alertOrigin/queryAlertOrigin',
+        payload: {
+          searchParam,
+          pagination:{ pageNo:1 }
+        }
+      })
+    },
     onPageChange: (pagination, filters, sorter) => {
       const pageIsObj = typeof pagination === 'object';
       dispatch({

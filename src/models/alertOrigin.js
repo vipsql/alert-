@@ -9,6 +9,7 @@ const initState = {
   records: [],
   pagination:{ pageNo:1, pageSize:10 },
   sorter: { sortKey:'occurTime', sortType: 1 },
+  searchParam: {}, // 过滤条件
 }
 
 export default {
@@ -34,7 +35,8 @@ export default {
 
   effects: {
     // 查询
-    *queryAlertOrigin({payload}, {call, put, select}) {
+    *queryAlertOrigin({payload={}}, {call, put, select}) {
+      const { searchParam, pagination={}, sorter={} } = payload;
       yield put({
         type: 'toggleLoading',
         payload: {
@@ -42,10 +44,13 @@ export default {
         }
       })
       const oldAlertOrigin = yield select((state) => state.alertOrigin);
-      payload.pagination = { ...oldAlertOrigin.pagination, ...payload.pagination }
-      payload.sorter = { ...oldAlertOrigin.sorter,  ...payload.sorter};
+      const {searchParam: oldSearchParam } = oldAlertOrigin;
+      const newSearchParam = {...oldSearchParam, ...searchParam};
+      payload.pagination = { ...oldAlertOrigin.pagination, pagination }
+      payload.sorter = { ...oldAlertOrigin.sorter,  sorter};
       const newAlertOrigin = { ...oldAlertOrigin,  ...payload}
-      const response = yield queryAlertOrigin({ pagination: newAlertOrigin.pagination, sorter: newAlertOrigin.sorter, alertId: newAlertOrigin.alertId })
+      console.log(newSearchParam, "newSEe");
+      const response = yield queryAlertOrigin({ pagination: newAlertOrigin.pagination, sorter: newAlertOrigin.sorter, alertId: newAlertOrigin.alertId, searchParam: {...newSearchParam} })
       // 请求无论成功还是失败都停止“记载中”状态
       yield put({
         type: 'toggleLoading',
@@ -72,7 +77,8 @@ export default {
           total: responseData.total,
         },
         records,
-        loading: false
+        loading: false,
+        searchParam: newSearchParam
       }
       yield put({
         type: 'setData',
