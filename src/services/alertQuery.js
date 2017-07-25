@@ -47,13 +47,15 @@ export async function queryCloumns() {
     })
 }
 
-export async function queryAlertOrigin({ pagination: {pageNo, pageSize} = {}, sorter: {sortKey, sortType} = {}, alertId }) {
+export async function queryAlertOrigin({ pagination: {pageNo, pageSize} = {}, sorter: {sortKey, sortType} = {}, alertId, searchParam={}} ) {
+    let searchParamStr = "";
+    Object.keys(searchParam).map((key) => { searchParam[key] && (searchParamStr += "&" + key + "=" + searchParam[key]) })
     return request(`/alert/queryOriginalAlert/` + alertId, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: 'pageNo=' + pageNo + "&pageSize=" + pageSize + "&sortKey=" + sortKey + "&sortType=" + sortType
+        body: 'pageNo=' + pageNo + "&pageSize=" + pageSize + "&sortKey=" + sortKey + "&sortType=" + sortType + searchParamStr
     })
     // return Promise.resolve({
     //     result: true,
