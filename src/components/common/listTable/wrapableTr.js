@@ -24,10 +24,10 @@ class WrapableTr extends Component {
     }
   }
   render() {
-    const { children, className, trId, ...restProps } = this.props;
+    const { children, className, trId, isSuppressed=false, ...restProps } = this.props;
     const { wrapped } = this.state;
     return (
-      <tr ref="tr" {...restProps} data-link-tr-id={trId} onClick={(e) => { this._toggleWrap(e) }} className={ classnames(className, wrapped?styles.showSome:styles.showAll) }>
+      <tr ref="tr" {...restProps} data-link-tr-id={trId} onClick={(e) => { this._toggleWrap(e) }} className={ classnames(className, wrapped?styles.showSome:styles.showAll, isSuppressed?styles.suppressed:'') }>
         { children }
       </tr>
     )
