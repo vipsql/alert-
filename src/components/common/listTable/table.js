@@ -273,10 +273,10 @@ class Table extends Component {
         tds.push(td)
       })
       if (target === 'parent') {
-        tds.unshift(<td className={sourceOrigin !== 'alertQuery' ? styles.moreLittle : styles.little} style={{ width: item.isFixed?'20px': undefined }} width="20" key='icon-col-td' colSpan={sourceOrigin !== 'alertQuery' ? '1' : '2'} ><LevelIcon extraStyle={sourceOrigin === 'alertQuery' && styles.alertQueryIcon} iconType={item['severity']} /></td>)
+        tds.unshift(<td className={sourceOrigin !== 'alertQuery' ? styles.moreLittle : styles.little} style={{ width: item.isFixed?'20px': undefined }} width="20" key='icon-col-td' colSpan={sourceOrigin !== 'alertQuery' && !isGroup ? '1' : '2'} ><LevelIcon extraStyle={sourceOrigin === 'alertQuery' && styles.alertQueryIcon} iconType={item['severity']} /></td>)
       } else {
         tds.unshift(<td className={styles.moreLittle} width="20" style={{ width: item.isFixed?'25px': undefined }} key='icon-col-td'><LevelIcon iconType={item['severity']} /></td>)
-        tds.unshift(<td className={styles.moreLittle} style={{ width: item.isFixed?'25px': undefined }} key='space-col-td' colSpan="2"></td>)
+        tds.unshift(<td className={styles.moreLittle} style={{ width: item.isFixed?'25px': undefined }} key='space-col-td'></td>)
       }
       return tds
     }
@@ -286,8 +286,6 @@ class Table extends Component {
 
       const trKey = childItem.id || 'chTd' + childIndex
       const childTds = getTds(childItem, keys, 'child')
-
-      console.log(trKey, "getchildTrs");
 
       return (
         <WrapableTr trId={trKey} key={trKey} className={!item.isSpread ? styles.hiddenChild : !isGroup ? styles.noSpread : styles.groupSpread}>
