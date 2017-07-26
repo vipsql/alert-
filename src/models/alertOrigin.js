@@ -46,7 +46,7 @@ export default {
       const oldAlertOrigin = yield select((state) => state.alertOrigin);
       const {searchParam: oldSearchParam } = oldAlertOrigin;
       const newSearchParam = {...oldSearchParam, ...searchParam};
-      payload.pagination = { ...oldAlertOrigin.pagination, pagination }
+      payload.pagination = { ...oldAlertOrigin.pagination, ...pagination }
       payload.sorter = { ...oldAlertOrigin.sorter,  sorter};
       const newAlertOrigin = { ...oldAlertOrigin,  ...payload}
       console.log(newSearchParam, "newSEe");
