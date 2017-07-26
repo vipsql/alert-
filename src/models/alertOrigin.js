@@ -25,7 +25,7 @@ export default {
     },
 
     toggleVisible(state, { payload: { visible, alertName } }) {
-      return { ...state, visible, alertName };
+      return { ...state, visible, alertName, searchParam: {} };
     },
 
     initPage(state, { payload }) {
