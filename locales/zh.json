@@ -87,6 +87,7 @@
   "alertQuery.label.allSource": "所有来源",
   "alertQuery.label.allStatus": "所有状态",
   "alertQuery.label.allOwners": "所有负责人",
+  "alertQuery.label.allSeverity": "所有级别",
   "alertQuery.label.firstOccurTime": "首次发生",
   "alertQuery.label.firstOccurTime.placeholder": "请点击选择首次发生时间段",
   "alertQuery.label.lastOccurTime": "最后发生",

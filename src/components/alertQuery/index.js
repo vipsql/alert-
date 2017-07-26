@@ -88,7 +88,7 @@ class alertQueryManage extends Component {
             type: 'alertQuery/queryAlertList'
           })
         }} />
-        <Filter dispatch={ dispatch }/>
+        <Filter />
         <ListTableWrap />
         <ScrollTopButton />
         <AlertOriginSliderWrap />
@@ -98,4 +98,4 @@ class alertQueryManage extends Component {
   }
 }
 
-export default injectIntl(alertQueryManage)
+export default injectIntl(connect()(alertQueryManage))
