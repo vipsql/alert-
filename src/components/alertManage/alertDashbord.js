@@ -191,7 +191,7 @@ class Chart extends Component {
     let textSize = this._textSize("12px", text);
     let isShorted = false;
 
-    while (textSize.width > d.dx - 10 && textSize.width > 2) {
+    while (textSize.width > d.dx - 25 && textSize.width > 2) {
       isShorted = true;
       text = text.substring(0, text.length - 2);
       textSize = this._textSize("13px", text + '...');

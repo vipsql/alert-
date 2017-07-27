@@ -391,9 +391,11 @@ export default {
       yield put({ type: 'queryAlertList' })
 
       // 查询来源和扩展标签
-      const sourceOptions = yield call(querySource)
-      const propertyOptions = yield call(queryProperty)
-      const ownerOptions = yield call(getUsers);
+      const [ sourceOptions, propertyOptions, ownerOptions ] = yield [
+        call(querySource),
+        call(queryProperty),
+        call(getUsers)
+      ]
 
       if (!sourceOptions.result) {
         yield message.error(sourceOptions.message, 3)
