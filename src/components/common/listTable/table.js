@@ -30,7 +30,6 @@ class Table extends Component {
   }
 
   render() {
-    i ++;
     const tempDate = new Date();
     const {
       sourceOrigin,
