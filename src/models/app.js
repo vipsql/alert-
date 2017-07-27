@@ -22,7 +22,7 @@ export default {
       history.listen((location) => {
         if (location.pathname === '/alertManage' || location.pathname === '/') {
           dispatch({
-            type: 'beforeHomePage'
+            type: 'isSetTags'
           })
           loop(function() {
             dispatch({type: 'getNotifies'})
@@ -33,17 +33,19 @@ export default {
   },
 
   effects: {
-    *beforeHomePage({ payload }, { put, call, select }) {
-      // const userInfo = JSON.parse(localStorage.getItem('UYUN_Alert_USERINFO'))
-      // if (!userInfo) {
-        const infoResult = yield getUserInformation()
+    beforeHomePage: [function *watcher({ take, put, call }) {
+      while(true) {
+        // 初始化的一些操作 比如获取用户信息 (异步的，是当触发isSetTags就会触发下面的flow)
+        yield take('app/isSetTags')
+        const infoResult = yield call(getUserInformation)
         if (infoResult.result) {
           yield put({ type: 'setUserInfo', payload: infoResult.data })
           yield sessionStorage.setItem('UYUN_Alert_USERINFO', JSON.stringify(infoResult.data))
         }
-      //}
-      yield put({ type: 'isSetTags' })
-    },
+        // 加载面板
+        yield put({ type: 'alertManage/alertManageSetup' })
+      }
+    }, { type: 'watcher'} ],
     *getNotifies({ payload }, { put, call, select }) {
       const loop = yield call(getWebNotification, {
         size: 10 // 接收的告警上限
@@ -59,14 +61,9 @@ export default {
       if (isSet.result && isSet.data) {
         yield put({
           type: 'showMask',
-          payload: false
+          payload: !isSet.data
         })
 
-      } else {
-        yield put({
-          type: 'showMask',
-          payload: true
-        })
       }
     },
 

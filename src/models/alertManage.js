@@ -29,27 +29,19 @@ export default {
   state: initialState,
 
   subscriptions: {
-    alertManageSetup({dispatch, history}) {
-      history.listen((location) => {
-        if (location.pathname === '/alertManage' || location.pathname === '/') {
-          dispatch({
-            type: 'alertManageSetup'
-          })
-        }
-      })
-    }
+
   },
 
   effects: {
     *alertManageSetup({payload}, {put, call, select}) {
-      let { selectedTime, selectedStatus } = yield select( state => {
+      let { selectedTime, selectedStatus, isShowMask } = yield select( state => {
         return {
           'selectedTime': state.alertManage.selectedTime,
           'selectedStatus': state.alertManage.selectedStatus,
+          'isShowMask': state.app.isShowMask
         }
       })
-      const isSet = yield isSetUserTags()
-      if(isSet.result && isSet.data) {
+      if(!isShowMask) {
         yield put({
           type: 'queryAlertDashbord',
           payload: {

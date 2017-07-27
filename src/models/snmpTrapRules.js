@@ -26,9 +26,11 @@ export default {
   effects: {
     // 新增规则 --> 点击新增
     *addRule({payload}, {select, put, call}) {
-      const fields = yield call(getField);
-      const source = yield call(getSource)
-      const OID = yield call(getOID)
+      const [ fields, source, OID ] = yield [
+        call(getField),
+        call(getSource),
+        call(getOID)
+      ]
       if (!fields.result) {
         yield message.error(fields.message, 3);
       }
@@ -54,9 +56,11 @@ export default {
     },
     // 编辑规则 --> 点击编辑
     *editRule({payload}, {select, put, call}) {
-      const fields = yield call(getField);
-      const source = yield call(getSource)
-      const OID = yield call(getOID)
+      const [ fields, source, OID ] = yield [
+        call(getField),
+        call(getSource),
+        call(getOID)
+      ]
       if (!fields.result) {
         yield message.error(fields.message, 3);
       }

@@ -539,7 +539,14 @@ class Filter extends Component {
             <Col span={8} className={classnames(styles.colStyle, styles.operateCol)}>
               <div>
                 <Button type="primary" size="large" htmlType="submit" onClick={(e) => { this.onOk(e, form) }}><FormattedMessage {...localeMessage['search']} /></Button>
-                <Button type="primary" size="large" onClick={() => { form.resetFields() }}><FormattedMessage {...localeMessage['reset']} /></Button>
+                <Button type="primary" size="large" onClick={() => {
+                  dispatch({
+                      type: 'alertQuery/setCurrentQuery',
+                      payload: {
+                        currentQueryRawData: {}
+                      }
+                  })
+                 }}><FormattedMessage {...localeMessage['reset']} /></Button>
               </div>
             </Col>
           </Row>
