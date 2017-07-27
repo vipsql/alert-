@@ -1,7 +1,7 @@
 import { querySource, queryAlertList, queryCount, queryProperty } from '../services/alertQuery'
 import { getUsers } from '../services/app.js'
 import { viewTicket } from '../services/alertOperation'
-import { groupSort } from '../utils'
+import { groupSort, returnByIsReRender } from '../utils'
 import { message } from 'antd'
 import { parse } from 'qs'
 import { injectIntl, formatMessage, defineMessages, IntlProvider } from 'react-intl';
@@ -44,7 +44,7 @@ const initalState = {
       cols: [
         { id: 'entityName', checked: true, isFixed: true },
         { id: 'name', checked: false, isFixed: true },
-        { id: 'owner', checked: true},
+        { id: 'owner', checked: true },
         { id: 'source', checked: false, },
         { id: 'description', checked: false, },
         { id: 'count', checked: false, },
@@ -57,7 +57,7 @@ const initalState = {
         { id: 'notifyList', checked: false, },
         { id: 'classCode', checked: false },
         { id: 'tags', checked: false },
-        { id: 'suppressionFlag', checked: false}
+        { id: 'suppressionFlag', checked: false }
       ]
     },
   ],
@@ -68,7 +68,7 @@ const initalState = {
   }, {
     key: 'name',
     isFixed: true
-  },{
+  }, {
     key: 'owner',
     order: true
   }, {
@@ -121,7 +121,7 @@ export default {
 
   reducers: {
     // 列定制初始化
-    initColumn(state, { payload: { baseCols, extend, tags } }) {
+    initColumn(state, { payload: { baseCols, extend, tags, isReRender = true } }) {
       let newList = JSON.parse(JSON.stringify(initalState.columnList));
       if (extend.cols.length !== 0) {
         extend.cols.forEach((col) => {
@@ -138,10 +138,18 @@ export default {
           })
         })
       })
-      return { ...state, columnList: newList, extendColumnList: extend.cols, extendTagsKey: tags }
+      return returnByIsReRender(
+        state,
+        {
+          columnList: newList,
+          extendColumnList: extend.cols,
+          extendTagsKey: tags
+        },
+        isReRender
+      )
     },
     // show more时需要叠加columns
-    addProperties(state, { payload: { properties, tags } }) {
+    addProperties(state, { payload: { properties, tags, isReRender = true } }) {
       let { columnList, extendTagsKey } = state;
       let colIds = [];
       let newTags = [].concat(extendTagsKey);
@@ -167,13 +175,20 @@ export default {
           }
         })
       }
-      return { ...state, columnList: columnList, extendColumnList: columnList[columnList.length - 1].cols, extendTagsKey: newTags }
+      if (isReRender) {
+        return { ...state, columnList: columnList, extendColumnList: columnList[columnList.length - 1].cols, extendTagsKey: newTags }
+      } else {
+        state.columnList = columnList;
+        state.extendColumnList = columnList[columnList.length - 1].cols;
+        state.extendTagsKey = newTags;
+        return state;
+      }
     },
     // 列改变时触发
-    setColumn(state, { payload: selectCol }) {
+    setColumn(state, { payload: { selectCol, isReRender = true } }) {
       const { columnList, selectColumn } = state;
       let arr = []
-      if(selectColumn.length != 0) {
+      if (selectColumn.length != 0) {
         arr = selectColumn.filter((col) => col.key != selectCol);
       }
       const newList = columnList.map((group) => {
@@ -181,7 +196,7 @@ export default {
           if (typeof selectCol !== 'undefined' && col.id === selectCol) {
             col.checked = !col.checked;
           }
-          const ifAddCondition = selectColumn.length == 0?col.checked:(col.checked && col.id === selectCol);
+          const ifAddCondition = selectColumn.length == 0 ? col.checked : (col.checked && col.id === selectCol);
           if (ifAddCondition) {
             if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count' || col.id == 'status' || col.id == 'owner' || col.id == 'suppressionFlag') {
               arr.push({ key: col.id, title: col.name, order: true, isFixed: col.isFixed }) // order字段先定死
@@ -194,115 +209,106 @@ export default {
         return group;
       })
       localStorage.setItem('__alert_query_userColumns', JSON.stringify(arr))
-      return { ...state, columnList: newList, selectColumn: arr }
+      return returnByIsReRender(state, { columnList: newList, selectColumn: arr }, isReRender)
     },
     // 设置分组显示的类型
-    setGroupType(state, { payload: selectGroup }) {
-      return { ...state, selectGroup }
+    setGroupType(state, { payload: { selectGroup, isReRender = true } }) {
+      return returnByIsReRender(state, { ...state, selectGroup }, isReRender)
     },
     // 移除分组显示的类型
-    removeGroupType(state) {
-      return { ...state, selectGroup: initalState.selectGroup }
+    removeGroupType(state, { payload: { isReRender = true } }) {
+      return returnByIsReRender(state, { selectGroup: initalState.selectGroup }, isReRender)
     },
     // 更新查询条件
     setCurrentQuery(state, { payload }) {
       return { ...state, ...payload }
     },
     // 更新data数据
-    updateAlertListData(state, { payload: { data, tempListData } }) {
-      return { ...state, data, tempListData }
+    updateAlertListData(state, { payload: { data, tempListData, isReRender = true } }) {
+      return returnByIsReRender(state, { data, tempListData }, isReRender)
     },
     // 存放告警来源的options
-    setOptions(state, { payload: { sourceOptions, propertyOptions, ownerOptions } }) {
-      return {
-        ...state,
-        sourceOptions: sourceOptions ? sourceOptions : state.sourceOptions,
-        propertyOptions: propertyOptions ? propertyOptions : state.propertyOptions,
-        ownerOptions: ownerOptions ? ownerOptions : state.ownerOptions
-      }
+    setOptions(state, { payload: { sourceOptions, propertyOptions, ownerOptions, isReRender = true } }) {
+      return returnByIsReRender(
+        state,
+        {
+          sourceOptions: sourceOptions ? sourceOptions : state.sourceOptions,
+          propertyOptions: propertyOptions ? propertyOptions : state.propertyOptions,
+          ownerOptions: ownerOptions ? ownerOptions : state.ownerOptions
+        },
+        isReRender
+      )
     },
     // 用来一次性结构状态，避免过度渲染
     changeState(state, { payload }) {
       return { ...state, ...payload }
     },
     // 加载状态
-    toggleLoading(state, { payload: isLoading }) {
-      return { ...state, isLoading }
+    toggleLoading(state, { payload: { isLoading, isReRender = true } }) {
+      return returnByIsReRender(state, { isLoading }, isReRender);
     },
     // 更新显示更多字段
-    updateShowMore(state, { payload: isShowMore }) {
-      return {
-        ...state,
-        isShowMore
-      }
+    updateShowMore(state, { payload: { isShowMore, isReRender = true } }) {
+      return returnByIsReRender(state, { isShowMore }, isReRender)
     },
     // 点击查看更多
-    setMore(state, { payload: currentPage }) {
-
-      return {
-        ...state,
-        currentPage
-      }
-    },
-    // 设置viewDetailAlertId
-    toggleDetailAlertId(state, { payload: viewDetailAlertId }) {
-      return { ...state, viewDetailAlertId }
+    setMore(state, { payload: { currentPage, isReRender = true } }) {
+      return returnByIsReRender(state, { currentPage }, isReRender)
     },
     // 初始化data
-    clearQuery(state) {
-      return {
-        ...state,
-        data: initalState.data,
-        currentPage: initalState.currentPage,
-        queryCount: initalState.queryCount,
-        isShowMore: initalState.isShowMore,
-        currentQuery: initalState.currentQuery,
-        currentQueryRawData: initalState.currentQueryRawData
-      }
+    clearQuery(state, { payload: { isReRender = true } }) {
+      return returnByIsReRender(
+        state,
+        {
+          data: initalState.data,
+          currentPage: initalState.currentPage,
+          queryCount: initalState.queryCount,
+          isShowMore: initalState.isShowMore,
+          currentQuery: initalState.currentQuery,
+          currentQueryRawData: initalState.currentQueryRawData
+        },
+        isReRender
+      )
     },
     // 不分组更新
-    updateAlertListToNoGroup(state, { payload: { info, tempListData, isShowMore, isGroup, orderBy, orderType, queryCount, currentPage } }) {
-
-      return { ...state, data: info, tempListData, isShowMore, isGroup, orderBy, orderType, queryCount, currentPage }
+    updateAlertListToNoGroup(state, { payload: { info, tempListData, isShowMore, isGroup, orderBy, orderType, queryCount, currentPage, isReRender = true } }) {
+      return returnByIsReRender(state, { data: info, tempListData, isShowMore, isGroup, orderBy, orderType, queryCount, currentPage }, isReRender)
     },
     // 分组时更新
-    updateAlertListToGroup(state, { payload: { info, isShowMore, isGroup, groupBy, queryCount } }) {
-
-      return { ...state, data: info, isShowMore, isGroup, groupBy, queryCount }
+    updateAlertListToGroup(state, { payload: { info, isShowMore, isGroup, groupBy, queryCount, isReRender } }) {
+      return returnByIsReRender(state, { data: info, isShowMore, isGroup, groupBy, queryCount }, isReRender);
     },
 
     // 自定义列
-    customCols(state, { payload: columns }) {
-      return {
-        ...state,
-        columns
-      }
+    customCols(state, { payload: {columns, isReRender=true} }) {
+      return returnByIsReRender(state, { columns }, isReRender)
     },
     // 手动添加分组展开状态
-    addGroupSpread(state, { payload }) {
+    addGroupSpread(state, { payload: { classify, isReRender=true } }) {
       const { data } = state;
       const newData = data.map((group) => {
-        if (group.classify == payload) {
+        if (group.classify == classify) {
           group.isGroupSpread = false;
         }
         return group
       })
-      return { ...state, data: newData }
+
+      return returnByIsReRender(state, { data: newData }, isReRender)
     },
     // 转换分组的展开状态
-    toggleGroupSpread(state, { payload }) {
+    toggleGroupSpread(state, { payload: { classify, isReRender=true } }) {
       const { data } = state;
       const newData = data.map((group) => {
-        if (group.classify == payload) {
+        if (group.classify == classify) {
           group.isGroupSpread = !group.isGroupSpread;
         }
         return group
       })
-      return { ...state, data: newData }
+      return returnByIsReRender(state, { data: newData }, isReRender)
     },
     // 排序
-    toggleOrder(state, { payload }) {
-      return { ...state, ...payload }
+    toggleOrder(state, { payload: { orderBy, orderType, isReRender } }) {
+      return returnByIsReRender(state, { orderBy, orderType }, isReRender);
     },
     // 显示或隐藏搜索项
     toggleBar(state, { payload: isShowBar }) {
@@ -369,7 +375,7 @@ export default {
       let initColumns = JSON.parse(JSON.stringify(initalState.columns))
       let queryColumns = JSON.parse(localStorage.getItem('__alert_query_userColumns'));
       let columns = queryColumns ? queryColumns : initColumns
-      yield put({ type: 'customCols', payload: columns })
+      yield put({ type: 'customCols', payload: {columns} })
     },
     /**
      * open alertQuery page operate
@@ -377,10 +383,11 @@ export default {
      * 3. 查询告警来源的options
      */
     *alertQuerySetup({ payload }, { call, put, select }) {
-      yield put({ type: 'initCustomCols' })
-      yield put({ type: 'alertDetail/toggleDetailModal', payload: false })
-      yield put({ type: 'clearQuery' })
-      yield put({ type: 'setCurrentQuery', payload: { currentQuery: {resObjectId: payload.resObjectId} } })
+      // yield put({ type: 'initCustomCols' })
+      // yield put({ type: 'alertDetail/toggleDetailModal', payload: false })
+      // yield put({ type: 'clearQuery' })
+      // yield put({ type: 'setCurrentQuery', payload: { currentQuery: {resObjectId: payload.resObjectId} } })
+
       yield put({ type: 'queryAlertList' })
 
       // 查询来源和扩展标签
@@ -424,7 +431,7 @@ export default {
 
     // 点击查找
     *queryBefore({ payload }, { call, put, select }) {
-      yield put({ type: 'setCurrentQuery', payload: {...payload} })
+      yield put({ type: 'setCurrentQuery', payload: { ...payload } })
       yield put({ type: 'queryAlertList' })
       yield put({ type: 'alertDetail/removeGroupType' })
     },
@@ -499,12 +506,13 @@ export default {
             orderBy: orderBy,
             orderType: orderType,
             currentPage: 1,
-            queryCount: countData.result ? countData.data : {}
+            queryCount: countData.result ? countData.data : {},
+            isReRender: false
           }
         })
         yield put({
           type: 'toggleLoading',
-          payload: false
+          payload: { isLoading: false, isReRender: false }
         })
         yield put({
           type: 'initColumn',
@@ -522,11 +530,11 @@ export default {
     },
     // 展开组
     *spreadGroup({ payload }, { call, put, select }) {
-      yield put({ type: 'toggleGroupSpread', payload: payload })
+      yield put({ type: 'toggleGroupSpread', payload: { classify: payload } })
     },
     // 合拢组
     *noSpreadGroup({ payload }, { call, put, select }) {
-      yield put({ type: 'addGroupSpread', payload: payload })
+      yield put({ type: 'addGroupSpread', payload: { classify: payload } })
     },
     // ------------------------------------------------------------------------------------------------
 
@@ -541,7 +549,7 @@ export default {
       if (payload.isGroup) {
         yield put({
           type: 'toggleLoading',
-          payload: true
+          payload: { isLoading: true }
         })
         const groupList = yield groupSort()(tempListData, payload.group)
         if (payload.group !== undefined && payload.group === 'severity') {
@@ -556,12 +564,13 @@ export default {
             isShowMore: false,
             isGroup: true,
             groupBy: payload.group,
-            queryCount: queryCount
+            queryCount: queryCount,
+            isReRender: false
           }
         })
         yield put({
           type: 'toggleLoading',
-          payload: false
+          payload: { isLoading: false }
         })
         //yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, groupBy: payload.group } })
       } else {
@@ -570,17 +579,20 @@ export default {
     },
     // show more
     *loadMore({ }, { call, put, select }) {
-
+      const firstDate = new Date();
+      let tempDate = new Date();
       // 防止同时多次加载更多
       const isLoading = yield select((state) => state.alertQuery.isLoading);
-      if(isLoading) {
+      if (isLoading) {
         return;
       }
 
       yield put({
         type: 'toggleLoading',
-        payload: true
+        payload: { isLoading: true }
       })
+
+      console.log(new Date() - tempDate, 'toggleLoading');
 
       let { currentPage, listData, alertQuery } = yield select(state => {
         return {
@@ -608,24 +620,36 @@ export default {
         if (!listReturnData.data.hasNext) {
           yield put({
             type: 'updateShowMore',
-            payload: listReturnData.data.hasNext
+            payload: { isShowMore: listReturnData.data.hasNext, isReRender: false }
           })
+
+          console.log(new Date() - tempDate, 'updateShowMore');
         }
+
+        tempDate = new Date();
 
         yield put({
           type: 'updateAlertListData',
           payload: {
             data: listData,
-            tempListData: listData
+            tempListData: listData,
+            isReRender: false
           }
         })
 
-        yield put({ type: 'setMore', payload: currentPage })
+        console.log(new Date() - tempDate, 'updateAlertListData');
 
+        tempDate = new Date();
+        yield put({ type: 'setMore', payload: { currentPage, isReRender: false } })
+        console.log(new Date() - tempDate, 'setMore');
+
+        tempDate = new Date();
         yield put({
           type: 'toggleLoading',
-          payload: false
+          payload: { isLoading: false, isReRender: false }
         })
+        console.log(new Date() - tempDate, 'cancelLoading');
+        tempDate = new Date();
         yield put({
           type: 'addProperties',
           payload: {
@@ -633,10 +657,12 @@ export default {
             tags: listReturnData.data.tagKeys
           }
         })
+        console.log(new Date() - tempDate, 'addProperties');
       } else {
         yield message.error(listReturnData.message, 2)
       }
 
+      console.log(new Date() - firstDate, 'total');
     },
     //orderList排序
     *orderList({ payload }, { select, put, call }) {
@@ -675,10 +701,15 @@ export default {
     },
     // 分组显示
     *groupView({ payload }, { select, put, call }) {
+      const tempDate = new Date();
       yield put({
         type: 'setGroupType',
-        payload: payload
+        payload: {
+          selectGroup: payload,
+          isReRender: false
+        }
       })
+      console.log(new Date() - tempDate, 'setGroupType');
       yield put({
         type: 'setGroup',
         payload: {
@@ -686,11 +717,15 @@ export default {
           group: payload
         }
       })
+      console.log(new Date() - tempDate, 'setGroup');
     },
     // 无分组显示
     *noGroupView({ payload }, { select, put, call }) {
       yield put({
         type: 'removeGroupType',
+        payload: {
+          isReRender: false
+        }
       })
       yield put({
         type: 'setGroup',
@@ -701,9 +736,9 @@ export default {
     },
     // 列定制
     *checkColumn({ payload }, { select, put, call }) {
-      yield put({ type: 'setColumn', payload: payload })
+      yield put({ type: 'setColumn', payload: { selectCol: payload, isReRender: false } })
       const selectColumn = yield select(state => state.alertQuery.selectColumn)
-      yield put({ type: 'customCols', payload: selectColumn })
+      yield put({ type: 'customCols', payload: { selectColumn } })
     },
   },
 

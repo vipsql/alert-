@@ -164,7 +164,7 @@ class Theads extends Component {
 
     return (
         <thead>
-          <WrapableTr>
+          <WrapableTr columnsLength={ columns.length } >
             {theads}
           </WrapableTr>
         </thead>

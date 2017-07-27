@@ -3,7 +3,7 @@ import { viewTicket } from '../services/alertOperation'
 import { parse } from 'qs'
 import { message } from 'antd'
 import { assign } from 'es6-object-assign';
-import { groupSort } from '../utils'
+import { groupSort, returnByIsReRender } from '../utils'
 
 const initialState = {
   isGroup: false,
@@ -44,10 +44,10 @@ const initialState = {
   }, {
     key: 'name',
     isFixed: true
-  },{
+  }, {
     key: 'owner',
     order: true
-  },{
+  }, {
     key: 'source',
     order: true
   }, {
@@ -92,8 +92,8 @@ export default {
       }
     },
     // 加载状态
-    toggleLoading(state, { payload: isLoading }) {
-      return { ...state, isLoading }
+    toggleLoading(state, { payload: { isLoading, isReRender = true } }) {
+      return returnByIsReRender(state, { isLoading }, isReRender);
     },
     // // 更改全选状态
     toggleSelectedAll(state, { payload }) {
@@ -113,14 +113,17 @@ export default {
       // ids.forEach((id) => {
       //   checkAlert[id].checked = checked;
       // });
-      const { selectedAll, checkAlert, operateAlertIds, selectedAlertIds } = payload;
-      return {
-        ...state,
-        selectedAll,
-        checkAlert,
-        operateAlertIds,
-        selectedAlertIds
-      }
+      const { selectedAll, checkAlert, operateAlertIds, selectedAlertIds, isReRender = true } = payload;
+      return returnByIsReRender(
+        state,
+        {
+          selectedAll,
+          checkAlert,
+          operateAlertIds,
+          selectedAlertIds
+        },
+        isReRender
+      )
     },
     // 更新分组字段
     updateGroup(state, { payload }) {
@@ -130,19 +133,20 @@ export default {
       }
     },
     // 更新显示更多字段
-    updateShowMore(state, { payload: isShowMore }) {
-      return {
-        ...state,
-        isShowMore
-      }
+    updateShowMore(state, { payload: { isShowMore, isReRender = true } }) {
+      return returnByIsReRender(
+        state,
+        { isShowMore },
+        isReRender
+      )
     },
     // 点击查看更多
-    setMore(state, { payload: currentPage }) {
-
-      return {
-        ...state,
-        currentPage
-      }
+    setMore(state, { payload: { currentPage, isReRender = true } }) {
+      return returnByIsReRender(
+        state,
+        { currentPage },
+        isReRender
+      )
     },
     // 注入通用状态
     setInitvalScope(state, { payload }) {
@@ -165,7 +169,7 @@ export default {
     //   }
     // },
     // 不分组更新
-    updateAlertListToNoGroup(state, { payload: { info, isShowMore, isGroup, levels, orderBy, orderType, tempListData, currentPage } }) {
+    updateAlertListToNoGroup(state, { payload: { info, isShowMore, isGroup, levels, orderBy, orderType, tempListData, currentPage, isReRender = true } }) {
       let checkList = {};
       info.forEach((item, index) => {
         checkList[`${item.id}`] = {
@@ -173,10 +177,10 @@ export default {
           checked: false
         }
       })
-      return { ...state, checkAlert: checkList, data: info, tempListData, isShowMore, isGroup, levels, orderBy, orderType, currentPage }
+      return returnByIsReRender(state, { checkAlert: checkList, data: info, tempListData, isShowMore, isGroup, levels, orderBy, orderType, currentPage }, isReRender)
     },
     // 分组时更新
-    updateAlertListToGroup(state, { payload: { info, isShowMore, isGroup, groupBy, levels } }) {
+    updateAlertListToGroup(state, { payload: { info, isShowMore, isGroup, groupBy, levels, isReRender = ture } }) {
       let checkList = {};
       info.forEach((group, index) => {
         group.children.forEach((item) => {
@@ -186,11 +190,11 @@ export default {
           }
         })
       })
-      return { ...state, checkAlert: checkList, data: info, isShowMore, isGroup, groupBy, levels }
+      return returnByIsReRender(state, { checkAlert: checkList, data: info, isShowMore, isGroup, groupBy, levels }, isReRender);
     },
     // 记录下原先checked数据
     //将loadMore取得的新数据放入checkAlert中
-    resetCheckAlert(state, { payload: { moreData } }) {
+    resetCheckAlert(state, { payload: { moreData, isReRender = true } }) {
       // let ids = Object.keys(origin);
       let checkList = {};
       // newObj.forEach((item, index) => {
@@ -214,13 +218,16 @@ export default {
           checked: false
         }
       })
-      return {
-        ...state,
-        checkAlert: {
-          ...state.checkAlert,
-          ...checkList
-        }
-      }
+      return returnByIsReRender(
+        state,
+        {
+          checkAlert: {
+            ...state.checkAlert,
+            ...checkList
+          }
+        },
+        isReRender
+      )
     },
     // 删除勾选项
     deleteCheckAlert(state, { payload: arr }) {
@@ -319,13 +326,13 @@ export default {
 
     },
     // 更新告警列表
-    updateAlertListData(state, { payload: { data, newLevels, tempListData } }) {
+    updateAlertListData(state, { payload: { data, newLevels, tempListData, isReRender=true } }) {
       let { levels } = state;
       let keys = Object.keys(newLevels);
       keys.forEach((key) => {
         levels[key] = typeof levels[key] !== 'undefined' ? levels[key] + newLevels[key] : newLevels[key]
       })
-      return { ...state, data, tempListData, levels: levels }
+      return returnByIsReRender(state, {data, tempListData, levels: levels }, isReRender);
     },
     // 手动添加子告警
     addChild(state, { payload: { children, parentId, isGroup } }) {
@@ -490,8 +497,8 @@ export default {
       return { ...state, data: newData }
     },
     // 排序
-    toggleOrder(state, { payload }) {
-      return { ...state, ...payload }
+    toggleOrder(state, { payload: { orderBy, orderType, isReRender=true } }) {
+      return returnByIsReRender(state, { orderBy, orderType }, isReRender);
     },
     // 删除告警
     deleteIncident(state, { payload: arr }) {
@@ -574,7 +581,7 @@ export default {
     },
     // 修改data数组某一行的值
     updateDataRow(state, { payload }) {
-      const { data, isGroup } = state;
+      const { data, isGroup, isReRender=true } = state;
       let newData = assign([], data);
       if (isGroup) {
         newData = newData.map((tempGroup) => {
@@ -595,7 +602,7 @@ export default {
           return tempRow;
         });
       }
-      return { ...state, data: newData };
+      return returnByIsReRender(state, {data: newData}, isReRender);
     },
 
     // 清空selectedAlertIds和operateAlertIds： 接手成功后要手动清除
@@ -639,7 +646,7 @@ export default {
       // console.log(linew)
       yield put({
         type: 'toggleLoading',
-        payload: true
+        payload: { isLoading: true }
       })
 
       var {
@@ -722,12 +729,13 @@ export default {
             isGroup: false,
             orderBy: orderBy,
             orderType: orderType,
-            levels: listData.data.levels
+            levels: listData.data.levels,
+            isReRender: false
           }
         })
         yield put({
           type: 'toggleLoading',
-          payload: false
+          payload: { isLoading: false }
         })
         yield put({
           type: 'alertOperation/initColumn',
@@ -863,7 +871,7 @@ export default {
       if (payload.isGroup) {
         yield put({
           type: 'toggleLoading',
-          payload: true
+          payload: { isLoading: true }
         })
         const groupList = yield groupSort()(tempListData, payload.group)
         if (payload.group !== undefined && payload.group === 'severity') {
@@ -878,12 +886,13 @@ export default {
             isShowMore: false,
             isGroup: true,
             groupBy: payload.group,
-            levels: levels
+            levels: levels,
+            isReRender: false
           }
         })
         yield put({
           type: 'toggleLoading',
-          payload: false
+          payload: { isLoading: false }
         })
         //yield put({ type: 'queryAlertList', payload: { isGroup: payload.isGroup, groupBy: payload.group } })
       } else {
@@ -893,13 +902,13 @@ export default {
     // show more
     *loadMore({ }, { call, put, select }) {
       const isLoading = yield select((state) => state.alertListTable.isLoading);
-      if(isLoading) {
+      if (isLoading) {
         return;
       }
 
       yield put({
         type: 'toggleLoading',
-        payload: true
+        payload: { isLoading: true }
       })
 
       let { currentPage, listData, alertListTable } = yield select(state => {
@@ -932,13 +941,14 @@ export default {
           payload: {
             // origin: alertListTable.checkAlert,
             // newObj: listData
-            moreData: listReturnData.data.datas
+            moreData: listReturnData.data.datas,
+            isReRender: false
           }
         })
         if (!listReturnData.data.hasNext) {
           yield put({
             type: 'updateShowMore',
-            payload: listReturnData.data.hasNext
+            payload: { isShowMore: listReturnData.data.hasNext, isReRender: false }
           })
         }
 
@@ -947,15 +957,16 @@ export default {
           payload: {
             data: listData,
             tempListData: listData,
-            newLevels: listReturnData.data.levels
+            newLevels: listReturnData.data.levels,
+            isReRender: false
           }
         })
 
-        yield put({ type: 'setMore', payload: currentPage })
+        yield put({ type: 'setMore', payload: { currentPage, isReRender: false } })
 
         yield put({
           type: 'toggleLoading',
-          payload: false
+          payload: { isLoading: false }
         })
         yield put({
           type: 'alertOperation/addProperties',
@@ -967,7 +978,6 @@ export default {
       } else {
         yield message.error(listReturnData.message, 2)
       }
-
     },
     //orderList排序
     *orderList({ payload }, { select, put, call }) {
@@ -987,6 +997,7 @@ export default {
           payload: {
             orderBy: payload,
             orderType: orderType === undefined || orderType === 1 ? 0 : 1,
+            isReRender: false
           }
         })
         yield put({ type: 'queryAlertList' })
@@ -1007,6 +1018,7 @@ export default {
 
     // 响应列表项的选中状态
     *handleCheckboxClick({ payload: { alertId } }, { select, put, call }) {
+      // const startDate = new Date();
 
       yield put({ type: 'changeCheckAlert', payload: { alertId } });
 
@@ -1019,6 +1031,8 @@ export default {
         type: 'alertOperation/setButtonsDisable',
         payload: disabled
       })
+
+      // console.log(new Date() - startDate, "check");
     },
 
     // 点击全选按钮

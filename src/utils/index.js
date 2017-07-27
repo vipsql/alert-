@@ -91,6 +91,18 @@ function formatDate(date) {
   return year + '/' + month + '/' + day + ' ' + hours + ':' + mins
 }
 
+// state发生变化，但是是否要影响相关页面重新渲染
+function returnByIsReRender(oldState, newState, isReRender) {
+  if (isReRender) {
+    return { ...oldState, ...newState };
+  } else {
+    Object.keys(newState).map((key) => {
+      oldState[key] = newState[key];
+    })
+    return oldState;
+  }
+}
+
 // 日期格式化
 Date.prototype.format = function (format) {
   var o = {
@@ -166,5 +178,6 @@ module.exports = {
   groupSort,
   browser,
   loopWebNotification,
-  formatDate
+  formatDate,
+  returnByIsReRender
 }

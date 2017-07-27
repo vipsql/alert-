@@ -30,6 +30,8 @@ class Table extends Component {
   }
 
   render() {
+    i ++;
+    const tempDate = new Date();
     const {
       sourceOrigin,
       isGroup,
@@ -37,7 +39,7 @@ class Table extends Component {
       data,
       columns,
       checkAlertFunc,
-      checkAlert,
+      checkAlert={},
       detailClick,
       spreadChild,
       noSpreadChild,
@@ -284,11 +286,11 @@ class Table extends Component {
     // 生成子告警行
     const getchildTrs = (childItem, childIndex, keys, item, isGroup) => {
 
-      const trKey = childItem.id || 'chTd' + childIndex
+      const trKey = childItem.id + '_' + childIndex
       const childTds = getTds(childItem, keys, 'child')
 
       return (
-        <WrapableTr isSuppressed={ childItem.suppressionFlag } trId={trKey} key={trKey} className={!item.isSpread ? styles.hiddenChild : !isGroup ? styles.noSpread : styles.groupSpread}>
+        <WrapableTr contentData={ {...childItem} } columnsLength={ columns.length } isSuppressed={ childItem.suppressionFlag } trId={trKey} key={trKey} className={!item.isSpread ? styles.hiddenChild : !isGroup ? styles.noSpread : styles.groupSpread}>
           {childTds}
         </WrapableTr>
       )
@@ -298,9 +300,8 @@ class Table extends Component {
       data.forEach((item, index) => {
         const keys = colsKey
         let childtrs = []
-        //console.log(trKey, "isGroup");
         let groupTitle = item.isGroupSpread === false ?
-          (<WrapableTr isSuppressed={ item.suppressionFlag } className={styles.trGroup} key={index}>
+          (<WrapableTr contentData={{ groupBy, classify: item.classify  }} columnsLength={ columns.length } isSuppressed={ item.suppressionFlag } className={styles.trGroup} key={index}>
             <td colSpan={keys.length + 3}>
               <span className={styles.expandIcon} data-classify={item.classify} onClick={spreadGroup}>+</span>
               {
@@ -315,7 +316,7 @@ class Table extends Component {
             </td>
           </WrapableTr>)
           :
-          (<WrapableTr isSuppressed={ item.suppressionFlag } className={styles.trGroup} key={index}>
+          (<WrapableTr contentData={{ groupBy, classify: item.classify  }} columnsLength={ columns.length } isSuppressed={ item.suppressionFlag } className={styles.trGroup} key={index}>
             <td colSpan={keys.length + 3}>
               <span className={styles.expandIcon} data-classify={item.classify} onClick={noSpreadGroup}>-</span>
               {
@@ -346,10 +347,10 @@ class Table extends Component {
           } else {
             childs = null
           }
-          const trKey = childItem.id || `tr_${index}_${itemIndex}`
-          const tdKey = childItem.id || `td_${index}_${itemIndex}`
+          const trKey = `tr_${index}_${itemIndex}`
+          const tdKey = `td_${index}_${itemIndex}`
           childtrs.push(
-            <WrapableTr isSuppressed={ childItem.suppressionFlag } key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread ? styles.hiddenChild : styles.groupSpread}>
+            <WrapableTr contentData={{...childItem, checked: checkAlert[childItem.id] && checkAlert[childItem.id].checked }}  columnsLength={ columns.length } isSuppressed={ childItem.suppressionFlag } trId={ trKey } key={trKey} className={item.isGroupSpread !== undefined && !item.isGroupSpread ? styles.hiddenChild : styles.groupSpread}>
               {
                 //<input type="checkbox" checked={checkAlert[childItem.id].checked} data-id={childItem.id} data-all={JSON.stringify(childItem)} onClick={checkAlertFunc} />
                 sourceOrigin !== 'alertQuery' ?
@@ -389,7 +390,7 @@ class Table extends Component {
         }
 
         commonTrs.push(
-          <WrapableTr isSuppressed={ item.suppressionFlag } trId={ item.id } key={item.id} className={classnames(styles.noSpread)}>
+          <WrapableTr contentData={{ ...item, columns, checked: checkAlert[item.id] && checkAlert[item.id].checked }} columnsLength={ columns.length } isSuppressed={ item.suppressionFlag } trId={ item.id + "_" + index } key={item.id + "_" + index} className={classnames(styles.noSpread)}>
             {
               //<input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc} />
               sourceOrigin !== 'alertQuery' && Object.keys(checkAlert).length !== 0 ?
@@ -434,7 +435,7 @@ class Table extends Component {
             data.length > 0 ?
               tbodyCon
               :
-              <WrapableTr>
+              <WrapableTr columnsLength={ columns.length }>
                 <td colSpan={columns.length + 3} style={{ textAlign: 'center' }}>{ this.props.isShowNoDataTip?<FormattedMessage {...formatMessages['noData']} />:undefined }</td>
               </WrapableTr>
           }
