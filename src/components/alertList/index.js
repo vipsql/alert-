@@ -36,7 +36,10 @@ class AlertListManage extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, intl: { formatMessage } } = this.props;
+    // dispatch({
+    //   type: 'alertOperation/afterDispatch'
+    // })
 
     window.addEventListener('message', (e) => {
       if (e.data.createTicket !== undefined && e.data.createTicket === 'success') {
@@ -44,12 +47,9 @@ class AlertListManage extends Component {
           successMsg: {
             id: 'alertOperate.dispatch.success',
             defaultMessage: "派单成功，工单号为：{ flowNo }",
-            values: {
-              flowNo: e.data.flowNo
-            }
           }
         })
-        message.success(formatMessage({ ...localeMessage['successMsg'] }));
+        message.success(formatMessage({ ...localeMessage['successMsg'] }, { flowNo: e.data.flowNo }));
         dispatch({
           type: 'alertOperation/afterDispatch'
         })
@@ -174,7 +174,7 @@ class AlertListManage extends Component {
             <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key='1'>
               {/*<AlertOperation position='list' {...operateProps} />*/}
               <AlertOperationWrap />
-              <ListTableWrap topFixArea={ <AlertOperationWrap /> } topHeight={ alertList.isShowBar?366:216 } />
+              <ListTableWrap topFixArea={<AlertOperationWrap />} topHeight={alertList.isShowBar ? 366 : 216} />
             </TabPane>
             <TabPane tab={<span className={tabLine} ><FormattedMessage {...localeMessage['tab_time']} /></span>} key='2'>
               {/*<AlertOperation position='timeAxis' {...operateProps} />*/}

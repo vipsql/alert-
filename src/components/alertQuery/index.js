@@ -40,13 +40,10 @@ class alertQueryManage extends Component {
         const localeMessage = defineMessages({
           successMsg: {
             id: 'alertOperate.dispatch.success',
-            defaultMessage: "派单成功，工单号为：{ flowNo }",
-            values: {
-              flowNo: e.data.flowNo
-            }
+            defaultMessage: "派单成功，工单号为：{flowNo}",
           }
         })
-        message.success(formatMessage({ ...localeMessage['successMsg'] }));
+        message.success(formatMessage({ ...localeMessage['successMsg'] }, { flowNo: e.data.flowNo }));
         dispatch({
           type: 'alertDetail/afterDispatch',
         })
