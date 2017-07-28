@@ -24,6 +24,10 @@ class WrapableTr extends Component {
       return true;
     }
 
+    if(nextProps.className != this.props.className) {
+      return true;
+    }
+
     const { contentData: oldContentData={} } = this.props;
     const { contentData: newContentData={} } = nextProps;
 
@@ -53,6 +57,7 @@ class WrapableTr extends Component {
   render() {
     const { children, className, contentData, trId, isSuppressed=false, columnsLength, ...restProps } = this.props;
     const { wrapped } = this.state;
+    console.log(contentData);
     return (
       <tr ref="tr" {...restProps} data-link-tr-id={trId} onClick={(e) => { this._toggleWrap(e) }} className={ classnames(className, wrapped?styles.showSome:styles.showAll, isSuppressed?styles.suppressed:'') }>
         { children }

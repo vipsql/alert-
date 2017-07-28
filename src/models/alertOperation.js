@@ -30,11 +30,11 @@ const initalState = {
   isSelectAlert: false, // 是否选择了告警
   isSelectOrigin: false, // 是否选择了源告警
 
-  originAlert: [], //选择的radio是个数组
+  originAlert: [], // 合并告警弹窗中选中的告警（长度肯定为1或0）
   relieveAlert: {}, // 选中的解除对象
   mergeInfoList: [
 
-  ], // 合并列表展示信息
+  ], // 合并告警弹窗中所有的告警选项
 
   // 列定制(点击需要初始化进行数据结构转换)
   selectColumn: [], // 选择的列
@@ -367,8 +367,8 @@ export default {
         }
       })
       if (mergeInfoList !== undefined && mergeInfoList.length > 1) { // 合并告警数量少于2不允许合并的操作在页面就不允许删除，还需和交互讨论，暂时不做处理
-        let filterList = yield mergeInfoList.filter(item => item.id != originAlert[0])
-        let filterListIds = yield filterList.map(item => item.id)
+        let filterList = yield mergeInfoList.filter(item => item.id != originAlert[0]) // 被合并的告警
+        let filterListIds = yield filterList.map(item => item.id) // 被合并的告警id列表
         let result = yield merge({
           parentId: originAlert[0],
           childs: filterListIds
