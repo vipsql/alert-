@@ -820,14 +820,14 @@ export default {
         if (item.hasChild) {
           // 有子告警后判断是否需要通过查询得到子告警
           let haveChild = !(typeof item.childrenAlert === 'undefined')
-          if (typeof haveChild !== undefined && !haveChild) {
+          if (typeof haveChild !== 'undefined' && !haveChild) {
             const childResult = yield queryChild({ incidentId: item.id, begin: begin, end: end })
             if (childResult.result) {
-              yield relieveItem.push(...childResult.data)
+              relieveItem.push(...childResult.data)
             } else {
               yield message.error(childResult.message, 2)
             }
-          } else if (typeof haveChild !== undefined && haveChild) {
+          } else if (typeof haveChild !== 'undefined' && haveChild) {
             relieveItem.push(...item.childrenAlert)
           } else {
             console.error('haveChild is undefined')
