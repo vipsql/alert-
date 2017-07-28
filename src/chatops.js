@@ -1,4 +1,4 @@
-(function() {
+;(function() {
   "use strict";
 
   var root = this;
@@ -12,6 +12,21 @@
 
   // Current version
   $$.VERSION = '0.0.9';
+
+  $$.verifyFields = function(fields, type) {
+    switch (type) {
+      case 'sidebar':
+        return $$.isObject(fields, ['url', 'title'])
+    }
+  }
+
+  $$.isObject = function(obj, arr) {
+    var res = [];
+    arr.forEach(function(key) {
+      res.push(obj.hasOwnProperty(key) ? 1 : 0);
+    })
+    return Math.min.apply(null, res) ? true : false;
+  }
 
   $$.Origin = (function() {
 
@@ -52,6 +67,27 @@
     open: function(key, url) {
       $$.postMessage.send({
         key: key || '',
+        type: this.type,
+        show: true
+      });
+    },
+
+    close: function(key) {
+      $$.postMessage.send({
+        key: key || '',
+        type: this.type,
+        show: false
+      });
+    }
+  }
+
+  $$.sidebar = {
+
+    type: 'sidebar',
+
+    open: function(data, url) {
+      $$.postMessage.send({
+        message: data,
         type: this.type,
         show: true
       });
