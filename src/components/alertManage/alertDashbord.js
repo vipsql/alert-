@@ -191,7 +191,7 @@ class Chart extends Component {
     let textSize = this._textSize("12px", text);
     let isShorted = false;
 
-    while (textSize.width > d.dx - 25 && textSize.width > 2) {
+    while (textSize.width > d.dx - 40 && textSize.width > 2) {
       isShorted = true;
       text = text.substring(0, text.length - 2);
       textSize = this._textSize("13px", text + '...');
@@ -225,7 +225,7 @@ class Chart extends Component {
             currentNode[0][0].__data__.maxSeverity = childNode.maxSeverity;
           }
           svg
-            .select("rect")
+            .select("rect.background")
             .transition()
             .duration(2000)
             .style("fill", (d) => {
@@ -499,6 +499,7 @@ class Chart extends Component {
         })
         .attr("height", headerHeight);
       parentEnterTransition.append("rect")
+        .classed("background", true)
         .attr("width", function (d) {
           return Math.max(0.01, d.dx);
         })
@@ -527,7 +528,7 @@ class Chart extends Component {
         .attr("transform", function (d) {
           return "translate(" + d.dx + "," + d.y + ")";
         });
-      parentUpdateTransition.select("rect")
+      parentUpdateTransition.select("rect.background")
         .attr("width", function (d) {
           return Math.max(0.01, d.dx);
         })
@@ -617,6 +618,12 @@ class Chart extends Component {
         .on('mouseleave', function () {
           d3Tip.hide()
         })
+      childEnterTransition.append("line")
+        .classed("shadow", true)
+        .attr('stroke', '#000')
+        .attr('stroke-opacity', '0.1')
+        .attr('stroke-width', '28')
+        .style("stroke-linecap", "round")
       childEnterTransition.append('text')
         .attr("class", "label")
         .attr('x', function (d) {
@@ -646,7 +653,7 @@ class Chart extends Component {
         .attr("transform", function (d) {
           return "translate(" + d.x + "," + d.y + ")";
         });
-      childUpdateTransition.select("rect")
+      childUpdateTransition.select("rect.background")
         .attr("width", function (d) {
           return Math.max(0.01, d.dx);
         })
@@ -796,20 +803,29 @@ class Chart extends Component {
             return ky * d.dy / 2;
           })
           .attr("font-size", "11.5pt")
-          .style("text-shadow", "1px 1px 1px #333")
-        // .attr("font-size", function(d) {
-
-        //     d.w = this.getComputedTextLength();
-        //     return d.dx > d.w ? 13 : 13 * d.dx / d.w;
-        // })
-        // .style("opacity", function(d) { d.w = this.getComputedTextLength(); return kx * d.dx > d.w ? 1 : 0; })
+          //.style("text-shadow", "1px 1px 1px #333")
+        zoomTransition.select(".child .shadow")
+          .attr("x1", (d) => {
+            const result = this._textSize('11.5pt', this._wrap(d))
+            return (kx * d.dx / 2) - (result.width / 2);
+          })
+          .attr("y1", function (d) {
+            return ky * d.dy / 2;
+          })
+          .attr("x2", (d) => {
+            const result = this._textSize('11.5pt', this._wrap(d))
+            return (kx * d.dx / 2) + (result.width / 2);
+          })
+          .attr("y2", function (d) {
+            return ky * d.dy / 2;
+          })
         zoomTransition.select(".parent .label")
           .attr("x", function (d) {
             return kx * d.dx / 2;
           })
 
 
-        zoomTransition.select("rect")
+        zoomTransition.select("rect.background")
           .attr("width", function (d) {
             return Math.max(0.01, (kx * d.dx));
           })

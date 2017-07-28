@@ -83,7 +83,7 @@ class DatePeriodPicker extends Component {
           </div>
         )}
       >
-        <Input placeholder={placeholder} readOnly value={dayTimeString} style={{ width: '100%' }} className={styles.selectTime} addonAfter={<i onClick={() => this.clear()} className={ shanchuClass }/>} />
+        <Input placeholder={placeholder} readOnly value={dayTimeString} style={{width: '100%'}} addonAfter={<i onClick={() => this.clear()} className={ shanchuClass }/>} />
       </Popover>
       </div>
     )
