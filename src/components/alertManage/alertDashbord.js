@@ -55,10 +55,10 @@ class Chart extends Component {
     const self = this;
 
     const severityToColor = {
-      '0': '#4fdfbf', // 恢复
-      '1': '#f6cb03', // 提醒
-      '2': '#fa8c16', // 警告
-      '3': "#ec5437" // 紧急
+      '0': '#52edcb', // 恢复
+      '1': '#fadc23', // 提醒
+      '2': '#ffae2f', // 警告
+      '3': "#ff522a" // 紧急
     }
     this.chartWidth = document.documentElement.clientWidth - 160 - 90
     this.chartHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight) - 180
@@ -67,7 +67,7 @@ class Chart extends Component {
     this.color = function (num) {
       // 没有数据时的颜色
       if (num < 0) {
-        return "#6dcd7c"
+        return "#5be570"
       }
       return severityToColor[num]
     }
@@ -834,7 +834,7 @@ class Chart extends Component {
           })
           .style("fill", d => {
             if (!d.children && d.noData) {
-              return '#6dcd7c'
+              return '#5be570'
             }
             return d.children ? headerColor : this.color(d.maxSeverity);
           });
