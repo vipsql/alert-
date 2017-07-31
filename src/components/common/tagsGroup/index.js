@@ -94,10 +94,10 @@ class tagsGroup extends Component{
     visible(target, e) {
         e.stopPropagation();
 
-        let root = this.containerNode;
-        if (!this.isNodeInRoot(e.target, root) && this.props.setVisible) {
+        // let root = this.containerNode;
+        // if (!this.isNodeInRoot(e.target, root) && this.props.setVisible) {
             this.props.setVisible(target)
-        }
+        //}
     }
 
     renderName(key, name) {
@@ -171,7 +171,11 @@ class tagsGroup extends Component{
 
         return (
             haveTags ?
-            <div className={className} onClick={this.visible.bind(this, ...arguments, content)}>
+            <div
+              className={className}
+              onMouseEnter={this.visible.bind(this, ...arguments, content)}
+              onMouseLeave={this.visible.bind(this, ...arguments, content)}
+            >
                 <p className={styles.typeName}>{`${ content.keyName }:`}</p>
                 {
                     content.values.map( (item, index) => {
@@ -193,7 +197,11 @@ class tagsGroup extends Component{
                 </Animate>
             </div>
             :
-            <div className={className} onClick={this.visible.bind(this, ...arguments, content)}>
+            <div
+              className={className}
+              onMouseEnter={this.visible.bind(this, ...arguments, content)}
+              onMouseLeave={this.visible.bind(this, ...arguments, content)}
+            >
                 <p className={styles.typeName}>{`${ content.keyName }:`}</p>
                 <span className={styles.placeholder}>{formatMessage(localeMessage['placeholder'], {name: `${content.keyName}`})}</span>
                 <Animate

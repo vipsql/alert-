@@ -18,23 +18,23 @@ class alertTagsFilter extends Component{
     }
   }
   componentDidMount() {
-    $(window.document.body).on("click.tags", (e) => {
-        const $target = $(e.target);
-        const $toClose = $target.closest("div#tagsContainer");
+    // $(window.document.body).on("click.tags", (e) => {
+    //     const $target = $(e.target);
+    //     const $toClose = $target.closest("div#tagsContainer");
 
-        if($toClose.length == 0) {
-            this.setState({
-              mouseEnter: false,
-              shareSelectTags: this.state.shareSelectTags.map(item => {
-                item.visible = false;
-                return item;
-              })
-            })
-        }
-    })
+    //     if($toClose.length == 0) {
+    //         this.setState({
+    //           mouseEnter: false,
+    //           shareSelectTags: this.state.shareSelectTags.map(item => {
+    //             item.visible = false;
+    //             return item;
+    //           })
+    //         })
+    //     }
+    // })
   }
   componentWillUnmount() {
-    $(window.document.body).off("click.tags");
+    //$(window.document.body).off("click.tags");
   }
   componentWillReceiveProps(nextProps, nextState) {
     //if (this.props.shareSelectTags !== nextProps.shareSelectTags) {
@@ -171,10 +171,15 @@ class alertTagsFilter extends Component{
 
       return (
           <div className={styles.tagsIframe} id='tagsContainer'>
-              <div className={styles.selectBtn} onClick={this.queryKey.bind(this, dispatch)}>
+              <div
+                className={styles.selectBtn}
+                onMouseEnter={this.queryKey.bind(this, dispatch)}
+                onMouseLeave={this.queryKey.bind(this, dispatch)}
+              >
                   <i className={classnames(switchClass, styles.hopper)}></i>
                   <div className={classnames(arrClass, styles.iconDiv)}></div>
                   <Animate
+                      component='div'
                       transitionName="tags"
                       transitionEnterTimeout={300}
                       transitionLeaveTimeout={300}
@@ -183,7 +188,6 @@ class alertTagsFilter extends Component{
                         <ul className={styles.content}>
                           {
                             tagsKeyList.map( (item) => {
-                              console.log(item.key)
                               return <li
                                 key={item.key + item.keyName}
                                 data-key={JSON.stringify(item)}

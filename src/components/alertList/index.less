@@ -777,39 +777,42 @@
                 transition: opacity .3s ease-in-out;
             }
         }
-        .content{
-            max-height: 200px;
-            overflow: scroll;
+        div:last-child{
             position: absolute;
+            top: ~"calc(100%)";
             left: 0;
-            top: e("calc(100% + 6px)");
-            margin-top: 2px;
-            padding: 5px 0;
-            width: 130px;
-            background: #095a95;
-            border: 1px solid #2bb4f4;
-            border-radius: 2px;
-            box-shadow: 1px 1px 3px 1px rgba(0,0,0,.1);
+            padding-top: 8px;
             z-index: 15;
-            li{
-                position: relative;
-                cursor: pointer;
+            .content{
+                max-height: 200px;
+                overflow: scroll;
+                padding: 5px 0;
+                width: 130px;
                 background: #095a95;
-                color: #96d0f9;
-                padding: 10px 15px;
-                transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-                &:hover{
-                    background-color: #3092d9;
-                    color: #ffffff;
-                }
-                i{
-                    position: absolute;
-                    top: 10px;
-                    right: 10px;
-                    font-size: 16px;
-                    line-height: 1;
+                border: 1px solid #2bb4f4;
+                border-radius: 2px;
+                box-shadow: 1px 1px 3px 1px rgba(0,0,0,.1);
+                li{
+                    position: relative;
+                    cursor: pointer;
+                    background: #095a95;
+                    color: #96d0f9;
+                    padding: 10px 15px;
+                    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+                    &:hover{
+                        background-color: #3092d9;
+                        color: #ffffff;
+                    }
+                    i{
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        font-size: 16px;
+                        line-height: 1;
+                    }
                 }
             }
+
         }
     }
 
