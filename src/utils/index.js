@@ -167,6 +167,17 @@ function loopWebNotification(callback = () => { }, loopTime) {
   }, secs)
 }
 
+/**
+ * device is mobile or web
+ * @return { Boolean } true or false
+ */
+function isMobile() {
+  let agent = navigator.userAgent
+  let isAndroid = agent.indexOf('Android') > -1 || agent.indexOf('Adr') > -1
+  let isIos = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+  return isAndroid || isIos
+}
+
 module.exports = {
   menu,
   bottomMenus,
@@ -177,6 +188,7 @@ module.exports = {
   getUUID,
   groupSort,
   browser,
+  isMobile,
   loopWebNotification,
   formatDate,
   returnByIsReRender

@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { classnames } from '../../utils'
+import { classnames, isMobile } from '../../utils'
 import styles from './common.less'
 import { Button, Form, Select, Row, Col} from 'antd';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
@@ -17,8 +17,11 @@ class Dispatch extends Component{
       const {dispatch} = this.props;
       window.addEventListener('message', (e) => {
         if(e.data.createTicket !== undefined && e.data.createTicket === 'success') {
-            $$.dialog.close()
-            //window.parent.postMessage({closeModal: true}, '*');
+            if (isMobile()) {
+              _mobile.dialog.close()
+            } else {
+              $$.dialog.close()
+            }
             dispatch({
                 type: 'alertExport/closeTicketModal',
             })
@@ -28,8 +31,11 @@ class Dispatch extends Component{
 
     callback() {
         console.log('发送成功')
-        $$.dialog.close()
-        //window.parent.postMessage({closeModal: true}, '*');
+        if (isMobile()) {
+          _mobile.dialog.close()
+        } else {
+          $$.dialog.close()
+        }
     }
 
     render() {
