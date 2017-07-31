@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { Select, Popover, Checkbox, Dropdown, Menu, Button, Icon } from 'antd';
+import { Select, Popover, Checkbox, Dropdown, Menu, Button, Icon, Tooltip } from 'antd';
 import { connect } from 'dva'
 import styles from './index.less'
 import { classnames } from '../../../utils'
@@ -32,8 +32,14 @@ const alertOperation = ({
   resolveDisabled,
   notifyDisabled,
   shareDisabled,
+  mergeDisabled,
+  reassignDisabled,
+  suppressDisabled,
+  chatOpsDisabled,
   showNotifyFunc,
   showReassiginFunc,
+  disableReasonMap = {},
+  showOperations = ['takeOver', 'reassign', 'dispatch', 'close', 'resolve', 'other'],
   intl: { formatMessage }
 }) => {
 
@@ -201,7 +207,7 @@ const alertOperation = ({
     groupByOther: {
       id: 'alertOperate.groupByOther',
       defaultMessage: '按{other}分组',
-    }
+    },
   })
 
   const setClass = classnames(
@@ -288,21 +294,21 @@ const alertOperation = ({
       }}
     >
       {
-        position !== 'detail' &&
-        <Menu.Item key="merge" className={styles.menuItem}>
+        position !== 'detail' && showOperations.indexOf('merge') < 0 &&
+        <Menu.Item key="merge" className={styles.menuItem} disabled={mergeDisabled}>
           <FormattedMessage {...localeMessage['operate_merge']} />
         </Menu.Item>
       }
-      <SubMenu title={formatMessage({ ...localeMessage['suppress'] })} className={styles.menuItem}>
+      <SubMenu title={formatMessage({ ...localeMessage['suppress'] })} className={styles.menuItem} disabled={suppressDisabled}>
         <Menu.Item key="5" className={styles.menuItem}><FormattedMessage {...localeMessage['suppress_five']} /></Menu.Item>
         <Menu.Item key="10" className={styles.menuItem}><FormattedMessage {...localeMessage['suppress_ten']} /></Menu.Item>
         <Menu.Item key="30" className={styles.menuItem}><FormattedMessage {...localeMessage['suppress_halfHour']} /></Menu.Item>
         <Menu.Item key="100" className={styles.menuItem}><FormattedMessage {...localeMessage['suppress_customer']} /></Menu.Item>
       </SubMenu>
-      <Menu.Item key="chatOps" className={styles.menuItem}>
+      <Menu.Item key="chatOps" className={styles.menuItem} disabled={chatOpsDisabled}>
         <FormattedMessage {...localeMessage['chatOps']} />
       </Menu.Item>
-      <Menu.Item key="notify" className={styles.menuItem}>
+      <Menu.Item key="notify" className={styles.menuItem} disabled={notifyDisabled}>
         <FormattedMessage {...localeMessage['notify']} />
       </Menu.Item>
     </Menu>
@@ -311,30 +317,114 @@ const alertOperation = ({
 
   return (
     <div className={styles.operateMain}>
+      {
+        showOperations.indexOf('takeOver') >= 0 && showOperations.indexOf('reassign') < 0 ?
+          <DropdownButton
+            overlay={reassign}
+            className={styles.myDropdown}
+            disabled={takeOverDisabled && reassignDisabled}
+            onClick={() => { takeOverDisabled && takeOverFunc(position) }}
+          >
+            <FormattedMessage {...localeMessage['operate_takeOver']} />
+          </DropdownButton>
+          :
+          showOperations.indexOf('reassign') >= 0 ?
+            takeOverDisabled && disableReasonMap['takeOverDisabled'] ?
+              <Tooltip title={disableReasonMap['takeOverDisabled']}>
+                <Button className={styles.myButton} disabled={takeOverDisabled} onClick={() => { takeOverFunc(position) }} >
+                  <FormattedMessage {...localeMessage['operate_takeOver']} />
+                </Button>
+              </Tooltip>
+              :
+              <Button className={styles.myButton} disabled={takeOverDisabled} onClick={() => { takeOverFunc(position) }} >
+                <FormattedMessage {...localeMessage['operate_takeOver']} />
+              </Button>
+            :
+            undefined
+      }
 
-      <DropdownButton
-        overlay={reassign}
-        className={styles.myDropdown}
-        trigger={['click']}
-        disabled={takeOverDisabled}
-        onClick={() => { takeOverFunc(position) }}
-      >
-        <FormattedMessage {...localeMessage['operate_takeOver']} />
-      </DropdownButton>
+      {
+        showOperations.indexOf('reassign') >= 0 ?
+          reassignDisabled && disableReasonMap['reassignDisabled'] ?
+            <Tooltip title={disableReasonMap['reassignDisabled']}>
+              <Button className={styles.myButton} disabled={reassignDisabled} onClick={() => { showReassiginFunc(position) }} >
+                <FormattedMessage {...localeMessage['operate_reassign']} />
+              </Button>
+            </Tooltip>
+            :
+            <Button className={styles.myButton} disabled={reassignDisabled} onClick={() => { showReassiginFunc(position) }} >
+              <FormattedMessage {...localeMessage['operate_reassign']} />
+            </Button>
+          :
+          undefined
+      }
 
-      <Button className={styles.myButton} disabled={dispatchDisabled} onClick={() => { dispatchFunc(position) }} >
-        <FormattedMessage {...localeMessage['operate_dispatch']} />
-      </Button>
-      <Button className={styles.myButton} disabled={closeDisabled} onClick={() => { closeFunc(position) }} >
-        <FormattedMessage {...localeMessage['operate_close']} />
-      </Button>
-      <Button className={styles.myButton} disabled={resolveDisabled} onClick={() => { resolveFunc(position) }} >
-        <FormattedMessage {...localeMessage['operate_resolve']} />
-      </Button>
+      {
+        showOperations.indexOf('dispatch') >= 0 ?
+          reassignDisabled && disableReasonMap['dispatchDisabled'] ?
+            <Tooltip title={disableReasonMap['dispatchDisabled']}>
+              <Button className={styles.myButton} disabled={dispatchDisabled} onClick={() => { dispatchFunc(position) }} >
+                <FormattedMessage {...localeMessage['operate_dispatch']} />
+              </Button>
+            </Tooltip>
+            :
+            <Button className={styles.myButton} disabled={dispatchDisabled} onClick={() => { dispatchFunc(position) }} >
+              <FormattedMessage {...localeMessage['operate_dispatch']} />
+            </Button>
+          :
+          undefined
+      }
 
-      <Dropdown overlay={menu}>
-        <span className={styles.moreOperateDropdown}>{formatMessage({ ...localeMessage['moreOperate'] })}<Icon type="down" /></span>
-      </Dropdown>
+      {
+        showOperations.indexOf('close') >= 0 ?
+          closeDisabled && disableReasonMap['closeDisabled'] ?
+            <Tooltip title={disableReasonMap['closeDisabled']}>
+              <Button className={styles.myButton} disabled={closeDisabled} onClick={() => { closeFunc(position) }} >
+                <FormattedMessage {...localeMessage['operate_close']} />
+              </Button>
+            </Tooltip>
+            :
+            <Button className={styles.myButton} disabled={closeDisabled} onClick={() => { closeFunc(position) }} >
+              <FormattedMessage {...localeMessage['operate_close']} />
+            </Button>
+          :
+          undefined
+      }
+
+      {
+        showOperations.indexOf('resolve') >= 0 ?
+          resolveDisabled && disableReasonMap['resolveDisabled'] ?
+            <Tooltip title={disableReasonMap['resolveDisabled']}>
+              <Button className={styles.myButton} disabled={resolveDisabled} onClick={() => { resolveFunc(position) }} >
+                <FormattedMessage {...localeMessage['operate_resolve']} />
+              </Button>
+            </Tooltip>
+            :
+            <Button className={styles.myButton} disabled={resolveDisabled} onClick={() => { resolveFunc(position) }} >
+              <FormattedMessage {...localeMessage['operate_resolve']} />
+            </Button>
+          :
+          undefined
+      }
+
+      {
+        showOperations.indexOf('merge') >= 0 ?
+          <Button className={styles.myButton} disabled={mergeDisabled} onClick={() => { mergeFunc() }} >
+            <FormattedMessage {...localeMessage['operate_merge']} />
+          </Button>
+          :
+          undefined
+      }
+
+      {
+        showOperations.indexOf('other') >= 0 ?
+          <Dropdown overlay={menu}>
+            <span className={styles.moreOperateDropdown}>{formatMessage({ ...localeMessage['moreOperate'] })}<Icon type="down" /></span>
+          </Dropdown>
+          :
+          undefined
+      }
+
 
       {/*<Dropdown overlay={menu} trigger={['click']} >
         <span className={styles.moreActionDropdown}>{formatMessage({ ...localeMessage['moreOperate'] })}<Icon type="down" /></span>

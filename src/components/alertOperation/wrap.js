@@ -78,7 +78,7 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch, intl: { 
       250: {
         id: 'alertDetail.action.t250',
         defaultMessage: '关闭'
-      }
+      },
     }
   })
 
@@ -121,7 +121,7 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch, intl: { 
 
         {
           errorMsgs.map((msg, index) => (
-            <p key={ index } style={{ textAlign: 'left' }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{index + 1}.{msg}</p>
+            <p key={index} style={{ textAlign: 'left' }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{index + 1}.{msg}</p>
           ))
         }
       </span>
@@ -140,6 +140,12 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch, intl: { 
     resolveDisabled: alertOperation.resolveDisabled,
     notifyDisabled: alertOperation.notifyDisabled,
     shareDisabled: alertOperation.shareDisabled,
+    mergeDisabled: alertOperation.mergeDisabled,
+    reassignDisabled: alertOperation.reassignDisabled,
+    suppressDisabled: alertOperation.suppressDisabled,
+    chatOpsDisabled: alertOperation.chatOpsDisabled,
+
+    showOperations: alertOperation.showOperations,
 
     checkCloumFunc: (e) => {
       dispatch({

@@ -3,6 +3,7 @@ import bottomMenus from './bottomMenu'
 import request from './request'
 import classnames from 'classnames'
 import { color } from './theme'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 /**
  * Return random getUUID
@@ -103,6 +104,146 @@ function returnByIsReRender(oldState, newState, isReRender) {
   }
 }
 
+// 根据告警状态获取单条告警可执行的操作及其不能操作的原因
+function getOperationExcutionMap({ ownerId, userId, status }) {
+  let disableObj = {
+    takeOver: {
+      disabled: false
+    },
+    reassign: {
+      disabled: false
+    },
+    dispatch: {
+      disabled: false
+    },
+    close: {
+      disabled: false
+    },
+    resolve: {
+      disabled: false
+    },
+    notify: {
+      disabled: false
+    },
+    share: {
+      disabled: false
+    },
+    suppress: {
+      disabled: false
+    },
+    chatOps: {
+      disabled: false
+    },
+  }
+
+  switch (status) {
+    case 'NEW':
+      // 未接手告警：接手、转派、分享、通知
+      disableObj = {
+        ...disableObj,
+        dispatch: {
+          disabled: true,
+          reason: 'status'
+        },
+        close: {
+          disabled: true,
+          reason: 'status'
+        },
+        resolve: {
+          disabled: true,
+          reason: 'status'
+        }
+      }
+      break;
+    case 'PROCESSING':
+      // 处理中告警：派单、转派、解决、关闭[属于自己的]、分享、通知
+      disableObj = {
+        ...disableObj,
+        takeOver: {
+          disabled: true,
+          reason: 'status'
+        }
+      }
+      if (ownerId != userId) {
+        disableObj = {
+          ...disableObj,
+          dispatch: {
+            disabled: true,
+            reason: 'owner'
+          },
+          reassign: {
+            disabled: true,
+            reason: 'owner'
+          },
+          resolve: {
+            disabled: true,
+            reason: 'owner'
+          },
+          close: {
+            disabled: true,
+            reason: 'owner'
+          }
+        }
+      }
+      break;
+    case 'RESOLVED':
+      // 已解决告警：关闭[属于自己的]、分享、通知
+      disableObj = {
+        ...disableObj,
+        takeOver: {
+          disabled: true,
+          reason: 'status'
+        },
+        dispatch: {
+          disabled: true,
+          reason: 'status'
+        },
+        reassign: {
+          disabled: true,
+          reason: 'status'
+        },
+        resolve: {
+          disabled: true,
+          reason: 'status'
+        }
+      }
+      if (ownerId != userId) {
+        disableObj.close = {
+          disabled: true,
+          reason: 'owner'
+        }
+      }
+    case 'CLOSED':
+      // 已关闭告警：分享、通知
+      disableObj = {
+        ...disableObj,
+        takeOver: {
+          disabled: true,
+          reason: 'status'
+        },
+        dispatch: {
+          disabled: true,
+          reason: 'status'
+        },
+        reassign: {
+          disabled: true,
+          reason: 'status'
+        },
+        resolve: {
+          disabled: true,
+          reason: 'status'
+        },
+        close: {
+          disabled: true,
+          reason: 'status'
+        }
+      }
+      break;
+  }
+
+  return disableObj;
+}
+
 // 日期格式化
 Date.prototype.format = function (format) {
   var o = {
@@ -179,5 +320,6 @@ module.exports = {
   browser,
   loopWebNotification,
   formatDate,
-  returnByIsReRender
+  returnByIsReRender,
+  getOperationExcutionMap
 }

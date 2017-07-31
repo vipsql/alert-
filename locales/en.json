@@ -123,6 +123,8 @@
   "alertOperate.groupByOther": "{other}",
   "alertOperate.log": "Audit Log",
   "alertOperate.errorMsg": "{ operate } Failed. The Cause maybe:",
+  "alertDetail.operation.reason1": "因为告警由他人负责所以无法{ control }",
+  "alertDetail.operation.reason2": "处于\"{ status }\"状态的告警无法{ control }",
 
   "modal.tag.select": "Please enter {name}",
   "modal.tag.keywords": "Please enter keywords",

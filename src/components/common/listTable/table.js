@@ -55,6 +55,8 @@ class Table extends Component {
       orderBy,
       orderType,
       orderByTittle,
+      isNeedCheckOwner,
+      userInfo={},
       intl: { formatMessage }
     } = this.props
     let colsKey = columns.map((item) => item['key'])
@@ -407,7 +409,7 @@ class Table extends Component {
               //<input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc} />
               sourceOrigin !== 'alertQuery' && Object.keys(checkAlert).length !== 0 ?
                 <td className={classnames(styles.checkstyle, styles.little)} style={{ width: item.isFixed ? '50px' : undefined }}>
-                  <Checkbox checked={checkAlert[item.id] && checkAlert[item.id].checked} data-id={item.id} data-no-need-wrap={true} onClick={checkAlertFunc} />
+                  <Checkbox checked={checkAlert[item.id] && checkAlert[item.id].checked} data-id={item.id} data-no-need-wrap={true} onClick={checkAlertFunc} disabled={ isNeedCheckOwner && userInfo.userId?!(userInfo.userId == item.ownerId || userInfo.realName == item.ownerName):undefined } />
                 </td>
                 :
                 undefined

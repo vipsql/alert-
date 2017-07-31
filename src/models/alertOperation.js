@@ -69,12 +69,16 @@ const initalState = {
   selectGroup: undefined, // 默认是分组设置
 
   //按钮是否disable
-  takeOverDisabled: false,
+  takeOverDisabled: true,
   dispatchDisabled: true,
   closeDisabled: true,
   resolveDisabled: true,
-  notifyDisabled: false,
-  shareDisabled: false,
+  notifyDisabled: true,
+  shareDisabled: true,
+  mergeDisabled: true,
+  reassignDisabled: true,
+  suppressDisabled: true,
+  chatOpsDisabled: true,
 }
 
 export default {
@@ -747,7 +751,7 @@ export default {
     setColumn(state, { payload: selectCol }) {
       const { columnList, selectColumn } = state;
       let arr = []
-      if(selectColumn.length != 0) {
+      if (selectColumn.length != 0) {
         arr = selectColumn.filter((col) => col.key != selectCol);
       }
       const newList = columnList.map((group) => {
@@ -755,7 +759,7 @@ export default {
           if (typeof selectCol !== 'undefined' && col.id === selectCol) {
             col.checked = !col.checked;
           }
-          const ifAddCondition = selectColumn.length == 0?col.checked:(col.checked && col.id === selectCol);
+          const ifAddCondition = selectColumn.length == 0 ? col.checked : (col.checked && col.id === selectCol);
           if (ifAddCondition) {
             if (col.id == 'source' || col.id == 'lastTime' || col.id == 'lastOccurTime' || col.id == 'count' || col.id == 'status' || col.id == 'owner' || col.id == 'suppressionFlag') {
               arr.push({ key: col.id, title: col.name, order: true, isFixed: col.isFixed }) // order字段先定死
@@ -835,13 +839,20 @@ export default {
       return { ...state, mergeInfoList: newList }
     },
 
-    //修改 “派单” “关闭” “解决” 三个按钮的状态
+    //修改 “派单” “关闭” “解决” “转派” “合并” “接手” 六个按钮的状态
     setButtonsDisable(state, { payload: disabled = true }) {
       return {
         ...state,
+        takeOverDisabled: disabled,
         dispatchDisabled: disabled,
         closeDisabled: disabled,
         resolveDisabled: disabled,
+        notifyDisabled: disabled,
+        shareDisabled: disabled,
+        mergeDisabled: disabled,
+        reassignDisabled: disabled,
+        suppressDisabled: disabled,
+        chatOpsDisabled: disabled,
       }
     },
     toggleReassignModal(state, { payload: isShowReassingModal }) {
@@ -862,5 +873,10 @@ export default {
     toggleTicketModal(state, { payload: payload }) {
       return { ...state, ...payload }
     },
+
+    // 显示告警
+    changeShowOperation(state, { payload: { showOperations } }) {
+      return { ...state, showOperations }
+    }
   }
 }
