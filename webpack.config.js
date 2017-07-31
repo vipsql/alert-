@@ -3,7 +3,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const StringReplacePlugin = require("string-replace-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require("path")
-// const fs = require("fs")
+//const fs = require("fs")
 
 module.exports = function (webpackConfig, env) {
   webpackConfig.babel.plugins.push('transform-runtime')
@@ -21,6 +21,11 @@ module.exports = function (webpackConfig, env) {
       ]
     }])
   } else {
+    webpackConfig.entry = {
+      "index": './src/index.js',
+      "chatops": './src/chatops.js',
+      "chatops_mobile": './src/chatops_mobile.js'
+    }
     webpackConfig.babel.plugins.push('dev-expression')
   }
   // webpackConfig.output = {

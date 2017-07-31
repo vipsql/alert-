@@ -6,6 +6,7 @@ import Animate from 'rc-animate'
 import KeyCode from 'rc-util/lib/KeyCode';
 import { classnames } from '../../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import scrollIntoView from 'dom-scroll-into-view';
 import DOMWrap from './Domwrap.js'
 
 const Item = Form.Item;
@@ -14,6 +15,14 @@ class TagsQuery extends Component{
     constructor(props) {
         super(props);
         this.timer = null;
+    }
+
+    componentDidUpdate(nextProps) {
+      if (this.domWrap && this.container && findDOMNode(this.container).parentNode) {
+        scrollIntoView(findDOMNode(this.domWrap), findDOMNode(this.container).parentNode, {
+          onlyScrollIfNeeded: true
+        })
+      }
     }
 
     contentLeave(tagGroup) {
@@ -75,7 +84,7 @@ class TagsQuery extends Component{
         }
 
         return (
-            <div className={styles.tags_container}>
+            <div className={styles.tags_container} ref={container => this.container = container}>
                 <Form>
                     {
                         tagsKeyList.length > 0 ? tagsKeyList.map( (tagGroup, index) => {
@@ -116,8 +125,7 @@ class TagsQuery extends Component{
                                                         if (event.keyCode === KeyCode.BACKSPACE && event.target.value == '') {
                                                             deleteItemByKeyboard(JSON.stringify({field: tagGroup.key}))
                                                         }
-                                                    }} onFocus={ () => { queryTagValues(tagGroup.key, '') }}/>
-
+                                                    }} onFocus={ () => { queryTagValues(tagGroup.key, '') } }/>
                                                 </div>
                                             </li>
                                             {
@@ -144,6 +152,7 @@ class TagsQuery extends Component{
                                             tagGroup.tagSpread ?
                                             <DOMWrap
                                               tag='ul'
+                                              ref={ domWrap => this.domWrap = domWrap }
                                               onMouseLeave={this.contentLeave.bind(this, tagGroup)}
                                               selectList={this.props.selectList}
                                               selectHandler={this.selectHandler.bind(this, tagGroup)}

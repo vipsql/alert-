@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { classnames } from '../../utils'
+import { classnames, isMobile } from '../../utils'
 import styles from './common.less'
 import { Button, Form, Select, Row, Col} from 'antd';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
@@ -52,8 +52,11 @@ const Close = ({dispatch, form, intl: {formatMessage}}) => {
 
     const callback = () => {
         console.log('发送成功')
-        $$.dialog.close()
-        //window.parent.postMessage({closeModal: true}, '*');
+        if (isMobile()) {
+          _mobile.dialog.close()
+        } else {
+          $$.dialog.close()
+        }
     }
 
     return (
