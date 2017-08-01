@@ -35,12 +35,12 @@ const resolveModal = ({currentData, onOk, onCancal, form, intl: {formatMessage}}
         }
     })
 
-    const { isShowResolveModal } = currentData;
+    const { isShowResolveModal, isButtonLoading } = currentData;
     const { getFieldDecorator, getFieldsValue, isFieldValidating, getFieldError } = form;
 
     const modalFooter = []
     modalFooter.push(<div className={styles.modalFooter}  key={ 1 }>
-      <Button type="primary" onClick={ () => {
+      <Button type="primary" loading={isButtonLoading || false} onClick={ () => {
         onOk(form)
       }} ><FormattedMessage {...localeMessage['modal_resolve']} /></Button>
       <Button type="ghost" className={styles.ghostBtn} onClick={ () => {
@@ -48,7 +48,6 @@ const resolveModal = ({currentData, onOk, onCancal, form, intl: {formatMessage}}
       }}><FormattedMessage {...localeMessage['modal_cancel']} /></Button>
       </div>
     )
-
     return (
         <Modal
             title={<FormattedMessage {...localeMessage['modal_resolveIncident']} />}

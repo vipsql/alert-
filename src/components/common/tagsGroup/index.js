@@ -13,17 +13,18 @@ class tagsGroup extends Component{
 
     constructor(props) {
         super(props)
-        this.timer = null;
+        this.searchTimer = null
+        this.visibleTimer = null
         this.state = {
+          popupVisible: false,
           current: props.selectList || [], // 当前数组行
           currentIndex: 0 // 当前活跃行
         }
-        this.isNodeInRoot = this.isNodeInRoot.bind(this)
         this.changeBykeyBoard = this.changeBykeyBoard.bind(this)
     }
 
     changeBykeyBoard(event) {
-        if( this.props.content && this.props.content.visible && this.state.current.length > 0 ) {
+        if( this.state.popupVisible && this.state.current.length > 0 ) {
           let currentIndex = this.state.currentIndex;
           switch (event.keyCode) {
             case KeyCode.UP:
@@ -77,27 +78,49 @@ class tagsGroup extends Component{
         document.removeEventListener('keydown', this.changeBykeyBoard, false)
     }
 
-    isNodeInRoot(node, root) {
-        // vislble = false 没有实例的情况
-        if (typeof root === 'undefined') {
-          return false;
-        }
-        while(node) {
-            if(node === root) {
-                return true;
-            }
-            node = node.parentNode;
-        }
-        return false;
+    setPopupVisible(popupVisible) {
+      this.clearDelayTimer();
+      if (this.state.popupVisible !== popupVisible) {
+        this.setState({
+          popupVisible,
+        });
+      }
     }
 
-    visible(target, e) {
-        e.stopPropagation();
+    setRows(popupVisible) {
+      const { content, queryTagValues, selectList } = this.props;
+      if (popupVisible) {
+        queryTagValues(content.key, '', this.setPopupVisible.bind(this, popupVisible))
+      } else {
+        this.setPopupVisible(popupVisible)
+      }
+    }
 
-        // let root = this.containerNode;
-        // if (!this.isNodeInRoot(e.target, root) && this.props.setVisible) {
-            this.props.setVisible(target)
-        //}
+    delay(callback, delayS) {
+      const delay = delayS * 1000;
+      this.clearDelayTimer();
+      if (delay) {
+        this.visibleTimer = setTimeout(() => {
+          callback();
+          this.clearDelayTimer();
+        }, delay);
+      } else {
+        callback();
+      }
+    }
+
+    clearDelayTimer() {
+      if (this.visibleTimer) {
+        clearTimeout(this.visibleTimer)
+        this.visibleTimer = null
+      }
+    }
+
+    clearSearchTimer() {
+      if (this.searchTimer) {
+        clearTimeout(this.searchTimer)
+        this.searchTimer = null
+      }
     }
 
     renderName(key, name) {
@@ -120,13 +143,10 @@ class tagsGroup extends Component{
               <i className={classnames(sousuo, styles.sousuo)} />
               <input ref={node => this.inputNode = node} type='text' placeholder={formatMessage(localeMessage['keyword'])} onChange={ (e) => {
                   e.persist();
-                  clearTimeout(this.timer)
-                  this.timer = setTimeout( () => {
+                  this.clearSearchTimer()
+                  this.searchTimer = setTimeout( () => {
                       this.props.queryTagValues(content.key, e.target.value)
                   }, 500)
-              }} onFocus={ (e) => {
-                e.stopPropagation();
-                this.props.queryTagValues(content.key, '')
               }} />
             </div>
             <DOMWrap
@@ -173,8 +193,8 @@ class tagsGroup extends Component{
             haveTags ?
             <div
               className={className}
-              onMouseEnter={this.visible.bind(this, ...arguments, content)}
-              onMouseLeave={this.visible.bind(this, ...arguments, content)}
+              onMouseEnter={ this.delay.bind(this, this.setRows.bind(this, true), 0.2) }
+              onMouseLeave={ this.delay.bind(this, this.setRows.bind(this, false), 0.2) }
             >
                 <p className={styles.typeName}>{`${ content.keyName }:`}</p>
                 {
@@ -193,14 +213,14 @@ class tagsGroup extends Component{
                     transitionName="tags"
                     transitionLeaveTimeout={300}
                 >
-                {content.visible && this.renderQueryContent(content, formatMessage, localeMessage)}
+                {this.state.popupVisible && this.renderQueryContent(content, formatMessage, localeMessage)}
                 </Animate>
             </div>
             :
             <div
               className={className}
-              onMouseEnter={this.visible.bind(this, ...arguments, content)}
-              onMouseLeave={this.visible.bind(this, ...arguments, content)}
+              onMouseEnter={ this.delay.bind(this, this.setRows.bind(this, true), 0.2) }
+              onMouseLeave={ this.delay.bind(this, this.setRows.bind(this, false), 0.2) }
             >
                 <p className={styles.typeName}>{`${ content.keyName }:`}</p>
                 <span className={styles.placeholder}>{formatMessage(localeMessage['placeholder'], {name: `${content.keyName}`})}</span>
@@ -208,7 +228,7 @@ class tagsGroup extends Component{
                     transitionName="tags"
                     transitionLeaveTimeout={300}
                 >
-                {content.visible && this.renderQueryContent(content, formatMessage, localeMessage)}
+                {this.state.popupVisible && this.renderQueryContent(content, formatMessage, localeMessage)}
                 </Animate>
             </div>
         )
@@ -218,16 +238,14 @@ class tagsGroup extends Component{
 tagsGroup.defaultProps = {
     className: styles.tagsGroupMain,
     removeHandler: () => {},
-    content: {},
-    setVisible: () => {}
+    content: {}
 }
 
 tagsGroup.propTypes = {
     haveTags: React.PropTypes.bool.isRequired,
     className: React.PropTypes.string.isRequired,
     content: React.PropTypes.object.isRequired,
-    removeHandler: React.PropTypes.func.isRequired,
-    setVisible: React.PropTypes.func.isRequired
+    removeHandler: React.PropTypes.func.isRequired
 }
 
 export default injectIntl(tagsGroup);

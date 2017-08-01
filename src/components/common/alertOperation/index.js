@@ -411,12 +411,12 @@ const alertOperation = ({
         showOperations.indexOf('resolve') >= 0 ?
           resolveDisabled && disableReasonMap['resolveDisabled'] ?
             <Tooltip title={disableReasonMap['resolveDisabled']}>
-              <Button className={styles.myButton} disabled={resolveDisabled} onClick={() => { resolveFunc(position) }} >
+              <Button className={styles.myButton}  onClick={() => { resolveFunc(position) }} >
                 <FormattedMessage {...localeMessage['operate_resolve']} />
               </Button>
             </Tooltip>
             :
-            <Button className={styles.myButton} disabled={resolveDisabled} onClick={() => { resolveFunc(position) }} >
+            <Button className={styles.myButton}  onClick={() => { resolveFunc(position) }} >
               <FormattedMessage {...localeMessage['operate_resolve']} />
             </Button>
           :
