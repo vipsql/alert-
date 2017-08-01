@@ -77,7 +77,6 @@ class AlertListManage extends Component {
   render() {
 
     const { alertDetail, alertListTable, alertList, dispatch, alertOperation, alertManage, intl: { formatMessage } } = this.props;
-    console.log(isNeedCheckOwnerMap[alertManage.selectedStatus], alertManage.selectedStatus)
 
     const localeMessage = defineMessages({
       tab_list: {

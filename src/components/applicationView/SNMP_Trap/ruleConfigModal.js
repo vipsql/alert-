@@ -36,7 +36,6 @@ const initalState = {
 class ruleModal extends Component {
 
   constructor(props) {
-    console.log('constructor modal')
     super(props);
     this.state = {
       dataSource: 1,
