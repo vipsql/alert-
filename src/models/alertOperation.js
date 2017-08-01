@@ -496,6 +496,11 @@ export default {
       const { operateAlertIds, closeMessage } = payload;
       if (operateAlertIds !== undefined) {
         let stingIds = operateAlertIds.map(item => '' + item)
+        //按钮发起请求加载中
+        yield put({
+          type: 'alertDetail/toggleButtonLoading',
+          payload: true
+        });
         const resultData = yield close({
           incidentIds: stingIds,
           closeMessage
@@ -506,6 +511,11 @@ export default {
             // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
             // yield put({ type: 'alertListTable/resetCheckedAlert'})
             // yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 255}})
+            //按钮发起请求加载中
+            yield put({
+              type: 'alertDetail/toggleButtonLoading',
+              payload: false
+            });
             yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
           } else {
             resultData.result = false;
@@ -548,6 +558,11 @@ export default {
       const { operateAlertIds, resolveMessage } = payload;
       if (operateAlertIds !== undefined) {
         let stingIds = operateAlertIds.map(item => '' + item)
+        //按钮发起请求加载中
+        yield put({
+          type: 'alertDetail/toggleButtonLoading',
+          payload: true
+        });
         // debugger
         let resultData = yield resolve({
           incidentIds: stingIds,
@@ -560,6 +575,11 @@ export default {
 
             // yield put({ type: 'alertListTable/resetCheckedAlert'})
             // yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 190}})
+
+            yield put({
+              type: 'alertDetail/toggleButtonLoading',
+              payload: false
+            });
             resultData.result = false;
             yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
           } else {
