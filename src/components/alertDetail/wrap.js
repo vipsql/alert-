@@ -14,7 +14,7 @@ import ManualNotifyModal from '../common/manualNotifyModal/index.js'
 import ReassignModal from '../common/reassignModal/index.js'
 import SuppressTimeSlider from '../common/suppressTimeSlider/index.js'
 
-const AlertDetailWrap = ({ alertDetail, dispatch, afterTakeOver, afterChatOpsh, afterClose, afterDispatch, afterMunalNotify, afterReassign, afterResolve, afterSuppress, intl: { formatMessage } }) => {
+const AlertDetailWrap = ({ alertDetail, userInfo, dispatch, afterTakeOver, afterChatOpsh, afterClose, afterDispatch, afterMunalNotify, afterReassign, afterResolve, afterSuppress, intl: { formatMessage } }) => {
 
   const localeMessage = defineMessages({
     assign_ticket: {
@@ -395,6 +395,7 @@ const AlertDetailWrap = ({ alertDetail, dispatch, afterTakeOver, afterChatOpsh, 
   }
 
   const alertDeatilProps = {
+    userInfo,
     extraProps: {
       currentAlertDetail: alertDetail.currentAlertDetail,
       isShowOperateForm: alertDetail.isShowOperateForm,
@@ -548,5 +549,6 @@ AlertDetailWrap.defaultProps = {
 export default injectIntl(connect((state) => {
   return {
     alertDetail: state.alertDetail,
+    userInfo: state.app && state.app.userInfo
   }
 })(AlertDetailWrap))

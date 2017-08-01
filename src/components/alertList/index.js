@@ -30,16 +30,33 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const TabPane = Tabs.TabPane
 
+const statusOperationMap = {
+  'NEW': ['takeOver', 'reassign', 'merge', 'other'],
+  'PROGRESSING': ['dispatch', 'close', 'resolve', 'merge',],
+  'RESOLVED': ['close', 'merge'],
+  'EXCEPTCLOSE': ['takeOver', 'reassign', 'dispatch', 'close', 'resolve', 'merge', 'other'],
+}
+
+// “不同状态的过滤”与“是否禁止非自己的告警选择框”的关系
+const isNeedCheckOwnerMap = {
+  'NEW': false,
+  'PROGRESSING': true,
+  'RESOLVED': true,
+  'EXCEPTCLOSE': false
+}
+
 class AlertListManage extends Component {
   constructor(props) {
     super(props);
   }
 
   componentDidMount() {
-    const { dispatch, intl: { formatMessage } } = this.props;
+    const { dispatch, alertManage={}, intl: { formatMessage } } = this.props;
     // dispatch({
     //   type: 'alertOperation/afterDispatch'
     // })
+
+    dispatch({ type: 'alertOperation/changeShowOperation', payload: { showOperations: statusOperationMap[alertManage.selectedStatus || 'NEW'] } });
 
     window.addEventListener('message', (e) => {
       if (e.data.createTicket !== undefined && e.data.createTicket === 'success') {
@@ -58,7 +75,9 @@ class AlertListManage extends Component {
   }
 
   render() {
+
     const { alertDetail, alertListTable, alertList, dispatch, alertOperation, alertManage, intl: { formatMessage } } = this.props;
+    console.log(isNeedCheckOwnerMap[alertManage.selectedStatus], alertManage.selectedStatus)
 
     const localeMessage = defineMessages({
       tab_list: {
@@ -161,6 +180,8 @@ class AlertListManage extends Component {
             dispatch({ type: 'tagListFilter/selectTime', payload: value })
           }}
           queryByStatus={(value) => {
+            const showOperations = statusOperationMap[value];
+            dispatch({ type: 'alertOperation/changeShowOperation', payload: { showOperations } })
             dispatch({ type: 'tagListFilter/selectStatus', payload: value })
           }}
         />
@@ -174,12 +195,12 @@ class AlertListManage extends Component {
             <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key='1'>
               {/*<AlertOperation position='list' {...operateProps} />*/}
               <AlertOperationWrap />
-              <ListTableWrap topFixArea={<AlertOperationWrap />} topHeight={alertList.isShowBar ? 366 : 216} />
+              <ListTableWrap isNeedCheckOwner={ isNeedCheckOwnerMap[alertManage.selectedStatus] } topFixArea={<AlertOperationWrap />} topHeight={alertList.isShowBar ? 366 : 216} />
             </TabPane>
             <TabPane tab={<span className={tabLine} ><FormattedMessage {...localeMessage['tab_time']} /></span>} key='2'>
               {/*<AlertOperation position='timeAxis' {...operateProps} />*/}
               <AlertOperationWrap />
-              <ListTimeTableWrap />
+              <ListTimeTableWrap isNeedCheckOwner={ isNeedCheckOwnerMap[alertManage.selectedStatus] }/>
             </TabPane>
             {isShowVisualTab &&
               <TabPane tab={<span className={tabVisual}><FormattedMessage {...localeMessage['tab_visual']} /></span>} key='3'>

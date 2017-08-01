@@ -719,11 +719,23 @@ export default {
       })
 
       if (listData.result) {
+        const userInfo = yield select((state) => {
+          return state.app && state.app.userInfo
+        })
+        const list = listData.data.datas.map((alert) => {
+          if(alert.ownerId == userInfo.userId || alert.ownerName == userInfo.realName) {
+            alert.isOwn = true;
+          } else {
+            alert.isOwn = false;
+          }
+
+          return alert;
+        })
         yield put({
           type: 'updateAlertListToNoGroup',
           payload: {
-            info: listData.data.datas,
-            tempListData: listData.data.datas,
+            info: list,
+            tempListData: list,
             isShowMore: listData.data.hasNext,
             currentPage: 1,
             isGroup: false,
@@ -1024,9 +1036,8 @@ export default {
 
       const selectedAlertIds = yield select(state => state.alertListTable.selectedAlertIds)
       // 如果列表为空，或者其中有一个未接手的，disabled都为true
-      const disabled = selectedAlertIds.length === 0 || selectedAlertIds.some(item => {
-        return item.status === 0
-      })
+      const disabled = selectedAlertIds.length === 0;
+
       yield put({
         type: 'alertOperation/setButtonsDisable',
         payload: disabled
@@ -1036,7 +1047,7 @@ export default {
     },
 
     // 点击全选按钮
-    *handleSelectAll({ payload: { checked } }, { select, put, call }) {
+    *handleSelectAll({ payload: { checked, isNeedCheckOwner } }, { select, put, call }) {
       const checkAlert = yield select(state => state.alertListTable.checkAlert);
       // let newStatus = !selectedAll;
       let ids = Object.keys(checkAlert);
@@ -1050,10 +1061,22 @@ export default {
         newOperateAlertIds = [];
         newSelectedAlertIds = [];
       }
-      ids.forEach((id) => {
-        //这里不应该直接改变这个对象，应该重新生成一个新的对象
-        checkAlert[id].checked = checked;
-      });
+      if(isNeedCheckOwner) {
+        ids.forEach((id) => {
+          const info = checkAlert[id].info;
+          console.log(info);
+          if(info.isOwn) {
+            checkAlert[id].checked = checked;
+          } else {
+            checkAlert[id].checked = false;
+          }
+        });
+      } else {
+        ids.forEach((id) => {
+          checkAlert[id].checked = checked;
+        })
+      }
+
       yield put({
         type: 'toggleSelectedAll',
         payload: {

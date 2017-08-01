@@ -3,7 +3,7 @@ import { Link } from 'dva/router'
 import { Button, Input, Form, Timeline, Spin } from 'antd';
 import { connect } from 'dva'
 import styles from './index.less'
-import { classnames, formatDate } from '../../../utils'
+import { classnames, formatDate, getOperationExcutionMap } from '../../../utils'
 import AlertOperation from '../alertOperation/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import Wrap from './wrap'
@@ -40,7 +40,7 @@ class alertDetail extends Component {
   }
 
   render() {
-    const { extraProps, operateProps, form, closeDeatilModal, clickTicketFlow, editForm, openForm, closeForm, openRemark, editRemark, closeRemark, intl: { formatMessage } } = this.props;
+    const { extraProps, operateProps, form, closeDeatilModal, clickTicketFlow, editForm, openForm, closeForm, openRemark, editRemark, closeRemark, userInfo, intl: { formatMessage } } = this.props;
     const { currentAlertDetail, isShowOperateForm, operateForm, isShowRemark, operateRemark, ciUrl, invokeByOutside } = extraProps;
     const { getFieldDecorator, getFieldsValue } = form;
     const { incidentLog = [], ci = [] } = currentAlertDetail;
@@ -332,7 +332,46 @@ class alertDetail extends Component {
           id: 'alertDetail.action.t250',
           defaultMessage: '关闭'
         }
-      }
+      },
+      operate_takeOver: {
+        id: 'alertOperate.takeOver',
+        defaultMessage: '接手'
+      },
+      operate_reassign: {
+        id: 'alertOperate.reassign',
+        defaultMessage: '转派'
+      },
+      operate_dispatch: {
+        id: 'alertOperate.dispatch',
+        defaultMessage: '派发工单'
+      },
+      operate_close: {
+        id: 'alertOperate.close',
+        defaultMessage: '关闭告警'
+      },
+      operate_resolve: {
+        id: 'alertOperate.resolve',
+        defaultMessage: '解决告警'
+      },
+      operate_merge: {
+        id: 'alertOperate.merge',
+        defaultMessage: '合并告警'
+      },
+      operate_relieve: {
+        id: 'alertOperate.relieve',
+        defaultMessage: '解除告警'
+      },
+      // 操作禁用的理由
+      disableReason: {
+        owner: {
+          id: 'alertDetail.operation.reason1',
+          defaultMessage: '因为告警由他人负责所以无法{ control }'
+        },
+        status: {
+          id: 'alertDetail.operation.reason2',
+          defaultMessage: '处于{ status }状态的告警无法{ control }'
+        }
+      },
     })
 
     const sharedFunc = (notifyList) => {
@@ -349,13 +388,38 @@ class alertDetail extends Component {
       255: window._status["255"]
     };
 
+    const statusMap = {
+      "0": "NEW",
+      "150": "PROCESSING",
+      "190": "RESOLVED",
+      "255": "CLOSED"
+    }
+
+    const disabledObj = getOperationExcutionMap({ userId: userInfo.userId, ownerId: currentAlertDetail.ownerId, status: statusMap[currentAlertDetail.status] })
+
+    let disableMap = {};
+    let disableReasonMap = {}
+    Object.keys(disabledObj).forEach((key) => {
+      console.log(key);
+      disableMap[key + 'Disabled'] = disabledObj[key].disabled;
+      if (disabledObj[key].disabled) {
+        disableReasonMap[key + 'Disabled'] = formatMessage(
+          { ...(localeMessage['disableReason'][disabledObj[key].reason]) },
+          {
+            control: formatMessage({ ...localeMessage['operate_' + key] }),
+            status: currentAlertDetail.statusName
+          }
+        );
+      }
+    })
+
     return (
       <div id="alertDetailSlider" className={styles.main}>
         <Spin spinning={extraProps.isLoading}>
-          <div className={ !invokeByOutside ? styles.detailHead : styles.detailHeadByOutside}>
+          <div className={!invokeByOutside ? styles.detailHead : styles.detailHeadByOutside}>
             <p>{currentAlertDetail.name ? currentAlertDetail.name : formatMessage({ ...localeMessage['unknown'] })}</p>
             {!invokeByOutside && <i className={classnames(styles.shanChu, shanchuClass)} onClick={closeDeatilModal}></i>}
-            <AlertOperation position="detail" {...operateProps} />
+            <AlertOperation position="detail" {...operateProps} {...disableMap} disableReasonMap={disableReasonMap}/>
           </div>
           <div className={styles.detailBody}>
             <Wrap title={formatMessage({ ...localeMessage['basic'] })}>
@@ -459,19 +523,19 @@ class alertDetail extends Component {
                         incidentLog.map((log, index) => {
                           const date = new Date(log.operateTime);
                           const today = new Date();
-                          const minutes = date.getMinutes() < 10?('0' + date.getMinutes()) : date.getMinutes();
+                          const minutes = date.getMinutes() < 10 ? ('0' + date.getMinutes()) : date.getMinutes();
                           let isShowOperateDate = false;
                           let isShowOperateYear = false;
                           if (index == incidentLog.length - 1) {
                             isShowOperateDate = true;
-                            if(date.getFullYear() != today.getFullYear()) {
+                            if (date.getFullYear() != today.getFullYear()) {
                               isShowOperateYear = true;
                             }
                           } else {
                             const nextDate = new Date(incidentLog[index + 1].operateTime);
                             isShowOperateDate = (date.getFullYear() != nextDate.getFullYear() || date.getMonth() != nextDate.getMonth() || date.getDate() != nextDate.getDate());
                             isShowOperateYear = (date.getFullYear() != nextDate.getFullYear());
-                            if(date.getFullYear() != today.getFullYear()) {
+                            if (date.getFullYear() != today.getFullYear()) {
                               isShowOperateYear = true && isShowOperateDate;
                             }
                           }
@@ -479,7 +543,7 @@ class alertDetail extends Component {
                             <Timeline.Item key={log.incidentId + '' + index} color={index == 0 ? 'green' : 'blue'}>
                               <div className={classnames(styles.timeLineLabel)}>
                                 {
-                                  (isShowOperateYear?(date.getFullYear() + "/"):'') + (isShowOperateDate ? ((date.getMonth() + 1) + "/" + date.getDate() + ' ') : '') + date.getHours() + ":" + minutes
+                                  (isShowOperateYear ? (date.getFullYear() + "/") : '') + (isShowOperateDate ? ((date.getMonth() + 1) + "/" + date.getDate() + ' ') : '') + date.getHours() + ":" + minutes
                                 }
                               </div>
                               <p>
@@ -525,7 +589,7 @@ class alertDetail extends Component {
                                 log.attributes && log.attributes['recipient'] ?
                                   (
                                     <p>
-                                      <span>{formatMessage({ ...localeMessage['recipient'] })}&nbsp;:&nbsp;{log.attributes['recipient'].map((recipient, index) => ((index > 0?',':'') + recipient) )}</span>
+                                      <span>{formatMessage({ ...localeMessage['recipient'] })}&nbsp;:&nbsp;{log.attributes['recipient'].map((recipient, index) => ((index > 0 ? ',' : '') + recipient))}</span>
                                     </p>
                                   )
                                   :
@@ -553,7 +617,7 @@ class alertDetail extends Component {
                                 log.attributes && log.attributes['suppressionTime'] ?
                                   (
                                     <p>
-                                      <span><FormattedMessage { ...localeMessage['suppressionMessage'] } values={{ minutes: log.attributes['suppressionTime'] }}/></span>
+                                      <span><FormattedMessage { ...localeMessage['suppressionMessage']} values={{ minutes: log.attributes['suppressionTime'] }} /></span>
                                     </p>
                                   )
                                   :

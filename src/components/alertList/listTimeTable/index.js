@@ -6,10 +6,12 @@ import styles from '../index.less'
 
 
 // function ListTimeTableWrap({dispatch, alertListTimeTable}){
-const ListTimeTableWrap = ({ dispatch, alertListTable, selectedTime }) => {
+const ListTimeTableWrap = ({ dispatch, alertListTable, userInfo, selectedTime, isNeedCheckOwner }) => {
   const props = {
     ...alertListTable,
     selectedTime,
+    isNeedCheckOwner,
+    userInfo,
     loadMore() {
       dispatch({
         type: 'alertListTable/loadMore'
@@ -88,7 +90,7 @@ const ListTimeTableWrap = ({ dispatch, alertListTable, selectedTime }) => {
       const checked = e.target.checked;
       dispatch({
         type: 'alertListTable/handleSelectAll',
-        payload: { checked }
+        payload: { checked, isNeedCheckOwner }
       });
     },
     // 解除告警
@@ -133,7 +135,8 @@ export default connect(
   (state) => {
     return {
       alertListTable: state.alertListTable,
-      selectedTime: state.alertManage.selectedTime
+      selectedTime: state.alertManage.selectedTime,
+      userInfo: state.app && state.app.userInfo
     }
   }
 )(ListTimeTableWrap)

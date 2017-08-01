@@ -4,11 +4,14 @@ import { connect } from 'dva'
 import ListTable from '../../common/listTable'
 
 // function ListTimeTableWrap({dispatch, alertListTimeTable}){
-const ListTableWrap = ({ dispatch, alertListTable, topHeight, topFixArea }) => {
+const ListTableWrap = ({ dispatch, userInfo, isNeedCheckOwner, alertListTable, topHeight, topFixArea }) => {
   const props = {
     ...alertListTable,
     topHeight,
     extraArea: topFixArea,
+    isNeedCheckOwner,
+    userInfo,
+
     loadMore() {
       dispatch({
         type: 'alertListTable/loadMore'
@@ -80,7 +83,7 @@ const ListTableWrap = ({ dispatch, alertListTable, topHeight, topFixArea }) => {
       const checked = e.target.checked;
       dispatch({
         type: 'alertListTable/handleSelectAll',
-        payload: { checked }
+        payload: { checked, isNeedCheckOwner }
       });
     },
     // 解除告警
@@ -187,6 +190,7 @@ export default connect(
   (state) => {
     return {
       alertListTable: state.alertListTable,
+      userInfo: state.app && state.app.userInfo
     }
   }
 )(ListTableWrap)

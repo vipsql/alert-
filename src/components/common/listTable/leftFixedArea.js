@@ -33,7 +33,9 @@ class LeftFixedArea extends Component {
       orderType,
       orderByTittle,
       extraArea,
-      topHeight
+      topHeight,
+      isNeedCheckOwner,
+      userInfo
     } = this.props;
 
     const formatMessages = defineMessages({
@@ -109,6 +111,8 @@ class LeftFixedArea extends Component {
             orderBy={orderBy}
             orderType={orderType}
             orderByTittle={orderByTittle}
+            userInfo={userInfo}
+            isNeedCheckOwner={isNeedCheckOwner}
           />
         </div>
       </div>

@@ -100,7 +100,7 @@
   "alertOperate.takeOver": "接手",
   "alertOperate.reassign": "转派",
   "alertOperate.dispatch": "派单",
-  "alertOperate.dispatch.success": "派单成功，工单号为：{ flowNo }",
+  "alertOperate.dispatch.success": "派单成功，工单号为：{flowNo}",
   "alertOperate.close": "关闭",
   "alertOperate.resolve": "解决",
   "alertOperate.suppress": "抑制告警",
@@ -123,6 +123,8 @@
   "alertOperate.groupByOther": "按{other}",
   "alertOperate.log": "审计日志",
   "alertOperate.errorMsg": "{ operate }失败。原因可能是:",
+  "alertDetail.operation.reason1": "因为告警由他人负责所以无法{ control }",
+  "alertDetail.operation.reason2": "处于\"{ status }\"状态的告警无法{ control }",
 
   "modal.operate.infoTip1": "请先选择一条告警",
   "modal.operate.infoTip2": "只允许操作一条告警",
