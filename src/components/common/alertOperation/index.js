@@ -395,12 +395,12 @@ const alertOperation = ({
         showOperations.indexOf('resolve') >= 0 ?
           resolveDisabled && disableReasonMap['resolveDisabled'] ?
             <Tooltip title={disableReasonMap['resolveDisabled']}>
-              <Button className={styles.myButton} disabled={resolveDisabled} onClick={() => { resolveFunc(position) }} >
+              <Button className={styles.myButton}  onClick={() => { resolveFunc(position) }} >
                 <FormattedMessage {...localeMessage['operate_resolve']} />
               </Button>
             </Tooltip>
             :
-            <Button className={styles.myButton} disabled={resolveDisabled} onClick={() => { resolveFunc(position) }} >
+            <Button className={styles.myButton}  onClick={() => { resolveFunc(position) }} >
               <FormattedMessage {...localeMessage['operate_resolve']} />
             </Button>
           :
@@ -519,7 +519,7 @@ const alertOperation = ({
 
       { //列定制的popover
         position === 'list' &&
-        <Popover placement='bottomRight' overlayClassName={styles.popover} trigger="click" content={popoverContent} >
+        <Popover placement='bottomRight' overlayClassName={styles.popover} content={popoverContent} >
           <div className={classnames(styles.button, styles.rightBtn)}>
             <i className={classnames(setClass, styles.setCol)}></i>
             <p className={styles.col}> <FormattedMessage {...localeMessage['columns']} /></p>

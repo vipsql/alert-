@@ -400,7 +400,6 @@ class alertDetail extends Component {
     let disableMap = {};
     let disableReasonMap = {}
     Object.keys(disabledObj).forEach((key) => {
-      console.log(key);
       disableMap[key + 'Disabled'] = disabledObj[key].disabled;
       if (disabledObj[key].disabled) {
         disableReasonMap[key + 'Disabled'] = formatMessage(

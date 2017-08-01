@@ -106,7 +106,7 @@ export default {
       history.listen((location) => {
         if (location.pathname === '/alertQuery') {
           const query = location.query || {};
-          console.log(query);
+          // console.log(query);
           dispatch({
             type: 'alertQuerySetup',
             payload: {
@@ -582,7 +582,7 @@ export default {
     // show more
     *loadMore({ }, { call, put, select }) {
       const firstDate = new Date();
-      let tempDate = new Date();
+      // let tempDate = new Date();
       // 防止同时多次加载更多
       const isLoading = yield select((state) => state.alertQuery.isLoading);
       if (isLoading) {
@@ -594,7 +594,7 @@ export default {
         payload: { isLoading: true }
       })
 
-      console.log(new Date() - tempDate, 'toggleLoading');
+      // console.log(new Date() - tempDate, 'toggleLoading');
 
       let { currentPage, listData, alertQuery } = yield select(state => {
         return {
@@ -625,10 +625,10 @@ export default {
             payload: { isShowMore: listReturnData.data.hasNext, isReRender: false }
           })
 
-          console.log(new Date() - tempDate, 'updateShowMore');
+          // console.log(new Date() - tempDate, 'updateShowMore');
         }
 
-        tempDate = new Date();
+        // tempDate = new Date();
 
         yield put({
           type: 'updateAlertListData',
@@ -639,19 +639,19 @@ export default {
           }
         })
 
-        console.log(new Date() - tempDate, 'updateAlertListData');
+        // console.log(new Date() - tempDate, 'updateAlertListData');
 
-        tempDate = new Date();
+        // tempDate = new Date();
         yield put({ type: 'setMore', payload: { currentPage, isReRender: false } })
-        console.log(new Date() - tempDate, 'setMore');
+        // console.log(new Date() - tempDate, 'setMore');
 
-        tempDate = new Date();
+        // tempDate = new Date();
         yield put({
           type: 'toggleLoading',
           payload: { isLoading: false, isReRender: false }
         })
-        console.log(new Date() - tempDate, 'cancelLoading');
-        tempDate = new Date();
+        // console.log(new Date() - tempDate, 'cancelLoading');
+        // tempDate = new Date();
         yield put({
           type: 'addProperties',
           payload: {
@@ -659,12 +659,12 @@ export default {
             tags: listReturnData.data.tagKeys
           }
         })
-        console.log(new Date() - tempDate, 'addProperties');
+        // console.log(new Date() - tempDate, 'addProperties');
       } else {
         yield message.error(listReturnData.message, 2)
       }
 
-      console.log(new Date() - firstDate, 'total');
+      // console.log(new Date() - firstDate, 'total');
     },
     //orderList排序
     *orderList({ payload }, { select, put, call }) {
@@ -703,7 +703,7 @@ export default {
     },
     // 分组显示
     *groupView({ payload }, { select, put, call }) {
-      const tempDate = new Date();
+      // const tempDate = new Date();
       yield put({
         type: 'setGroupType',
         payload: {
@@ -711,7 +711,7 @@ export default {
           isReRender: false
         }
       })
-      console.log(new Date() - tempDate, 'setGroupType');
+      // console.log(new Date() - tempDate, 'setGroupType');
       yield put({
         type: 'setGroup',
         payload: {
@@ -719,7 +719,7 @@ export default {
           group: payload
         }
       })
-      console.log(new Date() - tempDate, 'setGroup');
+      // console.log(new Date() - tempDate, 'setGroup');
     },
     // 无分组显示
     *noGroupView({ payload }, { select, put, call }) {

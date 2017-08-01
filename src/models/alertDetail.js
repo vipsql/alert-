@@ -11,6 +11,7 @@ const initalState = {
   id: undefined, // 告警编号
   isShowDetail: false, // 是否显示detail
   isLoading: false, // 是否处于加载中状态
+  isButtonLoading: false, //是否发送服务端成功的加载按钮
 
   invokeByOutside: false, // 是否来自外部调用
 
@@ -259,7 +260,6 @@ export default {
       if (!viewDetailAlertId) {
         viewDetailAlertId = id;
       }
-
       // 去除上一次的orderFlowNum和ciUrl地址，并且设置加载中的状态
       yield put({
         type: 'beforeOpenDetail',
@@ -367,12 +367,22 @@ export default {
 
       if (viewDetailAlertId) {
         let stringId = '' + viewDetailAlertId;
+        //按钮发起请求加载中
+        yield put({
+          type: 'toggleButtonLoading',
+          payload: true
+        });
         const resultData = yield close({
           incidentIds: [stringId],
           closeMessage: payload.closeMessage
         })
         if (resultData.result) {
           if (resultData.data.result) {
+            //按钮发起请求加载中
+            yield put({
+              type: 'toggleButtonLoading',
+              payload: false
+            });
             yield put({ type: 'openDetailModal' })
             yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
           } else {
@@ -409,9 +419,14 @@ export default {
     // 解决告警
     *resolveAlert({ payload }, { select, put, call }) {
       const viewDetailAlertId = yield select(state => state.alertDetail.id);
-
+      
       if (viewDetailAlertId) {
         let stringId = '' + viewDetailAlertId;
+        //按钮发起请求加载中
+        yield put({
+          type: 'toggleButtonLoading',
+          payload: true
+        });
         const resultData = yield resolve({
           incidentIds: [stringId],
           resolveMessage: payload.resolveMessage
@@ -420,6 +435,11 @@ export default {
           if (resultData.data.result) {
             // yield put({ type: 'alertQuery/changeCloseState', payload: { arrList: [stringId], status: 190 } })
             // yield put({ type: 'alertQuery/queryAlertList' })
+            //按钮发起请求加载中
+            yield put({
+              type: 'toggleButtonLoading',
+              payload: false
+            });
             yield put({ type: 'openDetailModal' })
             yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
           } else {
@@ -433,6 +453,7 @@ export default {
         payload && payload.resolve && payload.resolve(false);
         console.error('select incident/incident type error');
       }
+
       yield put({
         type: 'toggleResolveModal',
         payload: false
@@ -584,6 +605,10 @@ export default {
     // 显示modal后取消加载中状态
     toggleLoading(state, { payload: isLoading }) {
       return { ...state, isLoading }
+    },
+    // 显示modal后取消加载中状态
+    toggleButtonLoading(state, { payload: isButtonLoading }) {
+      return { ...state, isButtonLoading }
     },
     // 设置分组显示的类型
     setGroupType(state, { payload: selectGroup }) {

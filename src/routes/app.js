@@ -11,7 +11,6 @@ const claarLocalStorage = () => {
   // 清除一些localstorge存储的用户操作
   localStorage.removeItem('UYUN_Alert_USERINFO')
   localStorage.removeItem('UYUN_Alert_MANAGEFILTER')
-  console.log(localStorage)
 }
 
 class App extends Component {
