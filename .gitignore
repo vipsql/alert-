@@ -12,3 +12,4 @@ npm-debug*
 yarn.lock
 dist/
 frontend/
+package-lock.json
