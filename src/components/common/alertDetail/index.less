@@ -169,11 +169,15 @@
           position: relative;
           line-height: 25px;
           font-size: 13px;
-          padding: 0px 20px 8px 90px;
+          padding: 0px 20px 8px 140px;
           &>span:first-child {
             position: absolute;
             left: 0;
             color: #81c5f6;
+            overflow: hidden;
+            max-width: 130px; // padding-left - 10px
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
           span {
             a {
