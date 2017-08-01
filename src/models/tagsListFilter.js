@@ -102,7 +102,8 @@ export default {
       const pageSize = yield select( state => state.tagListFilter.pageSize );
       if (payload !== undefined && payload.key !== undefined && payload.value !== undefined) {
         const tagValues = yield call(getTagValues, {
-          ...payload,
+          key: payload.key,
+          value: payload.value,
           currentPage: 1,
           pageSize
         });
@@ -121,6 +122,7 @@ export default {
             currentPage: 1
           }
         })
+        payload.callback && payload.callback()
       } else {
         console.error('query params type error')
       }
@@ -182,7 +184,7 @@ export default {
       let keys = Object.keys(originTags);
       keys.length > 0 && keys.forEach( (key, index) => {
           filter[key] = originTags[key]['values']
-          shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: [originTags[key]['values']], visible: false })
+          shareSelectTags.push({key: originTags[key]['key'], keyName: originTags[key]['keyName'], values: [originTags[key]['values']] })
       })
       return { ...state, shareSelectTags, filteredTags: filter }
     },
@@ -200,8 +202,7 @@ export default {
         shareSelectTags.push({
           key: filter.key,
           keyName: filter.keyName,
-          values: [],
-          visible: false
+          values: []
         })
       }
       return {...state, shareSelectTags, tagsKeyList}
@@ -288,9 +289,7 @@ export default {
     setSelectList(state, {payload: {selectList, targetKey, currentPage}}) {
       const { shareSelectTags } = state;
       let newList = shareSelectTags.map( (tag, index) => {
-        tag.visible = false;
         if (tag.key === targetKey) {
-          tag.visible = true;
           tag.values.forEach( (val) => {
             selectList.forEach( (select) => {
               if (select.value == val) {
