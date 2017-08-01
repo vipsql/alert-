@@ -67,15 +67,24 @@ class alertQueryManage extends Component {
       }
     }
 
+    const updateRow = (response, currentAlertDetail) => {
+      if(response && response.result) {
+        dispatch({
+          type: 'alertQuery/updateDataRow',
+          payload: currentAlertDetail
+        })
+      }
+    }
+
     const alertDetailWrapProps = {
-      afterTakeOver: refreshList,
-      afterClose: refreshList, // 告警关闭后的回调方法
-      afterDispatch: refreshList, // 告警派发后的回调方法
-      afterChatOpsh: refreshList, // 告警发送到ChatOps后的回调方法
-      afterResolve: refreshList, // 告警解决后的回调方法
-      afterSuppress: refreshList, // 告警抑制后的回调方法
-      afterReassign: refreshList, // 告警转派后的回调方法
-      afterMunalNotify: refreshList // 告警通知后的回调方法
+      afterTakeOver: updateRow,
+      afterClose: updateRow, // 告警关闭后的回调方法
+      afterDispatch: updateRow, // 告警派发后的回调方法
+      afterChatOpsh: updateRow, // 告警发送到ChatOps后的回调方法
+      afterResolve: updateRow, // 告警解决后的回调方法
+      afterSuppress: updateRow, // 告警抑制后的回调方法
+      afterReassign: updateRow, // 告警转派后的回调方法
+      afterMunalNotify: updateRow // 告警通知后的回调方法
     }
 
     return (

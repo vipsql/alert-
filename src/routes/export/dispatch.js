@@ -8,10 +8,9 @@ function export_dispatch(props){
   )
 }
 export_dispatch.propTypes = {
-  
+
 }
 export default connect((state) => {
-    console.log(state)
     return {
         alertExport: state.alertExport
     }

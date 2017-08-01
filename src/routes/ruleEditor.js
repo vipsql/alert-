@@ -18,7 +18,6 @@ function ruleEditor(props) {
       ...props.alertAssociationRules.currentEditRule.rule
     }
     delete ruleProps.rule;
-    console.log(ruleProps);
   }
 
   return (

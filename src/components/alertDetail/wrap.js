@@ -89,7 +89,8 @@ const AlertDetailWrap = ({ alertDetail, userInfo, dispatch, afterTakeOver, after
         type: 'alertDetail/submitReassign',
         payload: {
           toWho: selectedUser.key,
-          resolve: afterReassign
+          resolve: afterReassign,
+          ownerName: selectedUser.label
         }
       })
     },

@@ -584,8 +584,9 @@ class Chart extends Component {
           d3Tip.hide()
           let alertListPath = {};
           let pName = d.parent.name
+          let pKey = d.parent.key
           if (pName) {
-            alertListPath[pName] = { key: pName, keyName: pName, values: d.name }
+            alertListPath[pName] = { key: pKey, keyName: pName, values: d.name }
           }
 
           localStorage.setItem('alertListPath', JSON.stringify(alertListPath))

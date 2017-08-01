@@ -384,7 +384,7 @@ class ListTimeTable extends Component {
                       :
                       <Checkbox checked={checkAlert[item.id] && checkAlert[item.id].checked} data-id={item.id} data-no-need-wrap={true} onClick={checkAlertFunc} />
                   }*/}
-                  <Checkbox checked={checkAlert[item.id] && checkAlert[item.id].checked} data-id={item.id} data-no-need-wrap={true} onClick={checkAlertFunc} disabled={ isNeedCheckOwner && userInfo.userId?!(userInfo.userId == item.ownerId || userInfo.realName == item.ownerName):undefined } />
+                  <Checkbox checked={checkAlert[item.id] && checkAlert[item.id].checked} data-id={item.id} data-no-need-wrap={true} onClick={checkAlertFunc} disabled={ isNeedCheckOwner && userInfo.userId?!(userInfo.userId == item.owner || userInfo.realName == item.ownerName):undefined } />
                 </td>
                 {tds}
                 <td key="timeDot">
@@ -429,7 +429,7 @@ class ListTimeTable extends Component {
                   <Checkbox checked={checkAlert[item.id] && checkAlert[item.id].checked} data-id={item.id} data-no-need-wrap={true} onClick={checkAlertFunc} />
               }*/}
 
-              <Checkbox checked={checkAlert[item.id] && checkAlert[item.id].checked} data-id={item.id} data-no-need-wrap={true} onClick={checkAlertFunc} disabled={ isNeedCheckOwner && userInfo.userId?!(userInfo.userId == item.ownerId || userInfo.realName == item.ownerName):undefined } />
+              <Checkbox checked={checkAlert[item.id] && checkAlert[item.id].checked} data-id={item.id} data-no-need-wrap={true} onClick={checkAlertFunc} disabled={ isNeedCheckOwner && userInfo.userId?!(userInfo.userId == item.owner || userInfo.realName == item.ownerName):undefined } />
 
             </td>
             :
