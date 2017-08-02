@@ -6,6 +6,7 @@ import { getUsers } from '../services/app.js';
 import { message } from 'antd'
 import pathToRegexp from 'path-to-regexp';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import { delay } from '../utils'
 
 const initalState = {
   id: undefined, // 告警编号
@@ -248,12 +249,31 @@ export default {
       }
       yield put({ type: 'toggleCloseModal', payload: true })
     },
-    // 点击展开detail时的操作
-    *openDetailModal({ payload = {} }, { select, put, call }) {
-      const { id, invokeByOutside } = yield select(state => {
+
+    *toggleOpenDetailModal({ payload }, { select, put, call }) {
+      const { id, invokeByOutside, isShowDetail } = yield select(state => {
         return {
           id: state.alertDetail.id,
-          invokeByOutside: state.alertDetail.invokeByOutside
+          invokeByOutside: state.alertDetail.invokeByOutside,
+          isShowDetail: state.alertDetail.isShowDetail
+        }
+      });
+
+      // const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+      // yield delay(200);
+      // yield put({
+      //   type: 'openDetailModal',
+      //   payload
+      // })
+    },
+
+    // 点击展开detail时的操作
+    *openDetailModal({ payload = {} }, { select, put, call }) {
+      const { id, invokeByOutside, isShowDetail } = yield select(state => {
+        return {
+          id: state.alertDetail.id,
+          invokeByOutside: state.alertDetail.invokeByOutside,
+          isShowDetail: state.alertDetail.isShowDetail
         }
       });
 
@@ -261,6 +281,10 @@ export default {
       if (!viewDetailAlertId) {
         viewDetailAlertId = id;
       }
+
+      yield delay(100);
+
+      // 呈现收拢再展开的效果
       // 去除上一次的orderFlowNum和ciUrl地址，并且设置加载中的状态
       yield put({
         type: 'beforeOpenDetail',
@@ -294,6 +318,10 @@ export default {
             })
           }
         } else {
+          // 打开失败，关闭modal
+          yield put({
+            type: 'closeDetailModal',
+          })
           yield message.error(detailResult.message, 3);
         }
       } else {

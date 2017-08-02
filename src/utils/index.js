@@ -5,6 +5,9 @@ import classnames from 'classnames'
 import { color } from './theme'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
+// 用于在model层创造延迟，用法：step1();yield delay(1000);step2()
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 /**
  * Return random getUUID
  *
@@ -358,5 +361,6 @@ module.exports = {
   formatDate,
   returnByIsReRender,
   getOperationExcutionMap,
-  modelExtend
+  modelExtend,
+  delay
 }
