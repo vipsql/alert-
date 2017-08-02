@@ -69,7 +69,6 @@ class LeftFixedArea extends Component {
                 columns={columns}
                 sourceOrigin={sourceOrigin}
                 isGroup={isGroup}
-                columns={columns}
                 selectedAll={selectedAll}
                 handleSelectAll={handleSelectAll}
                 orderUp={orderUp}

@@ -18,9 +18,12 @@ class TopFixedArea extends Component {
       if (!this.unmount) {
         const $target = $(e.target);
         if ($target.scrollTop() > this.props.topHeight) {
+          $(parentTarget).find("thead").css("display", "none")
+          // $(this.refs.thead).css("display", 'block')
           this.setState({ isShow: true });
           onShow && onShow();
         } else {
+          $(parentTarget).find("thead").removeAttr("style");
           this.setState({ isShow: false });
           onHide && onHide();
         }
@@ -50,7 +53,9 @@ class TopFixedArea extends Component {
           {extraArea}
         </div>
         <table className={classnames(styles.listTable, styles.topFixed)}>
-          { theads }
+          <thead ref="thead">
+            { theads }
+          </thead>
         </table>
         {
           isShowScrollBar?
@@ -75,7 +80,7 @@ TopFixedArea.propTypes = {
   extraArea: PropTypes.node,
   target: PropTypes.string,
   parentTarget: PropTypes.string, // 父级容器，需要监听它的左右滚动
-  topHeight: PropTypes.number
+  topHeight: PropTypes.number,
 }
 
 export default TopFixedArea;
