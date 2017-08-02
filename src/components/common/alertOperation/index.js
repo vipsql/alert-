@@ -377,7 +377,7 @@ const alertOperation = ({
 
       {
         showOperations.indexOf('dispatch') >= 0 ?
-          reassignDisabled && disableReasonMap['dispatchDisabled'] ?
+          dispatchDisabled && disableReasonMap['dispatchDisabled'] ?
             <Tooltip title={disableReasonMap['dispatchDisabled']}>
               <Button className={styles.myButton} disabled={dispatchDisabled} onClick={() => { dispatchFunc(position) }} >
                 <FormattedMessage {...localeMessage['operate_dispatch']} />
