@@ -585,15 +585,15 @@ class Chart extends Component {
           let alertListPath = {};
           let pName = d.parent.name
           let pKey = d.parent.key
-          if (pName) {
-            alertListPath[pName] = { key: pKey, keyName: pName, values: d.name }
+          if (pKey) {
+            alertListPath[pKey] = { key: pKey, keyName: pName, values: d.name }
           }
 
           localStorage.setItem('alertListPath', JSON.stringify(alertListPath))
-          localStorage.setItem('__visual_group', pName)
+          localStorage.setItem('__visual_group', pKey)
 
           if (pName != 'source' && pName != 'status' && pName != 'severity') {
-            const gr1 = [{ key: pName, value: d.name }]
+            const gr1 = [{ key: pKey, value: d.name }]
             localStorage.setItem('__alert_visualAnalyze_gr1', JSON.stringify(gr1))
           }
           window.location.hash = "#/alertManage/alertList";
