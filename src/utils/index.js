@@ -198,10 +198,6 @@ function getOperationExcutionMap({ owner, userId, status }) {
           disabled: true,
           reason: 'status'
         },
-        reassign: {
-          disabled: true,
-          reason: 'status'
-        },
         resolve: {
           disabled: true,
           reason: 'status'
