@@ -740,7 +740,7 @@ export default {
     *checkColumn({ payload }, { select, put, call }) {
       yield put({ type: 'setColumn', payload: { selectCol: payload, isReRender: false } })
       const selectColumn = yield select(state => state.alertQuery.selectColumn)
-      yield put({ type: 'customCols', payload: { selectColumn } })
+      yield put({ type: 'customCols', payload: { columns: selectColumn } })
     },
   },
 
