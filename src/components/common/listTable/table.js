@@ -365,7 +365,7 @@ class Table extends Component {
 
             })
           } else {
-            childs = null
+            childs = []
           }
           const trKey = `tr_${index}_${itemIndex}`
           const tdKey = `td_${index}_${itemIndex}`
@@ -415,7 +415,7 @@ class Table extends Component {
             }
           })
         } else {
-          childs = null
+          childs = []
         }
 
         commonTrs.push(
