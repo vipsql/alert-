@@ -419,7 +419,7 @@ class Table extends Component {
         }
 
         commonTrs.push(
-          <WrapableTr contentData={{ ...item, columns, checked: checkAlert[item.id] && checkAlert[item.id].checked }} columnsLength={columns.length} isSuppressed={item.suppressionFlag} isRemoved={item.isRemoved} trId={item.id + "_" + index} key={item.id + "_" + index} className={classnames(styles.noSpread)}>
+          <WrapableTr contentData={{ ...item, checked: checkAlert[item.id] && checkAlert[item.id].checked }} columnsLength={columns.length} isSuppressed={item.suppressionFlag} isRemoved={item.isRemoved} trId={item.id + "_" + index} key={item.id + "_" + index} className={classnames(styles.noSpread)}>
             {
               //<input type="checkbox" checked={checkAlert[item.id].checked} data-id={item.id} data-all={JSON.stringify(item)} onClick={checkAlertFunc} />
               sourceOrigin !== 'alertQuery' && Object.keys(checkAlert).length !== 0 ?
