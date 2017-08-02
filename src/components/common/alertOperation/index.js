@@ -317,7 +317,7 @@ const alertOperation = ({
 
   return (
     <div className={styles.operateMain}>
-      {
+      {/*{
         showOperations.indexOf('takeOver') >= 0 && showOperations.indexOf('reassign') < 0 ?
           <DropdownButton
             overlay={reassign}
@@ -341,6 +341,22 @@ const alertOperation = ({
               </Button>
             :
             undefined
+      }*/}
+
+      {
+        showOperations.indexOf('takeOver') >= 0 ?
+          takeOverDisabled && disableReasonMap['takeOverDisabled'] ?
+            <Tooltip title={disableReasonMap['takeOverDisabled']}>
+              <Button className={styles.myButton} disabled={takeOverDisabled} onClick={() => { takeOverFunc(position) }} >
+                <FormattedMessage {...localeMessage['operate_takeOver']} />
+              </Button>
+            </Tooltip>
+            :
+            <Button className={styles.myButton} disabled={takeOverDisabled} onClick={() => { takeOverFunc(position) }} >
+              <FormattedMessage {...localeMessage['operate_takeOver']} />
+            </Button>
+          :
+          undefined
       }
 
       {

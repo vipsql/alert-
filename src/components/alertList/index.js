@@ -32,7 +32,7 @@ const TabPane = Tabs.TabPane
 
 const statusOperationMap = {
   'NEW': ['takeOver', 'reassign', 'merge', 'other'],
-  'PROGRESSING': ['dispatch', 'close', 'resolve', 'merge',],
+  'PROGRESSING': ['dispatch', 'reassign', 'close', 'resolve', 'merge',],
   'RESOLVED': ['close', 'merge'],
   'EXCEPTCLOSE': ['takeOver', 'reassign', 'dispatch', 'close', 'resolve', 'merge', 'other'],
 }
@@ -166,7 +166,27 @@ class AlertListManage extends Component {
       }
     })
     const groupName = localStorage.getItem('__visual_group'),
-      isShowVisualTab = !(groupName == 'source' || groupName == 'status' || groupName == 'severity')
+      isShowVisualTab = !(groupName == 'source' || groupName == 'status' || groupName == 'severity');
+
+    const updateRow = (response, currentAlertDetail) => {
+      if(response && response.result) {
+        dispatch({
+          type: 'alertListTable/updateDataRow',
+          payload: currentAlertDetail
+        })
+      }
+    }
+
+    const alertDetailWrapProps = {
+      afterTakeOver: updateRow,
+      afterClose: updateRow, // 告警关闭后的回调方法
+      afterDispatch: updateRow, // 告警派发后的回调方法
+      afterChatOpsh: updateRow, // 告警发送到ChatOps后的回调方法
+      afterResolve: updateRow, // 告警解决后的回调方法
+      afterSuppress: updateRow, // 告警抑制后的回调方法
+      afterReassign: updateRow, // 告警转派后的回调方法
+      afterMunalNotify: updateRow // 告警通知后的回调方法
+    }
 
     return (
       <div style={{ position: 'relative' }}>
@@ -219,7 +239,7 @@ class AlertListManage extends Component {
           </ul>
         </div>
 
-        <AlertDetailWrap />
+        <AlertDetailWrap { ...alertDetailWrapProps }/>
         <AlertOriginSliderWrap />
         <ScrollTopButton />
       </div>

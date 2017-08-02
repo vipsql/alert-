@@ -105,7 +105,7 @@ function returnByIsReRender(oldState, newState, isReRender) {
 }
 
 // 根据告警状态获取单条告警可执行的操作及其不能操作的原因
-function getOperationExcutionMap({ ownerId, userId, status }) {
+function getOperationExcutionMap({ owner, userId, status }) {
   let disableObj = {
     takeOver: {
       disabled: false
@@ -164,7 +164,7 @@ function getOperationExcutionMap({ ownerId, userId, status }) {
           reason: 'status'
         }
       }
-      if (ownerId != userId) {
+      if (owner != userId) {
         disableObj = {
           ...disableObj,
           dispatch: {
@@ -207,12 +207,13 @@ function getOperationExcutionMap({ ownerId, userId, status }) {
           reason: 'status'
         }
       }
-      if (ownerId != userId) {
+      if (owner != userId) {
         disableObj.close = {
           disabled: true,
           reason: 'owner'
         }
       }
+      break;
     case 'CLOSED':
       // 已关闭告警：分享、通知
       disableObj = {

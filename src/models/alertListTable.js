@@ -326,13 +326,13 @@ export default {
 
     },
     // 更新告警列表
-    updateAlertListData(state, { payload: { data, newLevels, tempListData, isReRender=true } }) {
+    updateAlertListData(state, { payload: { data, newLevels, tempListData, isReRender = true } }) {
       let { levels } = state;
       let keys = Object.keys(newLevels);
       keys.forEach((key) => {
         levels[key] = typeof levels[key] !== 'undefined' ? levels[key] + newLevels[key] : newLevels[key]
       })
-      return returnByIsReRender(state, {data, tempListData, levels: levels }, isReRender);
+      return returnByIsReRender(state, { data, tempListData, levels: levels }, isReRender);
     },
     // 手动添加子告警
     addChild(state, { payload: { children, parentId, isGroup } }) {
@@ -497,7 +497,7 @@ export default {
       return { ...state, data: newData }
     },
     // 排序
-    toggleOrder(state, { payload: { orderBy, orderType, isReRender=true } }) {
+    toggleOrder(state, { payload: { orderBy, orderType, isReRender = true } }) {
       return returnByIsReRender(state, { orderBy, orderType }, isReRender);
     },
     // 删除告警
@@ -579,9 +579,62 @@ export default {
         return { ...state, data: newData }
       }
     },
+
+    // 修改data数组多行的值
+    updateDataRows(state, { payload }) {
+      const { datas, isReRender = true } = payload;
+      const { data, isGroup, tagsFilter: { status }, checkAlert } = state;
+      const ids = datas.map((data) => data.id);
+      let newData = assign([], data);
+
+      if (isGroup) {
+        newData = newData.map((tempGroup) => {
+          let data = tempGroup.children.map((tempRow) => {
+            if (ids.indexOf(tempRow['id']) >= 0) {
+              tempRow = { ...tempRow, ...(datas[ids.indexOf(tempRow['id'])]) };
+
+              // 如果告警的状态与当前过滤条件的状态不一致，则设置“移除字段”为true
+              if (status.indexOf(',') < 0 && status != tempRow.status) {
+                tempRow.isRemoved = true;
+              }
+
+              if (!tempRow.checked) {
+                if (checkAlert[tempRow.id] && checkAlert[tempRow.id].checked) {
+                  checkAlert[tempRow.id].checked = false;
+                }
+              }
+            }
+          })
+          tempGroup.children = data;
+          return tempGroup;
+        });
+      } else {
+        newData = newData.map((tempRow) => {
+          if (ids.indexOf(tempRow['id']) >= 0) {
+            tempRow = { ...tempRow, ...(datas[ids.indexOf(tempRow['id'])]) };
+
+            // 如果告警的状态与当前过滤条件的状态不一致，则设置“移除字段”为true
+            if (status.indexOf(',') < 0 && status != tempRow.status) {
+              tempRow.isRemoved = true;
+            }
+
+            if (!tempRow.checked) {
+              if (checkAlert[tempRow.id] && checkAlert[tempRow.id].checked) {
+                checkAlert[tempRow.id].checked = false;
+              }
+            }
+          }
+
+          return tempRow
+        });
+      }
+
+      return returnByIsReRender(state, { data: newData, checkAlert }, isReRender);
+    },
+
     // 修改data数组某一行的值
     updateDataRow(state, { payload }) {
-      const { data, isGroup, isReRender=true } = state;
+      const { data, isGroup, isReRender = true } = state;
       let newData = assign([], data);
       if (isGroup) {
         newData = newData.map((tempGroup) => {
@@ -602,7 +655,7 @@ export default {
           return tempRow;
         });
       }
-      return returnByIsReRender(state, {data: newData}, isReRender);
+      return returnByIsReRender(state, { data: newData }, isReRender);
     },
 
     // 清空selectedAlertIds和operateAlertIds： 接手成功后要手动清除
@@ -704,6 +757,7 @@ export default {
         }
       })
 
+      console.log(tagsFilter);
 
       // 这里触发时currentPage始终为1，如果从common取在分组转分页时会有问题
       extraParams = {
@@ -723,7 +777,7 @@ export default {
           return state.app && state.app.userInfo
         })
         const list = listData.data.datas.map((alert) => {
-          if(alert.ownerId == userInfo.userId || alert.ownerName == userInfo.realName) {
+          if (alert.owner == userInfo.userId) {
             alert.isOwn = true;
           } else {
             alert.isOwn = false;
@@ -1061,11 +1115,10 @@ export default {
         newOperateAlertIds = [];
         newSelectedAlertIds = [];
       }
-      if(isNeedCheckOwner) {
+      if (isNeedCheckOwner) {
         ids.forEach((id) => {
           const info = checkAlert[id].info;
-          console.log(info);
-          if(info.isOwn) {
+          if (info.isOwn) {
             checkAlert[id].checked = checked;
           } else {
             checkAlert[id].checked = false;

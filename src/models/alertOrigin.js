@@ -49,7 +49,6 @@ export default {
       payload.pagination = { ...oldAlertOrigin.pagination, ...pagination }
       payload.sorter = { ...oldAlertOrigin.sorter,  sorter};
       const newAlertOrigin = { ...oldAlertOrigin,  ...payload}
-      console.log(newSearchParam, "newSEe");
       const response = yield queryAlertOrigin({ pagination: newAlertOrigin.pagination, sorter: newAlertOrigin.sorter, alertId: newAlertOrigin.alertId, searchParam: {...newSearchParam} })
       // 请求无论成功还是失败都停止“记载中”状态
       yield put({

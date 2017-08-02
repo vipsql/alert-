@@ -160,7 +160,8 @@ export default {
         } else {
           yield message.error(notify.message, 3);
         }
-        payload.resolve && payload.resolve(notify.result)
+        const currentAlertDetail = yield select(state => state.alertDetail.currentAlertDetail)
+        payload && payload.resolve && payload.resolve(notify, currentAlertDetail);
       } else {
         payload.resolve && payload.resolve(false)
         console.error('please select incidet/incident is error');
@@ -219,8 +220,8 @@ export default {
         } else {
           yield message.error(data.message, 3);
         }
-
-        payload && payload.resolve && payload.resolve(data);
+        const currentAlertDetail = yield select(state => state.alertDetail.currentAlertDetail)
+        payload && payload.resolve && payload.resolve(data, currentAlertDetail);
       } else {
         payload && payload.resolve && payload.resolve(false);
         console.error('selectedAlertIds error');
@@ -268,6 +269,7 @@ export default {
           invokeByOutside: payload.invokeByOutside || invokeByOutside
         }
       })
+
       if (viewDetailAlertId) {
         const detailResult = yield queryDetail(viewDetailAlertId);
         if (detailResult.result) {
@@ -303,6 +305,49 @@ export default {
         type: 'toggleLoading',
         payload: false
       });
+    },
+
+    //刷新告警详情侧滑modal
+    *refresh({ payload: { alertId, afterRefresh } }, { select, put, call }) {
+      yield put({
+        type: 'toggleLoading',
+        payload: true
+      });
+
+      if (!alertId) {
+        alertId = yield select((state) => state.alertDetail.id);
+      }
+
+      const detailResult = yield queryDetail(alertId);
+      if (detailResult.result) {
+        yield put({
+          type: 'setDetail',
+          payload: detailResult.data || {}
+        })
+        yield put({
+          type: 'setDetailBtnDisable',
+          payload: detailResult.data
+        })
+        if (detailResult.data && detailResult.data.orderFlowNum) {
+          yield put({
+            type: 'setFormData',
+            payload: detailResult.data.orderFlowNum
+          })
+        }
+        if (detailResult.data && detailResult.data.ciUrl !== undefined && detailResult.data.ciUrl != '') {
+          yield put({
+            type: 'setCiUrl',
+            payload: detailResult.data.ciUrl
+          })
+        }
+      }
+
+      yield put({
+        type: 'toggleLoading',
+        payload: false
+      });
+      const currentAlertDetail = yield select((state) => state.alertDetail.currentAlertDetail);
+      afterRefresh && afterRefresh(currentAlertDetail);
     },
     // 编辑工单流水号
     *changeTicketFlow({ payload }, { select, put, call }) {
@@ -378,12 +423,18 @@ export default {
         })
         if (resultData.result) {
           if (resultData.data.result) {
-            //按钮发起请求加载中
             yield put({
               type: 'toggleButtonLoading',
               payload: false
             });
-            yield put({ type: 'openDetailModal' })
+            yield put({
+              type: 'refresh',
+              payload: {
+                afterRefresh: (currentAlertDetail) => {
+                  payload && payload.resolve && payload.resolve(resultData, currentAlertDetail);
+                }
+              }
+            })
             yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
           } else {
             yield message.error(`${resultData.data.failures}`, 3);
@@ -392,7 +443,9 @@ export default {
           yield message.error(resultData.message, 3);
         }
 
-        payload && payload.resolve && payload.resolve(resultData);
+        const currentAlertDetail = yield select(state => state.alertDetail.currentAlertDetail)
+
+        payload && payload.resolve && payload.resolve(resultData, currentAlertDetail);
       } else {
         payload && payload.resolve && payload.resolve(false);
         console.error('select incident/incident type error');
@@ -412,14 +465,14 @@ export default {
       }
 
       yield put({
-        type: 'alertDetail/toggleResolveModal',
+        type: 'toggleResolveModal',
         payload: true
       })
     },
     // 解决告警
     *resolveAlert({ payload }, { select, put, call }) {
       const viewDetailAlertId = yield select(state => state.alertDetail.id);
-      
+
       if (viewDetailAlertId) {
         let stringId = '' + viewDetailAlertId;
         //按钮发起请求加载中
@@ -440,7 +493,14 @@ export default {
               type: 'toggleButtonLoading',
               payload: false
             });
-            yield put({ type: 'openDetailModal' })
+            yield put({
+              type: 'refresh',
+              payload: {
+                afterRefresh: (currentAlertDetail) => {
+                  payload && payload.resolve && payload.resolve(resultData, currentAlertDetail);
+                }
+              }
+            })
             yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
           } else {
             yield message.error(`${resultData.data.failures}`, 3);
@@ -448,7 +508,9 @@ export default {
         } else {
           yield message.error(resultData.message, 3);
         }
-        payload && payload.resolve && payload.resolve(resultData);
+
+        const currentAlertDetail = yield select(state => state.alertDetail.currentAlertDetail)
+        payload && payload.resolve && payload.resolve(resultData, currentAlertDetail);
       } else {
         payload && payload.resolve && payload.resolve(false);
         console.error('select incident/incident type error');
@@ -514,19 +576,23 @@ export default {
           if (Array.isArray(success) && success.length > 0) {
             const successMsg = success.map(item => `${item.name}: ${item['msg']}`).join('\n');
             message.success(successMsg, 3);
-            yield put({ type: 'openDetailModal' })
-          } else if (Array.isArray(failed) && failed.length > 0) {
-            const failedMsg = failed.map(item => `${item.name}: ${item['msg']}`).join('\n');
-            message.error(failedMsg, 3);
-            response.result = false;
+            yield put({
+              type: 'refresh',
+              payload: {
+                afterRefresh: (currentAlertDetail) => {
+                  payload && payload.resolve && payload.resolve(response, currentAlertDetail);
+                }
+              }
+            })
+          } else {
+            message.error(`${response.message}`, 2)
           }
-        } else {
-          message.error(`${response.message}`, 2)
+
+          const currentAlertDetail = yield select(state => state.alertDetail.currentAlertDetail)
+          payload && payload.resolve && payload.resolve(response, currentAlertDetail);
         }
 
-        payload && payload.resolve && payload.resolve(response);
       }
-
     },
 
     //打开转派告警Model
@@ -555,7 +621,7 @@ export default {
       });
     },
     //转派
-    *submitReassign({ payload: { toWho, resolve } }, { select, put, call }) {
+    *submitReassign({ payload: { toWho, ownerName, resolve } }, { select, put, call }) {
       const viewDetailAlertId = yield select(state => state.alertDetail.id);
       let response = yield call(reassignAlert, {
         toWho,
@@ -570,6 +636,13 @@ export default {
             type: 'toggleReassignModal',
             payload: false
           });
+          yield put({
+            type: 'setDetail',
+            payload: {
+              owner: toWho,
+              ownerName
+            }
+          })
           yield put({ type: 'toggleDetailModal', payload: false });
         } else if (Array.isArray(failed) && failed.length > 0) {
           const failedMsg = failed.map(item => `${item.name}: ${item['msg']}`).join('\n');
@@ -580,7 +653,9 @@ export default {
         message.error(response.message, 2);
       }
 
-      resolve && resolve(response);
+      const currentAlertDetail = yield select((state) => state.alertDetail.currentAlertDetail)
+
+      resolve && resolve(response, currentAlertDetail);
     },
 
   },
@@ -625,7 +700,7 @@ export default {
     },
     // 储存detail信息
     setDetail(state, { payload: currentAlertDetail }) {
-      return { ...state, currentAlertDetail, isShowOperateForm: false }
+      return { ...state, currentAlertDetail: { ...(state.currentAlertDetail), ...currentAlertDetail }, isShowOperateForm: false }
     },
     // 设置chatOps群组
     setChatOpsRoom(state, { payload }) {

@@ -346,7 +346,7 @@ export default {
     // 修改data数组某一行的值
     updateDataRow(state, { payload }) {
       const { data, isGroup } = state;
-      let newData = assign([], data);
+      let newData = Object.assign([], data);
       if (isGroup) {
         newData = newData.map((tempGroup) => {
           let data = tempGroup.children.map((tempRow) => {

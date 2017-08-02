@@ -16,7 +16,7 @@ import RelieveModal from '../common/relieveModal/index.js'
 import MergeModal from '../common/mergeModal/index.js'
 import styles from './index.less'
 
-const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch, intl: { formatMessage } }) => {
+const AlertOperationWrap = ({ alertOperation, alertListTable, userInfo, dispatch, intl: { formatMessage } }) => {
   const localeMessage = defineMessages({
     assign_ticket: {
       id: 'alertDetail.ticket.assgin',
@@ -87,9 +87,32 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch, intl: { 
     'icon-shanchux'
   )
 
-  const refreshListAndResetCheckbox = () => {
-    dispatch({ type: 'alertListTable/resetCheckboxStatus' })
-    dispatch({ type: 'alertListTable/queryAlertList' })
+  const refreshListAndResetCheckbox = (newInfo) => {
+    // dispatch({ type: 'alertListTable/resetCheckboxStatus' })
+    // dispatch({ type: 'alertListTable/queryAlertList' })
+    // dispatch({ type: 'alertListTable/resetCheckboxStatus' })
+    if (newInfo) {
+      const checkAlert = alertListTable.checkAlert || {};
+      const checkIds = Object.keys(checkAlert).filter((id) => {
+        return checkAlert[id].checked;
+      })
+      const checkAlerts = checkIds.map((id) => {
+        return { id, ...newInfo };
+      })
+      dispatch({
+        type: 'alertListTable/updateDataRows',
+        payload: {
+          datas: checkAlerts
+        }
+      })
+    }
+
+    dispatch({
+      type: 'alertOperation/setButtonsDisable',
+      payload: true
+    })
+
+    // dispatch({ type: 'alertListTable/resetCheckboxStatus' })
   }
 
   const showErrorMessage = function ({ checkResponse, operateCode }) {
@@ -176,8 +199,7 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch, intl: { 
           selectedAlertIds: alertListTable.selectedAlertIds,
           resolve: (response) => {
             if (response && response.result) {
-              dispatch({ type: 'alertListTable/resetCheckboxStatus' })
-              dispatch({ type: 'alertListTable/queryAlertList' })
+              refreshListAndResetCheckbox({ status: '150', owner: userInfo.userId, ownerName: userInfo.realName })
             }
           }
         }
@@ -330,7 +352,7 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch, intl: { 
             operateAlertIds: alertListTable.operateAlertIds,
             resolve: (response) => {
               if (response && response.result) {
-                refreshListAndResetCheckbox();
+                refreshListAndResetCheckbox({ status: '255' });
               }
             }
           }
@@ -363,7 +385,7 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch, intl: { 
             resolveMessage: formData.resolveMessage,
             operateAlertIds: alertListTable.operateAlertIds,
             resolve: () => {
-              refreshListAndResetCheckbox();
+              refreshListAndResetCheckbox({ status: '190' });
             }
           }
         })
@@ -518,7 +540,7 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch, intl: { 
           operateAlertIds: alertListTable.operateAlertIds,
           resolve: (response) => {
             if (response && response.result) {
-              refreshListAndResetCheckbox();
+              refreshListAndResetCheckbox({ owner: selectedUser.key, ownerName: selectedUser.label });
             }
           }
         }
@@ -654,6 +676,7 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, dispatch, intl: { 
 export default injectIntl(connect(state => {
   return {
     alertOperation: {...state.alertOperation,isButtonLoading: state.alertDetail.isButtonLoading},
-    alertListTable: state.alertListTable
+    alertListTable: state.alertListTable,
+    userInfo: state.app.userInfo
   }
 })(AlertOperationWrap))

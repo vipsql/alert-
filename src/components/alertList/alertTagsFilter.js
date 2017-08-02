@@ -12,10 +12,11 @@ class alertTagsFilter extends Component{
   constructor(props) {
     super(props)
     this.state = {
-      mouseEnter: false,
+      popupVisible: false,
       shareSelectTags: props.tagListFilter.shareSelectTags || [],
       selectList: props.tagListFilter.selectList || []
     }
+    this.delayTimer = null
   }
   componentDidMount() {
     // $(window.document.body).on("click.tags", (e) => {
@@ -24,7 +25,7 @@ class alertTagsFilter extends Component{
 
     //     if($toClose.length == 0) {
     //         this.setState({
-    //           mouseEnter: false,
+    //           popupVisible: false,
     //           shareSelectTags: this.state.shareSelectTags.map(item => {
     //             item.visible = false;
     //             return item;
@@ -45,27 +46,6 @@ class alertTagsFilter extends Component{
     //}
   }
 
-  display(state) {
-    this.setState({
-      mouseEnter: state,
-      shareSelectTags: this.state.shareSelectTags.map( item => {
-        item.visible = false;
-        return item;
-      })
-    })
-  }
-
-  queryKey(dispatch) {
-    if (this.state.mouseEnter) {
-      this.display(!this.state.mouseEnter)
-    } else {
-      dispatch({
-        type: 'tagListFilter/openSelectModal',
-        payload: this.display.bind(this, !this.state.mouseEnter)
-      })
-    }
-  }
-
   select(dispatch, e) {
     e.stopPropagation();
     let select = JSON.parse(e.currentTarget.getAttribute('data-key'));
@@ -75,33 +55,14 @@ class alertTagsFilter extends Component{
     })
   }
 
-  setVisible(target) {
-    let arrList = _.cloneDeep(this.state.shareSelectTags)
-    if (arrList && arrList.length > 0) {
-      arrList.forEach( (item) => {
-        item.visible = false
-        if (item.key === target.key) {
-          item.visible = !target.visible
-        }
-      })
-    }
-    this.setState({
-      shareSelectTags: arrList,
-      mouseEnter: false,
-      selectList: []
-    })
-    if (!target.visible) {
-      this.queryTagValues(target.key, '')
-    }
-  }
-
-  queryTagValues(key, message) {
+  queryTagValues(key, message, callback) {
     const {dispatch} = this.props;
     dispatch({
       type: 'tagListFilter/queryTagValues',
       payload: {
         key: key,
-        value: message
+        value: message || '',
+        callback: callback || (() => {})
       }
     })
   }
@@ -129,6 +90,43 @@ class alertTagsFilter extends Component{
         value: message
       }
     })
+  }
+  setPopupVisible(popupVisible) {
+    this.clearDelayTimer();
+    if (this.state.popupVisible !== popupVisible) {
+      this.setState({
+        popupVisible,
+      });
+    }
+  }
+  setKeys(popupVisible) {
+    const { tagListFilter, dispatch } = this.props
+    if (popupVisible && !tagListFilter.tagsKeyList || !tagListFilter.tagsKeyList.length) {
+      dispatch({
+        type: 'tagListFilter/openSelectModal',
+        payload: this.setPopupVisible.bind(this, popupVisible)
+      })
+    } else {
+      this.setPopupVisible(popupVisible)
+    }
+  }
+  delay(callback, delayS) {
+    const delay = delayS * 1000;
+    this.clearDelayTimer();
+    if (delay) {
+      this.delayTimer = setTimeout(() => {
+        callback();
+        this.clearDelayTimer();
+      }, delay);
+    } else {
+      callback();
+    }
+  }
+  clearDelayTimer() {
+    if (this.delayTimer) {
+      clearTimeout(this.delayTimer)
+      this.delayTimer = null
+    }
   }
 
   render() {
@@ -158,7 +156,6 @@ class alertTagsFilter extends Component{
             key={ item.key }
             haveTags={typeof item.values !== 'undefined' && item.values.length !== 0 ? true : false}
             className={classnames(tagsStyles.tagsGroupMain, styles.tagsGroup)}
-            setVisible={this.setVisible.bind(this, ...arguments)}
             content={ item }
             changeHandler={this.changefun.bind(this)}
             removeHandler={this.removefun.bind(this)}
@@ -173,8 +170,8 @@ class alertTagsFilter extends Component{
           <div className={styles.tagsIframe} id='tagsContainer'>
               <div
                 className={styles.selectBtn}
-                onMouseEnter={this.queryKey.bind(this, dispatch)}
-                onMouseLeave={this.queryKey.bind(this, dispatch)}
+                onMouseEnter={ this.delay.bind(this, this.setKeys.bind(this, true), 0.2) }
+                onMouseLeave={ this.delay.bind(this, this.setKeys.bind(this, false), 0.2) }
               >
                   <i className={classnames(switchClass, styles.hopper)}></i>
                   <div className={classnames(arrClass, styles.iconDiv)}></div>
@@ -184,7 +181,7 @@ class alertTagsFilter extends Component{
                       transitionEnterTimeout={300}
                       transitionLeaveTimeout={300}
                   >
-                    {this.state.mouseEnter &&
+                    {this.state.popupVisible &&
                         <ul className={styles.content}>
                           {
                             tagsKeyList.map( (item) => {
