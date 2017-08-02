@@ -22,22 +22,10 @@ class App extends Component {
 
 
   componentDidMount() {
-    // this.context.router.setRouteLeaveHook(this.props.route, () => {
-    //   console.log('Leave')
-    //   this.claarLocalStorage();
-    // })
     NotificationApi.config({
       placement: 'toopRight',
       threshold: 10
     })
-    // window.addEventListener('beforeunload', (e) => {
-    //   console.log('beforeunload unmount')
-    //   var confirmationMessage = "\o/";
-    //   // -------- operation ---------------
-    //   this.claarLocalStorage();
-    //   e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
-    //   return confirmationMessage;              // Gecko, WebKit, Chrome <34
-    // })
   }
 
   componentWillReceiveProps(nextProps) {
