@@ -436,24 +436,24 @@ export default {
       const { selectedAlertIds, data } = payload
       if (selectedAlertIds.length === 1 && selectedAlertIds[0] !== undefined) {
 
-        const data = yield call(dispatchForm, {
+        const response = yield call(dispatchForm, {
           id: selectedAlertIds[0]['id'],
           code: data.id,
           name: data.name
         })
-        if (data.result) {
+        if (response.result) {
           // window.open(data.data.url)
           // 显示工单modal
           yield put({
             type: 'toggleTicketModal',
             payload: {
               isShowTicketModal: true,
-              ticketUrl: data.data.url
+              ticketUrl: response.data.url
             }
           })
         } else {
           // 500 error
-          yield message.error(data.message, 3);
+          yield message.error(response.message, 3);
         }
 
       } else {
