@@ -32,9 +32,9 @@ const TabPane = Tabs.TabPane
 
 const statusOperationMap = {
   'NEW': ['takeOver', 'reassign', 'merge', 'other'],
-  'PROGRESSING': ['dispatch', 'reassign', 'close', 'resolve', 'merge',],
-  'RESOLVED': ['close', 'merge'],
-  'EXCEPTCLOSE': ['takeOver', 'reassign', 'dispatch', 'close', 'resolve', 'merge', 'other'],
+  'PROGRESSING': ['dispatch', 'reassign', 'close', 'resolve', 'merge'],
+  'RESOLVED': ['close', 'reassign', 'merge'],
+  'EXCEPTCLOSE': ['merge', 'other'],
 }
 
 // “不同状态的过滤”与“是否禁止非自己的告警选择框”的关系
