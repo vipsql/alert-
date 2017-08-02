@@ -18,7 +18,7 @@ class TopFixedArea extends Component {
       if (!this.unmount) {
         const $target = $(e.target);
         if ($target.scrollTop() > this.props.topHeight) {
-          $(parentTarget).find("thead").css("display", "none")
+          $(parentTarget).find("thead").css("opacity", "0")
           // $(this.refs.thead).css("display", 'block')
           this.setState({ isShow: true });
           onShow && onShow();
@@ -53,9 +53,7 @@ class TopFixedArea extends Component {
           {extraArea}
         </div>
         <table className={classnames(styles.listTable, styles.topFixed)}>
-          <thead ref="thead">
-            { theads }
-          </thead>
+          { theads }
         </table>
         {
           isShowScrollBar?
