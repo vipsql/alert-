@@ -159,14 +159,14 @@ class Theads extends Component {
     theads.unshift(<th className={ styles.moreLittle } style={{ width: columns[0].isFixed?'25px': undefined }} key="blank"></th>);
     theads.unshift(<th className={ styles.moreLittle } style={{ width: columns[0].isFixed?'25px': undefined }} key='spread'></th>);
     if(sourceOrigin !== 'alertQuery') {
-      theads.unshift(<th key="checkAll" className={classnames(styles.checkstyle, styles.little)} style={{ width: columns[0].isFixed?'50px': undefined }}><Checkbox onClick={handleSelectAll} checked={selectedAll} /></th>)
+      theads.unshift(<th key="checkAll" className={classnames(styles.checkstyle, styles.little)} style={{ width: columns[0].isFixed?'50px': undefined }}><Checkbox onClick={(e) => { handleSelectAll(!selectedAll)}} checked={selectedAll} /></th>)
     }
 
     return (
         <thead>
-          <WrapableTr columnsLength={ columns.length } >
+          <tr>
             {theads}
-          </WrapableTr>
+          </tr>
         </thead>
     )
   }

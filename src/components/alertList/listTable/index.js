@@ -80,7 +80,12 @@ const ListTableWrap = ({ dispatch, userInfo, isNeedCheckOwner, alertListTable, t
       })
     },
     handleSelectAll(e) {
-      const checked = e.target.checked;
+      let checked;
+      if(typeof e === 'object') {
+        checked = e.target.checked;
+      } else {
+        checked = e;
+      }
       dispatch({
         type: 'alertListTable/handleSelectAll',
         payload: { checked, isNeedCheckOwner }

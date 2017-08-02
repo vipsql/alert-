@@ -757,8 +757,6 @@ export default {
         }
       })
 
-      console.log(tagsFilter);
-
       // 这里触发时currentPage始终为1，如果从common取在分组转分页时会有问题
       extraParams = {
         pageSize: pageSize,
