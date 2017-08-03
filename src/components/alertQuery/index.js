@@ -36,6 +36,7 @@ class alertQueryManage extends Component {
   componentDidMount() {
     const { dispatch, intl: { formatMessage } } = this.props;
     window.addEventListener('message', (e) => {
+      console.log(e，'看看itsm触发了多少次postMessage');
       if (e.data.createTicket !== undefined && e.data.createTicket === 'success') {
         const localeMessage = defineMessages({
           successMsg: {
