@@ -88,9 +88,6 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, userInfo, dispatch
   )
 
   const refreshListAndResetCheckbox = (newInfo) => {
-    // dispatch({ type: 'alertListTable/resetCheckboxStatus' })
-    // dispatch({ type: 'alertListTable/queryAlertList' })
-    // dispatch({ type: 'alertListTable/resetCheckboxStatus' })
     if (newInfo) {
       const checkAlert = alertListTable.checkAlert || {};
       const checkIds = Object.keys(checkAlert).filter((id) => {
@@ -111,8 +108,6 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, userInfo, dispatch
       type: 'alertOperation/setButtonsDisable',
       payload: true
     })
-
-    // dispatch({ type: 'alertListTable/resetCheckboxStatus' })
   }
 
   const showErrorMessage = function ({ checkResponse, operateCode }) {

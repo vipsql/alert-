@@ -25,6 +25,7 @@ import AlertOriginSliderWrap from '../alertOriginSlider/wrap.js'
 import FilterHead from '../common/filterHead/index.js'
 import ScrollTopButton from '../common/scrollTopButton/index'
 import AutoRefresh from '../common/autoRefresh'
+import Animate from './animate'
 import { classnames } from '../../utils'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -72,6 +73,10 @@ class AlertListManage extends Component {
         })
       }
     }, false)
+  }
+
+  componentWillUnmount() {
+    Animate.destroy()
   }
 
   render() {

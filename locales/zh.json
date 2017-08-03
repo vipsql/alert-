@@ -29,6 +29,7 @@
   "alertManage.newIncident": "未接手告警",
   "alertManage.resolvedIncident": "已解决告警",
   "alertManage.assignedIncident": "处理中告警",
+  "alertManage.closeIncident": "已关闭告警",
   "alertManage.exceptCloseIncident": "所有未关闭",
   "alertManage.noData": "告警热图暂无数据，请先在[关注设置]添加要关注的标签",
   "alertManage.dashbord.selectedText": "已选择 {num} 个关注",

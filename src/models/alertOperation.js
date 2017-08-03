@@ -4,7 +4,35 @@ import { queryAlertList, queryChild, queryAlertListTime } from '../services/aler
 import { getUsers } from '../services/app.js';
 import { queryCloumns } from '../services/alertQuery'
 import { message } from 'antd';
+import Animate from '../components/alertList/animate'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+
+const optkeyWords = [
+  'TakeOver', 'Reassign', 'Close', 'Resolve', 'Dispatch'
+]
+function getMotionMessage(type, total) {
+  let message = ''
+  const operate = optkeyWords.filter(opt => opt === type).toString()
+  if (operate) {
+    switch (operate) {
+      case 'TakeOver':
+        message = `${window.__alert_appLocaleData.messages['alertManage.assignedIncident']} + ${total}`
+        break;
+      case 'Reassign':
+        message = `${window.__alert_appLocaleData.messages['alertManage.assignedIncident']} + ${total}`
+        break;
+      case 'Close':
+        message = `${window.__alert_appLocaleData.messages['alertManage.closeIncident']} + ${total}`
+        break;
+      case 'Resolve':
+        message = `${window.__alert_appLocaleData.messages['alertManage.resolvedIncident']} + ${total}`
+        break;
+      default:
+        break;
+    }
+  }
+  return message
+}
 
 const initalState = {
   // 操作的alertIds
@@ -90,9 +118,6 @@ export default {
 
     //打开转派告警Model
     *openReassign({ payload }, { select, put, call }) {
-      // yield put({
-      //   type: 'alertList/toggleModalOrigin',
-      // });
 
       const operateAlertIds = payload.operateAlertIds;
 
@@ -138,6 +163,7 @@ export default {
             type: 'toggleReassignModal',
             payload: false
           });
+          Animate.generate(getMotionMessage('Reassign', operateAlertIds.length || 0))
         } else if (Array.isArray(failed) && failed.length > 0) {
           const failedMsg = failed.map(item => `${item.name}: ${item['msg']}`).join('\n');
           message.error(failedMsg, 3);
@@ -151,8 +177,7 @@ export default {
     },
     // 打开抑制告警Modal
     *openSuppressTimeSlider({ payload }, { select, put, call }) {
-      // 触发筛选
-      // yield put({ type: 'alertListTable/filterCheckAlert' })
+
       const { operateAlertIds } = payload;
       if (operateAlertIds.length === 0) {
         yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
@@ -165,8 +190,6 @@ export default {
     },
     // 抑制告警
     *beforeSuppressIncidents({ payload: { time, position, resolve, operateAlertIds } }, { select, put, call }) {
-      // 触发筛选
-      // yield put({ type: 'alertListTable/filterCheckAlert' })
 
       yield put({
         type: 'suppressIncidents',
@@ -227,9 +250,6 @@ export default {
           ...data
         })
         if (notify.result) {
-          // yield put({ type: 'alertListTable/resetCheckedAlert' })
-          // yield put({ type: 'alertListTable/changeCloseState', payload: { arrList: stingIds, status: 150 } })
-
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
         } else {
           yield message.error(notify.message, 3);
@@ -275,8 +295,6 @@ export default {
     },
     // 打开解除告警modal
     *openRelieveModal({ payload }, { select, put, call }) {
-      // 触发筛选
-      // yield put({ type: 'alertListTable/filterCheckAlert' })
       const relieveAlert = payload.selectedAlertIds;
       if (relieveAlert !== undefined && relieveAlert.length === 1) {
         if (relieve.hasChild) {
@@ -344,8 +362,6 @@ export default {
     },
     // 打开合并告警需要做的处理
     *openMergeModal({ payload }, { select, put, call }) {
-      // 触发筛选
-      // yield put({ type: 'alertListTable/filterCheckAlert' })
       const mergeInfoList = payload.selectedAlertIds;
       if (mergeInfoList.length >= 2) {
         yield put({
@@ -397,8 +413,6 @@ export default {
     },
     // 打开派发工单做的相应处理
     *openFormModal({ payload }, { select, put, call }) {
-      // 触发筛选
-      // yield put({ type: 'alertListTable/filterCheckAlert' })
       const { operateAlertIds, selectedAlertIds } = payload;
       yield put({
         type: 'alertList/toggleModalOrigin',
@@ -442,8 +456,6 @@ export default {
           name: data.name
         })
         if (response.result) {
-          // window.open(data.data.url)
-          // 显示工单modal
           yield put({
             type: 'toggleTicketModal',
             payload: {
@@ -469,14 +481,11 @@ export default {
     *afterDispatch({ payload }, { select, put, call }) {
 
       yield put({ type: 'alertListTable/resetCheckboxStatus' })
-      yield put({ type: 'alertListTable/queryAlertList' });
-
-      //yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 150}})
+      yield put({ type: 'alertListTable/queryAlertList' })
       yield put({ type: 'closeTicketModal' })
+
     },
     *openCloseModal({ payload }, { select, put, call }) {
-      // 触发筛选
-      // yield put({ type: 'alertListTable/filterCheckAlert' })
       const { operateAlertIds } = payload;
 
       if (operateAlertIds.length === 0) {
@@ -494,6 +503,7 @@ export default {
     // 关闭告警
     *closeAlert({ payload }, { select, put, call }) {
       const { operateAlertIds, closeMessage } = payload;
+      let resultData = null
       if (operateAlertIds !== undefined) {
         let stingIds = operateAlertIds.map(item => '' + item)
         //按钮发起请求加载中
@@ -501,16 +511,12 @@ export default {
           type: 'alertDetail/toggleButtonLoading',
           payload: true
         });
-        const resultData = yield close({
+        resultData = yield close({
           incidentIds: stingIds,
           closeMessage
         })
         if (resultData.result) {
           if (resultData.data.result) {
-            // yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
-            // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
-            // yield put({ type: 'alertListTable/resetCheckedAlert'})
-            // yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 255}})
             //按钮发起请求加载中
             yield put({
               type: 'alertDetail/toggleButtonLoading',
@@ -535,11 +541,10 @@ export default {
         type: 'toggleCloseModal',
         payload: false
       })
+      resultData.result && resultData.data.result && Animate.generate(getMotionMessage('Close', operateAlertIds.length || 0))
     },
     // 打开解决告警
     *openResolveModal({ payload }, { select, put, call }) {
-      // 触发筛选
-      // yield put({ type: 'alertListTable/filterCheckAlert' })
       const { operateAlertIds, data, state } = payload
       if (operateAlertIds.length === 0) {
         yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
@@ -556,6 +561,7 @@ export default {
     // 解决告警
     *resolveAlert({ payload }, { select, put, call }) {
       const { operateAlertIds, resolveMessage } = payload;
+      let resultData = null
       if (operateAlertIds !== undefined) {
         let stingIds = operateAlertIds.map(item => '' + item)
         //按钮发起请求加载中
@@ -564,23 +570,16 @@ export default {
           payload: true
         });
         // debugger
-        let resultData = yield resolve({
+        resultData = yield resolve({
           incidentIds: stingIds,
           resolveMessage
         })
         if (resultData.result) {
           if (resultData.data.result) {
-            // yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
-            // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
-
-            // yield put({ type: 'alertListTable/resetCheckedAlert'})
-            // yield put({ type: 'alertListTable/changeCloseState', payload: {arrList: stingIds, status: 190}})
-
             yield put({
               type: 'alertDetail/toggleButtonLoading',
               payload: false
             });
-            resultData.result = false;
             yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3);
           } else {
             yield message.error(`${resultData.data.failures}`, 3);
@@ -598,11 +597,11 @@ export default {
         type: 'toggleResolveModal',
         payload: false
       })
+      resultData.result && resultData.data.result && Animate.generate(getMotionMessage('Resolve', operateAlertIds.length || 0))
+
     },
     // 打开分享到ChatOps的modal
     *openChatOps({ payload }, { select, put, call }) {
-      // 触发筛选
-      // yield put({ type: 'alertListTable/filterCheckAlert' })
       const { operateAlertIds } = payload
       if (operateAlertIds.length === 0) {
         yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
@@ -640,7 +639,6 @@ export default {
           }
         });
         if (shareResult.result) {
-          // yield put({ type: 'alertListTable/resetCheckedAlert' })
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 2)
         } else {
           yield message.error(`${shareResult.message}`, 2)
@@ -681,22 +679,13 @@ export default {
       if (alertIds.length === 0) {
         yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);
       } else {
-        // const checkResponse = yield checkOperationExecutable({  operateCode: 200,incidentIds: alertIds });
-
-        // if(!checkResponse.result) {
-        //   payload && payload.checkFailPayload && payload.checkFailPayload({checkResponse, operateCode: 200});
-        //   return;
-        // }
         let response = yield call(takeOverService, { alertIds });
-        const stingIds = alertIds.map(item => '' + item)
         if (response.result) {
           const { success, failed, lang } = response.data;
           if (Array.isArray(success) && success.length > 0) {
-            //这里一定要先删除告警，再删除checkAlert，因为在渲染table的时候用到了checkAlert
-            // yield put({ type: 'alertListTable/deleteIncident', payload: stingIds })
-            // yield put({ type: 'alertListTable/deleteCheckAlert', payload: stingIds })
             const successMsg = success.map(item => `${item.name}: ${item['msg']}`).join('\n');
             message.success(successMsg, 3);
+            Animate.generate(getMotionMessage('TakeOver', alertIds.length || 0))
           } else if (Array.isArray(failed) && failed.length > 0) {
             const failedMsg = failed.map(item => `${item.name}: ${item['msg']}`).join('\n');
             message.error(failedMsg, 3);

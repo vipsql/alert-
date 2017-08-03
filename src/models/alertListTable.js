@@ -629,7 +629,7 @@ export default {
         });
       }
 
-      return returnByIsReRender(state, { data: newData, checkAlert }, isReRender);
+      return returnByIsReRender(state, { data: newData, checkAlert, operateAlertIds: [], selectedAlertIds: [] }, isReRender);
     },
 
     // 修改data数组某一行的值

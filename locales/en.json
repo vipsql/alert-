@@ -29,6 +29,7 @@
   "alertManage.newIncident": "New",
   "alertManage.resolvedIncident": "Resolved",
   "alertManage.assignedIncident": "Assigned",
+  "alertManage.closeIncident": "Closed",
   "alertManage.exceptCloseIncident": "Unclosed",
   "alertManage.noData": "No data on the map.",
   "alertManage.dashbord.selectedText": "{num} Tags selected",
