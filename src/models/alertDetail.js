@@ -665,7 +665,7 @@ export default {
             payload: false
           });
           yield put({
-            type: 'setDetail',
+            type: 'updateDetail',
             payload: {
               owner: toWho,
               ownerName
@@ -726,8 +726,12 @@ export default {
     initalFormData(state) {
       return { ...state, operateRemark: state.currentAlertDetail.form }
     },
-    // 储存detail信息
+    // 储存detail信息（删除旧值）
     setDetail(state, { payload: currentAlertDetail }) {
+      return { ...state, currentAlertDetail, isShowOperateForm: false }
+    },
+    // 更新detail信息（保留旧值）
+    updateDetail(state, { payload: currentAlertDetail }) {
       return { ...state, currentAlertDetail: { ...(state.currentAlertDetail), ...currentAlertDetail }, isShowOperateForm: false }
     },
     // 设置chatOps群组
