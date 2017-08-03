@@ -243,17 +243,7 @@ class Filter extends Component {
                 {getFieldDecorator('source', {
 
                 })(
-                  <Select getPopupContainer={() => document.getElementById("content")} onChange={ (value) => {
-                    dispatch({
-                      type: 'alertQuery/setCurrentQuery',
-                      payload: {
-                        currentQueryRawData: {
-                          ...this.props.alertQuery.currentQueryRawData,
-                          source: value
-                        }
-                      }
-                    })
-                  }}>
+                  <Select getPopupContainer={() => document.getElementById("content")} >
                     <Option value=''><FormattedMessage {...localeMessage['allSource']} /></Option>
                     {
                       sourceOptions.map((item, index) => {
@@ -309,17 +299,7 @@ class Filter extends Component {
                 {getFieldDecorator('severity', {
 
                 })(
-                  <Select getPopupContainer={() => document.getElementById("content")} onChange={ (value) => {
-                    dispatch({
-                      type: 'alertQuery/setCurrentQuery',
-                      payload: {
-                        currentQueryRawData: {
-                          ...this.props.alertQuery.currentQueryRawData,
-                          severity: value
-                        }
-                      }
-                    })
-                  }}>
+                  <Select getPopupContainer={() => document.getElementById("content")}>
                     <Option value=""><FormattedMessage {...localeMessage['allSeverity']} /></Option>
                     <Option value="3">{window['_severity']['3']}</Option>
                     <Option value="2">{window['_severity']['2']}</Option>
@@ -337,17 +317,7 @@ class Filter extends Component {
                 {getFieldDecorator('status', {
 
                 })(
-                  <Select getPopupContainer={() => document.getElementById("content")} onChange={ (value) => {
-                    dispatch({
-                      type: 'alertQuery/setCurrentQuery',
-                      payload: {
-                        currentQueryRawData: {
-                          ...this.props.alertQuery.currentQueryRawData,
-                          status: value
-                        }
-                      }
-                    })
-                  }}>
+                  <Select getPopupContainer={() => document.getElementById("content")}>
                     <Option value=""><FormattedMessage {...localeMessage['allStatus']} /></Option>
                     <Option value="0">{window['_status']['0']}</Option>
                     <Option value="150">{window['_status']['150']}</Option>
@@ -365,17 +335,7 @@ class Filter extends Component {
                 {getFieldDecorator('duration', {
 
                 })(
-                  <Select getPopupContainer={() => document.getElementById("content")} placeholder={formatMessage({ ...localeMessage['duration_placeholder'] })} onChange={ (value) => {
-                    dispatch({
-                      type: 'alertQuery/setCurrentQuery',
-                      payload: {
-                        currentQueryRawData: {
-                          ...this.props.alertQuery.currentQueryRawData,
-                          duration: value
-                        }
-                      }
-                    })
-                  }}>
+                  <Select getPopupContainer={() => document.getElementById("content")} placeholder={formatMessage({ ...localeMessage['duration_placeholder'] })}>
                     <Option value="1">{`< 15 min`}</Option>
                     <Option value="2">{`15 ~ 30 min`}</Option>
                     <Option value="3">{`30 ~ 60 min`}</Option>
@@ -395,17 +355,7 @@ class Filter extends Component {
                 {getFieldDecorator('count', {
 
                 })(
-                  <Select getPopupContainer={() => document.getElementById("content")} placeholder={formatMessage({ ...localeMessage['count_placeholder'] })} onChange={ (value) => {
-                    dispatch({
-                      type: 'alertQuery/setCurrentQuery',
-                      payload: {
-                        currentQueryRawData: {
-                          ...this.props.alertQuery.currentQueryRawData,
-                          count: value
-                        }
-                      }
-                    })
-                  }}>
+                  <Select getPopupContainer={() => document.getElementById("content")} placeholder={formatMessage({ ...localeMessage['count_placeholder'] })}>
                     <Option value="1">{`> 5`}</Option>
                     <Option value="2">{`> 10`}</Option>
                     <Option value="3">{`> 20`}</Option>
@@ -422,17 +372,7 @@ class Filter extends Component {
                 {getFieldDecorator('isNotify', {
 
                 })(
-                  <Select getPopupContainer={() => document.getElementById("content")} placeholder={formatMessage({ ...localeMessage['notifyList_placeholder'] })} onChange={ (value) => {
-                    dispatch({
-                      type: 'alertQuery/setCurrentQuery',
-                      payload: {
-                        currentQueryRawData: {
-                          ...this.props.alertQuery.currentQueryRawData,
-                          isNotify: value
-                        }
-                      }
-                    })
-                  }}>
+                  <Select getPopupContainer={() => document.getElementById("content")} placeholder={formatMessage({ ...localeMessage['notifyList_placeholder'] })}>
                     <Option value='true'>{formatMessage({ ...localeMessage['notifyList_yes'] })}</Option>
                     <Option value='false'>{formatMessage({ ...localeMessage['notifyList_no'] })}</Option>
                   </Select>
@@ -448,17 +388,6 @@ class Filter extends Component {
 
                 })(
                   <Select getPopupContainer={() => document.getElementById("content")} labelInValue showSearch filterOption={false}
-                    onChange={(value) => {
-                      dispatch({
-                        type: 'alertQuery/setCurrentQuery',
-                        payload: {
-                          currentQueryRawData: {
-                            ...this.props.alertQuery.currentQueryRawData,
-                            owner: value
-                          }
-                        }
-                      })
-                    }}
                     onSearch={
                       _.debounce((value) => {
                         dispatch({
@@ -489,17 +418,7 @@ class Filter extends Component {
                 {getFieldDecorator('keyWordsType', {
                   initialValue: JSON.stringify({ 'keyWordsType': '1' })
                 })(
-                  <Select getPopupContainer={() => document.getElementById("content")} size='large' onChange={ (value) => {
-                    dispatch({
-                      type: 'alertQuery/setCurrentQuery',
-                      payload: {
-                        currentQueryRawData: {
-                          ...this.props.alertQuery.currentQueryRawData,
-                          keyWordsType: value
-                        }
-                      }
-                    })
-                  }}>
+                  <Select getPopupContainer={() => document.getElementById("content")} size='large'>
                     <Option key={1} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '1' })}><FormattedMessage {...localeMessage['entityName']} /></Option>
                     <Option key={2} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '3' })}><FormattedMessage {...localeMessage['tags']} /></Option>
                     <Option key={3} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '2' })}><FormattedMessage {...localeMessage['description']} /></Option>
@@ -522,17 +441,7 @@ class Filter extends Component {
                 {getFieldDecorator('keyWords', {
 
                 })(
-                  <Input autoComplete="off" placeholder={formatMessage({ ...localeMessage['keyWords_placeholder'] })} onChange={ (e) => {
-                    dispatch({
-                      type: 'alertQuery/setCurrentQuery',
-                      payload: {
-                        currentQueryRawData: {
-                          ...this.props.alertQuery.currentQueryRawData,
-                          keyWords: e.target.value
-                        }
-                      }
-                    })
-                  }}/>
+                  <Input autoComplete="off" placeholder={formatMessage({ ...localeMessage['keyWords_placeholder'] })} />
                 )}
               </Item>
             </Col>
@@ -565,6 +474,7 @@ export default injectIntl(
   (Form.create({
     mapPropsToFields: (props) => {
       const params = props.alertQuery.currentQueryRawData || {};
+      console.log(params, 'params');
       return {
         source: {
           value: typeof params.source !== 'undefined' ? params.source : ''

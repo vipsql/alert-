@@ -388,6 +388,11 @@ export default {
       // yield put({ type: 'clearQuery' })
       // yield put({ type: 'setCurrentQuery', payload: { currentQuery: {resObjectId: payload.resObjectId} } })
 
+      yield put({
+        type: 'clearQuery',
+        payload: {}
+      })
+
       yield put({ type: 'queryAlertList' })
 
       // 查询来源和扩展标签
