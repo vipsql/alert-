@@ -40,6 +40,7 @@ const alertOperation = ({
   showReassiginFunc,
   disableReasonMap = {},
   showOperations = ['takeOver', 'reassign', 'dispatch', 'close', 'resolve', 'other'],
+  isShowColSetBtn,
   intl: { formatMessage }
 }) => {
 
@@ -534,7 +535,7 @@ const alertOperation = ({
       }
 
       { //列定制的popover
-        position === 'list' &&
+        position === 'list' && isShowColSetBtn != false &&
         <Popover placement='bottomRight' overlayClassName={styles.popover} content={popoverContent} >
           <div className={classnames(styles.button, styles.rightBtn)}>
             <i className={classnames(setClass, styles.setCol)}></i>

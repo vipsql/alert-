@@ -224,7 +224,7 @@ class AlertListManage extends Component {
             </TabPane>
             <TabPane tab={<span className={tabLine} ><FormattedMessage {...localeMessage['tab_time']} /></span>} key='2'>
               {/*<AlertOperation position='timeAxis' {...operateProps} />*/}
-              <AlertOperationWrap />
+              <AlertOperationWrap isShowColSetBtn={ false } />
               <ListTimeTableWrap isNeedCheckOwner={ isNeedCheckOwnerMap[alertManage.selectedStatus] && userInfo.supervisor != "1" }/>
             </TabPane>
             {isShowVisualTab &&

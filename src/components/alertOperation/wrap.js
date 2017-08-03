@@ -16,7 +16,7 @@ import RelieveModal from '../common/relieveModal/index.js'
 import MergeModal from '../common/mergeModal/index.js'
 import styles from './index.less'
 
-const AlertOperationWrap = ({ alertOperation, alertListTable, userInfo, dispatch, intl: { formatMessage } }) => {
+const AlertOperationWrap = ({ alertOperation, alertListTable, userInfo, isShowColSetBtn, dispatch, intl: { formatMessage } }) => {
   const localeMessage = defineMessages({
     assign_ticket: {
       id: 'alertDetail.ticket.assgin',
@@ -164,6 +164,7 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, userInfo, dispatch
     chatOpsDisabled: alertOperation.chatOpsDisabled,
 
     showOperations: alertOperation.showOperations,
+    isShowColSetBtn: isShowColSetBtn, // 是否显示列定制
 
     checkCloumFunc: (e) => {
       dispatch({
