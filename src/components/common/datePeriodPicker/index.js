@@ -12,7 +12,7 @@ class DatePeriodPicker extends Component {
     this.state = { dayTimeString: '', placeholdMessage, timeStart: { hours: 0, mins: 0 }, timeEnd: { hours: 0, mins: 0 } };
   }
   componentWillReceiveProps(newProps) {
-    if (!newProps.value && newProps.value != this.props.value) {
+    if ((!newProps.value || newProps.value.length == 0) && newProps.value != this.props.value) {
       this.setState({ dayTimeString: '', timeStart: { hours: 0, mins: 0 }, timeEnd: { hours: 0, mins: 0 } })
     }
   }
