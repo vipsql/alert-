@@ -49,17 +49,33 @@ class DatePeriodPicker extends Component {
       onChange([newStartDate.toDate().getTime(), newEndDate.toDate().getTime()]);
     }
   }
+
   clear() {
     const { onChange } = this.props;
     this.setState({ timeStart: { hours: 0, mins: 0 }, timeEnd: { hours: 0, mins: 0 }, dayTimeString: '' })
     onChange([undefined, undefined]);
   }
+
+  onFocus() {
+    this.setState({...(this.state), isFocus: true});
+  }
+
+  onLostFocus() {
+    this.setState({...(this.state), isFocus: false});
+  }
+
   render() {
-    const { dayTimeString, timeStart, timeEnd } = this.state;
+    const { dayTimeString, timeStart, timeEnd, isFocus } = this.state;
     const { placeholder, value } = this.props;
     const shanchuClass = classnames(
       'iconfont',
       'icon-shanchux',
+      styles.shanchux
+    )
+
+    const shijianClass = classnames(
+      'iconfont',
+      'icon-shijian',
       styles.shanchux
     )
 
@@ -83,7 +99,7 @@ class DatePeriodPicker extends Component {
           </div>
         )}
       >
-        <Input placeholder={placeholder} readOnly value={dayTimeString} style={{width: '100%'}} addonAfter={<i onClick={() => this.clear()} className={ shanchuClass }/>} />
+        <Input onMouseOut={() => this.onLostFocus()} onMouseEnter={ () => this.onFocus() } placeholder={placeholder} readOnly value={dayTimeString} style={{width: '100%'}} addonAfter={<i onMouseOut={() => this.onLostFocus()} onMouseEnter={ () => this.onFocus() }  onClick={() => this.clear()} className={ isFocus?shanchuClass:shijianClass }/>} />
       </Popover>
       </div>
     )
