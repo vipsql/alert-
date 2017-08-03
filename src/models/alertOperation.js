@@ -11,27 +11,27 @@ const optkeyWords = [
   'TakeOver', 'Reassign', 'Close', 'Resolve', 'Dispatch'
 ]
 function getMotionMessage(type, total) {
-  let message = ''
+  let content = ''
   const operate = optkeyWords.filter(opt => opt === type).toString()
   if (operate) {
     switch (operate) {
       case 'TakeOver':
-        message = `${window.__alert_appLocaleData.messages['alertManage.assignedIncident']} + ${total}`
+        content = `${window.__alert_appLocaleData.messages['alertManage.assignedIncident']} + ${total}`
         break;
       case 'Reassign':
-        message = `${window.__alert_appLocaleData.messages['alertManage.assignedIncident']} + ${total}`
+        content = `${window.__alert_appLocaleData.messages['alertManage.assignedIncident']} + ${total}`
         break;
       case 'Close':
-        message = `${window.__alert_appLocaleData.messages['alertManage.closeIncident']} + ${total}`
+        content = `${window.__alert_appLocaleData.messages['alertManage.closeIncident']} + ${total}`
         break;
       case 'Resolve':
-        message = `${window.__alert_appLocaleData.messages['alertManage.resolvedIncident']} + ${total}`
+        content = `${window.__alert_appLocaleData.messages['alertManage.resolvedIncident']} + ${total}`
         break;
       default:
         break;
     }
   }
-  return message
+  return content
 }
 
 const initalState = {
