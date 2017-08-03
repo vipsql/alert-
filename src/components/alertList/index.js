@@ -76,7 +76,7 @@ class AlertListManage extends Component {
 
   render() {
 
-    const { alertDetail, alertListTable, alertList, dispatch, alertOperation, alertManage, intl: { formatMessage } } = this.props;
+    const { alertDetail, alertListTable, alertList, userInfo, dispatch, alertOperation, alertManage, intl: { formatMessage } } = this.props;
 
     const localeMessage = defineMessages({
       tab_list: {
@@ -214,12 +214,12 @@ class AlertListManage extends Component {
             <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key='1'>
               {/*<AlertOperation position='list' {...operateProps} />*/}
               <AlertOperationWrap />
-              <ListTableWrap isNeedCheckOwner={ isNeedCheckOwnerMap[alertManage.selectedStatus] } topFixArea={<AlertOperationWrap />} topHeight={alertList.isShowBar ? 366 : 216} />
+              <ListTableWrap isNeedCheckOwner={ isNeedCheckOwnerMap[alertManage.selectedStatus] && userInfo.supervisor != "1" } topFixArea={<AlertOperationWrap />} topHeight={alertList.isShowBar ? 366 : 216} />
             </TabPane>
             <TabPane tab={<span className={tabLine} ><FormattedMessage {...localeMessage['tab_time']} /></span>} key='2'>
               {/*<AlertOperation position='timeAxis' {...operateProps} />*/}
               <AlertOperationWrap />
-              <ListTimeTableWrap isNeedCheckOwner={ isNeedCheckOwnerMap[alertManage.selectedStatus] }/>
+              <ListTimeTableWrap isNeedCheckOwner={ isNeedCheckOwnerMap[alertManage.selectedStatus] && userInfo.supervisor != "1" }/>
             </TabPane>
             {isShowVisualTab &&
               <TabPane tab={<span className={tabVisual}><FormattedMessage {...localeMessage['tab_visual']} /></span>} key='3'>
@@ -252,5 +252,6 @@ export default injectIntl(connect((state) => {
     alertManage: state.alertManage,
     alertListTable: state.alertListTable,
     alertList: state.alertList,
+    userInfo: state.app.userInfo
   }
 })(AlertListManage))

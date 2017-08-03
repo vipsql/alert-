@@ -395,7 +395,7 @@ class alertDetail extends Component {
       "255": "CLOSED"
     }
 
-    const disabledObj = getOperationExcutionMap({ userId: userInfo.userId, owner: currentAlertDetail.owner, status: statusMap[currentAlertDetail.status] })
+    const disabledObj = getOperationExcutionMap({ userId: userInfo.userId, owner: currentAlertDetail.owner, isAdmin: userInfo.supervisor == "1", status: statusMap[currentAlertDetail.status] })
 
     let disableMap = {};
     let disableReasonMap = {}
