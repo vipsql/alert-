@@ -1261,9 +1261,6 @@
 .easeAnimate{
   position: fixed;
   z-index: 1010;
-  bottom: 50%;
-  right: 0px;
-  margin-right: 50px;
   svg{
     text{
       fill: #fff;
@@ -1272,54 +1269,6 @@
     }
   }
 }
-:global{
-  .msgEase-effect{
-    animation-fill-mode: both;
-    animation-duration: 1s;
-  }
-  .msgEase-enter,
-  .msgEase-appear{
-    opacity: 0;
-    animation-timing-function: ease-out;
-    animation-play-state: paused;
-    .msgEase-effect();
-  }
-  .msgEase-leave{
-    animation-timing-function: ease-in;
-    animation-play-state: paused;
-    .msgEase-effect();
-  }
-  .msgEase-enter.msgEase-enter-active,
-  .msgEase-appear.msgEase-appear-active {
-    animation-name: msgIn;
-    animation-play-state: running;
-  }
-  .msgEase-leave.msgEase-leave-active {
-    animation-name: msgOut;
-    animation-play-state: running;
-  }
-}
-@keyframes ~":global(msgIn)" {
-  0% {
-    opacity: 0;
-    bottom: 20%
-  }
-  100% {
-    opacity: 1;
-    bottom: 50%
-  }
-}
-@keyframes ~":global(msgOut)" {
-  0% {
-    opacity: 1;
-    bottom: 50%
-  }
-  100% {
-    opacity: 0;
-    bottom: 80%
-  }
-}
-
 
 :global{
     .visualAlert{

@@ -52,7 +52,7 @@ const formatMessages = defineMessages({
 const filterHead = ({queryByTime, queryByStatus, style = undefined, defaultTime, defaultStatus, intl}) => {
     const {formatMessage} = intl;
     return (
-        <div style={style}>
+        <div style={style} id="__alert_filterRadioGroup" >
             <Select defaultValue={defaultTime} getPopupContainer={() =>document.getElementById("content")} style={{ width: 150 }} onChange={ (value) => {
                 queryByTime(value)
             }}>

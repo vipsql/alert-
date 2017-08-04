@@ -31,25 +31,33 @@ class alertQueryManage extends Component {
 
   constructor(props) {
     super(props)
+    this.ITSMPostMessage = this.ITSMPostMessage.bind(this)
+  }
+
+  ITSMPostMessage(e) {
+    console.log(e, 'alertQuery postMessage count');
+    const { dispatch, intl: { formatMessage } } = this.props;
+    if (e.data.createTicket !== undefined && e.data.createTicket === 'success') {
+      const localeMessage = defineMessages({
+        successMsg: {
+          id: 'alertOperate.dispatch.success',
+          defaultMessage: "派单成功，工单号为：{flowNo}",
+        }
+      })
+      message.success(formatMessage({ ...localeMessage['successMsg'] }, { flowNo: e.data.flowNo }));
+      dispatch({
+        type: 'alertDetail/afterDispatch',
+      })
+    }
   }
 
   componentDidMount() {
     const { dispatch, intl: { formatMessage } } = this.props;
-    window.addEventListener('message', (e) => {
-      console.log(e,'看看itsm触发了多少次postMessage');
-      if (e.data.createTicket !== undefined && e.data.createTicket === 'success') {
-        const localeMessage = defineMessages({
-          successMsg: {
-            id: 'alertOperate.dispatch.success',
-            defaultMessage: "派单成功，工单号为：{flowNo}",
-          }
-        })
-        message.success(formatMessage({ ...localeMessage['successMsg'] }, { flowNo: e.data.flowNo }));
-        dispatch({
-          type: 'alertDetail/afterDispatch',
-        })
-      }
-    }, false)
+    window.addEventListener('message', this.ITSMPostMessage, false)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('message', this.ITSMPostMessage, false)
   }
 
   render() {

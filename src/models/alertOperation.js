@@ -4,6 +4,7 @@ import { queryAlertList, queryChild, queryAlertListTime } from '../services/aler
 import { getUsers } from '../services/app.js';
 import { queryCloumns } from '../services/alertQuery'
 import { message } from 'antd';
+import $ from 'jquery'
 import Animate from '../components/alertList/animate'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
@@ -32,6 +33,35 @@ function getMotionMessage(type, total) {
     }
   }
   return content
+}
+function getMotionNode(type) {
+  // 将Id搁在了包裹RadioGroup的容器上，没办法加在RadioGroup上，不加id只能使用ref
+  let node = document.getElementById('__alert_filterRadioGroup').lastChild
+  const operate = optkeyWords.filter(opt => opt === type).toString()
+  if (node && operate) {
+    switch (operate) {
+      case 'TakeOver':
+        node = node.childNodes[1] // 处理中
+        break;
+      case 'Reassign':
+        node = node.childNodes[1] // 处理中
+        break;
+      case 'Resolve':
+        node = node.childNodes[2] // 已解决
+        break;
+      default:
+        break;
+    }
+    return node
+  }
+}
+function callbackMotion(node) {
+  $(node).addClass('motion')
+  let timeOut = setTimeout(() => {
+    $(node).removeClass('motion')
+    clearTimeout(timeOut)
+    timeOut = null
+  }, 1000)
 }
 
 const initalState = {
@@ -163,7 +193,13 @@ export default {
             type: 'toggleReassignModal',
             payload: false
           });
-          Animate.generate(getMotionMessage('Reassign', operateAlertIds.length || 0))
+          Animate.generate({
+            content: getMotionMessage('Reassign', operateAlertIds.length || 0),
+            node: getMotionNode('Reassign'),
+            callback: (node) => {
+              callbackMotion(node)
+            }
+          })
         } else if (Array.isArray(failed) && failed.length > 0) {
           const failedMsg = failed.map(item => `${item.name}: ${item['msg']}`).join('\n');
           message.error(failedMsg, 3);
@@ -541,7 +577,6 @@ export default {
         type: 'toggleCloseModal',
         payload: false
       })
-      resultData.result && resultData.data.result && Animate.generate(getMotionMessage('Close', operateAlertIds.length || 0))
     },
     // 打开解决告警
     *openResolveModal({ payload }, { select, put, call }) {
@@ -597,7 +632,15 @@ export default {
         type: 'toggleResolveModal',
         payload: false
       })
-      resultData.result && resultData.data.result && Animate.generate(getMotionMessage('Resolve', operateAlertIds.length || 0))
+      resultData.result
+        && resultData.data.result
+        && Animate.generate({
+          content: getMotionMessage('Resolve', operateAlertIds.length || 0),
+          node: getMotionNode('Resolve'),
+          callback: (node) => {
+            callbackMotion(node)
+          }
+        })
 
     },
     // 打开分享到ChatOps的modal
@@ -685,7 +728,13 @@ export default {
           if (Array.isArray(success) && success.length > 0) {
             const successMsg = success.map(item => `${item.name}: ${item['msg']}`).join('\n');
             message.success(successMsg, 3);
-            Animate.generate(getMotionMessage('TakeOver', alertIds.length || 0))
+            Animate.generate({
+              content: getMotionMessage('TakeOver', alertIds.length || 0),
+              node: getMotionNode('TakeOver'),
+              callback: (node) => {
+                callbackMotion(node)
+              }
+            })
           } else if (Array.isArray(failed) && failed.length > 0) {
             const failedMsg = failed.map(item => `${item.name}: ${item['msg']}`).join('\n');
             message.error(failedMsg, 3);
