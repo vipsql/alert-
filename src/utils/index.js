@@ -108,7 +108,7 @@ function returnByIsReRender(oldState, newState, isReRender) {
 }
 
 // 根据告警状态获取单条告警可执行的操作及其不能操作的原因
-function getOperationExcutionMap({ owner, userId, status }) {
+function getOperationExcutionMap({ owner, userId, isAdmin, status }) {
   let disableObj = {
     takeOver: {
       disabled: false
@@ -167,7 +167,7 @@ function getOperationExcutionMap({ owner, userId, status }) {
           reason: 'status'
         }
       }
-      if (owner != userId) {
+      if ((owner != userId && !isAdmin) && !(owner == "" && isAdmin)) {
         disableObj = {
           ...disableObj,
           dispatch: {
@@ -206,7 +206,7 @@ function getOperationExcutionMap({ owner, userId, status }) {
           reason: 'status'
         }
       }
-      if (owner != userId) {
+      if ((owner != userId && !isAdmin) && !(owner == "" && isAdmin)) {
         disableObj.close = {
           disabled: true,
           reason: 'owner'
