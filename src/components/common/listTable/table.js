@@ -25,8 +25,7 @@ class Table extends Component {
   }
 
   componentWillUnMount() {
-    clearTimeout(this.autoLoad);
-    this._cancelAutoLoadMore();
+    
   }
 
   render() {
