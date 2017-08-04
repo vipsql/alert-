@@ -268,7 +268,7 @@ class Filter extends Component {
                       dateTime: [startDate, endDate]
                     })
                   }} />
-                )}
+                  )}
 
               </Item>
             </Col>
@@ -390,6 +390,11 @@ class Filter extends Component {
                   <Select getPopupContainer={() => document.getElementById("content")} labelInValue showSearch filterOption={false}
                     onSearch={
                       _.debounce((value) => {
+                        // 保存之前的过滤条件，防止在重新渲染的时候丢失
+                        dispatch({
+                          type: 'alertQuery/setCurrentQuery',
+                          payload: this.queryBefore(form)
+                        })
                         dispatch({
                           type: 'alertQuery/ownerQuery',
                           payload: {
@@ -442,7 +447,7 @@ class Filter extends Component {
 
                 })(
                   <Input autoComplete="off" placeholder={formatMessage({ ...localeMessage['keyWords_placeholder'] })} />
-                )}
+                  )}
               </Item>
             </Col>
             <Col span={8} className={classnames(styles.colStyle, styles.operateCol)}>
@@ -450,12 +455,12 @@ class Filter extends Component {
                 <Button type="primary" size="large" htmlType="submit" onClick={(e) => { this.onOk(e, form) }}><FormattedMessage {...localeMessage['search']} /></Button>
                 <Button type="primary" size="large" onClick={() => {
                   dispatch({
-                      type: 'alertQuery/setCurrentQuery',
-                      payload: {
-                        currentQueryRawData: {}
-                      }
+                    type: 'alertQuery/setCurrentQuery',
+                    payload: {
+                      currentQueryRawData: {}
+                    }
                   })
-                 }}><FormattedMessage {...localeMessage['reset']} /></Button>
+                }}><FormattedMessage {...localeMessage['reset']} /></Button>
               </div>
             </Col>
           </Row>
@@ -471,45 +476,45 @@ export default injectIntl(
       alertQuery: state.alertQuery
     }
   })
-  (Form.create({
-    mapPropsToFields: (props) => {
-      const params = props.alertQuery.currentQueryRawData || {};
-      console.log(params, 'params');
-      return {
-        source: {
-          value: typeof params.source !== 'undefined' ? params.source : ''
-        },
-        dateTime: {
-          value: typeof params.dateTime !== 'undefined' ? params.dateTime : []
-        },
-        lastOccurTime: {
-          value: typeof params.lastOccurTime !== 'undefined' ? params.lastOccurTime : []
-        },
-        severity: {
-          value: typeof params.severity !== 'undefined' ? params.severity : ''
-        },
-        status: {
-          value: typeof params.status !== 'undefined' ? params.status : ''
-        },
-        duration: {
-          value: typeof params.duration !== 'undefined' ? params.duration : undefined
-        },
-        count: {
-          value: typeof params.count !== 'undefined' ? params.count : undefined
-        },
-        isNotify: {
-          value: typeof params.isNotify !== 'undefined' ? params.isNotify : undefined
-        },
-        owner: {
-          value: typeof params.owner !== 'undefined' ? params.owner : { key: '', label: '' }
-        },
-        keyWordsType: {
-          value: typeof params.keyWordsType !== 'undefined' ? params.keyWordsType : JSON.stringify({ 'keyWordsType': '1' })
-        },
-        keyWords: {
-          value: typeof params.keyWords !== 'undefined' ? params.keyWords : undefined
+    (Form.create({
+      mapPropsToFields: (props) => {
+        const params = props.alertQuery.currentQueryRawData || {};
+
+        return {
+          source: {
+            value: typeof params.source !== 'undefined' ? params.source : ''
+          },
+          dateTime: {
+            value: typeof params.dateTime !== 'undefined' ? params.dateTime : []
+          },
+          lastOccurTime: {
+            value: typeof params.lastOccurTime !== 'undefined' ? params.lastOccurTime : []
+          },
+          severity: {
+            value: typeof params.severity !== 'undefined' ? params.severity : ''
+          },
+          status: {
+            value: typeof params.status !== 'undefined' ? params.status : ''
+          },
+          duration: {
+            value: typeof params.duration !== 'undefined' ? params.duration : undefined
+          },
+          count: {
+            value: typeof params.count !== 'undefined' ? params.count : undefined
+          },
+          isNotify: {
+            value: typeof params.isNotify !== 'undefined' ? params.isNotify : undefined
+          },
+          owner: {
+            value: typeof params.owner !== 'undefined' ? params.owner : { key: '', label: '' }
+          },
+          keyWordsType: {
+            value: typeof params.keyWordsType !== 'undefined' ? params.keyWordsType : JSON.stringify({ 'keyWordsType': '1' })
+          },
+          keyWords: {
+            value: typeof params.keyWords !== 'undefined' ? params.keyWords : undefined
+          }
         }
       }
-    }
-  })(Filter))
+    })(Filter))
 )
