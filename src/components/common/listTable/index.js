@@ -45,7 +45,7 @@ class ListTable extends Component {
   _setAutoLoadMore() {
     $(this.props.target).scroll((e) => {
       const $target = $(e.target);
-      if ($target.scrollTop() + 10 + $target.height() > this.scrollHeight && this.props.isShowMore && !this.isLoadingMore) {
+      if ($target.scrollTop() + 200 > this.scrollHeight - $target.height() && this.props.isShowMore && !this.isLoadingMore) {
         this.isLoadingMore = true;
         this.autoLoad = setTimeout(() => {
           this.props.loadMore();
