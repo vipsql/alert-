@@ -106,7 +106,7 @@ export default {
       history.listen((location) => {
         if (location.pathname === '/alertQuery') {
           const query = location.query || {};
-          // console.log(query);
+         // console.log(query);
           dispatch({
             type: 'alertQuerySetup',
             payload: {
@@ -392,6 +392,11 @@ export default {
         type: 'clearQuery',
         payload: {}
       })
+
+      // 若需要查找指定ci的告警
+      if(payload && payload.resObjectId) {
+        yield put({ type: 'setCurrentQuery', payload: { currentQuery: {resObjectId: payload.resObjectId} } })
+      }
 
       yield put({ type: 'queryAlertList' })
 
