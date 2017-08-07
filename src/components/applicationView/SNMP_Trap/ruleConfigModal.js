@@ -61,7 +61,7 @@ class ruleModal extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.snmpTrapRules.operateAppRules !== this.props.snmpTrapRules.operateAppRules) {
-      let operate = nextProps.snmpTrapRules.operateAppRules;
+      let operate = _.cloneDeep(nextProps.snmpTrapRules.operateAppRules);
       this.setState({
         dataSource: operate.dataSource || 1,
         filterFields: operate.filterFields || initalState.filterFields,
