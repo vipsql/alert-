@@ -1137,7 +1137,7 @@ export default {
           selectedAlertIds: newSelectedAlertIds
         }
       });
-      const disabled = newSelectedAlertIds.length === 0 || newSelectedAlertIds.some(item => parseInt(item.status) === 0);
+      const disabled = newSelectedAlertIds.length === 0;
       yield put({
         type: 'alertOperation/setButtonsDisable',
         payload: disabled
