@@ -11,6 +11,7 @@ const Item = Form.Item;
 const RangePicker = DatePicker.RangePicker;
 const InputGroup = Input.Group;
 const Option = Select.Option;
+const OptGroup = Select.OptGroup;
 
 class Filter extends Component {
   constructor(props) {
@@ -228,6 +229,18 @@ class Filter extends Component {
       IP_address: {
         id: 'alertList.title.entityAddr',
         defaultMessage: 'IP地址'
+      },
+      baseKeyWords: {
+        id: 'ruleEditor.label1',
+        defaultMessage: '基本字段'
+      },
+      ciKeyWords: {
+        id: 'ruleEditor.label2',
+        defaultMessage: 'ci字段'
+      },
+      extraKeyWords: {
+        id: 'ruleEditor.label3',
+        defaultMessage: '扩展字段'
       }
     })
 
@@ -424,18 +437,24 @@ class Filter extends Component {
                   initialValue: JSON.stringify({ 'keyWordsType': '1' })
                 })(
                   <Select getPopupContainer={() => document.getElementById("content")} size='large'>
-                    <Option key={1} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '1' })}><FormattedMessage {...localeMessage['entityName']} /></Option>
-                    <Option key={2} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '3' })}><FormattedMessage {...localeMessage['tags']} /></Option>
-                    <Option key={3} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '2' })}><FormattedMessage {...localeMessage['description']} /></Option>
-                    <Option key={4} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '4' })}><FormattedMessage {...localeMessage['name']} /></Option>
-                    <Option key={5} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '5' })}><FormattedMessage {...localeMessage['IP_address']} /></Option>
-                    <Option key={6} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '6' })}><FormattedMessage {...localeMessage['orderFlowNum']} /></Option>
-                    <Option key={7} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '7' })}><FormattedMessage {...localeMessage['classCode']} /></Option>
+                    <OptGroup label={formatMessage({ ...localeMessage['baseKeyWords'] })}>
+                      <Option key={1} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '1' })}><FormattedMessage {...localeMessage['entityName']} /></Option>
+                      <Option key={2} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '3' })}><FormattedMessage {...localeMessage['tags']} /></Option>
+                      <Option key={3} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '2' })}><FormattedMessage {...localeMessage['description']} /></Option>
+                      <Option key={4} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '4' })}><FormattedMessage {...localeMessage['name']} /></Option>
+                      <Option key={5} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '5' })}><FormattedMessage {...localeMessage['IP_address']} /></Option>
+                      <Option key={6} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '6' })}><FormattedMessage {...localeMessage['orderFlowNum']} /></Option>
+                    </OptGroup>
+                    <OptGroup label={formatMessage({ ...localeMessage['ciKeyWords'] })}>
+                      <Option key={7} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '7' })}><FormattedMessage {...localeMessage['classCode']} /></Option>
+                    </OptGroup>
+                    <OptGroup label={formatMessage({ ...localeMessage['extraKeyWords'] })}>
                     {
                       propertyOptions.length > 0 ? propertyOptions.map((item, index) => {
                         return <Option key={item.code + "_" + index} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '100', 'keyName': item.code })}>{item.name}</Option>
                       }) : []
                     }
+                    </OptGroup>
                   </Select>
                   )}
               </Item>
