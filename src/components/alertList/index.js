@@ -108,7 +108,6 @@ class AlertListManage extends Component {
     })
 
     const { levels } = alertListTable;
-    const { alertOperateModalOrigin } = alertList
 
     const toggleBarButtonClick = (e) => {
       const isShowAlertBar = !alertList.isShowBar;

@@ -670,8 +670,11 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, userInfo, isShowCo
 }
 
 export default injectIntl(connect(state => {
+  let alertOperation = state.alertOperation;
+  const isButtonLoading = state.alertDetail.isButtonLoading;
+  alertOperation.isButtonLoading = isButtonLoading;
   return {
-    alertOperation: {...state.alertOperation,isButtonLoading: state.alertDetail.isButtonLoading},
+    alertOperation: alertOperation,
     alertListTable: state.alertListTable,
     userInfo: state.app.userInfo
   }
