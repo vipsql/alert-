@@ -154,9 +154,7 @@ const VisualAnalyzeWrap = ({ dispatch, visualAnalyze }) => {
 export default connect(
   (state) => {
     return {
-      visualAnalyze: {
-        ...state.visualAnalyze,
-      }
+      visualAnalyze: state.visualAnalyze,
     }
   }
 )(VisualAnalyzeWrap)
