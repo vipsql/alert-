@@ -759,13 +759,13 @@ export default {
     // 列定制初始化
     initColumn(state, { payload: { baseCols, extend, tags } }) {
       let newList = JSON.parse(JSON.stringify(initalState.columnList));
-      if (extend.cols.length !== 0) {
+      if (extend.cols && extend.cols.length !== 0) {
         extend.cols.forEach((col) => {
           col.checked = false;
         })
         newList[1] = extend;
       }
-      newList.forEach((group) => {
+      newList && newList.forEach((group) => {
         group.cols.forEach((col) => {
           baseCols.forEach((column, index) => {
             if (column.key === col.id) {
