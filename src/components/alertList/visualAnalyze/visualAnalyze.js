@@ -240,7 +240,7 @@ class VisualAnalyze extends Component {
 
     const tagsComponent = tags.length > 0 && tags.map((item, index) => {
       return (
-        <Select.Option key={index} value={item}>{item}</Select.Option>
+        <Select.Option key={index} value={item} title={item}>{item}</Select.Option>
       )
     })
 
