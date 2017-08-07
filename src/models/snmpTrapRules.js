@@ -225,8 +225,6 @@ export default {
       appRules.forEach( (rule, index) => {
         if (rule.id == id) {
           operateAppRules = rule;
-          operateAppRules.matchAttributes.length > 0 && operateAppRules.matchAttributes.forEach( item => item.isSpread = false )
-          operateAppRules.properties.length > 0 && operateAppRules.properties.forEach( item => item.isSpread = false )
           if (rule.dataSource === 2) {
             matchProps.push('severity');
           }
