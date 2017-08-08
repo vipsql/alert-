@@ -226,10 +226,13 @@ class AlertListManage extends Component {
               <AlertOperationWrap isShowColSetBtn={ false } />
               <ListTimeTableWrap isNeedCheckOwner={ isNeedCheckOwnerMap[alertManage.selectedStatus] && userInfo.supervisor != "1" }/>
             </TabPane>
-            {isShowVisualTab &&
+            {
+              isShowVisualTab?
               <TabPane tab={<span className={tabVisual}><FormattedMessage {...localeMessage['tab_visual']} /></span>} key='3'>
                 <VisualAnalyzeWrap key={new Date().getTime()} />
               </TabPane>
+              :
+              undefined
             }
           </Tabs>
           <ul className={styles.levelBar}>
