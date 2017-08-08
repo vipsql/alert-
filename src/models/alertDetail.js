@@ -185,14 +185,19 @@ export default {
       }
       const options = yield getFormOptions();
       if (options.result) {
-        yield put({
-          type: 'setFormOptions',
-          payload: options.data || []
-        })
-        yield put({
-          type: 'toggleDispatchModal',
-          payload: true
-        })
+        const optionData = options.data;
+        if (optionData.error && optionData.error.message) {
+          yield message.error(`${optionData.error.message}`, 3);
+        } else {
+          yield put({
+            type: 'setFormOptions',
+            payload: options.data || []
+          })
+          yield put({
+            type: 'toggleDispatchModal',
+            payload: true
+          })
+        }
       } else {
         yield message.error(`${options.message}`, 3)
       }
