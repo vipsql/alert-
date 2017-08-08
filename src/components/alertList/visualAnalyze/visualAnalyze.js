@@ -266,7 +266,7 @@ class VisualAnalyze extends Component {
     })
     const resInfoImgComponent = ImgEle && ImgEle.values.length > 0 && ImgEle.values.map((item, index) => {
       return (
-        <div className={styles.imgInfo} key={index}><img src={item} alt="" /></div>
+        <div className={styles.imgInfo} key={index}>{item != ""?<img src={item} alt="" />:''}</div>
       )
     })
 
