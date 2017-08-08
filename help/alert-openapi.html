@@ -3401,6 +3401,14 @@ margin-bottom: 20px;
     }
   }
 };
+  defs.statistics = {
+  "type" : "object",
+  "description" : "根据传入分组参数，返回对应分组的值及数量"
+};
+  defs.trends = {
+  "type" : "object",
+  "description" : "根据传入统计趋势参数返回对应时间及数量"
+};
       // encode url
 
   </script>
@@ -3419,7 +3427,7 @@ margin-bottom: 20px;
 
                     </div>
                     -->
-                    <li class="nav-fixed nav-header active" data-group="_"><a href="#api-_">优云 Monitor OpenAPI</a></li>
+                    <li class="nav-fixed nav-header active" data-group="_"><a href="#api-_">优云 Alert OpenAPI</a></li>
 
 
                                 <!--baseName to note-->
@@ -3429,6 +3437,12 @@ margin-bottom: 20px;
                                     </li>
                                     <li data-group="Alert" data-name="query" class="">
                                     <a href="#api-Alert-query">查询告警列表(分页)</a>
+                                    </li>
+                                    <li data-group="Alert" data-name="statistics" class="">
+                                    <a href="#api-Alert-statistics">告警统计</a>
+                                    </li>
+                                    <li data-group="Alert" data-name="trends" class="">
+                                    <a href="#api-Alert-trends">告警趋势</a>
                                     </li>
 
 
@@ -3483,7 +3497,7 @@ margin-bottom: 20px;
                                             <p></p>
                                             <br />
 
-                                            <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/alert/create</span></code></pre>
+                                            <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/create</span></code></pre>
 
                                             <p>
                                                 <h3>API调用示例代码</h3>
@@ -3522,7 +3536,7 @@ margin-bottom: 20px;
                                             <div class="tab-content">
                                                 <div class="tab-pane active" id="examples-Alert-intakeAlert-0-curl">
                                                     <pre class="prettyprint"><code class="language-bsh">
-curl -X <span style="text-transform: uppercase;">post</span> "http://127.0.0.1/alert/openapi/v2/alert/create"
+curl -X <span style="text-transform: uppercase;">post</span> "http://127.0.0.1/alert/openapi/v2/create?api_key=&app_key="
 
 
 </code></pre>
@@ -3706,73 +3720,6 @@ try {
 
 
 
-                                                <div class="methodsubtabletitle">消息头参数</div>
-                                                <table id="methodsubtable">
-                                                    <tr>
-                                                        <th width="150px">名称</th>
-                                                        <th>描述</th>
-                                                    </tr>
-                                                    <!---->
-                                                        <tr>
-    <td style="width:150px;">api_key*</td>
-    <td>
-
-
-        <script>
-            $(document).ready(function () {
-                var schemaWrapper = {
-  "name" : "api_key",
-  "in" : "header",
-  "description" : "租户apikey",
-  "required" : true,
-  "type" : "string"
-};
-                var schema = schemaWrapper;
-
-
-                var view = new JSONSchemaView(schema, 0);
-                var result = $('#d2e199_intakeAlert_api_key');
-                result.empty();
-                result.append(view.render());
-
-
-            });
-        </script>
-        <div id="d2e199_intakeAlert_api_key"></div>
-    </td>
-</tr>
-
-                                                        <tr>
-    <td style="width:150px;">app_key*</td>
-    <td>
-
-
-        <script>
-            $(document).ready(function () {
-                var schemaWrapper = {
-  "name" : "app_key",
-  "in" : "header",
-  "description" : "应用key",
-  "required" : true,
-  "type" : "string"
-};
-                var schema = schemaWrapper;
-
-
-                var view = new JSONSchemaView(schema, 0);
-                var result = $('#d2e199_intakeAlert_app_key');
-                result.empty();
-                result.append(view.render());
-
-
-            });
-        </script>
-        <div id="d2e199_intakeAlert_app_key"></div>
-    </td>
-</tr>
-
-
-                                                </table>
 
 
                                                 <div class="methodsubtabletitle">消息体参数</div>
@@ -3827,6 +3774,72 @@ try {
 
                                                 </table>
 
+                                                <div class="methodsubtabletitle">查询参数</div>
+                                                <table id="methodsubtable">
+                                                    <tr>
+                                                        <th width="150px">名称</th>
+                                                        <th>描述</th>
+                                                    </tr>
+                                                    <!---->
+                                                        <tr>
+    <td style="width:150px;">api_key*</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "api_key",
+  "in" : "query",
+  "description" : "租户apikey",
+  "required" : true,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_intakeAlert_api_key');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_intakeAlert_api_key"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">app_key*</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "app_key",
+  "in" : "query",
+  "description" : "应用key",
+  "required" : true,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_intakeAlert_app_key');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_intakeAlert_app_key"></div>
+    </td>
+</tr>
+
+                                                </table>
 
                                             <h2>响应</h2>
 
@@ -3979,7 +3992,7 @@ try {
                                             <div class="tab-content">
                                                 <div class="tab-pane active" id="examples-Alert-query-0-curl">
                                                     <pre class="prettyprint"><code class="language-bsh">
-curl -X <span style="text-transform: uppercase;">get</span> "http://127.0.0.1/alert/openapi/v2/incident/query?apikey=&pageNo=&pageSize=&id=&name=&alias=&status=&entityName=&entityAddr=&tag=&severity=&classCode=&begin=&end="
+curl -X <span style="text-transform: uppercase;">get</span> "http://127.0.0.1/alert/openapi/v2/incident/query?api_key=&pageNo=&pageSize=&id=&name=&alias=&status=&entityName=&entityAddr=&tag=&severity=&classCode=&begin=&end="
 
 
 </code></pre>
@@ -4000,7 +4013,7 @@ public class AlertApiExample {
     public static void main(String[] args) {
         
         AlertApi apiInstance = new AlertApi();
-        String apikey = apikey_example; // String | 租户apikey
+        String api_key = apiKey_example; // String | 租户apikey
         Integer pageNo = 56; // Integer | 当前查询的页数，从1开始计数
         Integer pageSize = 56; // Integer | 查询结果返回的数据行数,默认20
         String id = id_example; // String | 告警id
@@ -4015,7 +4028,7 @@ public class AlertApiExample {
         BigDecimal begin = 3.4; // BigDecimal | 如：1486454685958
         BigDecimal end = 3.4; // BigDecimal | 如：1486454685958
         try {
-            incidents result = apiInstance.query(apikey, pageNo, pageSize, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end);
+            incidents result = apiInstance.query(api_key, pageNo, pageSize, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AlertApi#query");
@@ -4036,7 +4049,7 @@ public class AlertApiExample {
 
     public static void main(String[] args) {
         AlertApi apiInstance = new AlertApi();
-        String apikey = apikey_example; // String | 租户apikey
+        String api_key = apiKey_example; // String | 租户apikey
         Integer pageNo = 56; // Integer | 当前查询的页数，从1开始计数
         Integer pageSize = 56; // Integer | 查询结果返回的数据行数,默认20
         String id = id_example; // String | 告警id
@@ -4051,7 +4064,7 @@ public class AlertApiExample {
         BigDecimal begin = 3.4; // BigDecimal | 如：1486454685958
         BigDecimal end = 3.4; // BigDecimal | 如：1486454685958
         try {
-            incidents result = apiInstance.query(apikey, pageNo, pageSize, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end);
+            incidents result = apiInstance.query(api_key, pageNo, pageSize, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AlertApi#query");
@@ -4072,7 +4085,7 @@ public class AlertApiExample {
                                                 <div class="tab-pane" id="examples-Alert-query-0-objc">
                                                     <pre class="prettyprint"><code class="language-cpp">
 
-String *apikey = apikey_example; // 租户apikey
+String *api_key = apiKey_example; // 租户apikey
 Integer *pageNo = 56; // 当前查询的页数，从1开始计数 (optional) (default to 1)
 Integer *pageSize = 56; // 查询结果返回的数据行数,默认20 (optional) (default to 20)
 String *id = id_example; // 告警id (optional)
@@ -4090,7 +4103,7 @@ BigDecimal *end = 3.4; // 如：1486454685958 (optional)
 AlertApi *apiInstance = [[AlertApi alloc] init];
 
 // 查询告警列表(分页)
-[apiInstance queryWith:apikey
+[apiInstance queryWith:api_key
     pageNo:pageNo
     pageSize:pageSize
     id:id
@@ -4121,7 +4134,7 @@ var  = require('');
 
 var api = new .AlertApi()
 
-var apikey = apikey_example; // {String} 租户apikey
+var api_key = apiKey_example; // {String} 租户apikey
 
 var opts = { 
   'pageNo': 56, // {Integer} 当前查询的页数，从1开始计数
@@ -4146,7 +4159,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.query(apikey, opts, callback);
+api.query(api_key, opts, callback);
 
                                                     </code></pre>
                                                 </div>
@@ -4171,7 +4184,7 @@ namespace Example
         {
             
             var apiInstance = new AlertApi();
-            var apikey = apikey_example;  // String | 租户apikey
+            var api_key = apiKey_example;  // String | 租户apikey
             var pageNo = 56;  // Integer | 当前查询的页数，从1开始计数 (optional)  (default to 1)
             var pageSize = 56;  // Integer | 查询结果返回的数据行数,默认20 (optional)  (default to 20)
             var id = id_example;  // String | 告警id (optional) 
@@ -4189,7 +4202,7 @@ namespace Example
             try
             {
                 // 查询告警列表(分页)
-                incidents result = apiInstance.query(apikey, pageNo, pageSize, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end);
+                incidents result = apiInstance.query(api_key, pageNo, pageSize, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -4210,7 +4223,7 @@ namespace Example
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new io.swagger.client\Api\AlertApi();
-$apikey = apikey_example; // String | 租户apikey
+$api_key = apiKey_example; // String | 租户apikey
 $pageNo = 56; // Integer | 当前查询的页数，从1开始计数
 $pageSize = 56; // Integer | 查询结果返回的数据行数,默认20
 $id = id_example; // String | 告警id
@@ -4226,7 +4239,7 @@ $begin = 3.4; // BigDecimal | 如：1486454685958
 $end = 3.4; // BigDecimal | 如：1486454685958
 
 try {
-    $result = $api_instance->query($apikey, $pageNo, $pageSize, $id, $name, $alias, $status, $entityName, $entityAddr, $tag, $severity, $classCode, $begin, $end);
+    $result = $api_instance->query($api_key, $pageNo, $pageSize, $id, $name, $alias, $status, $entityName, $entityAddr, $tag, $severity, $classCode, $begin, $end);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling AlertApi->query: ', $e->getMessage(), PHP_EOL;
@@ -4257,14 +4270,14 @@ try {
                                                     </tr>
                                                     <!---->
                                                         <tr>
-    <td style="width:150px;">apikey*</td>
+    <td style="width:150px;">api_key*</td>
     <td>
 
 
         <script>
             $(document).ready(function () {
                 var schemaWrapper = {
-  "name" : "apikey",
+  "name" : "api_key",
   "in" : "query",
   "description" : "租户apikey",
   "required" : true,
@@ -4274,14 +4287,14 @@ try {
 
 
                 var view = new JSONSchemaView(schema, 0);
-                var result = $('#d2e199_query_apikey');
+                var result = $('#d2e199_query_api_key');
                 result.empty();
                 result.append(view.render());
 
 
             });
         </script>
-        <div id="d2e199_query_apikey"></div>
+        <div id="d2e199_query_api_key"></div>
     </td>
 </tr>
 
@@ -4733,6 +4746,1760 @@ try {
                                                             </script>
                                                         </div>
                                                         <input id='examples-Alert-query-schema-data' type='hidden' value=''></input>
+
+
+
+
+
+
+                                                    </div>
+
+
+
+
+                                                </div>
+
+
+
+
+
+
+
+
+
+                                        </article>
+
+                                    </div>
+
+                                    <hr>
+
+
+
+
+
+
+
+
+                                    <div id="api-Alert-statistics">
+
+                                        <article id="api-Alert-statistics-0" data-group="User" data-name="statistics" data-version="0">
+                                            <div class="pull-left">
+                                                <h1>告警统计</h1>
+                                            </div>
+                                            <div class="pull-right">
+
+                                            </div>
+                                            <div class="clearfix"></div>
+
+                                            <p></p>
+                                            <p>统计告警信息</p>
+                                            <p></p>
+                                            <br />
+
+                                            <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/incident/statistics</span></code></pre>
+
+                                            <p>
+                                                <h3>API调用示例代码</h3>
+                                            </p>
+
+                                            <ul class="nav nav-tabs nav-tabs-examples">
+                                                <li class="active">
+                                                    <a href="#examples-Alert-statistics-0-curl">Curl</a>
+                                                </li>
+                                                <li class="">
+              <a href="#examples-Alert-statistics-0-java">Java</a>
+            </li>
+            <li class="">
+              <a href="#examples-Alert-statistics-0-android">Android</a>
+            </li>
+            <!--<li class="">
+              <a href="#examples-Alert-statistics-0-groovy">Groovy</a>
+            </li>-->
+                                                <li class="">
+                                                    <a href="#examples-Alert-statistics-0-objc">Obj-C</a>
+                                                </li>
+                                                <li class="">
+                                                    <a href="#examples-Alert-statistics-0-javascript">JavaScript</a>
+                                                </li>
+                                                <!--<li class="">
+              <a href="#examples-Alert-statistics-0-angular">Angular</a>
+            </li>-->
+                                                <li class="">
+                                                    <a href="#examples-Alert-statistics-0-csharp">C#</a>
+                                                </li>
+                                                <li class="">
+              <a href="#examples-Alert-statistics-0-php">PHP</a>
+            </li>
+                                            </ul>
+
+                                            <div class="tab-content">
+                                                <div class="tab-pane active" id="examples-Alert-statistics-0-curl">
+                                                    <pre class="prettyprint"><code class="language-bsh">
+curl -X <span style="text-transform: uppercase;">get</span> "http://127.0.0.1/alert/openapi/v2/incident/statistics?api_key=&id=&name=&alias=&status=&entityName=&entityAddr=&tag=&severity=&classCode=&begin=&end=&groupBy=&top=&sort="
+
+
+</code></pre>
+                                                </div>
+
+                                                <div class="tab-pane" id="examples-Alert-statistics-0-java">
+                                                  <pre class="prettyprint"><code class="language-java">
+import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import .AlertApi;
+
+import java.io.File;
+import java.util.*;
+
+public class AlertApiExample {
+
+    public static void main(String[] args) {
+        
+        AlertApi apiInstance = new AlertApi();
+        String api_key = apiKey_example; // String | 租户apikey
+        String id = id_example; // String | 告警id
+        String name = name_example; // String | 告警名称
+        array[String] alias = ; // array[String] | 告警别名
+        array[String] status = ; // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
+        String entityName = entityName_example; // String | 资源名称
+        String entityAddr = entityAddr_example; // String | 资源地址
+        String tag = tag_example; // String | 告警所属标签
+        array[String] severity = ; // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急
+        String classCode = classCode_example; // String | 资源类型
+        BigDecimal begin = 3.4; // BigDecimal | 如：1486454685958
+        BigDecimal end = 3.4; // BigDecimal | 如：1486454685958
+        String groupBy = groupBy_example; // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签、资源类型
+        Integer top = 56; // Integer | 取前N条数据
+        String sort = sort_example; // String | 排序（ASC、DESC）
+        try {
+            statistics result = apiInstance.statistics(api_key, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, groupBy, top, sort);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AlertApi#statistics");
+            e.printStackTrace();
+        }
+    }
+}
+
+                                                  </code></pre>
+          </div>
+
+
+                                                <div class="tab-pane" id="examples-Alert-statistics-0-android">
+                                                  <pre class="prettyprint"><code class="language-java">
+import .AlertApi;
+
+public class AlertApiExample {
+
+    public static void main(String[] args) {
+        AlertApi apiInstance = new AlertApi();
+        String api_key = apiKey_example; // String | 租户apikey
+        String id = id_example; // String | 告警id
+        String name = name_example; // String | 告警名称
+        array[String] alias = ; // array[String] | 告警别名
+        array[String] status = ; // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
+        String entityName = entityName_example; // String | 资源名称
+        String entityAddr = entityAddr_example; // String | 资源地址
+        String tag = tag_example; // String | 告警所属标签
+        array[String] severity = ; // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急
+        String classCode = classCode_example; // String | 资源类型
+        BigDecimal begin = 3.4; // BigDecimal | 如：1486454685958
+        BigDecimal end = 3.4; // BigDecimal | 如：1486454685958
+        String groupBy = groupBy_example; // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签、资源类型
+        Integer top = 56; // Integer | 取前N条数据
+        String sort = sort_example; // String | 排序（ASC、DESC）
+        try {
+            statistics result = apiInstance.statistics(api_key, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, groupBy, top, sort);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AlertApi#statistics");
+            e.printStackTrace();
+        }
+    }
+}
+
+                                                  </code></pre>
+          </div>
+
+          <!--
+          <div class="tab-pane" id="examples-Alert-statistics-0-groovy">
+            <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+          </div> -->
+
+
+                                                <div class="tab-pane" id="examples-Alert-statistics-0-objc">
+                                                    <pre class="prettyprint"><code class="language-cpp">
+
+String *api_key = apiKey_example; // 租户apikey
+String *id = id_example; // 告警id (optional)
+String *name = name_example; // 告警名称 (optional)
+array[String] *alias = ; // 告警别名 (optional)
+array[String] *status = ; // 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭 (optional)
+String *entityName = entityName_example; // 资源名称 (optional)
+String *entityAddr = entityAddr_example; // 资源地址 (optional)
+String *tag = tag_example; // 告警所属标签 (optional)
+array[String] *severity = ; // 告警等级0:恢复,1:提醒,2:警告,3:紧急 (optional)
+String *classCode = classCode_example; // 资源类型 (optional)
+BigDecimal *begin = 3.4; // 如：1486454685958 (optional)
+BigDecimal *end = 3.4; // 如：1486454685958 (optional)
+String *groupBy = groupBy_example; // 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签、资源类型 (optional)
+Integer *top = 56; // 取前N条数据 (optional)
+String *sort = sort_example; // 排序（ASC、DESC） (optional)
+
+AlertApi *apiInstance = [[AlertApi alloc] init];
+
+// 告警统计
+[apiInstance statisticsWith:api_key
+    id:id
+    name:name
+    alias:alias
+    status:status
+    entityName:entityName
+    entityAddr:entityAddr
+    tag:tag
+    severity:severity
+    classCode:classCode
+    begin:begin
+    end:end
+    groupBy:groupBy
+    top:top
+    sort:sort
+              completionHandler: ^(statistics output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+
+                                                    </code></pre>
+                                                </div>
+                                                <div class="tab-pane" id="examples-Alert-statistics-0-javascript">
+                                                    <pre class="prettyprint"><code class="language-js">
+var  = require('');
+
+var api = new .AlertApi()
+
+var api_key = apiKey_example; // {String} 租户apikey
+
+var opts = { 
+  'id': id_example, // {String} 告警id
+  'name': name_example, // {String} 告警名称
+  'alias': , // {array[String]} 告警别名
+  'status': , // {array[String]} 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
+  'entityName': entityName_example, // {String} 资源名称
+  'entityAddr': entityAddr_example, // {String} 资源地址
+  'tag': tag_example, // {String} 告警所属标签
+  'severity': , // {array[String]} 告警等级0:恢复,1:提醒,2:警告,3:紧急
+  'classCode': classCode_example, // {String} 资源类型
+  'begin': 3.4, // {BigDecimal} 如：1486454685958
+  'end': 3.4, // {BigDecimal} 如：1486454685958
+  'groupBy': groupBy_example, // {String} 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签、资源类型
+  'top': 56, // {Integer} 取前N条数据
+  'sort': sort_example // {String} 排序（ASC、DESC）
+};
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.statistics(api_key, opts, callback);
+
+                                                    </code></pre>
+                                                </div>
+
+                                                <!--<div class="tab-pane" id="examples-Alert-statistics-0-angular">
+            <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+          </div>-->
+
+                                                <div class="tab-pane" id="examples-Alert-statistics-0-csharp">
+                                                    <pre class="prettyprint"><code class="language-cs">
+using System;
+using System.Diagnostics;
+using .Api;
+using .Client;
+using ;
+
+namespace Example
+{
+    public class statisticsExample
+    {
+        public void main()
+        {
+            
+            var apiInstance = new AlertApi();
+            var api_key = apiKey_example;  // String | 租户apikey
+            var id = id_example;  // String | 告警id (optional) 
+            var name = name_example;  // String | 告警名称 (optional) 
+            var alias = new array[String](); // array[String] | 告警别名 (optional) 
+            var status = new array[String](); // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭 (optional) 
+            var entityName = entityName_example;  // String | 资源名称 (optional) 
+            var entityAddr = entityAddr_example;  // String | 资源地址 (optional) 
+            var tag = tag_example;  // String | 告警所属标签 (optional) 
+            var severity = new array[String](); // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急 (optional) 
+            var classCode = classCode_example;  // String | 资源类型 (optional) 
+            var begin = 3.4;  // BigDecimal | 如：1486454685958 (optional) 
+            var end = 3.4;  // BigDecimal | 如：1486454685958 (optional) 
+            var groupBy = groupBy_example;  // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签、资源类型 (optional) 
+            var top = 56;  // Integer | 取前N条数据 (optional) 
+            var sort = sort_example;  // String | 排序（ASC、DESC） (optional) 
+
+            try
+            {
+                // 告警统计
+                statistics result = apiInstance.statistics(api_key, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, groupBy, top, sort);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling AlertApi.statistics: " + e.Message );
+            }
+        }
+    }
+}
+
+                                                    </code></pre>
+                                                </div>
+
+
+                                                <div class="tab-pane" id="examples-Alert-statistics-0-php">
+                                                  <pre class="prettyprint"><code class="language-php">
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new io.swagger.client\Api\AlertApi();
+$api_key = apiKey_example; // String | 租户apikey
+$id = id_example; // String | 告警id
+$name = name_example; // String | 告警名称
+$alias = ; // array[String] | 告警别名
+$status = ; // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
+$entityName = entityName_example; // String | 资源名称
+$entityAddr = entityAddr_example; // String | 资源地址
+$tag = tag_example; // String | 告警所属标签
+$severity = ; // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急
+$classCode = classCode_example; // String | 资源类型
+$begin = 3.4; // BigDecimal | 如：1486454685958
+$end = 3.4; // BigDecimal | 如：1486454685958
+$groupBy = groupBy_example; // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签、资源类型
+$top = 56; // Integer | 取前N条数据
+$sort = sort_example; // String | 排序（ASC、DESC）
+
+try {
+    $result = $api_instance->statistics($api_key, $id, $name, $alias, $status, $entityName, $entityAddr, $tag, $severity, $classCode, $begin, $end, $groupBy, $top, $sort);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling AlertApi->statistics: ', $e->getMessage(), PHP_EOL;
+}
+
+                                                  </code></pre>
+          </div>
+
+                                            </div>
+
+
+
+
+
+                                            <h2>参数</h2>
+
+
+
+
+
+
+
+                                                <div class="methodsubtabletitle">查询参数</div>
+                                                <table id="methodsubtable">
+                                                    <tr>
+                                                        <th width="150px">名称</th>
+                                                        <th>描述</th>
+                                                    </tr>
+                                                    <!---->
+                                                        <tr>
+    <td style="width:150px;">api_key*</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "api_key",
+  "in" : "query",
+  "description" : "租户apikey",
+  "required" : true,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_api_key');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_api_key"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">id</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "id",
+  "in" : "query",
+  "description" : "告警id",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_id');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_id"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">name</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "name",
+  "in" : "query",
+  "description" : "告警名称",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_name');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_name"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">alias</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "alias",
+  "in" : "query",
+  "description" : "告警别名",
+  "required" : false,
+  "type" : "array"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_alias');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_alias"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">status</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "status",
+  "in" : "query",
+  "description" : "告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭",
+  "required" : false,
+  "type" : "array"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_status');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_status"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">entityName</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "entityName",
+  "in" : "query",
+  "description" : "资源名称",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_entityName');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_entityName"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">entityAddr</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "entityAddr",
+  "in" : "query",
+  "description" : "资源地址",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_entityAddr');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_entityAddr"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">tag</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "tag",
+  "in" : "query",
+  "description" : "告警所属标签",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_tag');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_tag"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">severity</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "severity",
+  "in" : "query",
+  "description" : "告警等级0:恢复,1:提醒,2:警告,3:紧急",
+  "required" : false,
+  "type" : "array"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_severity');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_severity"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">classCode</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "classCode",
+  "in" : "query",
+  "description" : "资源类型",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_classCode');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_classCode"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">begin</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "begin",
+  "in" : "query",
+  "description" : "如：1486454685958",
+  "required" : false,
+  "type" : "number",
+  "format" : "long"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_begin');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_begin"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">end</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "end",
+  "in" : "query",
+  "description" : "如：1486454685958",
+  "required" : false,
+  "type" : "number",
+  "format" : "long"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_end');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_end"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">groupBy</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "groupBy",
+  "in" : "query",
+  "description" : "根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签、资源类型",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_groupBy');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_groupBy"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">top</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "top",
+  "in" : "query",
+  "description" : "取前N条数据",
+  "required" : false,
+  "type" : "integer"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_top');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_top"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">sort</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "sort",
+  "in" : "query",
+  "description" : "排序（ASC、DESC）",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_sort');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_sort"></div>
+    </td>
+</tr>
+
+                                                </table>
+
+                                            <h2>响应</h2>
+
+                                                <h3> 状态码: 200 - 返回统计信息,如##根据告警级别 { \&quot;0\&quot;: 385, \&quot;1\&quot;: 224, \&quot;2\&quot;: 224, \&quot;3\&quot;: 295 } </h3>
+
+                                                <ul class="nav nav-tabs nav-tabs-examples" >
+
+                                                    <li class="active">
+                                                        <a href="#examples-Alert-statistics-schema">返回类型</a>
+                                                    </li>
+
+
+                                                </ul>
+
+
+
+
+
+
+
+                                                <div class="tab-content" style='margin-bottom: 10px;'>
+
+
+
+                                                    <div class="tab-pane active" id="examples-Alert-statistics-schema">
+
+
+
+
+                                                        <div id='examples-Alert-statistics-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+
+                                                            <script>
+                                                                $(document).ready(function() {
+                                                                    var schemaWrapper = {
+  "description" : "返回统计信息,如##根据告警级别 { \"0\": 385, \"1\": 224, \"2\": 224, \"3\": 295 }",
+  "schema" : {
+    "$ref" : "#/definitions/statistics"
+  }
+};
+                                                                    var schema = schemaWrapper.schema;
+                                                                    schemaWrapper.definitions = defs;
+                                                                    //console.log(JSON.stringify(schema))
+                                                                    JsonRefs.resolveRefs(schemaWrapper, {
+                                                                        "depth": 3,
+                                                                        "resolveRemoteRefs": false,
+                                                                        "resolveFileRefs": false
+                                                                    }, function(err, resolved, metadata) {
+
+                                                                        //console.log(JSON.stringify(resolved));
+
+
+
+                                                                        var view = new JSONSchemaView(resolved.schema, 3);
+                                                                        $('#examples-Alert-statistics-schema-data').val(JSON.stringify(resolved.schema));
+                                                                        var result = $('#examples-Alert-statistics-schema-200');
+                                                                        result.empty();
+                                                                        result.append(view.render());
+                                                                    });
+
+
+
+
+                                                                });
+                                                            </script>
+                                                        </div>
+                                                        <input id='examples-Alert-statistics-schema-data' type='hidden' value=''></input>
+
+
+
+
+
+
+                                                    </div>
+
+
+
+
+                                                </div>
+
+
+
+
+
+
+
+
+
+                                        </article>
+
+                                    </div>
+
+                                    <hr>
+
+
+
+
+
+
+
+
+                                    <div id="api-Alert-trends">
+
+                                        <article id="api-Alert-trends-0" data-group="User" data-name="trends" data-version="0">
+                                            <div class="pull-left">
+                                                <h1>告警趋势</h1>
+                                            </div>
+                                            <div class="pull-right">
+
+                                            </div>
+                                            <div class="clearfix"></div>
+
+                                            <p></p>
+                                            <p>告警趋势统计</p>
+                                            <p></p>
+                                            <br />
+
+                                            <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/incident/trend</span></code></pre>
+
+                                            <p>
+                                                <h3>API调用示例代码</h3>
+                                            </p>
+
+                                            <ul class="nav nav-tabs nav-tabs-examples">
+                                                <li class="active">
+                                                    <a href="#examples-Alert-trends-0-curl">Curl</a>
+                                                </li>
+                                                <li class="">
+              <a href="#examples-Alert-trends-0-java">Java</a>
+            </li>
+            <li class="">
+              <a href="#examples-Alert-trends-0-android">Android</a>
+            </li>
+            <!--<li class="">
+              <a href="#examples-Alert-trends-0-groovy">Groovy</a>
+            </li>-->
+                                                <li class="">
+                                                    <a href="#examples-Alert-trends-0-objc">Obj-C</a>
+                                                </li>
+                                                <li class="">
+                                                    <a href="#examples-Alert-trends-0-javascript">JavaScript</a>
+                                                </li>
+                                                <!--<li class="">
+              <a href="#examples-Alert-trends-0-angular">Angular</a>
+            </li>-->
+                                                <li class="">
+                                                    <a href="#examples-Alert-trends-0-csharp">C#</a>
+                                                </li>
+                                                <li class="">
+              <a href="#examples-Alert-trends-0-php">PHP</a>
+            </li>
+                                            </ul>
+
+                                            <div class="tab-content">
+                                                <div class="tab-pane active" id="examples-Alert-trends-0-curl">
+                                                    <pre class="prettyprint"><code class="language-bsh">
+curl -X <span style="text-transform: uppercase;">get</span> "http://127.0.0.1/alert/openapi/v2/incident/trend?api_key=&id=&name=&alias=&status=&entityName=&entityAddr=&tag=&severity=&classCode=&begin=&end=&trendBy=&top=&sort="
+
+
+</code></pre>
+                                                </div>
+
+                                                <div class="tab-pane" id="examples-Alert-trends-0-java">
+                                                  <pre class="prettyprint"><code class="language-java">
+import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import .AlertApi;
+
+import java.io.File;
+import java.util.*;
+
+public class AlertApiExample {
+
+    public static void main(String[] args) {
+        
+        AlertApi apiInstance = new AlertApi();
+        String api_key = apiKey_example; // String | 租户apikey
+        String id = id_example; // String | 告警id
+        String name = name_example; // String | 告警名称
+        String alias = alias_example; // String | 告警别名
+        array[String] status = ; // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
+        String entityName = entityName_example; // String | 资源名称
+        String entityAddr = entityAddr_example; // String | 资源地址
+        array[String] tag = ; // array[String] | 告警所属标签
+        array[String] severity = ; // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急
+        String classCode = classCode_example; // String | 资源类型
+        BigDecimal begin = 3.4; // BigDecimal | 如：1486454685958
+        BigDecimal end = 3.4; // BigDecimal | 如：1486454685958
+        String trendBy = trendBy_example; // String | 根据条件分组（hour、dayOfMonth、week）
+        Integer top = 56; // Integer | 取前N条数据
+        String sort = sort_example; // String | 排序（ASC、DESC）
+        try {
+            trends result = apiInstance.trends(api_key, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, trendBy, top, sort);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AlertApi#trends");
+            e.printStackTrace();
+        }
+    }
+}
+
+                                                  </code></pre>
+          </div>
+
+
+                                                <div class="tab-pane" id="examples-Alert-trends-0-android">
+                                                  <pre class="prettyprint"><code class="language-java">
+import .AlertApi;
+
+public class AlertApiExample {
+
+    public static void main(String[] args) {
+        AlertApi apiInstance = new AlertApi();
+        String api_key = apiKey_example; // String | 租户apikey
+        String id = id_example; // String | 告警id
+        String name = name_example; // String | 告警名称
+        String alias = alias_example; // String | 告警别名
+        array[String] status = ; // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
+        String entityName = entityName_example; // String | 资源名称
+        String entityAddr = entityAddr_example; // String | 资源地址
+        array[String] tag = ; // array[String] | 告警所属标签
+        array[String] severity = ; // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急
+        String classCode = classCode_example; // String | 资源类型
+        BigDecimal begin = 3.4; // BigDecimal | 如：1486454685958
+        BigDecimal end = 3.4; // BigDecimal | 如：1486454685958
+        String trendBy = trendBy_example; // String | 根据条件分组（hour、dayOfMonth、week）
+        Integer top = 56; // Integer | 取前N条数据
+        String sort = sort_example; // String | 排序（ASC、DESC）
+        try {
+            trends result = apiInstance.trends(api_key, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, trendBy, top, sort);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AlertApi#trends");
+            e.printStackTrace();
+        }
+    }
+}
+
+                                                  </code></pre>
+          </div>
+
+          <!--
+          <div class="tab-pane" id="examples-Alert-trends-0-groovy">
+            <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+          </div> -->
+
+
+                                                <div class="tab-pane" id="examples-Alert-trends-0-objc">
+                                                    <pre class="prettyprint"><code class="language-cpp">
+
+String *api_key = apiKey_example; // 租户apikey
+String *id = id_example; // 告警id (optional)
+String *name = name_example; // 告警名称 (optional)
+String *alias = alias_example; // 告警别名 (optional)
+array[String] *status = ; // 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭 (optional)
+String *entityName = entityName_example; // 资源名称 (optional)
+String *entityAddr = entityAddr_example; // 资源地址 (optional)
+array[String] *tag = ; // 告警所属标签 (optional)
+array[String] *severity = ; // 告警等级0:恢复,1:提醒,2:警告,3:紧急 (optional)
+String *classCode = classCode_example; // 资源类型 (optional)
+BigDecimal *begin = 3.4; // 如：1486454685958 (optional)
+BigDecimal *end = 3.4; // 如：1486454685958 (optional)
+String *trendBy = trendBy_example; // 根据条件分组（hour、dayOfMonth、week） (optional)
+Integer *top = 56; // 取前N条数据 (optional)
+String *sort = sort_example; // 排序（ASC、DESC） (optional)
+
+AlertApi *apiInstance = [[AlertApi alloc] init];
+
+// 告警趋势
+[apiInstance trendsWith:api_key
+    id:id
+    name:name
+    alias:alias
+    status:status
+    entityName:entityName
+    entityAddr:entityAddr
+    tag:tag
+    severity:severity
+    classCode:classCode
+    begin:begin
+    end:end
+    trendBy:trendBy
+    top:top
+    sort:sort
+              completionHandler: ^(trends output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+
+                                                    </code></pre>
+                                                </div>
+                                                <div class="tab-pane" id="examples-Alert-trends-0-javascript">
+                                                    <pre class="prettyprint"><code class="language-js">
+var  = require('');
+
+var api = new .AlertApi()
+
+var api_key = apiKey_example; // {String} 租户apikey
+
+var opts = { 
+  'id': id_example, // {String} 告警id
+  'name': name_example, // {String} 告警名称
+  'alias': alias_example, // {String} 告警别名
+  'status': , // {array[String]} 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
+  'entityName': entityName_example, // {String} 资源名称
+  'entityAddr': entityAddr_example, // {String} 资源地址
+  'tag': , // {array[String]} 告警所属标签
+  'severity': , // {array[String]} 告警等级0:恢复,1:提醒,2:警告,3:紧急
+  'classCode': classCode_example, // {String} 资源类型
+  'begin': 3.4, // {BigDecimal} 如：1486454685958
+  'end': 3.4, // {BigDecimal} 如：1486454685958
+  'trendBy': trendBy_example, // {String} 根据条件分组（hour、dayOfMonth、week）
+  'top': 56, // {Integer} 取前N条数据
+  'sort': sort_example // {String} 排序（ASC、DESC）
+};
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.trends(api_key, opts, callback);
+
+                                                    </code></pre>
+                                                </div>
+
+                                                <!--<div class="tab-pane" id="examples-Alert-trends-0-angular">
+            <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+          </div>-->
+
+                                                <div class="tab-pane" id="examples-Alert-trends-0-csharp">
+                                                    <pre class="prettyprint"><code class="language-cs">
+using System;
+using System.Diagnostics;
+using .Api;
+using .Client;
+using ;
+
+namespace Example
+{
+    public class trendsExample
+    {
+        public void main()
+        {
+            
+            var apiInstance = new AlertApi();
+            var api_key = apiKey_example;  // String | 租户apikey
+            var id = id_example;  // String | 告警id (optional) 
+            var name = name_example;  // String | 告警名称 (optional) 
+            var alias = alias_example;  // String | 告警别名 (optional) 
+            var status = new array[String](); // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭 (optional) 
+            var entityName = entityName_example;  // String | 资源名称 (optional) 
+            var entityAddr = entityAddr_example;  // String | 资源地址 (optional) 
+            var tag = new array[String](); // array[String] | 告警所属标签 (optional) 
+            var severity = new array[String](); // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急 (optional) 
+            var classCode = classCode_example;  // String | 资源类型 (optional) 
+            var begin = 3.4;  // BigDecimal | 如：1486454685958 (optional) 
+            var end = 3.4;  // BigDecimal | 如：1486454685958 (optional) 
+            var trendBy = trendBy_example;  // String | 根据条件分组（hour、dayOfMonth、week） (optional) 
+            var top = 56;  // Integer | 取前N条数据 (optional) 
+            var sort = sort_example;  // String | 排序（ASC、DESC） (optional) 
+
+            try
+            {
+                // 告警趋势
+                trends result = apiInstance.trends(api_key, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, trendBy, top, sort);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling AlertApi.trends: " + e.Message );
+            }
+        }
+    }
+}
+
+                                                    </code></pre>
+                                                </div>
+
+
+                                                <div class="tab-pane" id="examples-Alert-trends-0-php">
+                                                  <pre class="prettyprint"><code class="language-php">
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new io.swagger.client\Api\AlertApi();
+$api_key = apiKey_example; // String | 租户apikey
+$id = id_example; // String | 告警id
+$name = name_example; // String | 告警名称
+$alias = alias_example; // String | 告警别名
+$status = ; // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
+$entityName = entityName_example; // String | 资源名称
+$entityAddr = entityAddr_example; // String | 资源地址
+$tag = ; // array[String] | 告警所属标签
+$severity = ; // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急
+$classCode = classCode_example; // String | 资源类型
+$begin = 3.4; // BigDecimal | 如：1486454685958
+$end = 3.4; // BigDecimal | 如：1486454685958
+$trendBy = trendBy_example; // String | 根据条件分组（hour、dayOfMonth、week）
+$top = 56; // Integer | 取前N条数据
+$sort = sort_example; // String | 排序（ASC、DESC）
+
+try {
+    $result = $api_instance->trends($api_key, $id, $name, $alias, $status, $entityName, $entityAddr, $tag, $severity, $classCode, $begin, $end, $trendBy, $top, $sort);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling AlertApi->trends: ', $e->getMessage(), PHP_EOL;
+}
+
+                                                  </code></pre>
+          </div>
+
+                                            </div>
+
+
+
+
+
+                                            <h2>参数</h2>
+
+
+
+
+
+
+
+                                                <div class="methodsubtabletitle">查询参数</div>
+                                                <table id="methodsubtable">
+                                                    <tr>
+                                                        <th width="150px">名称</th>
+                                                        <th>描述</th>
+                                                    </tr>
+                                                    <!---->
+                                                        <tr>
+    <td style="width:150px;">api_key*</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "api_key",
+  "in" : "query",
+  "description" : "租户apikey",
+  "required" : true,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_api_key');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_api_key"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">id</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "id",
+  "in" : "query",
+  "description" : "告警id",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_id');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_id"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">name</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "name",
+  "in" : "query",
+  "description" : "告警名称",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_name');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_name"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">alias</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "alias",
+  "in" : "query",
+  "description" : "告警别名",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_alias');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_alias"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">status</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "status",
+  "in" : "query",
+  "description" : "告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭",
+  "required" : false,
+  "type" : "array"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_status');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_status"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">entityName</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "entityName",
+  "in" : "query",
+  "description" : "资源名称",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_entityName');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_entityName"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">entityAddr</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "entityAddr",
+  "in" : "query",
+  "description" : "资源地址",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_entityAddr');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_entityAddr"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">tag</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "tag",
+  "in" : "query",
+  "description" : "告警所属标签",
+  "required" : false,
+  "type" : "array"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_tag');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_tag"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">severity</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "severity",
+  "in" : "query",
+  "description" : "告警等级0:恢复,1:提醒,2:警告,3:紧急",
+  "required" : false,
+  "type" : "array"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_severity');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_severity"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">classCode</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "classCode",
+  "in" : "query",
+  "description" : "资源类型",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_classCode');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_classCode"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">begin</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "begin",
+  "in" : "query",
+  "description" : "如：1486454685958",
+  "required" : false,
+  "type" : "number",
+  "format" : "long"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_begin');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_begin"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">end</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "end",
+  "in" : "query",
+  "description" : "如：1486454685958",
+  "required" : false,
+  "type" : "number",
+  "format" : "long"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_end');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_end"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">trendBy</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "trendBy",
+  "in" : "query",
+  "description" : "根据条件分组（hour、dayOfMonth、week）",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_trendBy');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_trendBy"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">top</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "top",
+  "in" : "query",
+  "description" : "取前N条数据",
+  "required" : false,
+  "type" : "integer"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_top');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_top"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">sort</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "sort",
+  "in" : "query",
+  "description" : "排序（ASC、DESC）",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_sort');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_sort"></div>
+    </td>
+</tr>
+
+                                                </table>
+
+                                            <h2>响应</h2>
+
+                                                <h3> 状态码: 200 - 返回趋势统计信息,如：##根据dayOfMonth { \&quot;2017-6-30\&quot;: 1, \&quot;2017-7-6\&quot;: 7, \&quot;2017-7-11\&quot;: 11, \&quot;2017-8-2\&quot;: 142, \&quot;2017-7-3\&quot;: 8, \&quot;2017-6-29\&quot;: 6, \&quot;2017-7-19\&quot;: 10 } </h3>
+
+                                                <ul class="nav nav-tabs nav-tabs-examples" >
+
+                                                    <li class="active">
+                                                        <a href="#examples-Alert-trends-schema">返回类型</a>
+                                                    </li>
+
+
+                                                </ul>
+
+
+
+
+
+
+
+                                                <div class="tab-content" style='margin-bottom: 10px;'>
+
+
+
+                                                    <div class="tab-pane active" id="examples-Alert-trends-schema">
+
+
+
+
+                                                        <div id='examples-Alert-trends-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+
+                                                            <script>
+                                                                $(document).ready(function() {
+                                                                    var schemaWrapper = {
+  "description" : "返回趋势统计信息,如：##根据dayOfMonth { \"2017-6-30\": 1, \"2017-7-6\": 7, \"2017-7-11\": 11, \"2017-8-2\": 142, \"2017-7-3\": 8, \"2017-6-29\": 6, \"2017-7-19\": 10 }",
+  "schema" : {
+    "$ref" : "#/definitions/trends"
+  }
+};
+                                                                    var schema = schemaWrapper.schema;
+                                                                    schemaWrapper.definitions = defs;
+                                                                    //console.log(JSON.stringify(schema))
+                                                                    JsonRefs.resolveRefs(schemaWrapper, {
+                                                                        "depth": 3,
+                                                                        "resolveRemoteRefs": false,
+                                                                        "resolveFileRefs": false
+                                                                    }, function(err, resolved, metadata) {
+
+                                                                        //console.log(JSON.stringify(resolved));
+
+
+
+                                                                        var view = new JSONSchemaView(resolved.schema, 3);
+                                                                        $('#examples-Alert-trends-schema-data').val(JSON.stringify(resolved.schema));
+                                                                        var result = $('#examples-Alert-trends-schema-200');
+                                                                        result.empty();
+                                                                        result.append(view.render());
+                                                                    });
+
+
+
+
+                                                                });
+                                                            </script>
+                                                        </div>
+                                                        <input id='examples-Alert-trends-schema-data' type='hidden' value=''></input>
 
 
 
