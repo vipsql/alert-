@@ -21,6 +21,8 @@ export async function getFormOptions() {
   }).then((response) => {
     if(response.data && response.data.error) {
       return { result: false, message: response.data.error.message };
+    } else {
+      return response;
     }
   })
 

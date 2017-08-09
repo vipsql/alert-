@@ -72,6 +72,8 @@ export async function getWos(params) {
   }).then((response) => {
     if(response.data && response.data.error) {
       return { result: false, message: response.data.error.message };
+    } else {
+      return response;
     }
   })
   // return Promise.resolve({
