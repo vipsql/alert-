@@ -18,7 +18,20 @@ export async function getFormOptions() {
     headers: {
       'Content-Type': 'application/json',
     }
+  }).then((response) => {
+    if(response.data && response.data.error) {
+      return { result: false, message: response.data.error.message };
+    }
   })
+
+  // return Promise.resolve({
+  //   result: true,
+  //   data: {"error":{"code":"500","message":"availableModelVOs Error"},"data":null}
+  // }).then((response) => {
+  //   if(response.data && response.data.error) {
+  //     return { result: false, message: response.data.error.message };
+  //   }
+  // })
 }
 
 export async function getChatOpsOptions() {

@@ -69,7 +69,19 @@ export async function getWos(params) {
     headers: {
       'Content-Type': 'application/json',
     }
+  }).then((response) => {
+    if(response.data && response.data.error) {
+      return { result: false, message: response.data.error.message };
+    }
   })
+  // return Promise.resolve({
+  //   result: true,
+  //   data: {"error":{"code":"500","message":"availableModelVOs Error"},"data":null}
+  // }).then((response) => {
+  //   if(response.data && response.data.error) {
+  //     return { result: false, message: response.data.error.message };
+  //   }
+  // })
 }
 
 // 获取工单映射配置
