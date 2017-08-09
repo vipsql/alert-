@@ -641,6 +641,10 @@ export default {
           let data = tempGroup.children.map((tempRow) => {
             if (tempRow['id'] == payload['id']) {
               tempRow = { ...tempRow, ...payload };
+              // 如果告警的状态与当前过滤条件的状态不一致，则设置“移除字段”为true
+              if (status.indexOf(',') < 0 && status != tempRow.status) {
+                tempRow.isRemoved = true;
+              }
             }
             return tempRow
           })
