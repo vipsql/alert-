@@ -113,7 +113,13 @@ class DOMWrap extends Component {
     };
 
     return (
-      <Tag ref={content => this.content = content} className={styles.tags_query_content} onMouseLeave={ onMouseLeave }>
+      <Tag ref={content => this.content = content} className={styles.tags_query_content} onMouseLeave={ (e) => {
+        // 有时候e.target会是LI,猜测这里mouseLeave在react的事件系统中是由mouseout实现的，以致会产生冒泡,e.nativeEvent.type是mouseout
+        if (e.target.nodeType && e.target.nodeName.toLocaleUpperCase() === 'LI') {
+          return;
+        }
+        onMouseLeave();
+      } }>
           {
               selectList.length > 0 ? selectList.map( (item, itemIndex) => {
                   return (

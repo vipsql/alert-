@@ -7,7 +7,7 @@
     padding: 10px;
     color: white;
     border-radius: 3px;
-    z-index: 9999;
+    z-index: 999;
 
   }
 }
@@ -73,7 +73,7 @@
   width: 343px;
   height: 259px;
   //background: ~"url('./guideTip.png')";
-  z-index: 100001;
+  z-index: 1001;
   cursor: pointer;
 }
 .focusSet{
@@ -170,6 +170,7 @@ ul.alertStatus{
 .myModal{
   :global{
     .ant-modal-body{
+      min-height: 200px;
       max-height: 400px;
       overflow: auto;
       &::-webkit-scrollbar-thumb {
