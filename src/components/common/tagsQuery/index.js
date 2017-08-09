@@ -15,6 +15,7 @@ class TagsQuery extends Component{
     constructor(props) {
         super(props);
         this.timer = null;
+        this.visibleTimer = null;
     }
 
     componentDidUpdate(nextProps) {
@@ -25,7 +26,27 @@ class TagsQuery extends Component{
       }
     }
 
-    contentLeave(tagGroup) {
+    delay(callback, delayS) {
+      const delay = delayS * 1000;
+      this.clearDelayTimer();
+      if (delay) {
+        this.visibleTimer = setTimeout(() => {
+          callback();
+          this.clearDelayTimer();
+        }, delay);
+      } else {
+        callback();
+      }
+    }
+
+    clearDelayTimer() {
+      if (this.visibleTimer) {
+        clearTimeout(this.visibleTimer)
+        this.visibleTimer = null
+      }
+    }
+
+    leave(tagGroup) {
       this.props.mouseLeave(JSON.stringify({field: tagGroup.key}))
       this.refs[`input_${tagGroup.key}`].blur();
     }
@@ -153,7 +174,7 @@ class TagsQuery extends Component{
                                             <DOMWrap
                                               tag='ul'
                                               ref={ domWrap => this.domWrap = domWrap }
-                                              onMouseLeave={this.contentLeave.bind(this, tagGroup)}
+                                              onMouseLeave={ this.delay.bind(this, this.leave.bind(this, tagGroup), 0.2)}
                                               selectList={this.props.selectList}
                                               selectHandler={this.selectHandler.bind(this, tagGroup)}
                                               loadMore={this.loadMore.bind(this, tagGroup)}
