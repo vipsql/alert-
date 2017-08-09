@@ -1,4 +1,14 @@
 @import "../vars.less";
+@import '../../theme/mixin.less';
+@border: 1px solid @white11;
+//蓝色和白色色系要上下一一对应
+//             1         2         3        4        5        6            7        8       9         10       11        12        13           14    15
+@var_default : @blue19,  @blue14, @none;
+@var_white   : @white13, @white0, @border;
+
+.setTheme(@var_default, @var_white);
+
+
 .global {
   .ant-select-dropdown-menu-item-active {
     color: #FFFFFF
@@ -33,12 +43,113 @@
 .hideBar {
   display: none
 }
-
-.toggleBarButton {
-  background-color: #1e5b97;
-  width: 100%;
-  border: none;
-  height: 17px;
+.getTheme(@var){
+  :local{
+    .toggleBarButton {
+      background-color: extract(@var, 1);
+      width: 100%;
+      border: none;
+      height: 17px;
+    }
+    .toggleBarButton:hover {
+      background-color: extract(@var, 1);
+    }
+    .toggleBarButton:focus {
+      background-color: extract(@var, 1);
+    }
+    .wrapBorder{
+      border:extract(@var, 3)
+    }
+    .queryOperate {
+      position: relative;
+      background: extract(@var, 2);
+      padding: 15px 5px 15px 10px;
+      overflow: hidden;
+      .count {
+        display: inline-block;
+        margin-top: 10px;
+        margin-left: 10px;
+        color: #90c6ee;
+        font-size: 13px;
+      }
+      .groupMain {
+        display: inline-block;
+        position: relative;
+        float: right;
+        .switch {
+          position: absolute;
+          left: 75px;
+          top: 4px;
+          color: #9dd7ff;
+          visibility: hidden;
+        }
+        &:hover .switch {
+          visibility: visible;
+        }
+      } // cover ant-design Select style on local
+      .selectSingle {
+        &.setGroup {
+          float: right;
+          width: 100px;
+        }
+        // &:global.ant-select {
+        //   //color: #6c7480;
+        //   font-size: 13px;
+        //   font-weight: normal;
+        //    :global .ant-select-selection--single {
+        //     height: 30px;
+        //      :global .ant-select-selection__rendered {
+        //       line-height: 28px;
+        //       margin-left: 10px;
+        //       margin-right: 10px;
+        //       padding-right: 10px;
+        //     }
+        //   }
+        // }
+      }
+      .button {
+        position: relative;
+        height: 30px;
+        display: inline-block;
+        border-radius: 3px; //border: 1px solid #d5ddeb;
+        //background-color: #fff;
+        background-color: #0d5990;
+        border: 1px solid #297ebb;
+        margin-right: 10px;
+        cursor: pointer;
+        transition: border .2s;
+        &:hover {
+          background-color: #2d98db;
+          span,
+          i {
+            color: #fff;
+          }
+        }
+        &.rightBtn {
+          float: right;
+        }
+        p {
+          position: relative;
+          display: inline-block;
+          padding: 4px 10px;
+          font-size: 13px;
+          font-weight: normal;
+          text-align: center;
+          color: #9dd7ff;
+          &.col {
+            padding-left: 5px;
+          }
+        }
+        .setCol {
+          position: relative;
+          display: inline-block;
+          top: 2px;
+          padding-left: 8px;
+          color: #7dbae6;
+        }
+      }
+    }
+  }
 }
 
 .toggleBarButtonIcon {
@@ -46,13 +157,9 @@
   top: -3px;
 }
 
-.toggleBarButton:hover {
-  background-color: #1e5b97;
-}
 
-.toggleBarButton:focus {
-  background-color: #1e5b97;
-}
+
+
 
 .searchBar {
    :global .ant-form-item {
@@ -90,95 +197,7 @@
   }
 }
 
-.queryOperate {
-  position: relative;
-  background: #153d69;
-  padding: 15px 5px 15px 10px;
-  overflow: hidden;
-  .count {
-    display: inline-block;
-    margin-top: 10px;
-    margin-left: 10px;
-    color: #90c6ee;
-    font-size: 13px;
-  }
-  .groupMain {
-    display: inline-block;
-    position: relative;
-    float: right;
-    .switch {
-      position: absolute;
-      left: 75px;
-      top: 4px;
-      color: #9dd7ff;
-      visibility: hidden;
-    }
-    &:hover .switch {
-      visibility: visible;
-    }
-  } // cover ant-design Select style on local
-  .selectSingle {
-    &.setGroup {
-      float: right;
-      width: 100px;
-    }
-    &:global.ant-select {
-      //color: #6c7480;
-      font-size: 13px;
-      font-weight: normal;
-       :global .ant-select-selection--single {
-        height: 30px;
-         :global .ant-select-selection__rendered {
-          line-height: 28px;
-          margin-left: 10px;
-          margin-right: 10px;
-          padding-right: 10px;
-        }
-      }
-    }
-  }
-  .button {
-    position: relative;
-    height: 30px;
-    display: inline-block;
-    border-radius: 3px; //border: 1px solid #d5ddeb;
-    //background-color: #fff;
-    background-color: #0d5990;
-    border: 1px solid #297ebb;
-    margin-right: 10px;
-    cursor: pointer;
-    transition: border .2s;
-    &:hover {
-      background-color: #2d98db;
-      span,
-      i {
-        color: #fff;
-      }
-    }
-    &.rightBtn {
-      float: right;
-    }
-    p {
-      position: relative;
-      display: inline-block;
-      padding: 4px 10px;
-      font-size: 13px;
-      font-weight: normal;
-      text-align: center;
-      color: #9dd7ff;
-      &.col {
-        padding-left: 5px;
-      }
-    }
-    .setCol {
-      position: relative;
-      display: inline-block;
-      top: 2px;
-      padding-left: 8px;
-      color: #7dbae6;
-    }
-  }
-}
+
 
 .alertDetailModal {
   position: fixed;

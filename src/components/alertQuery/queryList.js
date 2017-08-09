@@ -347,15 +347,17 @@ const ListTableWrap = ({ dispatch, alertQuery, topHeight, intl: { formatMessage 
   return (
     <div>
       <Button className={classnames(styles.toggleBarButton, zhankaiClass)} onClick={toggleBarButtonClick} size="small"><i className={classnames(isShowBar ? shouqiClass : zhankaiClass, styles.toggleBarButtonIcon)} /></Button>
-      {
-        !haveQuery ?
-          <div className={styles.alertListInfo}><FormattedMessage {...localeMessage['noQueryData']} /></div>
-          :
-          <div>
-            {topFixArea}
-            <ListTable extraArea={topFixArea} topHeight={isShowBar ? 335 : 145} sourceOrigin='alertQuery' {...props} />
-          </div>
-      }
+      <div className={styles.wrapBorder}>
+        {
+          !haveQuery ?
+            <div className={styles.alertListInfo}><FormattedMessage {...localeMessage['noQueryData']} /></div>
+            :
+            <div>
+              {topFixArea}
+              <ListTable extraArea={topFixArea} topHeight={isShowBar ? 335 : 145} sourceOrigin='alertQuery' {...props} />
+            </div>
+        }
+      </div>  
     </div>
   )
 }
