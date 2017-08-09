@@ -1,6 +1,6 @@
 import { getUserInformation, getWebNotification } from '../services/app'
 import { isSetUserTags } from '../services/alertTags.js'
-import { loopWebNotification as loop } from '../utils/index.js'
+import { loopWebNotification as loop, delay } from '../utils/index.js'
 import { parse } from 'qs'
 import { message } from 'antd'
 
@@ -35,8 +35,10 @@ export default {
   effects: {
     beforeHomePage: [function *watcher({ take, put, call }) {
       while(true) {
-        // 初始化的一些操作 比如获取用户信息 (异步的，是当触发isSetTags就会触发下面的flow)
+        // 初始化的一些操作 比如获取用户信息 (异步的，是当触发isSetTags就会触发下面的flow) delay做一个间隙，确保app/isSetTags执行以后再往下走
         yield take('app/isSetTags')
+        // 延时-------
+        yield delay(50)
         const infoResult = yield call(getUserInformation)
         if (infoResult.result) {
           yield put({ type: 'setUserInfo', payload: infoResult.data })
