@@ -47,7 +47,7 @@ export default {
       const {searchParam: oldSearchParam } = oldAlertOrigin;
       const newSearchParam = {...oldSearchParam, ...searchParam};
       payload.pagination = { ...oldAlertOrigin.pagination, ...pagination }
-      payload.sorter = { ...oldAlertOrigin.sorter,  sorter};
+      payload.sorter = { ...oldAlertOrigin.sorter,  ...sorter};
       const newAlertOrigin = { ...oldAlertOrigin,  ...payload}
       const response = yield queryAlertOrigin({ pagination: newAlertOrigin.pagination, sorter: newAlertOrigin.sorter, alertId: newAlertOrigin.alertId, searchParam: {...newSearchParam} })
       // 请求无论成功还是失败都停止“记载中”状态
