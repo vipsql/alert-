@@ -1364,6 +1364,7 @@ class RuleEditor extends Component {
             }
             if (/key|opt|value/.test(type)) {
                 if (type === 'key') {
+                    content[conditionIndex]['opt'] = undefined
                     content[conditionIndex]['value'] = undefined;
                 }
                 if (x.target) {
@@ -1384,6 +1385,7 @@ class RuleEditor extends Component {
                     }
                     if (/key|opt|value/.test(type)) {
                         if (type === 'key') {
+                            complex[i].content[conditionIndex]['opt'] = undefined
                             complex[i].content[conditionIndex]['value'] = undefined;
                         }
                         if (x.target) {

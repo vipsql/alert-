@@ -1,7 +1,7 @@
 import { request } from '../utils'
 
 export async function querySource() {
-    return request(`/incident/querySourceTags`, {
+    return request(`/rule/querySourceTags`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
