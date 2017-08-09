@@ -200,7 +200,7 @@ class VisualAnalyze extends Component {
     const resComponent = resList.length > 0 && resList.map((item, index) => {
       //referrerPolicy="no-referrer"
       const resList = item.resources.map((childItem, childIndex) => {
-        const iconImage = <img src={childItem.iconUrl} style={{ width: '70%', marginTop: '15%' }} />
+        const iconImage = (childItem.iconUrl && childItem.iconUrl!="")?<img src={childItem.iconUrl} style={{ width: '70%', marginTop: '15%' }} /> : undefined;
         return (
           <Popover key={childIndex} content={AlertListContent} >
             <li key={childIndex} data-id={childItem.resId} onMouseLeave={cancelShowAlertList} onMouseEnter={(e) => { showAlertList(e) }}>
