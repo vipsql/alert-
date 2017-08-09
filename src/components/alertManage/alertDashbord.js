@@ -188,13 +188,19 @@ class Chart extends Component {
 
   _wrap(d, actualWidth) {
     let text = d.name;
-    let textSize = this._textSize("12px", text);
+    let textSize = this._textSize("13px", text);
     let isShorted = false;
 
-    while (textSize.width > d.dx - 40 && textSize.width > 2) {
+    // 防止死循环，当内容压缩为‘’时退出循环
+    while (text != '' && textSize.width > d.dx - 40 && textSize.width > 2) {
       isShorted = true;
-      text = text.substring(0, text.length - 2);
+      text = text.substring(0, text.length - 1);
       textSize = this._textSize("13px", text + '...');
+    }
+
+    // 如果内容为‘’，且‘...’占据的空间依旧比个子空间大，则不显示任何内容
+    if(text == '' && this._textSize("13px", text + '...') > d.dx - 40) {
+      isShorted = false;
     }
 
     return isShorted ? (text + "...") : text;
