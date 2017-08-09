@@ -127,7 +127,12 @@ class AlertOriginSlider extends Component {
     const name = alertOrigin.alertName;
     const columns = [
       {
-        title: formatMessage({ ...localeMessage['occurTime'] }),
+        title: (
+          <span className={styles.sorter} onClick={() =>
+            onPageChange(1, undefined, { field: 'occurTime', order: sorter.sortType <= 0 ? 'ascend' : 'descend' })
+          }
+          > {formatMessage({ ...localeMessage['occurTime'] })}</span>
+        ),
         dataIndex: 'occurTime',
         key: 'occurTime',
         sorter: true,
@@ -176,7 +181,7 @@ class AlertOriginSlider extends Component {
               />
             </p>
             <div className={styles.startTimePeriod}>
-              <DatePeriodPicker value={ visible?'':undefined } placeholder={ formatMessage({...localeMessage['alertStartTimePlaceholder']}) } onChange={([startTime, endTime]) => {
+              <DatePeriodPicker value={visible ? '' : undefined} placeholder={formatMessage({ ...localeMessage['alertStartTimePlaceholder'] })} onChange={([startTime, endTime]) => {
                 onSearch({ startTime, endTime })
               }} />
             </div>

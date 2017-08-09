@@ -509,7 +509,7 @@ const AlertOperationWrap = ({ alertOperation, alertListTable, userInfo, isShowCo
           operateAlertIds: alertListTable.operateAlertIds,
           resolve: (response) => {
             if (response && response.result) {
-              refreshListAndResetCheckbox();
+              refreshListAndResetCheckbox({  });
             }
           }
         }

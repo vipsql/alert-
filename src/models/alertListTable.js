@@ -634,13 +634,17 @@ export default {
 
     // 修改data数组某一行的值
     updateDataRow(state, { payload }) {
-      const { data, isGroup, isReRender = true } = state;
+      const { data, isGroup, tagsFilter: { status }, isReRender = true } = state;
       let newData = assign([], data);
       if (isGroup) {
         newData = newData.map((tempGroup) => {
           let data = tempGroup.children.map((tempRow) => {
             if (tempRow['id'] == payload['id']) {
               tempRow = { ...tempRow, ...payload };
+              // 如果告警的状态与当前过滤条件的状态不一致，则设置“移除字段”为true
+              if (status.indexOf(',') < 0 && status != tempRow.status) {
+                tempRow.isRemoved = true;
+              }
             }
             return tempRow
           })
@@ -651,6 +655,10 @@ export default {
         newData = newData.map((tempRow) => {
           if (tempRow['id'] == payload['id']) {
             tempRow = { ...tempRow, ...payload };
+            // 如果告警的状态与当前过滤条件的状态不一致，则设置“移除字段”为true
+            if (status.indexOf(',') < 0 && status != tempRow.status) {
+              tempRow.isRemoved = true;
+            }
           }
           return tempRow;
         });

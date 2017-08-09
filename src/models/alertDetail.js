@@ -102,7 +102,7 @@ export default {
         } else {
           yield message.error(suppressData.message, 3);
         }
-        resolve && resolve(suppressData)
+        resolve && resolve(suppressData, {})
       } else {
         resolve && resolve(false)
         console.error('select incident/incident type error');
