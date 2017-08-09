@@ -28,7 +28,7 @@ class alertDetail extends Component {
       // const $toCloseContent = $target.closest(".layout");
 
       // 如果点击的组件补上下拉框选项或者不在弹出框上或者不在右侧滑动栏上，则隐藏右侧滑动栏
-      if (($target.attr("role") != 'menuitem' && $toCloseLi.attr("role") != 'menuitem' && $toCloseSlider.length == 0 && $toCloseModal.length == 0)) {
+      if (($target.attr("role") != 'menuitem' && ($toCloseLi.attr("role") != 'menuitem' || $target.attr("href")) && $toCloseSlider.length == 0 && $toCloseModal.length == 0)) {
         this.props.closeDeatilModal();
       }
     })
