@@ -220,7 +220,13 @@ const AlertDetailWrap = ({ alertDetail, userInfo, dispatch, afterTakeOver, after
     onOk: (value) => {
       dispatch({
         type: 'alertDetail/dispatchForm',
-        payload: {...value, resolve: afterDispatch}
+        payload: {...value, resolve: (response, currentAlertDetail) => {
+          dispatch({
+            type: 'alertDetail/toggleDispatchModal',
+            payload: false
+          })
+          afterDispatch(response, currentAlertDetail);
+        }}
       })
     },
     onCancal: () => {
