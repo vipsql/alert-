@@ -69,7 +69,7 @@ class AlertListManage extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, alertManage={}, intl: { formatMessage } } = this.props;
+    const { dispatch, alertManage = {}, intl: { formatMessage } } = this.props;
 
     dispatch({ type: 'alertOperation/changeShowOperation', payload: { showOperations: statusOperationMap[alertManage.selectedStatus || 'NEW'] } });
 
@@ -174,7 +174,7 @@ class AlertListManage extends Component {
       isShowVisualTab = !(groupName == 'source' || groupName == 'status' || groupName == 'severity');
 
     const updateRow = (response, currentAlertDetail) => {
-      if(response && response.result) {
+      if (response && response.result) {
         dispatch({
           type: 'alertListTable/updateDataRow',
           payload: currentAlertDetail
@@ -219,20 +219,20 @@ class AlertListManage extends Component {
             <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key='1'>
               {/*<AlertOperation position='list' {...operateProps} />*/}
               <AlertOperationWrap />
-              <ListTableWrap isNeedCheckOwner={ isNeedCheckOwnerMap[alertManage.selectedStatus] && userInfo.supervisor != "1" } topFixArea={<AlertOperationWrap />} topHeight={alertList.isShowBar ? 366 : 216} />
+              <ListTableWrap isNeedCheckOwner={isNeedCheckOwnerMap[alertManage.selectedStatus] && userInfo.supervisor != "1"} topFixArea={<AlertOperationWrap />} topHeight={alertList.isShowBar ? 366 : 216} />
             </TabPane>
             <TabPane tab={<span className={tabLine} ><FormattedMessage {...localeMessage['tab_time']} /></span>} key='2'>
               {/*<AlertOperation position='timeAxis' {...operateProps} />*/}
-              <AlertOperationWrap isShowColSetBtn={ false } />
-              <ListTimeTableWrap isNeedCheckOwner={ isNeedCheckOwnerMap[alertManage.selectedStatus] && userInfo.supervisor != "1" }/>
+              <AlertOperationWrap isShowColSetBtn={false} />
+              <ListTimeTableWrap isNeedCheckOwner={isNeedCheckOwnerMap[alertManage.selectedStatus] && userInfo.supervisor != "1"} />
             </TabPane>
             {
-              isShowVisualTab?
-              <TabPane tab={<span className={tabVisual}><FormattedMessage {...localeMessage['tab_visual']} /></span>} key='3'>
-                <VisualAnalyzeWrap key={new Date().getTime()} />
-              </TabPane>
-              :
-              undefined
+              isShowVisualTab ?
+                <TabPane tab={<span className={tabVisual}><FormattedMessage {...localeMessage['tab_visual']} /></span>} key='3'>
+                  <VisualAnalyzeWrap key={new Date().getTime()} />
+                </TabPane>
+                :
+                []
             }
           </Tabs>
           <ul className={styles.levelBar}>
@@ -247,7 +247,7 @@ class AlertListManage extends Component {
           </ul>
         </div>
 
-        <AlertDetailWrap { ...alertDetailWrapProps }/>
+        <AlertDetailWrap { ...alertDetailWrapProps } />
         <AlertOriginSliderWrap />
         <ScrollTopButton />
       </div>
