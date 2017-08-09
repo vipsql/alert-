@@ -124,13 +124,13 @@
   "alertOperate.groupByOther": "按{other}",
   "alertOperate.log": "审计日志",
   "alertOperate.errorMsg": "{ operate }失败。原因可能是:",
-  "alertDetail.operation.reason1": "因为告警由他人负责所以无法{ control }",
-  "alertDetail.operation.reason2": "处于\"{ status }\"状态的告警无法{ control }",
+  "alertDetail.operation.reason1": "不能{ control }由他人负责的告警",
+  "alertDetail.operation.reason2": "不能{ control }处于\"{ status }\"状态的告警",
 
   "modal.operate.infoTip1": "请先选择一条告警",
   "modal.operate.infoTip2": "只允许操作一条告警",
-  "modal.operate.infoTip3": "请先选择至少二条告警",
-  "modal.operate.infoTip4": "请先将多条告警合并为一条源告警",
+  "modal.operate.infoTip3": "请选择至少两条告警",
+  "modal.operate.infoTip4": "请将多条告警合并到一条根源告警",
   "modal.operate.allowRollUp": "只允许新告警才能派发工单",
 
   "modal.tag.select": "请选择{name}",

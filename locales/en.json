@@ -124,8 +124,8 @@
   "alertOperate.groupByOther": "{other}",
   "alertOperate.log": "Audit Log",
   "alertOperate.errorMsg": "{ operate } Failed. The Cause maybe:",
-  "alertDetail.operation.reason1": "因为告警由他人负责所以无法{ control }",
-  "alertDetail.operation.reason2": "处于\"{ status }\"状态的告警无法{ control }",
+  "alertDetail.operation.reason1": "You can't { control } alerts owned by others",
+  "alertDetail.operation.reason2": "You can't { control } alerts in \"{ status }\" state",
 
   "modal.tag.select": "Please enter {name}",
   "modal.tag.keywords": "Please enter keywords",
@@ -159,7 +159,7 @@
   "modal.reassignTitle": "Assign to Team Members",
   "modal.specificUser": "Specified User",
 
-  "modal.know": "OK, I get it",
+  "modal.know": "OK, I got it",
   "modal.suppress.success": "Suppress successfully.",
   "modal.suppress.successRemind": "Alerts will not be received in specified time range, please go to 'Settings - Correlations' to disable the temporary suppression rules if you want cancel that.",
   "modal.remind": "Don't remind me again.",
