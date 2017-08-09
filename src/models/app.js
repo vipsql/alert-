@@ -58,12 +58,12 @@ export default {
     },
     *isSetTags({ payload }, { put, call, select }) {
       const isSet = yield isSetUserTags()
-      if (isSet.result && isSet.data) {
+      //debugger
+      if (isSet.result) {
         yield put({
           type: 'showMask',
           payload: !isSet.data
         })
-
       }
     },
 
