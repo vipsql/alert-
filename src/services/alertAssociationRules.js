@@ -115,3 +115,12 @@ export async function getClasscode() {
       }
   })
 }
+
+export async function querySource() {
+    return request(`/rule/querySourceTags`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+}

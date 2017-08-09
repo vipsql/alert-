@@ -12,14 +12,12 @@ import {
   getField,
   queryAttributes,
   getshowITSMParam,
-  getClasscode
+  getClasscode,
+  querySource
 } from '../services/alertAssociationRules';
 import {
   getUsers
 } from '../services/app.js'
-import {
-  querySource
-} from '../services/alertQuery';
 import {
   getChatOpsOptions
 } from '../services/alertOperation';
