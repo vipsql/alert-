@@ -12,5 +12,4 @@
       location.href = 'uyun-close://'
     }
   }
-}.call(this));
-  
+}.call(window));

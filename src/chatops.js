@@ -113,4 +113,4 @@
       return $$;
     });
   }
-}.call(this));
+}.call(window));
