@@ -113,6 +113,12 @@ export default {
               resObjectId: query.resObjectId,
             }
           })
+
+          // alertQuery页面打开后关闭告警详情弹出框
+          dispatch({
+            type: 'alertDetail/toggleDetailModal',
+            payload: false
+          })
         }
       })
 
@@ -397,6 +403,8 @@ export default {
       if(payload && payload.resObjectId) {
         yield put({ type: 'setCurrentQuery', payload: { currentQuery: {resObjectId: payload.resObjectId} } })
       }
+
+      yield put({ type: 'toggle' })
 
       yield put({ type: 'queryAlertList' })
 
