@@ -4,24 +4,8 @@ import { Button } from 'antd'
 import styles from './index.less';
 import LevelIcon from '../levelIcon/index.js'
 
-function switchVideoSouce(type = '3') {
-    let _source = 'Recovery.wav';
-    switch (type) {
-      case '3':
-        _source = 'Critical.wav';
-        break;
-      case '2':
-        _source = 'Warning.wav';
-        break;
-      case '1':
-        _source = 'Information.wav';
-        break;
-      case '0':
-        _source = 'Recovery.wav';
-        break;
-      default:
-        break;
-    }
+function switchVideoSouce(type = '01') {
+    let _source = `/sound/Sound${type || '01'}.mp3`;
     return _source;
 }
 

@@ -26,24 +26,8 @@ function saveref(name, component) {
     this[name] = component
 }
 
-function switchVideoSouce(type = '3') {
-    let _source = 'Recovery.wav';
-    switch (type) {
-      case '3':
-        _source = 'Critical.wav';
-        break;
-      case '2':
-        _source = 'Warning.wav';
-        break;
-      case '1':
-        _source = 'Information.wav';
-        break;
-      case '0':
-        _source = 'Recovery.wav';
-        break;
-      default:
-        break;
-    }
+function switchVideoSouce(type = '01') {
+    let _source = `/sound/Sound${type || '01'}.mp3`;
     return _source;
 }
 
@@ -251,13 +235,15 @@ class NotificationList extends Component {
                                   <Select
                                     id="voiceType"
                                     getPopupContainer={() =>document.getElementById("content")}
-                                    value={action.actionNotification ? action.actionNotification.notificationMode.webNotification.voiceType : '3'}
+                                    value={action.actionNotification ? action.actionNotification.notificationMode.webNotification.voiceType : '01'}
                                     onChange={this.changeAction.bind(this, 'voiceType')}
                                   >
-                                    <Option value="3">{window['_severity']['3']}</Option>
-                                    <Option value="2">{window['_severity']['2']}</Option>
-                                    <Option value="1">{window['_severity']['1']}</Option>
-                                    <Option value="0">{window['_severity']['0']}</Option>
+                                    <Option value="01">{'Sound01'}</Option>
+                                    <Option value="02">{'Sound02'}</Option>
+                                    <Option value="03">{'Sound03'}</Option>
+                                    <Option value="04">{'Sound04'}</Option>
+                                    <Option value="05">{'Sound05'}</Option>
+                                    <Option value="06">{'Sound06'}</Option>
                                   </Select>
                               </FormItem>
                             </Col>

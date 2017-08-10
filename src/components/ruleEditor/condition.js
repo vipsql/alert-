@@ -191,17 +191,17 @@ class Condition extends Component {
             )}>
                 <Select getPopupContainer={() =>document.getElementById("content")} onChange={changeConditionContent.bind(_this, node, index, 'key')} className={styles.key} value={_key} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phField']}>
                     {
-                        keyList.map((item, itemIndex) => {
+                        keyList.length > 0 ? keyList.map((item, itemIndex) => {
                             return (
                               <OptGroup label={attributeLabels[itemIndex]} key={itemIndex}>
                                 {
-                                  item.map( child => (
-                                    <Option key={child.value}>{child.name}</Option>
-                                  ))
+                                  item.length > 0 ? item.map( child => (
+                                    <Option key={child.value} value={child.value}>{child.name}</Option>
+                                  )) : []
                                 }
                               </OptGroup>
                             )
-                        })
+                        }) : []
                     }
                 </Select>
                 <Select getPopupContainer={() =>document.getElementById("content")} style={{ width: 150 }} onChange={changeConditionContent.bind(_this, node, index, 'opt')} className={styles.opt} value={opt} placeholder={window.__alert_appLocaleData.messages['ruleEditor.phOpt']}>

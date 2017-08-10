@@ -28,11 +28,7 @@ module.exports = function (webpackConfig, env) {
     }
     webpackConfig.babel.plugins.push('dev-expression')
   }
-  // webpackConfig.output = {
-  //    publicPath: '/arbiter/new'
-  // }
 
-  //
   webpackConfig.plugins.push(
     new CopyWebpackPlugin([
       {
@@ -64,20 +60,8 @@ module.exports = function (webpackConfig, env) {
         to: __dirname + '/dist/'
       },
       {
-        from: __dirname + '/Critical.wav',
-        to: __dirname + '/dist/'
-      },
-      {
-        from: __dirname + '/Information.wav',
-        to: __dirname + '/dist/'
-      },
-      {
-        from: __dirname + '/Recovery.wav',
-        to: __dirname + '/dist/'
-      },
-      {
-        from: __dirname + '/Warning.wav',
-        to: __dirname + '/dist/'
+        from: __dirname + '/sound/*',
+        to: __dirname + '/dist/sound/'
       },
       {
         from: __dirname + '/locales/**',

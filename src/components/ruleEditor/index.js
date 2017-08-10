@@ -246,7 +246,7 @@ const initalNotificationMode = {
       title: '${name}',
       message: '${severity},${entityName},${description}',
       playTimeType: 'ONECE', // {string} ONECE --> 一次， TENSEC --> 10s，TIMEOUT --> 直到超时
-      voiceType: '3', // {string} 3 --> 紧急， 2 --> 警告， 1 --> 提醒， 0 --> 恢复
+      voiceType: '01', // {string}
       timeOut: 30 // {number} 秒记，上限 30 分钟
     }
 }
