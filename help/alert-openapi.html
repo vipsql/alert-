@@ -3234,6 +3234,17 @@ margin-bottom: 20px;
 
   var defs = {}
 
+  defs.count = {
+  "type" : "object",
+  "properties" : {
+    "value" : {
+      "type" : "string"
+    },
+    "count" : {
+      "type" : "integer"
+    }
+  }
+};
   defs.incident = {
   "type" : "object",
   "properties" : {
@@ -3402,12 +3413,18 @@ margin-bottom: 20px;
   }
 };
   defs.statistics = {
-  "type" : "object",
-  "description" : "根据传入分组参数，返回对应分组的值及数量"
+  "type" : "array",
+  "description" : "根据传入分组参数，返回对应分组的值及数量",
+  "items" : {
+    "$ref" : "#/definitions/count"
+  }
 };
   defs.trends = {
-  "type" : "object",
-  "description" : "根据传入统计趋势参数返回对应时间及数量"
+  "type" : "array",
+  "description" : "根据传入统计趋势参数返回对应时间及数量;hour、dayOfMonth、week的value返回格式分别为 2017-7-25 9:00(统计的是2017-7-25 9:00-10:00时间段的数量)、2017-6-30(当天)、2017-25(2017年第25周)",
+  "items" : {
+    "$ref" : "#/definitions/count"
+  }
 };
       // encode url
 
@@ -4835,7 +4852,7 @@ try {
                                             <div class="tab-content">
                                                 <div class="tab-pane active" id="examples-Alert-statistics-0-curl">
                                                     <pre class="prettyprint"><code class="language-bsh">
-curl -X <span style="text-transform: uppercase;">get</span> "http://127.0.0.1/alert/openapi/v2/incident/statistics?api_key=&id=&name=&alias=&status=&entityName=&entityAddr=&tag=&severity=&classCode=&begin=&end=&groupBy=&top=&sort="
+curl -X <span style="text-transform: uppercase;">get</span> "http://127.0.0.1/alert/openapi/v2/incident/statistics?api_key=&groupBy=&id=&name=&alias=&status=&entityName=&entityAddr=&tag=&severity=&classCode=&begin=&end=&top=&sort="
 
 
 </code></pre>
@@ -4857,6 +4874,7 @@ public class AlertApiExample {
         
         AlertApi apiInstance = new AlertApi();
         String api_key = apiKey_example; // String | 租户apikey
+        String groupBy = groupBy_example; // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签key、资源类型
         String id = id_example; // String | 告警id
         String name = name_example; // String | 告警名称
         array[String] alias = ; // array[String] | 告警别名
@@ -4868,11 +4886,10 @@ public class AlertApiExample {
         String classCode = classCode_example; // String | 资源类型
         BigDecimal begin = 3.4; // BigDecimal | 如：1486454685958
         BigDecimal end = 3.4; // BigDecimal | 如：1486454685958
-        String groupBy = groupBy_example; // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签、资源类型
         Integer top = 56; // Integer | 取前N条数据
         String sort = sort_example; // String | 排序（ASC、DESC）
         try {
-            statistics result = apiInstance.statistics(api_key, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, groupBy, top, sort);
+            statistics result = apiInstance.statistics(api_key, groupBy, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, top, sort);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AlertApi#statistics");
@@ -4894,6 +4911,7 @@ public class AlertApiExample {
     public static void main(String[] args) {
         AlertApi apiInstance = new AlertApi();
         String api_key = apiKey_example; // String | 租户apikey
+        String groupBy = groupBy_example; // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签key、资源类型
         String id = id_example; // String | 告警id
         String name = name_example; // String | 告警名称
         array[String] alias = ; // array[String] | 告警别名
@@ -4905,11 +4923,10 @@ public class AlertApiExample {
         String classCode = classCode_example; // String | 资源类型
         BigDecimal begin = 3.4; // BigDecimal | 如：1486454685958
         BigDecimal end = 3.4; // BigDecimal | 如：1486454685958
-        String groupBy = groupBy_example; // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签、资源类型
         Integer top = 56; // Integer | 取前N条数据
         String sort = sort_example; // String | 排序（ASC、DESC）
         try {
-            statistics result = apiInstance.statistics(api_key, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, groupBy, top, sort);
+            statistics result = apiInstance.statistics(api_key, groupBy, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, top, sort);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AlertApi#statistics");
@@ -4931,6 +4948,7 @@ public class AlertApiExample {
                                                     <pre class="prettyprint"><code class="language-cpp">
 
 String *api_key = apiKey_example; // 租户apikey
+String *groupBy = groupBy_example; // 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签key、资源类型
 String *id = id_example; // 告警id (optional)
 String *name = name_example; // 告警名称 (optional)
 array[String] *alias = ; // 告警别名 (optional)
@@ -4942,7 +4960,6 @@ array[String] *severity = ; // 告警等级0:恢复,1:提醒,2:警告,3:紧急 (
 String *classCode = classCode_example; // 资源类型 (optional)
 BigDecimal *begin = 3.4; // 如：1486454685958 (optional)
 BigDecimal *end = 3.4; // 如：1486454685958 (optional)
-String *groupBy = groupBy_example; // 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签、资源类型 (optional)
 Integer *top = 56; // 取前N条数据 (optional)
 String *sort = sort_example; // 排序（ASC、DESC） (optional)
 
@@ -4950,6 +4967,7 @@ AlertApi *apiInstance = [[AlertApi alloc] init];
 
 // 告警统计
 [apiInstance statisticsWith:api_key
+    groupBy:groupBy
     id:id
     name:name
     alias:alias
@@ -4961,7 +4979,6 @@ AlertApi *apiInstance = [[AlertApi alloc] init];
     classCode:classCode
     begin:begin
     end:end
-    groupBy:groupBy
     top:top
     sort:sort
               completionHandler: ^(statistics output, NSError* error) {
@@ -4983,6 +5000,8 @@ var api = new .AlertApi()
 
 var api_key = apiKey_example; // {String} 租户apikey
 
+var groupBy = groupBy_example; // {String} 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签key、资源类型
+
 var opts = { 
   'id': id_example, // {String} 告警id
   'name': name_example, // {String} 告警名称
@@ -4995,7 +5014,6 @@ var opts = {
   'classCode': classCode_example, // {String} 资源类型
   'begin': 3.4, // {BigDecimal} 如：1486454685958
   'end': 3.4, // {BigDecimal} 如：1486454685958
-  'groupBy': groupBy_example, // {String} 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签、资源类型
   'top': 56, // {Integer} 取前N条数据
   'sort': sort_example // {String} 排序（ASC、DESC）
 };
@@ -5007,7 +5025,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.statistics(api_key, opts, callback);
+api.statistics(api_key, groupBy, opts, callback);
 
                                                     </code></pre>
                                                 </div>
@@ -5033,6 +5051,7 @@ namespace Example
             
             var apiInstance = new AlertApi();
             var api_key = apiKey_example;  // String | 租户apikey
+            var groupBy = groupBy_example;  // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签key、资源类型
             var id = id_example;  // String | 告警id (optional) 
             var name = name_example;  // String | 告警名称 (optional) 
             var alias = new array[String](); // array[String] | 告警别名 (optional) 
@@ -5044,14 +5063,13 @@ namespace Example
             var classCode = classCode_example;  // String | 资源类型 (optional) 
             var begin = 3.4;  // BigDecimal | 如：1486454685958 (optional) 
             var end = 3.4;  // BigDecimal | 如：1486454685958 (optional) 
-            var groupBy = groupBy_example;  // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签、资源类型 (optional) 
             var top = 56;  // Integer | 取前N条数据 (optional) 
             var sort = sort_example;  // String | 排序（ASC、DESC） (optional) 
 
             try
             {
                 // 告警统计
-                statistics result = apiInstance.statistics(api_key, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, groupBy, top, sort);
+                statistics result = apiInstance.statistics(api_key, groupBy, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, top, sort);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -5073,6 +5091,7 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new io.swagger.client\Api\AlertApi();
 $api_key = apiKey_example; // String | 租户apikey
+$groupBy = groupBy_example; // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签key、资源类型
 $id = id_example; // String | 告警id
 $name = name_example; // String | 告警名称
 $alias = ; // array[String] | 告警别名
@@ -5084,12 +5103,11 @@ $severity = ; // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急
 $classCode = classCode_example; // String | 资源类型
 $begin = 3.4; // BigDecimal | 如：1486454685958
 $end = 3.4; // BigDecimal | 如：1486454685958
-$groupBy = groupBy_example; // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签、资源类型
 $top = 56; // Integer | 取前N条数据
 $sort = sort_example; // String | 排序（ASC、DESC）
 
 try {
-    $result = $api_instance->statistics($api_key, $id, $name, $alias, $status, $entityName, $entityAddr, $tag, $severity, $classCode, $begin, $end, $groupBy, $top, $sort);
+    $result = $api_instance->statistics($api_key, $groupBy, $id, $name, $alias, $status, $entityName, $entityAddr, $tag, $severity, $classCode, $begin, $end, $top, $sort);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling AlertApi->statistics: ', $e->getMessage(), PHP_EOL;
@@ -5145,6 +5163,35 @@ try {
             });
         </script>
         <div id="d2e199_statistics_api_key"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">groupBy*</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "groupBy",
+  "in" : "query",
+  "description" : "根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签key、资源类型",
+  "required" : true,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_groupBy');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_groupBy"></div>
     </td>
 </tr>
 
@@ -5470,35 +5517,6 @@ try {
 </tr>
 
                                                         <tr>
-    <td style="width:150px;">groupBy</td>
-    <td>
-
-
-        <script>
-            $(document).ready(function () {
-                var schemaWrapper = {
-  "name" : "groupBy",
-  "in" : "query",
-  "description" : "根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签、资源类型",
-  "required" : false,
-  "type" : "string"
-};
-                var schema = schemaWrapper;
-
-
-                var view = new JSONSchemaView(schema, 0);
-                var result = $('#d2e199_statistics_groupBy');
-                result.empty();
-                result.append(view.render());
-
-
-            });
-        </script>
-        <div id="d2e199_statistics_groupBy"></div>
-    </td>
-</tr>
-
-                                                        <tr>
     <td style="width:150px;">top</td>
     <td>
 
@@ -5560,7 +5578,7 @@ try {
 
                                             <h2>响应</h2>
 
-                                                <h3> 状态码: 200 - 返回统计信息,如##根据告警级别 { \&quot;0\&quot;: 385, \&quot;1\&quot;: 224, \&quot;2\&quot;: 224, \&quot;3\&quot;: 295 } </h3>
+                                                <h3> 状态码: 200 - 返回统计信息 </h3>
 
                                                 <ul class="nav nav-tabs nav-tabs-examples" >
 
@@ -5591,7 +5609,7 @@ try {
                                                             <script>
                                                                 $(document).ready(function() {
                                                                     var schemaWrapper = {
-  "description" : "返回统计信息,如##根据告警级别 { \"0\": 385, \"1\": 224, \"2\": 224, \"3\": 295 }",
+  "description" : "返回统计信息",
   "schema" : {
     "$ref" : "#/definitions/statistics"
   }
@@ -5712,7 +5730,7 @@ try {
                                             <div class="tab-content">
                                                 <div class="tab-pane active" id="examples-Alert-trends-0-curl">
                                                     <pre class="prettyprint"><code class="language-bsh">
-curl -X <span style="text-transform: uppercase;">get</span> "http://127.0.0.1/alert/openapi/v2/incident/trend?api_key=&id=&name=&alias=&status=&entityName=&entityAddr=&tag=&severity=&classCode=&begin=&end=&trendBy=&top=&sort="
+curl -X <span style="text-transform: uppercase;">get</span> "http://127.0.0.1/alert/openapi/v2/incident/trend?api_key=&trendBy=&id=&name=&alias=&status=&entityName=&entityAddr=&tag=&severity=&classCode=&begin=&end=&top=&sort="
 
 
 </code></pre>
@@ -5734,6 +5752,7 @@ public class AlertApiExample {
         
         AlertApi apiInstance = new AlertApi();
         String api_key = apiKey_example; // String | 租户apikey
+        String trendBy = trendBy_example; // String | 根据条件分组（hour、dayOfMonth、week）
         String id = id_example; // String | 告警id
         String name = name_example; // String | 告警名称
         String alias = alias_example; // String | 告警别名
@@ -5745,11 +5764,10 @@ public class AlertApiExample {
         String classCode = classCode_example; // String | 资源类型
         BigDecimal begin = 3.4; // BigDecimal | 如：1486454685958
         BigDecimal end = 3.4; // BigDecimal | 如：1486454685958
-        String trendBy = trendBy_example; // String | 根据条件分组（hour、dayOfMonth、week）
         Integer top = 56; // Integer | 取前N条数据
         String sort = sort_example; // String | 排序（ASC、DESC）
         try {
-            trends result = apiInstance.trends(api_key, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, trendBy, top, sort);
+            trends result = apiInstance.trends(api_key, trendBy, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, top, sort);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AlertApi#trends");
@@ -5771,6 +5789,7 @@ public class AlertApiExample {
     public static void main(String[] args) {
         AlertApi apiInstance = new AlertApi();
         String api_key = apiKey_example; // String | 租户apikey
+        String trendBy = trendBy_example; // String | 根据条件分组（hour、dayOfMonth、week）
         String id = id_example; // String | 告警id
         String name = name_example; // String | 告警名称
         String alias = alias_example; // String | 告警别名
@@ -5782,11 +5801,10 @@ public class AlertApiExample {
         String classCode = classCode_example; // String | 资源类型
         BigDecimal begin = 3.4; // BigDecimal | 如：1486454685958
         BigDecimal end = 3.4; // BigDecimal | 如：1486454685958
-        String trendBy = trendBy_example; // String | 根据条件分组（hour、dayOfMonth、week）
         Integer top = 56; // Integer | 取前N条数据
         String sort = sort_example; // String | 排序（ASC、DESC）
         try {
-            trends result = apiInstance.trends(api_key, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, trendBy, top, sort);
+            trends result = apiInstance.trends(api_key, trendBy, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, top, sort);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AlertApi#trends");
@@ -5808,6 +5826,7 @@ public class AlertApiExample {
                                                     <pre class="prettyprint"><code class="language-cpp">
 
 String *api_key = apiKey_example; // 租户apikey
+String *trendBy = trendBy_example; // 根据条件分组（hour、dayOfMonth、week）
 String *id = id_example; // 告警id (optional)
 String *name = name_example; // 告警名称 (optional)
 String *alias = alias_example; // 告警别名 (optional)
@@ -5819,7 +5838,6 @@ array[String] *severity = ; // 告警等级0:恢复,1:提醒,2:警告,3:紧急 (
 String *classCode = classCode_example; // 资源类型 (optional)
 BigDecimal *begin = 3.4; // 如：1486454685958 (optional)
 BigDecimal *end = 3.4; // 如：1486454685958 (optional)
-String *trendBy = trendBy_example; // 根据条件分组（hour、dayOfMonth、week） (optional)
 Integer *top = 56; // 取前N条数据 (optional)
 String *sort = sort_example; // 排序（ASC、DESC） (optional)
 
@@ -5827,6 +5845,7 @@ AlertApi *apiInstance = [[AlertApi alloc] init];
 
 // 告警趋势
 [apiInstance trendsWith:api_key
+    trendBy:trendBy
     id:id
     name:name
     alias:alias
@@ -5838,7 +5857,6 @@ AlertApi *apiInstance = [[AlertApi alloc] init];
     classCode:classCode
     begin:begin
     end:end
-    trendBy:trendBy
     top:top
     sort:sort
               completionHandler: ^(trends output, NSError* error) {
@@ -5860,6 +5878,8 @@ var api = new .AlertApi()
 
 var api_key = apiKey_example; // {String} 租户apikey
 
+var trendBy = trendBy_example; // {String} 根据条件分组（hour、dayOfMonth、week）
+
 var opts = { 
   'id': id_example, // {String} 告警id
   'name': name_example, // {String} 告警名称
@@ -5872,7 +5892,6 @@ var opts = {
   'classCode': classCode_example, // {String} 资源类型
   'begin': 3.4, // {BigDecimal} 如：1486454685958
   'end': 3.4, // {BigDecimal} 如：1486454685958
-  'trendBy': trendBy_example, // {String} 根据条件分组（hour、dayOfMonth、week）
   'top': 56, // {Integer} 取前N条数据
   'sort': sort_example // {String} 排序（ASC、DESC）
 };
@@ -5884,7 +5903,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.trends(api_key, opts, callback);
+api.trends(api_key, trendBy, opts, callback);
 
                                                     </code></pre>
                                                 </div>
@@ -5910,6 +5929,7 @@ namespace Example
             
             var apiInstance = new AlertApi();
             var api_key = apiKey_example;  // String | 租户apikey
+            var trendBy = trendBy_example;  // String | 根据条件分组（hour、dayOfMonth、week）
             var id = id_example;  // String | 告警id (optional) 
             var name = name_example;  // String | 告警名称 (optional) 
             var alias = alias_example;  // String | 告警别名 (optional) 
@@ -5921,14 +5941,13 @@ namespace Example
             var classCode = classCode_example;  // String | 资源类型 (optional) 
             var begin = 3.4;  // BigDecimal | 如：1486454685958 (optional) 
             var end = 3.4;  // BigDecimal | 如：1486454685958 (optional) 
-            var trendBy = trendBy_example;  // String | 根据条件分组（hour、dayOfMonth、week） (optional) 
             var top = 56;  // Integer | 取前N条数据 (optional) 
             var sort = sort_example;  // String | 排序（ASC、DESC） (optional) 
 
             try
             {
                 // 告警趋势
-                trends result = apiInstance.trends(api_key, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, trendBy, top, sort);
+                trends result = apiInstance.trends(api_key, trendBy, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, top, sort);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -5950,6 +5969,7 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new io.swagger.client\Api\AlertApi();
 $api_key = apiKey_example; // String | 租户apikey
+$trendBy = trendBy_example; // String | 根据条件分组（hour、dayOfMonth、week）
 $id = id_example; // String | 告警id
 $name = name_example; // String | 告警名称
 $alias = alias_example; // String | 告警别名
@@ -5961,12 +5981,11 @@ $severity = ; // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急
 $classCode = classCode_example; // String | 资源类型
 $begin = 3.4; // BigDecimal | 如：1486454685958
 $end = 3.4; // BigDecimal | 如：1486454685958
-$trendBy = trendBy_example; // String | 根据条件分组（hour、dayOfMonth、week）
 $top = 56; // Integer | 取前N条数据
 $sort = sort_example; // String | 排序（ASC、DESC）
 
 try {
-    $result = $api_instance->trends($api_key, $id, $name, $alias, $status, $entityName, $entityAddr, $tag, $severity, $classCode, $begin, $end, $trendBy, $top, $sort);
+    $result = $api_instance->trends($api_key, $trendBy, $id, $name, $alias, $status, $entityName, $entityAddr, $tag, $severity, $classCode, $begin, $end, $top, $sort);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling AlertApi->trends: ', $e->getMessage(), PHP_EOL;
@@ -6022,6 +6041,35 @@ try {
             });
         </script>
         <div id="d2e199_trends_api_key"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">trendBy*</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "trendBy",
+  "in" : "query",
+  "description" : "根据条件分组（hour、dayOfMonth、week）",
+  "required" : true,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_trendBy');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_trendBy"></div>
     </td>
 </tr>
 
@@ -6347,35 +6395,6 @@ try {
 </tr>
 
                                                         <tr>
-    <td style="width:150px;">trendBy</td>
-    <td>
-
-
-        <script>
-            $(document).ready(function () {
-                var schemaWrapper = {
-  "name" : "trendBy",
-  "in" : "query",
-  "description" : "根据条件分组（hour、dayOfMonth、week）",
-  "required" : false,
-  "type" : "string"
-};
-                var schema = schemaWrapper;
-
-
-                var view = new JSONSchemaView(schema, 0);
-                var result = $('#d2e199_trends_trendBy');
-                result.empty();
-                result.append(view.render());
-
-
-            });
-        </script>
-        <div id="d2e199_trends_trendBy"></div>
-    </td>
-</tr>
-
-                                                        <tr>
     <td style="width:150px;">top</td>
     <td>
 
@@ -6437,7 +6456,7 @@ try {
 
                                             <h2>响应</h2>
 
-                                                <h3> 状态码: 200 - 返回趋势统计信息,如：##根据dayOfMonth { \&quot;2017-6-30\&quot;: 1, \&quot;2017-7-6\&quot;: 7, \&quot;2017-7-11\&quot;: 11, \&quot;2017-8-2\&quot;: 142, \&quot;2017-7-3\&quot;: 8, \&quot;2017-6-29\&quot;: 6, \&quot;2017-7-19\&quot;: 10 } </h3>
+                                                <h3> 状态码: 200 - 返回趋势统计信息 </h3>
 
                                                 <ul class="nav nav-tabs nav-tabs-examples" >
 
@@ -6468,7 +6487,7 @@ try {
                                                             <script>
                                                                 $(document).ready(function() {
                                                                     var schemaWrapper = {
-  "description" : "返回趋势统计信息,如：##根据dayOfMonth { \"2017-6-30\": 1, \"2017-7-6\": 7, \"2017-7-11\": 11, \"2017-8-2\": 142, \"2017-7-3\": 8, \"2017-6-29\": 6, \"2017-7-19\": 10 }",
+  "description" : "返回趋势统计信息",
   "schema" : {
     "$ref" : "#/definitions/trends"
   }
