@@ -5,7 +5,7 @@ import styles from './index.less';
 import LevelIcon from '../levelIcon/index.js'
 
 function switchVideoSouce(type = '01') {
-    let _source = `/sound/Sound${type || '01'}.mp3`;
+    let _source = `./sound/Sound${type || '01'}.mp3`;
     return _source;
 }
 

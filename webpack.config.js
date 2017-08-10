@@ -60,7 +60,7 @@ module.exports = function (webpackConfig, env) {
         to: __dirname + '/dist/'
       },
       {
-        from: __dirname + '/sound/*',
+        from: __dirname + '/sound/**',
         to: __dirname + '/dist/sound/'
       },
       {

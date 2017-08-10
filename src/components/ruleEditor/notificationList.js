@@ -27,7 +27,7 @@ function saveref(name, component) {
 }
 
 function switchVideoSouce(type = '01') {
-    let _source = `/sound/Sound${type || '01'}.mp3`;
+    let _source = `./sound/Sound${type || '01'}.mp3`;
     return _source;
 }
 
