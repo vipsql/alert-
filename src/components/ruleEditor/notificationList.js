@@ -59,7 +59,7 @@ class NotificationList extends Component {
         event.stopPropagation();
         event.preventDefault();
         const _videoType = this.props.action && this.props.action.actionNotification.notificationMode.webNotification.voiceType;
-        if (this.audioInstance && this.audioInstance.src.indexOf(this.switchVideoSouce(_videoType)) > 0) {
+        if (this.audioInstance && this.audioInstance.src.indexOf(this.switchVideoSouce(_videoType).substring(1)) > 0) {
           if (this.audioInstance.paused) {
               this.audioInstance.play();
           }else{
