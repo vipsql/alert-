@@ -3319,7 +3319,7 @@ margin-bottom: 20px;
       "description" : "是否通知"
     },
     "classCode" : {
-      "type" : "boolean",
+      "type" : "string",
       "description" : "资源类型"
     },
     "properties" : {
@@ -4009,7 +4009,7 @@ try {
                                             <div class="tab-content">
                                                 <div class="tab-pane active" id="examples-Alert-query-0-curl">
                                                     <pre class="prettyprint"><code class="language-bsh">
-curl -X <span style="text-transform: uppercase;">get</span> "http://127.0.0.1/alert/openapi/v2/incident/query?api_key=&pageNo=&pageSize=&id=&name=&alias=&status=&entityName=&entityAddr=&tag=&severity=&classCode=&begin=&end="
+curl -X <span style="text-transform: uppercase;">get</span> "http://127.0.0.1/alert/openapi/v2/incident/query?api_key=&pageNo=&pageSize=&id=&name=&alias=&status=&entityName=&entityAddr=&tag=&severity=&classCode=&source=&begin=&end="
 
 
 </code></pre>
@@ -4042,10 +4042,11 @@ public class AlertApiExample {
         String tag = tag_example; // String | 告警所属标签
         Integer severity = 56; // Integer | 告警等级0:恢复,1:提醒,2:警告,3:紧急
         String classCode = classCode_example; // String | 资源类型
+        String source = source_example; // String | 告警来源(应用显示名)
         BigDecimal begin = 3.4; // BigDecimal | 如：1486454685958
         BigDecimal end = 3.4; // BigDecimal | 如：1486454685958
         try {
-            incidents result = apiInstance.query(api_key, pageNo, pageSize, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end);
+            incidents result = apiInstance.query(api_key, pageNo, pageSize, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, source, begin, end);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AlertApi#query");
@@ -4078,10 +4079,11 @@ public class AlertApiExample {
         String tag = tag_example; // String | 告警所属标签
         Integer severity = 56; // Integer | 告警等级0:恢复,1:提醒,2:警告,3:紧急
         String classCode = classCode_example; // String | 资源类型
+        String source = source_example; // String | 告警来源(应用显示名)
         BigDecimal begin = 3.4; // BigDecimal | 如：1486454685958
         BigDecimal end = 3.4; // BigDecimal | 如：1486454685958
         try {
-            incidents result = apiInstance.query(api_key, pageNo, pageSize, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end);
+            incidents result = apiInstance.query(api_key, pageNo, pageSize, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, source, begin, end);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AlertApi#query");
@@ -4114,6 +4116,7 @@ String *entityAddr = entityAddr_example; // 资源地址 (optional)
 String *tag = tag_example; // 告警所属标签 (optional)
 Integer *severity = 56; // 告警等级0:恢复,1:提醒,2:警告,3:紧急 (optional)
 String *classCode = classCode_example; // 资源类型 (optional)
+String *source = source_example; // 告警来源(应用显示名) (optional)
 BigDecimal *begin = 3.4; // 如：1486454685958 (optional)
 BigDecimal *end = 3.4; // 如：1486454685958 (optional)
 
@@ -4132,6 +4135,7 @@ AlertApi *apiInstance = [[AlertApi alloc] init];
     tag:tag
     severity:severity
     classCode:classCode
+    source:source
     begin:begin
     end:end
               completionHandler: ^(incidents output, NSError* error) {
@@ -4165,6 +4169,7 @@ var opts = {
   'tag': tag_example, // {String} 告警所属标签
   'severity': 56, // {Integer} 告警等级0:恢复,1:提醒,2:警告,3:紧急
   'classCode': classCode_example, // {String} 资源类型
+  'source': source_example, // {String} 告警来源(应用显示名)
   'begin': 3.4, // {BigDecimal} 如：1486454685958
   'end': 3.4 // {BigDecimal} 如：1486454685958
 };
@@ -4213,13 +4218,14 @@ namespace Example
             var tag = tag_example;  // String | 告警所属标签 (optional) 
             var severity = 56;  // Integer | 告警等级0:恢复,1:提醒,2:警告,3:紧急 (optional) 
             var classCode = classCode_example;  // String | 资源类型 (optional) 
+            var source = source_example;  // String | 告警来源(应用显示名) (optional) 
             var begin = 3.4;  // BigDecimal | 如：1486454685958 (optional) 
             var end = 3.4;  // BigDecimal | 如：1486454685958 (optional) 
 
             try
             {
                 // 查询告警列表(分页)
-                incidents result = apiInstance.query(api_key, pageNo, pageSize, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end);
+                incidents result = apiInstance.query(api_key, pageNo, pageSize, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, source, begin, end);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -4252,11 +4258,12 @@ $entityAddr = entityAddr_example; // String | 资源地址
 $tag = tag_example; // String | 告警所属标签
 $severity = 56; // Integer | 告警等级0:恢复,1:提醒,2:警告,3:紧急
 $classCode = classCode_example; // String | 资源类型
+$source = source_example; // String | 告警来源(应用显示名)
 $begin = 3.4; // BigDecimal | 如：1486454685958
 $end = 3.4; // BigDecimal | 如：1486454685958
 
 try {
-    $result = $api_instance->query($api_key, $pageNo, $pageSize, $id, $name, $alias, $status, $entityName, $entityAddr, $tag, $severity, $classCode, $begin, $end);
+    $result = $api_instance->query($api_key, $pageNo, $pageSize, $id, $name, $alias, $status, $entityName, $entityAddr, $tag, $severity, $classCode, $source, $begin, $end);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling AlertApi->query: ', $e->getMessage(), PHP_EOL;
@@ -4637,6 +4644,35 @@ try {
 </tr>
 
                                                         <tr>
+    <td style="width:150px;">source</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "source",
+  "in" : "query",
+  "description" : "告警来源(应用显示名)",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_query_source');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_query_source"></div>
+    </td>
+</tr>
+
+                                                        <tr>
     <td style="width:150px;">begin</td>
     <td>
 
@@ -4852,7 +4888,7 @@ try {
                                             <div class="tab-content">
                                                 <div class="tab-pane active" id="examples-Alert-statistics-0-curl">
                                                     <pre class="prettyprint"><code class="language-bsh">
-curl -X <span style="text-transform: uppercase;">get</span> "http://127.0.0.1/alert/openapi/v2/incident/statistics?api_key=&groupBy=&id=&name=&alias=&status=&entityName=&entityAddr=&tag=&severity=&classCode=&begin=&end=&top=&sort="
+curl -X <span style="text-transform: uppercase;">get</span> "http://127.0.0.1/alert/openapi/v2/incident/statistics?api_key=&groupBy=&id=&name=&alias=&status=&entityName=&entityAddr=&source=&tag=&severity=&classCode=&begin=&end=&top=&sort="
 
 
 </code></pre>
@@ -4874,13 +4910,14 @@ public class AlertApiExample {
         
         AlertApi apiInstance = new AlertApi();
         String api_key = apiKey_example; // String | 租户apikey
-        String groupBy = groupBy_example; // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签key、资源类型
+        String groupBy = groupBy_example; // String | 根据条件分组（severity、status、source、shared、tag、classCode）分别是等级、状态、来源、是否分享、标签key、资源类型
         String id = id_example; // String | 告警id
         String name = name_example; // String | 告警名称
         array[String] alias = ; // array[String] | 告警别名
         array[String] status = ; // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
         String entityName = entityName_example; // String | 资源名称
         String entityAddr = entityAddr_example; // String | 资源地址
+        String source = source_example; // String | 告警来源(应用显示名)
         String tag = tag_example; // String | 告警所属标签
         array[String] severity = ; // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急
         String classCode = classCode_example; // String | 资源类型
@@ -4889,7 +4926,7 @@ public class AlertApiExample {
         Integer top = 56; // Integer | 取前N条数据
         String sort = sort_example; // String | 排序（ASC、DESC）
         try {
-            statistics result = apiInstance.statistics(api_key, groupBy, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, top, sort);
+            statistics result = apiInstance.statistics(api_key, groupBy, id, name, alias, status, entityName, entityAddr, source, tag, severity, classCode, begin, end, top, sort);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AlertApi#statistics");
@@ -4911,13 +4948,14 @@ public class AlertApiExample {
     public static void main(String[] args) {
         AlertApi apiInstance = new AlertApi();
         String api_key = apiKey_example; // String | 租户apikey
-        String groupBy = groupBy_example; // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签key、资源类型
+        String groupBy = groupBy_example; // String | 根据条件分组（severity、status、source、shared、tag、classCode）分别是等级、状态、来源、是否分享、标签key、资源类型
         String id = id_example; // String | 告警id
         String name = name_example; // String | 告警名称
         array[String] alias = ; // array[String] | 告警别名
         array[String] status = ; // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
         String entityName = entityName_example; // String | 资源名称
         String entityAddr = entityAddr_example; // String | 资源地址
+        String source = source_example; // String | 告警来源(应用显示名)
         String tag = tag_example; // String | 告警所属标签
         array[String] severity = ; // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急
         String classCode = classCode_example; // String | 资源类型
@@ -4926,7 +4964,7 @@ public class AlertApiExample {
         Integer top = 56; // Integer | 取前N条数据
         String sort = sort_example; // String | 排序（ASC、DESC）
         try {
-            statistics result = apiInstance.statistics(api_key, groupBy, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, top, sort);
+            statistics result = apiInstance.statistics(api_key, groupBy, id, name, alias, status, entityName, entityAddr, source, tag, severity, classCode, begin, end, top, sort);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AlertApi#statistics");
@@ -4948,13 +4986,14 @@ public class AlertApiExample {
                                                     <pre class="prettyprint"><code class="language-cpp">
 
 String *api_key = apiKey_example; // 租户apikey
-String *groupBy = groupBy_example; // 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签key、资源类型
+String *groupBy = groupBy_example; // 根据条件分组（severity、status、source、shared、tag、classCode）分别是等级、状态、来源、是否分享、标签key、资源类型
 String *id = id_example; // 告警id (optional)
 String *name = name_example; // 告警名称 (optional)
 array[String] *alias = ; // 告警别名 (optional)
 array[String] *status = ; // 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭 (optional)
 String *entityName = entityName_example; // 资源名称 (optional)
 String *entityAddr = entityAddr_example; // 资源地址 (optional)
+String *source = source_example; // 告警来源(应用显示名) (optional)
 String *tag = tag_example; // 告警所属标签 (optional)
 array[String] *severity = ; // 告警等级0:恢复,1:提醒,2:警告,3:紧急 (optional)
 String *classCode = classCode_example; // 资源类型 (optional)
@@ -4974,6 +5013,7 @@ AlertApi *apiInstance = [[AlertApi alloc] init];
     status:status
     entityName:entityName
     entityAddr:entityAddr
+    source:source
     tag:tag
     severity:severity
     classCode:classCode
@@ -5000,7 +5040,7 @@ var api = new .AlertApi()
 
 var api_key = apiKey_example; // {String} 租户apikey
 
-var groupBy = groupBy_example; // {String} 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签key、资源类型
+var groupBy = groupBy_example; // {String} 根据条件分组（severity、status、source、shared、tag、classCode）分别是等级、状态、来源、是否分享、标签key、资源类型
 
 var opts = { 
   'id': id_example, // {String} 告警id
@@ -5009,6 +5049,7 @@ var opts = {
   'status': , // {array[String]} 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
   'entityName': entityName_example, // {String} 资源名称
   'entityAddr': entityAddr_example, // {String} 资源地址
+  'source': source_example, // {String} 告警来源(应用显示名)
   'tag': tag_example, // {String} 告警所属标签
   'severity': , // {array[String]} 告警等级0:恢复,1:提醒,2:警告,3:紧急
   'classCode': classCode_example, // {String} 资源类型
@@ -5051,13 +5092,14 @@ namespace Example
             
             var apiInstance = new AlertApi();
             var api_key = apiKey_example;  // String | 租户apikey
-            var groupBy = groupBy_example;  // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签key、资源类型
+            var groupBy = groupBy_example;  // String | 根据条件分组（severity、status、source、shared、tag、classCode）分别是等级、状态、来源、是否分享、标签key、资源类型
             var id = id_example;  // String | 告警id (optional) 
             var name = name_example;  // String | 告警名称 (optional) 
             var alias = new array[String](); // array[String] | 告警别名 (optional) 
             var status = new array[String](); // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭 (optional) 
             var entityName = entityName_example;  // String | 资源名称 (optional) 
             var entityAddr = entityAddr_example;  // String | 资源地址 (optional) 
+            var source = source_example;  // String | 告警来源(应用显示名) (optional) 
             var tag = tag_example;  // String | 告警所属标签 (optional) 
             var severity = new array[String](); // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急 (optional) 
             var classCode = classCode_example;  // String | 资源类型 (optional) 
@@ -5069,7 +5111,7 @@ namespace Example
             try
             {
                 // 告警统计
-                statistics result = apiInstance.statistics(api_key, groupBy, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, top, sort);
+                statistics result = apiInstance.statistics(api_key, groupBy, id, name, alias, status, entityName, entityAddr, source, tag, severity, classCode, begin, end, top, sort);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -5091,13 +5133,14 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new io.swagger.client\Api\AlertApi();
 $api_key = apiKey_example; // String | 租户apikey
-$groupBy = groupBy_example; // String | 根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签key、资源类型
+$groupBy = groupBy_example; // String | 根据条件分组（severity、status、source、shared、tag、classCode）分别是等级、状态、来源、是否分享、标签key、资源类型
 $id = id_example; // String | 告警id
 $name = name_example; // String | 告警名称
 $alias = ; // array[String] | 告警别名
 $status = ; // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
 $entityName = entityName_example; // String | 资源名称
 $entityAddr = entityAddr_example; // String | 资源地址
+$source = source_example; // String | 告警来源(应用显示名)
 $tag = tag_example; // String | 告警所属标签
 $severity = ; // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急
 $classCode = classCode_example; // String | 资源类型
@@ -5107,7 +5150,7 @@ $top = 56; // Integer | 取前N条数据
 $sort = sort_example; // String | 排序（ASC、DESC）
 
 try {
-    $result = $api_instance->statistics($api_key, $groupBy, $id, $name, $alias, $status, $entityName, $entityAddr, $tag, $severity, $classCode, $begin, $end, $top, $sort);
+    $result = $api_instance->statistics($api_key, $groupBy, $id, $name, $alias, $status, $entityName, $entityAddr, $source, $tag, $severity, $classCode, $begin, $end, $top, $sort);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling AlertApi->statistics: ', $e->getMessage(), PHP_EOL;
@@ -5176,7 +5219,7 @@ try {
                 var schemaWrapper = {
   "name" : "groupBy",
   "in" : "query",
-  "description" : "根据条件分组（severity、status、source、shared、owner、tag、classCode）分别是等级、状态、来源、是否分享、负责人、标签key、资源类型",
+  "description" : "根据条件分组（severity、status、source、shared、tag、classCode）分别是等级、状态、来源、是否分享、标签key、资源类型",
   "required" : true,
   "type" : "string"
 };
@@ -5366,6 +5409,35 @@ try {
             });
         </script>
         <div id="d2e199_statistics_entityAddr"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">source</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "source",
+  "in" : "query",
+  "description" : "告警来源(应用显示名)",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_statistics_source');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_statistics_source"></div>
     </td>
 </tr>
 
@@ -5730,7 +5802,7 @@ try {
                                             <div class="tab-content">
                                                 <div class="tab-pane active" id="examples-Alert-trends-0-curl">
                                                     <pre class="prettyprint"><code class="language-bsh">
-curl -X <span style="text-transform: uppercase;">get</span> "http://127.0.0.1/alert/openapi/v2/incident/trend?api_key=&trendBy=&id=&name=&alias=&status=&entityName=&entityAddr=&tag=&severity=&classCode=&begin=&end=&top=&sort="
+curl -X <span style="text-transform: uppercase;">get</span> "http://127.0.0.1/alert/openapi/v2/incident/trend?api_key=&trendBy=&id=&name=&alias=&status=&entityName=&entityAddr=&source=&tag=&severity=&classCode=&begin=&end=&top=&sort="
 
 
 </code></pre>
@@ -5759,6 +5831,7 @@ public class AlertApiExample {
         array[String] status = ; // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
         String entityName = entityName_example; // String | 资源名称
         String entityAddr = entityAddr_example; // String | 资源地址
+        String source = source_example; // String | 告警来源(应用显示名)
         array[String] tag = ; // array[String] | 告警所属标签
         array[String] severity = ; // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急
         String classCode = classCode_example; // String | 资源类型
@@ -5767,7 +5840,7 @@ public class AlertApiExample {
         Integer top = 56; // Integer | 取前N条数据
         String sort = sort_example; // String | 排序（ASC、DESC）
         try {
-            trends result = apiInstance.trends(api_key, trendBy, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, top, sort);
+            trends result = apiInstance.trends(api_key, trendBy, id, name, alias, status, entityName, entityAddr, source, tag, severity, classCode, begin, end, top, sort);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AlertApi#trends");
@@ -5796,6 +5869,7 @@ public class AlertApiExample {
         array[String] status = ; // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
         String entityName = entityName_example; // String | 资源名称
         String entityAddr = entityAddr_example; // String | 资源地址
+        String source = source_example; // String | 告警来源(应用显示名)
         array[String] tag = ; // array[String] | 告警所属标签
         array[String] severity = ; // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急
         String classCode = classCode_example; // String | 资源类型
@@ -5804,7 +5878,7 @@ public class AlertApiExample {
         Integer top = 56; // Integer | 取前N条数据
         String sort = sort_example; // String | 排序（ASC、DESC）
         try {
-            trends result = apiInstance.trends(api_key, trendBy, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, top, sort);
+            trends result = apiInstance.trends(api_key, trendBy, id, name, alias, status, entityName, entityAddr, source, tag, severity, classCode, begin, end, top, sort);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling AlertApi#trends");
@@ -5833,6 +5907,7 @@ String *alias = alias_example; // 告警别名 (optional)
 array[String] *status = ; // 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭 (optional)
 String *entityName = entityName_example; // 资源名称 (optional)
 String *entityAddr = entityAddr_example; // 资源地址 (optional)
+String *source = source_example; // 告警来源(应用显示名) (optional)
 array[String] *tag = ; // 告警所属标签 (optional)
 array[String] *severity = ; // 告警等级0:恢复,1:提醒,2:警告,3:紧急 (optional)
 String *classCode = classCode_example; // 资源类型 (optional)
@@ -5852,6 +5927,7 @@ AlertApi *apiInstance = [[AlertApi alloc] init];
     status:status
     entityName:entityName
     entityAddr:entityAddr
+    source:source
     tag:tag
     severity:severity
     classCode:classCode
@@ -5887,6 +5963,7 @@ var opts = {
   'status': , // {array[String]} 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
   'entityName': entityName_example, // {String} 资源名称
   'entityAddr': entityAddr_example, // {String} 资源地址
+  'source': source_example, // {String} 告警来源(应用显示名)
   'tag': , // {array[String]} 告警所属标签
   'severity': , // {array[String]} 告警等级0:恢复,1:提醒,2:警告,3:紧急
   'classCode': classCode_example, // {String} 资源类型
@@ -5936,6 +6013,7 @@ namespace Example
             var status = new array[String](); // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭 (optional) 
             var entityName = entityName_example;  // String | 资源名称 (optional) 
             var entityAddr = entityAddr_example;  // String | 资源地址 (optional) 
+            var source = source_example;  // String | 告警来源(应用显示名) (optional) 
             var tag = new array[String](); // array[String] | 告警所属标签 (optional) 
             var severity = new array[String](); // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急 (optional) 
             var classCode = classCode_example;  // String | 资源类型 (optional) 
@@ -5947,7 +6025,7 @@ namespace Example
             try
             {
                 // 告警趋势
-                trends result = apiInstance.trends(api_key, trendBy, id, name, alias, status, entityName, entityAddr, tag, severity, classCode, begin, end, top, sort);
+                trends result = apiInstance.trends(api_key, trendBy, id, name, alias, status, entityName, entityAddr, source, tag, severity, classCode, begin, end, top, sort);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -5976,6 +6054,7 @@ $alias = alias_example; // String | 告警别名
 $status = ; // array[String] | 告警状态0:新告警,40:已确认,150:处理中,190:已解决,255:已关闭
 $entityName = entityName_example; // String | 资源名称
 $entityAddr = entityAddr_example; // String | 资源地址
+$source = source_example; // String | 告警来源(应用显示名)
 $tag = ; // array[String] | 告警所属标签
 $severity = ; // array[String] | 告警等级0:恢复,1:提醒,2:警告,3:紧急
 $classCode = classCode_example; // String | 资源类型
@@ -5985,7 +6064,7 @@ $top = 56; // Integer | 取前N条数据
 $sort = sort_example; // String | 排序（ASC、DESC）
 
 try {
-    $result = $api_instance->trends($api_key, $trendBy, $id, $name, $alias, $status, $entityName, $entityAddr, $tag, $severity, $classCode, $begin, $end, $top, $sort);
+    $result = $api_instance->trends($api_key, $trendBy, $id, $name, $alias, $status, $entityName, $entityAddr, $source, $tag, $severity, $classCode, $begin, $end, $top, $sort);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling AlertApi->trends: ', $e->getMessage(), PHP_EOL;
@@ -6244,6 +6323,35 @@ try {
             });
         </script>
         <div id="d2e199_trends_entityAddr"></div>
+    </td>
+</tr>
+
+                                                        <tr>
+    <td style="width:150px;">source</td>
+    <td>
+
+
+        <script>
+            $(document).ready(function () {
+                var schemaWrapper = {
+  "name" : "source",
+  "in" : "query",
+  "description" : "告警来源(应用显示名)",
+  "required" : false,
+  "type" : "string"
+};
+                var schema = schemaWrapper;
+
+
+                var view = new JSONSchemaView(schema, 0);
+                var result = $('#d2e199_trends_source');
+                result.empty();
+                result.append(view.render());
+
+
+            });
+        </script>
+        <div id="d2e199_trends_source"></div>
     </td>
 </tr>
 
