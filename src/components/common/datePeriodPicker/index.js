@@ -82,6 +82,7 @@ class DatePeriodPicker extends Component {
     return (
       <div className={ styles.timeCycle }>
       <Popover
+        trigger="click"
         placement="bottomLeft"
         overlayClassName="pickTime"
         content={(

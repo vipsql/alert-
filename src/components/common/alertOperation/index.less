@@ -1,10 +1,82 @@
 @import "../../vars.less";
-@moblie: ~"only screen and (max-width: 768px)";
-// @media @moblie {
-//   .operateMain{
-//   }
-// }
-// alertOperation style on local
+@import '../../../theme/mixin.less';
+
+//蓝色和白色色系要上下一一对应
+//             1        2         3        4        5        6        7        8        9
+@var_default : @white0, @blue18,  @iptBg,  @blue11, @blue25, @white0, @blue16, @blue62, @blue17;
+@var_white   : @black0, @white11, @white0, @black1, @white9, @black1, @white0, @white6, @white30;
+
+.setTheme(@var_default, @var_white);
+.getTheme(@var){
+  :local{
+    .menuItem {
+      &:global.ant-dropdown-menu-item {
+        background-color: extract(@var, 7);
+        color: extract(@var, 8);
+         &:hover {
+          background-color: extract(@var, 9);
+          color: extract(@var, 1);
+        }
+      }
+      &:global.ant-select-dropdown-menu-item {
+        background-color: #1d6aa7;
+        color: #6ac5fe;
+      }
+      &:global.ant-dropdown-menu-submenu {
+        background-color: extract(@var, 7);
+        .ant-dropdown-menu-submenu-title {
+          color: extract(@var, 8);
+          &:after {
+            color: extract(@var, 8);
+          }
+          &:hover {
+            background-color: extract(@var, 9);
+            color: extract(@var, 1);
+            &:after {
+              color: extract(@var, 1);
+            }
+          }
+        }
+      }
+    }
+    .operateMain{
+      .moreOperateDropdown {
+        &:global(.ant-dropdown-trigger) {
+          border: 1px solid extract(@var, 2);
+          color: extract(@var, 4);
+          background-color:  extract(@var, 3);
+          &:hover {
+            background-color: extract(@var, 5);
+            color: extract(@var, 1);
+          }
+        }
+      }
+      .myButton {
+        &:global.ant-btn {
+          border: 1px solid extract(@var,2);
+          color: extract(@var,4);
+          background-color: extract(@var,3);
+          &:hover {
+            background-color: extract(@var, 5);
+            color: extract(@var, 6);
+          }
+        }
+        :global{
+          .ant-btn{
+            border: 1px solid extract(@var,2);
+            color: extract(@var,4);
+            background-color: extract(@var,3);
+            &:hover {
+              background-color: extract(@var, 5);
+              color: extract(@var, 6);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 .operateMain {
   position: relative;
   padding: 16px 12px 16px 18px; //background-color: #fff;
@@ -130,34 +202,16 @@
       margin-right: 10px;
       line-height: 1.45;
       font-weight: normal;
-      font-size: 13px; //color: #6c7480;
-      //background-color: white;
-      border: 1px solid #297ebb;
-      color: #9dd7ff;
-      background-color: #0d5990;
+      font-size: 13px; 
       transition: all .3s ease-in-out;
-      &:hover {
-        //border-color: #2bb4f4;
-        background-color: #2d98db;
-        color: #fff;
-      }
     }
      :global {
       .ant-btn {
         margin-right: 10px;
         line-height: 1.45;
         font-weight: normal;
-        font-size: 13px; //color: #6c7480;
-        //background-color: white;
-        border: 1px solid #297ebb;
-        color: #9dd7ff;
-        background-color: #0d5990;
+        font-size: 13px;
         transition: all .3s ease-in-out;
-        &:hover {
-          //border-color: #2bb4f4;
-          background-color: #2d98db;
-          color: #fff;
-        }
       }
       .ant-btn[disabled] {
         opacity: 0.5;
@@ -288,38 +342,22 @@
     font-size: 13px;
     font-weight: normal;
     width: 135px;
-    background-color: #1d6aa7;
-    color: #6ac5fe;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   &:global.ant-select-dropdown-menu-item {
     font-size: 13px;
     font-weight: normal;
-    background-color: #1d6aa7;
-    color: #6ac5fe;
   }
   &:global.ant-dropdown-menu-submenu {
     font-size: 13px;
     font-weight: normal;
-    background-color: #1d6aa7;
     .ant-dropdown-menu-submenu-title {
       font-size: 13px;
-      color: #6ac5fe;
-      &:after {
-        color: #6ac5fe;
-      }
-      &:hover {
-        background-color: #3092d9;
-        color: #ffffff;
-        &:after {
-          color: #ffffff;
-        }
-      }
     }
   }
-  &:hover {
-    background-color: #3092d9;
-    color: #ffffff;
-  }
+  // &:hover {
+  //   background-color: #3092d9;
+  //   color: #ffffff;
+  // }
 }

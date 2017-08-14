@@ -417,7 +417,7 @@ const alertOperation = ({
               </Button>
             </Tooltip>
             :
-            <Button className={styles.myButton} disabled={resolveDisabled} onClick={() => { resolveFunc(position) }} >
+            <Button className={styles.myButton}  onClick={() => { resolveFunc(position) }} >
               <FormattedMessage {...localeMessage['operate_resolve']} />
             </Button>
           :
@@ -435,7 +435,7 @@ const alertOperation = ({
 
       {
         showOperations.indexOf('other') >= 0 ?
-          <Dropdown overlay={menu}>
+          <Dropdown overlay={menu} trigger={'click'}>
             <span className={styles.moreOperateDropdown}>{formatMessage({ ...localeMessage['moreOperate'] })}<Icon type="down" /></span>
           </Dropdown>
           :
