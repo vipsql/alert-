@@ -130,6 +130,8 @@ async function init() {
   app.model(require('./models/visualAnalyze'))
   // 告警发生历史
   app.model(require('./models/alertOrigin'))
+  // 告警查询条件
+  app.model(require("./models/alertQueryFilter"))
   // 3. Router
   app.router(require('./router'))
 

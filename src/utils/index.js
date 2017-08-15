@@ -97,7 +97,7 @@ function formatDate(date) {
 
 // state发生变化，但是是否要影响相关页面重新渲染
 function returnByIsReRender(oldState, newState, isReRender) {
-  if (isReRender) {
+  if (isReRender != false) {
     return { ...oldState, ...newState };
   } else {
     Object.keys(newState).map((key) => {
