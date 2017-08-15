@@ -119,6 +119,11 @@ export default {
             type: 'alertDetail/toggleDetailModal',
             payload: false
           })
+
+          // 页面打开后查询所有用户已经保存过的查询条件
+          dispatch({
+            type: 'alertQueryFilter/queryFilters'
+          })
         }
       })
 

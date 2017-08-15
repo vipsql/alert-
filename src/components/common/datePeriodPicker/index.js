@@ -14,6 +14,20 @@ class DatePeriodPicker extends Component {
   componentWillReceiveProps(newProps) {
     if ((!newProps.value || newProps.value.length == 0) && newProps.value != this.props.value) {
       this.setState({ dayTimeString: '', timeStart: { hours: 0, mins: 0 }, timeEnd: { hours: 0, mins: 0 } })
+    } else if(newProps.value && newProps.value.length == 2 && newProps.value != this.props.value) {
+      const startDate = newProps.value[0] && new Date(newProps.value[0]);
+      const endDate = newProps.value[1] && new Date(newProps.value[1]);
+      const dayTimeString = (startDate?formatDate(startDate):'') + (startDate || endDate?'~':'') + (endDate?formatDate(endDate):'');
+      const timeStart = {
+        hours: startDate?startDate.getHours():0,
+        mins: startDate?startDate.getMinutes():0
+      }
+      const timeEnd = {
+        hours: endDate?endDate.getHours():0,
+        mins: endDate?endDate.getMinutes():0
+      }
+
+      this.setState({ dayTimeString, timeStart, timeEnd })
     }
   }
   onChangeDate(newDate) {

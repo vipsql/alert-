@@ -38,6 +38,37 @@ export async function queryCount(params) {
     })
 }
 
+// 搜索查询条件
+export async function queryFilters(params) {
+  return request('/incident/queryCondition/getAll', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
+
+// 保存查询条件
+export async function saveFilter(filter, name) {
+  return request('/incident/queryCondition/save/' + name, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'body': JSON.stringify(filter)
+    }
+  })
+}
+
+// 删除查询条件
+export async function deleteFilter(id) {
+  return request('/incident/queryCondition/remove/' + id, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
+
 export async function queryCloumns() {
     return request(`/incident/queryExtendedTag`, {
         method: 'GET',

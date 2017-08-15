@@ -3,29 +3,41 @@
   .ant-select-dropdown-menu-item-active {
     color: #FFFFFF
   } // scrollbar
-  ::-webkit-scrollbar-corner {
+   ::-webkit-scrollbar-corner {
     background-color: transparent;
   }
-  ::-webkit-scrollbar-button {
+   ::-webkit-scrollbar-button {
     width: 0;
     height: 0;
     display: none;
   }
-  ::-webkit-scrollbar-thumb {
+   ::-webkit-scrollbar-thumb {
     width: 2px;
     background-color: rgba(0, 0, 0, .2);
     border-radius: 2px;
   }
-  ::-webkit-scrollbar {
+   ::-webkit-scrollbar {
     width: 2px;
     height: 2px;
   }
-  ::-webkit-scrollbar-track {
+   ::-webkit-scrollbar-track {
     width: 5px;
   }
-  ::-webkit-scrollbar:hover {
+   ::-webkit-scrollbar:hover {
     background-color: transparent;
   }
+  .ant-dropdown {}
+}
+
+div.delete {
+  float: right;
+  border-radius: 8px;
+  width: 16px;
+  text-align:center;
+   :global .iconfont {
+    font-size: 8px;
+  }
+  background-color: #094d7e
 }
 
 .showBar {}
@@ -57,6 +69,54 @@
 .searchBar {
    :global .ant-form-item {
     margin-bottom: 15px;
+  }
+  .searchBtn {
+    float: right;
+  }
+  .myDropdown {
+    position: relative !important;
+    float: right;
+    top: 0px !important;
+    width: 72px !important;
+    margin-left: 10px;
+    margin-right: 0px !important;
+    &:global.ant-btn-group {
+      margin-right: 10px;
+      height: 32px;
+      top: 0px;
+       :global .ant-btn {
+        font-size: 13px;
+        font-weight: normal;
+        padding: 4px 10px; //background: white;
+        background-color: #0d5990;
+        border: 1px solid #297ebb;
+        color: #9dd7ff;
+        &:hover {
+          border-color: #2bb4f4;
+        }
+      }
+       :global .ant-dropdown-trigger {
+        top: -3px;
+      }
+    }
+    button:first-child {
+      &.disabled {
+        opacity: 0.5;
+      }
+      &.disabled:hover {
+        background-color: #0d5990;
+        color: #9dd7ff;
+      }
+    }
+    button:last-child {
+      //background: #f5f9fc;
+      background-color: #0d5990;
+      border: 1px solid #297ebb;
+      color: #9dd7ff;
+      &:hover {
+        border-color: #2bb4f4;
+      }
+    }
   }
 }
 
@@ -238,15 +298,51 @@
 }
 
 // cover menuitem
+// cover menuitem
 .menuItem {
   &:global.ant-dropdown-menu-item {
     font-size: 13px;
     font-weight: normal;
-    width: 103px;
+    min-width: 135px;
+    background-color: #1d6aa7;
+    color: #6ac5fe;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    div {
+      display: none
+    }
+    &:hover {
+      background-color: #3092d9;
+      color: #ffffff;
+      div {
+        display: block
+      }
+    }
   }
   &:global.ant-select-dropdown-menu-item {
     font-size: 13px;
     font-weight: normal;
+    background-color: #1d6aa7;
+    color: #6ac5fe;
+  }
+  &:global.ant-dropdown-menu-submenu {
+    font-size: 13px;
+    font-weight: normal;
+    background-color: #1d6aa7;
+    .ant-dropdown-menu-submenu-title {
+      font-size: 13px;
+      color: #6ac5fe;
+      &:after {
+        color: #6ac5fe;
+      }
+      &:hover {
+        background-color: #3092d9;
+        color: #ffffff;
+        &:after {
+          color: #ffffff;
+        }
+      }
+    }
   }
 }
 
@@ -266,7 +362,7 @@
   .operateCol {
     div {
       width: 75%;
-      button{
+      button {
         margin-left: 10px;
       }
     }
