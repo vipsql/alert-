@@ -2,9 +2,9 @@
 @import '../../../theme/mixin.less';
 
 //蓝色和白色色系要上下一一对应
-//             1        2         3        4        5        6        7        8        9
-@var_default : @white0, @blue18,  @iptBg,  @blue11, @blue25, @white0, @blue16, @blue62, @blue17;
-@var_white   : @black0, @white11, @white0, @black1, @white9, @black1, @white0, @white6, @white30;
+//             1        2         3        4        5        6        7        8        9         10        11        12        13       14       15        16       17    
+@var_default : @white0, @blue18,  @iptBg,  @blue11, @blue25, @white0, @blue16, @blue62, @blue17,  @blue94,  @blue18,  @blue25, @blue11, @blue26,  @white0, @blue41,  @blue11;
+@var_white   : @black0, @white11, @white0, @black1, @white9, @black1, @white0, @white6, @white30, @white0,  @white16, @white7, @white6, @white6,  @white6, @white35, @white36;
 
 .setTheme(@var_default, @var_white);
 .getTheme(@var){
@@ -19,8 +19,11 @@
         }
       }
       &:global.ant-select-dropdown-menu-item {
-        background-color: #1d6aa7;
-        color: #6ac5fe;
+        background-color: extract(@var, 7);
+        color: extract(@var, 8);
+        &:hover {
+          color: extract(@var, 1);
+        }
       }
       &:global.ant-dropdown-menu-submenu {
         background-color: extract(@var, 7);
@@ -40,6 +43,24 @@
       }
     }
     .operateMain{
+      background-color: extract(@var, 10);
+      .button {
+        background-color: extract(@var, 3);
+        border: 1px solid extract(@var, 11);
+        &:hover {
+          background-color: extract(@var, 12);
+          span,
+          i {
+            color: extract(@var, 15);
+          }
+        }
+        p{
+          color: extract(@var, 13);
+        }
+        .setCol {
+          color: extract(@var, 14);
+        }
+      }
       .moreOperateDropdown {
         &:global(.ant-dropdown-trigger) {
           border: 1px solid extract(@var, 2);
@@ -74,13 +95,56 @@
         }
       }
     }
+
+    .popover {
+      .popoverMain {
+        position: relative;
+        div:last-child {
+          margin-bottom: 5px;
+        }
+        .colGroup {
+          margin: 10px 10px 15px 10px;
+          width: 240px;
+          &>p {
+            color: extract(@var, 17);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            line-height: 10px;
+            &:after {
+              position: relative;
+              content: " ";
+              display: inline-block;
+              height: 1px;
+              width: 90%;
+              background: extract(@var, 16);
+            }
+          }
+          .inlineItem {
+            display: inline-block;
+            width: 120px;
+            padding-bottom: 5px;
+            :global {
+              .ant-checkbox-wrapper+span,
+              .ant-checkbox+span {
+                display: inline-block;
+                white-space: nowrap;
+                max-width: 100px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                vertical-align: middle;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 
 .operateMain {
   position: relative;
   padding: 16px 12px 16px 18px; //background-color: #fff;
-  background-color: #164779;
   border-radius: 3px;
   .groupMain {
     display: inline-block;
@@ -242,18 +306,10 @@
     display: inline-block;
     border-radius: 3px; // border: 1px solid #d5ddeb;
     // background-color: #fff;
-    background-color: #0d5990;
-    border: 1px solid #297ebb;
     margin-right: 10px;
     cursor: pointer;
     transition: border .2s;
-    &:hover {
-      background-color: #2d98db;
-      span,
-      i {
-        color: #fff;
-      }
-    }
+    
     &.rightBtn {
       float: right;
     }
@@ -264,7 +320,6 @@
       font-size: 13px;
       font-weight: normal;
       text-align: center;
-      color: #9dd7ff;
       &.col {
         padding-left: 5px;
       }
@@ -274,64 +329,6 @@
       display: inline-block;
       top: 2px;
       padding-left: 8px;
-      color: #7dbae6;
-    }
-  }
-}
-
-.popover {
-   :global {
-    .ant-popover-content {
-      .ant-popover-arrow {
-        border-bottom-color: #226eaf;
-      }
-      .ant-popover-arrow::after {
-        border-bottom-color: #226eaf;
-      }
-      .ant-popover-inner {
-        background-color: #226eaf;
-      }
-    }
-  } // popover card
-  .popoverMain {
-    position: relative;
-    div:last-child {
-      margin-bottom: 5px;
-    }
-    .colGroup {
-      margin: 10px 10px 15px 10px;
-      width: 240px;
-      &>p {
-        color: #9dd7ff;
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 4px;
-        line-height: 10px;
-        &:after {
-          position: relative;
-          content: " ";
-          display: inline-block;
-          height: 1px;
-          width: 90%;
-          background: #5994d6;
-        }
-      }
-      .inlineItem {
-        display: inline-block;
-        width: 120px;
-        padding-bottom: 5px;
-         :global {
-          .ant-checkbox-wrapper+span,
-          .ant-checkbox+span {
-            display: inline-block;
-            white-space: nowrap;
-            max-width: 100px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            vertical-align: middle;
-          }
-        }
-      }
     }
   }
 }

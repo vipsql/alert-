@@ -230,12 +230,12 @@
         }
         .even {
           td {
-            background-color: #18477a;
+            background-color: extract(@var, 2);
           }
         }
         .odd {
           td {
-            background-color: #1d5692;
+            background-color: extract(@var, 3);
           }
         }
         .groupSpread {
@@ -256,7 +256,7 @@
           line-height: 50px;
           text-align: left;
           color: extract(@var, 7);
-          // border-bottom: 1px solid extract(@var, 4);
+          border-bottom: 1px solid extract(@var, 4);
           background-color: extract(@var, 3);
           &.little {
             min-width: 50px;
