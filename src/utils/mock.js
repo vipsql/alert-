@@ -41,7 +41,8 @@ const __DataRule = {
   },
   '/incident/queryCondition/remove': {
     'result|1': [true, false],
-    'message|1': ['删除成功', '删除失败']
+    'message|1': ['删除成功', '删除失败'],
+    'regex': /\/incident\/queryCondition\/remove\//
   }
 }
 
@@ -74,7 +75,7 @@ function valid(url, data, cb = () => { }) {
   data = true
   let warning = undefined;
   let key = interceptURL(url);
-  if (Mock && Object.keys(__DataRule).indexOf(key) > -1) {
+  if (Mock) {
     Mock.valid(__DataRule[key], data)
     warning = `${key} Interface response data error to template rule`;
   }
@@ -87,14 +88,10 @@ function valid(url, data, cb = () => { }) {
  * @param {string} method request method
  * @param {Function} callback
  */
-function invoke(url, method = 'get', cb = () => { }) {
+function invoke(url, rule, method = 'get', cb = () => { }) {
   let key = interceptURL(url);
   if (Mock) {
-    if (Object.keys(__DataRule).indexOf(key) > -1) {
-      Mock.mock(url, method, __DataRule[key], () => cb());
-    } else {
-      throw new Error('URL no match rule generate data')
-    }
+    Mock.mock(url, method, rule, () => cb());
   } else {
     throw new Error('Invalid Mock by mockjs')
   }

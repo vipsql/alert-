@@ -5,7 +5,7 @@ let Promise = require('es6-promise').Promise;
 let Mock = require('./mock.js');
 const ROOT_PATH = constants.api_root;
 
-(function() {
+(function () {
   if (process.env.NODE_ENV === undefined || process.env.NODE_ENV === 'development') {
     window.__DEV_MOCK__ = false; // dev环境默认关闭
   }
@@ -23,7 +23,7 @@ function isApiUrl(url) {
     return url;
   }
   //请求本地资源文件时以"#localAsset#"开头
-  if(url.substring(0, 12) === '#localAsset#'){
+  if (url.substring(0, 12) === '#localAsset#') {
     return url.substring(12)
   }
   return `${ROOT_PATH}${url}`;
@@ -33,14 +33,14 @@ function isApiUrl(url) {
  * Use Mock Date ?
  */
 function mockStart(use) {
-  window.__DEV_MOCK__ = use;
+  window.__DEV_MOCK__ = true;
 }
 
 /**
  * Requests URL, Response Mock data
  */
-function mockAjax(url, options) {
-  return new Promise(function(resolve, reject) {
+function mockAjax(url, options, rule) {
+  return new Promise(function (resolve, reject) {
     try {
       const configs = {
         url,
@@ -48,9 +48,9 @@ function mockAjax(url, options) {
         dataType: 'json'
       }
       /* Mock */
-      Mock.invoke(configs.url, configs.method)
+      Mock.invoke(configs.url, rule, configs.method)
       // before ajax you need use mock
-      $.ajax(configs).done( data => {
+      $.ajax(configs).done(data => {
         resolve({
           result: true,
           data: data
@@ -70,7 +70,7 @@ function mockAjax(url, options) {
  * @return {object}           An object containing either "data" or "err"
  */
 
-function ajax(url, options){
+function ajax(url, options) {
   return new Promise(function (resolve, reject) {
     const configs = {
       url,
@@ -81,11 +81,11 @@ function ajax(url, options){
         ...options.headers,
       },
       xhrFields: {
-        withCredentials: true
+        withCredentials: false
       },
       // timeout: 10000
     }
-    $.ajax(configs).done( data => {
+    $.ajax(configs).done(data => {
       // use mock valid
       // Mock.valid(configs.url, data, (warning, data) => {
       //   if (warning) console.warn(warning)
@@ -103,9 +103,9 @@ function ajax(url, options){
       const serverNameList = [ // 若增加产品，在此数组里增加相应名称
         'ChatOps'
       ];
-      if(xhr.status == 401){
+      if (xhr.status == 401) {
         location.href = location.origin + '/tenant/#/login_admin/'
-      }else if(xhr.status == 502){
+      } else if (xhr.status == 502) {
         for (let i = serverNameList.length - 1; i >= 0; i -= 1) {
           if (serverNameList[i].toLowerCase() === serverName) {
             resolve({
@@ -127,10 +127,32 @@ function ajax(url, options){
 
 export default async function request(url, options) {
   // or stop mock
-  /* mockStart(false) */
-  if(Mock && window.__DEV_MOCK__) {
-    const response = await mockAjax(isApiUrl(url), options)
-    return response
+  mockStart(false)
+  if (Mock && window.__DEV_MOCK__) {
+    // 匹配数据生成规则
+    // 需要用规则中的正则进行二次比较
+    let isMock = false;
+    let rule = undefined
+    if (Mock.rule[url]) {
+      isMock = true;
+      rule = Mock.rule[url];
+    } else if(typeof url === 'string') {
+      Object.keys(Mock.rule).forEach((ruleKey) => {
+        const tempRule = Mock.rule[ruleKey];
+        if (!isMock && tempRule.regex && url.match(tempRule.regex) ) {
+          isMock = true;
+          rule = tempRule;
+        }
+      })
+    }
+
+    if (isMock) {
+      const response = await mockAjax(isApiUrl(url), options, rule)
+      return response
+    } else {
+      const response = await ajax(isApiUrl(url), options)
+      return response
+    }
   } else {
     const response = await ajax(isApiUrl(url), options)
     return response
