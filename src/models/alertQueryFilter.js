@@ -76,17 +76,23 @@ export default {
       const response = yield saveFilter({ ...toSaveFilter }, name);
       if (response.result) {
         const data = response.data;
-        yield put({
-          type: 'setFilters',
-          payload: {
-            filters: [...filters, { incidentHistoryParam: { ...toSaveFilter }, name, id: data.id }],
-            isReRender: false,
-          }
-        })
+        if (data.result) {
+          message.success(data.message);
+          const id = data.data.id;
+          yield put({
+            type: 'setFilters',
+            payload: {
+              filters: [...filters, { incidentHistoryParam: { ...toSaveFilter }, name, id}],
+              isReRender: false,
+            }
+          })
 
-        yield put({
-          type: 'closeSaveModal',
-        })
+          yield put({
+            type: 'closeSaveModal',
+          })
+        } else {
+          message.error(data.message);
+        }
       } else {
         message.error(response.message);
       }
