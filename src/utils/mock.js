@@ -13,7 +13,12 @@ const __DataRule = {
   /* key: url -> value: rule */
   '/incident/tags/isSet': '@boolean',
   '/incident/queryCondition/save': {
-    'id|10000-100000': 1
+    'result|1': [true, false],
+    'message|1': ['保存成功', '保存失败'],
+    'data': {
+      'id|10000-100000': 1
+    },
+    'regex': /\/incident\/queryCondition\/save\//
   },
   '/incident/queryCondition/getAll': {
     'list|1-10': [
