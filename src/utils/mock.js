@@ -48,7 +48,113 @@ const __DataRule = {
     'result|1': [true, false],
     'message|1': ['删除成功', '删除失败'],
     'regex': /\/incident\/queryCondition\/remove\//
-  }
+  },
+  '/applicationType/query': {
+    regex: /\/applicationType\/query?/,
+    template: [
+      {
+        "id": "58c681355b71a73b448ccec6",
+        "name": "UYUN ITSM",
+        "type": 1,
+        "appType": "协同类"
+      },
+      {
+        "id": "58c680df5b71a73b448ccec4",
+        "name": "UYUN ChatOps",
+        "type": 1,
+        "appType": "协同类"
+      },
+      {
+        "id": "58c680df5b71a73b448ccec7",
+        "name": "UYUN WebHook",
+        "type": 1,
+        "appType": "协同类"
+      },
+    ]
+  },
+  // 是否有权限查询应用状态
+  '/application/checkPayType': {
+    "template|1": [true, false]
+  },
+  // 应用查询接口模拟
+  '/application/query': {
+    regex: /\/application\/query?/,
+    'template|1-10': [
+      {
+        "id": "@string(10)",
+        "tenant": "@string(10)",
+        "status|1": [1, 0],
+        "integration": "@string(10)",
+        "applyType": {
+          "id": "@string(10)",
+          "name|1": ['UYUN ITSM', 'UYUN ChatOps', 'UYUN WebHook'],
+          "type|1": [0, 1],
+          "appType": "@name",
+          "appAlias": "@cname"
+        },
+        "displayName": '@cname',
+        "appKey": "@string(12)",
+        "type|1": [0, 1],
+        "buildIn|1": [0, 1],
+        "createDate|1502035200524-1502812800524": 1,
+        "webHook": {
+          "url": "@url",
+          "timeout|30-150": 1,
+          "fidldMap": /(.*?):"\$\{(.*?)\}"/g
+        },
+        "appRules|1-5": [{
+          "id": '@string(10)',
+          "tenant": "@string(10)",
+          "name": "@cname",
+          "description": "@sentence",
+          "dataSource": [1, 2, 3],
+          "filterFields|1-5": [{
+
+          }]
+        }]
+      }
+    ]
+  },
+  '/application/create': {
+    'template|1': [true, false]
+  },
+  '/application/getAppDetail': {
+    regex: /\/application\/getAppDetail\//,
+    'template': {
+      "id": "@string(10)",
+      "tenant": "@string(10)",
+      "status|1": [1, 0],
+      "integration": "@string(10)",
+      "applyType": {
+        "id": "@string(10)",
+        "name|1": ['UYUN ITSM', 'UYUN ChatOps', 'UYUN WebHook'],
+        "type|1": [0, 1],
+        "appType": "@name",
+        "appAlias": "@cname"
+      },
+      "displayName": '@cname',
+      "appKey": "@string(12)",
+      "type|1": [0, 1],
+      "buildIn|1": [0, 1],
+      "createDate|1502035200524-1502812800524": 1,
+      "webHook": {
+        "url": "@url",
+        "timeout|30-150": 1,
+        "fidldMap": /(.*?):"\$\{(.*?)\}"/g
+      },
+      "appRules|1-5": [{
+        "id": '@string(10)',
+        "tenant": "@string(10)",
+        "name": "@cname",
+        "description": "@sentence",
+        "dataSource": [1, 2, 3],
+        "filterFields|1-5": [{
+
+        }]
+      }]
+    }
+  },
+
 }
 
 /**

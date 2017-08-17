@@ -8,6 +8,39 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 // 用于在model层创造延迟，用法：step1();yield delay(1000);step2()
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+// 判断字符串是否是空字符
+function isEmpty(str) {
+  if(!str || str.trim() == '') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+// 判断字符串是否为JSON格式
+function isJSON(str, pass_object) {
+
+  if (pass_object && isObject(str)) return true;
+
+  if (typeof str !== 'string') return false;
+
+  str = str.replace(/\s/g, '').replace(/\n|\r/, '');
+
+  if (/^\{(.*?)\}$/.test(str))
+    return /(.*?):(.*?)/g.test(str);
+
+  if (/^\[(.*?)\]$/.test(str)) {
+    return str.replace(/^\[/, '')
+      .replace(/\]$/, '')
+      .replace(/},{/g, '}\n{')
+      .split(/\n/)
+      .map(function (s) { return isJSON(s); })
+      .reduce(function (prev, curr) { return !!curr; });
+  }
+
+  return false;
+}
+
 /**
  * Return random getUUID
  *
@@ -362,5 +395,7 @@ module.exports = {
   returnByIsReRender,
   getOperationExcutionMap,
   modelExtend,
-  delay
+  delay,
+  isJSON,
+  isEmpty
 }

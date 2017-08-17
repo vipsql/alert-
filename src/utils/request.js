@@ -51,6 +51,9 @@ function mockAjax(url, options, rule) {
       Mock.invoke(configs.url, rule, configs.method)
       // before ajax you need use mock
       $.ajax(configs).done(data => {
+        if(typeof data.template !== undefined) {
+          data = data.template;
+        }
         resolve({
           result: true,
           data: data
