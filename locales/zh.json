@@ -3,21 +3,18 @@
   "constants.state": "状态",
   "constants.success": "成功",
   "constants.error": "失败",
-
   "bread.integrationConfig": "应用配置",
   "bread.integrations": "应用集成",
   "bread.association.add": "添加规则",
   "bread.association.edit": "编辑规则",
   "bread.alertList": "告警列表",
   "bread.association": "关联配置",
-
   "leftMenu.alertManage": "告警管理",
   "leftMenu.alertQuery": "告警查询",
   "leftMenu.alertConfig": "告警配置",
   "leftMenu.watchManage": "值班管理",
   "leftMenu.set": "设置",
   "lefeMenu.help": "帮助",
-
   "alertManage.noAlert": "无告警",
   "alertManage.addTags": "关注设置",
   "alertManage.oneHour": "最近 1 小时",
@@ -33,16 +30,13 @@
   "alertManage.exceptCloseIncident": "所有未关闭",
   "alertManage.noData": "告警热图暂无数据，请先在[关注设置]添加要关注的标签",
   "alertManage.dashbord.selectedText": "已选择 {num} 个关注",
-
   "alertManage.setModal.ok": "确定",
   "alertManage.setModal.reset": "重置",
-
   "alertList.tabs.list": "列表",
   "alertList.tabs.timeList": "时间线",
   "alertList.tabs.visual": "可视化分析",
   "alertList.autoRefresh": "自动刷新",
   "alertList.selectTags": "选择标签过滤",
-
   "alertList.title.classCode": "资源类型",
   "alertList.title.tags": "标签",
   "alertList.title.id": "告警ID",
@@ -70,11 +64,9 @@
   "alertList.title.additional": "扩展",
   "alertList.detailHistory.alertTimesDescription": "累计发生告警{ times }次",
   "alertList.detailHistory.alertStartTime.placeholder": "请点击选择告警发生的时间范围",
-
   "alertList.noListData": "暂无数据",
   "alertList.showMore": "显示更多",
   "alertList.unknown": "未知",
-
   "alertQuery.label.keyWords": "关键字",
   "alertQuery.label.duration": "持续时间",
   "alertQuery.label.keyWords.placeholder": "请输入关键字",
@@ -97,13 +89,10 @@
   "alertQuery.search": "搜索",
   "alertQuery.reset": "重置",
   "alertQuery.result": "共{total}个结果（紧急{critical}个，警告{warning}个，提醒{informaiton}个，恢复{ok}个）",
-
   "alertQueryFilter.saveFilter": "保存查询条件",
   "alertQueryFilter.savePlaceholder": "保存查询条件",
   "alertQueryFilter.deleteFilter": "删除查询条件",
   "alertQueryFilter.deleteFilterMessage": "是否删除查询条件{ name }?",
-
-
   "alertOperate.takeOver": "接手",
   "alertOperate.reassign": "转派",
   "alertOperate.dispatch": "派单",
@@ -132,22 +121,18 @@
   "alertOperate.errorMsg": "{ operate }失败。原因可能是:",
   "alertDetail.operation.reason1": "不能{ control }由他人负责的告警",
   "alertDetail.operation.reason2": "不能{ control }处于\"{ status }\"状态的告警",
-
   "modal.operate.infoTip1": "请先选择一条告警",
   "modal.operate.infoTip2": "只允许操作一条告警",
   "modal.operate.infoTip3": "请选择至少两条告警",
   "modal.operate.infoTip4": "请将多条告警合并到一条根源告警",
   "modal.operate.allowRollUp": "只允许新告警才能派发工单",
-
   "modal.tag.select": "请选择{name}",
   "modal.tag.keywords": "请输入关键字搜素",
   "modal.tag.repeat": "该标签已选择",
-
   "modal.shareChatOps": "分享到ChatOps",
   "modal.share": "分享",
   "modal.roomName": "群组名称",
   "modal.noRoomName": "请选择群组",
-
   "modal.ok": "确定",
   "modal.submit": "提交",
   "modal.delete": "删除",
@@ -160,16 +145,13 @@
   "modal.noTicketType": "请选择工单类型",
   "modal.leaveNotice": "你还有数据未保存，确定要离开此页面吗？",
   "modal.leave": "离开",
-
   "modal.reassign": "转派",
   "modal.reassignTitle": "转派指定人员",
   "modal.specificUser": "指定人员",
-
   "modal.know": "知道了",
   "modal.suppress.success": "抑制成功",
   "modal.suppress.successRemind": "告警将在抑制时间内不再被接收，取消抑制请移步 “设置———关联规则”，禁用或删除对应的规则",
   "modal.remind": "不再提醒",
-
   "modal.close": "关闭",
   "modal.resolve": "解决",
   "modal.customTime": "自定义时间",
@@ -189,7 +171,6 @@
   "modal.rollupTitle": "合并告警前，请选择一条告警做源告警",
   "modal.unrollup": "解除合并",
   "modal.unrollupMessage": "解除{name}的合并告警",
-
   "alertDetail.basic": "基本信息",
   "alertDetail.enrich": "扩展信息",
   "alertDetail.ciInfo": "CI信息",
@@ -226,12 +207,10 @@
   "alertDetail.action.t250": "关闭",
   "alertDetail.suppressionMessage": "抑制{ minutes }分钟",
   "alertDetail.reassignMessage": "转派给",
-
   "alertConfig.integrations": "第三方应用集成",
   "alertConfig.integrations.message": "接入第三方应用，如网络、服务器和应用监控工具、帮助台和客户支持、聊天协同等应用",
   "alertConfig.correlation": "告警关联配置",
   "alertConfig.correlation.message": "设置告警关联规则",
-
   "alertApplication.incomingTotal.numberWarn": "免费租户只能创建5个接入应用",
   "alertApplication.newApplication": "添加应用",
   "alertApplication.incoming": "接入",
@@ -248,19 +227,15 @@
   "alertApplication.List.actions": "操作",
   "alertApplication.List.edit": "编辑",
   "alertApplication.List.delete": "删除",
-
   "alertApplication.rest.headerTitle": "使用优云Alert REST API，可以方便的接入自定义告警",
   "alertApplication.rest.apidocument": "API使用文档",
   "alertApplication.rest.step2": "接口",
-
   "alertApplication.monitor.headerTitle": "使用Web Hook接入快速优云Monitor告警",
   "alertApplication.monitor.step2": "向接口发送数据",
   "alertApplication.monitor.step2Message": "请复制以下URL至您的应用中",
-
   "alertApplication.network.headerTitle": "使用Web Hook接入快速优云NetWork告警",
   "alertApplication.network.step2": "向接口发送数据",
   "alertApplication.network.step2Message": "请复制以下URL至您的应用中",
-
   "alertApplication.trap.headerTitle": "接入第三方监控系统发出的SNMP Trap告警",
   "alertApplication.trap.step2": "配置SNMP Trap",
   "alertApplication.trap.step2Message": "本步骤主要完成配置SMNPTrap解析规则的定义",
@@ -271,7 +246,6 @@
   "alertApplication.trap.action": "操作",
   "alertApplication.trap.action_edit": "编辑",
   "alertApplication.trap.action_delete": "删除",
-
   "modal.trap.ruleName": "规则名称",
   "modal.trap.ruleName_placeholder": "请输入规则名称",
   "modal.trap.ruleDescription": "规则描述",
@@ -313,7 +287,6 @@
   "modal.trap.severityMapper.trap": "Trap级别",
   "modal.trap.severityMapper.alert": "Alert级别",
   "modal.trap.severityMapper.message": "Alert级别定义：紧急 - 3，警告 - 2，提醒 - 1，恢复 - 0",
-
   "modal.trap.regex": "高级",
   "modal.trap.regex.clear": "清除",
   "modal.trap.regex.type": "类型",
@@ -330,23 +303,36 @@
   "modal.trap.regex.noResult": "暂无结果",
   "modal.trap.regex.ok": "完成",
   "modal.trap.regex.goBack": "返回",
-
   "modal.rule.deleteTitle": "删除规则",
   "modal.rule.deleteMessage": "您确定要删除{message}规则吗？",
-
   "alertApplication.videoMon.headerTitle": "使用Web Hook接入快速优云VideoMon告警",
   "alertApplication.videoMon.step2": "向接口发送数据",
   "alertApplication.videoMon.step2Message": "请复制以下URL至您的应用中",
-
   "alertApplication.itsm.headerTitle": "把优云Alert的告警快速创建为ITSM工单",
   "alertApplication.chatOps.headerTitle": "把优云Alert的告警快速分享到ChatOps群组",
-
   "alertApplication.displayName": "设定显示名",
   "alertApplication.displayName.message": "设定一个显示名用于标识应用",
   "alertApplication.displayName.placeholder": "请输入应用名称",
   "alertApplication.appKey": "点击生成AppKey",
   "alertApplication.appKey.placeholder": "请先生成AppKey",
   "alertApplication.save": "保存",
+
+  "alertApplication.webhook.headerTitle": "把优云Alert告警以Web Hook方式实时分享到第三方系统",
+  "alertApplication.webhook.step2": "配置优云Alert",
+  "alertApplication.webhook.step2Message": "把从第三方系统获取的Web Hook接口地址粘贴到文本框",
+  "alertApplication.webhook.url": "URL",
+  "alertApplication.webhook.httpMethod": "HTTP方法",
+  "alertApplication.webhook.overTime": "超时时间",
+  "alertApplication.webhook.overTimeMsg": "若告警发送失败,在{ overTime }s内再次尝试发送，如果仍不成功即放弃发送",
+  "alertApplication.webhook.seniorModule": "高级模式",
+  "alertApplication.webhook.fieldMap": "字段映射",
+  "alertApplication.webhook.fieldMapMsg": "允许开发人员制定Web Hook服务与Alert数据字典的对应关系。Alert数据字段说明请参照{ API }",
+  "alertApplication.webhook.fieldMapMsgPlaceholder": "//示例\n{\"state\": \"${status}\",\n\"time\": \"${occurTime}\",\n\"name\": \"name\",\n\"resName\": \"entityName\",\n\"ip\": \"${entityName}\",\n\"desc\": \"${entityName},\n发生告警，描述:${description}\"}",
+  "alertApplication.webhook.webhookApi": "API文档",
+  "alertApplication.webhook.returnKey": "返回码key",
+  "alertApplication.webhook.returnSuccessMark": "返回成功标识",
+  "alertApplication.webhook.returnKeyMsg": "根据http应答内容判断告警是否发送成功，若不清楚请查阅Web Hook接口文档.",
+  "alertApplication.webhook.returnBlankMsg": "如果没有配置返回码，系统默认以http是否返回200来判断是否发送成功.",
 
   "alertAssociationRules.newRule": "添加规则",
   "alertAssociationRules.ruleTotal": "规则总数: {num}",
@@ -360,16 +346,13 @@
   "alertAssociationRules.ruleTypeNum.0": "非周期性",
   "alertAssociationRules.ruleTypeNum.1": "固定时间段",
   "alertAssociationRules.ruleTypeNum.2": "周期性",
-
   "server.notStarted": "服务不可用",
   "unknown.Error": "未知错误",
-
   "treemap.tagsGroup": "标签分组名",
   "treemap.activeAlerts": "未接手告警",
   "treemap.assignedAlerts": "处理中告警",
   "treemap.resolvedAlerts": "已解决告警",
   "treemap.exceptClosed": "所有未关闭告警",
-
   "ruleEditor.baseInfo": "基本信息",
   "ruleEditor.anyTime": "任意时间均执行",
   "ruleEditor.peroid": "周期性执行",
@@ -487,15 +470,16 @@
   "ruleEditor.word8": "请选择告警状态",
   "ruleEditor.nLevelUp": "当且仅当告警级别改变时再次提醒",
   "ruleEditor.isShareUpgrade": "是否开启告警升级",
-
   "visualAnalyze.groupBy": "分组",
   "visualAnalyze.incidentGroup": "只显示有故障的分组",
   "visualAnalyze.noData": "暂无数据",
   "visualAnalyze.tip": "提示：【可视化分析】利用CMDB展现含共同标签CI的告警状态 (未关闭、最高等级告警)，通过标签分组辅助运维人员判断故障可能的根源。",
-
   "layout.fixedLayout": "固定布局",
   "layout.autoLayout": "自动布局",
   "layout.fullScreen": "全屏",
   "layout.initialize": "还原",
-  "go_top.tip": "返回顶部"
+  "go_top.tip": "返回顶部",
+
+  "form.requireWarn": "请输入{ content }",
+  "form.JSONRequire": "请输入JSON格式的字符串"
 }
