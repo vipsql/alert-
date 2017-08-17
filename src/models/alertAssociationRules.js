@@ -288,7 +288,7 @@ export default {
         yield put({
           type: 'updateITSMParam',
           payload: {
-            data: result.data.json
+            data: result.data || {}
           }
         });
       } else {

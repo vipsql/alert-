@@ -126,7 +126,29 @@
         .ant-select-dropdown-menu-item:hover,
         .ant-select-dropdown-menu-item-active {
           background-color: #3092d9;
-        } //--------DatePicker---------
+        }
+        // select multiple
+        .ant-select-selection--multiple .ant-select-selection__choice {
+            border-radius: 2px;
+            background-color: #158ad4;
+            color: #fff;
+        }
+        .ant-select-selection--multiple .ant-select-selection__choice__remove {
+            top: 2px;
+            right: 0;
+            display: inline-block;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #094e80;
+            color: #fff;
+            line-height: 20px;
+            &:hover{
+              color: #fff;
+            }
+        }
+        //--------DatePicker---------
         .ant-calendar-picker {
           .ant-calendar-picker-input {
             &>input::-webkit-input-placeholder,
@@ -361,6 +383,50 @@
       .ant-switch:after {
         background-color: #1f497a;
       } // }
+
+      // --------级联框---------
+      .ant-cascader-picker{
+        background: #0d5990
+      }
+      .ant-input.ant-cascader-input.ant-input-lg{
+        border:1px solid #297ebb;
+        background-color: #0d5990;
+        z-index: 0;
+      }
+      .ant-cascader-picker-label{
+        z-index: 1;
+        color: #ffffff;
+      }
+      .ant-cascader-menus{
+        background-color: #0d5990;
+        color: #ffffff;
+        user-select:none;
+        border:1px solid #297ebb;
+      }
+      .ant-cascader-menu.ant-cascader-menu{
+        border-right:1px solid #297ebb;
+      }
+
+      .ant-cascader-menu-item:hover {
+          background: #3092d9;
+      }
+
+      .ant-cascader-menu-item-active:not(.ant-cascader-menu-item-disabled),
+      .ant-cascader-menu-item-active:not(.ant-cascader-menu-item-disabled):hover{
+        background: #0968ab;
+      }
+      .ant-cascader-picker-clear{
+        background: none;
+      }
+      // -------- Input disabled --------
+      .ant-input[disabled] {
+        color: #9dd7ff;
+        background-color: #0d5990;
+        border: 1px solid #297ebb;
+        &:hover{
+          border: 1px solid #297ebb;
+        }
+      }
     }
     &.white {
       background-color: @white1;

@@ -21,6 +21,8 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
 import Condition from './condition';
 import NotificationList from './notificationList';
+import ITSMMapper from './itsmMapper';
+//import mockdata from './itsm.json'
 import TimeSlider from './timeSlider';
 import LeaveNotifyModal from '../common/leaveNotifyModal/index'
 
@@ -274,7 +276,7 @@ class RuleEditor extends Component {
             chatops: false,
             audio: false,
             recipients: [],
-            ITSMParam: '',
+            ITSMParam: {},
             /* 适用范围 */
             target: props.target,
         };
@@ -398,8 +400,8 @@ class RuleEditor extends Component {
                 action: _action || nextProps.action,
                 isShareUpgrade,
                 ITSMParam: nextProps.action.actionITSM
-                    ? JSON.stringify(JSON.parse(nextProps.action.actionITSM.param), null, 2)
-                    : '',
+                    ? JSON.parse(nextProps.action.actionITSM.param)
+                    : {},
                 timeStart: _timeStart,
                 timeEnd: _timeEnd
             });
@@ -414,7 +416,7 @@ class RuleEditor extends Component {
             });
             this.setState({
                 // action: nextProps.action,
-                ITSMParam: JSON.stringify(JSON.parse(_ITSMParam), null, 2)
+                ITSMParam: _ITSMParam
             })
         }
         this.isChecked(nextProps);
@@ -497,7 +499,7 @@ class RuleEditor extends Component {
         this.audioVarContent = this.vars('webAudioMessage')
 
         return (
-            <Form id="RuleEditor" onSubmit={this.submit} hideRequiredMark={false}>
+            <div id="RuleEditor" className="ant-form ant-form-horizontal">
 
                 <h2>{window.__alert_appLocaleData.messages['ruleEditor.baseInfo']}</h2>
                 <div className={styles.baseInfo}>
@@ -745,7 +747,6 @@ class RuleEditor extends Component {
                                                             // mode="multiple"
                                                             style={{ width: 180 }}
                                                             placeholder={window.__alert_appLocaleData.messages['ruleEditor.word8']}
-                                                            className={styles.recipients}
                                                             onChange={this.changeUpgradeMode.bind(this, index)}
                                                             value={(() => {
                                                                 if (item.status.length === 2) {
@@ -770,7 +771,6 @@ class RuleEditor extends Component {
                                                             filterOption={false}
                                                             placeholder={window.__alert_appLocaleData.messages['ruleEditor.notifySelectObj']}
                                                             onChange={this.changeUpgradeRecipients.bind(this, index)}
-                                                            className={styles.recipients}
                                                             value={item.recipients.map(item => ({key: item.userId, label: item.realName}))}
                                                             onSearch={
                                                               _.debounce( (value) => {
@@ -799,36 +799,15 @@ class RuleEditor extends Component {
                             }
                         </TabPane>
                         {/* 告警派单 */}
-                        <TabPane disabled={this.props.alertAssociationRules.wos.length === 0 ? true : false} tab={window.__alert_appLocaleData.messages['ruleEditor.ticket']} key="4" className={styles.actionITSM}>
-                            <div>
-                                <FormItem
-                                    {...itsmLayout}
-                                    label={window.__alert_appLocaleData.messages['ruleEditor.itsmType']}
-                                >
-                                    <Select
-                                        getPopupContainer={() =>document.getElementById("content")}
-                                        style={{ width: 100 }}
-                                        placeholder={window.__alert_appLocaleData.messages['ruleEditor.phItsmType']}
-                                        value={action.actionITSM ? action.actionITSM.itsmModelId : undefined}
-                                        onChange={this.changeAction.bind(this, 4)}
-                                    >
-                                        {
-                                            this.props.alertAssociationRules.wos.map(item => <Option key={item.id}>{item.name}</Option>)
-                                        }
-                                    </Select>
-                                    <em className={styles.tip}>{window.__alert_appLocaleData.messages['ruleEditor.word3']}</em>
-                                </FormItem>
-                                <FormItem
-                                    {...itsmLayout}
-                                    label={window.__alert_appLocaleData.messages['ruleEditor.fm']}
-                                >
-                                    <Input className={cls(styles.text, {
-                                        // 'hidden': !(action.actionITSM && action.actionITSM.itsmModelId)
-                                    })} onChange={this.changeAction.bind(this, 4)}
-                                        value={this.state.ITSMParam}
-                                        type="textarea" placeholder={window.__alert_appLocaleData.messages['ruleEditor.fm']} />
-                                </FormItem>
-                            </div>
+                        <TabPane disabled={/*this.props.alertAssociationRules.wos.length === 0 ? true : */false} tab={window.__alert_appLocaleData.messages['ruleEditor.ticket']} key="4" className={styles.actionITSM}>
+                            <ITSMMapper
+                              ref={ node => this.formByItsm = node }
+                              vars={this.props.alertAssociationRules.field || []}
+                              wosTypes={ this.props.alertAssociationRules.wos }
+                              wosType={ action.actionITSM ? action.actionITSM.itsmModelId : undefined }
+                              wos={ this.state.ITSMParam }
+                              changeWosType={ this.changeAction.bind(this, 4) }
+                            />
                         </TabPane>
                         {/* 抑制告警 */}
                         {
@@ -870,7 +849,7 @@ class RuleEditor extends Component {
                   return this.isNeedLeaveCheck;
                 }}/>
                 <span onClick={this.handleSubmit.bind(this)} className={styles.submit}>{window.__alert_appLocaleData.messages['ruleEditor.submit']}</span>
-            </Form>
+            </div>
         );
     }
 
@@ -1119,7 +1098,6 @@ class RuleEditor extends Component {
         })
     }
     changeAction(type, value) {
-        // console.info('changeAction', this);
         const { dispatch } = this.props;
         const _action = _.cloneDeep(this.state.action);
         switch (type) {
@@ -1212,9 +1190,8 @@ class RuleEditor extends Component {
                     };
                 }
                 if (value.target) {
-                    _action.actionITSM.param = value.target.value.replace(/\s|\n/g, "");
                     let _ITSMParam = value.target.value;
-
+                    //_action.actionITSM.param = JSON.stringify(JSON.parse(_.cloneDeep(_ITSMParam)), null, 2).replace(/\s|\n/g, "");
                     this.setState({
                         ITSMParam: _ITSMParam
                     });
@@ -1567,6 +1544,8 @@ class RuleEditor extends Component {
                 }
                 break;
             case 4:
+                console.log(this.formByItsm.getFieldsValue())
+                debugger
                 _actionITSM = action.actionITSM;
                 _actionITSM.itsmModelName = this.props.alertAssociationRules.wos.filter(item => {
                     return item.id === _actionITSM.itsmModelId;

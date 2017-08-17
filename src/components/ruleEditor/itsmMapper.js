@@ -1,0 +1,451 @@
+import React, { Component, PureComponent } from 'react'
+import { Form , Select, Button } from 'antd'
+import styles from './itsmMapper.less'
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import { default as cls } from 'classnames';
+import { getUUID } from '../../utils/index'
+import _ from 'lodash'
+// ------------- customer Component ----------------- //
+import Prefix from './formMaterial/prefix.js'
+import CTMCascader from './formMaterial/cascader.js'
+import CTMTitle from './formMaterial/title.js'
+import CTMTicketDesc from './formMaterial/ticketDesc.js'
+import CTMDateTime from './formMaterial/dateTime.js'
+import CTMDateTimeInterval from './formMaterial/dateTimeInterval.js'
+import CTMFloat from './formMaterial/float.js'
+import CTMInt from './formMaterial/int.js'
+import CTMListSel from './formMaterial/listSel.js'
+import CTMMultiRowText from './formMaterial/multiRowText.js'
+import CTMMultSel from './formMaterial/multiSel.js'
+import CTMSingleSel from './formMaterial/singleSel.js'
+import CTUrgentLevel from './formMaterial/urgentLevel.js'
+import CTMSingleRowText from './formMaterial/singleRowText.js'
+import WrapperUser from './formMaterial/user.js'
+// -------------- Executors ------------------------ //
+import Executor from './formMaterial/executor.js'
+
+let defaultObj = {}
+let defaultArr = []
+const FormItem = Form.Item
+const itsmLayout = {
+    labelCol: { span: 3 },
+    wrapperCol: { span: 21 }
+};
+const childItemLayout = {
+    wrapperCol: { span: 24 }
+}
+const activityVOsLayout = {
+    labelCol: { span: 3 },
+    wrapperCol: { span: 21 }
+}
+
+const Option = Select.Option
+/**
+ * 根据code或者type查询需要渲染的工单类型
+ * @param { item } 后台数据
+ * @param { extra } 额外的渲染数据
+ * @param { index } 数组的index
+ * @return { ReactElement } 返回的React元素
+ */
+function findType(item, extra, index) {
+  const diliver = {
+    getFieldDecorator: extra.form.getFieldDecorator,
+    item,
+    formItemLayout: extra.formItemLayout,
+    prop: extra.prop ? extra.prop : {},
+    disabled: item.isRequired === 2 ? true : false // 是否是只读, 2 --> readOnly, 1 --> required, 0 --> notRequired
+  }
+
+  function insertVar(type, item) {
+    let value = extra.form.getFieldValue(type) || ''
+    extra.form.setFieldsValue({
+      [type]: value += '${' + item + '}'
+    })
+  }
+
+  function vars(type) {
+    const vars = extra.vars;
+    return (
+        <div className={styles.varList}>
+            {vars.map(item => <span key={`${'${'}${item}${'}'}`} onClick={insertVar.bind(null, type, item)}>{item}</span>)}
+        </div>
+    );
+  }
+
+  //工单标题
+  if (item.code === 'title') {
+    return (
+      <CTMTitle key={ item.code } {...diliver} vars={vars(item.code)} />
+    )
+  }
+  //优先级
+  if (item.code === 'urgentLevel') {
+    return (
+      <CTUrgentLevel key={ item.code } {...diliver} />
+    )
+  }
+  if (item.type === 'singleRowText' && item.code !== 'title') {
+    return (
+      <CTMSingleRowText key={ item.code } {...diliver} vars={vars(item.code)} />
+    )
+  }
+  if (item.type === 'multiRowText' && item.code !== 'ticketDesc') {
+    return (
+      <CTMMultiRowText key={ item.code } {...diliver} vars={vars(item.code)} />
+    )
+  }
+  if (item.type === 'listSel') {
+    return (
+      <CTMListSel key={ item.code } {...diliver} />
+    )
+  }
+  if (item.type === 'singleSel' && item.code !== 'urgentLevel') {
+    return (
+      <CTMSingleSel key={ item.code } {...diliver} />
+    )
+  }
+  //多选
+  if (item.type === 'multiSel') {
+    return (
+      <CTMMultSel key={ item.code } {...diliver} />
+    )
+  }
+  //整数
+  if (item.type === 'int') {
+    return (
+      <CTMInt key={ item.code } {...diliver} />
+    )
+  }
+  //小数
+  if (item.type === 'double') {
+    return (
+      <CTMFloat key={ item.code } {...diliver} />
+    )
+  }
+  if (item.type === 'dateTimeInterval') {
+    return (
+      <CTMDateTimeInterval key={ item.code } {...diliver} />
+    )
+  }
+  if (item.type === 'dateTime') {
+    return (
+      <CTMDateTime key={ item.code } {...diliver} />
+    )
+  }
+  if (item.type === 'user') {
+    // 这里为了让user组件每次渲染保证initValue就是value
+    return (
+      <WrapperUser key={ item.code } {...diliver} />
+    )
+  }
+  //级联
+  if (item.type === 'cascader') {
+    return (
+      <CTMCascader key={ item.code } {...diliver} />
+    )
+  }
+  //工单描述
+  if (item.code === 'ticketDesc') {
+    return (
+      <CTMTicketDesc key={ item.code } {...diliver} vars={vars(item.code)} />
+    )
+  }
+  return null
+}
+
+/**
+ * 配置项前缀组件
+ * @return { ReactElement } 返回的React元素
+ */
+function prefix(item, extra, index, options = [], opt = {}) {
+  const props = {
+    key: item.code,
+    item,
+    options,
+    changeUper: opt.update || (() => {}),
+    delUper: opt.dele || (() => {})
+  }
+  let child = findType(item, extra, index)
+  return (
+    React.isValidElement(child) ?
+    <Prefix
+      {...props}
+    >
+      { child }
+    </Prefix>
+    : null
+  )
+}
+
+/**
+ * 根据activityVOs渲染执行人
+ * @param { item } activityVOs数据
+ * @param { extra } 额外的渲染数据
+ * @return { ReactElement } 返回的React元素
+ */
+function findActivityVOs(item, extra) {
+
+  const diliver = {
+    item,
+    getFieldDecorator: extra.form.getFieldDecorator,
+  }
+  return (
+    <Executor key={item.id} {...diliver}/>
+  )
+}
+
+// -------------- Required ----------------------- //
+class Required extends Component {
+  constructor(props) {
+    super(props)
+    this.renderItem = this.renderItem.bind(this)
+    this.prefix = prefix.bind(this)
+  }
+
+  renderItem(props) {
+    let { data, form, vars } = props
+    let extra = {
+      form,
+      formItemLayout: childItemLayout,
+      vars: vars
+    }
+    return data.map((item, index) => {
+      return this.prefix(item, extra, index)
+    }).filter(i => i !== null)
+  }
+
+  render() {
+    return (
+      this.props.data.length ?
+      <div className={styles.required}>
+        <p>{window.__alert_appLocaleData.messages['ITSMWrapper.isRequired']}</p>
+        <div className={styles.content}>
+          { this.renderItem(this.props) }
+        </div>
+      </div>
+      : null
+    )
+  }
+}
+
+// -------------- NotRequired -------------------- //
+class NotRequired extends Component {
+  constructor(props) {
+    super(props)
+    this.renderItem = this.renderItem.bind(this)
+    this.prefix = prefix.bind(this)
+    this.diffence = this.diffence.bind(this)
+    this.state = {
+      req: [], //用户选择的
+      options: this.props.data || []
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.data.length !== this.props.data.length) {
+      // 类型更改时的重置
+      this.setState({
+        req: [],
+        options: nextProps.data
+      })
+    }
+  }
+
+  diffence(all, less) {
+    return all.filter((option) => {
+      let status = true;
+      for(let i = 0; i < less.length; i++) {
+        if (_.isEqual(option, less[i])) {
+          status = false;
+          break;
+        }
+      }
+      return status
+    })
+  }
+
+  add() {
+    let _copyReq = _.cloneDeep(this.state.req)
+    let _copyOptions = _.cloneDeep(this.state.options)
+    _copyOptions = this.diffence(_copyOptions, _copyReq)
+    let first = _copyOptions.shift()
+    _copyReq.push(first)
+    this.setState({
+      req: _copyReq
+    })
+  }
+
+  update(index, value) {
+    let _options = _.cloneDeep(this.state.options)
+    let _req = _.cloneDeep(this.state.req)
+    for(let i = 0; i < _options.length; i++) {
+      if (_options[i]['code'] === value) {
+        _req[index] = _options[i];;
+        break;
+      }
+    }
+    this.setState({
+      req: _req
+    })
+  }
+
+  dele(index) {
+    let _req = _.cloneDeep(this.state.req)
+    this.setState({
+      req: _req.filter((it, iti) => iti !== index)
+    })
+  }
+
+  renderItem(props) {
+    let { form, vars } = props
+    let extra = {
+      form,
+      formItemLayout: childItemLayout,
+      vars: vars
+    }
+    return this.state.req.map( (item, index) => {
+      let options = this.diffence(this.state.options, this.state.req)
+      options.push(item)
+      let opt = {
+        update: this.update.bind(this, index),
+        dele: this.dele.bind(this, index)
+      }
+      return this.prefix(item, extra, index, options, opt)
+    })
+  }
+
+  render() {
+    return (
+      this.props.data.length ?
+      <div className={styles.notRequired}>
+        <p>{window.__alert_appLocaleData.messages['ITSMWrapper.isNotRequired']}</p>
+        <div className={styles.content}>
+          { this.renderItem(this.props) }
+          {
+            this.state.options.length > this.state.req.length ?
+            <Button type="primary" onClick={this.add.bind(this)}>+&nbsp;更多字段</Button>
+            :
+            null
+          }
+          {/*<i className={styles.addUper} onClick={this.add.bind(this)}>+</i><span>更多字段</span>*/}
+        </div>
+      </div>
+      : null
+    )
+  }
+}
+
+// -------------- Executors --------------------- //
+class Executors extends Component {
+  constructor(props) {
+    super(props)
+    this.renderActivityVOs = this.renderActivityVOs.bind(this)
+    this.findActivityVOs = findActivityVOs.bind(this)
+  }
+
+  renderActivityVOs(props) {
+    let { data, form } = props
+    let extra = {
+      form,
+      formItemLayout: activityVOsLayout
+    }
+    return data.map(item => {
+      return this.findActivityVOs(item, extra)
+    })
+  }
+
+  render() {
+    return (
+      this.props.data.length ?
+      <div className={styles.executors}>
+        <p>{window.__alert_appLocaleData.messages['ITSMWrapper.executors']}</p>
+        <div className={styles.exeContent}>
+          { this.renderActivityVOs(this.props) }
+        </div>
+      </div>
+      : null
+    )
+  }
+}
+
+class ITSMMapper extends Component {
+  constructor(props) {
+    super(props)
+    this.slice = this.slice.bind(this)
+  }
+  static propTypes = {
+    wosTypes: React.PropTypes.array.isRequired,
+    wosType: React.PropTypes.string,
+    wos: React.PropTypes.object.isRequired,
+    changeWosType: React.PropTypes.func.isRequired
+  }
+  static defaultProps = {
+    wosTypes: [],
+    wosType: undefined,
+    changeWosType: () => {},
+    wos: {}
+  }
+  // 切割数据必选和非必选的数据
+  slice(woses) {
+    let required = []
+    let notRequired = []
+    woses.form !== undefined && (
+      required = woses.form.filter(wos => {
+        (wos.isRequired !== 1 && notRequired.push(wos)) // 只读也归为非必选
+        return wos.isRequired === 1
+      }) || []
+    )
+    return {
+      required: required,
+      notRequired: notRequired,
+      executors: woses.activityVOs || []
+    }
+  }
+
+  render() {
+    let result = this.slice(this.props.wos || defaultObj)
+    console.log(this.props.wos)
+    console.log(result)
+    return (
+      <Form>
+        <div className={styles.ITSMMapper} >
+          <FormItem
+              {...itsmLayout}
+              label={window.__alert_appLocaleData.messages['ruleEditor.itsmType']}
+          >
+              <Select
+                  getPopupContainer={ () => {
+                    return document.getElementById("content") || document.body
+                  } }
+                  style={{ width: 100 }}
+                  placeholder={ window.__alert_appLocaleData.messages['ruleEditor.phItsmType'] }
+                  value={ this.props.wosType }
+                  onChange={ this.props.changeWosType }
+              >
+                  {
+                      this.props.wosTypes.map(item => <Option key={item.id}>{item.name}</Option>)
+                  }
+              </Select>
+              <em className={styles.tip}>{window.__alert_appLocaleData.messages['ruleEditor.word3']}</em>
+          </FormItem>
+          { React.cloneElement(<Required />, {
+            data: result.required || defaultArr,
+            vars: this.props.vars,
+            form: this.props.form
+          }) }
+          { React.cloneElement(<NotRequired />, {
+            data: result.notRequired || defaultArr,
+            vars: this.props.vars,
+            form: this.props.form
+          }) }
+          { React.cloneElement(<Executors />, {
+            data: result.executors || defaultArr,
+            form: this.props.form
+          })}
+        </div>
+      </Form>
+    )
+  }
+}
+
+export default Form.create()(ITSMMapper)
