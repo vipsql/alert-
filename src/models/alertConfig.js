@@ -228,7 +228,8 @@ export default {
             ...currentEditApp['applyType']
           },
           type: currentEditApp.type,
-          appKey: UUID
+          appKey: UUID,
+          webHook: formData.webHook
         }
         // 如果是SNMP Trap
         switch (currentEditApp.applyType.name) {

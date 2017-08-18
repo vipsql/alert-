@@ -28,7 +28,7 @@ const shouqiClass = classnames(
 const webhookClass = classnames(
   'icon',
   'iconfont',
-  'icon-ITSM'
+  'icon-webhook'
 )
 
 const itemLayout = {
@@ -158,7 +158,7 @@ class UYUN_Webhook extends Component {
           </span>
         </div>
         <div className={styles.viewContent}>
-          <div className={styles.step1}>
+          <div className={styles.step1} style={{ height: 130 }}>
             <span className={styles.step1Icon}></span>
             <p className={styles.stepName}>{formatMessage({ ...localeMessage['displayName'] })}</p>
             <p className={styles.stepMessage}>{formatMessage({ ...localeMessage['displayName_message'] })}</p>
@@ -205,12 +205,12 @@ class UYUN_Webhook extends Component {
                 label={formatMessage({ ...localeMessage['httpMethod'] })}
               >
                 {getFieldDecorator('requestMode', {
-                  initialValue: '1',
+                  initialValue: 'GET',
 
                 })(
                   <RadioGroup>
-                    <RadioButton value='1'>GET</RadioButton>
-                    <RadioButton value='2'>POST</RadioButton>
+                    <RadioButton value='GET'>GET</RadioButton>
+                    <RadioButton value='POST'>POST</RadioButton>
                   </RadioGroup>
                   )}
               </Item>
@@ -229,7 +229,7 @@ class UYUN_Webhook extends Component {
                     min={0}
                   />
                   )}
-                <span className={styles.overTimeMsg}><FormattedMessage { ...localeMessage['overTimeMsg']} values={{ overTime: form.getFieldsValue().overTime }} /></span>
+                <span className={styles.overTimeMsg}><FormattedMessage { ...localeMessage['overTimeMsg']} values={{ overTime: form.getFieldsValue().timeout }} /></span>
               </Item>
               <Item
                 {...itemLayout}
@@ -275,7 +275,7 @@ class UYUN_Webhook extends Component {
                   {...itemLayout}
                   label={formatMessage({ ...localeMessage['returnSuccessMark'] })}
                 >
-                  {getFieldDecorator('replySuccsess', {
+                  {getFieldDecorator('replySuccess', {
                   })(
                     <Input className={styles.shortInput} />
                     )}
@@ -289,7 +289,7 @@ class UYUN_Webhook extends Component {
             </Form>
           </div>
 
-          <span className={styles.stepLine} style={{ height: 150 }}></span>
+          <span className={styles.stepLine} style={{ height: 180 }}></span>
           <Button type="primary" htmlType='submit' onClick={(e) => { onOk(e, form) }}>{formatMessage({ ...localeMessage['save'] })}</Button>
         </div>
       </div>
@@ -305,6 +305,8 @@ export default injectIntl(Form.create({
     Object.keys(webHook).forEach(key => {
       webHookValues[key] = { value:  webHook[key]}
     })
+
+    console.log(webHook);
 
     return {
       displayName: {

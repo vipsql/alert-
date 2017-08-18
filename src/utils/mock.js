@@ -118,6 +118,9 @@ const __DataRule = {
   '/application/create': {
     'template|1': [true, false]
   },
+  '/application/update': {
+    'template|1': [true, false]
+  },
   '/application/getAppDetail': {
     regex: /\/application\/getAppDetail\//,
     'template': {
@@ -127,7 +130,7 @@ const __DataRule = {
       "integration": "@string(10)",
       "applyType": {
         "id": "@string(10)",
-        "name|1": ['UYUN ITSM', 'UYUN ChatOps', 'UYUN WebHook'],
+        "name|1": ['UYUN ITSM', 'UYUN ChatOps', 'UYUN WebHook', 'UYUN WebHook', 'UYUN WebHook', 'UYUN WebHook'],
         "type|1": [0, 1],
         "appType": "@name",
         "appAlias": "@cname"
@@ -140,7 +143,10 @@ const __DataRule = {
       "webHook": {
         "url": "@url",
         "timeout|30-150": 1,
-        "fidldMap": /(.*?):"\$\{(.*?)\}"/g
+        "fieldMap": /^{(.*?):"\$\{(\d)\}"{1, 10}}$/g,
+        "replyKey": '@string(5)',
+        "replySuccess": '@string(2)',
+        "requestMode|1": ['GET', 'POST']
       },
       "appRules|1-5": [{
         "id": '@string(10)',
