@@ -7,7 +7,7 @@
 @var_white   : @white0, @black1, @white1, @blue8,  @blue8,  @blue10, @white0, @white16, @white6, @blue13, @blue8,  @iptWhiteBoxShadow, @white0, @white18, @white18, @white16, @black0, @blue8,  @blue72, @blue24, @white0, @white16, @black1, @white27, @white26, @blue8,  @white37, @white27, @white16, @white0, @black0, @black0, @white38, @black1, @white6, @blue51, @white0, @blue8,  @none,   @green1,  @white16, @blue51, @white16, @white0,      @blue58,    @blue58, @white0, @black11, @white41, @white43, @opacity, @white6, @blue8,  @white0, @white16, @white13, @black0, @white0, @white11, @white38, @white38, @white14;
 
 .setTheme(@var_default, @var_white);
-.getTheme(@var){
+.getTheme(@var, @name){
     //min-width: 1200px;
   body {
     h1, h2, h3, h4, h5, h6 {
@@ -443,7 +443,15 @@
     } 
     //--------Switch end---------//
     //----------左边导航start----------／／
-    
+    .alertShow{
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 5px;
+      background: #000;
+      opacity: .5;
+      color: white;
+    }
     .ant-menu-inline .ant-menu-item:after, .ant-menu-vertical .ant-menu-item:after{
       border-right: 3px solid transparent;
     }

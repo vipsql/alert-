@@ -1,14 +1,13 @@
 @import "../vars.less";
-
 @import '../../theme/mixin.less';
 
 //蓝色和白色色系要上下一一对应
-//             1         2         3            4        5        6         7        8       9        10       11        12         13        14       15        16        17        18      19        20       21       22       23       24        25        26       27        28        29       30      31
-@var_default : @blue98, @opacity, @blue99,      @blue39, @blue65, @blue100, @white0, 2px;
-@var_white   : @white0, @white11, @var_blue112, @white0, @blue8,  @blue8,   @blue8,  10px;
+//             1         2         3            4        5        6         7         8       9        10       11       
+@var_default : @blue98, @opacity, @blue99,      @blue39, @blue65, @blue100, @white0,  2px,  @blue65, @blue100, @white0;
+@var_white   : @white0, @white11, @var_blue112, @white0, @white6,  @white6, @white6,  10px, @blue8,  @blue8,   @blue8;
 
 .setTheme(@var_default, @var_white);
-.getTheme(@var){
+.getTheme(@var, @name){
   :local{
     .configHome {
       & > a > div {
@@ -27,6 +26,15 @@
           left: -4px;
           box-shadow: 5px 5px  extract(@var, 8) extract(@var, 3);
           background-color: extract(@var, 4);
+          .configIcon {
+            color: extract(@var, 9);
+          }
+          .title {
+             color: extract(@var, 11);
+          }
+          .message {
+            color: extract(@var, 10);
+          }
         }
 
         .configIcon {

@@ -9,11 +9,11 @@
       .@{name}{
         & when (@name = blue){
           @var: @var_default;
-          .getTheme(@var)
+          .getTheme(@var, @name)
         }
         & when (@name = white){
           @var: @var_white;
-          .getTheme(@var)
+          .getTheme(@var, @name)
         }
       }
     }

@@ -97,7 +97,7 @@ class alertQueryManage extends Component {
     }
 
     return (
-      <div style={{ position: 'relative' }}>
+      <div style={{ position: 'relative' }} className={styles.alertQueryWrapper}>
         <AutoRefresh origin='alertList' top={"-50px"} refresh={() => {
           dispatch({
             type: 'alertQuery/queryAlertList'

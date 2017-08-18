@@ -7,7 +7,7 @@
 @var_white   : @white0,  @white11, @blue8,   @black0,  @white4, @blue8,  @white4, @white26, @black0, @white7,  @black1,  @white11, @white0,  @white0,  @white11, @opacity, @blue13,  @white45, @white7,  @black1,  @white11, @white0,  @white0,  @black1, @blue8,   @white4,  @red1,    @blue8,   @white14, @red0, @blue8;
 
 .setTheme(@var_default, @var_white);
-.getTheme(@var){
+.getTheme(@var, @name){
   :local{
     .detailView{
       background-color: extract(@var, 1);

@@ -8,7 +8,7 @@
 @var_white   : @white6, @white0,  @white11, @blue8,  @white0, @white11, @black1, @blue8, @blue72, @black1, @white13, @white34, @black1;
 
 .setTheme(@var_default, @var_white);
-.getTheme(@var){
+.getTheme(@var, @name){
   :local{
     .alertSetInfo{
       color: extract(@var, 13);

@@ -40,13 +40,25 @@
   }
 }
 
+.bgWrapper(){
+  background: #fff;
+  padding: 20px;
+  margin-left: -20px;
+  margin-top: -20px;
+}
+
 .showBar {}
 
 .hideBar {
   display: none
 }
-.getTheme(@var){
+.getTheme(@var, @name){
   :local{
+    .alertQueryWrapper{
+       & when (@name = white){
+        .bgWrapper()
+      }
+    }
     .toggleBarButton {
       background-color: extract(@var, 1);
       width: 100%;
@@ -197,7 +209,7 @@
         }
       }
     }
-    
+
   }
 }
 
@@ -205,10 +217,6 @@
   position: absolute;
   top: -3px;
 }
-
-
-
-
 
 .searchBar {
    :global .ant-form-item {
