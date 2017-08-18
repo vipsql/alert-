@@ -1,116 +1,200 @@
+@import '../../theme/mixin.less';
+
+//蓝色和白色色系要上下一一对应
+//             1         2         3        4         5        6         7         8        9         10       11        12       13        14       15       16       17       18        19        20       21       22       23       24        25        26       27        28        29       30      31
+@var_default : @blue125, @white0, @blue126, @blue127, @blue62, @blue128, @blue129, @blue62, @blue130, @blue77, @blue131, @blue41, @blue18,  @blue76, @blue84, @blue77, @white0, @blue15,  @blue41, @iptBg,  @blue132, @opacity, @blue41;
+@var_white   : @white26, @black1, @blue8,   @white0,  @blue8,  @white0,  @white16, @black1, @white16, @blue8,  @white38, @white0, @white16, @white0, @black1, @white0, @blue8,  @white16, @black1, @white0, @white7,  @white11, @blue8;
+
+.setTheme(@var_default, @var_white);
+.getTheme(@var){
+  :local{
+    .defineConditions {
+      & > div {
+        &:before {
+          border-color: extract(@var, 7);
+        }
+      }
+    }
+    .baseInfo {
+       color: extract(@var, 2);
+    }
+    .delete {
+      background-color: extract(@var, 11);
+      color: extract(@var, 12);
+    }
+    .timeCycleBd {
+      background-color: extract(@var, 4);
+      :global {
+        p {
+          color: extract(@var, 2);
+        }
+      }
+    }
+    .title {
+      border: 1px dashed extract(@var, 7);
+      background-color: extract(@var, 6);
+      color: extract(@var, 8);
+    }
+    .btnWrap {
+      & > span {
+        background-color: extract(@var, 10);;
+        color: #FFFFFF;
+      }
+    }
+    .timeCycleHd {
+      & > span {
+        background-color: extract(@var, 1);
+        color: extract(@var, 2);
+      }
+      :global {
+        .active {
+          background-color: extract(@var, 3);
+          color: #fff;
+        }
+      }
+    }
+    .submit {
+      background-color: extract(@var, 10);
+      color: #FFFFFF;
+    }
+  }
+  
+  #RuleEditor {
+    color: extract(@var, 2);
+    h2 {
+      border-bottom: 2px solid extract(@var, 5);
+      color: extract(@var, 5);
+    }
+    & > div {
+      &:after {
+        background-color: extract(@var, 9);
+      }
+    }
+    .ant-tabs-tab {
+      border: 1px solid extract(@var, 13);
+      background-color: extract(@var, 14);
+      color: extract(@var, 15);
+    }
+    .ant-tabs-tab-active {
+      border-color: extract(@var, 10);
+      background-color: extract(@var, 16);
+      color: extract(@var, 17);
+      &:after {
+        border-color: transparent transparent #123863 transparent;
+      }
+    }
+    .ant-tabs-tab-disabled {
+      border-color: extract(@var, 13);
+      background-color: extract(@var, 20);
+      color: extract(@var, 19);
+      &:hover {
+        border-color: extract(@var, 18);;
+      }
+    }
+    .ant-tabs-tabpane {
+      background-color: extract(@var, 21);
+      border: 1px solid extract(@var, 22);
+      em {
+        color: extract(@var, 23);
+      }
+    }
+  }
+}
+
 :global {
     .hidden {
         display: none !important;
     }
     #RuleEditor {
         padding-bottom: 200px;
-        color: #FFFFFF;
         h2 {
-            position: relative;
-            z-index: 1;
-            display: inline-block;
-            border-bottom: 2px solid #6AC5FE;
-            color: #6AC5FE;
-            font-weight: normal;
-            font-size: 13px;
-            line-height: 48px;
+          position: relative;
+          z-index: 1;
+          display: inline-block;
+          font-weight: normal;
+          font-size: 13px;
+          line-height: 48px;
         }
         & > div {
-            position: relative;
-            padding: 25px;
-            &:after {
-                position: absolute;
-                top: -1px;
-                left: 0;
-                display: block;
-                width: 100%;
-                height: 1px;
-                background-color: #225188;
-                content: "";
-            }
+          position: relative;
+          padding: 25px;
+          &:after {
+            position: absolute;
+            top: -1px;
+            left: 0;
+            display: block;
+            width: 100%;
+            height: 1px;
+            content: "";
+          }
         }
         :global {
             // .ant-form, .ant-tabs {
             //   padding: 25px;
             // }
             .ant-select-selection {
-                border-radius: 2px;
+              border-radius: 2px;
             }
             .ant-input {
-                border-radius: 2px;
+              border-radius: 2px;
             }
             .ant-tabs-bar {
-                border-bottom: 0;
-                background-color: transparent;
+              border-bottom: 0;
+              background-color: transparent;
             }
             .ant-tabs-tab {
-                margin-right: 10px;
-                padding: 0 12px;
-                width: auto;
-                height: 28px;
-                border: 1px solid #297EBB;
-                border-radius: 2px;
-                background-color: #095A95;
-                color: #9DD6FF;
-                line-height: 28px;
+              margin-right: 10px;
+              padding: 0 12px;
+              width: auto;
+              height: 28px;
+              border-radius: 2px;
+              line-height: 28px;
             }
             .ant-tabs-tab-disabled {
-                border-color: #297EBB;
-                background-color: #0D5990;
-                color: #5994D6;
-                opacity: .5;
-                cursor: not-allowed;
-                transition: .3s;
-                pointer-events: auto;
-                &:hover {
-                    border-color: #2BB4F4;
-                }
+              opacity: .5;
+              cursor: not-allowed;
+              transition: .3s;
+              pointer-events: auto;
             }
             .ant-tabs-nav-scroll,
             .ant-tabs-nav-wrap {
-                overflow: visible;
+              overflow: visible;
             }
             .ant-tabs-tab-active {
-                position: relative;
-                margin-bottom: 0;
-                border-color: #158AD4;
-                background-color: #158AD4;
-                color: #FFFFFF;
-                // &:before {
-                //   content: '';
-                //   display: block;
-                //   position: absolute;
-                //   top: 0;
-                //   right: 0;
-                //   width: 5px;
-                //   height: 5px;
-                //   background-color: #fff;
-                // }
-                &:after {
-                    position: absolute;
-                    top: 26px;
-                    left: 50%;
-                    display: block;
-                    margin-left: -8px;
-                    width: 0;
-                    height: 0;
-                    border-width: 8px;
-                    border-style: solid;
-                    border-color: transparent transparent #123863 transparent;
-                    content: "";
-                }
+              position: relative;
+              margin-bottom: 0;
+              // &:before {
+              //   content: '';
+              //   display: block;
+              //   position: absolute;
+              //   top: 0;
+              //   right: 0;
+              //   width: 5px;
+              //   height: 5px;
+              //   background-color: #fff;
+              // }
+              &:after {
+                position: absolute;
+                top: 26px;
+                left: 50%;
+                display: block;
+                margin-left: -8px;
+                width: 0;
+                height: 0;
+                border-width: 8px;
+                border-style: solid;
+                content: "";
+              }
             }
             .ant-tabs-tabpane {
-                margin-top: 15px;
-                padding: 30px 25px;
-                background-color: #123863;
-                em {
-                    display: block;
-                    // margin: 0 10px;
-                    margin-bottom: 20px;
-                    color: #5994D6;
-                    font-style: normal;
-                }
+              margin-top: 15px;
+              padding: 30px 25px;
+              em {
+                display: block;
+                // margin: 0 10px;
+                margin-bottom: 20px;
+                font-style: normal;
+              }
             }
         }
     }
@@ -119,9 +203,6 @@
 .title {
     padding: 0 15px;
     height: 55px;
-    border: 1px dashed #2769A2;
-    background-color: #0D3562;
-    color: #6AC5FE;
     line-height: 55px;
 }
 .level1 {
@@ -134,58 +215,54 @@
     margin-left: 30px;
 }
 .btnWrap {
-    float: right;
-    & > span {
-        // width: 70px;
-        padding: 0 10px;
-        height: 32px;
-        border-radius: 2px;
-        background-color: #158AD4;
-        color: #FFFFFF;
-        text-align: center;
-        line-height: 32px;
-    }
+  float: right;
+  & > span {
+    padding: 0 10px;
+    height: 32px;
+    border-radius: 2px;
+    text-align: center;
+    line-height: 32px;
+  }
 }
 .defineConditions {
-    // width: 65%;
-    // padding: 25px;
-    padding-right: 35% !important;
-    & > div {
-        position: relative;
-        margin-bottom: 7px;
-        &:before {
-            position: absolute;
-            top: 10px;
-            left: -35px;
-            display: block;
-            width: 20px;
-            height: 20px;
-            border-width: 0 0 1px 1px;
-            border-style: solid;
-            border-color: #2769A2;
-            background-color: transparent;
-            content: "";
-        }
+  // width: 65%;
+  // padding: 25px;
+  padding-right: 35% !important;
+  & > div {
+    position: relative;
+    margin-bottom: 7px;
+    &:before {
+      position: absolute;
+      top: 10px;
+      left: -35px;
+      display: block;
+      width: 20px;
+      height: 20px;
+      border-width: 0 0 1px 1px;
+      border-style: solid;
+      background-color: transparent;
+      content: "";
     }
-    :global {
-        .treeTag0 {
-            &:before {
-                display: none;
-            }
-        }
-        .treeTag1 {
-            margin-left: 50px;
-        }
-        .treeTag2 {
-            margin-left: 100px;
-            .addBlock {
-                display: none;
-            }
-        }
-        .ant-select {
-            width: 122px;
-        }
+  }
+  :global {
+    .treeTag0 {
+      &:before {
+        display: none;
+      }
     }
+    .treeTag1 {
+      margin-left: 50px;
+    }
+    .treeTag2 {
+      margin-left: 100px;
+      .addBlock {
+        display: none;
+      }
+    }
+    .ant-select {
+      width: 122px;
+    }
+  }
 }
 .btn {
     display: inline-block;
@@ -199,130 +276,128 @@
     position: relative;
 }
 .submit {
-    display: inline-block;
-    margin-left: 25px;
-    width: 90px;
-    height: 32px;
-    border-radius: 2px;
-    background-color: #158AD4;
-    color: #FFFFFF;
-    text-align: center;
-    line-height: 32px;
-    cursor: pointer;
+  display: inline-block;
+  margin-left: 25px;
+  width: 90px;
+  height: 32px;
+  border-radius: 2px;
+  text-align: center;
+  line-height: 32px;
+  cursor: pointer;
 }
 .baseInfo {
     font-size: 14px;
 }
 .timeCycle {
     overflow: hidden;
-    :global {
-        .rc-calendar {
-            border: none;
-            // float: left;
-            background-color: transparent;
-            box-shadow: none;
-        }
-        .rc-calendar-range-middle {
-            margin-left: -4px;
-            color: #5994D6;
-        }
-        .rc-calendar-date-input-wrap {
-            padding: 0 10px;
-        }
-        .rc-calendar-next-month-btn,
-        .rc-calendar-next-year-btn,
-        .rc-calendar-prev-month-btn,
-        .rc-calendar-prev-year-btn {
-            color: #7BC5F5;
-        }
-        .rc-calendar-input-wrap {
-            padding: 0;
-            height: auto !important;
-            border-bottom: 0;
-            .rc-calendar-input {
-                height: 30px;
-                border: 1px solid #3B8CCA;
-                border-radius: 2px;
-                background-color: #116098;
-                color: #5994D6;
-                &::-webkit-input-placeholder {
-                    color: #5994D6;
-                }
-            }
-        }
-        .rc-calendar-day-select,
-        .rc-calendar-month-select,
-        .rc-calendar-year-select {
-            color: #7BC5F5;
-        }
-        .rc-calendar-range .rc-calendar-body,
-        .rc-calendar-range .rc-calendar-decade-panel-body,
-        .rc-calendar-range .rc-calendar-month-panel-body,
-        .rc-calendar-range .rc-calendar-year-panel-body {
-            border-bottom: 0;
-        }
-        .rc-calendar-last-month-cell .rc-calendar-date,
-        .rc-calendar-next-month-btn-day .rc-calendar-date {
-            color: #163E6B;
-        }
-        .rc-calendar-range .rc-calendar-in-range-cell {
-            background-color: #3488C8;
-            color: #7CC6F5;
-            &:first-child {
-                border-top-left-radius: 2px;
-                border-bottom-left-radius: 2px;
-            }
-            &:last-child {
-                border-top-right-radius: 2px;
-                border-bottom-right-radius: 2px;
-            }
-        }
-        // .rc-calendar-today-btn, .rc-calendar-ok-btn, .rc-calendar-time-picker-btn {
-        //   color: #5994d6;
-        // }
-        .rc-calendar-date {
-            border: 1px solid transparent;
-            color: #7BC5F5;
-            &:hover {
-                border-color: #108EE9;
-                background-color: transparent;
-            }
-        }
-        .rc-calendar-selected-day .rc-calendar-date {
-            background-color: #46A0E4;
-        }
-        .rc-calendar-today .rc-calendar-date {
-            border-color: #108EE9;
-            background-color: transparent;
-        }
-        .rc-calendar-selected-date .rc-calendar-date:hover {
-            background-color: transparent;
-        }
-        .rc-calendar-range-left {
-            padding-right: 10px;
-        }
-        .rc-calendar-range-right {
-            padding-left: 10px;
-        }
-        .rc-calendar-footer-btn {
-            padding: 0 !important;
-        }
-        .rc-calendar-header {
-            border-bottom: none;
-        }
-        .rc-calendar-body {
-            border-bottom: none !important;
-        }
-        .rc-calendar-footer {
-            & > div {
-                margin: 0;
-                background-color: transparent;
-                .ant-slider {
-                    background-color: #116098;
-                }
-            }
-        }
-    }
+    // :global {
+    //     .rc-calendar {
+    //         border: none;
+    //         // float: left;
+    //         background-color: transparent;
+    //         box-shadow: none;
+    //     }
+    //     .rc-calendar-range-middle {
+    //         margin-left: -4px;
+    //         color: #5994D6;
+    //     }
+    //     .rc-calendar-date-input-wrap {
+    //         padding: 0 10px;
+    //     }
+    //     .rc-calendar-next-month-btn,
+    //     .rc-calendar-next-year-btn,
+    //     .rc-calendar-prev-month-btn,
+    //     .rc-calendar-prev-year-btn {
+    //         color: #7BC5F5;
+    //     }
+    //     .rc-calendar-input-wrap {
+    //         padding: 0;
+    //         height: auto !important;
+    //         border-bottom: 0;
+    //         .rc-calendar-input {
+    //             height: 30px;
+    //             border: 1px solid #3B8CCA;
+    //             border-radius: 2px;
+    //             background-color: #116098;
+    //             color: #5994D6;
+    //             &::-webkit-input-placeholder {
+    //                 color: #5994D6;
+    //             }
+    //         }
+    //     }
+    //     .rc-calendar-day-select,
+    //     .rc-calendar-month-select,
+    //     .rc-calendar-year-select {
+    //         color: #7BC5F5;
+    //     }
+    //     .rc-calendar-range .rc-calendar-body,
+    //     .rc-calendar-range .rc-calendar-decade-panel-body,
+    //     .rc-calendar-range .rc-calendar-month-panel-body,
+    //     .rc-calendar-range .rc-calendar-year-panel-body {
+    //         border-bottom: 0;
+    //     }
+    //     .rc-calendar-last-month-cell .rc-calendar-date,
+    //     .rc-calendar-next-month-btn-day .rc-calendar-date {
+    //         color: #163E6B;
+    //     }
+    //     .rc-calendar-range .rc-calendar-in-range-cell {
+    //         background-color: #3488C8;
+    //         color: #7CC6F5;
+    //         &:first-child {
+    //             border-top-left-radius: 2px;
+    //             border-bottom-left-radius: 2px;
+    //         }
+    //         &:last-child {
+    //             border-top-right-radius: 2px;
+    //             border-bottom-right-radius: 2px;
+    //         }
+    //     }
+    //     // .rc-calendar-today-btn, .rc-calendar-ok-btn, .rc-calendar-time-picker-btn {
+    //     //   color: #5994d6;
+    //     // }
+    //     .rc-calendar-date {
+    //         border: 1px solid transparent;
+    //         color: #7BC5F5;
+    //         &:hover {
+    //             border-color: #108EE9;
+    //             background-color: transparent;
+    //         }
+    //     }
+    //     .rc-calendar-selected-day .rc-calendar-date {
+    //         background-color: #46A0E4;
+    //     }
+    //     .rc-calendar-today .rc-calendar-date {
+    //         border-color: #108EE9;
+    //         background-color: transparent;
+    //     }
+    //     .rc-calendar-selected-date .rc-calendar-date:hover {
+    //         background-color: transparent;
+    //     }
+    //     .rc-calendar-range-left {
+    //         padding-right: 10px;
+    //     }
+    //     .rc-calendar-range-right {
+    //         padding-left: 10px;
+    //     }
+    //     .rc-calendar-footer-btn {
+    //         padding: 0 !important;
+    //     }
+    //     .rc-calendar-header {
+    //         border-bottom: none;
+    //     }
+    //     .rc-calendar-body {
+    //         border-bottom: none !important;
+    //     }
+    //     .rc-calendar-footer {
+    //         & > div {
+    //             margin: 0;
+    //             background-color: transparent;
+    //             .ant-slider {
+    //                 background-color: #116098;
+    //             }
+    //         }
+    //     }
+    // }
     // 日期组件样式
     .calendar {
         width: auto;
@@ -334,50 +409,45 @@
     }
 }
 .timeCycleHd {
-    & > span {
-        display: inline-block;
-        margin-right: 10px;
-        width: 48px;
-        height: 48px;
-        border-radius: 2px;
-        background-color: #155A96;
-        color: #FFFFFF;
-        text-align: center;
-        line-height: 48px;
-        cursor: pointer;
+  & > span {
+    display: inline-block;
+    margin-right: 10px;
+    width: 48px;
+    height: 48px;
+    border-radius: 2px;
+    text-align: center;
+    line-height: 48px;
+    cursor: pointer;
+  }
+  :global {
+    .active {
+      cursor: default;
     }
-    :global {
-        .active {
-            background-color: #2984C6;
-            cursor: default;
-        }
-    }
+  }
 }
 .timeCycleBd {
-    margin-top: 15px;
-    padding: 20px 15px;
-    max-width: 485px;
-    border-radius: 2px;
-    background-color: #1A63A1;
-    :global {
-        p {
-            margin-bottom: 20px;
-            color: #FFFFFF;
-        }
-        .ant-checkbox-wrapper {
-            margin-right: 0;
-            margin-bottom: 15px;
-            width: 10%;
-        }
-        .ant-time-picker {
-            width: 125px;
-        }
-        .weekCycle {
-            .ant-checkbox-wrapper {
-                width: 20%;
-            }
-        }
+  margin-top: 15px;
+  padding: 20px 15px;
+  max-width: 485px;
+  border-radius: 2px;
+  :global {
+    p {
+      margin-bottom: 20px;
     }
+    .ant-checkbox-wrapper {
+      margin-right: 0;
+      margin-bottom: 15px;
+      width: 10%;
+    }
+    .ant-time-picker {
+      width: 125px;
+    }
+    .weekCycle {
+      .ant-checkbox-wrapper {
+          width: 20%;
+      }
+    }
+  }
 }
 .alertSource {
     position: relative;
@@ -408,24 +478,19 @@
     display: none;
 }
 .delete {
-    position: absolute;
-    top: 15px;
-    right: -35px;
-    display: block;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background-color: #093362;
-    color: #5994D6;
-    text-align: center;
-    font-weight: bold;
-    font-style: normal;
-    line-height: 24px;
-    cursor: pointer;
+  position: absolute;
+  top: 15px;
+  right: -35px;
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  text-align: center;
+  font-weight: bold;
+  font-style: normal;
+  line-height: 24px;
+  cursor: pointer;
 }
-// .actionSuppress {
-//   // display: none;
-// }
 .actionITSM {
     & > div {
         padding-right: 35%;
@@ -447,136 +512,6 @@
         margin-right: 5px;
     }
 }
-// .notificationTabsLabel {
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   display: block;
-//   width: 8.333%;
-//   margin-top: 59px;
-//   text-align: right;
-//   font-size: 13px;
-//   &:after {
-//     content: ":";
-//     margin: 0 8px 0 2px;
-//     position: relative;
-//     top: -0.5px;
-//   }
-// }
-// .actionNotification{
-//   & > div {
-//     position: relative;
-//   }
-//   .recipients{
-//     width: 100% !important;
-//     color: #fff;
-//     :global {
-//       .ant-select-selection--multiple .ant-select-selection__choice {
-//         background-color: #158ad4;
-//         color: #fff;
-//         border-radius: 2px;
-//       }
-//       .ant-select-selection__choice__remove{
-//         display: inline-block;
-//         width: 20px;
-//         height: 20px;
-//         line-height: 20px;
-//         padding: 0;
-//         top: 2px;
-//         right: 0;
-//         color: #fff;
-//         border-radius: 50%;
-//         background-color: #094e80;
-//       }
-//     }
-//   }
-// }
-// .notificationTabs {
-//   position: relative;
-//   margin-left: 8.333%;
-//   overflow: visible;
-//   :global {
-//     .ant-tabs-tab {
-//       height: 30px !important;
-//       line-height: 30px !important;
-//       border-color: #6ca4cd !important;
-//       border-style: dashed !important;
-//     }
-//     .ant-tabs-tab-active {
-//       background-color: #1681c4 !important;
-//     }
-//     .ant-checkbox-wrapper {
-//       margin-right: 5px;
-//       & + span {
-//         padding: 0;
-//       }
-//     }
-//     .ant-tabs-tabpane {
-//       padding: 0 !important;
-//       // & > div {
-//       //   position: relative;
-//       // }
-//     }
-//     .ant-form-item-label,
-//     .ant-form-item-control-wrapper {
-//       float: left;
-//       width: 75px;
-//     }
-//     // .ant-form-item-label label {
-//       // position: relative;
-//       // top: -5px;
-//     // }
-//   }
-//   .mailTitle {
-//     :global {
-//       .ant-form-item-control-wrapper {
-//         width: 40%;
-//       }
-//     }
-//   }
-//   .msgContent {
-//     :global {
-//       .ant-form-item-control-wrapper {
-//         width: 60%;
-//       }
-//     }
-//   }
-// }
-// .varsWrap {
-//   // position: relative;
-//   border: 0;
-//   :global {
-//     .ant-popover-arrow {
-//       display: none;
-//     }
-//     .ant-popover-inner {
-//       background-color: #09284b;
-//     }
-//   }
-// }
-// .insertVar {
-//   cursor: pointer;
-//   position: absolute;
-//   top: 26px;
-//   left: -65px;
-//   display: inline-block;
-//   height: 24px;
-//   line-height: 24px;
-//   padding: 0 5px;
-//   color: #5994d6;
-//   background-color: #09284b;
-// }
-// .varList {
-//   position: relative;
-//   color: #fff;
-//   // width: 50%;
-//   span {
-//     display: inline-block;
-//     position: relative;
-//     margin: 0 5px;
-//     cursor: pointer;
-//   }
-// }
 .reclist {
     margin-bottom: 15px;
     margin-left: 8.333%;

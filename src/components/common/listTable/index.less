@@ -2,9 +2,9 @@
 @import '../../../theme/mixin.less';
 
 //蓝色和白色色系要上下一一对应
-//             1        2        3         4         5        6        7        8        9        10       11        12       13       14       15        16        17       18       19      20   
-@var_default : @blue27, @blue28, @blue29, @blue30,  @blue31, @blue32, @white0, @blue33, @blue34, @blue35, @blue36,  @blue37, @blue38, @blue39, @blue31,  @blue16,  @blue28, @blue45, @white0, @blue55;
-@var_white   : @white7, @white0, @white0, @white11, @white0, @white6, @black1, @blue8,  @white7, @white0, @white33, @white0, @black1, @blue8,  @white13, @white34, @white0, @white8, @blue8,  @white40;
+//             1        2        3         4         5        6        7        8        9        10       11        12       13       14       15        16        17       18       19      20        21
+@var_default : @blue27, @blue28, @blue29, @blue30,  @blue31, @blue32, @white0, @blue33, @blue34, @blue35, @blue36,  @blue37, @blue38, @blue39, @blue31,  @blue16,  @blue28, @blue45, @white0, @blue55,  @blue144;
+@var_white   : @white7, @white0, @white0, @white11, @white0, @white6, @black1, @blue8,  @white7, @white0, @white33, @white0, @black1, @blue8,  @white13, @white34, @white0, @white8, @blue8,  @white40, @white0;
 
 .setTheme(@var_default, @var_white);
 .getTheme(@var){
@@ -202,7 +202,7 @@
       tbody {
         tr.suppressed {
           td {
-            background-color: #495d65 !important
+            background-color:  extract(@var, 21)!important;
           }
         }
         .hiddenChild {

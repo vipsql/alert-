@@ -1,5 +1,5 @@
 @import "../../vars.less";
-
+@import "../../../theme/footerMixin.less";
 .dispatchMain{
     padding: 5px 50px 5px 50px;
     :global .ant-form-item{
@@ -25,25 +25,3 @@
     }
 }
 
-// common modal footer
-.modalFooter{
-    height: 60px;
-    line-height: 60px;
-    margin: -10px -16px -10px -10px;
-    //background: #f2f7fc;
-    background: #145e99;
-    text-align: center;
-    button{
-        width: 82px;
-    }
-    .ghostBtn{
-        color: #fff;
-        background-color: #108ee9;
-        border-color: #108ee9;
-        &:hover{
-            color: #fff;
-            background-color: #49a9ee;
-            border-color: #49a9ee;
-        }
-    }
-}

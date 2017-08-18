@@ -2,8 +2,8 @@
 
 //蓝色和白色色系要上下一一对应
 //                   1         2       3     4        5        6         7        8       9        10       11        12         13        14
-@var_chart_default: @blue89, @blue90,  .125, @blue38;
-@var_chart_white:   @white0, @blue91,  1,    @white6;
+@var_chart_default: @blue89, @blue90,  .125, @blue38, @blue68, @blue141;
+@var_chart_white:   @white0, @blue143, .65, @white6, @green0, @blue142;
 
 // config dc-chart on global
 .chartMixin(@var){
@@ -17,7 +17,7 @@
         stroke: none;
         cursor: pointer;
         //fill: #67e6bb;
-        fill: #14c3ff
+        fill: extract(@var, 5);
     }
     .dc-chart g.tick{
         fill: extract(@var, 4);
@@ -36,7 +36,7 @@
     .dc-chart rect.deselected {
         stroke: none;
         //fill: #dbedff;
-        fill: #135375;
+        fill: extract(@var, 6);
     }
     .dc-chart .pie-slice {
         fill: white;

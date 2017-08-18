@@ -3,13 +3,19 @@
 @import '../../theme/footerMixin.less';
 
 //蓝色和白色色系要上下一一对应
-//             1        2         3         4        5        6         7        8       9        10       11        12
-@var_default : @blue21, @opacity, @opacity, @blue86, @blue74, @blue74,  @blue75, @blue,  @blue22, @blue38, @blue31,  @blue16;;
-@var_white   : @white6, @white0,  @white11, @blue8,  @white0, @white11, @black1, @blue8, @blue72, @black1, @white13, @white34;
+//             1        2         3         4        5        6         7        8       9        10       11        12        13
+@var_default : @blue21, @opacity, @opacity, @blue86, @blue74, @blue74,  @blue75, @blue,  @blue22, @blue38, @blue31,  @blue16,  @white0;
+@var_white   : @white6, @white0,  @white11, @blue8,  @white0, @white11, @black1, @blue8, @blue72, @black1, @white13, @white34, @black1;
 
 .setTheme(@var_default, @var_white);
 .getTheme(@var){
   :local{
+    .alertSetInfo{
+      color: extract(@var, 13);
+    }
+    .alertNoData{
+      color: extract(@var, 13);
+    }
     .myModal{
       :global(.ant-modal-body){
         min-height: 200px;
@@ -177,7 +183,6 @@
   margin-left: -100px;
   margin-top: -10px;
   //color: #4082e6;
-  color: #fff;
   font-size: 14px;
   &:before{
     .exclamation()
@@ -189,7 +194,6 @@
   left: 40%;
   text-align: center;
   font-size: 14px;
-  color: white;
   &:before{
     .exclamation()
   }

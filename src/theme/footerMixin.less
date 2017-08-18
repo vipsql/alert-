@@ -1,9 +1,9 @@
 
 @import './vars_color.less';
 //蓝色和白色色系要上下一一对应
-//             1          2        3        4        5         6        7
-@var_default1 : @blue64,  @blue22, @blue21, @blue21,  @white0, @blue22, @blue22;
-@var_white1   : @white42, @blue72, @white0, @white11, @black1, @white9, @white16;
+//             1          2        3        4        5         6        7         8         9         10
+@var_default1 : @blue64,  @blue22, @blue21, @blue21,  @white0, @blue22, @blue22,  @blue137, @white46, @blue137;
+@var_white1   : @white42, @blue72, @white0, @white11, @black1, @white9, @white16, @opacity, @white38, @white11;
 
 .footerMixin(@var){
   body{
@@ -13,6 +13,13 @@
       margin: -10px -16px -10px -10px; 
       background: extract(@var, 1);
       text-align: center;
+       :global{
+        .ant-btn-primary[disabled]{
+            background: extract(@var, 8);
+            color: extract(@var, 9);
+            border: 1px solid extract(@var, 10);
+        }
+      }
       button {
         width: 82px;
         &:hover{

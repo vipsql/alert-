@@ -3,15 +3,26 @@
 //左边导航border-right变量
 @borderSold: 1px solid @white11;
 //蓝色和白色色系要上下一一对应
-//             1        2         3        4        5        6            7        8       9         10       11        12        13           14    15
-@var_default : @blue2,  @blue7,   @blue5,  @blue3,  @white2, @none,       @white0, @blue0, @blue9,   @blue9,  @blue6,   @none,    @none,       5px,  @blue14;
-@var_white   : @white0, @white26, @black1, @white1, @blue8,  @borderSold, @blue8,  @blue8, @black12, @white1, @white14, @white13, @borderSold, 24px, @opacity;
+//             1        2         3        4        5        6            7        8       9         10       11        12        13           14    15       16        17
+@var_default : @blue2,  @blue7,   @blue5,  @blue3,  @white2, @none,       @white0, @blue0, @blue9,   @blue9,  @blue6,   @none,    @none,       5px,  @blue14, @blue31,  @blue16;
+@var_white   : @white0, @white26, @black1, @white1, @blue8,  @borderSold, @blue8,  @blue8, @black12, @white1, @white14, @white13, @borderSold, 24px, @opacity, @white13, @white34;
 
 .setTheme(@var_default, @var_white);
 
 .getTheme(@var){
   :local{
     .layout{
+      :global{
+        .alertShow{
+          position: absolute;
+          width: 100px;
+          height: 100px;
+          border-radius: 5px;
+          background: #000;
+          opacity: .5;
+          color: white;
+        }
+      }
       position: relative;
       height: 100%;
       &.withnavbar {
@@ -151,14 +162,14 @@
         background: extract(@var, 11);
         &::-webkit-scrollbar-thumb {
           width: 7px; //background-color: #d3d4d6;
-          background-color: #1d6aa7;
-          border: 2px solid #153d5e;
+          background-color: extract(@var, 17);
+          border: 2px solid extract(@var, 16);
           border-radius: 7px;
         }
         &::-webkit-scrollbar {
           width: 7px;
           height: 7px;
-          background-color: #153d5e;
+          background-color: extract(@var, 16);
           border-radius: 7px;
         }
         &::-webkit-scrollbar-track {
