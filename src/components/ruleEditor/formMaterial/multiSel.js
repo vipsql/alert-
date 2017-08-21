@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Checkbox } from 'antd';
-import styles from '../itsmMapper.less'
+import styles from '../customField.less'
 import classnames from 'classnames'
 const FormItem = Form.Item;
 const CheckboxGroup = Checkbox.Group;

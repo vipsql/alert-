@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Popover } from 'antd';
 import limitFields from './limitField';
-import styles from '../itsmMapper.less'
+import styles from '../customField.less'
 
 const FormItem = Form.Item;
 export default class CTMTicketDesc extends React.Component {

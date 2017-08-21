@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, InputNumber } from 'antd';
-import styles from '../itsmMapper.less'
+import styles from '../customField.less'
 const FormItem = Form.Item;
 
 export default class CTMFloat extends React.Component {

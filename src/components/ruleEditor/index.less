@@ -550,3 +550,52 @@
     position: relative;
     left: 9.333%;
 }
+
+
+//actionSeverity
+.actionSeverity{
+  margin-bottom: 10px;
+  &:after{
+    clear: both;
+    visibility: hidden;
+    font-size: 0;
+    height: 0;
+  }
+  &:before, &:after{
+    content: " ";
+    display: table;
+  }
+  & > p {
+    position: relative;
+    top: 5px;
+    display: block;
+    width: 10%;
+    float: left;
+    flex: 0 0 auto;
+    text-align: right;
+    // ----------------
+    font-size: 13px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    &::after{
+      content: '：'
+    }
+  }
+  & > .content {
+    display: block;
+    width: 87.5%;
+    float: left;
+    flex: 0 0 auto;
+    :global(.ant-select){
+        width: 100px
+    }
+    .arrow{
+      display: inline-block;
+      margin: 0px 20px;
+      transform: rotate(-90deg);
+      color: #5994d6;
+      font-size: 18px;
+    }
+  }
+}

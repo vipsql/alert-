@@ -96,6 +96,16 @@ export async function getshowITSMParam(params) {
   })
 }
 
+// 获取插件的配置
+export async function getshowPluginParam(params) {
+  return request(`/rule/getUIComponentById?id=${params.id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+}
+
 // 获取维度
 export async function queryAttributes(params) {
   return request(`/rule/queryAttributes`, {
@@ -118,6 +128,16 @@ export async function getClasscode() {
 
 export async function querySource() {
     return request(`/rule/querySourceTags`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+}
+
+// 获取插件类型
+export async function getPlugins() {
+    return request(`/rule/getActionNameList`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

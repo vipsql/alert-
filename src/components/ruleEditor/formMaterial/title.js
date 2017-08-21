@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Input, Popover } from 'antd';
-import styles from '../itsmMapper.less'
+import styles from '../customField.less'
 import limitFields from './limitField';
 
 function trim(str) { //删除左右两端的空格

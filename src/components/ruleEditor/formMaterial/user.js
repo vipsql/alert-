@@ -4,8 +4,9 @@ import {
   getUsers
 } from '../../../services/app.js'
 import { getUUID } from '../../../utils/index'
+import limitField from './limitField.js'
 import _ from 'lodash'
-import styles from '../itsmMapper.less'
+import styles from '../customField.less'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -81,7 +82,7 @@ class CTMUser extends React.Component {
       <div className={styles.wrapper}>
         <FormItem {...formItemLayout}>
           {
-            getFieldDecorator(item.code, _.merge(
+            getFieldDecorator(`${limitField.PREFIX_USERTYPE}${item.code}`, _.merge(
               {
                 ...prop,
                 initialValue

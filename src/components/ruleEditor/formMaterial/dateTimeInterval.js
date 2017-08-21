@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, DatePicker } from 'antd';
-import styles from '../itsmMapper.less'
+import styles from '../customField.less'
 const FormItem = Form.Item;
 const RangePicker = DatePicker.RangePicker;
 

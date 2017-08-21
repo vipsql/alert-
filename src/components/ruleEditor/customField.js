@@ -1,6 +1,6 @@
 import React, { Component, PureComponent } from 'react'
 import { Form , Select, Button } from 'antd'
-import styles from './itsmMapper.less'
+import styles from './customField.less'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import { default as cls } from 'classnames';
 import { getUUID } from '../../utils/index'
@@ -188,6 +188,7 @@ function findActivityVOs(item, extra) {
   const diliver = {
     item,
     getFieldDecorator: extra.form.getFieldDecorator,
+    prop: extra.prop ? extra.prop : {}
   }
   return (
     <Executor key={item.id} {...diliver}/>
@@ -210,7 +211,10 @@ class Required extends Component {
       vars: vars
     }
     return data.map((item, index) => {
-      return this.prefix(item, extra, index)
+      return this.prefix(item, {
+        ...extra,
+        prop: item.defaultValue ? { initialValue: item.defaultValue } : null
+      }, index)
     }).filter(i => i !== null)
   }
 
@@ -236,13 +240,13 @@ class NotRequired extends Component {
     this.prefix = prefix.bind(this)
     this.diffence = this.diffence.bind(this)
     this.state = {
-      req: [], //用户选择的
+      req: props.data.filter(i => i.defaultValue) || [], //用户选择的
       options: this.props.data || []
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.data.length !== this.props.data.length) {
+    if (nextProps.data !== this.props.data) {
       // 类型更改时的重置
       this.setState({
         req: [],
@@ -310,7 +314,10 @@ class NotRequired extends Component {
         update: this.update.bind(this, index),
         dele: this.dele.bind(this, index)
       }
-      return this.prefix(item, extra, index, options, opt)
+      return this.prefix(item, {
+        ...extra,
+        prop: item.defaultValue ? { initialValue: item.defaultValue } : null
+      }, index, options, opt)
     })
   }
 
@@ -323,7 +330,7 @@ class NotRequired extends Component {
           { this.renderItem(this.props) }
           {
             this.state.options.length > this.state.req.length ?
-            <Button type="primary" onClick={this.add.bind(this)}>+&nbsp;更多字段</Button>
+            <Button type="primary" onClick={this.add.bind(this)}>+&nbsp;{window.__alert_appLocaleData.messages['ITSMWrapper.create.moreFields']}</Button>
             :
             null
           }
@@ -347,10 +354,13 @@ class Executors extends Component {
     let { data, form } = props
     let extra = {
       form,
-      formItemLayout: activityVOsLayout
+      formItemLayout: activityVOsLayout,
     }
     return data.map(item => {
-      return this.findActivityVOs(item, extra)
+      return this.findActivityVOs(item, {
+        ...extra,
+        prop: item.defaultValue ? { initialValue: item.defaultValue } : null
+      })
     })
   }
 
@@ -368,78 +378,88 @@ class Executors extends Component {
   }
 }
 
-class ITSMMapper extends Component {
+class CustomField extends Component {
   constructor(props) {
     super(props)
     this.slice = this.slice.bind(this)
+    this.state = {
+      result: this.slice(props.params || defaultObj)
+    }
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.params !== this.props.params) {
+      this.props.form.resetFields()
+      this.setState({
+        result: this.slice(nextProps.params || defaultObj)
+      })
+    }
+  }
+
   static propTypes = {
-    wosTypes: React.PropTypes.array.isRequired,
-    wosType: React.PropTypes.string,
-    wos: React.PropTypes.object.isRequired,
-    changeWosType: React.PropTypes.func.isRequired
+    types: React.PropTypes.array.isRequired,
+    type: React.PropTypes.string,
+    params: React.PropTypes.object.isRequired,
+    changeType: React.PropTypes.func.isRequired
   }
   static defaultProps = {
-    wosTypes: [],
-    wosType: undefined,
-    changeWosType: () => {},
-    wos: {}
+    types: [],
+    type: undefined,
+    changeType: () => {},
+    params: {}
   }
   // 切割数据必选和非必选的数据
-  slice(woses) {
+  slice(params) {
     let required = []
     let notRequired = []
-    woses.form !== undefined && (
-      required = woses.form.filter(wos => {
-        (wos.isRequired !== 1 && notRequired.push(wos)) // 只读也归为非必选
-        return wos.isRequired === 1
+    params.form !== undefined && (
+      required = params.form.filter(param => {
+        (param.isRequired !== 1 && notRequired.push(param)) // 只读也归为非必选
+        return param.isRequired === 1
       }) || []
     )
     return {
       required: required,
       notRequired: notRequired,
-      executors: woses.activityVOs || []
+      executors: params.activityVOs || []
     }
   }
 
   render() {
-    let result = this.slice(this.props.wos || defaultObj)
-    console.log(this.props.wos)
-    console.log(result)
     return (
       <Form>
         <div className={styles.ITSMMapper} >
           <FormItem
               {...itsmLayout}
-              label={window.__alert_appLocaleData.messages['ruleEditor.itsmType']}
+              label={this.props.titlePlacholder}
           >
               <Select
                   getPopupContainer={ () => {
                     return document.getElementById("content") || document.body
                   } }
                   style={{ width: 100 }}
-                  placeholder={ window.__alert_appLocaleData.messages['ruleEditor.phItsmType'] }
-                  value={ this.props.wosType }
-                  onChange={ this.props.changeWosType }
+                  placeholder={ this.props.titlePlacholder }
+                  value={ this.props.type }
+                  onChange={ this.props.changeType }
               >
                   {
-                      this.props.wosTypes.map(item => <Option key={item.id}>{item.name}</Option>)
+                      this.props.types.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)
                   }
               </Select>
-              <em className={styles.tip}>{window.__alert_appLocaleData.messages['ruleEditor.word3']}</em>
+              { this.props.tip ? <em className={styles.tip}>{ this.props.tip }</em> : undefined }
           </FormItem>
           { React.cloneElement(<Required />, {
-            data: result.required || defaultArr,
+            data: this.state.result.required || defaultArr,
             vars: this.props.vars,
             form: this.props.form
           }) }
           { React.cloneElement(<NotRequired />, {
-            data: result.notRequired || defaultArr,
+            data: this.state.result.notRequired || defaultArr,
             vars: this.props.vars,
             form: this.props.form
           }) }
           { React.cloneElement(<Executors />, {
-            data: result.executors || defaultArr,
+            data: this.state.result.executors || defaultArr,
             form: this.props.form
           })}
         </div>
@@ -448,4 +468,4 @@ class ITSMMapper extends Component {
   }
 }
 
-export default Form.create()(ITSMMapper)
+export default Form.create()(CustomField)

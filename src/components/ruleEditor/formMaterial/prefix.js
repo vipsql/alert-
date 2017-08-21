@@ -1,6 +1,6 @@
 import React from 'react';
 import { Select } from 'antd';
-import styles from '../itsmMapper.less'
+import styles from '../customField.less'
 import classnames from 'classnames'
 
 const Option = Select.Option
@@ -21,7 +21,7 @@ export default class Prefix extends React.Component {
       <div>
         {
           !(item.isRequired === 1) ?
-          <Select defaultValue={item.code} placeholder={'请选择类别'} onChange={(code) => {changeUper(code)}}>
+          <Select defaultValue={item.code} placeholder={window.__alert_appLocaleData.messages['ITSMWrapper.create.selectType']} onChange={(code) => {changeUper(code)}}>
             {
               options.length ?
               options.map((item) => {

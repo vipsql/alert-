@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Select } from 'antd';
-import styles from '../itsmMapper.less'
+import styles from '../customField.less'
 import _ from 'lodash'
 const FormItem = Form.Item;
 const Option = Select.Option;

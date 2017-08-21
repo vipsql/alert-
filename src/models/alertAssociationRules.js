@@ -12,8 +12,10 @@ import {
   getField,
   queryAttributes,
   getshowITSMParam,
+  getshowPluginParam,
   getClasscode,
-  querySource
+  querySource,
+  getPlugins
 } from '../services/alertAssociationRules';
 import {
   getUsers
@@ -22,6 +24,7 @@ import {
   getChatOpsOptions
 } from '../services/alertOperation';
 import { groupSort } from '../utils'
+import _ from 'lodash'
 
 const initalState = {
   isLoading: false,
@@ -56,8 +59,144 @@ const initalState = {
   field: [], // 映射字段
   rooms: [], // chatOps 群组
   wos: [], // 工单类型
+  plugins: [], //插件类型
   classCode: [], // 资源类型
-  ITSMParam: '', // 映射配置
+  ITSMParam: {}, // 映射配置
+  PluginParam: {}, // 插件配置
+}
+
+function isArray(array) {
+  return Object.prototype.toString.call(array) === "[object Array]"
+}
+
+function isObject(object) {
+  return Object.prototype.toString.call(object) === "[object Object]"
+}
+// 新增工单映射切换工单类型时，不显示默认项
+function deleteDefaultValue(woses = {}) {
+  Object.keys(woses).length && Object.keys(woses).forEach( (key) => {
+    if (isArray(woses[key]) && woses[key].length) {
+      woses[key].forEach((item) => {
+        delete item.defaultValue
+      })
+    }
+  })
+  return woses
+}
+
+// defaultValue回调
+function injectDefaultValue(inject, injected) {
+  // 差个级联的，暂时不做处理了，太耗
+  switch (injected.type) {
+    case 'listSel':
+      if (injected.params.map(i => String(i.value)).includes(inject)) {
+        injected.defaultValue = inject
+      }
+      break;
+    case 'singleSel':
+      if (injected.params.map(i => String(i.value)).includes(inject)) {
+        injected.defaultValue = inject
+      }
+      break;
+    case 'multiSel':
+      let compose = injected.params.map(i => i.value)
+      let array = inject.filter(inj => {
+        let state = false
+        if (compose.includes(inj)) {
+          state = true
+        }
+        return state
+      })
+      injected.defaultValue = array
+      break;
+    case 'user': // 历史数据，编辑时不显示
+      if (isArray(inject) && inject.length && isObject(inject[0])) {
+        injected.defaultValue = inject
+      } else {
+        injected.defaultValue = []
+      }
+      break;
+    default:
+      injected.defaultValue = inject
+      break;
+  }
+}
+// 比较函数
+function compare(params, target, callback) {
+  let _target = _.cloneDeep(target)
+  if (params.form) {
+    let keys = Object.keys(params.form)
+    for(let i = 0; i < keys.length; i++) {
+      for(let j = 0; j < _target.form.length; j++) {
+        if (_target.form[j].code === keys[i]) {
+          callback(params.form[keys[i]], _target.form[j])
+          break;
+        }
+      }
+    }
+  }
+  if (params.executors) {
+    let execKeys = Object.keys(params.executors)
+    for(let i = 0; i < execKeys.length; i++) {
+      for(let j = 0; j < _target.activityVOs.length; j++) {
+        let users = _target.activityVOs[j].users
+        if (_target.activityVOs[j].id === execKeys[i] && users && isArray(users)) {
+          let ids = users.map(i => i.userId)
+          let array = (params.executors[execKeys[i]]).filter(user => {
+            let state = false
+            if (ids.includes(user)) {
+              state = true
+            }
+            return state
+          })
+          _target.activityVOs[j].defaultValue = array
+          break;
+        }
+      }
+    }
+  }
+  return _target
+}
+
+// 比如告警派单需要在此时先根据id做一次工单类型模板的查询
+function beforeEdit(viewData) {
+  let other = {}
+  if (viewData.action.type && viewData.action.type.includes(4)) { //工单映射配置
+    return getshowITSMParam({
+      id: viewData.action.actionITSM.itsmModelId
+    }).then( ITSM => {
+      if (ITSM.result) {
+        let viewParam = _.cloneDeep(viewData.action.actionITSM.viewParam) || _.cloneDeep(viewData.action.actionITSM.realParam)
+        /*
+          比较编辑数据和ITSM模板
+          1. 判断编辑数据是否存在ITSM的可选项中（依据code，再找type，再比较）
+          2. 如果在可选项中将值作为defaultValue填入ITSMParam中
+          */
+        const ITSMParam = compare(JSON.parse(viewParam), ITSM.data, injectDefaultValue)
+        return Promise.resolve({
+          ITSMParam
+        })
+      }
+    })
+  }
+  if (viewData.action.type && viewData.action.type.includes(100)) { // 插件映射
+    return getshowPluginParam({
+      id: viewData.action.actionPlugin.uuid
+    }).then( plugin => {
+      if (plugin.result) {
+        let viewParam = _.cloneDeep(viewData.action.actionPlugin.realParam)
+        /*
+          比较编辑数据和插件模板
+          1. 判断编辑数据是否存在插件配置的可选项中（依据code，再找type，再比较）
+          2. 如果在可选项中将值作为defaultValue填入PluginParam中
+          */
+        const PluginParam = compare(JSON.parse(viewParam), plugin.data, injectDefaultValue)
+        return Promise.resolve({
+          PluginParam
+        })
+      }
+    })
+  }
 }
 
 export default {
@@ -147,9 +286,13 @@ export default {
       if (payload !== undefined) {
         const viewResult = yield call(viewRule, payload)
         if (viewResult.result) {
+          const other = yield call(beforeEdit, viewResult.data)
           yield put({
             type: 'setCurrent',
-            payload: viewResult.data || {}
+            payload: {
+              currentEditRule: viewResult.data || {},
+              ...other
+            }
           })
         } else {
           yield message.error(viewResult.message, 3)
@@ -225,57 +368,36 @@ export default {
       }
     },
 
-    // 获取 chatops 群组
-    *getRooms({payload}, {select, put, call}) {
+    // 进入页面时做一些接口的查询
+    *initQuery({payload}, {select, put, call}) {
       const params = {
         ...payload
-      };
-      const result = yield call(getChatOpsOptions ,params);
-      // const result = {
-      //   result: true,
-      //   data: []
-      // }
-      if (result.result) {
-        // debugger
-        // message.success('保存成功');
-        yield put({
-          type: 'updateRooms',
-          payload: {
-            data: result.data || []
-          }
-        });
       }
-    },
-    // 获取classcode
-    *getClassCode({payload}, {select, put, call}) {
-      const result = yield call(getClasscode);
-      if (result.result) {
-        yield put({
-          type: 'updateClassCode',
-          payload: {
-            data: result.data
-          }
-        });
-      } else {
-        message.error(result.message, 3);
-      }
-    },
-    // 获取 工单类型
-    *getWos({payload}, {select, put, call}) {
-      const params = {
-        ...payload
-      };
-      const result = yield call(getWos ,params);
-      if (result.result) {
-        yield put({
-          type: 'updateWos',
-          payload: {
-            data: result.data
-          }
-        });
-      } else {
-        message.error(result.message, 3);
-      }
+
+      const [ chatOps, users, source, attributes, field, wos, classCode, plugins ] = yield [
+        call(getChatOpsOptions, params), // 获取群组
+        call(getUsers, params), // 获取用户
+        call(querySource, params), // 获取来源
+        call(queryAttributes, params), // 获取维度
+        call(getField, params), // 获取映射字段
+        call(getWos, params), // 获取工单类型
+        call(getClasscode, params), // 获取classcode
+        call(getPlugins, params) // 获取插件种类
+      ]
+
+      yield put({
+        type: 'updateInitData',
+        payload: {
+          rooms: chatOps.result ? chatOps.data : [],
+          users: users.result ? users.data : [],
+          source: source.result ? source.data : [],
+          attributes: attributes.result ? attributes.data : [],
+          field: field.result ? field.data : [],
+          wos: wos.result ? wos.data : [],
+          classCode: classCode.result ? classCode.data : [],
+          plugins: plugins.result ? plugins.data : []
+        }
+      })
     },
 
     // 获取 工单映射配置
@@ -283,86 +405,31 @@ export default {
       const params = {
         ...payload
       };
-      const result = yield call(getshowITSMParam ,params);
+      const result = yield call(getshowITSMParam, params);
       if (result.result) {
+        let data = yield deleteDefaultValue(result.data)
         yield put({
           type: 'updateITSMParam',
           payload: {
+            data: data || {}
+          }
+        });
+      } else {
+        message.error(result.message, 3);
+      }
+    },
+
+    // 获取 插件配置
+    *getshowPluginParam({payload}, {select, put, call}) {
+      const params = {
+        ...payload
+      };
+      const result = yield call(getshowPluginParam, params);
+      if (result.result) {
+        yield put({
+          type: 'updatePluginParam',
+          payload: {
             data: result.data || {}
-          }
-        });
-      } else {
-        message.error(result.message, 3);
-      }
-    },
-
-    // 获取用户
-    *getUsers({payload}, {select, put, call}) {
-      const params = {
-        ...payload
-      };
-      const result = yield call(getUsers ,params);
-      if (result.result) {
-        // message.success('保存成功');
-        yield put({
-          type: 'updateUsers',
-          payload: {
-            data: result.data
-          }
-        });
-      } else {
-        message.error(result.message, 3);
-      }
-    },
-
-    // 获取映射字段
-    *getField({payload}, {select, put, call}) {
-      const params = {
-        ...payload
-      };
-      const result = yield call(getField ,params);
-      if (result.result) {
-        // debugger
-        yield put({
-          type: 'updateField',
-          payload: {
-            data: result.data
-          }
-        });
-      } else {
-        message.error(result.message, 3);
-      }
-    },
-
-    // 获取维度
-    *queryAttributes({payload}, {select, put, call}) {
-      const params = {
-        ...payload
-      };
-      const result = yield call(queryAttributes ,params);
-      if (result.result) {
-        yield put({
-          type: 'updateAttributes',
-          payload: {
-            data: result.data
-          }
-        });
-      } else {
-        message.error(result.message, 3);
-      }
-    },
-
-    // 获取来源
-    *querySource({payload}, {select, put, call}) {
-      const params = {
-        ...payload
-      };
-      const result = yield call(querySource ,params);
-      if (result.result) {
-        yield put({
-          type: 'updateSource',
-          payload: {
-            data: result.data
           }
         });
       } else {
@@ -428,13 +495,6 @@ export default {
       return { ...state, associationRules: newData }
     },
 
-
-    // 更新用户列表
-    updateUsers(state, { payload }) {
-      const { users } = state;
-      return { ...state, users: payload.data }
-    },
-
     // 更改状态
     changeRuleStatus(state, { payload: {id, status} }) {
       const { associationRules } = state;
@@ -461,33 +521,19 @@ export default {
       return { ...state, associationRules: newData, isShowDeleteModal: false, currentDeleteRule: {} }
     },
     setCurrent(state, { payload }) {
-      return { ...state, currentEditRule: payload }
+      return { ...state, ...payload }
     },
-    updateSource(state, {payload}) {
-      return { ...state, source: payload.data }
-    },
-    updateAttributes(state, {payload}) {
-      return { ...state, attributes: payload.data }
-    },
-    updateField(state, {payload}) {
-      return { ...state, field: payload.data }
-    },
-    updateRooms(state, {payload}) {
-      // debugger
-      return { ...state, rooms: payload.data }
-    },
-    updateClassCode(state, {payload}) {
-      return { ...state, classCode: payload.data }
-    },
-    updateWos(state, {payload}) {
-      return { ...state, wos: payload.data }
+    updateInitData(state, {payload}) {
+      return { ...state, ...payload}
     },
     updateITSMParam(state, {payload}) {
-      // debugger
       return { ...state, ITSMParam: payload.data }
     },
+    updatePluginParam(state, {payload}) {
+      return { ...state, PluginParam: payload.data }
+    },
     clear(state, {payload}) {
-      return { ...state, currentEditRule: {}, ITSMParam: '' }
+      return initalState
     },
     toggleDeleteModal(state, {payload: {currentDeleteRule, isShowDeleteModal}}) {
       return { ...state, currentDeleteRule, isShowDeleteModal }

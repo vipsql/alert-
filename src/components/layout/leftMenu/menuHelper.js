@@ -27,7 +27,7 @@ const createMenus = (menus, isFold, supervisor) => {
     )
 
     return (
-      <Menu.Item key={item.key}>
+      parseInt(supervisor, 10) && <Menu.Item key={item.key}>
         <Link to={path + item.key}>
           <i className={className}></i>
 

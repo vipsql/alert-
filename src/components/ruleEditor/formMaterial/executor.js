@@ -1,6 +1,7 @@
 import React from 'react'
 import { Form, Select, Row, Col, Tooltip} from 'antd';
-import styles from '../itsmMapper.less'
+import styles from '../customField.less'
+import limitField from './limitField.js'
 import classnames from 'classnames'
 import _ from 'lodash'
 
@@ -22,7 +23,7 @@ export default class Executor extends React.Component {
   }
 
   render() {
-    const { item, getFieldDecorator } = this.props;
+    const { item, getFieldDecorator, prop } = this.props;
 
     return (
       <Row>
@@ -34,12 +35,13 @@ export default class Executor extends React.Component {
         <Col span={6} className={styles.manageStyle}>
           <FormItem>
             {
-              getFieldDecorator(item.id, {
-                rules: [
-                  {
-                    validator: this.handleCheck.bind(this)
-                  }
-                ]
+              getFieldDecorator(`${limitField.PREFIX_EXECUTOR}${item.id}`, {
+                // rules: [
+                //   {
+                //     validator: this.handleCheck.bind(this)
+                //   }
+                // ],
+                ...prop
               })(
                 <Select
                   mode="multiple" showSearch  optionFilterProp="children"

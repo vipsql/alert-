@@ -1,4 +1,4 @@
-{
+export default {
     "form": [
         {
             "name": "工单标题",

@@ -85,10 +85,22 @@ var data = {
         },
         "actionITSM": {
             "itsmModelId": "changed",
-            "param": {
+            "realParam": {
                 "cesjo": "cesj"
             },
+            "viewParam": {
+
+            },
             "type": 4
+        },
+        "actionSeverity": {
+            "type":"类型：1、固定级别；2升级到上一级别；3降级到下一级别",
+        	"fixedSeverity":"固定级别"
+        },
+        "actionPlugin": {
+            "uuid":"插件id",
+            "name":"插件名称",
+            "param":"与工单类似"
         },
         "actionChatOps": {
             notifyWhenLevelUp: true,
