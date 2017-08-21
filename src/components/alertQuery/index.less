@@ -55,6 +55,13 @@
 .getTheme(@var, @name){
   :local{
     .alertQueryWrapper{
+       :global{
+         .refresh-top{
+           & when (@name = blue){
+            top:-52px;
+           }
+         }
+       }
        & when (@name = white){
         .bgWrapper()
       }

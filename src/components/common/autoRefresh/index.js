@@ -55,7 +55,7 @@ class autoRefresh extends React.Component {
     })
 
     return (
-      <div className={styles.alertSwitch} style={{top: this.props.top || '-30px'}}>
+      <div className={`${styles.alertSwitch} refresh-top`}>
         <span><FormattedMessage {...localeMessage['auto_refresh']} /></span>
         <Switch onChange={this.change.bind(this)} checked={this.state.isRefresh} />
       </div>
