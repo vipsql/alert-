@@ -34,6 +34,20 @@
 		color: #6ec2ff;
 		margin-bottom: 18px;
 	}
+  .white td{
+		border: 1px solid #e4e7eb;
+	}
+  .white body{
+		color: #6c7480;
+	}
+  .white .table-list thead{
+		background-color: #f8fbfd;
+		color: #4c5159;
+		border-bottom: 1px solid #e4e7eb;
+	}
+  .white p{
+		color: #6c7480;
+	}
   </style>
  </head>
  <body onload="getUrl()">
@@ -102,6 +116,10 @@ curl -H "Content-type: application/json;charset=utf-8" -X POST -d '
 ' </pre>
 	</div>
  </body>
+ <script>
+  var skinType = window.parent.document.getElementsByTagName('html')[0].className;
+  document.getElementsByTagName('html')[0].className = skinType;
+ </script>
  <script>
  	function getUrl() {
 		document.getElementById('url').innerHTML = window.parent.__alert_restApiUrl

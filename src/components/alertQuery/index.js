@@ -96,9 +96,12 @@ class alertQueryManage extends Component {
       afterMunalNotify: updateRow // 告警通知后的回调方法
     }
 
+    const skinType = document.getElementsByTagName('html')[0].className;
+    let autoRefreshTop;
+    skinType == 'white' ? (autoRefreshTop = '-55px') : (autoRefreshTop = '-50px');
     return (
-      <div style={{ position: 'relative' }}>
-        <AutoRefresh origin='alertList' top={"-50px"} refresh={() => {
+      <div style={{ position: 'relative' }} className={styles.alertQueryWrapper}>
+        <AutoRefresh origin='alertList' top={autoRefreshTop} refresh={() => {
           dispatch({
             type: 'alertQuery/queryAlertList'
           })

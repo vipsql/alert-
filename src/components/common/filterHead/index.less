@@ -1,15 +1,26 @@
 @import "../../vars.less";
+@import '../../../theme/mixin.less';
 
-.myRadioGroup{
-    color: #fff;
-    margin-left: 29px;
-    & > label:global(.ant-radio-wrapper) {
-      &:global(.motion){ // motion是全局的不然jquery获取不到class
-          animation: radioScale 1s ease-in-out 1;
-          -webkit-animation: radioScale 1s ease-in-out 1;
-          -moz-animation: radioScale 1s ease-in-out 1;
-      }
+//蓝色和白色色系要上下一一对应
+//             1      
+@var_default : @white0;
+@var_white   : @black1;
+
+.setTheme(@var_default, @var_white);
+.getTheme(@var, @name){
+  :local {
+    .myRadioGroup{
+        color: extract(@var, 1);
+        margin-left: 29px;
+        & > label:global(.ant-radio-wrapper) {
+          &:global(.motion){ // motion是全局的不然jquery获取不到class
+              animation: radioScale 1s ease-in-out 1;
+              -webkit-animation: radioScale 1s ease-in-out 1;
+              -moz-animation: radioScale 1s ease-in-out 1;
+          }
+        }
     }
+  }
 }
 
 @keyframes radioScale {

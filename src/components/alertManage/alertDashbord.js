@@ -53,12 +53,13 @@ class Chart extends Component {
   }
   componentDidMount() {
     const self = this;
+    let htmlDomClassName = document.getElementsByTagName('html')[0].className;
 
     const severityToColor = {
-      '0': '#52edcb', // 恢复
-      '1': '#fadc23', // 提醒
-      '2': '#ffae2f', // 警告
-      '3': "#ff522a" // 紧急
+      '0': (htmlDomClassName == 'white') ? '#3ff6ce' : '#52edcb', // 恢复
+      '1': (htmlDomClassName == 'white') ? '#ffdc1d' : '#fadc23', // 提醒
+      '2': (htmlDomClassName == 'white') ? '#ff9b2f' : '#ffae2f', // 警告
+      '3': (htmlDomClassName == 'white') ? '#ff522a' : "#ff522a" // 紧急
     }
     this.chartWidth = document.documentElement.clientWidth - 160 - 90
     this.chartHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight) - 180
@@ -67,7 +68,7 @@ class Chart extends Component {
     this.color = function (num) {
       // 没有数据时的颜色
       if (num < 0) {
-        return "#5be570"
+        return (htmlDomClassName == 'white') ? "#1dca9d" : "#5be570";
       }
       return severityToColor[num]
     }
@@ -199,7 +200,7 @@ class Chart extends Component {
     }
 
     // 如果内容为‘’，且‘...’占据的空间依旧比个子空间大，则不显示任何内容
-    if(text == '' && this._textSize("13px", text + '...') > d.dx - 40) {
+    if (text == '' && this._textSize("13px", text + '...') > d.dx - 40) {
       isShorted = false;
     }
 
@@ -222,7 +223,7 @@ class Chart extends Component {
       parentNode.children.forEach((childNode) => {
         const oldNode = oldDashbordDataMap[childNode.id];
         const wrap = this._wrap;
-        const currentNode = d3.select("[id='" + childNode.id +"']");
+        const currentNode = d3.select("[id='" + childNode.id + "']");
 
         // 最高级别警告发生变化时呈现的动画
         if ((childNode && oldNode) && childNode.maxSeverity != oldNode.maxSeverity) {
@@ -241,11 +242,11 @@ class Chart extends Component {
 
         // 告警数发生变化时呈现的动画
         if (childNode && (!oldNode || oldNode.trueVal != childNode.trueVal)) {
-          const node = this.chart.select("[id='" + childNode.id +"']");
+          const node = this.chart.select("[id='" + childNode.id + "']");
           currentNode[0][0].__data__.trueVal = childNode.trueVal;
           currentNode[0][0].__data__.noData = childNode.trueVal == 0;
           node.data(childNode);
-          const svg = d3.select("[id='" + childNode.id +"']").select("svg");
+          const svg = d3.select("[id='" + childNode.id + "']").select("svg");
           let isInAction = false;
           const labelTransition = svg
             .select("text.label")
@@ -432,8 +433,10 @@ class Chart extends Component {
         }
 
       });
+    let htmlDomClassName = document.getElementsByTagName('html')[0].className;
     var headerHeight = 40;
-    var headerColor = "#0d3158";
+    var headerColor = (htmlDomClassName == 'white') ? '#fff' : "#0d3158";
+    var headerBorderColor = (htmlDomClassName == 'white') ? '#e4e7ec' : "#163c67";
     var transitionDuration = 500;
     var root;
     var node;
@@ -509,13 +512,13 @@ class Chart extends Component {
         .attr("width", function (d) {
           return Math.max(0.01, d.dx);
         })
-        .attr('stroke', '#163c67')
+        .attr('stroke', headerBorderColor)
         .attr('stroke-width', '4')
         .attr("height", headerHeight)
         .style("fill", headerColor);
       parentEnterTransition.append('text')
         .attr("class", "label")
-        .attr("fill", "#6ac5fe")
+        .attr("fill", (htmlDomClassName == 'white') ? "#4082e6" : "#6ac5fe")
         .attr("text-anchor", "middle")
         .attr("x", function (d) {
           return Math.max(0.01, d.dx / 2);
@@ -613,7 +616,7 @@ class Chart extends Component {
       childEnterTransition.append("rect")
         .classed("background", true)
         // .attr('filter',"url(#inset-shadow)")
-        .attr('stroke', '#163c67')
+        .attr('stroke', headerBorderColor)
         .attr('stroke-width', '2')
         .attr("style", "cursor:pointer")
         .style("fill", (d) => {
@@ -763,9 +766,9 @@ class Chart extends Component {
           .each("end", (d, i) => {
             d.isInAction = false;
             if (!i && (level !== self.root)) {
-              const tempNode = d3.select("[id='" + d.id +"']");
+              const tempNode = d3.select("[id='" + d.id + "']");
               parentD.children.forEach((childD) => {
-                d3.select("[id='" + childD.id +"']").select('.label').text((d) => this._wrap(d));
+                d3.select("[id='" + childD.id + "']").select('.label').text((d) => this._wrap(d));
               })
               // this.chart.selectAll(".cell.child")
               //     .filter(function(d) {
@@ -781,7 +784,7 @@ class Chart extends Component {
 
             const matchD = parentD.children.filter((childD) => childD.id == d.id);
             if (matchD && matchD.length > 0 && level.depth == 1) {
-              this._textTransition("[id='" + matchD[0].id +"']", true);
+              this._textTransition("[id='" + matchD[0].id + "']", true);
             }
           })
 
@@ -810,7 +813,7 @@ class Chart extends Component {
             return ky * d.dy / 2;
           })
           .attr("font-size", "11.5pt")
-          //.style("text-shadow", "1px 1px 1px #333")
+        //.style("text-shadow", "1px 1px 1px #333")
         zoomTransition.select(".child .shadow")
           .attr("x1", (d) => {
             const result = this._textSize('11.5pt', this._wrap(d))

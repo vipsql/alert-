@@ -1,8 +1,27 @@
+@import '../../theme/mixin.less';
+
+//蓝色和白色色系要上下一一对应
+//             1         2         3         4        5        6         7        8       9        10       11        12         13        14       15        16        17        18      19        20       21       22       23       24        25        26       27        28        29       30      31
+@var_default : @blue129, @opacity, @blue131, @blue41;
+@var_white   : @blue13,  @white8,  @white4,  @white0;
+
+.setTheme(@var_default, @var_white);
+.getTheme(@var, @name){
+  :local{
+    .conditionItem {
+      border: 1px dashed extract(@var, 1);
+      background-color: extract(@var, 2);
+    }
+    .delete {
+      background-color: extract(@var, 3);
+      color: extract(@var, 4);
+    }
+  }
+}
 .conditionItem {
   padding: 0 15px;
   height: 55px;
   line-height: 55px;
-  border: 1px dashed #2769a2;
 }
 .key {
 
@@ -20,8 +39,6 @@
   display: block;
   width: 24px;
   height: 24px;
-  background-color: #093362;
-  color: #5994d6;
   line-height: 24px;
   text-align: center;
   font-weight: bold;

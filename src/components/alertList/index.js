@@ -193,9 +193,13 @@ class AlertListManage extends Component {
       afterMunalNotify: updateRow // 告警通知后的回调方法
     }
 
+    const skinType = document.getElementsByTagName('html')[0].className;
+    let autoRefreshTop;
+    skinType == 'white' ? (autoRefreshTop = '-55px') : (autoRefreshTop = '-30px')
+
     return (
       <div style={{ position: 'relative' }}>
-        <AutoRefresh origin='alertList' refresh={refresh} />
+        <AutoRefresh origin='alertList' refresh={refresh}  top={"-55px"} />
         <FilterHead
           style={{ marginBottom: '20px' }}
           defaultTime={alertManage.selectedTime}

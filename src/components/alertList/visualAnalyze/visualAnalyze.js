@@ -9,12 +9,13 @@ import Slider from 'react-slick'
 
 
 
+let htmlDomClassName = document.getElementsByTagName('html')[0].className;
 
 const severityToColor = {
-  '-1': '#5be570', // 无故障
-  '0': '#52edcb', // 正常
-  '1': '#fadc23', // 提醒
-  '2': '#ffae2f', // 警告
+  '-1': (htmlDomClassName == 'white') ? "#1dca9d" : "#5be570", // 无故障
+  '0': (htmlDomClassName == 'white') ? '#3ff6ce' : '#52edcb', // 正常
+  '1': (htmlDomClassName == 'white') ? '#ffdc1d' : '#fadc23', // 提醒
+  '2': (htmlDomClassName == 'white') ? '#ff9b2f' : '#ffae2f', // 警告
   '3': "#ff522a" // 紧急
 }
 const tagsFilter = classnames(
