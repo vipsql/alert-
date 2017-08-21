@@ -8,6 +8,7 @@ import ChatOps from './UYUN_ChatOps'
 import VideoMON from './UYUN_VideoMon'
 import Trap from './SNMP_Trap'
 import NetWork from './UYUN_NetWork'
+import Webhook from './UYUN_Webhook'
 import LeaveNotifyModal from '../common/leaveNotifyModal/index'
 
 class Edit extends Component {
@@ -52,9 +53,11 @@ class Edit extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/editApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    }}
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    }
                   })
                 })
               }}
@@ -78,9 +81,11 @@ class Edit extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/editApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    }}
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    }
                   })
                 })
               }}
@@ -104,9 +109,11 @@ class Edit extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/editApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    }}
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    }
                   })
                 })
               }}
@@ -130,9 +137,11 @@ class Edit extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/editApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    }}
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    }
                   })
                 })
               }}
@@ -156,9 +165,11 @@ class Edit extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/editApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    }}
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    }
                   })
                 })
               }}
@@ -180,9 +191,11 @@ class Edit extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/editApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    }}
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    }
                   })
                 })
               }}
@@ -204,9 +217,48 @@ class Edit extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/editApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    }}
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    }
+                  })
+                })
+              }}
+            />
+          break;
+        case 'UYUN WebHook':
+          targetApplication =
+            <Webhook
+              route={props.route}
+              appkey={currentEditApp.appKey}
+              displayName={currentEditApp.displayName}
+              builtIn={currentEditApp.builtIn}
+              webHook={ currentEditApp.webHook }
+              onOk={(e, form) => {
+                e.preventDefault();
+
+                form.validateFieldsAndScroll((errors, values) => {
+                  if (!!errors) {
+                    return;
+                  }
+                  const formData = form.getFieldsValue()
+                  const webHook = {
+                    url: formData.url,
+                    timeout: formData.timeout,
+                    requestMode: formData.requestMode,
+                    fieldMap: formData.fieldMap,
+                    replyKey: formData.replyKey,
+                    replySuccess: formData.replySuccess
+                  }
+                  dispatch({
+                    type: 'alertConfig/editApplication',
+                    payload: {
+                      formData: { ...formData, webHook },
+                      resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    },
                   })
                 })
               }}
@@ -230,9 +282,11 @@ class Edit extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/editApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    }}
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    }
                   })
                 })
               }}
@@ -241,7 +295,7 @@ class Edit extends Component {
       }
       return (
         <div>
-          { targetApplication }
+          {targetApplication}
           <LeaveNotifyModal route={props.route} needLeaveCheck={() => {
             return this.isNeedLeaveCheck;
           }} />

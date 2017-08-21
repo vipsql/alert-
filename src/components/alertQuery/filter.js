@@ -1,17 +1,20 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'dva'
-import { Row, Col, Form, Input, Select, DatePicker, Button, Popover, Checkbox, message } from 'antd'
+import { Menu, Row, Col, Form, Input, Select, DatePicker, Button, Popover, Checkbox, message, Dropdown } from 'antd'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import styles from './index.less'
 import { classnames } from '../../utils'
 import TimeSlider from '../ruleEditor/timeSlider'
 import DatePeriodPicker from '../common/datePeriodPicker/index'
+import FilterSaveModal from './filterSaveModal'
+import FilterDeleteModal from './filterDeleteModal'
 
 const Item = Form.Item;
 const RangePicker = DatePicker.RangePicker;
 const InputGroup = Input.Group;
 const Option = Select.Option;
 const OptGroup = Select.OptGroup;
+const MenuItem = Menu.Item;
 
 class Filter extends Component {
   constructor(props) {
@@ -27,26 +30,12 @@ class Filter extends Component {
     rawData = { ...formData };
     // ----------------------------------------------------
 
-    let keyWords = JSON.parse(formData.keyWordsType);
-    let owner = formData.owner;
-
-    formData.ownerId = owner.key;
-    formData.keyName = keyWords.keyName;
-    formData.keyWordsType = keyWords.keyWordsType;
-    delete formData.owner
-
-    formData.begin = formData.dateTime[0];
-    formData.end = formData.dateTime[1];
-    delete formData.dateTime
-
-    formData.lastBegin = formData.lastOccurTime[0];
-    formData.lastEnd = formData.lastOccurTime[1];
-    delete formData.lastOccurTime
+    const currentQuery = this._formDataToQueryData(formData);
 
     // -----------------------------------------------------
 
     return {
-      currentQuery: formData,
+      currentQuery: currentQuery,
       currentQueryRawData: rawData
     }
   }
@@ -67,11 +56,120 @@ class Filter extends Component {
       })
     })
   }
+
+  onDeleteSearch(filter) {
+    const id = filter.id;
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'alertQueryFilter/openDeleteModal',
+      payload: {
+        id
+      }
+    })
+  }
+
+  onSelectSearch(item, key) {
+    const { dispatch } = this.props;
+    const id = item.props.id;
+
+    if(this.isDeleting) {
+      this.isDeleting = false;
+      return;
+    }
+
+    dispatch({
+      type: 'alertQueryFilter/selectFilter',
+      payload: {
+        selectedFilterId: id,
+        resolve: (selectedFilter) => {
+
+          const currentQuery = selectedFilter.incidentHistoryParam;
+          const currentQueryRawData = this._queryToQueryRaw(currentQuery);
+
+          dispatch({
+            type: 'alertQuery/queryBefore',
+            payload: {
+              currentQuery,
+              currentQueryRawData
+            }
+          })
+        }
+      }
+    })
+  }
+
+  openSaveModal() {
+    const { form, dispatch } = this.props;
+
+    const formData = form.getFieldsValue();
+    dispatch({
+      type: 'alertQueryFilter/openSaveModal',
+      payload: {
+        toSaveFilter: this._formDataToQueryData(formData)
+      }
+    })
+    dispatch({
+      type: 'alertQuery/setCurrentQuery',
+      payload: this.queryBefore(form)
+    })
+  }
+
+  openDeleteModal(e, id) {
+    const { dispatch } = this.props;
+    e.preventDefault();
+    // 设置删除标志位，在点击删除的时候防止切换过滤条件
+    this.isDeleting = true;
+    dispatch({
+      type: 'alertQueryFilter/openDeleteModal',
+      payload: { id }
+    })
+  }
+
+  // 将form表单数据转换为发送给后端的数据
+  _formDataToQueryData(formData) {
+    const queryData = { ...formData };
+    let keyWords = JSON.parse(queryData.keyWordsType);
+    let owner = queryData.owner;
+
+    queryData.ownerId = owner.key;
+    queryData.keyName = keyWords.keyName;
+    queryData.keyWordsType = keyWords.keyWordsType;
+    delete queryData.owner
+
+    queryData.begin = queryData.dateTime[0];
+    queryData.end = queryData.dateTime[1];
+    delete queryData.dateTime
+
+    queryData.lastBegin = queryData.lastOccurTime[0];
+    queryData.lastEnd = queryData.lastOccurTime[1];
+    delete queryData.lastOccurTime
+
+    return queryData;
+  }
+
+  // 将query数据转化为queryRawData，用于在表单中显示
+  _queryToQueryRaw(currentQuery) {
+    const currentQueryRawData = { ...currentQuery };
+    currentQueryRawData.owner = { key: currentQueryRawData.ownerId }
+    currentQueryRawData.dateTime = [currentQuery.begin, currentQuery.lastBegin]
+    currentQueryRawData.lastOccurTime = [currentQuery.end, currentQuery.lastEnd]
+    if (currentQuery.keyWordsType) {
+      currentQueryRawData.keyWordsType = { keyWordsType: currentQuery.keyWordsType }
+      currentQuery.keyName && (currentQueryRawData.keyWordsType.keyName = currentQuery.keyName);
+      currentQueryRawData.keyWordsType = JSON.stringify(currentQueryRawData.keyWordsType);
+      currentQueryRawData.keyWords = currentQuery.keyWords;
+    } else {
+      currentQueryRawData.keyWordsType = undefined;
+    }
+
+    return currentQueryRawData;
+  }
+
   render() {
-    const { form, dispatch, alertQuery, alertOperation, intl: { formatMessage } } = this.props;
+    const { form, dispatch, alertQuery, alertOperation, intl: { formatMessage }, alertQueryFilter } = this.props;
     const { getFieldDecorator, getFieldsValue } = form;
     const { haveQuery, sourceOptions, propertyOptions, ownerOptions, queryCount, isShowBar, selectGroup, columnList, extendColumnList, extendTagsKey } = alertQuery;
-
+    const { filters, isShowSaveModal, isShowDeleteModal, toDeleteFilter={} } = alertQueryFilter;
 
     const formItemLayout = {
       labelCol: { span: 6 },
@@ -243,6 +341,32 @@ class Filter extends Component {
         defaultMessage: '扩展字段'
       }
     })
+
+    const saveIcon = classnames(
+      'icon',
+      'iconfont',
+      'icon-baocun'
+    )
+
+    const deleteIcon = classnames(
+      'icon',
+      'iconfont',
+      'icon-shanchux'
+    )
+
+    const filtersOverlay = (
+      <Menu onClick={({ item, key }) => { this.onSelectSearch(item, key) }}>
+        {
+          filters.map((filter, index) => {
+            return (
+              <MenuItem id={filter.id} key={filter.id} className={styles.menuItem}>{filter.name}
+                <div onClick={(e) => { this.openDeleteModal(e, filter.id) }} className={styles.delete}><i className={deleteIcon} /></div>
+              </MenuItem>
+            )
+          })
+        }
+      </Menu>
+    )
 
     return (
       <div className={classnames(styles.searchBar, isShowBar ? '' : styles.hideBar)}>
@@ -449,17 +573,17 @@ class Filter extends Component {
                       <Option key={7} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '7' })}><FormattedMessage {...localeMessage['classCode']} /></Option>
                     </OptGroup>
                     <OptGroup label={formatMessage({ ...localeMessage['extraKeyWords'] })}>
-                    {
-                      propertyOptions.length > 0 ? propertyOptions.map((item, index) => {
-                        return <Option key={item.code + "_" + index} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '100', 'keyName': item.code })}>{item.name}</Option>
-                      }) : []
-                    }
+                      {
+                        propertyOptions.length > 0 ? propertyOptions.map((item, index) => {
+                          return <Option key={item.code + "_" + index} className={styles.keywordsMenuItem} value={JSON.stringify({ 'keyWordsType': '100', 'keyName': item.code })}>{item.name}</Option>
+                        }) : []
+                      }
                     </OptGroup>
                   </Select>
                   )}
               </Item>
               <Item
-                wrapperCol={{ span: 15, offset: 9 }}
+                wrapperCol={{ span: 12, offset: 9 }}
                 className={styles.keywordArea}
               >
                 {getFieldDecorator('keyWords', {
@@ -471,8 +595,10 @@ class Filter extends Component {
             </Col>
             <Col span={8} className={classnames(styles.colStyle, styles.operateCol)}>
               <div>
-                <Button type="primary" size="large" htmlType="submit" onClick={(e) => { this.onOk(e, form) }}><FormattedMessage {...localeMessage['search']} /></Button>
-                <Button type="primary" size="large" onClick={() => {
+                <Dropdown.Button onClick={ this.openSaveModal.bind(this) } type="primary" size="large" className={classnames(styles.myDropdown)} overlay={filtersOverlay}>
+                  <i className={saveIcon} />
+                </Dropdown.Button>
+                <Button className={styles.searchBtn} type="primary" size="large" onClick={() => {
                   dispatch({
                     type: 'alertQuery/setCurrentQuery',
                     payload: {
@@ -480,10 +606,13 @@ class Filter extends Component {
                     }
                   })
                 }}><FormattedMessage {...localeMessage['reset']} /></Button>
+                <Button className={styles.searchBtn} type="primary" size="large" htmlType="submit" onClick={(e) => { this.onOk(e, form) }}><FormattedMessage {...localeMessage['search']} /></Button>
               </div>
             </Col>
           </Row>
         </Form>
+        <FilterSaveModal dispatch={ dispatch } isShowSaveModal={ isShowSaveModal }/>
+        <FilterDeleteModal dispatch={ dispatch } isShowDeleteModal={ isShowDeleteModal } toDeleteFilter={ toDeleteFilter }/>
       </div>
     )
   }
@@ -492,7 +621,8 @@ class Filter extends Component {
 export default injectIntl(
   connect((state) => {
     return {
-      alertQuery: state.alertQuery
+      alertQuery: state.alertQuery,
+      alertQueryFilter: state.alertQueryFilter
     }
   })
     (Form.create({

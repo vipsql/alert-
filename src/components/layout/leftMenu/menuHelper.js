@@ -80,7 +80,7 @@ function FoldBar({ isFold, handleFoldMenu, handleClickNavMenu, supervisor, class
         defaultSelectedKeys={[location.pathname.split('/')[location.pathname.split('/').length - 1] || 'alertManage']}>
         {menuItems}
       </Menu>
-      {<div className={styles.menuHelp}><a target="_blank" href="help/index.html"><i className={helpClass}></i>{!isFold ? <FormattedMessage {...formatMessages['help']} /> : ''}</a></div>}
+      { window.__alert_appLocaleData.locale != 'en-us'?<div className={styles.menuHelp}><a target="_blank" href="help/index.html"><i className={helpClass}></i>{!isFold ? <FormattedMessage {...formatMessages['help']} /> : ''}</a></div>:undefined}
     </div>
   )
 }

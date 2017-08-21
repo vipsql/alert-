@@ -1,10 +1,10 @@
-import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery, add, update, view, getTrapUrl, checkPayType} from '../services/alertConfig'
-import {parse} from 'qs'
+import { queryConfigAplication, changeAppStatus, deleteApp, typeQuery, add, update, view, getTrapUrl, checkPayType } from '../services/alertConfig'
+import { parse } from 'qs'
 import { message } from 'antd'
 import pathToRegexp from 'path-to-regexp';
 import { routerRedux } from 'dva/router';
 
-const initalState ={
+const initalState = {
 
   isLoading: false,
   applicationType: undefined, // 接入还是接出
@@ -47,7 +47,7 @@ export default {
   state: initalState,
 
   subscriptions: {
-    alertAplicationSetup({dispatch, history}) {
+    alertAplicationSetup({ dispatch, history }) {
       history.listen((location) => {
         if (location.pathname === '/alertConfig/alertApplication') {
           dispatch({
@@ -59,7 +59,7 @@ export default {
         }
       })
     },
-    addApplicationSetup({dispatch, history}) {
+    addApplicationSetup({ dispatch, history }) {
       history.listen((location) => {
         if (pathToRegexp('/alertConfig/alertApplication/applicationView/add/:typeId').test(location.pathname)) {
           const match = pathToRegexp('/alertConfig/alertApplication/applicationView/add/:typeId').exec(location.pathname);
@@ -71,7 +71,7 @@ export default {
         }
       })
     },
-    editApplicationSetup({dispatch, history}) {
+    editApplicationSetup({ dispatch, history }) {
       history.listen((location) => {
         if (pathToRegexp('/alertConfig/alertApplication/applicationView/edit/:appId').test(location.pathname)) {
           const match = pathToRegexp('/alertConfig/alertApplication/applicationView/edit/:appId').exec(location.pathname);
@@ -87,29 +87,28 @@ export default {
 
   effects: {
     // 通过modal进入详情页
-    *addApplicationView({payload}, {select, put, call}) {
+    *addApplicationView({ payload }, { select, put, call }) {
       const app = yield select(state => state.app)
-      const local = JSON.parse(sessionStorage.getItem('UYUN_Alert_USERINFO'))
       if (payload !== undefined) {
         yield put({
           type: 'setApiKeys',
-          payload: app.userInfo.apiKeys[0] || local.apiKeys[0] || undefined
+          payload: (app.userInfo && app.userInfo.apiKeys && app.userInfo.apiKeys[0]) || undefined
         })
-        yield put({ type: 'initalAddAppView', payload: {isShowTypeModal: false, appTypeId: payload, UUID: undefined}}) // isShowTypeModal -> false, currentOperateAppType -> Object
-        const { currentOperateAppType } = yield select( state => {
+        yield put({ type: 'initalAddAppView', payload: { isShowTypeModal: false, appTypeId: payload, UUID: undefined } }) // isShowTypeModal -> false, currentOperateAppType -> Object
+        const { currentOperateAppType } = yield select(state => {
           return {
             'currentOperateAppType': state.alertConfig.currentOperateAppType,
           }
         })
         // 如果是SNMP Trap
-        switch(currentOperateAppType.name) {
+        switch (currentOperateAppType.name) {
           case 'SNMPTrap':
-              const trapUrl = yield call(getTrapUrl)
-              if (trapUrl.result) {
-                yield put({ type: 'snmpTrapRules/setAppRules', payload: {trapUrl: trapUrl.data.url, appRules: []}})
-              } else {
-                yield message.error(trapUrl.message, 3)
-              }
+            const trapUrl = yield call(getTrapUrl)
+            if (trapUrl.result) {
+              yield put({ type: 'snmpTrapRules/setAppRules', payload: { trapUrl: trapUrl.data.url, appRules: [] } })
+            } else {
+              yield message.error(trapUrl.message, 3)
+            }
             break;
           default:
             break;
@@ -119,9 +118,8 @@ export default {
       }
     },
     // 通过编辑进入详情页
-    *editApplicationView({payload}, {select, put, call}) {
+    *editApplicationView({ payload }, { select, put, call }) {
       const app = yield select(state => state.app)
-      const local = JSON.parse(sessionStorage.getItem('UYUN_Alert_USERINFO'))
       if (payload !== undefined) {
         const viewResult = yield call(view, payload)
         if (viewResult.result) {
@@ -131,17 +129,17 @@ export default {
           })
           yield put({
             type: 'setApiKeys',
-            payload: app.userInfo.apiKeys[0] || local.apiKeys[0] || undefined
+            payload: app.userInfo && app.userInfo.apiKeys && app.userInfo.apiKeys[0] || undefined
           })
           if (viewResult.data.applyType !== undefined) {
-            switch(viewResult.data.applyType.name) {
+            switch (viewResult.data.applyType.name) {
               case 'SNMPTrap':
-                  const trapUrl = yield call(getTrapUrl)
-                  if (trapUrl.result) {
-                    yield put({ type: 'snmpTrapRules/setAppRules', payload: {trapUrl: trapUrl.data.url, appRules: viewResult.data.appRules || []}})
-                  } else {
-                    yield message.error(trapUrl.message, 3)
-                  }
+                const trapUrl = yield call(getTrapUrl)
+                if (trapUrl.result) {
+                  yield put({ type: 'snmpTrapRules/setAppRules', payload: { trapUrl: trapUrl.data.url, appRules: viewResult.data.appRules || [] } })
+                } else {
+                  yield message.error(trapUrl.message, 3)
+                }
                 break;
               default:
                 break;
@@ -155,8 +153,8 @@ export default {
       }
     },
     // 新增应用
-    *addApplication({payload}, {select, put, call}) {
-      const { UUID, currentOperateAppType, appRules } = yield select( state => {
+    *addApplication({ payload }, { select, put, call }) {
+      const { UUID, currentOperateAppType, appRules } = yield select(state => {
         return {
           'UUID': state.alertConfig.UUID,
           'currentOperateAppType': state.alertConfig.currentOperateAppType,
@@ -174,16 +172,19 @@ export default {
           status: 1, // 默认启用
           integration: '',
           displayName: formData.displayName,
-          applyType:{
+          applyType: {
             ...currentOperateAppType
           },
           type: currentOperateAppType.type,
           appKey: UUID
         }
         // 如果是SNMP Trap
-        switch(currentOperateAppType.name) {
+        switch (currentOperateAppType.name) {
           case 'SNMPTrap':
-              yield params.appRules = appRules;
+            yield params.appRules = appRules;
+            break;
+          case 'UYUN WebHook':
+            params.webHook = formData.webHook;
             break;
           default:
             break;
@@ -203,8 +204,8 @@ export default {
       }
     },
     // 编辑
-    *editApplication({payload}, {select, put, call}) {
-      const { UUID, currentEditApp, appRules } = yield select( state => {
+    *editApplication({ payload }, { select, put, call }) {
+      const { UUID, currentEditApp, appRules } = yield select(state => {
         return {
           'UUID': state.alertConfig.UUID,
           'currentEditApp': state.alertConfig.currentEditApp,
@@ -223,16 +224,17 @@ export default {
           status: currentEditApp.status,
           integration: currentEditApp.integration,
           displayName: formData.displayName,
-          applyType:{
+          applyType: {
             ...currentEditApp['applyType']
           },
           type: currentEditApp.type,
-          appKey: UUID
+          appKey: UUID,
+          webHook: formData.webHook
         }
         // 如果是SNMP Trap
-        switch(currentEditApp.applyType.name) {
+        switch (currentEditApp.applyType.name) {
           case 'SNMPTrap':
-              yield params.appRules = appRules;
+            yield params.appRules = appRules;
             break;
           default:
             break;
@@ -252,11 +254,11 @@ export default {
       }
     },
     // 查询
-    *queryAplication({payload}, {select, put, call}) {
+    *queryAplication({ payload }, { select, put, call }) {
 
       yield put({ type: 'toggleLoading', payload: true })
 
-      var { type, orderBy, orderType } = yield select( state => {
+      var { type, orderBy, orderType } = yield select(state => {
         return {
           'type': state.alertConfig.applicationType,
           'orderBy': state.alertConfig.orderBy,
@@ -281,21 +283,24 @@ export default {
 
       const appResult = yield call(queryConfigAplication, params)
       if (appResult.result) {
-        yield put({ type: 'setApplicationData', payload: {
-          applicationData: appResult.data || [],
-          applicationType: type,
-          orderBy: orderBy,
-          orderType: orderType
-        }})
+        yield put({
+          type: 'setApplicationData', payload: {
+            applicationData: appResult.data || [],
+            applicationType: type,
+            orderBy: orderBy,
+            orderType: orderType
+          }
+        })
       } else {
         yield message.error(appResult.message, 2)
       }
 
       yield put({ type: 'toggleLoading', payload: false })
     },
-    *beforeQueryApplicationType({payload}, {select, put, call}) {
+    *beforeQueryApplicationType({ payload }, { select, put, call }) {
       if (payload !== undefined && payload == 0) {
         const isRoot = yield call(checkPayType)
+        console.log(isRoot);
         if (isRoot.result) {
           if (!isRoot.data) {
             yield message.warn(window.__alert_appLocaleData.messages['alertApplication.incomingTotal.numberWarn'], 2)
@@ -309,7 +314,7 @@ export default {
       yield put({ type: 'queryAplicationType', payload: payload })
     },
     // 查询配置种类 --> 接入在判断前先查询是否有资格，免费用户只有5个名额
-    *queryAplicationType({payload}, {select, put, call}) {
+    *queryAplicationType({ payload }, { select, put, call }) {
       if (payload !== undefined) {
         yield put({ type: 'toggleTypeModal', payload: true })
         const typeResult = yield call(typeQuery, payload)
@@ -328,7 +333,7 @@ export default {
       }
     },
     // 更改启用状态
-    *changeStatus({payload}, {select, put, call}) {
+    *changeStatus({ payload }, { select, put, call }) {
       if (payload !== undefined && payload.id !== undefined && payload.status !== undefined) {
         const statusResult = yield call(changeAppStatus, payload)
         if (statusResult.result) {
@@ -347,8 +352,8 @@ export default {
       }
     },
     // 删除时的操作
-    *deleteApp({payload}, {select, put, call}) {
-      const { currentDeleteApp } = yield select( state => {
+    *deleteApp({ payload }, { select, put, call }) {
+      const { currentDeleteApp } = yield select(state => {
         return {
           'currentDeleteApp': state.alertConfig.currentDeleteApp,
         }
@@ -368,16 +373,16 @@ export default {
       }
     },
     //orderList排序
-    *orderList({payload}, {select, put, call}) {
-      yield put({ type: 'queryAplication', payload: {orderBy: payload.orderBy, orderType: payload.orderType } })
+    *orderList({ payload }, { select, put, call }) {
+      yield put({ type: 'queryAplication', payload: { orderBy: payload.orderBy, orderType: payload.orderType } })
     },
     //orderByTittle
-    *orderByTittle({payload}, {select, put, call}) {
-      const { orderType } = yield select( state => {
+    *orderByTittle({ payload }, { select, put, call }) {
+      const { orderType } = yield select(state => {
         return {
           'orderType': state.alertConfig.orderType,
         }
-      } )
+      })
       if (payload !== undefined) {
         yield put({
           type: 'toggleOrder',
@@ -394,32 +399,32 @@ export default {
   },
 
   reducers: {
-    setApiKeys(state, { payload: apikey}) {
+    setApiKeys(state, { payload: apikey }) {
       return { ...state, apikey }
     },
     // 点开新增详情页面
-    initalAddAppView(state, { payload: {isShowTypeModal, appTypeId, UUID}}) {
+    initalAddAppView(state, { payload: { isShowTypeModal, appTypeId, UUID } }) {
       const { applicationTypeData } = state;
       let newObj = {};
-      applicationTypeData.forEach( (typeItem) => {
-        typeItem.children.forEach( (item) => {
+      applicationTypeData.forEach((typeItem) => {
+        typeItem.children.forEach((item) => {
           if (item.id == appTypeId) {
             newObj = item;
           }
         })
       })
-      return { ...state, isShowTypeModal, UUID, currentOperateAppType: newObj, currentDisplayName: undefined}
+      return { ...state, isShowTypeModal, UUID, currentOperateAppType: newObj, currentDisplayName: undefined }
     },
     // 回显
     setCurrent(state, { payload }) {
       return { ...state, currentEditApp: payload, UUID: payload.appKey }
     },
     // 打开配置modal
-    openTypeModal(state, { payload: { applicationTypeData}}) {
+    openTypeModal(state, { payload: { applicationTypeData } }) {
       let typeObj = {};
       let newArr = [];
       let keys = [];
-      applicationTypeData.forEach( (typeItem) => {
+      applicationTypeData.forEach((typeItem) => {
         if (typeObj[typeItem.appType] !== undefined) {
           typeObj[typeItem.appType].push(typeItem)
         } else {
@@ -427,7 +432,7 @@ export default {
         }
       })
       keys = Object.keys(typeObj);
-      keys.forEach( (key) => {
+      keys.forEach((key) => {
         newArr.push({
           appType: key,
           children: typeObj[key]
@@ -436,29 +441,29 @@ export default {
       return { ...state, applicationTypeData: newArr }
     },
     // 关闭modal
-    toggleTypeModal(state, {payload: isShowTypeModal}) {
+    toggleTypeModal(state, { payload: isShowTypeModal }) {
       return { ...state, isShowTypeModal }
     },
     // 关闭modal
-    toggleDeleteModal(state, {payload: {applicationItem, status}}) {
+    toggleDeleteModal(state, { payload: { applicationItem, status } }) {
       return { ...state, currentDeleteApp: applicationItem, isShowDeteleModal: status }
     },
     // 加载状态
-    toggleLoading(state, {payload: isLoading}) {
+    toggleLoading(state, { payload: isLoading }) {
       return { ...state, isLoading }
     },
     // 排序
-    toggleOrder(state, {payload}) {
+    toggleOrder(state, { payload }) {
       return { ...state, ...payload }
     },
     // 存贮当前的data
-    setApplicationData(state, {payload: { applicationData, applicationType, orderBy, orderType}}) {
+    setApplicationData(state, { payload: { applicationData, applicationType, orderBy, orderType } }) {
       return { ...state, applicationData, applicationType, orderBy, orderType }
     },
     // 改变状态
-    changeAppStatus(state, {payload: { id, status }}) {
+    changeAppStatus(state, { payload: { id, status } }) {
       const { applicationData } = state;
-      const newData = applicationData.map( (item) => {
+      const newData = applicationData.map((item) => {
         if (item.id == id) {
           item.status = + status
         }
@@ -469,17 +474,17 @@ export default {
     // 删除
     deleteApplication(state, { payload }) {
       const { applicationData } = state;
-      const newData = applicationData.filter( (item) => {
+      const newData = applicationData.filter((item) => {
         let status = true;
         if (item.id == payload) {
           status = false;
         }
         return status;
       })
-      return { ...state, applicationData: newData, isShowDeteleModal: false}
+      return { ...state, applicationData: newData, isShowDeteleModal: false }
     },
-    setUUID(state, { payload: {UUID, currentDisplayName}}) {
-      return { ...state, UUID: UUID, currentDisplayName: currentDisplayName}
+    setUUID(state, { payload: { UUID, currentDisplayName } }) {
+      return { ...state, UUID: UUID, currentDisplayName: currentDisplayName }
     }
   },
 

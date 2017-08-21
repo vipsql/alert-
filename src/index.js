@@ -67,6 +67,17 @@ async function setLang(lang) {
         "190": "Resolved",
         "255": "Closed"
       }
+      window.fieldMapMsgPlaceholder = `
+      //示例
+      {
+        "state":"$\0{status}",
+        "time":"$\0{occurTime}",
+        "name": "$\0{name}",
+        "resName":"$\0{entityName}",
+        "ip":"$\0{entityAddr}",
+        "desc":"$\0{entityName},发生告警，描述:$\0{description}"
+      }
+      `
       break
     default:
       appLocaleData = {
@@ -89,6 +100,18 @@ async function setLang(lang) {
         "190": "已解决",
         "255": "已关闭"
       }
+
+      window.fieldMapMsgPlaceholder = `
+      //示例
+      {
+        "state":"$\0{status}",
+        "time":"$\0{occurTime}",
+        "name": "$\0{name}",
+        "resName":"$\0{entityName}",
+        "ip":"$\0{entityAddr}",
+        "desc":"$\0{entityName},发生告警，描述:$\0{description}"
+      }
+      `
 
       break
 
@@ -130,6 +153,8 @@ async function init() {
   app.model(require('./models/visualAnalyze'))
   // 告警发生历史
   app.model(require('./models/alertOrigin'))
+  // 告警查询条件
+  app.model(require("./models/alertQueryFilter"))
   // 3. Router
   app.router(require('./router'))
 
