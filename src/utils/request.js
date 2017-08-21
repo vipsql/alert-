@@ -7,7 +7,7 @@ const ROOT_PATH = constants.api_root;
 
 (function () {
   if (process.env.NODE_ENV === undefined || process.env.NODE_ENV === 'development') {
-    window.__DEV_MOCK__ = false; // dev环境默认关闭
+    window.__DEV_MOCK__ = true; // dev环境默认开启
   }
 })()
 
