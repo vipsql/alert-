@@ -298,7 +298,7 @@ class Add extends Component {
               }}
             />
           break;
-        case 'UYUN WebHook':
+        case 'Web Hook':
           targetApplication =
             <Webhook
               route={props.route}

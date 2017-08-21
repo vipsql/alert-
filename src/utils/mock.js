@@ -66,7 +66,7 @@ const __DataRule = {
       },
       {
         "id": "58c680df5b71a73b448ccec7",
-        "name": "UYUN WebHook",
+        "name": "Web Hook",
         "type": 1,
         "appType": "协同类"
       },
@@ -185,13 +185,13 @@ const __DataRule = {
   },
 
   '/visual/resStateInfo': {
-    'template|10': [
+    'template|5': [
       {
         "tagValue": '@cname',
-        "resources|100": [
+        "resources|10": [
           {
             "resId": '@string(10)',
-            "resName": '@cname',
+            "resName": '@string(200)',
             "severity|1": [0, 1, 2, 3],
             "iconUrl": '@url'
           }
