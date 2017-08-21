@@ -243,11 +243,16 @@ class Edit extends Component {
                     return;
                   }
                   const formData = form.getFieldsValue()
+                  // 保证字段映射传到后台是一个JSON格式的字符串
+                  let fieldMap = formData.fieldMap;
+                  if(!fieldMap || fieldMap.trim() == '') {
+                    fieldMap = '{}';
+                  }
                   const webHook = {
                     url: formData.url,
                     timeout: formData.timeout,
                     requestMode: formData.requestMode,
-                    fieldMap: formData.fieldMap,
+                    fieldMap: fieldMap,
                     replyKey: formData.replyKey,
                     replySuccess: formData.replySuccess
                   }
