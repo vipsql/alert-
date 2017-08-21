@@ -130,7 +130,7 @@ function ajax(url, options) {
 
 export default async function request(url, options) {
   // or stop mock
-  // mockStart(false)
+  mockStart(false)
   if (Mock && window.__DEV_MOCK__) {
     // 匹配数据生成规则
     // 需要用规则中的正则进行二次比较
