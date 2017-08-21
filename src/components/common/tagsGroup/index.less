@@ -1,155 +1,167 @@
 @import "../../vars.less";
+@import '../../../theme/mixin.less';
 
-// tagsGroup style on local
-.tagsGroupMain{
-    //border: 1px solid #d5ddeb;
-    border-radius: 3px;
-    //background: #fff;
-    border: 1px solid #186399;
-    background: #0a548a;
-    cursor: pointer;
-    &:hover{
-      border: 1px solid #2bb4f4;
-      transition: border .5s ease-in-out;
-    }
-    .typeName{
-        position: relative;
-        display: inline-block;
-        //vertical-align: top;
-        margin: 5px 3px 5px 3px;
-        //color: #acb2be;
-        color: #57a9e5;
-    }
-    .placeholder{
-        margin: 3px;
-        color: #fff;
-        padding: 3px;
-    }
-    .mark{
-        position: relative;
-        display: inline-block;
-        margin: 3px;
-        height: 22px;
-        background: #1985c9;
-        color: #fff;
-        border: 1px solid #1985c9;
-        box-shadow: #0a548a 0px 0px 2px;
-        //---------------------
-        //background: #dce2e6;
-        //border: 1px solid #ebeff3;
-        //box-shadow: #ebeff3 0px 0px 2px;
+//蓝色和白色色系要上下一一对/应
+//             1         2        3        4         5         6         7         8         9        10       11         12       13       14      15
+@var_default : @blue81,  @blue82, @blue15, @blue83,  @white0,  @white0,  @blue34,  @blue82,  @blue78, @blue76, @blue15,  @blue84, @blue85, @blue17,  @white0;
+@var_white   : @white16, @white0, @blue8,  @white28, @white28, @white44, @white26, @opacity, @white4, @white0, @white16, @white6, @white6, @white30, @black0;
+
+.setTheme(@var_default, @var_white);
+
+.getTheme(@var, @name) {
+  :local{
+    // tagsGroup style on local
+    .tagsGroupMain{
+        //border: 1px solid #d5ddeb;
         border-radius: 3px;
-        vertical-align: top;
-        padding: 3px;
-        p{
-            position: relative;
-            bottom: 2px;
-            margin-right: 3px;
-            font-weight: normal;
-            display: inline-block;
-            vertical-align: top;
+        //background: #fff;
+        border: 1px solid extract(@var, 1);
+        background: extract(@var, 2);
+        cursor: pointer;
+        &:hover{
+          border: 1px solid extract(@var, 3);
+          transition: border .5s ease-in-out;
         }
-        i{
+        .typeName{
             position: relative;
             display: inline-block;
-            bottom: 5px;
+            //vertical-align: top;
+            margin: 5px 3px 5px 3px;
+            //color: #acb2be;
+            color: extract(@var, 4);
+        }
+        .placeholder{
+            margin: 3px;
+            color: extract(@var, 6);
+            padding: 3px;
+        }
+        .mark{
+            position: relative;
+            display: inline-block;
+            margin: 3px;
+            height: 22px;
+            background: extract(@var, 7);
+            color: extract(@var, 6);
+            border: 1px solid extract(@var, 7);
+            box-shadow: extract(@var, 8) 0px 0px 2px;
+            //---------------------
+            //background: #dce2e6;
+            //border: 1px solid #ebeff3;
+            //box-shadow: #ebeff3 0px 0px 2px;
+            border-radius: 3px;
             vertical-align: top;
-            //color: #acb3bf
-            color: #094e80;
+            padding: 3px;
+            p{
+                position: relative;
+                bottom: 2px;
+                margin-right: 3px;
+                font-weight: normal;
+                display: inline-block;
+                vertical-align: top;
+            }
+            i{
+                position: relative;
+                display: inline-block;
+                bottom: 5px;
+                vertical-align: top;
+                //color: #acb3bf
+                color: extract(@var, 9);
+            }
         }
-    }
-    :global{
-        .tags-appear.tags-appear-active {
-            opacity: 0;
-            transition: opacity .3s ease-in-out;
+        :global{
+            .tags-appear.tags-appear-active {
+                opacity: 0;
+                transition: opacity .3s ease-in-out;
+            }
+            .tags-leave.tags-leave-active {
+                opacity: 0;
+                transition: opacity .3s ease-in-out;
+            }
         }
-        .tags-leave.tags-leave-active {
-            opacity: 0;
-            transition: opacity .3s ease-in-out;
-        }
-    }
-    .tagsContent{
-        position: absolute;
-        left: 0;
-        top: 100%;
-        z-index: 15;
-        width: 100%;
-        .query{
-          position: relative;
-          margin-top: 8px;
-          background: #095a95;
-          padding: 5px 5px 5px 5px;
-          border: 1px solid #2bb4f4;
-          border-top-left-radius: 2px;
-          border-top-right-radius: 2px;
-          border-bottom: none;
-          .sousuo{
+        .tagsContent{
             position: absolute;
-            top: 12px;
-            left: 10px;
-            color: #9dd6ff;
-            font-size: 16px;
-            line-height: 1;
-            width: 16px;
-          }
-          input{
-            height: 28px;
+            left: 0;
+            top: 100%;
+            z-index: 15;
             width: 100%;
-            padding-left: 22px;
-            padding-right: 5px;
-            background: #1c77b8;
-            border: 1px solid #2bb4f4;
-
-            color: #fff;
-            outline: none;
-            &::-webkit-input-placeholder{
-                color: #fff;
-            }
-            &::-ms-input-placeholder{
-                color: #fff;
-            }
-            &::-moz-placeholder{
-                color: #fff;
-            }
-          }
-        }
-        ul{
-          max-height: 200px;
-          overflow: scroll;
-          background: #095a95;
-          border: 1px solid #2bb4f4;
-          border-top: none;
-          border-bottom-left-radius: 2px;
-          border-bottom-right-radius: 2px;
-          box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.1);
-          li{
+            .query{
               position: relative;
-              cursor: pointer;
-              background: #095a95;
-              color: #96d0f9;
-              padding: 8px 10px;
-              white-space: nowrap;
-              transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-              p{
-                overflow: hidden;
-                text-overflow: ellipsis;
+              margin-top: 8px;
+              background: extract(@var, 10);
+              padding: 5px 5px 5px 5px;
+              border: 1px solid extract(@var, 11);
+              border-top-left-radius: 2px;
+              border-top-right-radius: 2px;
+              border-bottom: none;
+              .sousuo{
+                position: absolute;
+                top: 12px;
+                left: 10px;
+                color: extract(@var, 12);
+                font-size: 16px;
+                line-height: 1;
+                width: 16px;
               }
-              &.active{
-                  background-color: #3092d9;
-                  color: #fff;
+              input{
+                height: 28px;
+                width: 100%;
+                padding-left: 22px;
+                padding-right: 5px;
+                background: extract(@var, 10);
+                border: 1px solid extract(@var, 11);
+
+                color: extract(@var, 6);
+                outline: none;
+                &::-webkit-input-placeholder{
+                    color: extract(@var, 6);
+                }
+                &::-ms-input-placeholder{
+                    color: extract(@var, 6);
+                }
+                &::-moz-placeholder{
+                    color: extract(@var, 6);
+                }
               }
-              &:hover{
-                  background-color: #3092d9;
-                  color: #fff;
+            }
+            ul{
+              max-height: 200px;
+              overflow: scroll;
+              background: extract(@var, 10);
+              border: 1px solid extract(@var, 11);
+              border-top: none;
+              border-bottom-left-radius: 2px;
+              border-bottom-right-radius: 2px;
+              box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.1);
+              li{
+                  position: relative;
+                  cursor: pointer;
+                  background: extract(@var, 10);
+                  color: extract(@var, 13);
+                  padding: 8px 10px;
+                  white-space: nowrap;
+                  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+                  p{
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  }
+                  &.active{
+                      background-color: extract(@var, 14);
+                      color: extract(@var, 15);
+                  }
+                  &:hover{
+                      background-color: extract(@var, 14);
+                      color: extract(@var, 15);
+                  }
+                  i{
+                      position: absolute;
+                      top: 10px;
+                      right: 10px;
+                      font-size: 16px;
+                      line-height: 1;
+                  }
               }
-              i{
-                  position: absolute;
-                  top: 10px;
-                  right: 10px;
-                  font-size: 16px;
-                  line-height: 1;
-              }
-          }
+            }
         }
     }
+  }
 }

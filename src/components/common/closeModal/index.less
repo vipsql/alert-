@@ -1,4 +1,28 @@
 @import "../../vars.less";
+@import "../../../theme/footerMixin.less";
+@import '../../../theme/mixin.less';
+
+//蓝色和白色色系要上下一一对应
+//             1    
+@var_default : @white0;
+@var_white   : @white6;
+
+
+.setTheme(@var_default, @var_white);
+.getTheme(@var, @name){
+  :local{
+    body {
+      .closeMain{
+        :global{
+          .ant-select-combobox .ant-select-search__field {
+            color: extract(@var, 1);
+          }
+        }
+      }
+    }
+  }
+}
+
 
 .closeMain{
     position: relative;
@@ -14,31 +38,6 @@
         & > div:last-child {
             display: inline-block;
             width: 70%
-        }
-    }
-}
-
-
-
-// common modal footer
-.modalFooter{
-    height: 60px;
-    line-height: 60px;
-    margin: -10px -16px -10px -10px;
-    //background: #f2f7fc;
-    background: #145e99;
-    text-align: center;
-    button{
-        width: 82px;
-    }
-    .ghostBtn{
-        color: #fff;
-        background-color: #108ee9;
-        border-color: #108ee9;
-        &:hover{
-            color: #fff;
-            background-color: #49a9ee;
-            border-color: #49a9ee;
         }
     }
 }

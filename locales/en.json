@@ -98,6 +98,11 @@
   "alertQuery.reset": "Reset",
   "alertQuery.result": "{total} results found. (Critical {critical}, Warning {warning}, Information {information}, Recovery {ok})",
 
+  "alertQueryFilter.saveFilter": "保存查询条件",
+  "alertQueryFilter.savePlaceholder": "保存查询条件",
+  "alertQueryFilter.deleteFilter": "删除查询条件",
+  "alertQueryFilter.deleteFilterMessage": "是否删除查询条件{ name }?",
+
   "alertOperate.takeOver": "Takeover",
   "alertOperate.reassign": "Assign to ...",
   "alertOperate.dispatch": "Create Ticket",
@@ -342,6 +347,23 @@
   "alertApplication.appKey.placeholder": "Please create an AppKey",
   "alertApplication.save": "Save",
 
+  "alertApplication.webhook.headerTitle": "把优云Alert告警以Web Hook方式实时分享到第三方系统",
+  "alertApplication.webhook.step2": "配置优云Alert",
+  "alertApplication.webhook.step2Message": "把从第三方系统获取的Web Hook接口地址粘贴到文本框",
+  "alertApplication.webhook.url": "URL",
+  "alertApplication.webhook.httpMethod": "HTTP方法",
+  "alertApplication.webhook.overTime": "超时时间",
+  "alertApplication.webhook.overTimeMsg": "若告警发送失败,在{ overTime }s内再次尝试发送，如果仍不成功即放弃发送",
+  "alertApplication.webhook.seniorModule": "高级模式",
+  "alertApplication.webhook.fieldMap": "字段映射",
+  "alertApplication.webhook.fieldMapMsg": "允许开发人员制定Web Hook服务与Alert数据字典的对应关系。Alert数据字段说明请参照{ API }",
+  "alertApplication.webhook.fieldMapMsgPlaceholder": "//示例\n{\"state\": \"${status}\",\n\"time\": \"${occurTime}\",\n\"name\": \"name\",\n\"resName\": \"entityName\",\n\"ip\": \"${entityName}\",\n\"desc\": \"${entityName},\n发生告警，描述:${description}\"}",
+  "alertApplication.webhook.webhookApi": "API文档",
+  "alertApplication.webhook.returnKey": "返回码key",
+  "alertApplication.webhook.returnSuccessMark": "返回成功标识",
+  "alertApplication.webhook.returnKeyMsg": "根据http应答内容判断告警是否发送成功，若不清楚请查阅Web Hook接口文档.",
+  "alertApplication.webhook.returnBlankMsg": "如果没有配置返回码，系统默认以http是否返回200来判断是否发送成功.",
+
   "alertAssociationRules.newRule": "Add Rule",
   "alertAssociationRules.ruleTotal": "Total Rules: {num}",
   "alertAssociationRules.List.ruleName": "Rule Name",
@@ -525,6 +547,9 @@
   "layout.autoLayout": "Auto Layout",
   "layout.fullScreen": "Full Screen Mode",
   "layout.initialize": "Exit Full Screen Mode",
-  "go_top.tip": "TOP"
+  "go_top.tip": "TOP",
+
+  "form.requireWarn": "请输入{ content }",
+  "form.JSONRequire": "请输入JSON格式的字符串"
 
 }

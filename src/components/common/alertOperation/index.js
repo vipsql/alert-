@@ -417,7 +417,7 @@ const alertOperation = ({
               </Button>
             </Tooltip>
             :
-            <Button className={styles.myButton} disabled={resolveDisabled} onClick={() => { resolveFunc(position) }} >
+            <Button className={styles.myButton}  onClick={() => { resolveFunc(position) }} >
               <FormattedMessage {...localeMessage['operate_resolve']} />
             </Button>
           :
@@ -435,7 +435,7 @@ const alertOperation = ({
 
       {
         showOperations.indexOf('other') >= 0 ?
-          <Dropdown overlay={menu}>
+          <Dropdown overlay={menu} trigger={'click'}>
             <span className={styles.moreOperateDropdown}>{formatMessage({ ...localeMessage['moreOperate'] })}<Icon type="down" /></span>
           </Dropdown>
           :
@@ -536,7 +536,7 @@ const alertOperation = ({
 
       { //列定制的popover
         position === 'list' && isShowColSetBtn != false &&
-        <Popover placement='bottomRight' overlayClassName={styles.popover} content={popoverContent} >
+        <Popover placement='bottomRight' overlayClassName={styles.popover} trigger="click" content={popoverContent} >
           <div className={classnames(styles.button, styles.rightBtn)}>
             <i className={classnames(setClass, styles.setCol)}></i>
             <p className={styles.col}> <FormattedMessage {...localeMessage['columns']} /></p>

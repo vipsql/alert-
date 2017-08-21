@@ -8,6 +8,7 @@ import ChatOps from './UYUN_ChatOps'
 import VideoMON from './UYUN_VideoMon'
 import Trap from './SNMP_Trap'
 import NetWork from './UYUN_NetWork'
+import Webhook from './UYUN_Webhook'
 import LeaveNotifyModal from '../common/leaveNotifyModal/index'
 
 class Add extends Component {
@@ -51,9 +52,11 @@ class Add extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/addApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    } },
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    },
                   })
                 })
               }}
@@ -88,9 +91,11 @@ class Add extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/addApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    } },
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    },
                   })
                 })
               }}
@@ -124,9 +129,11 @@ class Add extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/addApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    } },
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    },
                   })
                 })
               }}
@@ -161,9 +168,11 @@ class Add extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/addApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    } },
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    },
                   })
                 })
               }}
@@ -197,9 +206,11 @@ class Add extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/addApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    } },
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    },
                   })
                 })
               }}
@@ -231,9 +242,11 @@ class Add extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/addApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    } },
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    },
                   })
                 })
               }}
@@ -265,9 +278,61 @@ class Add extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/addApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    } },
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    },
+                  })
+                })
+              }}
+              keyCreate={(form) => {
+                let _UUID = getUUID(32);
+                dispatch({
+                  type: 'alertConfig/setUUID',
+                  payload: {
+                    UUID: _UUID,
+                    currentDisplayName: form.getFieldsValue().displayName
+                  }
+                })
+              }}
+            />
+          break;
+        case 'Web Hook':
+          targetApplication =
+            <Webhook
+              route={props.route}
+              appkey={UUID}
+              displayName={currentDisplayName}
+              onOk={(e, form) => {
+                e.preventDefault();
+
+                form.validateFieldsAndScroll((errors, values) => {
+                  if (!!errors) {
+                    return;
+                  }
+                  const formData = form.getFieldsValue()
+                  // 保证字段映射传到后台是一个JSON格式的字符串
+                  let fieldMap = formData.fieldMap;
+                  if(!fieldMap || fieldMap.trim() == '') {
+                    fieldMap = '{}';
+                  }
+                  const webHook = {
+                    url: formData.url,
+                    timeout: formData.timeout,
+                    requestMode: formData.requestMode,
+                    fieldMap: fieldMap,
+                    replyKey: formData.replyKey,
+                    replySuccess: formData.replySuccess
+                  }
+                  dispatch({
+                    type: 'alertConfig/addApplication',
+                    payload: {
+                      formData: {...formData, webHook},
+                      resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    },
                   })
                 })
               }}
@@ -301,9 +366,11 @@ class Add extends Component {
                   const formData = form.getFieldsValue()
                   dispatch({
                     type: 'alertConfig/addApplication',
-                    payload: { formData, resolve: (result) => {
-                      this.isNeedLeaveCheck = !result;
-                    } },
+                    payload: {
+                      formData, resolve: (result) => {
+                        this.isNeedLeaveCheck = !result;
+                      }
+                    },
                   })
                 })
               }}
@@ -323,7 +390,7 @@ class Add extends Component {
       }
       return (
         <div>
-          { targetApplication }
+          {targetApplication}
           <LeaveNotifyModal route={props.route} needLeaveCheck={() => {
             return this.isNeedLeaveCheck;
           }} />

@@ -1,31 +1,62 @@
 @import "../vars.less";
+@import '../../theme/mixin.less';
+@border: 1px solid @white11;
+@borderBlueButton: 1px solid @blue18;
+@borderWhiteButton: 1px solid @white16;
+//蓝色和白色色系要上下一一对应
+//             1         2         3       4        5        6                   7        8        9        10       11        12        13           14    15
+@var_default : @blue19,  @blue14, @none,   @blue20, @iptBg,  @borderBlueButton,  @blue25, @white0, @blue11, @blue26, @blue41,  @blue11;
+@var_white   : @white13, @white0, @border, @white6, @white0, @borderWhiteButton, @white7, @white6, @white6, @white6, @white35, @white36;
+
+.setTheme(@var_default, @var_white);
+
+
 .global {
   .ant-select-dropdown-menu-item-active {
     color: #FFFFFF
   } // scrollbar
-  ::-webkit-scrollbar-corner {
+   ::-webkit-scrollbar-corner {
     background-color: transparent;
   }
-  ::-webkit-scrollbar-button {
+   ::-webkit-scrollbar-button {
     width: 0;
     height: 0;
     display: none;
   }
-  ::-webkit-scrollbar-thumb {
+   ::-webkit-scrollbar-thumb {
     width: 2px;
     background-color: rgba(0, 0, 0, .2);
     border-radius: 2px;
   }
-  ::-webkit-scrollbar {
+   ::-webkit-scrollbar {
     width: 2px;
     height: 2px;
   }
-  ::-webkit-scrollbar-track {
+   ::-webkit-scrollbar-track {
     width: 5px;
   }
-  ::-webkit-scrollbar:hover {
+   ::-webkit-scrollbar:hover {
     background-color: transparent;
   }
+  .ant-dropdown {}
+}
+
+div.delete {
+  float: right;
+  border-radius: 8px;
+  width: 16px;
+  text-align:center;
+   :global .iconfont {
+    font-size: 8px;
+  }
+  background-color: #094d7e
+}
+
+.bgWrapper(){
+  background: #fff;
+  padding: 20px;
+  margin-left: -20px;
+  margin-top: -20px;
 }
 
 .showBar {}
@@ -33,12 +64,172 @@
 .hideBar {
   display: none
 }
+.getTheme(@var, @name){
+  :local{
+    .alertQueryWrapper{
+       :global{
+         .refresh-top{
+           & when (@name = blue){
+            top:-52px;
+           }
+         }
+       }
+       & when (@name = white){
+        .bgWrapper()
+      }
+    }
+    .toggleBarButton {
+      background-color: extract(@var, 1);
+      width: 100%;
+      border: none;
+      height: 17px;
+    }
+    .toggleBarButton:hover {
+      background-color: extract(@var, 1);
+    }
+    .toggleBarButton:focus {
+      background-color: extract(@var, 1);
+    }
+    .wrapBorder{
+      border:extract(@var, 3)
+    }
+    .queryOperate {
+      position: relative;
+      background: extract(@var, 2);
+      border-bottom: extract(@var, 3);
+      padding: 15px 5px 15px 10px;
+      overflow: hidden;
+      .count {
+        display: inline-block;
+        margin-top: 10px;
+        margin-left: 10px;
+        color: extract(@var, 4);
+        font-size: 13px;
+      }
+      .groupMain {
+        display: inline-block;
+        position: relative;
+        float: right;
+        .switch {
+          position: absolute;
+          left: 75px;
+          top: 4px;
+          color: #9dd7ff;
+          visibility: hidden;
+        }
+        &:hover .switch {
+          visibility: visible;
+        }
+      } // cover ant-design Select style on local
+      .selectSingle {
+        &.setGroup {
+          float: right;
+          width: 100px;
+        }
+        // &:global.ant-select {
+        //   //color: #6c7480;
+        //   font-size: 13px;
+        //   font-weight: normal;
+        //    :global .ant-select-selection--single {
+        //     height: 30px;
+        //      :global .ant-select-selection__rendered {
+        //       line-height: 28px;
+        //       margin-left: 10px;
+        //       margin-right: 10px;
+        //       padding-right: 10px;
+        //     }
+        //   }
+        // }
+      }
+      .button {
+        position: relative;
+        height: 30px;
+        display: inline-block;
+        border-radius: 3px; //border: 1px solid #d5ddeb;
+        //background-color: #fff;
+        background-color: extract(@var, 5);
+        border: extract(@var, 6);
+        margin-right: 10px;
+        cursor: pointer;
+        transition: border .2s;
+        &:hover {
+          background-color: extract(@var, 7);
+          
+          span,
+          i {
+            color: extract(@var, 8);
+          }
+        }
+        &.rightBtn {
+          float: right;
+        }
+        p {
+          position: relative;
+          display: inline-block;
+          padding: 4px 10px;
+          font-size: 13px;
+          font-weight: normal;
+          text-align: center;
+          color: extract(@var, 9);
+          &.col {
+            padding-left: 5px;
+          }
+        }
+        .setCol {
+          position: relative;
+          display: inline-block;
+          top: 2px;
+          padding-left: 8px;
+          color: extract(@var, 10);
+        }
+      }
+    }
+    .popover {
+      // popover card
+      .popoverMain {
+        position: relative;
+        div:last-child {
+          margin-bottom: 5px;
+        }
+        .colGroup {
+          margin: 10px 10px 15px 10px;
+          width: 240px;
+          &>p {
+            color: extract(@var, 12);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            line-height: 10px;
+            &:after {
+              position: relative;
+              content: " ";
+              display: inline-block;
+              height: 1px;
+              width: 90%;
+              background: extract(@var, 11);
+            }
+          }
+          .inlineItem {
+            display: inline-block;
+            width: 120px;
+            padding-bottom: 5px;
+            :global {
+              .ant-checkbox-wrapper+span,
+              .ant-checkbox+span {
+                display: inline-block;
+                white-space: nowrap;
+                max-width: 100px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                vertical-align: middle;
+              }
+            }
+          }
+        }
+      }
+    }
 
-.toggleBarButton {
-  background-color: #1e5b97;
-  width: 100%;
-  border: none;
-  height: 17px;
+  }
 }
 
 .toggleBarButtonIcon {
@@ -46,17 +237,57 @@
   top: -3px;
 }
 
-.toggleBarButton:hover {
-  background-color: #1e5b97;
-}
-
-.toggleBarButton:focus {
-  background-color: #1e5b97;
-}
-
 .searchBar {
    :global .ant-form-item {
     margin-bottom: 15px;
+  }
+  .searchBtn {
+    float: right;
+  }
+  .myDropdown {
+    position: relative !important;
+    float: right;
+    top: 0px !important;
+    width: 72px !important;
+    margin-left: 10px;
+    margin-right: 0px !important;
+    &:global.ant-btn-group {
+      margin-right: 10px;
+      height: 32px;
+      top: 0px;
+       :global .ant-btn {
+        font-size: 13px;
+        font-weight: normal;
+        padding: 4px 10px; //background: white;
+        background-color: #0d5990;
+        border: 1px solid #297ebb;
+        color: #9dd7ff;
+        &:hover {
+          border-color: #2bb4f4;
+        }
+      }
+       :global .ant-dropdown-trigger {
+        top: -3px;
+      }
+    }
+    button:first-child {
+      &.disabled {
+        opacity: 0.5;
+      }
+      &.disabled:hover {
+        background-color: #0d5990;
+        color: #9dd7ff;
+      }
+    }
+    button:last-child {
+      //background: #f5f9fc;
+      background-color: #0d5990;
+      border: 1px solid #297ebb;
+      color: #9dd7ff;
+      &:hover {
+        border-color: #2bb4f4;
+      }
+    }
   }
 }
 
@@ -90,163 +321,54 @@
   }
 }
 
-.queryOperate {
-  position: relative;
-  background: #153d69;
-  padding: 15px 5px 15px 10px;
-  overflow: hidden;
-  .count {
-    display: inline-block;
-    margin-top: 10px;
-    margin-left: 10px;
-    color: #90c6ee;
-    font-size: 13px;
-  }
-  .groupMain {
-    display: inline-block;
-    position: relative;
-    float: right;
-    .switch {
-      position: absolute;
-      left: 75px;
-      top: 4px;
-      color: #9dd7ff;
-      visibility: hidden;
-    }
-    &:hover .switch {
-      visibility: visible;
-    }
-  } // cover ant-design Select style on local
-  .selectSingle {
-    &.setGroup {
-      float: right;
-      width: 100px;
-    }
-    &:global.ant-select {
-      //color: #6c7480;
-      font-size: 13px;
-      font-weight: normal;
-       :global .ant-select-selection--single {
-        height: 30px;
-         :global .ant-select-selection__rendered {
-          line-height: 28px;
-          margin-left: 10px;
-          margin-right: 10px;
-          padding-right: 10px;
-        }
-      }
-    }
-  }
-  .button {
-    position: relative;
-    height: 30px;
-    display: inline-block;
-    border-radius: 3px; //border: 1px solid #d5ddeb;
-    //background-color: #fff;
-    background-color: #0d5990;
-    border: 1px solid #297ebb;
-    margin-right: 10px;
-    cursor: pointer;
-    transition: border .2s;
-    &:hover {
-      background-color: #2d98db;
-      span,
-      i {
-        color: #fff;
-      }
-    }
-    &.rightBtn {
-      float: right;
-    }
-    p {
-      position: relative;
-      display: inline-block;
-      padding: 4px 10px;
-      font-size: 13px;
-      font-weight: normal;
-      text-align: center;
-      color: #9dd7ff;
-      &.col {
-        padding-left: 5px;
-      }
-    }
-    .setCol {
-      position: relative;
-      display: inline-block;
-      top: 2px;
-      padding-left: 8px;
-      color: #7dbae6;
-    }
-  }
-}
 
-.popover {
-   :global {
-    .ant-popover-content {
-      .ant-popover-arrow {
-        border-bottom-color: #226eaf;
-      }
-      .ant-popover-arrow::after {
-        border-bottom-color: #226eaf;
-      }
-      .ant-popover-inner {
-        background-color: #226eaf;
-      }
-    }
-  } // popover card
-  .popoverMain {
-    position: relative;
-    div:last-child {
-      margin-bottom: 5px;
-    }
-    .colGroup {
-      margin: 10px 10px 15px 10px;
-      width: 240px;
-      &>p {
-        color: #9dd7ff;
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 4px;
-        line-height: 10px;
-        &:after {
-          position: relative;
-          content: " ";
-          display: inline-block;
-          height: 1px;
-          width: 90%;
-          background: #5994d6;
-        }
-      }
-      .inlineItem {
-        display: inline-block;
-        width: 120px;
-        padding-bottom: 5px;
-         :global {
-          .ant-checkbox-wrapper+span,
-          .ant-checkbox+span {
-            display: inline-block;
-            white-space: nowrap;
-            max-width: 100px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            vertical-align: middle;
-          }
-        }
-      }
-    }
-  }
-}
 
+// cover menuitem
 // cover menuitem
 .menuItem {
   &:global.ant-dropdown-menu-item {
     font-size: 13px;
     font-weight: normal;
-    width: 103px;
+    min-width: 135px;
+    background-color: #1d6aa7;
+    color: #6ac5fe;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    div {
+      display: none
+    }
+    &:hover {
+      background-color: #3092d9;
+      color: #ffffff;
+      div {
+        display: block
+      }
+    }
   }
   &:global.ant-select-dropdown-menu-item {
     font-size: 13px;
     font-weight: normal;
+    background-color: #1d6aa7;
+    color: #6ac5fe;
+  }
+  &:global.ant-dropdown-menu-submenu {
+    font-size: 13px;
+    font-weight: normal;
+    background-color: #1d6aa7;
+    .ant-dropdown-menu-submenu-title {
+      font-size: 13px;
+      color: #6ac5fe;
+      &:after {
+        color: #6ac5fe;
+      }
+      &:hover {
+        background-color: #3092d9;
+        color: #ffffff;
+        &:after {
+          color: #ffffff;
+        }
+      }
+    }
   }
 }
 
@@ -266,7 +388,7 @@
   .operateCol {
     div {
       width: 75%;
-      button{
+      button {
         margin-left: 10px;
       }
     }
