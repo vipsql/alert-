@@ -21,7 +21,7 @@ const __DataRule = {
     'regex': /\/incident\/queryCondition\/save\//
   },
   '/incident/queryCondition/getAll': {
-    'list|1-10': [
+    'data|1-10': [
       {
         'name': '@name',
         'id|+1': 100,
@@ -161,6 +161,60 @@ const __DataRule = {
     }
   },
 
+  // 可视化接口
+  '/visual/storeKeys': {
+    'template': {
+        "keys|3-5": ['@cname'],
+        "level|1": [0, 1, 2, 3]
+      }
+  },
+
+  '/visual/tagValuesInfo': {
+    'template|10-20': [
+      {
+        "tagValue": "@cname",
+        "severity": 3,
+        "values|1-10": [
+          {
+            "value": "@cname",
+            "severity|1": [0, 1, 2, 3]
+          }
+        ]
+      }
+    ]
+  },
+
+  '/visual/resStateInfo': {
+    'template|10': [
+      {
+        "tagValue": '@cname',
+        "resources|100": [
+          {
+            "resId": '@string(10)',
+            "resName": '@cname',
+            "severity|1": [0, 1, 2, 3],
+            "iconUrl": '@url'
+          }
+        ]
+      }
+    ]
+  },
+
+  '/visual/resIncidents': {
+    regex: /\/visual\/resIncidents\/? /,
+    'template|1-5': [
+      {
+        "id": '@string(10)',
+        "name": '告警：@cname',
+        "severity|1": [0, 1, 2, 3],
+        "iconUrl": '@url'
+      }
+    ]
+  },
+  'treeMap/tags/isSet': {
+    regex: /\/treeMap\/tags\/isSet/,
+    "template|1": [true, true]
+  }
 }
 
 /**

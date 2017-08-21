@@ -63,7 +63,7 @@ export default {
         yield put({
           type: 'setFilters',
           payload: {
-            filters: response.data.list
+            filters: response.data.data
           }
         })
       } else {
