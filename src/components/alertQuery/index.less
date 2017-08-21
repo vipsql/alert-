@@ -4,9 +4,9 @@
 @borderBlueButton: 1px solid @blue18;
 @borderWhiteButton: 1px solid @white16;
 //蓝色和白色色系要上下一一对应
-//             1         2         3       4        5        6                   7        8        9        10       11        12        13           14    15
-@var_default : @blue19,  @blue14, @none,   @blue20, @iptBg,  @borderBlueButton,  @blue25, @white0, @blue11, @blue26, @blue41,  @blue11;
-@var_white   : @white13, @white0, @border, @white6, @white0, @borderWhiteButton, @white7, @white6, @white6, @white6, @white35, @white36;
+//             1         2         3       4        5        6                   7        8        9        10       11        12        13           14    15       16       17       18       19        20       21
+@var_default : @blue19,  @blue14, @none,   @blue20, @iptBg,  @borderBlueButton,  @blue25, @white0, @blue11, @blue26, @blue41,  @blue11,  @iptBg,   @blue15, @blue11, @blue11, @blue16, @blue62, @blue17,  @white0, @blue151;
+@var_white   : @white13, @white0, @border, @white6, @white0, @borderWhiteButton, @white7, @white6, @white6, @white6, @white35, @white36, @white18, @blue8,  @blue13, @white6, @white0, @white6, @white30, @black0, @white4;
 
 .setTheme(@var_default, @var_white);
 
@@ -43,13 +43,14 @@
 
 div.delete {
   float: right;
-  border-radius: 8px;
+  border-radius: 50%;
   width: 16px;
+  height: 16px;
+  line-height: 18px;
   text-align:center;
    :global .iconfont {
     font-size: 8px;
   }
-  background-color: #094d7e
 }
 
 .bgWrapper(){
@@ -66,6 +67,10 @@ div.delete {
 }
 .getTheme(@var, @name){
   :local{
+    div.delete {
+      background-color: extract(@var, 21);
+      color:#fff;
+    }
     .alertQueryWrapper{
        :global{
          .refresh-top{
@@ -78,6 +83,69 @@ div.delete {
         .bgWrapper()
       }
     }
+    .menuItem {
+      &:global.ant-dropdown-menu-item {
+        background-color: extract(@var, 17);
+        color: extract(@var, 18);
+        &:hover {
+          background-color: extract(@var, 19);
+          color: extract(@var, 20);
+        }
+      }
+      &:global.ant-select-dropdown-menu-item {
+        background-color: extract(@var, 17);
+        color: extract(@var, 18);
+      }
+      &:global.ant-dropdown-menu-submenu {
+        background-color: extract(@var, 17);
+        .ant-dropdown-menu-submenu-title {
+          color: extract(@var, 18);
+          &:after {
+            color: extract(@var, 18);
+          }
+          &:hover {
+            background-color: #3092d9;
+            color: #ffffff;
+            &:after {
+              color: #ffffff;
+            }
+          }
+        }
+      }
+    }
+    .searchBar {
+      .myDropdown {
+        &:global.ant-btn-group {
+          :global .ant-btn {
+            background-color: extract(@var, 5);
+            border: extract(@var, 6);
+            color: extract(@var, 16);
+            &:hover {
+              border-color: extract(@var, 14);
+            }
+          }
+          :global .ant-btn:last-child {
+            background-color: extract(@var, 13);
+            color: extract(@var, 15);
+          }
+        }
+        button:first-child {
+          &.disabled:hover {
+            background-color: extract(@var, 5);
+            color: extract(@var, 16);
+          }
+        }
+        button:last-child {
+          background-color: extract(@var, 13);
+          border: extract(@var, 6);
+          color: extract(@var, 15);
+          &:hover {
+            border-color: extract(@var, 14);
+          }
+        }
+      }
+    }
+
     .toggleBarButton {
       background-color: extract(@var, 1);
       width: 100%;
@@ -126,27 +194,12 @@ div.delete {
           float: right;
           width: 100px;
         }
-        // &:global.ant-select {
-        //   //color: #6c7480;
-        //   font-size: 13px;
-        //   font-weight: normal;
-        //    :global .ant-select-selection--single {
-        //     height: 30px;
-        //      :global .ant-select-selection__rendered {
-        //       line-height: 28px;
-        //       margin-left: 10px;
-        //       margin-right: 10px;
-        //       padding-right: 10px;
-        //     }
-        //   }
-        // }
       }
       .button {
         position: relative;
         height: 30px;
         display: inline-block;
         border-radius: 3px; //border: 1px solid #d5ddeb;
-        //background-color: #fff;
         background-color: extract(@var, 5);
         border: extract(@var, 6);
         margin-right: 10px;
@@ -237,6 +290,7 @@ div.delete {
   top: -3px;
 }
 
+
 .searchBar {
    :global .ant-form-item {
     margin-bottom: 15px;
@@ -259,31 +313,17 @@ div.delete {
         font-size: 13px;
         font-weight: normal;
         padding: 4px 10px; //background: white;
-        background-color: #0d5990;
-        border: 1px solid #297ebb;
-        color: #9dd7ff;
-        &:hover {
-          border-color: #2bb4f4;
-        }
       }
        :global .ant-dropdown-trigger {
-        top: -3px;
+        top: -2px;
       }
     }
     button:first-child {
       &.disabled {
         opacity: 0.5;
       }
-      &.disabled:hover {
-        background-color: #0d5990;
-        color: #9dd7ff;
-      }
     }
     button:last-child {
-      //background: #f5f9fc;
-      background-color: #0d5990;
-      border: 1px solid #297ebb;
-      color: #9dd7ff;
       &:hover {
         border-color: #2bb4f4;
       }
@@ -330,16 +370,12 @@ div.delete {
     font-size: 13px;
     font-weight: normal;
     min-width: 135px;
-    background-color: #1d6aa7;
-    color: #6ac5fe;
     overflow: hidden;
     text-overflow: ellipsis;
     div {
       display: none
     }
     &:hover {
-      background-color: #3092d9;
-      color: #ffffff;
       div {
         display: block
       }
@@ -348,26 +384,12 @@ div.delete {
   &:global.ant-select-dropdown-menu-item {
     font-size: 13px;
     font-weight: normal;
-    background-color: #1d6aa7;
-    color: #6ac5fe;
   }
   &:global.ant-dropdown-menu-submenu {
     font-size: 13px;
     font-weight: normal;
-    background-color: #1d6aa7;
     .ant-dropdown-menu-submenu-title {
       font-size: 13px;
-      color: #6ac5fe;
-      &:after {
-        color: #6ac5fe;
-      }
-      &:hover {
-        background-color: #3092d9;
-        color: #ffffff;
-        &:after {
-          color: #ffffff;
-        }
-      }
     }
   }
 }

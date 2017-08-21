@@ -1,188 +1,100 @@
 @import "../../vars.less";
-.detailView {
-  padding: 16px 30px;
-  background-color: #173b65;
-  .viewHeader {
-    position: relative;
-    .headerIcon {
-      font-size: 45px;
-      color: #0e9ce0;
-    }
-    .headerContent {
-      position: absolute;
-      top: 5px;
-      left: 58px;
-      font-size: 13px;
-      color: #fff;
-      .headerName {
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
-      p {
-        color: #6ec2ff;
-        margin-left: 5px;
-        a {
-          margin-left: 12px;
-          color: #6ec2ff;
-          border-bottom: 1px solid #4a8cc3;
-          &:hover {
-            color: #3498df;
-          }
-        }
-      }
-    }
-  }
-  .viewContent {
-    position: relative;
-    :global {
-      .ant-radio-button-wrapper {
-        background-color: @blue6;
-        border-color: @blue6
-      }
-      .ant-radio-button-wrapper-checked {
-        background-color: @blue5;
-        border-color: @blue6
-      }
-    }
-    .showItem {
-      display: block;
-    }
-    .hideItem {
-      display: none;
-    }
-    .shortInput {
-      width: 78px;
-    }
-    .stepLine {
-      top: 40px;
-      position: absolute;
-      display: inline-block;
-      width: 3px;
-      left: 20px;
-      height: 48%;
-      background: #2980bf;
-    }
-    .step1,
-    .step2 {
-      position: relative;
-      padding-top: 20px;
-      padding-left: 58px;
-      margin-bottom: 50px;
-      .secondForm {
-        width: 620px;
-        label {
-          float: left
-        }
-        .overTime {
-          width: 50px
-        }
-        span.msg {
-          color: #FFFFFF;
-          margin-left: 8px
-        }
-        span.fieldMapMsg {
-          color: #FFFFFF;
-          line-height: 1.5;
-        }
-        span.overTimeMsg {
-          color: #FFFFFF
-        }
-        span.returnBlankMsg {
-          margin-left: 86px;
-          color: #FFFFFF
-        }
+@import "../common.less";
+.baseStyle();
+.skinStyle();
+
+@import '../../../theme/mixin.less';
+//蓝色和白色色系要上下一一对应
+//             1       2        3         4       5         6         7         8        9
+@var_default : @blue6, @blue5,  @blue6,   @blue6,  @white0, @blue18,  @iptBg,   @blue18, @blue21;
+@var_white   : @white0, @blue8, @white16, @blue72, @white6, @white16, @white18, @blue13, @blue8;
+
+.setTheme(@var_default, @var_white);
+.getTheme(@var, @name){
+  :local{
+    .detailView {
+      .viewContent {
+        position: relative;
         :global {
-          .ant-form-item-control {
-            line-height: 0px;
+          .ant-radio-button-wrapper {
+            background-color: extract(@var, 1);
+            border-color: extract(@var, 3);
+            color: extract(@var, 5);
           }
-          .ant-form-item-control-wrapper {
-            line-height: 1
+          .ant-radio-button-wrapper-checked {
+            background-color: extract(@var, 2);
+            border-color: extract(@var, 4);
+            color:#fff;
           }
         }
-      }
-      .viewForm {
-        display: inline-block;
-        vertical-align: top;
-         :global {
-          .ant-form-item {
-            margin-bottom: 0px;
-            .ant-form-item-control {
-              line-height: 0px;
-              .ant-input-lg {
-                height: 28px;
+        .showItem {
+          display: block;
+        }
+        .hideItem {
+          display: none;
+        }
+        .shortInput {
+          width: 78px;
+        }
+        .step1,
+        .step2 {
+          .secondForm {
+            a {
+              color: extract(@var, 9);
+            }
+            width: 620px;
+            label {
+              float: left
+            }
+            .overTime {
+              width: 50px
+            }
+            span.msg {
+              color: extract(@var, 5);
+              margin-left: 8px
+            }
+            span.fieldMapMsg {
+              color: extract(@var, 5);
+              line-height: 1.5;
+            }
+            span.overTimeMsg {
+              color: extract(@var, 5);
+            }
+            span.returnBlankMsg {
+              margin-left: 86px;
+              color: extract(@var, 5);
+            }
+            :global {
+              .ant-input-number-handler-wrap{
+                 border-color:extract(@var, 6);
+                 background-color: extract(@var, 1);
+              }
+              .ant-input-number {
+                background-color: transparent;
+                border-color: extract(@var, 3);
+              }
+              .ant-input-number-handler-up,.ant-input-number-handler-down {
+                border-color:extract(@var, 6);
+                background-color: extract(@var, 7);
+              }
+              .ant-input-number-handler-wrap .ant-input-number-handler-up-inner,.ant-input-number-handler-wrap .ant-input-number-handler-down-inner {
+                color: extract(@var, 8);
+              }
+              .ant-input-number input{
+                background-color: extract(@var, 1);
+                color: extract(@var, 5);
+              }
+              .ant-form-item-control {
+                line-height: 0px;
+              }
+              .ant-form-item-control-wrapper {
+                line-height: 1
               }
             }
           }
         }
-        .nameInput {
-          width: 200px;
-          color: #9dd7ff;
-        }
+      
       }
-      & .readOnly {
-        margin-top: 10px;
-        font-size: 13px;
-        color: #fff;
-      }
-      & .createBtn {
-        margin-left: 10px;
-        background-color: #0d5990;
-        border-color: #297ebb;
-        &:hover {
-          border-color: #2bb4f4;
-        }
-      }
-      &>span:first-child {
-        position: absolute;
-        top: 16px;
-        left: 8px;
-        width: 28px;
-        height: 28px;
-        background: #2980bf;
-        border-radius: 100%;
-        display: inline-block;
-        z-index: 1
-      }
-      .step1Icon {
-        &:before {
-          display: inline-block;
-          content: '1';
-          color: #fff;
-          font-size: 13px;
-          position: relative;
-          top: 4px;
-          left: 10px;
-        }
-      }
-      .step2Icon {
-        &:before {
-          display: inline-block;
-          content: '2';
-          color: #fff;
-          font-size: 13px;
-          position: relative;
-          top: 4px;
-          left: 10px;
-        }
-      }
-      .stepName {
-        font-size: 14px;
-        color: #6ec2ff;
-        margin-bottom: 18px;
-      }
-      .stepMessage {
-        font-size: 13px;
-        color: #fff;
-        margin-bottom: 10px;
-      }
-      .stepExample {
-        font-size: 13px;
-        color: #9dd6ff;
-      }
-    }
-    button:last-child {
-      margin-left: 58px;
     }
   }
 }
