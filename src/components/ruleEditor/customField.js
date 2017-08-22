@@ -249,7 +249,7 @@ class NotRequired extends Component {
     if (nextProps.data !== this.props.data) {
       // 类型更改时的重置
       this.setState({
-        req: [],
+        req: nextProps.data.filter(i => i.defaultValue) || [], //用户选择的,
         options: nextProps.data
       })
     }

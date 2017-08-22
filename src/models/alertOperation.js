@@ -449,11 +449,13 @@ export default {
     },
     // 打开派发工单做的相应处理
     *openFormModal({ payload }, { select, put, call }) {
-      const { operateAlertIds, selectedAlertIds } = payload;
+      // 记录派发工单的动作由‘alertOperation’model引起
       yield put({
         type: 'alertList/toggleModalOrigin',
-        payload: payload
+        payload: 'alertOperation'
       })
+
+      const { operateAlertIds, selectedAlertIds } = payload;
 
       if (operateAlertIds.length === 0) {
         yield message.warn(window.__alert_appLocaleData.messages['modal.operate.infoTip1'], 3);

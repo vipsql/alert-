@@ -234,6 +234,44 @@ const __DataRule = {
         }
       ]
     }
+  },
+
+  '/incident/queryHistory': {
+    template: {
+      'tagKeys': [],
+      'properties': {},
+      'data|20-40': [{
+        'alias': '@string(5)',
+        'classCode': '@string(5)',
+        'count|1-1000': 1,
+        'description': '@sentence()',
+        'entityAddr': '@address',
+        'entityName': '告警-@cname',
+        'firstOccurTime|1502035200524-1502812800524': 1,
+        'lastOccurTime|1502035200524-1502812800524': 1,
+        'lastTime|0-1200000': 1,
+        'hasChild': false,
+        'id': '@string(12)',
+        'name': '@cname',
+        'resObjectId': '@string(12)',
+        'severity|1': [0, 1, 2, 3],
+        'source': '@cname',
+        "status|1": ['0', '40', '150', '190', '255'],
+        'ownerName': '@cname',
+        'tags': [],
+        'hasNext|1': [true, false]
+      }]
+    }
+  },
+
+  '/incident/queryIncidentCount': {
+    template: {
+      'ok|1-40': 1,
+      'information|1-40': 1,
+      'warning|1-40': 1,
+      'critical|1-40': 1,
+      'total|1-100': 1,
+    }
   }
 }
 

@@ -52,8 +52,8 @@ class AlertListManage extends Component {
   }
 
   ITSMPostMessage(e) {
-    console.log(e, 'alertList postMessage count');
-    const { dispatch, intl: { formatMessage } } = this.props;
+    const { dispatch, intl: { formatMessage }, alertList } = this.props;
+    const { alertOperateModalOrigin='alertOperation' } = alertList;
     if (e.data.createTicket !== undefined && e.data.createTicket === 'success') {
       const localeMessage = defineMessages({
         successMsg: {
@@ -63,7 +63,7 @@ class AlertListManage extends Component {
       })
       message.success(formatMessage({ ...localeMessage['successMsg'] }, { flowNo: e.data.flowNo }));
       dispatch({
-        type: 'alertOperation/afterDispatch'
+        type: alertOperateModalOrigin + '/afterDispatch'
       })
     }
   }
@@ -264,6 +264,6 @@ export default injectIntl(connect((state) => {
     alertManage: state.alertManage,
     alertListTable: state.alertListTable,
     alertList: state.alertList,
-    userInfo: state.app.userInfo
+    userInfo: state.app.userInfo,
   }
 })(AlertListManage))

@@ -35,7 +35,6 @@ class alertQueryManage extends Component {
   }
 
   ITSMPostMessage(e) {
-    console.log(e, 'alertQuery postMessage count');
     const { dispatch, intl: { formatMessage } } = this.props;
     if (e.data.createTicket !== undefined && e.data.createTicket === 'success') {
       const localeMessage = defineMessages({
