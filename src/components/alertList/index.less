@@ -6,9 +6,9 @@
 @import '../../theme/mixin.less';
 
 //蓝色和白色色系要上下一一对应  
-//             1         2         3         4        5        6         7        8       9        10       11        12         13        14       15        16        17        18      19        20       21       22       23       24        25        26       27        28        29       30      31        32       33         34      35       36       37        38        39       40         41        42
-@var_default : @blue18,  @opacity, @blue80, @blue76, @blue15,  @blue85, @blue17,  @white0, @blue22, @blue38, @blue31,  @blue16,  @blue87,  @blue88, @blue19,  @blue92,  @blue95, @blue27, @blue32, @blue96,  @blue29, @blue30, @white0, @blue97, @blue28, @opacity,  @iptBg,   @blue33, @blue45, @white0, @blue92, @blue145, @blue146, @blue84, @blue84, @blue84, @blue147, @blue62, @blue148, @blue149, @blue150, @blue49;
-@var_white   : @white16, @white0,  @white6, @white0, @white16, @white6, @white30, @black0, @blue72, @black1, @white13, @white34, @white17, @white0, @white13, @white11, @black1, @white7, @black1, @white11, @white0, @white11, @black1, @black1, @white0, @white11, @white11, @blue8,  @white8, @blue8,  @white0, @white0,  @white0,  @blue8,  @black1, @blue13, @white26, @black0, @white0,  @blue13,  @white26, @white0;
+//             1         2         3         4        5        6         7        8       9        10       11        12         13        14       15        16        17        18      19        20       21       22       23       24        25        26       27        28        29       30      31        32       33         34      35       36       37        38        39       40         41        42      43
+@var_default : @blue18,  @opacity, @blue80, @blue76, @blue15,  @blue85, @blue17,  @white0, @blue22, @blue38, @blue31,  @blue16,  @blue87,  @blue88, @blue19,  @blue92,  @blue95, @blue27, @blue32, @blue96,  @blue29, @blue30, @white0, @blue97, @blue28, @opacity,  @iptBg,   @blue33, @blue45, @white0, @blue92, @blue145, @blue146, @blue84, @blue84, @blue84, @blue147, @blue62, @blue148, @blue149, @blue150, @blue49, @white47;
+@var_white   : @white16, @white0,  @white6, @white0, @white16, @white6, @white30, @black0, @blue72, @black1, @white13, @white34, @white17, @white0, @white13, @white11, @black1, @white7, @black1, @white11, @white0, @white11, @black1, @black1, @white0, @white11, @white11, @blue8,  @white8, @blue8,  @white0, @white0,  @white0,  @blue8,  @black1, @blue13, @white26, @black0, @white0,  @blue13,  @white26, @white0, @white16;
 
 .setTheme(@var_default, @var_white);
 .getTheme(@var, @name){
@@ -541,6 +541,212 @@
         background: -ms-radial-gradient(50% 50%, extract(@var, 32), extract(@var, 33));
       }
     }
+    //popover
+    .popover{
+      :global{
+        .ant-popover-content{
+          .ant-popover-arrow{
+            border-top-color: #000;
+            opacity: 0.6;
+          }
+          .ant-popover-arrow:after{
+            border-top-color: #000;
+            opacity: 0.6;
+          }
+          .ant-popover-inner{
+            opacity: 0.6;
+            background-color: #000;
+            p{
+              color: extract(@var, 23);
+            }
+          }
+        }
+      }
+    }
+    .loadMore{
+      background: #174170;
+      button{
+        position: relative;
+        margin: 10px 50%;
+        background: #153960;
+        border: 1px solid #296193;
+        color: #4990c4;
+        font-size: 13px;
+        transition: all 0.5s;
+        &:hover{
+            border-color: #316fb4;
+            background: #153960;
+            color: #316fb4;
+            box-shadow: 1px 1px 1px #17375d;
+            top: -1px;
+            left: -1px;
+        }
+        &:focus{
+            background: #153960;
+        }
+      }
+    }
+    .listTimeTable{
+      width: 100%;
+      border-collapse: collapse;
+      .checkstyle{
+        text-align: center;
+      }
+      .fade-leave.fade-leave-active {
+        animation: leave 1s ease-in-out 1;
+        -webkit-animation: leave 1s ease-in-out 1;
+        -moz-animation: leave 1s ease-in-out 1;
+      }
+      thead{
+        tr{
+          th{
+          padding-right: 10px;
+          position: relative;
+          height: 38px;
+          line-height: 38px;
+          text-align: left;
+          }
+        }
+      }
+      tbody{
+        .hiddenChild{
+          display: none;
+        }
+        
+        td{
+          padding-right: 10px;
+          height: 50px;
+          line-height: 50px;
+          text-align: left;
+          .entityName{
+            width: 200px;
+            .text-overflow()
+          }
+          //background: white;
+          //border-bottom: 1px solid #e4e7eb;
+          &.tdBorderRight{
+          position: relative;
+          cursor: pointer;
+          .relieveIcon{
+            overflow: visible;
+            position: absolute;
+            // top: 16px;
+            right: 2px;
+            cursor: pointer;
+            z-index: 12;
+          }
+          .name{
+            display: inline;
+            width: 200px;
+            .text-overflow();
+          }
+          }
+          &.tdBtn{
+            cursor: pointer;
+            color: #4082e6;
+            .relieveIcon{
+              position: relative;
+              left: 10px;
+              cursor: pointer;
+            }
+          }
+        }
+
+        tr.trGroup{
+          td {
+            text-align: left;
+            .expandIcon{
+              display: inline-block;
+              margin: 18px 10px 0 12px;
+              width: 14px;
+              height: 14px;
+              line-height: 14px;
+              text-align: center;
+              cursor: pointer;
+              font-size: 14px;
+              font-weight: bold;
+              border-radius: 3px;
+            }
+          }
+        }
+        tr.trChild{
+            td{
+
+            }
+        }
+      }
+      .triangleDown {
+        display: block;
+        width: 0;
+        height: 0;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+        border-top: 6px solid #4082e6;
+        text-align: center;
+        cursor: pointer;
+      }
+      .triangleUp {
+        display: block;
+        width: 0;
+        height: 0;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+        border-bottom: 6px solid #4082e6;
+        text-align: center;
+        cursor: pointer;
+      }
+      .relPos{
+        position: relative;
+        height: 38px;
+      }
+      .timePos{
+        position: absolute;
+        font-weight: normal;
+        left: 0;
+        top: 0;
+      }
+      .timeSep{
+        position: absolute;
+        left: 0;
+        top: 32px;
+        height: 6px;
+        width: 1px;
+      }
+      .timeLineDot{
+        position: relative;
+        width: 100%;
+        height: 100%;
+        .lineDot{
+          position: absolute;
+          left: 0;
+          top: 24px;
+          height: 1px;
+          background: extract(@var, 43);
+          //background: #345374;
+        }
+        span{
+          position: absolute;
+          cursor: pointer;
+          top: 19px;
+          width: 12px;
+          height: 12px;
+          background: #f26d49;
+          border-radius: 12px;
+          &.jjLevel{
+              background-color: #ff522a;
+          }
+          &.hfLevel{
+              background-color: #52edcb;
+          }
+          &.gjLevel{
+              background-color: #ffae2f;
+          }
+          &.txLevel{
+              background-color: #fadc23;
+          }
+        }
+      }
+    }
   }
 }
 .showBar {
@@ -622,197 +828,7 @@
     }
 }
 
-.loadMore{
-  background: #174170;
-  button{
-    position: relative;
-    margin: 10px 50%;
-    background: #153960;
-    border: 1px solid #296193;
-    color: #4990c4;
-    font-size: 13px;
-    transition: all 0.5s;
-    &:hover{
-        border-color: #316fb4;
-        background: #153960;
-        color: #316fb4;
-        box-shadow: 1px 1px 1px #17375d;
-        top: -1px;
-        left: -1px;
-    }
-    &:focus{
-        background: #153960;
-    }
-  }
-}
-.listTimeTable{
-    width: 100%;
-    border-collapse: collapse;
-    .checkstyle{
-        text-align: center;
-    }
-    .fade-leave.fade-leave-active {
-        animation: leave 1s ease-in-out 1;
-        -webkit-animation: leave 1s ease-in-out 1;
-        -moz-animation: leave 1s ease-in-out 1;
-    }
-    thead{
-        tr{
-            th{
-            padding-right: 10px;
-            position: relative;
-            height: 38px;
-            line-height: 38px;
-            text-align: left;
-            }
-        }
-    }
-    tbody{
 
-        .hiddenChild{
-            display: none;
-        }
-        
-        td{
-        //   max-width: 150px;
-        //   overflow: hidden;
-        //   white-space: nowrap;
-        //   text-overflow: ellipsis;
-            padding-right: 10px;
-            height: 50px;
-            line-height: 50px;
-            text-align: left;
-            .entityName{
-                width: 200px;
-                .text-overflow()
-            }
-            //background: white;
-            //border-bottom: 1px solid #e4e7eb;
-            &.tdBorderRight{
-            position: relative;
-            cursor: pointer;
-
-            .relieveIcon{
-                overflow: visible;
-                position: absolute;
-                // top: 16px;
-                right: 2px;
-                cursor: pointer;
-                z-index: 12;
-            }
-            .name{
-                display: inline;
-                width: 200px;
-                .text-overflow();
-            }
-            }
-            &.tdBtn{
-            cursor: pointer;
-            color: #4082e6;
-            .relieveIcon{
-                position: relative;
-                left: 10px;
-                cursor: pointer;
-            }
-            }
-        }
-
-        tr.trGroup{
-          td {
-            text-align: left;
-            .expandIcon{
-              display: inline-block;
-              margin: 18px 10px 0 12px;
-              width: 14px;
-              height: 14px;
-              line-height: 14px;
-              text-align: center;
-              cursor: pointer;
-              font-size: 14px;
-              font-weight: bold;
-              border-radius: 3px;
-            }
-          }
-        }
-        tr.trChild{
-            td{
-
-            }
-        }
-    }
-  .triangleDown {
-      display: block;
-      width: 0;
-      height: 0;
-      border-right: 4px solid transparent;
-      border-left: 4px solid transparent;
-      border-top: 6px solid #4082e6;
-      text-align: center;
-      cursor: pointer;
-  }
-  .triangleUp {
-    display: block;
-    width: 0;
-    height: 0;
-    border-right: 4px solid transparent;
-    border-left: 4px solid transparent;
-    border-bottom: 6px solid #4082e6;
-    text-align: center;
-    cursor: pointer;
-  }
-  .relPos{
-    position: relative;
-    height: 38px;
-  }
-  .timePos{
-    position: absolute;
-    font-weight: normal;
-    left: 0;
-    top: 0;
-  }
-  .timeSep{
-    position: absolute;
-    left: 0;
-    top: 32px;
-    height: 6px;
-    width: 1px;
-  }
-  .timeLineDot{
-    position: relative;
-    width: 100%;
-    height: 100%;
-    .lineDot{
-      position: absolute;
-      left: 0;
-      top: 24px;
-      height: 1px;
-      background: #91a7be;
-      //background: #345374;
-    }
-    span{
-      position: absolute;
-      cursor: pointer;
-      top: 19px;
-      width: 12px;
-      height: 12px;
-      background: #f26d49;
-      border-radius: 12px;
-      &.jjLevel{
-          background-color: #ff522a;
-      }
-      &.hfLevel{
-          background-color: #52edcb;
-      }
-      &.gjLevel{
-          background-color: #ffae2f;
-      }
-      &.txLevel{
-          background-color: #fadc23;
-      }
-    }
-  }
-
-}
 
 // config tagsFilter style on local
 
@@ -854,30 +870,6 @@
     }
 }
 
-
-
-//popover
-.popover{
-    :global{
-        .ant-popover-content{
-            .ant-popover-arrow{
-                border-top-color: #000;
-                opacity: 0.6;
-            }
-            .ant-popover-arrow:after{
-                border-top-color: #000;
-                opacity: 0.6;
-            }
-            .ant-popover-inner{
-                opacity: 0.6;
-                background-color: #000;
-                p{
-                    color: #fff;
-                }
-            }
-        }
-    }
-}
 
 :global{
 
