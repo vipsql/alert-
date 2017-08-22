@@ -176,6 +176,12 @@ export default {
     },
     // 打开派发工单做的相应处理
     *openFormModal({ payload }, { select, put, call }) {
+      // 记录派发工单的动作由‘alertDetail’model引起
+      yield put({
+        type: 'alertList/toggleModalOrigin',
+        payload: 'alertDetail'
+      })
+
       const viewDetailAlertId = yield select(state => state.alertDetail.id);
       const checkResponse = (yield checkOperationExecutable({ operateCode: 130, incidentIds: [viewDetailAlertId] }) || {}).data;
 
