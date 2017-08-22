@@ -318,12 +318,12 @@ const ListTableWrap = ({ dispatch, alertQuery, topHeight, intl: { formatMessage 
           <Option key={'status'} className={styles.menuItem} value="status"><FormattedMessage {...localeMessage['groupByStatus']} /></Option>
           <Option key={'IPAddress'} className={styles.menuItem} value="entityAddress"><FormattedMessage {...localeMessage['groupByIPAddress']} /></Option>
           {
-            extendColumnList.length !== 0 ? extendColumnList.map((col, index) => {
+            extendColumnList && extendColumnList.length !== 0 ? extendColumnList.map((col, index) => {
               return <Option key={col.id} className={styles.menuItem} value={col.id}><FormattedMessage {...localeMessage['groupByOther']} values={{ other: col.name }} /></Option>
             }) : []
           }
           {
-            extendTagsKey.length > 0 ? extendTagsKey.map((tag, index) => {
+            extendTagsKey && extendTagsKey.length > 0 ? extendTagsKey.map((tag, index) => {
               return <Option key={tag} className={styles.menuItem} value={tag}><FormattedMessage {...localeMessage['groupByOther']} values={{ other: tag }} /></Option>
             }) : []
           }
@@ -357,7 +357,7 @@ const ListTableWrap = ({ dispatch, alertQuery, topHeight, intl: { formatMessage 
               <ListTable extraArea={topFixArea} topHeight={isShowBar ? 335 : 145} sourceOrigin='alertQuery' {...props} />
             </div>
         }
-      </div>  
+      </div>
     </div>
   )
 }
