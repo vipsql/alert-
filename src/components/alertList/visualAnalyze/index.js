@@ -71,6 +71,9 @@ const VisualAnalyzeWrap = ({ dispatch, visualAnalyze }) => {
       while (target.tagName.toLowerCase() != 'li') {
         target = target.parentNode
       }
+      if(window.__uyun_showAlertList) {
+        clearTimeout(window.__uyun_showAlertList);
+      }
       window.__uyun_showAlertList = setTimeout(() => {
         dispatch({
           type: 'visualAnalyze/showAlertList',

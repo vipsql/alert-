@@ -6,7 +6,7 @@ import styles from '../index.less'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import { classnames } from '../../../utils'
 import Slider from 'react-slick'
-
+import IconItem from './iconItem'
 
 
 let htmlDomClassName = document.getElementsByTagName('html')[0].className;
@@ -96,7 +96,8 @@ class VisualAnalyze extends Component {
       tasgFitler,
       detailClick,
       incidentGroup,
-      resList
+      resList,
+      hoverId
       } = this.props
     const { gr2State, gr3State, gr4State } = this.state
 
@@ -150,6 +151,7 @@ class VisualAnalyze extends Component {
     let AlertListContent = (
       <div>Loading...</div>
     )
+
     if (Array.isArray(alertList)) {
       AlertListContent = alertList.length > 0 ?
         alertList.map((item, index) => {
@@ -197,32 +199,14 @@ class VisualAnalyze extends Component {
     })
 
 
-
     const resComponent = resList.length > 0 && resList.map((item, index) => {
       //referrerPolicy="no-referrer"
       const resList = item.resources.map((childItem, childIndex) => {
-        const iconImage = (childItem.iconUrl && childItem.iconUrl!="")?<img src={childItem.iconUrl} style={{ width: '70%', marginTop: '15%' }} /> : undefined;
+
+        // const iconImage = (childItem.iconUrl && childItem.iconUrl!="")?<img src={childItem.iconUrl} style={{ width: '70%', marginTop: '15%' }} /> : undefined;
+        // console.log(hoverId, childItem.resId,  alertList);
         return (
-          <Popover key={childIndex} content={AlertListContent} >
-            <li key={childIndex} data-id={childItem.resId} onMouseLeave={cancelShowAlertList} onMouseEnter={(e) => { showAlertList(e) }}>
-
-              <div className={childItem['severity'] > -1 ? styles.tagsRingTwo : styles.tagsRingTwo2} style={{ background: severityToColor[childItem['severity']] }}>
-                {childItem['severity'] <= -1 && iconImage}
-              </div>
-              {
-                childItem['severity'] > -1 && <div className={styles.tagsRingOne} style={{
-                  marginTop: '-20px',
-                  //backgroundImage: `url("${childItem.iconUrl}")`,
-                  backgroundColor: severityToColor[childItem['severity']]
-                }}>
-                  {iconImage}
-                </div>
-              }
-
-              <div className={styles.tagsName}>{childItem.resName}</div>
-
-            </li>
-          </Popover>
+          <IconItem key={childIndex} alertList={hoverId == childItem.resId ? alertList : undefined} showAlertList={showAlertList} cancelShowAlertList={cancelShowAlertList} childItem={childItem} />
         )
       })
       return (
@@ -267,7 +251,7 @@ class VisualAnalyze extends Component {
     })
     const resInfoImgComponent = ImgEle && ImgEle.values.length > 0 && ImgEle.values.map((item, index) => {
       return (
-        <div className={styles.imgInfo} key={index}>{item != ""?<img src={item} alt="" />:''}</div>
+        <div className={styles.imgInfo} key={index}>{item != "" ? <img src={item} alt="" /> : ''}</div>
       )
     })
 
@@ -278,9 +262,12 @@ class VisualAnalyze extends Component {
           {(!isShowFouth && lessLevel > 2) && <Checkbox className={styles.showGroup} onChange={showIncidentGroup} checked={incidentGroup} ><FormattedMessage {...formatMessages['incidentGroup']} /></Checkbox>}
 
           {
-            lessLevel > 0 && lessLevel !== 2 &&
+            lessLevel > 0 && lessLevel !== 2
+            &&
             <div style={{ display: 'inline-block' }}>
-              <FormattedMessage {...formatMessages['groupBy']} />：<Select getPopupContainer={() => document.getElementById("content")} disabled={isShowFouth ? true : false} defaultValue={gr2State != '' ? gr2State : tags[0]} onChange={gr2ChangeOverride} className={styles.visualGroup}  >
+              <FormattedMessage {...formatMessages['groupBy']} />
+              :
+              <Select getPopupContainer={() => document.getElementById("content")} disabled={isShowFouth ? true : false} defaultValue={gr2State != '' ? gr2State : tags[0]} onChange={gr2ChangeOverride} className={styles.visualGroup}  >
                 {tagsComponent}
               </Select>
             </div>
@@ -298,21 +285,23 @@ class VisualAnalyze extends Component {
           }
 
           <div className={styles.visualFilter} style={{ opacity: isShowFouth ? 1 : 0 }}>
-            >
-                        <div className={styles.tagsFilter} onClick={redirectTagsList}>
+            <div className={styles.tagsFilter} onClick={redirectTagsList}>
               <p>{tasgFitler}</p>
               <i className={tagsFilter}></i>
             </div>
-            {tags.length > 0 && <Select getPopupContainer={() => document.getElementById("content")} disabled={!isShowFouth ? true : false} defaultValue={gr4State != '' ? gr4State : tags[0]} onChange={gr4ChangeOverride} className={styles.visualGroup}  >
-              {tagsComponent}
-            </Select>}
+            {
+              tags.length > 0 && lessLevel != 2 &&
+              <Select getPopupContainer={() => document.getElementById("content")} disabled={!isShowFouth ? true : false} defaultValue={gr4State != '' ? gr4State : tags[0]} onChange={gr4ChangeOverride} className={styles.visualGroup}  >
+                {tagsComponent}
+              </Select>
+            }
           </div>
 
           <div className={styles.tip}><FormattedMessage {...formatMessages['tip']} /></div>
         </div>
 
 
-        {(lessLevel < 3) ?
+        {(lessLevel < 2) ?
           /* 表示层级小于4层时，直接请求设备故障列表*/
           <div className={styles.visualAlert} style={{ opacity: !isShowFouth ? 1 : 0 }}>
             {resInfo.length > 0 &&

@@ -8,6 +8,14 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 // 用于在model层创造延迟，用法：step1();yield delay(1000);step2()
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+const severityToColor = {
+  '-1': '#5be570', // 无故障
+  '0': '#52edcb', // 正常
+  '1': '#fadc23', // 提醒
+  '2': '#ffae2f', // 警告
+  '3': "#ff522a" // 紧急
+}
+
 // 判断字符串是否是空字符
 function isEmpty(str) {
   if(!str || str.trim() == '') {
@@ -397,5 +405,6 @@ module.exports = {
   modelExtend,
   delay,
   isJSON,
-  isEmpty
+  isEmpty,
+  severityToColor
 }
