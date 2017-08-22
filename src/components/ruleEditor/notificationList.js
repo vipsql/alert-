@@ -218,7 +218,7 @@ class NotificationList extends Component {
                                 label={window.__alert_appLocaleData.messages['ruleEditor.playTimeOut']}
                                 className={styles.timeOut}
                               >
-                                <InputNumber id="timeOut" max={1800} step={10}
+                                <InputNumber id="timeOut" min={0} max={1800} step={10}
                                   value={action.actionNotification ? action.actionNotification.notificationMode.webNotification.timeOut : 30}
                                   onChange={this.changeAction.bind(this, 'timeOut')}
                                 />
