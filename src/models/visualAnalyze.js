@@ -18,8 +18,8 @@ const initalState = {
   lessLevel: 0,
   tasgFitler: '',
   resInfo: [],
-  alertList: ''
-
+  alertList: '',
+  hoverId: undefined, // 鼠标所在的设备编号，showAlertList后设置的
 }
 
 // 保存标签分组选择
@@ -76,7 +76,6 @@ export default {
           tags: visualSelect
         })
 
-
         if (tagsData.result) {
 
           const data = tagsData.data
@@ -107,6 +106,7 @@ export default {
 
           // 默认选择标签
           setGroups(gr2, gr3, gr4)
+
           yield put({
             type: 'updateSelect',
             payload: {
@@ -143,7 +143,7 @@ export default {
       // 这里的3是前面2层分组加上设备的1层分组
       // visualSelect 是热图以及tagsFileter选择的条件 如果选择了2个维度就是 最终的层级为2 + 3
       // 如果选择的标签比较多，那么就直接查询resource
-      if (level < visualSelect.length + 3) {
+      if (level < visualSelect.length + 2) {
         let val
         const gr1 = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")) || [];
         const gr2key = localStorage.getItem('__alert_visualAnalyze_gr2') ? localStorage.getItem('__alert_visualAnalyze_gr2') : tags[0]
@@ -261,7 +261,10 @@ export default {
       if (alertList.result) {
         yield put({
           type: 'updateAlertList',
-          payload: alertList.data
+          payload: {
+            list: alertList.data,
+            resId: payload
+          }
         })
       } else {
         message.error(alertList.message)
@@ -284,10 +287,11 @@ export default {
       newGroupList[index]['isExpand'] = isExpand
       return { ...state, newGroupList }
     },
-    updateAlertList(state, { payload: alertList }) {
+    updateAlertList(state, { payload: {list, resId} }) {
       return {
         ...state,
-        alertList
+        alertList: list,
+        hoverId: resId
       }
     },
 

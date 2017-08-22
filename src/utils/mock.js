@@ -130,7 +130,7 @@ const __DataRule = {
       "integration": "@string(10)",
       "applyType": {
         "id": "@string(10)",
-        "name|1": ['UYUN ITSM', 'UYUN ChatOps', 'UYUN WebHook', 'UYUN WebHook', 'UYUN WebHook', 'UYUN WebHook'],
+        "name|1": ['UYUN ITSM', 'UYUN ChatOps', 'Web Hook', 'Web Hook', 'Web Hook', 'Web Hook'],
         "type|1": [0, 1],
         "appType": "@name",
         "appAlias": "@cname"
@@ -164,8 +164,8 @@ const __DataRule = {
   // 可视化接口
   '/visual/storeKeys': {
     'template': {
-        "keys|3-5": ['@cname'],
-        "level|1": [0, 1, 2, 3]
+        "keys|1-5": ['@cname'],
+        "level|1": [0, 1, 2, 3, 4, 5]
       }
   },
 
@@ -191,7 +191,7 @@ const __DataRule = {
         "resources|10": [
           {
             "resId": '@string(10)',
-            "resName": '@string(200)',
+            "resName": '@string(10, 200)',
             "severity|1": [0, 1, 2, 3],
             "iconUrl": '@url'
           }
@@ -211,9 +211,29 @@ const __DataRule = {
       }
     ]
   },
-  'treeMap/tags/isSet': {
+  '/treeMap/tags/isSet': {
     regex: /\/treeMap\/tags\/isSet/,
     "template|1": [true, true]
+  },
+
+  '/treeMap/getData': {
+    'template': {
+      'totalCriticalCnt|1-100': 1,
+      'totalWarnCnt|1-100': 1,
+      "picList": [
+        {
+          "path": "test",
+          "children|1-5": [
+            {
+              "path": "test/@name",
+              "name": "@cname",
+              "value|1-100": 1,
+              "maxSeverity": [-1, 0, 1, 2, 3]
+            }
+          ]
+        }
+      ]
+    }
   }
 }
 
