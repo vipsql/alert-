@@ -227,6 +227,7 @@ class UYUN_Webhook extends Component {
                 })(
                   <InputNumber
                     min={0}
+                    max={30}
                   />
                   )}
                 <span className={styles.overTimeMsg}><FormattedMessage { ...localeMessage['overTimeMsg']} values={{ overTime: form.getFieldsValue().timeout }} /></span>
