@@ -258,7 +258,7 @@ class UYUN_Webhook extends Component {
                       }
                     ]
                   })(
-                    <Input type="textarea" autosize={{minRows: 10, maxRows: 10}} placeholder={fieldMapMsgPlaceholder} />
+                    <Input type="textarea" className={ styles.mapFieldTextarea } placeholder={fieldMapMsgPlaceholder} />
                     )}
                   <span className={styles.fieldMapMsg}><FormattedMessage { ...localeMessage['fieldMapMsg']} values={{ API: <a href={webhookApi}>{formatMessage({ ...localeMessage['webhookApi'] })}</a> }} /></span>
                 </Item>

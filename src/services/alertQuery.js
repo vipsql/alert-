@@ -54,8 +54,8 @@ export async function saveFilter(filter, name) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'body': JSON.stringify(filter)
-    }
+    },
+    body: JSON.stringify(filter)
   })
 }
 

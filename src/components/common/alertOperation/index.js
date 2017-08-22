@@ -435,7 +435,7 @@ const alertOperation = ({
 
       {
         showOperations.indexOf('other') >= 0 ?
-          <Dropdown overlay={menu} trigger={'click'}>
+          <Dropdown overlay={menu}>
             <span className={styles.moreOperateDropdown}>{formatMessage({ ...localeMessage['moreOperate'] })}<Icon type="down" /></span>
           </Dropdown>
           :

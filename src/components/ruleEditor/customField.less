@@ -1,0 +1,163 @@
+
+
+// 派单映射
+.ITSMMapper{
+  padding-right: 25%;
+  .tip {
+      margin-top: 10px !important;
+      margin-bottom: 0 !important;
+      line-height: 1.5;
+  }
+  .notRequired, .required, .executors{
+    margin-bottom: 10px;
+    &:after{
+      clear: both;
+      visibility: hidden;
+      font-size: 0;
+      height: 0;
+    }
+    &:before, &:after{
+      content: " ";
+      display: table;
+    }
+    & > p {
+      display: block;
+      width: 12.5%;
+      float: left;
+      flex: 0 0 auto;
+      text-align: right;
+      // ----------------
+      font-size: 13px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      &::after{
+        content: '：'
+      }
+    }
+    & > .exeContent {
+      display: block;
+      width: 87.5%;
+      float: left;
+      flex: 0 0 auto;
+      .tacheName {
+        border: 1px solid #297ebb;
+        height: 32px;
+        display: inline-block;
+        width: 100%;
+        vertical-align: middle;
+        border-right: none;
+        line-height: 32px;
+        text-align: center;
+        color: #5994d6;
+        box-shadow: 0 0 0 0;
+        background: #0d5990;
+        border-radius: 0;
+        border-radius: 2px 0 0 2px;
+      }
+      .manageStyle {
+        :global{
+          .ant-select .ant-select-selection{
+            border-radius: 0 2px 2px 0;
+          }
+          .has-error .ant-select-selection{
+            box-shadow: none;
+          }
+          .ant-form-item-control{
+            line-height: 30px;
+          }
+        }
+      }
+    }
+    & > .content {
+      display: block;
+      width: 87.5%;
+      float: left;
+      flex: 0 0 auto;
+      .key{
+        background-color: #0d5990;
+        border: 1px solid #297ebb;
+        height: 32px;
+        width: 100px;
+        color: #9dd7ff;
+        display: inline-block;
+        line-height: 32px;
+        text-align: center;
+        font-size: 12px;
+      }
+      & > div > :global(.ant-select){
+        width: 100px
+      }
+      .arrow{
+        display: inline-block;
+        margin: 0px 20px;
+        transform: rotate(-90deg);
+        color: #5994d6;
+        font-size: 18px;
+      }
+      .wrapper{
+        width: 400px;
+        display: inline-block;
+        vertical-align: top;
+        position: relative;
+        :global(.ant-form-item){
+          display: inline-block;
+          width: 50%
+        }
+        &.fullWidth > :global(.ant-form-item) {
+          width: 100%
+        }
+      }
+    }
+  }
+}
+.insertVar{
+  margin: 4px 0px 4px 10px;
+  display: inline-block;
+  padding: 0 5px;
+  height: 24px;
+  background-color: #09284B;
+  color: #5994D6;
+  line-height: 24px;
+  cursor: pointer;
+}
+.varList {
+  position: relative;
+  color: #FFFFFF;
+  span {
+      position: relative;
+      display: inline-block;
+      margin: 0 5px;
+      cursor: pointer;
+  }
+}
+.varsWrap {
+  width: 45%;
+  border: 0;
+  :global {
+      .ant-popover-arrow {
+          display: none;
+      }
+      .ant-popover-inner {
+          background-color: #09284B;
+      }
+  }
+}
+.addUper,
+.delUper {
+    position: relative;
+    right: 25px;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-color: #093362;
+    color: #5994d6;
+    line-height: 24px;
+    text-align: center;
+    font-weight: bold;
+    font-style: normal;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+

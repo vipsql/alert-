@@ -21,6 +21,11 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
 import Condition from './condition';
 import NotificationList from './notificationList';
+import CustomField from './customField.js';
+
+//import mockdata from './itsm.js'
+
+import limitField from './formMaterial/limitField.js'
 import TimeSlider from './timeSlider';
 import LeaveNotifyModal from '../common/leaveNotifyModal/index'
 
@@ -159,6 +164,11 @@ const MonthArray = _.range(31).map(item => {
         value: item.toString()
     };
 });
+const arrow = cls(
+  'icon',
+  'icon-arrowdown',
+  'iconfont'
+)
 let conditionsDom = []; // 元素列表
 let treeTag = 0; // 当前数据的层级标识
 let leafTag = 0; // 叶子 id
@@ -274,7 +284,8 @@ class RuleEditor extends Component {
             chatops: false,
             audio: false,
             recipients: [],
-            ITSMParam: '',
+            ITSMParam: {},
+            PluginParam: {},
             /* 适用范围 */
             target: props.target,
         };
@@ -282,102 +293,51 @@ class RuleEditor extends Component {
     componentWillMount() {
         const { dispatch } = this.props;
         dispatch({
-            type: 'alertAssociationRules/getUsers'
-        });
-        dispatch({
-            type: 'alertAssociationRules/querySource'
-        });
-        dispatch({
-            type: 'alertAssociationRules/queryAttributes'
-        });
-        dispatch({
-            type: 'alertAssociationRules/getField'
-        });
-        dispatch({
-            type: 'alertAssociationRules/getRooms'
-        });
-        dispatch({
-            type: 'alertAssociationRules/getWos'
-        });
-        dispatch({
-            type: 'alertAssociationRules/getClassCode',
+            type: 'alertAssociationRules/initQuery'
         })
     }
     componentDidMount() {
       this.isNeedLeaveCheck = true;
     }
     componentWillReceiveProps(nextProps, nextState) {
+        // 用户模糊查询
         if (nextProps.alertAssociationRules.users !== this.props.alertAssociationRules.users) {
           let state = _.cloneDeep(this.state)
-          this.setState({
-            ...state,
-            recipients: this.state.recipients
-          })
+          this.setState({ ...state, recipients: this.state.recipients })
           return;
         }
-        const {
-            dayStart = '',
-            dayEnd = '',
-            timeCycle = 0,
-            timeCycleWeek = '',
-            timeCycleMonth = '',
-            timeStart = '',
-            timeEnd = ''
-        } = nextProps.time;
+        if (nextProps.name && nextProps.action !== this.props.action) {
+            const {
+                dayStart = '',
+                dayEnd = '',
+                timeCycle = 0,
+                timeCycleWeek = '',
+                timeCycleMonth = '',
+                timeStart = '',
+                timeEnd = ''
+            } = nextProps.time;
 
-        let _timeStart = {
-            hours: 0,
-            mins: 0
-        },
-            _timeEnd = {
-                hours: 23,
-                mins: 59
-            };
-        if (nextProps.time.dayStart && nextProps.time.dayEnd) {
-            _timeStart.hours = nextProps.time.dayStart.substr(11, 2);
-            _timeStart.mins = nextProps.time.dayStart.substr(14, 2);
-            _timeEnd.hours = nextProps.time.dayEnd.substr(11, 2);
-            _timeEnd.mins = nextProps.time.dayEnd.substr(14, 2);
-        } else if (nextProps.time.timeStart && nextProps.time.timeEnd) {
-            _timeStart.hours = nextProps.time.timeStart.substr(0, 2);
-            _timeStart.mins = nextProps.time.timeStart.substr(3, 2);
-            _timeEnd.hours = nextProps.time.timeEnd.substr(0, 2);
-            _timeEnd.mins = nextProps.time.timeEnd.substr(3, 2);
-        }
-        if (nextProps.name) {
-            let _action = undefined;
-            let isShareUpgrade = false;
-            _action = _.cloneDeep(nextProps.action);
-            let _actionType = _action.type;
-
-            if(_actionType.includes(3)) {
-                _actionType = [3] // 告警升级 + 告警通知
-                if(!_action.actionUpgrade) {
-                    _action.actionUpgrade = {
-                        notificationGroupings: [{
-                            delay: 15,
-                            status: [],
-                            recipients: []
-                        }]
-                    }
-                } else {
-                    isShareUpgrade = true
-                }
-                _action.type = _actionType
-            } else {
-                _action.actionNotification = {
-                    recipients: [],
-                    notifyWhenLevelUp: true,
-                    notificationMode: initalNotificationMode
+            let _timeStart = {
+                    hours: 0,
+                    mins: 0
+                },
+                _timeEnd = {
+                    hours: 23,
+                    mins: 59
                 };
-                _action.actionUpgrade = {
-                    notificationGroupings: [{
-                        delay: 15,
-                        status: [],
-                        recipients: []
-                    }]
-                }
+            if (nextProps.time.dayStart && nextProps.time.dayEnd) {
+                _timeStart.hours = nextProps.time.dayStart.substr(11, 2);
+                _timeStart.mins = nextProps.time.dayStart.substr(14, 2);
+                _timeEnd.hours = nextProps.time.dayEnd.substr(11, 2);
+                _timeEnd.mins = nextProps.time.dayEnd.substr(14, 2);
+            } else if (nextProps.time.timeStart && nextProps.time.timeEnd) {
+                _timeStart.hours = nextProps.time.timeStart.substr(0, 2);
+                _timeStart.mins = nextProps.time.timeStart.substr(3, 2);
+                _timeEnd.hours = nextProps.time.timeEnd.substr(0, 2);
+                _timeEnd.mins = nextProps.time.timeEnd.substr(3, 2);
             }
+
+            let result = this.editorRuleAction(nextProps) // action 初始化
 
             this.setState({
                 name: nextProps.name,
@@ -395,34 +355,65 @@ class RuleEditor extends Component {
                 target: nextProps.target,
                 source: nextProps.source,
                 condition: makeCondition(_.cloneDeep(nextProps.condition)),
-                action: _action || nextProps.action,
-                isShareUpgrade,
-                ITSMParam: nextProps.action.actionITSM
-                    ? JSON.stringify(JSON.parse(nextProps.action.actionITSM.param), null, 2)
-                    : '',
+                action: result._action,
+                isShareUpgrade: result.isShareUpgrade || false,
                 timeStart: _timeStart,
-                timeEnd: _timeEnd
+                timeEnd: _timeEnd,
+                ITSMParam: nextProps.ITSMParam,
+                PluginParam: nextProps.PluginParam
             });
         }
-
-        if (nextProps.alertAssociationRules.ITSMParam) {
+        // ITSMParam
+        if (nextProps.alertAssociationRules.ITSMParam !== this.props.alertAssociationRules.ITSMParam) {
             let _ITSMParam = nextProps.alertAssociationRules.ITSMParam;
-            this.changeAction(4, {
-                target: {
-                    value: _ITSMParam
-                }
-            });
             this.setState({
-                // action: nextProps.action,
-                ITSMParam: JSON.stringify(JSON.parse(_ITSMParam), null, 2)
+              ITSMParam: _ITSMParam
+            })
+        }
+        // PluginParam
+        if (nextProps.alertAssociationRules.PluginParam !== this.props.alertAssociationRules.PluginParam) {
+            let _pluginParam = nextProps.alertAssociationRules.PluginParam;
+            this.setState({
+              PluginParam: _pluginParam
             })
         }
         this.isChecked(nextProps);
     }
 
+    editorRuleAction(props) {
+        let _action = _.cloneDeep(props.action);
+        let isShareUpgrade = false;
+        let _actionType = _action.type;
+        // 不同action的情况
+        if (_actionType.includes(3)) {
+          _actionType = [3] // 告警升级 + 告警通知
+          if(!_action.actionUpgrade) {
+              _action.actionUpgrade = {
+                  notificationGroupings: [{
+                      delay: 15,
+                      status: [],
+                      recipients: []
+                  }]
+              }
+          } else {
+              isShareUpgrade = true
+          }
+          _action.type = _actionType
+          return {
+            _action,
+            isShareUpgrade
+          }
+        }
+        return {
+          _action,
+          isShareUpgrade
+        }
+    }
+
     render() {
         conditionsDom = []; // 重置，防止重复 render
         const { time, timeStart, timeEnd, source, condition, action, email, sms, chatops, audio, target, isShareUpgrade } = this.state;
+
         const itemLayout = {
             labelCol: { span: 2 },
             wrapperCol: { span: 4 }
@@ -497,7 +488,7 @@ class RuleEditor extends Component {
         this.audioVarContent = this.vars('webAudioMessage')
 
         return (
-            <Form id="RuleEditor" onSubmit={this.submit} hideRequiredMark={false}>
+            <div id="RuleEditor" className="ant-form ant-form-horizontal">
 
                 <h2>{window.__alert_appLocaleData.messages['ruleEditor.baseInfo']}</h2>
                 <div className={styles.baseInfo}>
@@ -745,7 +736,6 @@ class RuleEditor extends Component {
                                                             // mode="multiple"
                                                             style={{ width: 180 }}
                                                             placeholder={window.__alert_appLocaleData.messages['ruleEditor.word8']}
-                                                            className={styles.recipients}
                                                             onChange={this.changeUpgradeMode.bind(this, index)}
                                                             value={(() => {
                                                                 if (item.status.length === 2) {
@@ -770,7 +760,6 @@ class RuleEditor extends Component {
                                                             filterOption={false}
                                                             placeholder={window.__alert_appLocaleData.messages['ruleEditor.notifySelectObj']}
                                                             onChange={this.changeUpgradeRecipients.bind(this, index)}
-                                                            className={styles.recipients}
                                                             value={item.recipients.map(item => ({key: item.userId, label: item.realName}))}
                                                             onSearch={
                                                               _.debounce( (value) => {
@@ -799,36 +788,17 @@ class RuleEditor extends Component {
                             }
                         </TabPane>
                         {/* 告警派单 */}
-                        <TabPane disabled={this.props.alertAssociationRules.wos.length === 0 ? true : false} tab={window.__alert_appLocaleData.messages['ruleEditor.ticket']} key="4" className={styles.actionITSM}>
-                            <div>
-                                <FormItem
-                                    {...itsmLayout}
-                                    label={window.__alert_appLocaleData.messages['ruleEditor.itsmType']}
-                                >
-                                    <Select
-                                        getPopupContainer={() =>document.getElementById("content")}
-                                        style={{ width: 100 }}
-                                        placeholder={window.__alert_appLocaleData.messages['ruleEditor.phItsmType']}
-                                        value={action.actionITSM ? action.actionITSM.itsmModelId : undefined}
-                                        onChange={this.changeAction.bind(this, 4)}
-                                    >
-                                        {
-                                            this.props.alertAssociationRules.wos.map(item => <Option key={item.id}>{item.name}</Option>)
-                                        }
-                                    </Select>
-                                    <em className={styles.tip}>{window.__alert_appLocaleData.messages['ruleEditor.word3']}</em>
-                                </FormItem>
-                                <FormItem
-                                    {...itsmLayout}
-                                    label={window.__alert_appLocaleData.messages['ruleEditor.fm']}
-                                >
-                                    <Input className={cls(styles.text, {
-                                        // 'hidden': !(action.actionITSM && action.actionITSM.itsmModelId)
-                                    })} onChange={this.changeAction.bind(this, 4)}
-                                        value={this.state.ITSMParam}
-                                        type="textarea" placeholder={window.__alert_appLocaleData.messages['ruleEditor.fm']} />
-                                </FormItem>
-                            </div>
+                        <TabPane disabled={this.props.alertAssociationRules.wos.length === 0 ? true : false} tab={window.__alert_appLocaleData.messages['ruleEditor.ticket']} key="4">
+                            <CustomField
+                              ref={ node => this.formByItsm = node }
+                              titlePlacholder={window.__alert_appLocaleData.messages['ruleEditor.itsmType']}
+                              tip={window.__alert_appLocaleData.messages['ruleEditor.word3']}
+                              vars={this.props.alertAssociationRules.field || []}
+                              types={ this.props.alertAssociationRules.wos }
+                              type={ action.actionITSM ? action.actionITSM.itsmModelId : undefined }
+                              params={ this.state.ITSMParam }
+                              changeType={ this.changeAction.bind(this, 4) }
+                            />
                         </TabPane>
                         {/* 抑制告警 */}
                         {
@@ -864,13 +834,74 @@ class RuleEditor extends Component {
                                 }
                             </TabPane>
                         }
+                        {/* 修改告警级别 */}
+                        {
+                            <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.actionSeverity']} key="7">
+                                <div className={styles.actionSeverity}>
+                                  <p>{window.__alert_appLocaleData.messages['ruleEditor.actionSeverity.severity']}</p>
+                                  <div className={styles.content}>
+                                    <Select
+                                        getPopupContainer={ () => {
+                                            return document.getElementById("content") || document.body
+                                        } }
+                                        style={{ width: 100 }}
+                                        placeholder={ window.__alert_appLocaleData.messages['ruleEditor.actionSeverity'] }
+                                        value={ action.actionSeverity ? action.actionSeverity.type : undefined }
+                                        onChange={ (value) => { this.changeAction(7, { type: value }) } }
+                                    >
+                                        <Option value='1'>{window.__alert_appLocaleData.messages['ruleEditor.actionSeverity.fixed']}</Option>
+                                        <Option value='2'>{window.__alert_appLocaleData.messages['ruleEditor.actionSeverity.up']}</Option>
+                                        <Option value='3'>{window.__alert_appLocaleData.messages['ruleEditor.actionSeverity.down']}</Option>
+                                    </Select>
+                                    {
+                                        action.actionSeverity && action.actionSeverity.type === '1' ?
+                                        <i className={cls(arrow, styles.arrow)}></i> : undefined
+                                    }
+                                    {
+                                        action.actionSeverity && action.actionSeverity.type === '1' ?
+                                        <Select
+                                            getPopupContainer={ () => {
+                                                return document.getElementById("content") || document.body
+                                            } }
+                                            style={{ width: 100 }}
+                                            placeholder={ window.__alert_appLocaleData.messages['ruleEditor.actionSeverity.fixed'] }
+                                            value={ action.actionSeverity ? action.actionSeverity.fixedSeverity : undefined }
+                                            onChange={ (value) => { this.changeAction(7, { fixedSeverity: value }) } }
+                                        >
+                                            <Option value="3" >{window['_severity']['3']}</Option>
+                                            <Option value="2" >{window['_severity']['2']}</Option>
+                                            <Option value="1" >{window['_severity']['1']}</Option>
+                                            <Option value="0" >{window['_severity']['0']}</Option>
+                                        </Select>
+                                        : undefined
+                                    }
+                                  </div>
+                                </div>
+                            </TabPane>
+                        }
+                        {/* 动作插件 */}
+                        {
+                            this.props.alertAssociationRules.plugins.length ?
+                            <TabPane tab={window.__alert_appLocaleData.messages['ruleEditor.actionPlugin']} key="100">
+                                <CustomField
+                                  ref={ node => this.formByPlugin = node }
+                                  titlePlacholder={window.__alert_appLocaleData.messages['ruleEditor.pluginType']}
+                                  vars={this.props.alertAssociationRules.field || []}
+                                  types={ this.props.alertAssociationRules.plugins }
+                                  type={ action.actionPlugin ? action.actionPlugin.uuid : undefined }
+                                  params={ this.state.PluginParam }
+                                  changeType={ this.changeAction.bind(this, 100) }
+                                />
+                            </TabPane>
+                            : []
+                        }
                     </Tabs>
                 </div>
                 <LeaveNotifyModal route={ this.props.route } needLeaveCheck={() => {
                   return this.isNeedLeaveCheck;
                 }}/>
                 <span onClick={this.handleSubmit.bind(this)} className={styles.submit}>{window.__alert_appLocaleData.messages['ruleEditor.submit']}</span>
-            </Form>
+            </div>
         );
     }
 
@@ -1119,7 +1150,6 @@ class RuleEditor extends Component {
         })
     }
     changeAction(type, value) {
-        // console.info('changeAction', this);
         const { dispatch } = this.props;
         const _action = _.cloneDeep(this.state.action);
         switch (type) {
@@ -1204,29 +1234,21 @@ class RuleEditor extends Component {
                 _action.actionNotification.notificationMode.notificationMode = mode.notificationMode;
                 break;
             case 4: // 告警派单
-                if (!_action.actionITSM) {
-                    _action.actionITSM = {
-                        itsmModelId: undefined,
-                        itsmModelName: undefined,
-                        param: undefined
-                    };
-                }
-                if (value.target) {
-                    _action.actionITSM.param = value.target.value.replace(/\s|\n/g, "");
-                    let _ITSMParam = value.target.value;
-
-                    this.setState({
-                        ITSMParam: _ITSMParam
-                    });
-                } else {
-                    _action.actionITSM.itsmModelId = value;
-                    dispatch({
-                        type: 'alertAssociationRules/getshowITSMParam',
-                        payload: {
-                            id: value
-                        }
-                    });
-                }
+                  if (!_action.actionITSM) {
+                      _action.actionITSM = {
+                          itsmModelId: undefined,
+                          itsmModelName: undefined,
+                          realParam: '',
+                          viewParam: ''
+                      };
+                  }
+                  _action.actionITSM.itsmModelId = value;
+                  dispatch({
+                      type: 'alertAssociationRules/getshowITSMParam',
+                      payload: {
+                          id: value
+                      }
+                  })
                 break;
             case 5: // 抑制告警
                 break;
@@ -1235,6 +1257,35 @@ class RuleEditor extends Component {
                     chatOpsRoomId: ''
                 };
                 _action.actionChatOps.chatOpsRoomId = value;
+                break;
+            case 7: // 修改告警级别
+                if (!_action.actionSeverity) {
+                    _action.actionSeverity = {
+                        type: undefined,
+                        fixedSeverity: undefined
+                    };
+                }
+                if (value.type) {
+                    _action.actionSeverity.type = value.type
+                } else {
+                    _action.actionSeverity.fixedSeverity = value.fixedSeverity
+                }
+                break;
+            case 100: // 动作插件
+                if (!_action.actionPlugin) {
+                    _action.actionPlugin = {
+                        uuid: undefined,
+                        name: undefined,
+                        realParam: ''
+                    };
+                }
+                _action.actionPlugin.uuid = value;
+                dispatch({
+                    type: 'alertAssociationRules/getshowPluginParam',
+                    payload: {
+                        id: value
+                    }
+                })
                 break;
             default:
                 throw new Error('未指定动作类型');
@@ -1523,6 +1574,9 @@ class RuleEditor extends Component {
         let _actionSuppress = undefined;
         let _actionChatOps = undefined;
         let _actionUpgrade = undefined;
+        let _actionPlugin = undefined;
+        let _actionSeverity = undefined;
+
         switch (type) {
             case 2: // 周期
                 if (time.timeCycle === 1) { // 每周
@@ -1567,10 +1621,40 @@ class RuleEditor extends Component {
                 }
                 break;
             case 4:
-                _actionITSM = action.actionITSM;
-                _actionITSM.itsmModelName = this.props.alertAssociationRules.wos.filter(item => {
-                    return item.id === _actionITSM.itsmModelId;
-                })[0]['name'];
+                this.formByItsm.validateFieldsAndScroll((errors, values) => {
+                  if (!!errors) {
+                    return
+                  }
+                  let params = this.formByItsm.getFieldsValue()
+                  let viewForm, viewExecutors = {}
+                  let form, executors = {}
+                  Object.keys(params).filter(key => params[key]).forEach(key => {
+                    if (key.indexOf(limitField.PREFIX_EXECUTOR) === 0) {
+                      executors = {
+                        ...executors,
+                        [key.slice(limitField.PREFIX_EXECUTOR.length)]: params[key]
+                      }
+                      viewExecutors = {
+                        ...viewExecutors,
+                        [key.slice(limitField.PREFIX_EXECUTOR.length)]: params[key]
+                      }
+                    } else {
+                        if (key.indexOf(limitField.PREFIX_USERTYPE) === 0) {
+                          form = { ...form, [key.slice(limitField.PREFIX_USERTYPE.length)]: params[key].map(i => i.key) }
+                          viewForm = { ...viewForm, [key.slice(limitField.PREFIX_USERTYPE.length)]: params[key] }
+                        } else {
+                          form = { ...form, [key]: params[key] }
+                          viewForm = { ...viewForm, [key]: params[key] }
+                        }
+                    }
+                  })
+                  _actionITSM = action.actionITSM;
+                  _actionITSM.itsmModelName = this.props.alertAssociationRules.wos.filter(item => {
+                      return item.id === _actionITSM.itsmModelId;
+                  })[0]['name'];
+                  _actionITSM.realParam = JSON.stringify({form, executors}, null, 2).replace(/\s|\n/g, "");
+                  _actionITSM.viewParam = JSON.stringify({form: viewForm, executors: viewExecutors}, null, 2)
+                })
                 break;
             case 5:
                 _actionSuppress = action.actionSuppress;
@@ -1580,6 +1664,26 @@ class RuleEditor extends Component {
                 _actionChatOps.chatOpsRoomName = this.props.alertAssociationRules.rooms.filter(item => {
                     return item.id === _actionChatOps.chatOpsRoomId;
                 })[0]['topic'];
+                break;
+            case 7:
+                _actionSeverity = action.actionSeverity;
+                break;
+            case 100:
+                this.formByPlugin.validateFieldsAndScroll((errors, values) => {
+                  if (!!errors) {
+                    return
+                  }
+                  let params = this.formByPlugin.getFieldsValue()
+                  let form = {}
+                  Object.keys(params).filter(key => params[key]).forEach(key => {
+                    form = { ...form, [key]: params[key] }
+                  })
+                  _actionPlugin = action.actionPlugin;
+                  _actionPlugin.name = this.props.alertAssociationRules.plugins.filter(item => {
+                      return item.id === _actionPlugin.uuid;
+                  })[0]['name'];
+                  _actionPlugin.realParam = JSON.stringify({ form }, null, 2);
+                })
                 break;
             default:
                 break;
@@ -1605,7 +1709,9 @@ class RuleEditor extends Component {
                 actionITSM: _actionITSM,
                 actionSuppress: _actionSuppress,
                 actionChatOps: _actionChatOps,
-                actionUpgrade: _actionUpgrade
+                actionUpgrade: _actionUpgrade,
+                actionPlugin: _actionPlugin,
+                actionSeverity: _actionSeverity
             }
         };
         dispatch({
@@ -1670,7 +1776,9 @@ RuleEditor.defaultProps = {
         },
         actionITSM: {
             itsmModelId: undefined,
-            param: ''
+            itsmModelName: undefined,
+            realParam: '',
+            viewParam: '' //临时存放数据
         },
         actionChatOps: {
             notifyWhenLevelUp: true,
@@ -1688,6 +1796,15 @@ RuleEditor.defaultProps = {
                 emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
                 smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
             }
+        },
+        actionSeverity: {
+            type: undefined,
+            fixedSeverity: undefined
+        },
+        actionPlugin: {
+            uuid: undefined,
+            name: undefined,
+            realParam: ''
         }
     },
 };
@@ -1763,7 +1880,9 @@ RuleEditor.propTypes = {
         }),
         actionITSM: PropTypes.shape({
             itsmModelId: PropTypes.string,
-            param: PropTypes.string
+            itsmModelName: PropTypes.string,
+            realParam: PropTypes.string,
+            viewParam: PropTypes.string
         }),
         actionChatOps: PropTypes.shape({
             notifyWhenLevelUp: PropTypes.bool,
@@ -1778,6 +1897,17 @@ RuleEditor.propTypes = {
                 emailMessage: PropTypes.string,
                 smsMessage: PropTypes.string
             })
+        }),
+        // 修改告警等级
+        actionSeverity: PropTypes.shape({
+            type: PropTypes.string,
+            fixedSeverity: PropTypes.string
+        }),
+        // 动作插件
+        actionPlugin: PropTypes.shape({
+            uuid: PropTypes.string,
+            name: PropTypes.string,
+            realParam: PropTypes.string
         }),
     })
 };

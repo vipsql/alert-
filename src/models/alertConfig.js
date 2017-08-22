@@ -183,7 +183,7 @@ export default {
           case 'SNMPTrap':
             yield params.appRules = appRules;
             break;
-          case 'UYUN WebHook':
+          case 'Web Hook':
             params.webHook = formData.webHook;
             break;
           default:
@@ -235,6 +235,9 @@ export default {
         switch (currentEditApp.applyType.name) {
           case 'SNMPTrap':
             yield params.appRules = appRules;
+            break;
+          case 'Web Hook':
+            params.webHook = formData.webHook;
             break;
           default:
             break;

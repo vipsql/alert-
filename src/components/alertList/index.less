@@ -378,6 +378,9 @@
             .tagsName{
               position: relative;
               top: 50px;
+              word-wrap: break-word;
+              height: 72px;
+              overflow:hidden
             }
           }
         }
@@ -405,14 +408,15 @@
             border-radius: 2px;
             background: extract(@var, 42);
             margin-bottom: 10px;
+            padding-bottom: 30px;
             overflow: hidden;
             .alertList{
               li{
                 position: relative;
                 float: left;
                 margin-left: 10px;
-                width: 100px;
-                min-height: 110px;
+                width: 250px;
+                height: 100px;
                 margin-top: 20px;
                 text-align: center;
                 color: extract(@var, 23);
@@ -450,6 +454,9 @@
                 .tagsName{
                   position: relative;
                   top: 50px;
+                  word-wrap: break-word;
+                  height: 72px;
+                  overflow:hidden
                 }
               }
             }
