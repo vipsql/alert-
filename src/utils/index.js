@@ -33,6 +33,10 @@ function isJSON(str, pass_object) {
   if (typeof str !== 'string') return false;
 
   str = str.replace(/\s/g, '').replace(/\n|\r/, '');
+  // 空对象判断
+  if(str == '{}') {
+    return true;
+  }
 
   if (/^\{(.*?)\}$/.test(str))
     return /(.*?):(.*?)/g.test(str);
