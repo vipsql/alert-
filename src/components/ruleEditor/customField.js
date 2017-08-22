@@ -239,7 +239,6 @@ class NotRequired extends Component {
     this.renderItem = this.renderItem.bind(this)
     this.prefix = prefix.bind(this)
     this.diffence = this.diffence.bind(this)
-    console.log('constructor')
     this.state = {
       req: props.data.filter(i => i.defaultValue) || [], //用户选择的
       options: this.props.data || []
@@ -248,7 +247,6 @@ class NotRequired extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.data !== this.props.data) {
-      console.log('componentWillReceiveProps')
       // 类型更改时的重置
       this.setState({
         req: nextProps.data.filter(i => i.defaultValue) || [], //用户选择的,
