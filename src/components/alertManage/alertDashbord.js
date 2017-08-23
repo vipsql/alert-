@@ -56,10 +56,10 @@ class Chart extends Component {
     let htmlDomClassName = document.getElementsByTagName('html')[0].className;
 
     const severityToColor = {
-      '0': (htmlDomClassName == 'white') ? '#3ff6ce' : '#52edcb', // 恢复
-      '1': (htmlDomClassName == 'white') ? '#ffdc1d' : '#fadc23', // 提醒
-      '2': (htmlDomClassName == 'white') ? '#ff9b2f' : '#ffae2f', // 警告
-      '3': (htmlDomClassName == 'white') ? '#ff522a' : "#ff522a" // 紧急
+      '0': 'recovery', // 恢复
+      '1': 'remind', // 提醒
+      '2': 'notice', // 警告
+      '3': 'urgent'  // 紧急
     }
     this.chartWidth = document.documentElement.clientWidth - 160 - 90
     this.chartHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight) - 180
@@ -68,7 +68,7 @@ class Chart extends Component {
     this.color = function (num) {
       // 没有数据时的颜色
       if (num < 0) {
-        return (htmlDomClassName == 'white') ? "#1dca9d" : "#5be570";
+        return 'nodata'
       }
       return severityToColor[num]
     }
@@ -235,8 +235,8 @@ class Chart extends Component {
             .select("rect.background")
             .transition()
             .duration(2000)
-            .style("fill", (d) => {
-              return this.color(childNode.maxSeverity)
+            .attr("class", (d) => {
+              return `background ${this.color(childNode.maxSeverity)}`
             })
         }
 
@@ -836,11 +836,11 @@ class Chart extends Component {
           .attr("height", function (d) {
             return d.children ? headerHeight : Math.max(0.01, (ky * d.dy));
           })
-          .style("fill", d => {
+          .attr("class", d => {
             if (!d.children && d.noData) {
-              return '#5be570'
+              return 'background'
             }
-            return !d.children && this.color(d.maxSeverity);
+            return d.children? 'background' : `background ${this.color(d.maxSeverity)}`;
           });
 
 
