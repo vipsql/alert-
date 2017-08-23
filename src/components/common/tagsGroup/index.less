@@ -2,9 +2,9 @@
 @import '../../../theme/mixin.less';
 
 //蓝色和白色色系要上下一一对/应
-//             1         2        3        4         5         6         7         8         9        10       11         12       13       14      15
-@var_default : @blue81,  @blue82, @blue15, @blue83,  @white0,  @white0,  @blue34,  @blue82,  @blue78, @blue76, @blue15,  @blue84, @blue85, @blue17,  @white0;
-@var_white   : @white16, @white0, @blue8,  @white28, @white28, @white44, @white26, @opacity, @white4, @white0, @white16, @white6, @white6, @white30, @black0;
+//             1         2        3        4         5         6         7         8         9        10       11         12       13       14      15        16
+@var_default : @blue81,  @blue82, @blue15, @blue83,  @white0,  @white0,  @blue34,  @blue82,  @blue78, @blue76, @blue15,  @blue84, @blue85, @blue17,  @white0, @white0;
+@var_white   : @white16, @white0, @blue8,  @white28, @white28, @white44, @white26, @opacity, @white4, @white0, @white16, @white6, @white6, @white30, @black0, @blue8;
 
 .setTheme(@var_default, @var_white);
 
@@ -151,6 +151,9 @@
                   &:hover{
                       background-color: extract(@var, 14);
                       color: extract(@var, 15);
+                      i{
+                        color: extract(@var, 16);
+                      }
                   }
                   i{
                       position: absolute;
