@@ -52,18 +52,14 @@ class Chart extends Component {
     return this.props.currentDashbordData !== nextProps.currentDashbordData || this.props.isFullScreen !== nextProps.isFullScreen
   }
   componentDidMount() {
-    window.changeSkin_hook_alert = ()=>{
-      this.forceUpdate();
-      console.log('我换肤刷新了');
-    }
     const self = this;
     let htmlDomClassName = document.getElementsByTagName('html')[0].className;
 
     const severityToColor = {
-      '0': (htmlDomClassName == 'white') ? '#3ff6ce' : '#52edcb', // 恢复
-      '1': (htmlDomClassName == 'white') ? '#ffdc1d' : '#fadc23', // 提醒
-      '2': (htmlDomClassName == 'white') ? '#ff9b2f' : '#ffae2f', // 警告
-      '3': (htmlDomClassName == 'white') ? '#ff522a' : "#ff522a" // 紧急
+      '0': 'recovery', // 恢复
+      '1': 'remind', // 提醒
+      '2': 'notice', // 警告
+      '3': 'urgent'  // 紧急
     }
     this.chartWidth = document.documentElement.clientWidth - 160 - 90
     this.chartHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight) - 180
@@ -72,7 +68,7 @@ class Chart extends Component {
     this.color = function (num) {
       // 没有数据时的颜色
       if (num < 0) {
-        return (htmlDomClassName == 'white') ? "#1dca9d" : "#5be570";
+        return 'nodata'
       }
       return severityToColor[num]
     }
@@ -239,8 +235,8 @@ class Chart extends Component {
             .select("rect.background")
             .transition()
             .duration(2000)
-            .style("fill", (d) => {
-              return this.color(childNode.maxSeverity)
+            .attr("class", (d) => {
+              return `background ${this.color(childNode.maxSeverity || 0)}`
             })
         }
 
@@ -439,8 +435,6 @@ class Chart extends Component {
       });
     let htmlDomClassName = document.getElementsByTagName('html')[0].className;
     var headerHeight = 40;
-    var headerColor = (htmlDomClassName == 'white') ? '#fff' : "#0d3158";
-    var headerBorderColor = (htmlDomClassName == 'white') ? '#e4e7ec' : "#163c67";
     var transitionDuration = 500;
     var root;
     var node;
@@ -516,10 +510,8 @@ class Chart extends Component {
         .attr("width", function (d) {
           return Math.max(0.01, d.dx);
         })
-        .attr('stroke', headerBorderColor)
         .attr('stroke-width', '4')
-        .attr("height", headerHeight)
-        .style("fill", headerColor);
+        .attr("height", headerHeight);
       parentEnterTransition.append('text')
         .attr("class", "label")
         .attr("fill", (htmlDomClassName == 'white') ? "#4082e6" : "#6ac5fe")
@@ -550,7 +542,6 @@ class Chart extends Component {
         })
         .attr("y", "10")
         .attr("height", headerHeight)
-        .style("fill", headerColor);
       parentUpdateTransition.select(".label")
         .attr("transform", "translate(3, 13)")
         .attr("width", function (d) {
@@ -620,7 +611,6 @@ class Chart extends Component {
       childEnterTransition.append("rect")
         .classed("background", true)
         // .attr('filter',"url(#inset-shadow)")
-        .attr('stroke', headerBorderColor)
         .attr('stroke-width', '2')
         .attr("style", "cursor:pointer")
         .style("fill", (d) => {
@@ -846,11 +836,12 @@ class Chart extends Component {
           .attr("height", function (d) {
             return d.children ? headerHeight : Math.max(0.01, (ky * d.dy));
           })
-          .style("fill", d => {
+          .attr("class", d => {
             if (!d.children && d.noData) {
-              return '#5be570'
+              return 'nodata background'
             }
-            return d.children ? headerColor : this.color(d.maxSeverity);
+            console.log(d);
+            return d.children ? 'background nodata' : `background ${this.color(d.maxSeverity || 0)}`;
           });
 
 
