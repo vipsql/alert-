@@ -33,8 +33,8 @@ class Add extends Component {
         hostUrl = origin + '/alert'
         window.__alert_restApiUrl = hostUrl + '/openapi/v2/create?' + `api_key=${apikey}`
       }
-      switch (currentOperateAppType.name) {
-        case 'UYUN Alert REST API':
+      switch (currentOperateAppType.uniqueCode) {
+        case '1':
           targetApplication =
             <AlertREST
               route={props.route}
@@ -73,7 +73,7 @@ class Add extends Component {
               }}
             />
           break;
-        case 'UYUN Monitor':
+        case '4':
           targetApplication =
             <Monitor
               route={props.route}
@@ -111,7 +111,7 @@ class Add extends Component {
               }}
             />
           break;
-        case 'UYUN NetWork':
+        case '6':
           targetApplication =
             <NetWork
               route={props.route}
@@ -149,7 +149,7 @@ class Add extends Component {
               }}
             />
           break;
-        case 'SNMPTrap':
+        case '7':
           targetApplication =
             <Trap
               route={props.route}
@@ -188,7 +188,7 @@ class Add extends Component {
               }}
             />
           break;
-        case 'UYUN VideoMon':
+        case '5':
           targetApplication =
             <VideoMON
               route={props.route}
@@ -226,7 +226,7 @@ class Add extends Component {
               }}
             />
           break;
-        case 'UYUN ITSM':
+        case '2':
           targetApplication =
             <Itsm
               route={props.route}
@@ -262,7 +262,7 @@ class Add extends Component {
               }}
             />
           break;
-        case 'UYUN ChatOps':
+        case '3':
           targetApplication =
             <ChatOps
               route={props.route}
@@ -298,7 +298,7 @@ class Add extends Component {
               }}
             />
           break;
-        case 'Web Hook':
+        case '8':
           targetApplication =
             <Webhook
               route={props.route}
