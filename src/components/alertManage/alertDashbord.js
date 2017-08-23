@@ -236,7 +236,7 @@ class Chart extends Component {
             .transition()
             .duration(2000)
             .attr("class", (d) => {
-              return `background ${this.color(childNode.maxSeverity)}`
+              return `background ${this.color(childNode.maxSeverity || 0)}`
             })
         }
 
@@ -838,9 +838,10 @@ class Chart extends Component {
           })
           .attr("class", d => {
             if (!d.children && d.noData) {
-              return 'background'
+              return 'nodata background'
             }
-            return d.children? 'background' : `background ${this.color(d.maxSeverity)}`;
+            console.log(d);
+            return d.children ? 'background nodata' : `background ${this.color(d.maxSeverity || 0)}`;
           });
 
 
