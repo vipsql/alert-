@@ -171,7 +171,7 @@ class AlertOriginSlider extends Component {
             <p>{name || '-'}</p>
             <i onClick={onClose} className={shanchuClass} />
           </div>
-          <hr className={styles.line} />
+          <div className={styles.line} ></div>
           <div className={styles.totalTip}>
             <p>
               <FormattedMessage {...localeMessage['alertTimesDescription']}

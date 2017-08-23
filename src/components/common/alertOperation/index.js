@@ -536,7 +536,7 @@ const alertOperation = ({
 
       { //列定制的popover
         position === 'list' && isShowColSetBtn != false &&
-        <Popover placement='bottomRight' overlayClassName={styles.popover} trigger="click" content={popoverContent} >
+        <Popover placement='bottomRight' overlayClassName={styles.popover} content={popoverContent} >
           <div className={classnames(styles.button, styles.rightBtn)}>
             <i className={classnames(setClass, styles.setCol)}></i>
             <p className={styles.col}> <FormattedMessage {...localeMessage['columns']} /></p>
