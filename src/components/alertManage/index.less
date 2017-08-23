@@ -4,8 +4,8 @@
 
 //蓝色和白色色系要上下一一对应
 //             1        2         3         4        5        6         7        8       9        10       11        12        13       14        15
-@var_default : @blue21, @opacity, @opacity, @blue86, @blue74, @blue74,  @blue75, @blue,  @blue22, @blue38, @blue31,  @blue16,  @white0, @blue157, @white17;
-@var_white   : @white6, @white0,  @white11, @blue8,  @white0, @white11, @black1, @blue8, @blue72, @black1, @white13, @white34, @black1, @white0,  @blue14;
+@var_default : @blue21, @opacity, @opacity, @blue86, @blue74, @blue74,  @blue75, @blue,  @blue22, @blue38, @blue31,  @blue16,  @white0, @blue157, @blue14;
+@var_white   : @white6, @white0,  @white11, @blue8,  @white0, @white11, @black1, @blue8, @blue72, @black1, @white13, @white34, @black1, @white0,  @white17;
 
 .setTheme(@var_default, @var_white);
 .getTheme(@var, @name){
@@ -17,10 +17,20 @@
       color: extract(@var, 13);
     }
     .treemap{
-      .background {
-        fill: extract(@var, 14);
-        stroke: extract(@var, 15);
+      :global{
+        .parent{
+          .background {
+            fill: extract(@var, 14);
+            stroke: extract(@var, 15);
+          }
+        }
+        .child {
+          rect {
+             stroke: extract(@var, 15);
+          }
+        }
       }
+      
     }
     .myModal{
       :global(.ant-modal-body){

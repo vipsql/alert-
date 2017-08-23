@@ -52,10 +52,6 @@ class Chart extends Component {
     return this.props.currentDashbordData !== nextProps.currentDashbordData || this.props.isFullScreen !== nextProps.isFullScreen
   }
   componentDidMount() {
-    window.changeSkin_hook_alert = ()=>{
-      this.forceUpdate();
-      console.log('我换肤刷新了');
-    }
     const self = this;
     let htmlDomClassName = document.getElementsByTagName('html')[0].className;
 
@@ -439,8 +435,6 @@ class Chart extends Component {
       });
     let htmlDomClassName = document.getElementsByTagName('html')[0].className;
     var headerHeight = 40;
-    var headerColor = (htmlDomClassName == 'white') ? '#fff' : "#0d3158";
-    var headerBorderColor = (htmlDomClassName == 'white') ? '#e4e7ec' : "#163c67";
     var transitionDuration = 500;
     var root;
     var node;
@@ -516,10 +510,8 @@ class Chart extends Component {
         .attr("width", function (d) {
           return Math.max(0.01, d.dx);
         })
-        .attr('stroke', headerBorderColor)
         .attr('stroke-width', '4')
-        .attr("height", headerHeight)
-        .style("fill", headerColor);
+        .attr("height", headerHeight);
       parentEnterTransition.append('text')
         .attr("class", "label")
         .attr("fill", (htmlDomClassName == 'white') ? "#4082e6" : "#6ac5fe")
@@ -550,7 +542,6 @@ class Chart extends Component {
         })
         .attr("y", "10")
         .attr("height", headerHeight)
-        .style("fill", headerColor);
       parentUpdateTransition.select(".label")
         .attr("transform", "translate(3, 13)")
         .attr("width", function (d) {
@@ -620,7 +611,6 @@ class Chart extends Component {
       childEnterTransition.append("rect")
         .classed("background", true)
         // .attr('filter',"url(#inset-shadow)")
-        .attr('stroke', headerBorderColor)
         .attr('stroke-width', '2')
         .attr("style", "cursor:pointer")
         .style("fill", (d) => {
@@ -850,7 +840,7 @@ class Chart extends Component {
             if (!d.children && d.noData) {
               return '#5be570'
             }
-            return d.children ? headerColor : this.color(d.maxSeverity);
+            return !d.children && this.color(d.maxSeverity);
           });
 
 
