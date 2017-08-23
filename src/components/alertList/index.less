@@ -6,9 +6,9 @@
 @import '../../theme/mixin.less';
 
 //蓝色和白色色系要上下一一对应  
-//             1         2         3         4        5        6         7        8       9        10       11        12         13        14       15        16        17        18      19        20       21       22       23       24        25        26       27        28        29       30      31        32       33         34      35       36       37        38        39       40         41        42      43
-@var_default : @blue18,  @opacity, @blue80, @blue76, @blue15,  @blue85, @blue17,  @white0, @blue22, @blue38, @blue31,  @blue16,  @blue87,  @blue88, @blue19,  @blue92,  @blue95, @blue27, @blue32, @blue96,  @blue29, @blue30, @white0, @blue97, @blue28, @opacity,  @iptBg,   @blue33, @blue45, @white0, @blue92, @blue145, @blue146, @blue84, @blue84, @blue84, @blue147, @blue62, @blue148, @blue149, @blue150, @blue49, @white47;
-@var_white   : @white16, @white0,  @white6, @white0, @white16, @white6, @white30, @black0, @blue72, @black1, @white13, @white34, @white17, @white0, @white13, @white11, @black1, @white7, @black1, @white11, @white0, @white11, @black1, @black1, @white0, @white11, @white11, @blue8,  @white8, @blue8,  @white0, @white0,  @white0,  @blue8,  @black1, @blue13, @white26, @black0, @white0,  @blue13,  @white26, @white0, @white16;
+//             1         2         3         4        5        6         7        8       9        10       11        12         13        14       15        16        17        18      19        20       21       22       23       24        25        26       27        28        29       30      31        32       33         34      35       36       37        38        39       40         41        42      43        44        45        46       47
+@var_default : @blue18,  @opacity, @blue80, @blue76, @blue15,  @blue85, @blue17,  @white0, @blue22, @blue38, @blue31,  @blue16,  @blue87,  @blue88, @blue19,  @blue92,  @blue95, @blue27, @blue32, @blue96,  @blue29, @blue30, @white0, @blue97, @blue28, @opacity,  @iptBg,   @blue33, @blue45, @white0, @blue92, @blue145, @blue146, @blue84, @blue84, @blue84, @blue147, @blue62, @blue148, @blue149, @blue150, @blue49, @white47, @blue34,  @white0,  @blue78, @tagBg;
+@var_white   : @white16, @white0,  @white6, @white0, @white16, @white6, @white30, @black0, @blue72, @black1, @white13, @white34, @white17, @white0, @white13, @white11, @black1, @white7, @black1, @white11, @white0, @white11, @black1, @black1, @white0, @white11, @white11, @blue8,  @white8, @blue8,  @white0, @white0,  @white0,  @blue8,  @black1, @blue13, @white26, @black0, @white0,  @blue13,  @white26, @white0, @white16, @white26, @white44, @white4, @blue8;
 
 .setTheme(@var_default, @var_white);
 .getTheme(@var, @name){
@@ -77,7 +77,7 @@
             color: extract(@var, 30);
             .expandIcon{
               background: #4082e6;
-              color: white;
+              color: extract(@var, 23)
             }
           }
         }
@@ -256,10 +256,10 @@
           .tagsFilter{
             display: inline-block;
             margin: 0px 5px;
-            background: #1985c9;
+            background: extract(@var, 44);
             border-radius: 3px;
             padding: 2px 5px;
-            color: white;
+            color: extract(@var, 45);
             p{
               display: inline-block;
               position: relative;
@@ -267,7 +267,7 @@
               margin-right: 5px;
             }
             i{
-              color: #094e80;
+              color: extract(@var, 46);
               vertical-align: middle;
               cursor: pointer;
             }
@@ -292,7 +292,7 @@
           background: #daab1c;
           text-align: center;
           line-height: 20px;
-          color: white;
+          color: extract(@var, 23);
           content: '!';
         }
       }
@@ -337,7 +337,7 @@
           // height: 100px;
           padding: 40px;
           background: extract(@var, 39);
-          color: white;
+          color: extract(@var, 23);
           .tagsGroup{
             position: relative;
             height: 100px;
@@ -491,7 +491,7 @@
               height: 24px;
               margin-top: -12px;
               font-size: 20px;
-              color: white;
+              color: extract(@var, 23);
               cursor: pointer;
             }
             .next{
@@ -519,7 +519,7 @@
             padding: 10px;
             li{
               margin-bottom: 5px;
-              color: white;
+              color:  extract(@var, 23);
               span{
                 display: inline-block;
                 vertical-align: middle;
@@ -755,6 +755,10 @@
       }
     }
   }
+  // 用于可视化动画
+  .tagsGroupAnimation{
+      background: extract(@var, 47);
+  }
 }
 .showBar {
 
@@ -936,7 +940,6 @@
         border-radius: 50px;
         width: 40px;
         height: 40px;
-        background: rgb(57, 120, 187);
     }
 }
 
