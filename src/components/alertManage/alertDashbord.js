@@ -52,6 +52,9 @@ class Chart extends Component {
     return this.props.currentDashbordData !== nextProps.currentDashbordData || this.props.isFullScreen !== nextProps.isFullScreen
   }
   componentDidMount() {
+    window.changeSkin_hook_alert = ()=>{
+      console.log('我靠，我竟然换肤了');
+    }
     const self = this;
     let htmlDomClassName = document.getElementsByTagName('html')[0].className;
 
