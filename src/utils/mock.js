@@ -272,6 +272,17 @@ const __DataRule = {
       'critical|1-40': 1,
       'total|1-100': 1,
     }
+  },
+
+  // 时间线
+  '/incident/buckets': {
+    'template|1-10': [
+      {
+        "time|+43200000": 1497361859610,
+        "count|1-10": 1,
+        "granularity": 43200000
+      }
+    ]
   }
 }
 
