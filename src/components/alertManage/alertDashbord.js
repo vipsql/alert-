@@ -53,7 +53,8 @@ class Chart extends Component {
   }
   componentDidMount() {
     window.changeSkin_hook_alert = ()=>{
-      console.log('我靠，我竟然换肤了');
+      this.forceUpdate();
+      console.log('我换肤刷新了');
     }
     const self = this;
     let htmlDomClassName = document.getElementsByTagName('html')[0].className;
