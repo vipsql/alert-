@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="white">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="icon" href="/tenant/styles/images/title-logo.png" type="image/x-icon">
   <title>Alert</title>
+  <link rel="stylesheet" type="text/css" href="/frontend/Layout-public.min.css" >
   <link rel="stylesheet" href="index.css" />
   <script>
     if ( window.navigator.userAgent.indexOf('Trident/') > -1 ) {
@@ -27,6 +28,11 @@
 <script src="/frontend/Layout-public.min.js"></script>
 <script src="chatops.js"></script>
 <script src="chatops_mobile.js"></script>
+<script>
+  if (document.getElementById("header")) {
+    document.getElementById("header").style.display="none";
+  }
+</script>
 <script src="index.js"></script>
 </body>
 </html>
