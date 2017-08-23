@@ -1,40 +1,43 @@
 import React, { PropTypes, Component } from 'react'
 import { Button, Popover } from 'antd';
 import { connect } from 'dva'
-import ListTimeTable from './listTimeTable'
-import styles from '../index.less'
-
+import ListTable from '../../common/listTable'
 
 // function ListTimeTableWrap({dispatch, alertListTimeTable}){
-const ListTimeTableWrap = ({ dispatch, alertListTable, userInfo, selectedTime, isNeedCheckOwner }) => {
+const ListTimeTableWrap = ({ dispatch, userInfo, isNeedCheckOwner, alertListTable, topHeight, topFixArea }) => {
   const props = {
     ...alertListTable,
-    selectedTime,
+    topHeight,
+    extraArea: topFixArea,
     isNeedCheckOwner,
     userInfo,
+    columns: [
+      alertListTable.columns[0],
+      alertListTable.columns[1],
+
+    ],
+
     loadMore() {
       dispatch({
         type: 'alertListTable/loadMore'
       })
     },
-
-    setTimeLineWidth(gridWidth, minuteToWidth, lineW) {
+    setTimeLineWidth(gridWidth, minuteToWidth) {
       dispatch({
         type: 'alertListTable/setTimeLineWidth',
         payload: {
           gridWidth,
-          minuteToWidth,
-          lineW
+          minuteToWidth
         }
       })
     },
-
     checkAlertFunc(e) {
-
       const alertId = e.target.getAttribute('data-id');
       dispatch({
         type: 'alertListTable/handleCheckboxClick',
-        payload: { alertId }
+        payload: {
+          alertId
+        }
       })
     },
     detailClick(e) {
@@ -81,13 +84,13 @@ const ListTimeTableWrap = ({ dispatch, alertListTable, userInfo, selectedTime, i
         payload: groupClassify
       })
     },
-    // toggleSelectedAll(e) {
-    //   dispatch({
-    //     type: 'alertListTable/toggleSelectedAll'
-    //   })
-    // },
     handleSelectAll(e) {
-      const checked = e.target.checked;
+      let checked;
+      if(typeof e === 'object') {
+        checked = e.target.checked;
+      } else {
+        checked = e;
+      }
       dispatch({
         type: 'alertListTable/handleSelectAll',
         payload: { checked, isNeedCheckOwner }
@@ -123,19 +126,80 @@ const ListTimeTableWrap = ({ dispatch, alertListTable, userInfo, selectedTime, i
         type: 'alertOperation/openRelieveModalByButton',
         payload: relieve
       })
-    }
+    },
+    // 升序
+    orderUp(e) {
+      const orderKey = e.target.getAttribute('data-key');
 
+      dispatch({
+        type: 'alertListTable/orderList',
+        payload: {
+          orderBy: orderKey,
+          orderType: 1
+        }
+      })
+    },
+    // 降序
+    orderDown(e) {
+      const orderKey = e.target.getAttribute('data-key');
+
+      dispatch({
+        type: 'alertListTable/orderList',
+        payload: {
+          orderBy: orderKey,
+          orderType: 0
+        }
+      })
+    },
+    orderByTittle(e) {
+      const orderKey = e.target.getAttribute('data-key');
+
+      dispatch({
+        type: 'alertListTable/orderByTittle',
+        payload: orderKey
+      })
+    },
+    orderFlowNumClick(e) {
+      const orderFlowNum = e.target.getAttribute('data-flow-num');
+      const id = e.target.getAttribute('data-id');
+      dispatch({
+        type: 'alertListTable/orderFlowNumClick',
+        payload: { orderFlowNum, id }
+      })
+    },
+    showAlertOrigin(e) {
+      const alertId = e.target.getAttribute('data-id');
+      const alertName = e.target.getAttribute('data-name');
+      dispatch({
+        type: 'alertOrigin/toggleVisible',
+        payload: {
+          visible: true,
+          alertName
+        }
+      })
+
+      dispatch({
+        type: 'alertOrigin/initPage'
+      })
+
+      dispatch({
+        type: 'alertOrigin/queryAlertOrigin',
+        payload: {
+          alertId,
+          alertName
+        }
+      })
+    }
   }
 
   return (
-    <ListTimeTable {...props} />
+    <ListTable {...props} />
   )
 }
 export default connect(
   (state) => {
     return {
       alertListTable: state.alertListTable,
-      selectedTime: state.alertManage.selectedTime,
       userInfo: state.app && state.app.userInfo
     }
   }

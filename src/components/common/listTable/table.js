@@ -25,7 +25,7 @@ class Table extends Component {
   }
 
   componentWillUnMount() {
-    
+
   }
 
   render() {
@@ -56,7 +56,9 @@ class Table extends Component {
       orderByTittle,
       isNeedCheckOwner,
       userInfo = {},
-      intl: { formatMessage }
+      begin = 0,
+      end = 0,
+      intl: { formatMessage },
     } = this.props
     let colsKey = columns.map((item) => item['key'])
     let theads = []
@@ -144,6 +146,7 @@ class Table extends Component {
       }
     })
 
+
     let tbodyCon = [];
     let fixedTbodyCon = [];
     const formatDate = function (time) {
@@ -159,6 +162,62 @@ class Table extends Component {
 
 
       return year + '/' + month + '/' + date + ' ' + hours + ':' + mins
+    }
+
+    //  生成时间线
+    const genDots = ({ item, begin, end }) => {
+      let dots = null
+      let dotsLine = []
+      let lineDotLeft = 0
+      let lineDotW = 0
+
+      const gridWidth = 1 / 10
+      const countMins = (end - begin) / (60 * 1000)
+      const minuteToWidth = 100 / countMins
+
+      if (item !== undefined && item.length !== 0) {
+        lineDotLeft = (item[0].occurTime - begin) / (60 * 1000) * minuteToWidth
+        const len = item.length
+        lineDotW = (item[len - 1]['occurTime'] - item[0]['occurTime']) / (60 * 1000) * minuteToWidth
+
+        dots = item.map((itemDot, idx) => {
+          const left = (itemDot.occurTime - begin) / (60 * 1000) * minuteToWidth
+          const iconColor = itemDot['severity'] == 3 ?
+            'jjLevel' : itemDot['severity'] == 2 ?
+              'gjLevel' : itemDot['severity'] == 1 ?
+                'txLevel' : itemDot['severity'] == 0 ?
+                  'hfLevel' : undefined
+          let newDate = new Date(+itemDot['occurTime'])
+          const content = (
+            <div>
+              <p><FormattedMessage {...formatMessages['severity']} />{`：${window['_severity'][itemDot['severity']]}`}</p>
+              <p><FormattedMessage {...formatMessages['name']} />{`：${itemDot['name']}`}</p>
+              <p><FormattedMessage {...formatMessages['occurTime']} />{`：${newDate.getFullYear() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getDate() + ' ' + newDate.getHours() + ':' + newDate.getMinutes()}`}</p>
+              <p><FormattedMessage {...formatMessages['description']} />{`：${itemDot['description']}`}</p>
+              <p><FormattedMessage {...formatMessages['source']} />{`：${itemDot['source']}`}</p>
+            </div>
+          );
+          return (
+            <Popover content={content} overlayClassName={styles.popover} key={`dot-${idx}`}>
+              <span style={{ left: left + '%' }} className={styles[iconColor]} data-id={itemDot.id} onClick={detailClick}></span>
+            </Popover>
+
+          )
+        })
+
+        return {
+          dots,
+          lineDotW,
+          lineDotLeft
+        }
+
+      } else {
+        return {
+          dots: [],
+          lineDotW: 0,
+          lineDotLeft: 0
+        }
+      }
     }
 
     // 生成每一列的参数
@@ -274,6 +333,21 @@ class Table extends Component {
         }
         tds.push(td)
       })
+      if (begin && end) {
+        const dotsInfo = genDots({ item: item.timeLine, begin, end })
+        const dots = dotsInfo.dots
+        const lineDotW = dotsInfo.lineDotW
+        const lineDotLeft = dotsInfo.lineDotLeft
+        const td = (
+          <td key="timeDot">
+            <div className={styles.timeLineDot}>
+              <div className={styles.lineDot} style={{ width: lineDotW + '%', left: lineDotLeft + '%' }}></div>
+              {dots}
+            </div>
+          </td>
+        )
+        tds.push(td)
+      }
 
       if (target === 'parent') {
         tds.unshift(<td className={sourceOrigin !== 'alertQuery' ? styles.moreLittle : styles.little} style={{ width: item.isFixed ? '20px' : undefined }} width="20" key='icon-col-td' colSpan={sourceOrigin !== 'alertQuery' && !isGroup ? '1' : '2'} ><LevelIcon extraStyle={sourceOrigin === 'alertQuery' && styles.alertQueryIcon} iconType={item['severity']} /></td>)
@@ -313,7 +387,7 @@ class Table extends Component {
       data.forEach((item, index) => {
         const keys = colsKey
         let childtrs = []
-        if(item.isRemoved) {
+        if (item.isRemoved) {
           return;
         }
         let groupTitle = item.isGroupSpread === false ?
@@ -393,7 +467,7 @@ class Table extends Component {
 
       data.length > 0 && data.children === undefined && data.forEach((item, index) => {
 
-        if(item.isRemoved) {
+        if (item.isRemoved) {
           return;
         }
 
@@ -452,6 +526,8 @@ class Table extends Component {
           orderBy={orderBy}
           orderType={orderType}
           orderByTittle={orderByTittle}
+          begin={begin}
+          end={end}
         />
         <Animate
           transitionName="fade"
