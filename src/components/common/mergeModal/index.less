@@ -3,9 +3,9 @@
 @import '../../../theme/mixin.less';
 
 //蓝色和白色色系要上下一一对应
-//             1         2        3          4         5         6         7        8
-@var_default : @blue100, @blue138, @blue139, @blue122, @blue16,  @blue140, @white0, @opacity;
-@var_white   : @white6,  @white11, @white7,  @black0,  @white11, @white0,  @black1, @white11;
+//             1         2        3          4         5         6         7        8         9
+@var_default : @blue100, @blue138, @blue139, @blue122, @blue16,  @blue140, @white0, @opacity, @white0;
+@var_white   : @white6,  @white11, @white7,  @black0,  @white11, @white0,  @black1, @white11, @blue8;
 
 .setTheme(@var_default, @var_white);
 
@@ -43,7 +43,7 @@
             }
         }
         .remove{
-            color: #fff;
+            color: extract(@var, 9);
         }
     }    
   }

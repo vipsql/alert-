@@ -117,9 +117,9 @@
 .skinStyle(){
   @import '../../theme/vars_color.less';
   //蓝色和白色色系要上下一一对应
-  //             1         2         3         4         5        6        7        8         9      10       11      12      13
-  @var_default_config : @blue105, @opacity, @blue106, @blue107, @white0, @white0, @blue11, @blue108, @white0, @iptBg, @blue18, @blue15;
-  @var_white_config   : @white0,  @white11, @blue8,   @black0,  @white4, @blue8,  @white4, @white26, @black0, @blue8, @blue8,   @blue8;
+  //             1         2         3         4         5        6        7        8         9      10       11      12      13        14
+  @var_default_config : @blue105, @opacity, @blue106, @blue107, @white0, @white0, @blue11, @blue108, @white0, @iptBg, @blue18, @blue15, @blue84;
+  @var_white_config   : @white0,  @white11, @blue8,   @black0,  @white4, @blue8,  @white4, @white26, @black0, @blue8, @blue8,  @blue8,  @blue8;
 
   .commonStyle(@var){
     .detailView{
@@ -184,7 +184,7 @@
             color: extract(@var, 5);
           }
           .stepExample{
-            color: #9dd6ff;
+            color: extract(@var, 5);
           }
         }
       }
