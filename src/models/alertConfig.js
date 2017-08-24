@@ -303,7 +303,6 @@ export default {
     *beforeQueryApplicationType({ payload }, { select, put, call }) {
       if (payload !== undefined && payload == 0) {
         const isRoot = yield call(checkPayType)
-        console.log(isRoot);
         if (isRoot.result) {
           if (!isRoot.data) {
             yield message.warn(window.__alert_appLocaleData.messages['alertApplication.incomingTotal.numberWarn'], 2)

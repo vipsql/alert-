@@ -840,7 +840,6 @@ class Chart extends Component {
             if (!d.children && d.noData) {
               return 'nodata background'
             }
-            console.log(d);
             return d.children ? 'background nodata' : `background ${this.color(d.maxSeverity || 0)}`;
           });
 

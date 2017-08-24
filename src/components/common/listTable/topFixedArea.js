@@ -47,8 +47,13 @@ class TopFixedArea extends Component {
   render() {
     const { theads, extraArea, topHeight, parentTarget, isShowScrollBar, sourceOrigin } = this.props;
     const { isShow, scrollLeft } = this.state;
+    // 获取肤色主题
+    const theme = window.document.getElementsByTagName('html')[0].getAttribute('class');
+    // 白色皮肤比蓝色皮肤多出一块高度（24px）
+    let extraHeight = (theme == 'white')?24:0;
+
     return (
-      <div className={classnames(styles.topFixedArea, isShow ? styles.showTopFixed : '')} style={{ top: $(this.props.target).scrollTop() - topHeight - 20 || 0 }}>
+      <div className={classnames(styles.topFixedArea, isShow ? styles.showTopFixed : '')} style={{ top: $(this.props.target).scrollTop() - topHeight - 50 - extraHeight || 0 }}>
         <div className={ styles.extraArea } style={{ left: scrollLeft, minHeight: extraArea?'0px':'60px' }}>
           {extraArea}
         </div>
