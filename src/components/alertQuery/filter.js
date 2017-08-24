@@ -355,7 +355,7 @@ class Filter extends Component {
     )
 
     const filtersOverlay = (
-      <Menu onClick={({ item, key }) => { this.onSelectSearch(item, key) }}>
+      <Menu className={ styles.filterMenu } onClick={({ item, key }) => { this.onSelectSearch(item, key) }}>
         {
           filters.map((filter, index) => {
             return (
