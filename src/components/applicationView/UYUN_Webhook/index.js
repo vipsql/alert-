@@ -39,11 +39,11 @@ const itemLayout = {
 const localeMessage = defineMessages({
   webhook_headerTitle: {
     id: 'alertApplication.webhook.headerTitle',
-    defaultMessage: '把优云Alert告警以Web Hook方式实时分享到第三方系统'
+    defaultMessage: '把Alert告警以Web Hook方式实时分享到第三方系统'
   },
   webhook_step2: {
     id: 'alertApplication.webhook.step2',
-    defaultMessage: '配置优云Alert'
+    defaultMessage: '配置Alert'
   },
   webhook_step2Message: {
     id: 'alertApplication.webhook.step2Message',
@@ -153,7 +153,7 @@ class UYUN_Webhook extends Component {
         <div className={styles.viewHeader}>
           <i className={classnames(webhookClass, styles.headerIcon)}></i>
           <span className={styles.headerContent}>
-            <p className={styles.headerName}>UYUN Web Hook</p>
+            <p className={styles.headerName}>Web Hook</p>
             <p>{formatMessage({ ...localeMessage['webhook_headerTitle'] })}</p>
           </span>
         </div>

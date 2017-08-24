@@ -24,7 +24,7 @@ const UYUN_Monitor = (props) => {
     const localeMessage = defineMessages({
         monitor_headerTitle: {
             id: 'alertApplication.monitor.headerTitle',
-            defaultMessage: '使用Web Hook接入快速优云Monitor告警'
+            defaultMessage: '使用Web Hook接入快速Monitor告警'
         },
         monitor_step2: {
             id: 'alertApplication.monitor.step2',
@@ -61,7 +61,7 @@ const UYUN_Monitor = (props) => {
             <div className={styles.viewHeader}>
                 <i className={classnames(monitorClass, styles.headerIcon)}></i>
                 <span className={styles.headerContent}>
-                    <p className={styles.headerName}>UYUN Monitor</p>
+                    <p className={styles.headerName}>Monitor</p>
                     <p>{formatMessage({...localeMessage['monitor_headerTitle']})}</p>
                 </span>
             </div>

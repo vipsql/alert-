@@ -24,7 +24,7 @@ const UYUN_Itsm = (props) => {
     const localeMessage = defineMessages({
         itsm_headerTitle: {
             id: 'alertApplication.itsm.headerTitle',
-            defaultMessage: '把优云Alert的告警快速创建为ITSM工单'
+            defaultMessage: '把Alert的告警快速创建为ITSM工单'
         },
         displayName: {
             id: 'alertApplication.displayName',
@@ -53,7 +53,7 @@ const UYUN_Itsm = (props) => {
             <div className={styles.viewHeader}>
                 <i className={classnames(itsmClass, styles.headerIcon)}></i>
                 <span className={styles.headerContent}>
-                    <p className={styles.headerName}>UYUN ITSM</p>
+                    <p className={styles.headerName}>ITSM</p>
                     <p>{formatMessage({...localeMessage['itsm_headerTitle']})}</p>
                 </span>
             </div>
