@@ -2,9 +2,9 @@
 @import '../../theme/mixin.less';
 
 //蓝色和白色色系要上下一一对应
-//             1        2
-@var_default : @blue16, @white0, @blue60,  @blue61;
-@var_white   : @white0, @black0, @white16, @op20white;
+//             1        2        3         4           5        6
+@var_default : @blue16, @white0, @blue60,  @blue61,    @blue54, @white0;
+@var_white   : @white0, @black0, @white16, @op20white, @blue6,  @black0;
 
 .setTheme(@var_default, @var_white);
 
@@ -43,11 +43,11 @@
           top: -2px;
           right: 10px;
           cursor: pointer;
-          color: #5bb1ef;
+          color: extract(@var, 5);
         }
         p {
           font-size: 14px;
-          color: #fff;
+          color: extract(@var, 6);
         }
       }
       iframe {

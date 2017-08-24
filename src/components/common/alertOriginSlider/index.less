@@ -1,6 +1,6 @@
 @import "../../vars.less";
 @import '../../../theme/mixin.less';
-
+@import '../../../theme/scrollbar.less';
 //蓝色和白色色系要上下一一对应  
 //             1        2        3         4           5        6         7         8        9        10         11      12       13        14       15       16        17        18        19       20        21        22        23        24
 @var_default : @blue16, @white0, @blue60,  @blue61,    @blue54, @blue153, @white0,  @blue27, @blue32, @blue96,  @white0, @blue32, @opacity, @blue28, @blue29, @blue21, @blue154, @blue153, @blue155, @blue154, @blue22,  @blue31,  @blue16,  @opacity;
@@ -47,21 +47,7 @@
           overflow: hidden !important
         }
         .ant-table-scroll {
-          &::-webkit-scrollbar-thumb {
-            width: 7px; //background-color: #d3d4d6;
-            background-color: extract(@var, 23);
-            border: 2px solid extract(@var, 22);
-            border-radius: 7px;
-          }
-          &::-webkit-scrollbar {
-            width: 7px;
-            height: 7px;
-            background-color: extract(@var, 22);
-            border-radius: 7px;
-          }
-          &::-webkit-scrollbar-track {
-            width: 10px;
-          }
+          .scrollBarMixin(@name);
         }
         .ant-pagination.mini .ant-pagination-item {
           margin: 5px;

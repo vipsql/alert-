@@ -1,5 +1,6 @@
 @import "../vars.less";
 @import '../../theme/mixin.less';
+@import '../../theme/scrollbar.less';
 //左边导航border-right变量
 @borderSold: 1px solid @white11;
 //蓝色和白色色系要上下一一对应
@@ -160,21 +161,8 @@
         height: 100%;
         transition: @transition-ease-out;
         background: extract(@var, 11);
-        &::-webkit-scrollbar-thumb {
-          width: 7px; //background-color: #d3d4d6;
-          background-color: extract(@var, 17);
-          border: 2px solid extract(@var, 16);
-          border-radius: 7px;
-        }
-        &::-webkit-scrollbar {
-          width: 7px;
-          height: 7px;
-          background-color: extract(@var, 16);
-          border-radius: 7px;
-        }
-        &::-webkit-scrollbar-track {
-          width: 10px;
-        }
+        //通用滚动样式 
+        .scrollBarMixin(@name);
         .container{
           padding: extract(@var, 14) 24px 24px 24px;
           // height: 100%;
