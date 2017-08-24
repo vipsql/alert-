@@ -354,7 +354,7 @@ const ListTableWrap = ({ dispatch, alertQuery, topHeight, intl: { formatMessage 
             :
             <div>
               {topFixArea}
-              <ListTable extraArea={topFixArea} topHeight={isShowBar ? 335 : 145} sourceOrigin='alertQuery' {...props} />
+              <ListTable extraArea={topFixArea} topHeight={isShowBar ? 285 : 95} sourceOrigin='alertQuery' {...props} />
             </div>
         }
       </div>
