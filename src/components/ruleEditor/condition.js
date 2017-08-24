@@ -100,10 +100,6 @@ const valueList = {
     ],
     status: [
         {
-            name: window.__alert_appLocaleData.messages['ruleEditor.s1'],
-            value: '',
-        },
-        {
             name: window.__alert_appLocaleData.messages['ruleEditor.s2'],
             value: '0',
         },
