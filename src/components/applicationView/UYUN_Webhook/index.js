@@ -307,8 +307,6 @@ export default injectIntl(Form.create({
       webHookValues[key] = { value:  webHook[key]}
     })
 
-    console.log(webHook);
-
     return {
       displayName: {
         value: props.displayName || undefined,

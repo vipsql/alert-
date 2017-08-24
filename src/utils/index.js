@@ -370,7 +370,6 @@ function isMobile() {
  * @return {Object} new model
  */
 function modelExtend(...models) {
-  console.log(models)
   const base = {
     state: {},
     subscriptions: {},

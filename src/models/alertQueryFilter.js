@@ -24,7 +24,6 @@ export default {
     },
     // 显示搜索条件保存modal
     openSaveModal(state, { payload: { toSaveFilter, isReRender } }) {
-      console.log(toSaveFilter);
       return returnByIsReRender(state, { toSaveFilter, isShowSaveModal: true }, isReRender);
     },
     // 关闭搜索条件保存modal
