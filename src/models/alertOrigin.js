@@ -8,7 +8,7 @@ const initState = {
   times: 0,
   records: [],
   pagination:{ pageNo:1, pageSize:10 },
-  sorter: { sortKey:'occurTime', sortType: 1 },
+  sorter: { sortKey:'occurTime', sortType: 0 },
   searchParam: {}, // 过滤条件
 }
 
