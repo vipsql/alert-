@@ -9,7 +9,7 @@ module.exports = function (webpackConfig, env) {
   webpackConfig.babel.plugins.push('transform-runtime')
   webpackConfig.babel.plugins.push(['import', {
     libraryName: 'antd',
-    style: true
+    style: false
   }])
 
   // Support hmr
@@ -31,6 +31,10 @@ module.exports = function (webpackConfig, env) {
 
   webpackConfig.plugins.push(
     new CopyWebpackPlugin([
+      {
+        from: __dirname + '/antd.min.css',
+        to: __dirname + '/dist/'
+      },
       {
         from: __dirname + '/iconfont/**',
         to: __dirname + '/dist/'
