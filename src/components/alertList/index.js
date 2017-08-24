@@ -228,7 +228,7 @@ class AlertListManage extends Component {
             <TabPane tab={<span className={tabLine} ><FormattedMessage {...localeMessage['tab_time']} /></span>} key='2'>
               {/*<AlertOperation position='timeAxis' {...operateProps} />*/}
               <AlertOperationWrap isShowColSetBtn={false} />
-              <ListTimeTableWrap isNeedCheckOwner={isNeedCheckOwnerMap[alertManage.selectedStatus] && userInfo.supervisor != "1"} />
+              <ListTimeTableWrap isNeedCheckOwner={isNeedCheckOwnerMap[alertManage.selectedStatus] && userInfo.supervisor != "1"} topFixArea={<AlertOperationWrap />} topHeight={alertList.isShowBar ? 366 : 216} />
             </TabPane>
             {
               isShowVisualTab ?

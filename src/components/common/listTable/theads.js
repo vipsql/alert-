@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { Button, Spin, Popover, Checkbox  } from 'antd';
+import { Button, Spin, Popover, Checkbox } from 'antd';
 import LevelIcon from '../levelIcon/index.js'
 import Animate from 'rc-animate'
 import styles from './index.less'
@@ -10,10 +10,84 @@ import WrapableTr from './wrapableTr'
 import TopFixedArea from './topFixedArea'
 import ScrollBar from './scrollBar'
 
+const defaultShowNums = 10;
+
+const formatDate = function (date, selectedTime) {
+  const d = new Date(date)
+  let month = d.getMonth() + 1;
+  let dates = d.getDate()
+  let hours = d.getHours()
+  let mins = d.getMinutes()
+
+  month = month < 10 ? '0' + month : month
+  dates = dates < 10 ? '0' + dates : dates
+  hours = hours < 10 ? '0' + hours : hours
+  mins = mins < 10 ? '0' + mins : mins
+
+  let result = hours + ':' + mins;
+
+  switch (selectedTime) {
+    case 'lastOneWeek':
+      result = month + '-' + dates;
+      break;
+    case 'lastFifteenDay':
+      result = month + '-' + dates;
+      break;
+    case 'lastOneMonth':
+      result = month + '-' + dates;
+      break;
+    default:
+      break;
+  }
+
+  return result;
+}
+
+const getTimeTh = ({ begin, end }) => {
+  const timeTH = [];
+
+  const gridWidth = 100 / 11;
+  const gridTime = (end - begin) / 11;
+  const countMins = (end - begin) / (60 * 1000)
+  const minuteToWidth = 100 / countMins
+
+  for (let i = 0; i < defaultShowNums; i++) {
+
+    const timstamp = begin + gridTime * i
+    const date = formatDate(timstamp)
+    const left = gridWidth * i
+    timeTH.push(
+      <div key={i}>
+        <span className={styles.timePos} style={{ left: left + '%' }}>
+          {date}
+        </span>
+        <span className={styles.timeSep} style={{ left: left + '%' }}>
+        </span>
+      </div>
+    )
+    // 添加最后时间点的显示
+    if (i == (defaultShowNums - 1)) {
+      const lastTimeLeft = gridWidth * defaultShowNums
+      const lastTime = formatDate(end)
+      timeTH.push(
+        <div key={defaultShowNums}>
+          <span className={styles.timePos} style={{ left: lastTimeLeft + '%' }}>
+            {lastTime}
+          </span>
+          <span className={styles.timeSep} style={{ left: lastTimeLeft + '%' }}>
+          </span>
+        </div>
+      )
+    }
+  }
+
+  return timeTH;
+}
+
 class Theads extends Component {
   constructor() {
     super();
-    this.state = {  };
+    this.state = {};
   }
   componentDidMount() {
 
@@ -40,6 +114,9 @@ class Theads extends Component {
       orderBy,
       orderType,
       orderByTittle,
+      timeNodeInfo,
+      begin,
+      end,
       intl: { formatMessage }
     } = this.props
     let colsKey = []
@@ -137,7 +214,7 @@ class Theads extends Component {
       colsKey.push(item['key'])
 
       theads.push(
-        <th key={item.key} className={item.key==='tags'?styles.tagsKey:''} style={{ width: item.isFixed?(item.key==='tags'?'200px':'150px'): undefined }}>
+        <th key={item.key} className={item.key === 'tags' ? styles.tagsKey : ''} style={{ width: item.isFixed ? (item.key === 'tags' ? '200px' : '150px') : undefined }}>
           {
             !isGroup && isOrder ?
               <span className={orderType !== undefined ? classnames(styles.orderTh, orderTh_active) : styles.orderTh} data-key={item['key']} onClick={orderByTittle}>
@@ -156,18 +233,22 @@ class Theads extends Component {
       )
     })
 
-    theads.unshift(<th className={ styles.moreLittle } style={{ width: columns[0].isFixed?'25px': undefined }} key="blank"></th>);
-    theads.unshift(<th className={ styles.moreLittle } style={{ width: columns[0].isFixed?'25px': undefined }} key='spread'></th>);
-    if(sourceOrigin !== 'alertQuery') {
-      theads.unshift(<th key="checkAll" className={classnames(styles.checkstyle, styles.little)} style={{ width: columns[0].isFixed?'50px': undefined }}><Checkbox onClick={(e) => { handleSelectAll(!selectedAll)}} checked={selectedAll} /></th>)
+    theads.unshift(<th className={styles.moreLittle} style={{ width: columns[0].isFixed ? '25px' : undefined }} key="blank"></th>);
+    theads.unshift(<th className={styles.moreLittle} style={{ width: columns[0].isFixed ? '25px' : undefined }} key='spread'></th>);
+    if (sourceOrigin !== 'alertQuery') {
+      theads.unshift(<th key="checkAll" className={classnames(styles.checkstyle, styles.little)} style={{ width: columns[0].isFixed ? '50px' : undefined }}><Checkbox onClick={(e) => { handleSelectAll(!selectedAll) }} checked={selectedAll} /></th>)
+    }
+    if (begin && end) {
+      const timeTh = getTimeTh({ begin, end });
+      theads.push(<th key="timeDot">{timeTh}</th>);
     }
 
     return (
-        <thead>
-          <tr>
-            {theads}
-          </tr>
-        </thead>
+      <thead>
+        <tr>
+          {theads}
+        </tr>
+      </thead>
     )
   }
 }
