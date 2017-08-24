@@ -252,11 +252,11 @@
   "alertApplication.rest.apidocument": "API documents",
   "alertApplication.rest.step2": "Alert API",
 
-  "alertApplication.monitor.headerTitle": "Use Web Hook to build an integration between Uyun Alert and Uyun Monitor.",
+  "alertApplication.monitor.headerTitle": "Use Web Hook to build an integration between Alert and Monitor.",
   "alertApplication.monitor.step2": "Send data from Monitor",
   "alertApplication.monitor.step2Message": "Please copy below URL to your application.",
 
-  "alertApplication.network.headerTitle": "Use Web Hook to build an integration between Uyun Alert and Uyun NetWork.",
+  "alertApplication.network.headerTitle": "Use Web Hook to build an integration between Alert and NetWork.",
   "alertApplication.network.step2": "Send data from NetWork",
   "alertApplication.network.step2Message": "Please copy below URL to your application.",
 
@@ -311,7 +311,7 @@
   "modal.trap.severityMapper.placeholder": "Please Select Severity",
   "modal.trap.severityMapper.trap": "Trap",
   "modal.trap.severityMapper.alert": "Alert",
-  "modal.trap.severityMapper.message": "Uyun Alert Severity Definition: Critical - 3，Warning - 2，Information - 1，Recovery - 0",
+  "modal.trap.severityMapper.message": "Alert Severity Definition: Critical - 3，Warning - 2，Information - 1，Recovery - 0",
 
   "modal.trap.regex": "Advanced",
   "modal.trap.regex.clear": "Clear",
@@ -333,12 +333,12 @@
   "modal.rule.deleteTitle": "Delete Rule",
   "modal.rule.deleteMessage": "Are you sure to delete the {message} Rule?",
 
-  "alertApplication.videoMon.headerTitle": "Use Web Hook to build an integration between Uyun Alert and Uyun VideoMon.",
+  "alertApplication.videoMon.headerTitle": "Use Web Hook to build an integration between Alert and VideoMon.",
   "alertApplication.videoMon.step2": "Send data to the Monitor",
   "alertApplication.videoMon.step2Message": "Please copy below URL to your application.",
 
-  "alertApplication.itsm.headerTitle": "Build an integration between Uyun Alert and Uyun ITSM.",
-  "alertApplication.chatOps.headerTitle": "Build an integration between Uyun Alert and Uyun ChatOps.",
+  "alertApplication.itsm.headerTitle": "Build an integration between Alert and ITSM.",
+  "alertApplication.chatOps.headerTitle": "Build an integration between Alert and ChatOps.",
 
   "alertApplication.displayName": "Display Name",
   "alertApplication.displayName.message": "Set a display name to identify the application",
@@ -347,8 +347,8 @@
   "alertApplication.appKey.placeholder": "Please create an AppKey",
   "alertApplication.save": "Save",
 
-  "alertApplication.webhook.headerTitle": "把优云Alert告警以Web Hook方式实时分享到第三方系统",
-  "alertApplication.webhook.step2": "配置优云Alert",
+  "alertApplication.webhook.headerTitle": "把Alert告警以Web Hook方式实时分享到第三方系统",
+  "alertApplication.webhook.step2": "配置Alert",
   "alertApplication.webhook.step2Message": "把从第三方系统获取的Web Hook接口地址粘贴到文本框",
   "alertApplication.webhook.url": "URL",
   "alertApplication.webhook.httpMethod": "HTTP方法",

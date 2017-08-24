@@ -130,12 +130,14 @@ div.delete {
           }
         }
         button:first-child {
+          float: left;
           &.disabled:hover {
             background-color: extract(@var, 5);
             color: extract(@var, 16);
           }
         }
         button:last-child {
+          float: left;
           background-color: extract(@var, 13);
           border: extract(@var, 6);
           color: extract(@var, 15);
@@ -207,7 +209,7 @@ div.delete {
         transition: border .2s;
         &:hover {
           background-color: extract(@var, 7);
-          
+
           span,
           i {
             color: extract(@var, 8);
@@ -313,9 +315,6 @@ div.delete {
         font-size: 13px;
         font-weight: normal;
         padding: 4px 10px; //background: white;
-      }
-       :global .ant-dropdown-trigger {
-        top: -2px;
       }
     }
     button:first-child {

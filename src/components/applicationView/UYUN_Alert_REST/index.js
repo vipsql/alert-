@@ -24,7 +24,7 @@ const UYUN_Alert_REST = (props) => {
     const localeMessage = defineMessages({
         rest_headerTitle: {
             id: 'alertApplication.rest.headerTitle',
-            defaultMessage: '使用优云Alert REST API，可以方便的接入自定义告警'
+            defaultMessage: '使用Alert REST API，可以方便的接入自定义告警'
         },
         rest_apidocument: {
             id: 'alertApplication.rest.apidocument',
@@ -61,7 +61,7 @@ const UYUN_Alert_REST = (props) => {
             <div className={styles.viewHeader}>
                 <i className={classnames(alertClass, styles.headerIcon)}></i>
                 <span className={styles.headerContent}>
-                    <p className={styles.headerName}>UYUN Alert REST API</p>
+                    <p className={styles.headerName}>Alert REST API</p>
                     <p>{formatMessage({...localeMessage['rest_headerTitle']})}</p>
                 </span>
             </div>

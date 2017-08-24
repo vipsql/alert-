@@ -24,7 +24,7 @@ const UYUN_ChatOps = (props) => {
     const localeMessage = defineMessages({
         chatOps_headerTitle: {
             id: 'alertApplication.chatOps.headerTitle',
-            defaultMessage: '把优云Alert的告警快速分享到ChatOps群组'
+            defaultMessage: '把Alert的告警快速分享到ChatOps群组'
         },
         displayName: {
             id: 'alertApplication.displayName',
@@ -53,7 +53,7 @@ const UYUN_ChatOps = (props) => {
             <div className={styles.viewHeader}>
                 <i className={classnames(chatOpsClass, styles.headerIcon)}></i>
                 <span className={styles.headerContent}>
-                    <p className={styles.headerName}>Uyun ChatOps</p>
+                    <p className={styles.headerName}>ChatOps</p>
                     <p>{formatMessage({...localeMessage['chatOps_headerTitle']})}</p>
                 </span>
             </div>

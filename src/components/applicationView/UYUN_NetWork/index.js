@@ -24,7 +24,7 @@ const UYUN_NetWork = (props) => {
     const localeMessage = defineMessages({
         network_headerTitle: {
             id: 'alertApplication.network.headerTitle',
-            defaultMessage: '使用Web Hook接入快速优云NetWork告警'
+            defaultMessage: '使用Web Hook接入快速NetWork告警'
         },
         network_step2: {
             id: 'alertApplication.network.step2',
@@ -61,7 +61,7 @@ const UYUN_NetWork = (props) => {
             <div className={styles.viewHeader}>
                 <i className={classnames(netWorkClass, styles.headerIcon)}></i>
                 <span className={styles.headerContent}>
-                    <p className={styles.headerName}>UYUN NetWork</p>
+                    <p className={styles.headerName}>NetWork</p>
                     <p>{formatMessage({...localeMessage['network_headerTitle']})}</p>
                 </span>
             </div>

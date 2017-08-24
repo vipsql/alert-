@@ -11,6 +11,8 @@ const ListTableWrap = ({ dispatch, userInfo, isNeedCheckOwner, alertListTable, t
     extraArea: topFixArea,
     isNeedCheckOwner,
     userInfo,
+    begin: undefined,
+    end: undefined,
 
     loadMore() {
       dispatch({

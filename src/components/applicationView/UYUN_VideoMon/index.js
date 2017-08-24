@@ -24,7 +24,7 @@ const UYUN_VideoMON = (props) => {
     const localeMessage = defineMessages({
         videoMon_headerTitle: {
             id: 'alertApplication.videoMon.headerTitle',
-            defaultMessage: '使用Web Hook接入快速优云VideoMon告警'
+            defaultMessage: '使用Web Hook接入快速VideoMon告警'
         },
         videoMon_step2: {
             id: 'alertApplication.videoMon.step2',
@@ -61,7 +61,7 @@ const UYUN_VideoMON = (props) => {
             <div className={styles.viewHeader}>
                 <i className={classnames(videoMonClass, styles.headerIcon)}></i>
                 <span className={styles.headerContent}>
-                    <p className={styles.headerName}>UYUN VideoMon</p>
+                    <p className={styles.headerName}>VideoMon</p>
                     <p>{formatMessage({...localeMessage['videoMon_headerTitle']})}</p>
                 </span>
             </div>

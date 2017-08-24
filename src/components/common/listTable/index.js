@@ -99,6 +99,8 @@ class ListTable extends Component {
       topHeight,
       isNeedCheckOwner,
       userInfo={},
+      begin,
+      end,
       intl: { formatMessage }
     } = this.props
 
@@ -145,6 +147,8 @@ class ListTable extends Component {
               topHeight={topHeight}
               userInfo={userInfo}
               isNeedCheckOwner={isNeedCheckOwner}
+              begin={begin}
+              end={end}
             />
             </div>
             <TopFixedArea parentTarget="div.listContainer" sourceOrigin={sourceOrigin}
@@ -160,6 +164,8 @@ class ListTable extends Component {
                   orderBy={orderBy}
                   orderType={orderType}
                   orderByTittle={orderByTittle}
+                  begin={begin}
+                  end={end}
                 />
               }
               extraArea={extraArea} topHeight={topHeight}
@@ -191,6 +197,8 @@ class ListTable extends Component {
               orderByTittle={orderByTittle}
               userInfo={userInfo}
               isNeedCheckOwner={isNeedCheckOwner}
+              begin={begin}
+              end={end}
             />
           </div>
         </Spin>
