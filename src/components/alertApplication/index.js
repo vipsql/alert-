@@ -12,7 +12,7 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 const TabPane = Tabs.TabPane;
 const alertApplication = ({dispatch, alertConfig, intl: {formatMessage}}) => {
 
-    const { orderType, orderBy, applicationData } = alertConfig;
+    const { orderType, orderBy, applicationData, applicationType } = alertConfig;
 
     const tabsChange = (tabKey) => {
         dispatch({
@@ -31,7 +31,7 @@ const alertApplication = ({dispatch, alertConfig, intl: {formatMessage}}) => {
             payload: type
         })
     }
-    
+
     const appListProps = {
         ...alertConfig,
 
@@ -78,7 +78,7 @@ const alertApplication = ({dispatch, alertConfig, intl: {formatMessage}}) => {
 
         orderUp: (e) => {
             const orderKey = e.target.getAttribute('data-key');
-        
+
             dispatch({
                 type: 'alertConfig/orderList',
                 payload: {
@@ -89,7 +89,7 @@ const alertApplication = ({dispatch, alertConfig, intl: {formatMessage}}) => {
         },
         orderDown: (e) => {
             const orderKey = e.target.getAttribute('data-key');
-        
+
             dispatch({
                 type: 'alertConfig/orderList',
                 payload: {
@@ -100,7 +100,7 @@ const alertApplication = ({dispatch, alertConfig, intl: {formatMessage}}) => {
         },
         orderByTittle: (e) => {
             const orderKey = e.target.getAttribute('data-key');
-        
+
             dispatch({
                 type: 'alertConfig/orderByTittle',
                 payload: orderKey
@@ -162,7 +162,7 @@ const alertApplication = ({dispatch, alertConfig, intl: {formatMessage}}) => {
                     <p className={styles.total}><FormattedMessage {...localeMessage['incomingTotal']} values={{num: alertConfig.applicationData.length}}/></p>
                 }
             </div>
-            <Tabs defaultActiveKey="0" type='line' onChange={ (tabKey) => {tabsChange(tabKey)}}>
+            <Tabs defaultActiveKey="0" activeKey={ '' + alertConfig.applicationType } type='line' onChange={ (tabKey) => {tabsChange(tabKey)}}>
                 <TabPane tab={formatMessage({...localeMessage['incoming']})} key="0">
                     <ApplicationList {...appListProps} />
                 </TabPane>
