@@ -37,7 +37,7 @@ const alertApplication = ({dispatch, alertConfig, intl: {formatMessage}}) => {
 
         pageBy: 'application',
 
-        columns: alertConfig.columns !== undefined && alertConfig.applicationType == 0 ? alertConfig.columns : alertConfig.columns.filter( item => item['key'] !== 'status'),
+        columns: alertConfig.columns,
 
         listData: alertConfig.applicationData,
 
