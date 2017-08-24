@@ -228,7 +228,7 @@ const __DataRule = {
               "path": "test/@name",
               "name": "@cname",
               "value|1-100": 1,
-              "maxSeverity": [-1, 0, 1, 2, 3]
+              "maxSeverity|1": [-1, 0, 1, 2, 3]
             }
           ]
         }
