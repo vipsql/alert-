@@ -1,6 +1,7 @@
 @import "../vars.less";
 @import '../../theme/mixin.less';
 @import '../../theme/footerMixin.less';
+@import '../../theme/scrollbar.less';
 
 //蓝色和白色色系要上下一一对应
 //             1        2         3         4        5        6         7        8       9        10       11        12        13       14        15        16        17          18        19
@@ -52,21 +53,7 @@
         min-height: 200px;
         max-height: 400px;
         overflow: auto;
-        &::-webkit-scrollbar-thumb {
-          width: 7px;
-          background-color: extract(@var, 12);
-          border: 2px solid extract(@var, 11);
-          border-radius: 7px;
-        }
-        &::-webkit-scrollbar {
-            width: 7px;
-            height: 7px;
-            border: 2px solid extract(@var, 11);
-            border-radius: 7px;
-        }
-        &::-webkit-scrollbar-track {
-            width: 10px;
-        }
+        .scrollBarMixin(@name);
       }
       :global(.ant-modal-content){
         width: 600px;

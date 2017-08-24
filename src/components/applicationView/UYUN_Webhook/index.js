@@ -259,7 +259,7 @@ class UYUN_Webhook extends Component {
                       }
                     ]
                   })(
-                    <Input type="textarea" className={ styles.mapFieldTextarea } placeholder={fieldMapMsgPlaceholder} />
+                    <Input.TextArea className={ styles.mapFieldTextarea } placeholder={fieldMapMsgPlaceholder} />
                     )}
                   <span className={styles.fieldMapMsg}><FormattedMessage { ...localeMessage['fieldMapMsg']} values={{ API: <a href={webhookApi}>{formatMessage({ ...localeMessage['webhookApi'] })}</a> }} /></span>
                 </Item>
@@ -306,8 +306,6 @@ export default injectIntl(Form.create({
     Object.keys(webHook).forEach(key => {
       webHookValues[key] = { value:  webHook[key]}
     })
-
-    console.log(webHook);
 
     return {
       displayName: {

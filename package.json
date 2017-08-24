@@ -4,7 +4,7 @@
     "index": "./src/index.js"
   },
   "dependencies": {
-    "antd": "^2.6.0",
+    "antd": "2.12.5",
     "classnames": "^2.2.5",
     "crossfilter": "^1.3.12",
     "d3": "^3.3.3",
