@@ -52,10 +52,17 @@ export default {
         if (location.pathname === '/alertConfig/alertApplication') {
           dispatch({
             type: 'queryAplication',
-            payload: {
-              type: 0
-            }
+            payload: { type: 0 }
           })
+        } else if (pathToRegexp('/alertConfig/alertApplication/:type')) {
+          const match = pathToRegexp('/alertConfig/alertApplication/:type').exec(location.pathname);
+          if (match) {
+            const type = match[1];
+            dispatch({
+              type: 'queryAplication',
+              payload: { type }
+            })
+          }
         }
       })
     },
@@ -193,7 +200,7 @@ export default {
         if (addResult.result) {
           yield message.success(window.__alert_appLocaleData.messages['constants.success'], 3)
           resolve && resolve(addResult.result);
-          yield put(routerRedux.goBack());
+          yield put(routerRedux.push('alertConfig/alertApplication/' + params.type));
         } else {
           yield message.error(addResult.message, 3)
         }
@@ -261,16 +268,19 @@ export default {
 
       yield put({ type: 'toggleLoading', payload: true })
 
-      var { type, orderBy, orderType } = yield select(state => {
+      var { type, orderBy, orderType, applicationType } = yield select(state => {
         return {
           'type': state.alertConfig.applicationType,
           'orderBy': state.alertConfig.orderBy,
-          'orderType': state.alertConfig.orderType
+          'orderType': state.alertConfig.orderType,
+          'applicationType': state.alertConfig.applicationType
         }
       })
 
       if (payload !== undefined && payload.type !== undefined) {
         type = payload.type;
+      } else {
+        type = applicationType;
       }
 
       if (payload !== undefined && payload.orderType !== undefined) {
@@ -291,7 +301,7 @@ export default {
             applicationData: appResult.data || [],
             applicationType: type,
             orderBy: orderBy,
-            orderType: orderType
+            orderType: orderType,
           }
         })
       } else {
@@ -459,8 +469,8 @@ export default {
       return { ...state, ...payload }
     },
     // 存贮当前的data
-    setApplicationData(state, { payload: { applicationData, applicationType, orderBy, orderType } }) {
-      return { ...state, applicationData, applicationType, orderBy, orderType }
+    setApplicationData(state, { payload: { applicationData, applicationType, orderBy, orderType, type } }) {
+      return { ...state, applicationData, applicationType, orderBy, orderType, type }
     },
     // 改变状态
     changeAppStatus(state, { payload: { id, status } }) {

@@ -127,6 +127,15 @@ export default function({history, app}) {
           }
         },
         {
+          path: 'alertConfig/alertApplication/:type',
+          name: 'alertApplication',
+          getComponent(nextState, cb) {
+            require.ensure([], require => {
+              cb(null, require('./routes/alertApplication'))
+            }, 'alertApplication')
+          }
+        },
+        {
           path: 'alertConfig/alertApplication/applicationView',
           name: 'applicationView',
           childRoutes: [

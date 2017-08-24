@@ -21,7 +21,7 @@ const __DataRule = {
     'regex': /\/incident\/queryCondition\/save\//
   },
   '/incident/queryCondition/getAll': {
-    'data|1-10': [
+    'data|10-30': [
       {
         'name': '@name',
         'id|+1': 100,
@@ -56,7 +56,8 @@ const __DataRule = {
         "id": "58c681355b71a73b448ccec6",
         "name": "UYUN ITSM",
         "type": 1,
-        "appType": "协同类"
+        "appType": "协同类",
+        "uniqueCode": 1
       },
       {
         "id": "58c680df5b71a73b448ccec4",
@@ -68,7 +69,8 @@ const __DataRule = {
         "id": "58c680df5b71a73b448ccec7",
         "name": "Web Hook",
         "type": 1,
-        "appType": "协同类"
+        "appType": "协同类",
+        "uniqueCode": '8'
       },
     ]
   },
@@ -164,9 +166,9 @@ const __DataRule = {
   // 可视化接口
   '/visual/storeKeys': {
     'template': {
-        "keys|1-5": ['@cname'],
-        "level|1": [0, 1, 2, 3, 4, 5]
-      }
+      "keys|1-5": ['@cname'],
+      "level|1": [0, 1, 2, 3, 4, 5]
+    }
   },
 
   '/visual/tagValuesInfo': {
@@ -280,10 +282,92 @@ const __DataRule = {
       {
         "time|+43200000": 1497361859610,
         "count|1-10": 1,
-        "granularity": 43200000
+        "granularity": 43200000,
       }
     ]
+  },
+
+  '/incident/queryLastTimeline': {
+    template: {
+      'tagKeys': [],
+      'hasNext|1': [true, false],
+      'levels': {
+        'OK|1-10': 1,
+        'Critical|1-10': 1,
+        'Warning|1-10': 1,
+        'Information|1-10': 1,
+      },
+      'properties': {
+        'name': '告警-@string(5,10)',
+        'type': '@name',
+        'cols': [],
+        'id': '@string(12)',
+        'name': '@cname'
+      },
+      'datas|40': [
+        {
+          'alias': '@string(5)',
+          'classCode': '@string(5)',
+          'count|1-1000': 1,
+          'description': '@sentence()',
+          'entityAddr': '@address',
+          'entityName': '告警-@cname',
+          'firstOccurTime|1502035200524-1502812800524': 1,
+          'lastOccurTime|1502035200524-1502812800524': 1,
+          'lastTime|0-1200000': 1,
+          'hasChild': false,
+          'id|+1': 1,
+          'name': '@cname',
+          'resObjectId': '@string(12)',
+          'severity|1': [0, 1, 2, 3],
+          'source': '@cname',
+          "status|1": ['0', '40', '150', '190', '255'],
+          'ownerName': '@cname',
+          'tags': [],
+          'hasNext|1': [true, false],
+          'timeLine|1-10': [
+            {
+              "occurTime|+10000000": 1497361859610,
+              "count|1-10": 1,
+              "granularity": 43200000,
+              'severity|1': [0, 1, 2, 3],
+              'description': '@sentence',
+              'name': '告警发生-@cname',
+              'source': '告警来源-@cname',
+              'incidentId|1-40': 1,
+            }
+          ]
+        }
+      ],
+    },
+  },
+
+  '/rule/queryAttributes': {
+    regex: /\/rule\/queryAttributes?/,
+    'template': [
+      { "group": "base", "nameZh": "告警名称", "nameUs": "alias", "type": "str" },
+      { "group": "base", "nameZh": "告警等级", "nameUs": "severity", "type": "num" },
+      { "group": "base", "nameZh": "告警来源", "nameUs": "source", "type": "str" },
+      { "group": "base", "nameZh": "告警发生源名称", "nameUs": "entityName", "type": "str" },
+      { "group": "base", "nameZh": "告警发生源地址", "nameUs": "entityAddr", "type": "str" },
+      { "group": "base", "nameZh": "告警描述", "nameUs": "description", "type": "str" },
+      { "group": "base", "nameZh": "标签", "nameUs": "tag", "type": "str" },
+      { "group": "base", "nameZh": "发生次数", "nameUs": "count", "type": "num" },
+      { "group": "base", "nameZh": "告警状态", "nameUs": "status", "type": "num" },
+      { "group": "source", "nameZh": "资源ID", "nameUs": "resObjectId", "type": "str" },
+      { "group": "source", "nameZh": "资源类型", "nameUs": "classCode", "type": "str" },
+      { "group": "property", "nameZh": "police", "nameUs": "belong", "type": "str" },
+      { "group": "property", "nameZh": "所在地", "nameUs": "location", "type": "str" },
+      { "group": "property", "nameZh": "资源ID", "nameUs": "id", "type": "str" },
+      { "group": "property", "nameZh": "端口ID", "nameUs": "portId", "type": "str" },
+      { "group": "property", "nameZh": "CI_ID", "nameUs": "ciid", "type": "str" }
+    ]
   }
+
+  // '/incident/getIncidentDetail/': {
+  //   regex: /\/incident\/getIncidentDetail\//,
+  //   template:
+  // }
 }
 
 /**
