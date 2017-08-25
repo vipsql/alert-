@@ -331,11 +331,13 @@ export default {
         yield put({ type: 'toggleTypeModal', payload: true })
         const typeResult = yield call(typeQuery, payload)
         if (typeResult.result) {
-          console.log(typeResult.data.filter( item => item.type == 1 && (item.uniqueCode != '2' || item.uniqueCode != '3') ))
+          console.log(typeResult.data.filter( item => (item.type == 1 && (item.uniqueCode != '2' || item.uniqueCode != '3')) ))
           yield put({
             type: 'openTypeModal',
             payload: {
-              applicationTypeData: typeResult.data || [], // 过滤ITSM和chatops
+              applicationTypeData: typeResult.data.filter( i => {
+                return (item.type == 1 && (item.uniqueCode != '2' || item.uniqueCode != '3'))
+              }) || [], // 过滤ITSM和chatops
             }
           })
         } else {
