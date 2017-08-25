@@ -160,7 +160,7 @@ const ListTableWrap = ({ dispatch, alertQuery, topHeight, intl: { formatMessage 
     },
     result: {
       id: 'alertQuery.result',
-      defaultMessage: "共{total}个结果（紧急{critical}个，警告{warning}个，提醒{informaiton}个，正常{ok}个）",
+      defaultMessage: "共{total}个结果（紧急{critical}个，警告{warning}个，提醒{information}个，正常{ok}个）",
     },
   })
   const props = {
