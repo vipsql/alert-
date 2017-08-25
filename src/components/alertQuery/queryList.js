@@ -160,7 +160,7 @@ const ListTableWrap = ({ dispatch, alertQuery, topHeight, intl: { formatMessage 
     },
     result: {
       id: 'alertQuery.result',
-      defaultMessage: "共{total}个结果（紧急{critical}个，警告{warning}个，提醒{informaiton}个，正常{ok}个）",
+      defaultMessage: "共{total}个结果（紧急{critical}个，警告{warning}个，提醒{information}个，正常{ok}个）",
     },
   })
   const props = {
@@ -296,11 +296,11 @@ const ListTableWrap = ({ dispatch, alertQuery, topHeight, intl: { formatMessage 
       <div className={styles.count}>
         <FormattedMessage {...localeMessage['result']}
           values={{
-            total: queryCount.total !== undefined ? '' + queryCount.total : 0,
-            critical: queryCount.critical !== undefined ? '' + queryCount.critical : 0,
-            warning: queryCount.warning !== undefined ? '' + queryCount.warning : 0,
-            informaiton: queryCount.information !== undefined ? '' + queryCount.information : 0,
-            ok: queryCount.ok !== undefined ? '' + queryCount.ok : 0
+            total: queryCount.total !== undefined ? '' + queryCount.total : '0',
+            critical: queryCount.critical !== undefined ? '' + queryCount.critical : '0',
+            warning: queryCount.warning !== undefined ? '' + queryCount.warning : '0',
+            information: queryCount.information !== undefined ? '' + queryCount.information : '0',
+            ok: queryCount.ok !== undefined ? '' + queryCount.ok : '0'
           }}
         />
 

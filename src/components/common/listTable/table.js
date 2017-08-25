@@ -143,7 +143,27 @@ class Table extends Component {
       Unknown: {
         id: 'alertList.unknown',
         defaultMessage: '未知',
-      }
+      },
+      description: {
+        id: 'alertList.title.description',
+        defaultMessage: '告警描述',
+      },
+      occurTime: {
+        id: 'alertList.title.occurTime',
+        defaultMessage: '发生时间',
+      },
+      severity: {
+        id: 'alertList.title.severity',
+        defaultMessage: '告警级别',
+      },
+      source: {
+        id: 'alertList.title.source',
+        defaultMessage: '告警来源',
+      },
+      description: {
+        id: 'alertList.title.description',
+        defaultMessage: '告警描述',
+      },
     })
 
 

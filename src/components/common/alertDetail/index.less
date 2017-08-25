@@ -12,7 +12,7 @@
   :local{
     .detailHead, .detailHeadByOutside {
       p {
-        color: extract(@var, 1); 
+        color: extract(@var, 1);
       }
       .shanChu {
         color: extract(@var, 2)
@@ -58,7 +58,7 @@
 .getTheme(@var, @name){
   :local{
     .main {
-      height: 97%;
+      height: 90%;
       :global .ant-spin-container {
         height: 100%;
       }
@@ -94,11 +94,17 @@
         overflow-x: auto;
         height: 80%;
         width: 100%;
+        &.mobileBody{
+          height: 100% // 移动端百分百占满
+        }
         .scrollBarMixin(@name);
         .info {
           width: 95%;
           margin-left: 18px;
           margin-bottom: 10px;
+          &.mobileInfo{
+            margin-left: 10px
+          }
           .infoTitle {
             min-height: 36px;
             line-height: 36px;
@@ -115,7 +121,7 @@
           .infoBody {
             position: relative;
             padding: 15px 18px 15px 18px;
-            margin-right: 12px; 
+            margin-right: 12px;
             border-radius: 3px;
             width: 100%;
             .ciDetailLink {
@@ -295,7 +301,7 @@
                 &>button {
                   color: #fff;
                   background-color: #108ee9;
-                  border-color: #108ee9; 
+                  border-color: #108ee9;
                   span {
                     color: #fff;
                   }

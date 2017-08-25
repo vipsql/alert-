@@ -381,7 +381,7 @@ class Filter extends Component {
 
                 })(
                   <Select getPopupContainer={() => document.getElementById("content")} >
-                    <Option value=''><FormattedMessage {...localeMessage['allSource']} /></Option>
+                    <Option value=''>{formatMessage({ ...localeMessage['allSource'] })}</Option>
                     {
                       sourceOptions.map((item, index) => {
                         return <Option key={index} value={item.key}>{item.value}</Option>
@@ -437,7 +437,7 @@ class Filter extends Component {
 
                 })(
                   <Select getPopupContainer={() => document.getElementById("content")}>
-                    <Option value=""><FormattedMessage {...localeMessage['allSeverity']} /></Option>
+                    <Option value="">{formatMessage({ ...localeMessage['allSeverity'] })}</Option>
                     <Option value="3">{window['_severity']['3']}</Option>
                     <Option value="2">{window['_severity']['2']}</Option>
                     <Option value="1">{window['_severity']['1']}</Option>
@@ -455,7 +455,7 @@ class Filter extends Component {
 
                 })(
                   <Select getPopupContainer={() => document.getElementById("content")}>
-                    <Option value=""><FormattedMessage {...localeMessage['allStatus']} /></Option>
+                    <Option value="">{formatMessage({ ...localeMessage['allStatus'] })}</Option>
                     <Option value="0">{window['_status']['0']}</Option>
                     <Option value="150">{window['_status']['150']}</Option>
                     <Option value="190">{window['_status']['190']}</Option>
