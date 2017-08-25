@@ -88,7 +88,7 @@
   "alertQuery.noQueryData": "暂无数据，请先选择查询条件",
   "alertQuery.search": "搜索",
   "alertQuery.reset": "重置",
-  "alertQuery.result": "共{total}个结果（紧急{critical}个，警告{warning}个，提醒{informaiton}个，恢复{ok}个）",
+  "alertQuery.result": "共{total}个结果（紧急{critical}个，警告{warning}个，提醒{information}个，恢复{ok}个）",
   "alertQueryFilter.saveFilter": "保存查询条件",
   "alertQueryFilter.savePlaceholder": "保存查询条件",
   "alertQueryFilter.deleteFilter": "删除查询条件",
