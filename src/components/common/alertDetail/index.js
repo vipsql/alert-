@@ -3,7 +3,7 @@ import { Link } from 'dva/router'
 import { Button, Input, Form, Timeline, Spin } from 'antd';
 import { connect } from 'dva'
 import styles from './index.less'
-import { classnames, formatDate, getOperationExcutionMap } from '../../../utils'
+import { classnames, formatDate, getOperationExcutionMap, isMobile } from '../../../utils'
 import AlertOperation from '../alertOperation/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import Wrap from './wrap'
@@ -418,9 +418,9 @@ class alertDetail extends Component {
           <div className={!invokeByOutside ? styles.detailHead : styles.detailHeadByOutside}>
             <p>{currentAlertDetail.name ? currentAlertDetail.name : formatMessage({ ...localeMessage['unknown'] })}</p>
             {!invokeByOutside && <i className={classnames(styles.shanChu, shanchuClass)} onClick={closeDeatilModal}></i>}
-            <AlertOperation position="detail" {...operateProps} {...disableMap} disableReasonMap={disableReasonMap}/>
+            {!(isMobile()) && <AlertOperation position="detail" {...operateProps} {...disableMap} disableReasonMap={disableReasonMap}/>}
           </div>
-          <div className={styles.detailBody}>
+          <div className={!(isMobile()) ? styles.detailBody : classnames(styles.detailBody, styles.mobileBody)}>
             <Wrap title={formatMessage({ ...localeMessage['basic'] })}>
               <ul>
                 <li><span>{formatMessage({ ...localeMessage['name'] })}:</span><span>{currentAlertDetail.name ? currentAlertDetail.name : formatMessage({ ...localeMessage['unknown'] })}</span></li>
