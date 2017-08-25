@@ -331,7 +331,7 @@ export default {
         yield put({ type: 'toggleTypeModal', payload: true })
         const typeResult = yield call(typeQuery, payload)
         if (typeResult.result) {
-          if (payload.type == '1') {
+          if (payload == '1') {
             typeResult.data = typeResult.data.filter( item => item.type == 1 && item.uniqueCode != '2' && item.uniqueCode != '3' )
           }
           yield put({
