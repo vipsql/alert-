@@ -1,5 +1,6 @@
 @import "../vars.less";
 @import '../../theme/mixin.less';
+@import '../../theme/scrollbar.less';
 @border: 1px solid @white11;
 @borderBlueButton: 1px solid @blue18;
 @borderWhiteButton: 1px solid @white16;
@@ -67,6 +68,10 @@ div.delete {
 }
 .getTheme(@var, @name){
   :local{
+    .filterMenu {
+      .scrollBarMixin(@name);
+      background-color: extract(@var, 17);
+    }
     div.delete {
       background-color: extract(@var, 21);
       color:#fff;
