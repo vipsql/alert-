@@ -420,7 +420,7 @@ class alertDetail extends Component {
             {!invokeByOutside && <i className={classnames(styles.shanChu, shanchuClass)} onClick={closeDeatilModal}></i>}
             {!(isMobile()) && <AlertOperation position="detail" {...operateProps} {...disableMap} disableReasonMap={disableReasonMap}/>}
           </div>
-          <div className={!(isMobile()) ? styles.detailBody : classNames(styles.detailBody, styles.mobileBody)}>
+          <div className={!(isMobile()) ? styles.detailBody : classnames(styles.detailBody, styles.mobileBody)}>
             <Wrap title={formatMessage({ ...localeMessage['basic'] })}>
               <ul>
                 <li><span>{formatMessage({ ...localeMessage['name'] })}:</span><span>{currentAlertDetail.name ? currentAlertDetail.name : formatMessage({ ...localeMessage['unknown'] })}</span></li>
