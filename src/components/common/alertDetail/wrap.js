@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import styles from './index.less'
-import { classnames } from '../../../utils'
+import { classnames, isMobile } from '../../../utils'
 import { Button } from 'antd'
 
 export default class Wrap extends Component {
@@ -25,7 +25,7 @@ export default class Wrap extends Component {
         'icon-xialasanjiao'
     )
     return (
-      <div className={ styles.info }>
+      <div className={ !(isMobile()) ? styles.info : classnames(styles.info, styles.mobileInfo) }>
         <div className={ styles.infoTitle }>
           <p onClick={toggleVisible || (() => {this.toggleVisible()})}>{ title } <Button ghost className={ styles.setVisibleIcon } onClick={toggleVisible || (() => {this.toggleVisible()})}><i href="javascript:;" className={ (this.state.visible?xialaClass : shanglaClass) + ' ' }/></Button></p>
         </div>
