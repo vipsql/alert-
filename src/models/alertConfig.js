@@ -334,7 +334,7 @@ export default {
           yield put({
             type: 'openTypeModal',
             payload: {
-              applicationTypeData: typeResult.data,
+              applicationTypeData: typeResult.data.filter( item => item.type == 1 && (item.uniqueCode != '2' || item.uniqueCode != '3') ) || [], // 过滤ITSM和chatops
             }
           })
         } else {
