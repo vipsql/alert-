@@ -6,6 +6,7 @@ import { classnames, isJSON, isEmpty } from '../../../utils'
 import constants from '../../../utils/constants'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import LeaveNotifyModal from '../../common/leaveNotifyModal/index'
+import VarsSelect from '../../varsSelect'
 
 const Item = Form.Item;
 const RadioGroup = Radio.Group;
@@ -242,7 +243,16 @@ class UYUN_Webhook extends Component {
               <div className={isShowSenior ? styles.showItem : styles.hideItem}>
                 <Item
                   {...itemLayout}
-                  label={formatMessage({ ...localeMessage['fieldMap'] })}
+                  colon={false}
+                  label={
+                    <div>
+                      <div style={{ lineHeight: 1 }}>{ formatMessage({ ...localeMessage['fieldMap'] }) }：</div>
+                      <VarsSelect insertVar={(item) => {
+                        const oldValue = form.getFieldValue("fieldMap") || '';
+                        form.setFieldsValue({ fieldMap: oldValue + '${' + item + '}' })
+                      }}/>
+                    </div>
+                  }
                 >
                   {getFieldDecorator('fieldMap', {
                     rules: [

@@ -72,7 +72,7 @@ class Filter extends Component {
     const { dispatch } = this.props;
     const id = item.props.id;
 
-    if(this.isDeleting) {
+    if (this.isDeleting) {
       this.isDeleting = false;
       return;
     }
@@ -169,7 +169,7 @@ class Filter extends Component {
     const { form, dispatch, alertQuery, alertOperation, intl: { formatMessage }, alertQueryFilter } = this.props;
     const { getFieldDecorator, getFieldsValue } = form;
     const { haveQuery, sourceOptions, propertyOptions, ownerOptions, queryCount, isShowBar, selectGroup, columnList, extendColumnList, extendTagsKey } = alertQuery;
-    const { filters, isShowSaveModal, isShowDeleteModal, toDeleteFilter={} } = alertQueryFilter;
+    const { filters, isShowSaveModal, isShowDeleteModal, toDeleteFilter = {} } = alertQueryFilter;
 
     const formItemLayout = {
       labelCol: { span: 6 },
@@ -339,6 +339,10 @@ class Filter extends Component {
       extraKeyWords: {
         id: 'ruleEditor.label3',
         defaultMessage: '扩展字段'
+      },
+      noData: {
+        id: "visualAnalyze.noData",
+        defaultMessage: "暂无数据",
       }
     })
 
@@ -355,7 +359,7 @@ class Filter extends Component {
     )
 
     const filtersOverlay = (
-      <Menu className={ styles.filterMenu } onClick={({ item, key }) => { this.onSelectSearch(item, key) }}>
+      <Menu className={styles.filterMenu} onClick={({ item, key }) => { this.onSelectSearch(item, key) }}>
         {
           filters.map((filter, index) => {
             return (
@@ -364,6 +368,15 @@ class Filter extends Component {
               </MenuItem>
             )
           })
+        }
+
+        {
+          filters.length == 0 ?
+            <MenuItem disabled={ true } key='noData' className={styles.menuItem}>
+              <FormattedMessage {...localeMessage['noData']}/>
+            </MenuItem>
+            :
+            []
         }
       </Menu>
     )
@@ -595,7 +608,7 @@ class Filter extends Component {
             </Col>
             <Col span={8} className={classnames(styles.colStyle, styles.operateCol)}>
               <div>
-                <Dropdown.Button onClick={ this.openSaveModal.bind(this) } type="primary" size="large" className={classnames(styles.myDropdown)} overlay={filtersOverlay}>
+                <Dropdown.Button trigger={['click']} onClick={this.openSaveModal.bind(this)} type="primary" size="large" className={classnames(styles.myDropdown)} overlay={filtersOverlay}>
                   <i className={saveIcon} />
                 </Dropdown.Button>
                 <Button className={styles.searchBtn} type="primary" size="large" onClick={() => {
@@ -611,8 +624,8 @@ class Filter extends Component {
             </Col>
           </Row>
         </Form>
-        <FilterSaveModal dispatch={ dispatch } isShowSaveModal={ isShowSaveModal }/>
-        <FilterDeleteModal dispatch={ dispatch } isShowDeleteModal={ isShowDeleteModal } toDeleteFilter={ toDeleteFilter }/>
+        <FilterSaveModal dispatch={dispatch} isShowSaveModal={isShowSaveModal} />
+        <FilterDeleteModal dispatch={dispatch} isShowDeleteModal={isShowDeleteModal} toDeleteFilter={toDeleteFilter} />
       </div>
     )
   }

@@ -362,6 +362,11 @@ const __DataRule = {
       { "group": "property", "nameZh": "端口ID", "nameUs": "portId", "type": "str" },
       { "group": "property", "nameZh": "CI_ID", "nameUs": "ciid", "type": "str" }
     ]
+  },
+
+  '/rule/filterValue': {
+    regex: /\/rule\/filterValue?/,
+    template: ["name","alias","severity","source","status","entityName","entityAddr","firstOccurTime","lastOccurTime","closeTime","description","mergeKey","resolveMessage","closeMessage","remark","isNotify","classCode","properties","tags","owner"]
   }
 
   // '/incident/getIncidentDetail/': {
