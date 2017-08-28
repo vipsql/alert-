@@ -796,6 +796,7 @@ class RuleEditor extends Component {
                               vars={this.props.alertAssociationRules.field || []}
                               types={ this.props.alertAssociationRules.wos }
                               type={ action.actionITSM ? action.actionITSM.itsmModelId : undefined }
+                              isNeedVars={true}
                               params={ this.state.ITSMParam }
                               changeType={ this.changeAction.bind(this, 4) }
                             />
@@ -889,6 +890,7 @@ class RuleEditor extends Component {
                                   vars={this.props.alertAssociationRules.field || []}
                                   types={ this.props.alertAssociationRules.plugins }
                                   type={ action.actionPlugin ? action.actionPlugin.uuid : undefined }
+                                  isNeedVars={false}
                                   params={ this.state.PluginParam }
                                   changeType={ this.changeAction.bind(this, 100) }
                                 />
@@ -1351,7 +1353,7 @@ class RuleEditor extends Component {
                 opt,
                 value,
                 level,
-                classCode: this.props.alertAssociationRules.classCode || [],
+                //classCode: this.props.alertAssociationRules.classCode || [],
                 source: this.props.alertAssociationRules.source || [],
                 attributes: this.props.alertAssociationRules.attributes || {},
                 _key: key,

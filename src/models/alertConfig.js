@@ -101,7 +101,7 @@ export default {
           type: 'setApiKeys',
           payload: (app.userInfo && app.userInfo.apiKeys && app.userInfo.apiKeys[0]) || undefined
         })
-        yield put({ type: 'initalAddAppView', payload: { isShowTypeModal: false, appTypeId: payload, UUID: undefined } }) // isShowTypeModal -> false, currentOperateAppType -> Object
+        yield put({ type: 'initalAddAppView', payload: { isShowTypeModal: false, uniqueCode: payload, UUID: undefined, webHook: {} } }) // isShowTypeModal -> false, currentOperateAppType -> Object
         const { currentOperateAppType } = yield select(state => {
           return {
             'currentOperateAppType': state.alertConfig.currentOperateAppType,
@@ -419,17 +419,20 @@ export default {
       return { ...state, apikey }
     },
     // 点开新增详情页面
-    initalAddAppView(state, { payload: { isShowTypeModal, appTypeId, UUID } }) {
+    initalAddAppView(state, { payload: { isShowTypeModal, uniqueCode, UUID } }) {
       const { applicationTypeData } = state;
       let newObj = {};
       applicationTypeData.forEach((typeItem) => {
         typeItem.children.forEach((item) => {
-          if (item.id == appTypeId) {
+          if (item.uniqueCode == uniqueCode) {
             newObj = item;
           }
         })
       })
-      return { ...state, isShowTypeModal, UUID, currentOperateAppType: newObj, currentDisplayName: undefined }
+      if(Object.keys(newObj).length == 0) {
+        newObj.uniqueCode = uniqueCode;
+      }
+      return { ...state, isShowTypeModal, UUID, currentOperateAppType: newObj, currentDisplayName: undefined, webHook: {} }
     },
     // 回显
     setCurrent(state, { payload }) {
