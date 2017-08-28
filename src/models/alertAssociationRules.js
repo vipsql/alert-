@@ -13,7 +13,7 @@ import {
   queryAttributes,
   getshowITSMParam,
   getshowPluginParam,
-  getClasscode,
+  //getClasscode,
   querySource,
   getPlugins
 } from '../services/alertAssociationRules';
@@ -60,7 +60,7 @@ const initalState = {
   rooms: [], // chatOps 群组
   wos: [], // 工单类型
   plugins: [], //插件类型
-  classCode: [], // 资源类型
+  //classCode: [], // 资源类型
   ITSMParam: {}, // 映射配置
   PluginParam: {}, // 插件配置
 }
@@ -374,14 +374,14 @@ export default {
         ...payload
       }
 
-      const [ chatOps, users, source, attributes, field, wos, classCode, plugins ] = yield [
+      const [ chatOps, users, source, attributes, field, wos, plugins ] = yield [
         call(getChatOpsOptions, params), // 获取群组
         call(getUsers, params), // 获取用户
         call(querySource, params), // 获取来源
         call(queryAttributes, params), // 获取维度
         call(getField, params), // 获取映射字段
         call(getWos, params), // 获取工单类型
-        call(getClasscode, params), // 获取classcode
+        //call(getClasscode, params), // 获取classcode
         call(getPlugins, params) // 获取插件种类
       ]
 
@@ -394,7 +394,7 @@ export default {
           attributes: attributes.result ? attributes.data : [],
           field: field.result ? field.data : [],
           wos: wos.result ? wos.data : [],
-          classCode: classCode.result ? classCode.data : [],
+          //classCode: classCode.result ? classCode.data : [],
           plugins: plugins.result ? plugins.data : []
         }
       })
