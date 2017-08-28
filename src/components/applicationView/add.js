@@ -20,7 +20,7 @@ class Add extends Component {
     const { currentOperateAppType } = props.alertConfig;
 
     const createApplication = ({ alertConfig, dispatch }) => {
-      const { currentOperateAppType, UUID, currentDisplayName, apikey } = alertConfig;
+      const { currentOperateAppType, UUID, currentDisplayName, apikey, webHook } = alertConfig;
       let targetApplication;
       let hostUrl = 'https://alert.uyun.cn'
       let origin = window.location.protocol + '//' + window.location.host;
@@ -304,6 +304,7 @@ class Add extends Component {
               route={props.route}
               appkey={UUID}
               displayName={currentDisplayName}
+              webHook={webHook}
               onOk={(e, form) => {
                 e.preventDefault();
 
@@ -338,11 +339,21 @@ class Add extends Component {
               }}
               keyCreate={(form) => {
                 let _UUID = getUUID(32);
+                const formData = form.getFieldsValue() || {};
+
                 dispatch({
                   type: 'alertConfig/setUUID',
                   payload: {
                     UUID: _UUID,
-                    currentDisplayName: form.getFieldsValue().displayName
+                    currentDisplayName: formData.displayName,
+                    webHook: {
+                      url: formData.url,
+                      requestMode: formData.requestMode,
+                      timeout: formData.timeout,
+                      fieldMap: formData.fieldMap,
+                      replyKey: formData.replyKey,
+                      replySuccess: formData.replySuccess
+                    }
                   }
                 })
               }}

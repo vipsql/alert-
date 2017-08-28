@@ -498,8 +498,8 @@ export default {
       })
       return { ...state, applicationData: newData, isShowDeteleModal: false }
     },
-    setUUID(state, { payload: { UUID, currentDisplayName } }) {
-      return { ...state, UUID: UUID, currentDisplayName: currentDisplayName }
+    setUUID(state, { payload: { UUID, currentDisplayName, webHook } }) {
+      return { ...state, UUID: UUID, currentDisplayName: currentDisplayName, webHook }
     }
   },
 
