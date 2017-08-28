@@ -53,7 +53,8 @@ function findType(item, extra, index) {
     item,
     formItemLayout: extra.formItemLayout,
     prop: extra.prop ? extra.prop : {},
-    disabled: item.isRequired === 2 ? true : false // 是否是只读, 2 --> readOnly, 1 --> required, 0 --> notRequired
+    disabled: item.isRequired === 2 ? true : false, // 是否是只读, 2 --> readOnly, 1 --> required, 0 --> notRequired
+    isNeedVars: extra.isNeedVars
   }
 
   function insertVar(type, item) {
@@ -75,7 +76,7 @@ function findType(item, extra, index) {
   //工单标题
   if (item.code === 'title') {
     return (
-      <CTMTitle key={ item.code } {...diliver} vars={vars(item.code)} />
+      <CTMTitle key={ item.code } {...diliver} vars={ diliver.isNeedVars ? vars(item.code) : null } />
     )
   }
   //优先级
@@ -86,12 +87,12 @@ function findType(item, extra, index) {
   }
   if (item.type === 'singleRowText' && item.code !== 'title') {
     return (
-      <CTMSingleRowText key={ item.code } {...diliver} vars={vars(item.code)} />
+      <CTMSingleRowText key={ item.code } {...diliver} vars={ diliver.isNeedVars ? vars(item.code) : null } />
     )
   }
   if (item.type === 'multiRowText' && item.code !== 'ticketDesc') {
     return (
-      <CTMMultiRowText key={ item.code } {...diliver} vars={vars(item.code)} />
+      <CTMMultiRowText key={ item.code } {...diliver} vars={ diliver.isNeedVars ? vars(item.code) : null } />
     )
   }
   if (item.type === 'listSel') {
@@ -147,7 +148,7 @@ function findType(item, extra, index) {
   //工单描述
   if (item.code === 'ticketDesc') {
     return (
-      <CTMTicketDesc key={ item.code } {...diliver} vars={vars(item.code)} />
+      <CTMTicketDesc key={ item.code } {...diliver} vars={ diliver.isNeedVars ? vars(item.code) : null } />
     )
   }
   return null
@@ -208,7 +209,8 @@ class Required extends Component {
     let extra = {
       form,
       formItemLayout: childItemLayout,
-      vars: vars
+      vars: vars,
+      isNeedVars: props.isNeedVars
     }
     return data.map((item, index) => {
       return this.prefix(item, {
@@ -305,7 +307,8 @@ class NotRequired extends Component {
     let extra = {
       form,
       formItemLayout: childItemLayout,
-      vars: vars
+      vars: vars,
+      isNeedVars: props.isNeedVars
     }
     return this.state.req.map( (item, index) => {
       let options = this.diffence(this.state.options, this.state.req)
@@ -451,11 +454,13 @@ class CustomField extends Component {
           { React.cloneElement(<Required />, {
             data: this.state.result.required || defaultArr,
             vars: this.props.vars,
+            isNeedVars: this.props.isNeedVars,
             form: this.props.form
           }) }
           { React.cloneElement(<NotRequired />, {
             data: this.state.result.notRequired || defaultArr,
             vars: this.props.vars,
+            isNeedVars: this.props.isNeedVars,
             form: this.props.form
           }) }
           { React.cloneElement(<Executors />, {
