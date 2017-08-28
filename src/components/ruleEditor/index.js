@@ -1351,7 +1351,7 @@ class RuleEditor extends Component {
                 opt,
                 value,
                 level,
-                classCode: this.props.alertAssociationRules.classCode || [],
+                //classCode: this.props.alertAssociationRules.classCode || [],
                 source: this.props.alertAssociationRules.source || [],
                 attributes: this.props.alertAssociationRules.attributes || {},
                 _key: key,
