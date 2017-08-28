@@ -28,7 +28,7 @@ export default class CTMSingleRowText extends React.Component {
   }
 
   render() {
-    const { item, getFieldDecorator, prop, vars, formItemLayout, disabled } = this.props;
+    const { item, getFieldDecorator, prop, vars, formItemLayout, disabled, isNeedVars } = this.props;
     return (
       <div className={styles.wrapper}>
         <FormItem {...formItemLayout}>
@@ -54,7 +54,7 @@ export default class CTMSingleRowText extends React.Component {
           }
         </FormItem>
         {
-          !disabled ?
+          !disabled && isNeedVars ?
           <Popover overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={vars}>
               <div className={styles.insertVar}>{window.__alert_appLocaleData.messages['ruleEditor.vars']}</div>
           </Popover>
