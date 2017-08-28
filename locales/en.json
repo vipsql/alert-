@@ -10,6 +10,8 @@
   "bread.association.edit": "Edit Rule",
   "bread.alertList": "Alerts",
   "bread.association": "Correlations",
+  "bread.toAddApplication": "Add Application",
+  "bread.toEditApplication": "Edit Application",
 
   "leftMenu.alertManage": "Alerts",
   "leftMenu.alertQuery": "Search",

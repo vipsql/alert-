@@ -45,10 +45,18 @@ const path = defineMessages({
   integrationConfig: {
     id: 'bread.integrationConfig',
     defaultMessage: '应用配置'
+  },
+  addApplication: {
+    id: 'bread.toAddApplication',
+    defaultMessage: '添加应用',
+  },
+  editApplication: {
+    id: 'bread.toEditApplication',
+    defaultMessage: '编辑应用'
   }
 })
 
-function Bread ({ location, appTypeName }) {
+function Bread ({ location }) {
   const pathname = location.pathname
   const pathDepth = pathname.split('/')
   let breads = []
@@ -88,7 +96,16 @@ function Bread ({ location, appTypeName }) {
     breads.push(
       <Breadcrumb.Item key="alertConfig"><a href="#alertConfig"><FormattedMessage {...path['alertConfig']}/></a></Breadcrumb.Item>,
       <Breadcrumb.Item key="alertApplication"><a href="#alertConfig/alertApplication"><FormattedMessage {...path['integration']}/></a></Breadcrumb.Item>,
-      <Breadcrumb.Item key="applicationView">{appTypeName}</Breadcrumb.Item>
+      <Breadcrumb.Item key="applicationView">
+        {pathDepth.indexOf('add') > -1?
+          <FormattedMessage  {...path['addApplication']}/>
+          :
+            pathDepth.indexOf('edit') > -1?
+            <FormattedMessage  {...path['editApplication']}/>
+            :
+            undefined
+        }
+      </Breadcrumb.Item>
     )
   } else {
     const key = pathDepth[1]
@@ -110,11 +127,5 @@ Bread.propTypes = {
   location: PropTypes.object
 }
 
-export default connect(({alertConfig}) => ({
-  appTypeName: alertConfig.currentOperateAppType.name !== undefined
-    ? alertConfig.currentOperateAppType.name
-      : alertConfig.currentEditApp.applyType !== undefined && alertConfig.currentEditApp.applyType.name !== undefined ?
-        alertConfig.currentEditApp.applyType.name
-          : 'Integrations Config'
-}))(Bread)
+export default Bread;
 
