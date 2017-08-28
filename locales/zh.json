@@ -9,6 +9,9 @@
   "bread.association.edit": "编辑规则",
   "bread.alertList": "告警列表",
   "bread.association": "关联配置",
+  "bread.toAddApplication": "添加应用",
+  "bread.toEditApplication": "编辑应用",
+
   "leftMenu.alertManage": "告警管理",
   "leftMenu.alertQuery": "告警查询",
   "leftMenu.alertConfig": "告警配置",
@@ -316,6 +319,8 @@
   "alertApplication.appKey": "点击生成AppKey",
   "alertApplication.appKey.placeholder": "请先生成AppKey",
   "alertApplication.save": "保存",
+  "alertApplication.toAdd": "添加应用",
+  "alertApplication.toEdit": "编辑应用",
 
   "alertApplication.webhook.headerTitle": "把Alert告警以Web Hook方式实时分享到第三方系统",
   "alertApplication.webhook.step2": "配置Alert",
