@@ -206,7 +206,7 @@ class VisualAnalyze extends Component {
         // const iconImage = (childItem.iconUrl && childItem.iconUrl!="")?<img src={childItem.iconUrl} style={{ width: '70%', marginTop: '15%' }} /> : undefined;
         // console.log(hoverId, childItem.resId,  alertList);
         return (
-          <IconItem key={childIndex} alertList={hoverId == childItem.resId ? alertList : undefined} showAlertList={showAlertList} cancelShowAlertList={cancelShowAlertList} childItem={childItem} />
+          <IconItem detailClick={detailClick} key={childIndex} alertList={hoverId == childItem.resId ? alertList : undefined} showAlertList={showAlertList} cancelShowAlertList={cancelShowAlertList} childItem={childItem} />
         )
       })
       return (

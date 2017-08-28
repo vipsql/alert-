@@ -64,6 +64,9 @@ const initialState = {
   }, {
     key: 'status',
     order: true
+  }, {
+    key: 'tags',
+    order: false
   },],
 }
 

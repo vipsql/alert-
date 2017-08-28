@@ -22,7 +22,7 @@ class IconItem extends Component {
     }
   }
   render() {
-    const { childItem, alertList, showAlertList, cancelShowAlertList } = this.props;
+    const { childItem, alertList, showAlertList, cancelShowAlertList, detailClick } = this.props;
     let AlertListContent = (
       <div>Loading...</div>
     )
