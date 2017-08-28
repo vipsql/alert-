@@ -229,6 +229,10 @@ class UYUN_Webhook extends Component {
                   <InputNumber
                     min={0}
                     max={30}
+                    step={ 5 }
+                    readOnly
+                    upHandler={<div className={ styles.num } onClick={() => { const { timeout } = form.getFieldsValue(); timeout < 30 && form.setFieldsValue({ timeout: parseInt(timeout) + 5 }) }}><i className={shouqiClass}/></div>}
+                    downHandler={<div className={ styles.num } onClick={() => { const { timeout } = form.getFieldsValue(); timeout > 0 && form.setFieldsValue({ timeout: parseInt(timeout) - 5 }) }}><i className={zhankaiClass}/></div>}
                   />
                   )}
                 <span className={styles.overTimeMsg}><FormattedMessage { ...localeMessage['overTimeMsg']} values={{ overTime: form.getFieldsValue().timeout }} /></span>
