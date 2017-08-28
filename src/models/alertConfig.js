@@ -173,7 +173,8 @@ export default {
 
       if (formData !== undefined && formData.displayName !== undefined) {
         if (UUID === undefined) {
-          yield message.error(window.__alert_appLocaleData.messages['alertApplication.appKey.placeholder'], 3)
+          message.error(window.__alert_appLocaleData.messages['alertApplication.appKey.placeholder'], 3)
+          return;
         }
         const params = {
           status: 1, // 默认启用
