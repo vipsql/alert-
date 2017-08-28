@@ -101,7 +101,7 @@ export default {
           type: 'setApiKeys',
           payload: (app.userInfo && app.userInfo.apiKeys && app.userInfo.apiKeys[0]) || undefined
         })
-        yield put({ type: 'initalAddAppView', payload: { isShowTypeModal: false, appTypeId: payload, UUID: undefined } }) // isShowTypeModal -> false, currentOperateAppType -> Object
+        yield put({ type: 'initalAddAppView', payload: { isShowTypeModal: false, appTypeId: payload, UUID: undefined, webHook: {} } }) // isShowTypeModal -> false, currentOperateAppType -> Object
         const { currentOperateAppType } = yield select(state => {
           return {
             'currentOperateAppType': state.alertConfig.currentOperateAppType,
@@ -429,7 +429,7 @@ export default {
           }
         })
       })
-      return { ...state, isShowTypeModal, UUID, currentOperateAppType: newObj, currentDisplayName: undefined }
+      return { ...state, isShowTypeModal, UUID, currentOperateAppType: newObj, currentDisplayName: undefined, webHook: {} }
     },
     // 回显
     setCurrent(state, { payload }) {
