@@ -68,14 +68,14 @@ async function setLang(lang) {
         "255": "Closed"
       }
       window.fieldMapMsgPlaceholder = '' +
-      '//示例\n' +
+      '//eg.\n' +
       '{\n' +
       '  "state":"${status}",\n' +
       '  "time":"${occurTime}",\n' +
       '  "name": "${name}",\n' +
       '  "resName":"${entityName}",\n' +
       '  "ip":"${entityAddr}",\n' +
-      '  "desc":"${entityName},发生告警，描述:${description}"\n' +
+      '  "desc":"${entityName} : ${description}"\n' +
       '}'
       break
     default:
