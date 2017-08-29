@@ -123,14 +123,14 @@ curl -H "Content-type: application/json;charset=utf-8" -X POST -d '
   </script>
  <script>
  	function getUrl() {
-		document.getElementById('url').innerHTML = window.parent.__alert_restApiUrl
-		document.getElementById('example').innerHTML = document.getElementById('example').innerHTML + window.parent.__alert_restApiUrl;
+		document.getElementById('url').innerText = window.parent.__alert_restApiUrl
+		document.getElementById('example').innerText = document.getElementById('example').innerText + window.parent.__alert_restApiUrl;
 	}
 	window.addEventListener('message', function(e){
-		var len = document.getElementById('example').innerHTML.length;
+		var len = document.getElementById('example').innerText.length;
 		if(e.source!=window.parent) return;
-		document.getElementById('url').innerHTML = document.getElementById('url').innerHTML + '&app_key=' + e.data
-		document.getElementById('example').innerHTML = document.getElementById('example').innerHTML.slice( 0, len) + '\\&app_key=' + e.data
+		document.getElementById('url').innerText = document.getElementById('url').innerText + '&app_key=' + e.data
+		document.getElementById('example').innerText = document.getElementById('example').innerText.slice( 0, len) + '\\&app_key=' + e.data
 	}, false);
  </script>
 </html>
