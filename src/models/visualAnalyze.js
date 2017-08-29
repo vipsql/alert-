@@ -11,7 +11,7 @@ const initalState = {
   tags: [],
   //  isFirst: false, //是否从其他页面进入
   resList: [],
-
+  pageSize: 20,
   isShowFouth: false,
   incidentGroup: true,
   tagsLevel: 1,
@@ -173,6 +173,7 @@ export default {
         }
 
       } else {
+        let pageSize = yield select(state => state.visualAnalyze.pageSize)
         let groupListData = yield call(queryVisual, {
           "incidentGroup": showIncidentGroup !== undefined ? showIncidentGroup : isShowIncidentGroup,
           tags: visualSelect.concat([
@@ -184,6 +185,7 @@ export default {
           // 一级分组列表
           groupList = groupListData.data.map(item => {
             item.isExpand = true
+            item.count = pageSize
             return item
           })
         } else {
@@ -280,6 +282,16 @@ export default {
         ...state,
         ...initalState
       }
+    },
+
+    addNums(state, {payload: {num, tagValue}}) {
+      const groupList = state.groupList
+      groupList.forEach(item => {
+        if (item.tagValue === tagValue) {
+          item.count = num
+        }
+      })
+      return { ...state, groupList }
     },
 
     expandList(state, { payload: { index, isExpand } }) {

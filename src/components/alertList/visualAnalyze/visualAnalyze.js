@@ -1,4 +1,5 @@
 import React, { PropTypes, Component } from 'react'
+import ReactDOM from 'react-dom'
 import { Tabs, Select, Checkbox, Tooltip, Popover } from 'antd'
 import { connect } from 'dva'
 
@@ -26,6 +27,11 @@ const rightArr = classnames(
   'iconfont',
   'icon-cebianlanzhankai',
   styles['next']
+)
+const arrClass = classnames(
+  'switchMenu',
+  'iconfont',
+  'icon-xialasanjiao'
 )
 const leftArr = classnames(
   'iconfont',
@@ -69,7 +75,6 @@ class VisualAnalyze extends Component {
 
   }
   componentWillReceiveProps(nextProps) {
-
     if (nextProps !== this.props) {
       return true
     }
@@ -78,6 +83,7 @@ class VisualAnalyze extends Component {
   render() {
     const {
       handleExpand,
+      pageSize,
       gr2Change,
       gr3Change,
       gr4Change,
@@ -97,6 +103,7 @@ class VisualAnalyze extends Component {
       detailClick,
       incidentGroup,
       resList,
+      addNums,
       hoverId
       } = this.props
     const { gr2State, gr3State, gr4State } = this.state
@@ -168,10 +175,11 @@ class VisualAnalyze extends Component {
 
     let isShowImg = false //是否显示图片
     const groupListComponent = groupList.length > 0 && groupList.map((item, index) => {
+      let tagsGroupWidth = 200 // tagsGroup的width
 
-      const tagsList = item.values.length > 0 && item.values.map((childItem, childIndex) => {
+      const tagsList = item.values.length > 0 && item.values.slice(0, item.count).map((childItem, childIndex) => {
         return (
-          <div className={styles.tagsGroup} key={childIndex} data-gr2Val={item.tagValue} data-gr3Val={childItem.value} onClick={(e) => { showResList(e) }}>
+          <div className={styles.tagsGroup} style={{width: tagsGroupWidth + 'px'}} key={childIndex} data-gr2Val={item.tagValue} data-gr3Val={childItem.value} onClick={(e) => { showResList(e) }}>
 
             <div className={childItem['severity'] > -1 ? styles.tagsRingTwo : styles.tagsRingTwo2} style={{ background: severityToColor[childItem['severity']] }}></div>
             {childItem['severity'] > -1 && <div className={styles.tagsRingOne} style={{ background: severityToColor[childItem['severity']] }}></div>}
@@ -188,10 +196,16 @@ class VisualAnalyze extends Component {
             <span className={!item.isExpand ? styles.triangleDown : styles.triangleTop} data-index={index} data-expand={item.isExpand} onClick={(e) => { handleExpand(e) }}></span>
           </div>
           {item.isExpand &&
-            <div className={styles.listBody}>
-              <Slider {...slideSettings}>
+            <div className={styles.listBody} >
                 {tagsList}
-              </Slider>
+            </div>
+          }
+          {item.isExpand && item.values.length > item.count &&
+            <div className={styles.listFooter} onClick={(e) => { addNums(e, {
+              tagValue: item.tagValue,
+              num: item.values.length - item.count  > pageSize ? (item.count + pageSize) : item.values.length
+            } ) }}>
+                <i className={arrClass}></i>
             </div>
           }
         </li>
@@ -332,7 +346,7 @@ class VisualAnalyze extends Component {
           : (!isShowFouth ?
 
             (groupList.length > 0 ?
-              <ul className={styles.visualList} style={{ opacity: !isShowFouth ? 1 : 0 }}>
+              <ul className={styles.visualList} style={{ opacity: !isShowFouth ? 1 : 0 }} ref={ body => this.ulBody = body }>
                 {groupListComponent}
               </ul>
               : <div className={styles.visualNoData}><FormattedMessage {...formatMessages['noData']} /></div>

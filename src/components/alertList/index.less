@@ -265,6 +265,17 @@
               }
           }
         }
+        .listFooter{
+          width: 100%;
+          text-align: center;
+          height: 25px;
+          line-height: 25px;
+          background: extract(@var, 37);
+          cursor: pointer;
+          & > i {
+            color: extract(@var, 40)
+          }
+        }
         .listBody{
           // height: 100px;
           padding: 40px;
@@ -277,6 +288,7 @@
             cursor: pointer;
             z-index: 1;
             padding-top: 10px;
+            display: inline-block;
             .tagsRingTwo{
               position: absolute;
               border-radius: 40px;

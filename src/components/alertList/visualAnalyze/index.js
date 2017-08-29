@@ -145,6 +145,15 @@ const VisualAnalyzeWrap = ({ dispatch, visualAnalyze }) => {
       })
 
 
+    },
+    addNums(e, params) {
+      e.stopPropagation();
+      dispatch({
+        type: 'visualAnalyze/addNums',
+        payload: {
+          ...params
+        }
+      })
     }
 
 
