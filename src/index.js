@@ -67,17 +67,16 @@ async function setLang(lang) {
         "190": "Resolved",
         "255": "Closed"
       }
-      window.fieldMapMsgPlaceholder = `
-      //示例
-      {
-        "state":"${status}",
-        "time":"${occurTime}",
-        "name": "${name}",
-        "resName":"${entityName}",
-        "ip":"${entityAddr}",
-        "desc":"${entityName},发生告警，描述:${description}"
-      }
-      `
+      window.fieldMapMsgPlaceholder = '' +
+      '//示例\n' +
+      '{\n' +
+      '  "state":"${status}",\n' +
+      '  "time":"${occurTime}",\n' +
+      '  "name": "${name}",\n' +
+      '  "resName":"${entityName}",\n' +
+      '  "ip":"${entityAddr}",\n' +
+      '  "desc":"${entityName},发生告警，描述:${description}"\n' +
+      '}'
       break
     default:
       appLocaleData = {
@@ -101,17 +100,16 @@ async function setLang(lang) {
         "255": "已关闭"
       }
 
-      window.fieldMapMsgPlaceholder = `
-      //示例
-      {
-        "state":"${status}",
-        "time":"${occurTime}",
-        "name": "${name}",
-        "resName":"${entityName}",
-        "ip":"${entityAddr}",
-        "desc":"${entityName},发生告警，描述:${description}"
-      }
-      `
+      window.fieldMapMsgPlaceholder = '' +
+      '//示例\n' +
+      '{\n' +
+      '  "state":"${status}",\n' +
+      '  "time":"${occurTime}",\n' +
+      '  "name": "${name}",\n' +
+      '  "resName":"${entityName}",\n' +
+      '  "ip":"${entityAddr}",\n' +
+      '  "desc":"${entityName},发生告警，描述:${description}"\n' +
+      '}'
 
       break
 
