@@ -107,7 +107,7 @@ export default {
       yield put({ type: 'tagListFilter/filterTags'})
       const filteredTags = yield select( state => state.tagListFilter.filteredTags )
       yield put({ type: 'queryAlertBar', payload: {...filteredTags} })
-      yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
+      // yield put({ type: 'visualAnalyze/queryVisualList', payload: {isFirst: true} })
       yield put({ type: 'alertOperation/setButtonsDisable'})
     }
 
