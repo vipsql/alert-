@@ -70,12 +70,12 @@ async function setLang(lang) {
       window.fieldMapMsgPlaceholder = `
       //示例
       {
-        "state":"$\0{status}",
-        "time":"$\0{occurTime}",
-        "name": "$\0{name}",
-        "resName":"$\0{entityName}",
-        "ip":"$\0{entityAddr}",
-        "desc":"$\0{entityName},发生告警，描述:$\0{description}"
+        "state":"${status}",
+        "time":"${occurTime}",
+        "name": "${name}",
+        "resName":"${entityName}",
+        "ip":"${entityAddr}",
+        "desc":"${entityName},发生告警，描述:${description}"
       }
       `
       break
@@ -104,12 +104,12 @@ async function setLang(lang) {
       window.fieldMapMsgPlaceholder = `
       //示例
       {
-        "state":"$\0{status}",
-        "time":"$\0{occurTime}",
-        "name": "$\0{name}",
-        "resName":"$\0{entityName}",
-        "ip":"$\0{entityAddr}",
-        "desc":"$\0{entityName},发生告警，描述:$\0{description}"
+        "state":"${status}",
+        "time":"${occurTime}",
+        "name": "${name}",
+        "resName":"${entityName}",
+        "ip":"${entityAddr}",
+        "desc":"${entityName},发生告警，描述:${description}"
       }
       `
 
