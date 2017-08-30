@@ -92,10 +92,12 @@
   "alertQuery.search": "搜索",
   "alertQuery.reset": "重置",
   "alertQuery.result": "共{total}个结果（紧急{critical}个，警告{warning}个，提醒{information}个，恢复{ok}个）",
+
   "alertQueryFilter.saveFilter": "保存查询条件",
   "alertQueryFilter.savePlaceholder": "保存查询条件",
   "alertQueryFilter.deleteFilter": "删除查询条件",
   "alertQueryFilter.deleteFilterMessage": "是否删除查询条件{ name }?",
+
   "alertOperate.takeOver": "接手",
   "alertOperate.reassign": "转派 ...",
   "alertOperate.dispatch": "派单",
