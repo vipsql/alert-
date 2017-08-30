@@ -114,7 +114,7 @@ class DatePeriodPicker extends Component {
           </div>
         )}
       >
-        <Input onMouseOut={() => this.onLostFocus()} onMouseEnter={ () => this.onFocus() } placeholder={placeholder} readOnly value={dayTimeString} style={{width: '100%'}} addonAfter={<i onMouseOut={() => this.onLostFocus()} onMouseEnter={ () => this.onFocus() }  onClick={() => this.clear()} className={ isFocus?shanchuClass:shijianClass }/>} />
+        <Input onMouseOut={() => this.onLostFocus()} onMouseEnter={ () => this.onFocus() } placeholder={placeholder} readOnly value={dayTimeString} style={{width: '100%', lineHeight: 1.5}} addonAfter={<i onMouseOut={() => this.onLostFocus()} onMouseEnter={ () => this.onFocus() }  onClick={() => this.clear()} className={ isFocus?shanchuClass:shijianClass }/>} />
       </Popover>
       </div>
     )
