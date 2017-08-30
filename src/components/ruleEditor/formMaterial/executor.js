@@ -32,7 +32,7 @@ export default class Executor extends React.Component {
             {item.name.length > 15 ? item.name.substr(0,15) + '...' : item.name}
           </div>
         </Col>
-        <Col span={6} className={styles.manageStyle}>
+        <Col span={12} className={styles.manageStyle}>
           <FormItem>
             {
               getFieldDecorator(`${limitField.PREFIX_EXECUTOR}${item.id}`, {

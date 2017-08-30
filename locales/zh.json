@@ -486,7 +486,7 @@
   "ITSMWrapper.create.urgentLevel": "根据级别自动匹配",
   "ITSMWrapper.isRequired": "映射字段(必选)",
   "ITSMWrapper.isNotRequired": "映射字段(选填)",
-  "ITSMWrapper.executors": "执行人：",
+  "ITSMWrapper.executors": "执行人",
   "ITSMWrapper.create.select": "请选择",
   "ITSMWrapper.create.enter_subject": "请输入工单标题",
   "ITSMWrapper.create.limit_subject": "名称字数超过限制",
