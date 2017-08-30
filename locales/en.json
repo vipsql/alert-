@@ -100,10 +100,10 @@
   "alertQuery.reset": "Reset",
   "alertQuery.result": "{total} results found. (Critical {critical}, Warning {warning}, Information {information}, Recovery {ok})",
 
-  "alertQueryFilter.saveFilter": "保存查询条件",
-  "alertQueryFilter.savePlaceholder": "保存查询条件",
-  "alertQueryFilter.deleteFilter": "删除查询条件",
-  "alertQueryFilter.deleteFilterMessage": "是否删除查询条件{ name }?",
+  "alertQueryFilter.saveFilter": "Save the query condition",
+  "alertQueryFilter.savePlaceholder": "Save the query condition",
+  "alertQueryFilter.deleteFilter": "Delete the query condition",
+  "alertQueryFilter.deleteFilterMessage": "Are you sure to delete { name }?",
 
   "alertOperate.takeOver": "Takeover",
   "alertOperate.reassign": "Assign to ...",
