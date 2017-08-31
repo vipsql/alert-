@@ -54,12 +54,13 @@ const slideSettings2 = {
 class VisualAnalyze extends Component {
   constructor(props) {
     super(props)
-    const gr1key = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")).map(item => {
+    let gr1key = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")).map(item => {
       return item.key
     })
     let gr2State, gr3State, gr4State
-    if (localStorage.getItem(gr1key.join())) {
-      const userStore = JSON.parse(localStorage.getItem(gr1key))
+    let userRecord = localStorage.getItem(gr1key.join())
+    if (userRecord) {
+      const userStore = JSON.parse(userRecord)
       gr2State = userStore.gr2key
       gr3State = userStore.gr3key
       gr4State = userStore.gr4key
@@ -273,12 +274,11 @@ class VisualAnalyze extends Component {
 
       <div className={styles.visualBg}>
         <div className={styles.visualHead}>
-          {(!isShowFouth && lessLevel > 2) && <Checkbox className={styles.showGroup} onChange={showIncidentGroup} checked={incidentGroup} ><FormattedMessage {...formatMessages['incidentGroup']} /></Checkbox>}
+          {(!isShowFouth && lessLevel > 1) && <Checkbox className={styles.showGroup} onChange={showIncidentGroup} checked={incidentGroup} ><FormattedMessage {...formatMessages['incidentGroup']} /></Checkbox>}
 
           {
-            lessLevel > 0 && lessLevel !== 2
-            &&
-            <div style={{ display: 'inline-block' }}>
+            lessLevel > 0 &&
+            <div style={{ display: 'inline-block' }} id="visualGr1">
               <FormattedMessage {...formatMessages['groupBy']} />
               :
               <Select getPopupContainer={() => document.getElementById("content")} disabled={isShowFouth ? true : false} defaultValue={gr2State != '' ? gr2State : tags[0]} onChange={gr2ChangeOverride} className={styles.visualGroup}  >
@@ -289,9 +289,10 @@ class VisualAnalyze extends Component {
 
 
           {
-            lessLevel > 1 &&
+            lessLevel > 1 && lessLevel !== 2
+            &&
             <div style={{ display: 'inline-block' }} id="visualGr2">
-              {lessLevel !== 2 && <span className={styles.levelArrow} >></span>}
+              <span className={styles.levelArrow} >></span>
               <Select getPopupContainer={() => document.getElementById("content")} disabled={isShowFouth ? true : false} defaultValue={gr3State != '' ? gr3State : tags[1]} onChange={gr3ChangeOverride} className={styles.visualGroup}  >
                 {tagsComponent}
               </Select>
