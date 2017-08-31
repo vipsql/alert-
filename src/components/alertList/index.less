@@ -135,6 +135,11 @@
       background: extract(@var, 31);
       border: 1px solid extract(@var, 16);
       border-radius: 3px;
+      :global(.ant-tabs-tabpane-inactive) {
+        div {
+          display: none
+        }
+      }
       &.marginTop0 {
         margin-top: 0px;
       }
@@ -145,8 +150,8 @@
       }
       .levelBar{
         position: absolute;
-        right: 0px;
-        top: 10px;
+        right: 15px;
+        top: 15px;
         li{
             position: relative;
             margin-right: 15px;
@@ -343,6 +348,7 @@
             line-height: 40px;
             text-indent: 10px;
             font-size: 13px;
+            padding-left: 10px;
             background: extract(@var, 41);
             color: extract(@var, 38);
           }
@@ -360,7 +366,7 @@
                 float: left;
                 margin-left: 10px;
                 width: 250px;
-                height: 100px;
+                height: 120px;
                 margin-top: 20px;
                 text-align: center;
                 color: extract(@var, 23);
@@ -368,11 +374,11 @@
 
                 .tagsRingTwo{
                   position: absolute;
-                  border-radius: 40px;
+                  border-radius: 50px;
                   left: 50%;
-                  margin-left: -20px;
-                  width: 40px;
-                  height: 40px;
+                  margin-left: -25px;
+                  width: 50px;
+                  height: 50px;
                   opacity: .5;
                   animation: pulse 2s ease-in-out infinite;
                   -webkit-animation: pulse 2s ease-in-out infinite;
@@ -380,24 +386,24 @@
                 }
                 .tagsRingTwo2{
                   position: absolute;
-                  border-radius: 40px;
+                  border-radius: 50px;
                   left: 50%;
-                  margin-left: -20px;
-                  width: 40px;
-                  height: 40px;
+                  margin-left: -25px;
+                  width: 50px;
+                  height: 50px;
                 }
                 .tagsRingOne{
                   position: absolute;
-                  border-radius: 35px;
-                  margin-left: -15px;
+                  border-radius: 46px;
+                  margin-left: -23px;
                   left: 50%;
-                  top: 25px;
-                  width: 30px;
-                  height: 30px;
+                  top: 23px;
+                  width: 46px;
+                  height: 46px;
                 }
                 .tagsName{
                   position: relative;
-                  top: 50px;
+                  top: 55px;
                   word-wrap: break-word;
                   height: 72px;
                   overflow:hidden

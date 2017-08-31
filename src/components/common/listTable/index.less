@@ -38,7 +38,7 @@
       background-color: extract(@var, 5);
       .leftFixedTable {
         z-index: 10000;
-        box-shadow: 6px 0 6px -4px rgba(0, 0, 0, .2);
+        // box-shadow: 6px 0 6px -4px rgba(0, 0, 0, .2);
       }
       .topFixedArea {
         z-index: 20;
@@ -122,7 +122,7 @@
           }
           th {
             // --------blue-------------
-            padding-left: 3px;
+            padding-left: 14px;
             background-color: extract(@var, 1);
             color: extract(@var, 6);
             border-bottom: 1px solid extract(@var, 4); //--------------------------
@@ -230,13 +230,13 @@
           .alertQueryIcon {
             margin: 0px 10px 0px 15px;
           }
-          padding-left: 3px;
+          padding-left: 14px;
           max-width: 150px;
           min-width: 150px;
           overflow: hidden;
           padding-right: 10px;
           height: 50px;
-          line-height: 50px;
+          line-height: 1.5;
           text-align: left;
           color: extract(@var, 7);
           border-bottom: 1px solid extract(@var, 4);
@@ -246,6 +246,7 @@
             max-width: 50px;
           }
           &.moreLittle {
+            padding-left: 10px;
             min-width: 25px;
             max-width: 25px;
           }
@@ -324,6 +325,8 @@
           td {
             white-space: normal;
             text-overflow: initial;
+            padding-top: 16px;
+            padding-bottom: 16px
           }
         }
         .showSome {

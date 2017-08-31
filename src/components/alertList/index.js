@@ -219,7 +219,7 @@ class AlertListManage extends Component {
         </div>
         <Button className={classnames(styles.toggleBarButton, zhankaiClass)} onClick={toggleBarButtonClick} size="small"><i className={classnames(alertList.isShowBar ? shouqiClass : zhankaiClass, styles.toggleBarButtonIcon)} /></Button>
         <div className={styles.alertListPage + " " + (alertList.isShowBar ? '' : styles.marginTop0)}>
-          <Tabs defaultActiveKey="1">
+          <Tabs defaultActiveKey="1" animated={ false }>
             <TabPane tab={<span className={tabList}><FormattedMessage {...localeMessage['tab_list']} /></span>} key='1'>
               {/*<AlertOperation position='list' {...operateProps} />*/}
               <AlertOperationWrap />
