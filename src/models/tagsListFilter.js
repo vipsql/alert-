@@ -318,6 +318,9 @@ export default {
       })
       prevList.push(...selectList)
       return { ...state, shareSelectTags: newList, selectList: prevList, currentPage }
+    },
+    clear(state) {
+      return { ...state, ...initalState }
     }
   }
 }
