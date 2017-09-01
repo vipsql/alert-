@@ -233,7 +233,7 @@ export default {
       ])
 
       if (tags.length === 2) { // 区分三个标签展示设备和四个标签展示设备的区别
-        targetTags = visualSelect.slice(0, targetTags.length - 1)
+        targetTags = targetTags.slice(0, targetTags.length - 1)
       }
       const res = yield call(queryVisualRes, {
         tags: targetTags
