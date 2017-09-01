@@ -268,7 +268,7 @@ class Table extends Component {
         switch (key) {
           case 'name':
             td = (<td key={key} title={data} className={styles.tdBtn} data-id={item.id} data-no-need-wrap={true} onClick={detailClick} >
-              {data}
+              {data && data != ''?data:<FormattedMessage {...formatMessages['Unknown']} />}
               {
                 sourceOrigin !== 'alertQuery' && item['hasChild'] === true && target === 'parent' ?
                   <span className={relieveIcon} data-id={classify ? JSON.stringify({ classify: classify, id: item.id }) : JSON.stringify({ id: item.id })} onClick={relieveClick}></span>

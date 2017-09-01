@@ -41,11 +41,11 @@ class IconItem extends Component {
         (<div><FormattedMessage {...formatMessages['noData']} /></div>)
     }
 
-    const iconImage = (childItem.iconUrl && childItem.iconUrl!="")?<img src={childItem.iconUrl} style={{ width: '70%', marginTop: '15%' }} /> : undefined;
+    const iconImage = (childItem.iconUrl && childItem.iconUrl!="")?<img src={childItem.iconUrl} style={{ width: '50%', marginTop: '25%' }} /> : undefined;
 
     return (
       <Popover content={AlertListContent} >
-        <li data-id={childItem.resId} onMouseLeave={cancelShowAlertList} onMouseEnter={showAlertList}>
+        <li className={ styles.iconItemLi } data-id={childItem.resId} onMouseLeave={cancelShowAlertList} onMouseEnter={showAlertList}>
 
           <div className={childItem['severity'] > -1 ? styles.tagsRingTwo : styles.tagsRingTwo2} style={{ background: severityToColor[childItem['severity']] }}>
             {childItem['severity'] <= -1 && iconImage}
