@@ -790,7 +790,7 @@ export default {
           })
         }
       })
-      if (properties.cols.length !== 0) {
+      if (properties.cols && properties.cols.length !== 0) {
         properties.cols.forEach((targetCol) => {
           if (!colIds.includes(targetCol.id)) {
             targetCol.checked = false;
