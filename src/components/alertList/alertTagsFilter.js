@@ -101,7 +101,7 @@ class alertTagsFilter extends Component{
   }
   setKeys(popupVisible) {
     const { tagListFilter, dispatch } = this.props
-    if (popupVisible && !tagListFilter.tagsKeyList || !tagListFilter.tagsKeyList.length) {
+    if (popupVisible && !tagListFilter.tagsKeyList.length) {
       dispatch({
         type: 'tagListFilter/openSelectModal',
         payload: this.setPopupVisible.bind(this, popupVisible)

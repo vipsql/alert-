@@ -39,7 +39,19 @@ export default {
     init({ dispatch, history }) {
       history.listen((location, state) => {
         if (pathToRegexp('/alertManage/alertList').test(location.pathname)) {
-
+          // ---------- 之所以要在这里重置 __alert_visualAnalyze_gr1 来处理浏览器强刷的情况--------- //
+          let alertListPath = JSON.parse(localStorage.getItem('alertListPath')) || {}
+          let array = Object.values(alertListPath)
+          if (array.length === 1) {
+            let gr1 = array.filter(item => item.keyName !== 'source').map( item => {
+              item.value = item.values
+              delete item.values
+              delete item.keyName
+              return item
+            })
+            localStorage.setItem('__alert_visualAnalyze_gr1', JSON.stringify(gr1))
+          }
+          // ------------------------------------------------------------------------------------ //
           dispatch({
             type: 'queryVisualList',
             payload: { isFirst: true }
@@ -88,12 +100,12 @@ export default {
           // 第一个分组key作为存储用户路径的依据
 
           // construction
-          const gr1key = visualSelect.map(item => {
+          let gr1key = visualSelect.map(item => {
             return item.key
           })
-          if (localStorage.getItem(gr1key.join())) {
-
-            const userStore = JSON.parse(localStorage.getItem(gr1key))
+          let userRecord = localStorage.getItem(gr1key.join())
+          if (userRecord) {
+            const userStore = JSON.parse(userRecord)
             gr2 = userStore.gr2key
             gr3 = userStore.gr3key
             gr4 = userStore.gr4key
@@ -213,12 +225,18 @@ export default {
       })
       const gr3Val = localStorage.getItem('__alert_visualAnalyze_gr3Val')
       const visualSelect = JSON.parse(localStorage.getItem("__alert_visualAnalyze_gr1")) || []
+
+      let targetTags = visualSelect.concat([
+        { key: localStorage.getItem("__alert_visualAnalyze_gr2"), value: localStorage.getItem('__alert_visualAnalyze_gr2Val') },
+        { key: localStorage.getItem("__alert_visualAnalyze_gr3"), value: gr3Val },
+        { key: gr4key ? gr4key : tags[0], value: '' }
+      ])
+
+      if (tags.length === 2) { // 区分三个标签展示设备和四个标签展示设备的区别
+        targetTags = visualSelect.slice(0, targetTags.length - 1)
+      }
       const res = yield call(queryVisualRes, {
-        tags: visualSelect.concat([
-          { key: localStorage.getItem("__alert_visualAnalyze_gr2"), value: localStorage.getItem('__alert_visualAnalyze_gr2Val') },
-          { key: localStorage.getItem("__alert_visualAnalyze_gr3"), value: gr3Val },
-          { key: gr4key ? gr4key : tags[0], value: '' }
-        ])
+        tags: targetTags
       })
 
       const resList = res.data
@@ -256,10 +274,7 @@ export default {
       const alertList = yield call(queryAlertList, {
         resId: payload
       })
-      //  const sa = [
-      //         {id:'ssss',name:'ssssss',severity: '1'},
-      //         {id:'ssss2',name:'ssssss2',severity: '0'}
-      //       ]
+
       if (alertList.result) {
         yield put({
           type: 'updateAlertList',

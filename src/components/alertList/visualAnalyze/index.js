@@ -30,7 +30,7 @@ const VisualAnalyzeWrap = ({ dispatch, visualAnalyze }) => {
         left: left + width,
         top: top
       }).appendTo('body')
-      const targetEle = $('#visualGr2'),
+      const targetEle = visualAnalyze.tags.length === 2 ? $('#visualGr1') : $('#visualGr2'), // hack 三个标签也要动画
         targetLeft = targetEle.offset().left,
         targetTop = targetEle.offset().top
 
@@ -106,6 +106,11 @@ const VisualAnalyzeWrap = ({ dispatch, visualAnalyze }) => {
       })
     },
     gr2Change(value) {
+      // 这是个hack,为了后端减少更改，当lessLeavl为2时，即tags === 2时 更改gr2时,和gr3相互置反
+      if (visualAnalyze.tags && visualAnalyze.tags.length === 2) {
+        localStorage.setItem('__alert_visualAnalyze_gr2', value)
+        localStorage.setItem('__alert_visualAnalyze_gr3', visualAnalyze.tags.filter(tag => tag != value).join())
+      }
       localStorage.setItem('__alert_visualAnalyze_gr2', value)
       dispatch({
         type: 'visualAnalyze/queryVisualList',

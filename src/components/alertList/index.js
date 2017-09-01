@@ -78,6 +78,9 @@ class AlertListManage extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('message', this.ITSMPostMessage, false)
+    this.props.dispatch({
+      type: 'tagListFilter/clear'
+    })
   }
 
   render() {
