@@ -90,6 +90,7 @@ class ListTable extends Component {
       orderFlowNumClick,
       showAlertOrigin,
       isLoading,
+      isLoadingMore,
       orderUp,
       orderDown,
       orderBy,
@@ -202,7 +203,7 @@ class ListTable extends Component {
             />
           </div>
         </Spin>
-        {isShowMore && <Spin size="large" spinning={isLoading}><div className={styles.loadMore}><Button onClick={loadMore}><FormattedMessage {...formatMessages['showMore']} /></Button></div></Spin>}
+        {isShowMore && <Spin size="large" spinning={isLoadingMore}><div className={styles.loadMore}><Button onClick={loadMore}><FormattedMessage {...formatMessages['showMore']} /></Button></div></Spin>}
       </div>
     )
   }

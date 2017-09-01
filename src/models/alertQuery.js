@@ -258,6 +258,10 @@ export default {
     toggleLoading(state, { payload: { isLoading, isReRender = true } }) {
       return returnByIsReRender(state, { isLoading }, isReRender);
     },
+    // 切换加载更多状态
+    toggleLoadingMore(state, { payload: { isLoadingMore, isReRender = true } }) {
+      return returnByIsReRender(state, { isLoadingMore, isReRender })
+    },
     // 更新显示更多字段
     updateShowMore(state, { payload: { isShowMore, isReRender = true } }) {
       return returnByIsReRender(state, { isShowMore }, isReRender)
@@ -613,8 +617,8 @@ export default {
       }
 
       yield put({
-        type: 'toggleLoading',
-        payload: { isLoading: true }
+        type: 'toggleLoadingMore',
+        payload: { isLoadingMore: true }
       })
 
       // console.log(new Date() - tempDate, 'toggleLoading');
@@ -670,8 +674,8 @@ export default {
 
         // tempDate = new Date();
         yield put({
-          type: 'toggleLoading',
-          payload: { isLoading: false, isReRender: false }
+          type: 'toggleLoadingMore',
+          payload: { isLoadingMore: false, isReRender: false }
         })
         // console.log(new Date() - tempDate, 'cancelLoading');
         // tempDate = new Date();

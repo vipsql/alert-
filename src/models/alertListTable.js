@@ -98,6 +98,10 @@ export default {
     toggleLoading(state, { payload: { isLoading, isReRender = true } }) {
       return returnByIsReRender(state, { isLoading }, isReRender);
     },
+    // 切换加载更多状态
+    toggleLoadingMore(state, { payload: { isLoadingMore, isReRender = true } }) {
+      return returnByIsReRender(state, { isLoadingMore, isReRender })
+    },
     // // 更改全选状态
     toggleSelectedAll(state, { payload }) {
       // const { checkAlert } = state;
@@ -976,14 +980,14 @@ export default {
     },
     // show more
     *loadMore({ }, { call, put, select }) {
-      const isLoading = yield select((state) => state.alertListTable.isLoading);
-      if (isLoading) {
+      const {isLoading, isLoadingMore} = yield select((state) => state.alertListTable);
+      if (isLoading || isLoadingMore) {
         return;
       }
 
       yield put({
-        type: 'toggleLoading',
-        payload: { isLoading: true }
+        type: 'toggleLoadingMore',
+        payload: { isLoadingMore: true }
       })
 
       let { currentPage, listData, alertListTable } = yield select(state => {
@@ -1040,8 +1044,8 @@ export default {
         yield put({ type: 'setMore', payload: { currentPage, isReRender: false } })
 
         yield put({
-          type: 'toggleLoading',
-          payload: { isLoading: false }
+          type: 'toggleLoadingMore',
+          payload: { isLoadingMore: false }
         })
         yield put({
           type: 'alertOperation/addProperties',
