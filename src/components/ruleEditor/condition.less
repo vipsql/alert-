@@ -21,7 +21,10 @@
 .conditionItem {
   padding: 0 15px;
   height: 55px;
-  line-height: 55px;
+  //line-height: 55px;
+  & > * {
+    margin: 13px 0px
+  }
 }
 .key {
 
@@ -34,6 +37,7 @@
 }
 .delete {
   position: absolute;
+  margin: 0px;
   top: 15px;
   right: -35px;
   display: block;
