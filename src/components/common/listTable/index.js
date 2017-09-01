@@ -45,8 +45,12 @@ class ListTable extends Component {
   _setAutoLoadMore() {
     $(this.props.target).scroll((e) => {
       const $target = $(e.target);
-      if ($target.scrollTop() + 200 > this.scrollHeight - $target.height() && this.props.isShowMore && !this.isLoadingMore) {
+      const $tableArea = $(this.refs.tableArea);
+
+      // 当区域已经被隐藏，则不执行loadMore操作
+      if ($tableArea.is(":visible") && $target.scrollTop() + 200 > this.scrollHeight - $target.height() && this.props.isShowMore && !this.isLoadingMore) {
         this.isLoadingMore = true;
+
         this.autoLoad = setTimeout(() => {
           this.props.loadMore();
         }, 0)
@@ -115,7 +119,7 @@ class ListTable extends Component {
     })
 
     return (
-      <div>
+      <div ref="tableArea">
         <Spin spinning={isLoading}>
           <div className={"listContainer " + styles.listContainer}>
             <ScrollBar sourceOrigin={sourceOrigin} horizonTarget="div.listContainer" />
