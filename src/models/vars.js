@@ -12,7 +12,6 @@ export default {
     *initVars({ payload }, { call, put, select }) {
       const response = yield getField();
       const list = response.data;
-      console.log(list);
       yield put({
         type: 'setList',
         payload: { list }

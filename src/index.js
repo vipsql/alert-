@@ -137,6 +137,7 @@ async function init() {
 
   app.model(require('./models/alertList'))
   app.model(require('./models/alertListTable'))
+  app.model(require('./models/alertListLevels'))
   // 告警查询
   app.model(require('./models/alertQuery'))
   app.model(require('./models/alertDetail'))

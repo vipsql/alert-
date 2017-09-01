@@ -825,6 +825,13 @@ export default {
           }
         })
 
+        yield put({
+          type: 'alertListLevels/setLevels',
+          payload: {
+            levels: listData.data.levels,
+          }
+        })
+
       } else {
         yield message.error(listData.message, 2)
       }
@@ -1053,6 +1060,10 @@ export default {
             properties: listReturnData.data.properties,
             tags: listReturnData.data.tagKeys
           }
+        })
+        yield put({
+          type: 'alertListLevels/addLevels',
+          payload: { newLevels: listReturnData.data.levels }
         })
       } else {
         yield message.error(listReturnData.message, 2)

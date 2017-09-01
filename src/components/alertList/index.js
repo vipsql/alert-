@@ -4,6 +4,7 @@ import { Tabs, Select, Switch, Checkbox, Button, message } from 'antd'
 import ListTableWrap from './listTable'
 import ListTimeTableWrap from './listTimeTable'
 import VisualAnalyzeWrap from './visualAnalyze'
+import LevelsWrap from './levelsWrap'
 import AlertDetailWrap from '../alertDetail/wrap'
 import AlertOperationWrap from '../alertOperation/wrap'
 import AlertBar from './alertBar'
@@ -12,7 +13,6 @@ import AlertOperation from '../common/alertOperation/index.js'
 import AlertDetail from '../common/alertDetail/index.js'
 import { connect } from 'dva'
 import styles from './index.less'
-import LevelIcon from '../common/levelIcon/index.js'
 import CloseModal from '../common/closeModal/index.js'
 import DispatchModal from '../common/dispatchModal/index.js'
 import ChatOpshModal from '../common/chatOpsModal/index.js'
@@ -85,7 +85,7 @@ class AlertListManage extends Component {
 
   render() {
 
-    const { alertDetail, alertListTable, alertList, userInfo, dispatch, alertOperation, alertManage, intl: { formatMessage } } = this.props;
+    const { alertDetail, alertList, userInfo, dispatch, alertOperation, alertManage, intl: { formatMessage } } = this.props;
 
     const localeMessage = defineMessages({
       tab_list: {
@@ -109,8 +109,6 @@ class AlertListManage extends Component {
         defaultMessage: '无告警'
       }
     })
-
-    const { levels } = alertListTable;
 
     const toggleBarButtonClick = (e) => {
       const isShowAlertBar = !alertList.isShowBar;
@@ -153,26 +151,7 @@ class AlertListManage extends Component {
       'iconfont',
       'icon-xialasanjiao-copy'
     )
-    // 转数字匹配等级，并作排序
-    let levels_wapper = {};
-    Object.keys(levels).length !== 0 && Object.keys(levels).forEach((severity) => {
-      switch (severity) {
-        case 'Critical':
-          levels_wapper['3'] = levels['Critical']
-          break;
-        case 'Warning':
-          levels_wapper['2'] = levels['Warning']
-          break;
-        case 'Information':
-          levels_wapper['1'] = levels['Information']
-          break;
-        case 'Recovery':
-          levels_wapper['0'] = levels['Recovery']
-          break;
-        default:
-          break;
-      }
-    })
+
     const groupName = localStorage.getItem('__visual_group'),
       isShowVisualTab = !(groupName == 'source' || groupName == 'status' || groupName == 'severity');
 
@@ -242,16 +221,7 @@ class AlertListManage extends Component {
                 []
             }
           </Tabs>
-          <ul className={styles.levelBar}>
-            {
-              Object.keys(levels_wapper).length !== 0 && Object.keys(levels_wapper).sort((prev, next) => {
-                return Number(next) - Number(prev);
-              }).map((key, index) => {
-                return (<li key={index}><LevelIcon extraStyle={styles.extraStyle} iconType={key} /><p>{`${window['_severity'][key]}（${levels_wapper[key]}）`}</p></li>)
-              })
-            }
-            <li><LevelIcon extraStyle={styles.extraStyle} iconType='noAlerts' /><p><FormattedMessage {...localeMessage['noAlert']} /></p></li>
-          </ul>
+          <LevelsWrap />
         </div>
 
         <AlertDetailWrap { ...alertDetailWrapProps } />
@@ -265,7 +235,6 @@ class AlertListManage extends Component {
 export default injectIntl(connect((state) => {
   return {
     alertManage: state.alertManage,
-    alertListTable: state.alertListTable,
     alertList: state.alertList,
     userInfo: state.app.userInfo,
   }
