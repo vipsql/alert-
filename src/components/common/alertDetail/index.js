@@ -3,7 +3,7 @@ import { Link } from 'dva/router'
 import { Button, Input, Form, Timeline, Spin } from 'antd';
 import { connect } from 'dva'
 import styles from './index.less'
-import { classnames, formatDate, getOperationExcutionMap, isMobile } from '../../../utils'
+import { classnames, formatDate, getOperationExcutionMap, isMobile, strToLink } from '../../../utils'
 import AlertOperation from '../alertOperation/index.js'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import Wrap from './wrap'
@@ -490,7 +490,8 @@ class alertDetail extends Component {
                   <ul>
                     {
                       currentAlertDetail.properties.map((item, index) => {
-                        return <li key={index}><span>{item.name}</span><span>{item.val}</span></li>
+                        const linkVal = strToLink(item.val);
+                        return <li key={index}><span>{item.name}</span><span>{linkVal? <a href={ linkVal.href } target="_blank" className={ styles.editForm }>{ linkVal.content }</a> : item.val}</span></li>
                       })
                     }
                   </ul>

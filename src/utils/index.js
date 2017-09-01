@@ -16,6 +16,20 @@ const severityToColor = {
   '3': "#ff522a" // 紧急
 }
 
+// 字符串转换为<a>...</a>,如果不是则返回false
+function strToLink(str) {
+  const linkTemplate = /<a href="(.*?)">(.*?)<\/a>/ig;
+  const params = linkTemplate.exec(str);
+  if(params != null && params.length >= 3) {
+   return {
+     href: params[1],
+     content: params[2]
+   }
+  } else {
+    return false;
+  }
+}
+
 // 判断字符串是否是空字符
 function isEmpty(str) {
   if(!str || str.trim() == '') {
@@ -409,5 +423,6 @@ module.exports = {
   delay,
   isJSON,
   isEmpty,
-  severityToColor
+  severityToColor,
+  strToLink
 }
