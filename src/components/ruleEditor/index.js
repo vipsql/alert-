@@ -261,6 +261,49 @@ const initalNotificationMode = {
     }
 }
 
+const initActions = {
+    actionDelOrClose: {
+        operation: undefined
+    },
+    actionNotification: {
+        notifyWhenLevelUp: true,
+        recipients: [],
+        notificationMode: initalNotificationMode
+    },
+    actionITSM: {
+        itsmModelId: undefined,
+        itsmModelName: undefined,
+        realParam: '',
+        viewParam: '' //临时存放数据
+    },
+    actionChatOps: {
+        notifyWhenLevelUp: true,
+        chatOpsRoomId: undefined
+    },
+    actionUpgrade: {
+        notificationGroupings: [{
+            delay: 15,
+            status: [],
+            recipients: []
+        }],
+        notificationMode: {
+            notificationMode: [],
+            emailTitle: '${entityName}:${name}',
+            emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
+            smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
+        }
+    },
+    actionSeverity: {
+        type: undefined,
+        fixedSeverity: undefined
+    },
+    actionPlugin: {
+        uuid: undefined,
+        name: undefined,
+        realParam: ''
+    }
+}
+
 class RuleEditor extends Component {
     constructor(props) {
         super(props);
@@ -355,7 +398,7 @@ class RuleEditor extends Component {
                 target: nextProps.target,
                 source: nextProps.source,
                 condition: makeCondition(_.cloneDeep(nextProps.condition)),
-                action: result._action,
+                action: result._actions,
                 isShareUpgrade: result.isShareUpgrade || false,
                 timeStart: _timeStart,
                 timeEnd: _timeEnd,
@@ -382,30 +425,28 @@ class RuleEditor extends Component {
 
     editorRuleAction(props) {
         let _action = _.cloneDeep(props.action);
+        let _actions = _.cloneDeep(initActions)
+
         let isShareUpgrade = false;
         let _actionType = _action.type;
         // 不同action的情况
         if (_actionType.includes(3)) {
           _actionType = [3] // 告警升级 + 告警通知
-          if(!_action.actionUpgrade) {
-              _action.actionUpgrade = {
-                  notificationGroupings: [{
-                      delay: 15,
-                      status: [],
-                      recipients: []
-                  }]
-              }
-          } else {
-              isShareUpgrade = true
+          if(_action.actionUpgrade) {
+            isShareUpgrade = true
           }
           _action.type = _actionType
-          return {
-            _action,
-            isShareUpgrade
+        }
+        // inject other actions initvalue
+        if (_actionType.length) { // 现阶段只允许一个动作，后期如果有多动作，这里要重新处理
+          _actions = {
+            ...initActions,
+            ..._action
           }
         }
+
         return {
-          _action,
+          _actions,
           isShareUpgrade
         }
     }
@@ -1768,46 +1809,7 @@ RuleEditor.defaultProps = {
     action: {
         tenant: '',
         type: [1],
-        actionDelOrClose: {
-            operation: undefined
-        },
-        actionNotification: {
-            notifyWhenLevelUp: true,
-            recipients: [],
-            notificationMode: initalNotificationMode
-        },
-        actionITSM: {
-            itsmModelId: undefined,
-            itsmModelName: undefined,
-            realParam: '',
-            viewParam: '' //临时存放数据
-        },
-        actionChatOps: {
-            notifyWhenLevelUp: true,
-            chatOpsRoomId: undefined
-        },
-        actionUpgrade: {
-            notificationGroupings: [{
-                delay: 15,
-                status: [],
-                recipients: []
-            }],
-            notificationMode: {
-                notificationMode: [],
-                emailTitle: '${entityName}:${name}',
-                emailMessage: '${severity},${entityName},${firstOccurTime},${description}',
-                smsMessage: '${severity},${entityName},${firstOccurTime},${description}'
-            }
-        },
-        actionSeverity: {
-            type: undefined,
-            fixedSeverity: undefined
-        },
-        actionPlugin: {
-            uuid: undefined,
-            name: undefined,
-            realParam: ''
-        }
+        ...initActions
     },
 };
 
