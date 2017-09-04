@@ -315,7 +315,6 @@ const alertOperation = ({
     </Menu>
   );
 
-
   return (
     <div className={styles.operateMain}>
       {/*{
@@ -417,7 +416,7 @@ const alertOperation = ({
               </Button>
             </Tooltip>
             :
-            <Button className={styles.myButton}  onClick={() => { resolveFunc(position) }} >
+            <Button className={styles.myButton} disabled={resolveDisabled} onClick={() => { resolveFunc(position) }} >
               <FormattedMessage {...localeMessage['operate_resolve']} />
             </Button>
           :
