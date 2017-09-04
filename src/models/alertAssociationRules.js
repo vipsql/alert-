@@ -214,13 +214,22 @@ export default {
         }
       })
     },
+    addAssociationRulesSetup({dispatch, history}) {
+      history.listen((location) => {
+        if (pathToRegexp('/alertConfig/alertAssociationRules/ruleEditor/add').test(location.pathname)) {
+          dispatch({
+            type: 'initQuery'
+          });
+        }
+      })
+    },
     editAssociationRulesSetup({dispatch, history}) {
       history.listen((location) => {
         if (pathToRegexp('/alertConfig/alertAssociationRules/ruleEditor/edit/:ruleId').test(location.pathname)) {
           const match = pathToRegexp('/alertConfig/alertAssociationRules/ruleEditor/edit/:ruleId').exec(location.pathname);
           const ruleId = match[1];
           dispatch({
-            type: 'queryAssociationRuleView',
+            type: 'editView',
             payload: ruleId
           });
         }
@@ -282,7 +291,7 @@ export default {
 
     },
     // 编辑查询
-    *queryAssociationRuleView({payload}, {select, put, call}) {
+    *editView({payload}, {select, put, call}) {
       if (payload !== undefined) {
         const viewResult = yield call(viewRule, payload)
         if (viewResult.result) {
@@ -293,6 +302,9 @@ export default {
               currentEditRule: viewResult.data || {},
               ...other
             }
+          })
+          yield put({
+            type: 'initQuery'
           })
         } else {
           yield message.error(viewResult.message, 3)
@@ -370,19 +382,16 @@ export default {
 
     // 进入页面时做一些接口的查询
     *initQuery({payload}, {select, put, call}) {
-      const params = {
-        ...payload
-      }
 
       const [ chatOps, users, source, attributes, field, wos, classCode, plugins ] = yield [
-        call(getChatOpsOptions, params), // 获取群组
-        call(getUsers, params), // 获取用户
-        call(querySource, params), // 获取来源
-        call(queryAttributes, params), // 获取维度
-        call(getField, params), // 获取映射字段
-        call(getWos, params), // 获取工单类型
-        call(getClasscode, params), // 获取classcode
-        call(getPlugins, params) // 获取插件种类
+        call(getChatOpsOptions), // 获取群组
+        call(getUsers), // 获取用户
+        call(querySource), // 获取来源
+        call(queryAttributes), // 获取维度
+        call(getField), // 获取映射字段
+        call(getWos), // 获取工单类型
+        call(getClasscode), // 获取classcode
+        call(getPlugins) // 获取插件种类
       ]
 
       yield put({
@@ -399,7 +408,6 @@ export default {
         }
       })
     },
-
     // 获取 工单映射配置
     *getshowITSMParam({payload}, {select, put, call}) {
       const params = {

@@ -308,8 +308,8 @@ class RuleEditor extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // name: props.name,
-            // description: props.description,
+            name: props.name,
+            description: props.description,
             /* 时间 */
             type: props.type,
             time: props.time,
@@ -334,21 +334,9 @@ class RuleEditor extends Component {
         };
     }
     componentDidMount() {
-        const { dispatch } = this.props;
-        dispatch({
-            type: 'alertAssociationRules/initQuery'
-        })
-    }
-    componentDidMount() {
       this.isNeedLeaveCheck = true;
     }
     componentWillReceiveProps(nextProps, nextState) {
-        // 用户模糊查询
-        if (nextProps.alertAssociationRules.users !== this.props.alertAssociationRules.users) {
-          let state = _.cloneDeep(this.state)
-          this.setState({ ...state, recipients: this.state.recipients })
-          return;
-        }
         if (nextProps.name && nextProps.action !== this.props.action) {
             const {
                 dayStart = '',
@@ -380,7 +368,8 @@ class RuleEditor extends Component {
                 _timeEnd.mins = nextProps.time.timeEnd.substr(3, 2);
             }
 
-            let result = this.editorRuleAction(nextProps) // action 初始化
+            let actionResult = this.editorRuleAction(nextProps) // action 初始化
+            let notifyType = this.isChecked(actionResult._actions); // notify 类型初始化
 
             this.setState({
                 name: nextProps.name,
@@ -398,14 +387,24 @@ class RuleEditor extends Component {
                 target: nextProps.target,
                 source: nextProps.source,
                 condition: makeCondition(_.cloneDeep(nextProps.condition)),
-                action: result._actions,
-                isShareUpgrade: result.isShareUpgrade || false,
+                action: actionResult._actions,
+                isShareUpgrade: actionResult.isShareUpgrade || false,
                 timeStart: _timeStart,
                 timeEnd: _timeEnd,
                 ITSMParam: nextProps.ITSMParam,
-                PluginParam: nextProps.PluginParam
+                PluginParam: nextProps.PluginParam,
+                ...notifyType
             });
         }
+        // 用户模糊查询
+        // if (nextProps.alertAssociationRules.users !== this.props.alertAssociationRules.users) {
+        //     let state = _.cloneDeep(this.state)
+        //     this.setState({
+        //       ...state,
+        //       recipients: this.state.recipients
+        //     })
+        //     return;
+        // }
         // ITSMParam
         if (nextProps.alertAssociationRules.ITSMParam !== this.props.alertAssociationRules.ITSMParam) {
             let _ITSMParam = nextProps.alertAssociationRules.ITSMParam;
@@ -420,7 +419,6 @@ class RuleEditor extends Component {
               PluginParam: _pluginParam
             })
         }
-        this.isChecked(nextProps);
     }
 
     editorRuleAction(props) {
@@ -726,7 +724,7 @@ class RuleEditor extends Component {
                                         placeholder={window.__alert_appLocaleData.messages['ruleEditor.notifySelectObj']}
                                         onChange={this.changeAction.bind(this, 3)}
                                         className={styles.recipients_notify}
-                                        value={this.state.recipients}
+                                        value={action.actionNotification ? action.actionNotification.recipients.map(item => ({key: item.userId, label: item.realName})) : []}
                                         onSearch={
                                           _.debounce( (value) => {
                                             this.userSearch(value)
@@ -957,22 +955,22 @@ class RuleEditor extends Component {
       })
     }
 
-    isChecked(props) {
-        const _action = _.cloneDeep(props.action);
+    isChecked(action) {
+
         let email = false;
         let sms = false;
         let chatops = false;
         let audio = false;
-        let recipients = [];
-        if (!_action.actionNotification) {
-            _action.actionNotification = {
-                recipients: [],
-                notifyWhenLevelUp: false,
-                notificationMode: initalNotificationMode
-            };
-        }
+        //let recipients = [];
+        // if (!_action.actionNotification) {
+        //     _action.actionNotification = {
+        //         recipients: [],
+        //         notifyWhenLevelUp: false,
+        //         notificationMode: initalNotificationMode
+        //     };
+        // }
 
-        const mode = _action.actionNotification.notificationMode.notificationMode;
+        const mode = action.actionNotification.notificationMode.notificationMode;
         for (let i = mode.length - 1; i >= 0; i -= 1) {
             if (mode[i] === 1) {
                 email = true;
@@ -988,14 +986,20 @@ class RuleEditor extends Component {
             }
         }
 
-        recipients = _action.actionNotification.recipients.map(item => ({key: item.userId, label: item.realName}));
-        this.setState({
-            email: email,
-            sms: sms,
-            chatops: chatops,
-            audio: audio,
-            recipients: recipients
-        });
+        return {
+          email: email,
+          sms: sms,
+          chatops: chatops,
+          audio: audio,
+        }
+        //recipients = action.actionNotification.recipients.map(item => ({key: item.userId, label: item.realName}));
+        // this.setState({
+        //     email: email,
+        //     sms: sms,
+        //     chatops: chatops,
+        //     audio: audio,
+        //     recipients: recipients
+        // });
     }
 
     // 是否需要告警升级
@@ -1245,9 +1249,9 @@ class RuleEditor extends Component {
                       })
                     }
                     _action.actionNotification.recipients = empty;
-                    this.setState({
-                        recipients: empty.map(item => ({key: item.userId, label: item.realName}))
-                    });
+                    // this.setState({
+                    //     recipients: empty.map(item => ({key: item.userId, label: item.realName}))
+                    // });
                 } else if (value.target.type === 'checkbox') { // 通知方式
                     if (value.target.checked) { // 选中此通知方式
                         mode.notificationMode.push(value.target.value);

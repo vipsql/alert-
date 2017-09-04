@@ -7,15 +7,18 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'dva';
 import RuleEditor from '../components/ruleEditor';
 
-function ruleEditor(props) {
+let defaultRule = {}
+
+function ruleEditor({alertAssociationRules, rule, ...other}) {
   let ruleProps = {
-    ...props,
+    alertAssociationRules,
+    ...other
   }
-  if (props.route.path.indexOf('edit') > -1 && Object.keys(props.alertAssociationRules.currentEditRule).length !== 0) {
+  if (other.route.path.indexOf('edit') > -1 && Object.keys(alertAssociationRules.currentEditRule).length) {
     ruleProps = {
-      ...props,
-      ...props.alertAssociationRules.currentEditRule,
-      ...props.alertAssociationRules.currentEditRule.rule
+      ...ruleProps,
+      ...alertAssociationRules.currentEditRule,
+      ...rule
     }
     delete ruleProps.rule;
   }
@@ -31,6 +34,7 @@ ruleEditor.propTypes = {
 
 export default connect( state => {
   return {
-    alertAssociationRules: state.alertAssociationRules
+    alertAssociationRules: state.alertAssociationRules,
+    rule: Object.keys(state.alertAssociationRules.currentEditRule).length ? state.alertAssociationRules.currentEditRule.rule : defaultRule,
   }
 })(ruleEditor);
