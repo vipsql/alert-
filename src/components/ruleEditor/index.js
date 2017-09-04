@@ -290,7 +290,7 @@ class RuleEditor extends Component {
             target: props.target,
         };
     }
-    componentWillMount() {
+    componentDidMount() {
         const { dispatch } = this.props;
         dispatch({
             type: 'alertAssociationRules/initQuery'
