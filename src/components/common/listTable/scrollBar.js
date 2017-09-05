@@ -22,8 +22,11 @@ class ScrollBar extends Component {
     })
   }
 
-  componentWillReceiveProps() {
-    this._setVisibleOfScrollBar();
+  componentDidUpdate(prevProps, prevState) {
+    // 由父级容器重新渲染导致的重新渲染后需要重新计算是否显示左右滚动条
+    if(this.props != prevProps) {
+      this._setVisibleOfScrollBar();
+    }
   }
 
   _setVisibleOfScrollBar() {
