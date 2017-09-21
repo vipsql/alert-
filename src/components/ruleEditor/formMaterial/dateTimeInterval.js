@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, DatePicker } from 'antd';
 import styles from '../customField.less'
+import moment from 'moment'
 const FormItem = Form.Item;
 const RangePicker = DatePicker.RangePicker;
 
@@ -11,6 +12,8 @@ export default class CTMDateTimeInterval extends React.Component {
 
   render() {
     const { item, getFieldDecorator, prop, formItemLayout, disabled } = this.props;
+
+    let wrapper = prop.initialValue ? item.formatDate ? { initialValue: moment(prop.initialValue, 'YYYY-MM-DD') } : { initialValue: moment(prop.initialValue, 'YYYY-MM-DD HH:mm') } : {}
 
     return (
       <div className={styles.wrapper}>
@@ -25,7 +28,7 @@ export default class CTMDateTimeInterval extends React.Component {
                   }
                 ]
               },
-              prop
+              wrapper
             ))(
               <RangePicker
                 disabled={ disabled }

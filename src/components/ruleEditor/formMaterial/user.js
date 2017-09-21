@@ -25,7 +25,7 @@ class CTMUser extends React.Component {
     getUsers({
       realName: value
     }).then((data) => {
-      if (data) {
+      if (data.result) {
         this.setState({
           userList: data.data || []
         })

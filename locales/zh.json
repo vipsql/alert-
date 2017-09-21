@@ -99,7 +99,7 @@
   "alertQueryFilter.deleteFilterMessage": "是否删除查询条件{ name }?",
 
   "alertOperate.takeOver": "接手",
-  "alertOperate.reassign": "转派 ...",
+  "alertOperate.reassign": "转派",
   "alertOperate.dispatch": "派单",
   "alertOperate.dispatch.success": "派单成功，工单号为：{flowNo}",
   "alertOperate.close": "关闭",
@@ -109,7 +109,7 @@
   "alertOperate.suppress.ten": "10分钟",
   "alertOperate.suppress.halfHour": "半小时",
   "alertOperate.suppress.customer": "自定义时间 ...",
-  "alertOperate.merge": "合并告警 ...",
+  "alertOperate.merge": "合并告警",
   "alertOperate.relieve": "解除合并",
   "alertOperate.moreAcitons": "更多操作",
   "alertOperate.shareChatOps": "分享到ChatOps ...",

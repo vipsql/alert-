@@ -106,7 +106,7 @@
   "alertQueryFilter.deleteFilterMessage": "Are you sure to delete { name }?",
 
   "alertOperate.takeOver": "Takeover",
-  "alertOperate.reassign": "Assign to ...",
+  "alertOperate.reassign": "Assign to",
   "alertOperate.dispatch": "Create Ticket",
   "alertOperate.dispatch.success": "Create Ticket Successfully. The Number is: { flowNo }",
   "alertOperate.close": "Close",
@@ -116,7 +116,7 @@
   "alertOperate.suppress.ten": "10 minutes",
   "alertOperate.suppress.halfHour": "30 minutes",
   "alertOperate.suppress.customer": "Customize...",
-  "alertOperate.merge": "Roll Up...",
+  "alertOperate.merge": "Roll Up",
   "alertOperate.relieve": "Unroll Up",
   "alertOperate.moreAcitons": "More Actions",
   "alertOperate.shareChatOps": "Share to ChatOps...",
