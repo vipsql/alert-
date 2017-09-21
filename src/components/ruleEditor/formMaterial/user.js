@@ -137,7 +137,7 @@ export default class Wrapper extends React.Component {
   }
 
   render() {
-    let init = this.props.prop && this.props.prop.initialValue ? this.props.prop.initialValue : []
+    let init = this.props.prop && this.props.prop.initialValue ? this.props.prop.initialValue.map(user => ({ userId: user.key, realName: user.label })) : []
     if (this.state.select.length) {
       init = _.cloneDeep(this.state.select)
     }
