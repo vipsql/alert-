@@ -327,8 +327,8 @@ class RuleEditor extends Component {
             chatops: false,
             audio: false,
             recipients: [],
-            ITSMParam: props.ITSMParam,
-            PluginParam: props.PluginParam,
+            ITSMParam: props.ITSMParam || {},
+            PluginParam: props.PluginParam || {},
             /* 适用范围 */
             target: props.target,
         };
