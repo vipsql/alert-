@@ -57,6 +57,12 @@ class App extends Component {
       isFold,
       location,
       handleFoldMenu() {
+        // 为了让头部的状态也跟着变化 boby 下 expand 和 unexpand 需要在此 trigger
+        if (!isFold) {
+          document.body.setAttribute('class', 'unexpand')
+        } else {
+          document.body.setAttribute('class', 'expand')
+        }
         dispatch({
           type: 'app/handleFoldMenu'
         })
