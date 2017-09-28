@@ -178,7 +178,12 @@ class NotificationList extends Component {
                             className={styles.msgTitle}
                         >
                             <Input id="audioTitle"
-                                value={action.actionNotification ? action.actionNotification.notificationMode.webNotification.title : '${name}'}
+                                value={
+                                  action.actionNotification && action.actionNotification.notificationMode.webNotification ?
+                                  action.actionNotification.notificationMode.webNotification.title
+                                  :
+                                  '${name}'
+                                }
                                 onChange={this.changeAction.bind(this, 3)}
                             />
                         </FormItem>
@@ -187,7 +192,12 @@ class NotificationList extends Component {
                             className={styles.msgContent}
                         >
                             <Input id="audioMessage"
-                                value={action.actionNotification ? action.actionNotification.notificationMode.webNotification.message : '${severity},${entityName},${description}'}
+                                value={
+                                  action.actionNotification && action.actionNotification.notificationMode.webNotification ?
+                                  action.actionNotification.notificationMode.webNotification.message
+                                  :
+                                  '${severity},${entityName},${description}'
+                                }
                                 onChange={this.changeAction.bind(this, 3)} type="textarea"
                             />
                             <Popover overlayStyle={{ width: '44%' }} overlayClassName={styles.varsWrap} placement="bottomLeft" trigger="click" content={audioVarContent}>
@@ -204,7 +214,12 @@ class NotificationList extends Component {
                                 <Select
                                   id="playTimeType"
                                   getPopupContainer={() =>document.getElementById("content")}
-                                  value={action.actionNotification ? action.actionNotification.notificationMode.webNotification.playTimeType : 'ONECE'}
+                                  value={
+                                    action.actionNotification && action.actionNotification.notificationMode.webNotification ?
+                                    action.actionNotification.notificationMode.webNotification.playTimeType
+                                    :
+                                    'ONECE'
+                                  }
                                   onChange={this.changeAction.bind(this, 'playTimeType')}
                                 >
                                   <Option value="ONECE">{window.__alert_appLocaleData.messages['ruleEditor.playTime.once']}</Option>
@@ -219,7 +234,12 @@ class NotificationList extends Component {
                                 className={styles.timeOut}
                               >
                                 <InputNumber id="timeOut" min={0} max={1800} step={10}
-                                  value={action.actionNotification ? action.actionNotification.notificationMode.webNotification.timeOut : 30}
+                                  value={
+                                  action.actionNotification && action.actionNotification.notificationMode.webNotification ?
+                                  action.actionNotification.notificationMode.webNotification.timeOut
+                                  :
+                                  30
+                                }
                                   onChange={this.changeAction.bind(this, 'timeOut')}
                                 />
                                 <span style={{fontSize: '13px'}}>s</span>
@@ -235,7 +255,12 @@ class NotificationList extends Component {
                                   <Select
                                     id="voiceType"
                                     getPopupContainer={() =>document.getElementById("content")}
-                                    value={action.actionNotification ? action.actionNotification.notificationMode.webNotification.voiceType : '01'}
+                                    value={
+                                      action.actionNotification && action.actionNotification.notificationMode.webNotification ?
+                                      action.actionNotification.notificationMode.webNotification.voiceType
+                                      :
+                                      '01'
+                                    }
                                     onChange={this.changeAction.bind(this, 'voiceType')}
                                   >
                                     <Option value="01">{'Sound01'}</Option>
